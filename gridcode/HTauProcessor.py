@@ -7,106 +7,24 @@ from rootpy.tree.filtering import *
 from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
-from rootpy.tree import Tree, TreeBuffer, TreeChain, TreeModel
-from rootpy.types import *
+from rootpy.tree import Tree, TreeBuffer, TreeChain
 from mixins import MCParticle
 import hepmc
 import tautools
+from rootpy.utils.classfactory import generate
+from models import *
 
 ROOT.gSystem.Load("libMissingMassCalculator.so")
-from rootpy.utils.classfactory import generate
 generate("vector<TLorentzVector>", "<vector>;TLorentzVector.h")
-
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
-class TruthTau(TreeModel):
-
-    hadronic = Bool(default=False)
-    nprong = Int(default=-1111)
-    npi0 = Int(default=-1111)
-    nneutrals = Int(default=-1111)
-    pt = Float(default=0)
-    eta = Float(default=-1111)
-    phi = Float(default=-1111)
-    pt_vis = Float(default=0)
-    eta_vis = Float(default=-1111)
-    phi_vis = Float(default=-1111)
-    nu_pt = Float(default=0)
-    nu_eta = Float(default=-1111)
-    nu_phi = Float(default=-1111)
-    dR_tau_nu = Float(default=-1111)
-    dTheta3d_tau_nu = Float(default=-1111)
 
 class HTauProcessor(ATLASStudent):
 
     def work(self):
                 
         mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TruthTau)
-         
-        reco_variables = (
-            ("BDTJetScore", "F"),
-            ("BDTEleScore", "F"),
-            ("nPi0", "I"),
-            ("pt", "F"),
-            ("seedCalo_eta", "F"),
-            ("seedCalo_phi", "F"),
-            ("seedCalo_numTrack", "I"),
-            ("charge", "I"),
-        )
-
-        truth_variables = (
-            ("pt", "F"),
-            ("m", "F"),
-            ("eta", "F"),
-            ("phi", "F"),
-            ("vis_m", "F"),
-            ("vis_eta", "F"),
-            ("vis_phi", "F"),
-            ("vis_Et", "F"),
-            ("nProng", "I"),
-            ("nPi0", "I"),
-            ("charge", "I"),
-        )
-
-        common_variables = (
-            ("matched", "I"),
-            ("matched_dR", "F"),
-            ("matched_collision", "B"),
-        )
-
-        # define branches for output ntuple
-        variables = [
-            ("Mvis_tau1_tau2","F"),
-            ("numJets","I"),
-            ("jetDeltaEta", "F"),
-            ("numVertices","I"),
-            ("MET","F"),
-            ("MET_phi","F"),
-            ("HT","F"),
-            ("MMC_mass","F"),
-            ("error", "B"),
-            ("mu", "I"),
-        ]
-
-        if self.fileset.datatype == datasets.MC:
-            variables.append(("selected", "B"))
         
-        jet_variables = (
-            ("E", "F"),
-            ("pt", "F"),
-            ("m", "F"),
-            ("eta", "F"),
-            ("phi", "F"),
-            ("jvtxf", "F")
-        )
-
-        jet_extra_variables = (
-            ("Et", "F"),
-            ("matched", "B"),
-            ("matched_dR", "F"),
-            ("matched_pdgId", "I")
-        )
-
         for v, t in reco_variables + common_variables:
             for tau in (1, 2):
                 variables.append(("tau%i_%s" % (tau, v), t))
@@ -117,7 +35,7 @@ class HTauProcessor(ATLASStudent):
                 for tau in (1, 2):
                     variables.append(("trueTau%i_%s" % (tau, v), t))
         
-        for v, t in jet_variables + jet_extra_variables:
+        for v, t in jet_variables + jet_extra_variables + jet_matched_variables:
             for jet in (1, 2):
                 variables.append(("jet%i_%s" % (jet, v), t))
 
@@ -137,20 +55,19 @@ class HTauProcessor(ATLASStudent):
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
-        if self.fileset.datatype != datasets.MC:
-            self.event_filters = EventFilterList([
-                GRLFilter(self.grl, passthrough = self.fileset.datatype != datasets.DATA),
-                Trigger(passthrough = self.fileset.datatype == datasets.MC),
-                PriVertex(),
-                LArError(),
-                JetCleaningLoose(passthrough = self.fileset.datatype != datasets.DATA),
-                JetCleaningMedium(passthrough = self.fileset.datatype != datasets.DATA),
-                LArHole(),
-                JetCrackVeto(),
-                ElectronVeto(),
-                MuonVeto()
-            ])
-            tree.set_filters(self.event_filters)
+        self.event_filters = EventFilterList([
+            GRLFilter(self.grl, passthrough = self.fileset.datatype != datasets.DATA),
+            Trigger(passthrough = self.fileset.datatype == datasets.MC),
+            PriVertex(),
+            LArError(),
+            JetCleaningLoose(passthrough = self.fileset.datatype != datasets.DATA),
+            JetCleaningMedium(passthrough = self.fileset.datatype != datasets.DATA),
+            LArHole(),
+            JetCrackVeto(),
+            ElectronVeto(),
+            MuonVeto()
+        ])
+        tree.set_filters(self.event_filters)
 
         # define tree collections
         tree.define_collection(name="taus", prefix="tau_", size="tau_n")
@@ -209,8 +126,7 @@ class HTauProcessor(ATLASStudent):
                     D4PD.selected = False
                     D4PD.Fill()
                 continue
-            if self.fileset.datatype == datasets.MC:
-                D4PD.selected = True
+            D4PD.selected = True
 
             # Sort the taus by BDT score
             taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)

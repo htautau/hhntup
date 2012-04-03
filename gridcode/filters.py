@@ -86,9 +86,9 @@ class JetCrackVeto(EventFilter):
 
     def passes(self, event):
 
-        for pt,eta in zip(event.jet_pt, event.jet_emscale_eta):
-            if pt <= 20*GeV: continue
-            if 1.3 < abs(eta) < 1.7: return False
+        for jet in event.jets:
+            if jet.pt <= 20*GeV: continue
+            if 1.3 < abs(jet.emscale_eta) < 1.7: return False
         return True
 
 class ElectronVeto(EventFilter):
