@@ -101,7 +101,7 @@ class HTauProcessor(ATLASStudent):
         self.output.cd()
         self.D4PD = Tree(name = self.fileset.name)
         self.D4PD.set_branches_from_buffer(buffer)
-        self.D4PD.set_branches_from_buffer(self.tree.buffer, copied_variables, visible=False)
+        #self.D4PD.set_branches_from_buffer(self.tree.buffer, copied_variables, visible=False)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
@@ -199,7 +199,7 @@ class HTauProcessor(ATLASStudent):
             """
             MMC and misc variables
             """
-            self.D4PD.MMC_mass.set(missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype))
+            #self.D4PD.MMC_mass.set(missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype))
             self.D4PD.Mvis_tau1_tau2.set(utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi))
             self.D4PD.numVertices.set(len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)]))
             self.D4PD.numJets.set(len(jets))
@@ -246,6 +246,14 @@ class HTauProcessor(ATLASStudent):
                 unmatched_truth = range(1, min(len(event.truetaus)+1, 3))
                 if len(event.truetaus) > 2:
                     print "ERROR: too many true taus: %i" % len(event.truetaus)
+                    for tau in event.truetaus:
+                        print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (tau.pt, tau.eta, tau.phi),
+                        if tau.tauAssoc_index >= 0:
+                            matched_tau = event.taus[tau.tauAssoc_index]
+                            print " ==> reco (pT: %.4f, eta: %.4f, phi: %.4f)" % (matched_tau.pt, matched_tau.seedCalo_eta, matched_tau.seedCalo_phi),
+                            print "dR = %.4f" % tau.tauAssoc_dr
+                        else:
+                            print ""
                     self.D4PD.error.set(True)
                 matched_truth = []
                 for i, tau in zip((1, 2), taus):
