@@ -28,6 +28,10 @@ class RecoTau(TreeModel):
     
     BDTJetScore = FloatCol()
     BDTEleScore = FloatCol()
+    JetBDTLoose = BoolCol()
+    JetBDTMedium = BoolCol()
+    JetBDTTight = BoolCol()
+
     nPi0 = IntCol()
     seedCalo_numTrack = IntCol()
     charge = IntCol()
@@ -100,6 +104,11 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             fourvect = tau.fourvect
             setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
             setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
+            
+            setattr(tree, 'tau%i_JetBDTLoose' % i, tau.JetBDTLoose)
+            setattr(tree, 'tau%i_JetBDTMedium' % i, tau.JetBDTMedium)
+            setattr(tree, 'tau%i_JetBDTTight' % i, tau.JetBDTTight)
+            
             setattr(tree, 'tau%i_nPi0' % i, tau.nPi0)
             setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
             setattr(tree, 'tau%i_charge' % i, tau.charge)
