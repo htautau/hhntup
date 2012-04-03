@@ -400,5 +400,5 @@ def missingMass(taus, jets, METx, METy, sumET, datatype):
     output_fitstatus = mmc.GetFitStatus() # MMC output: 1=found solution; 0= no slution
     MMC_mass = 0.
     if output_fitstatus == 1:
-        MMC_mass = mmc.GetFittedMass(1)
+        MMC_mass = mmc.GetFittedMass(2) # use 2 instead of 1 to remove spikes in output
     return MMC_mass
