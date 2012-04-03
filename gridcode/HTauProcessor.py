@@ -227,7 +227,8 @@ class HTauProcessor(ATLASStudent):
             for jet in jets:
                 matched = False
                 for tau in taus:
-                    if utils.dR(jet.emscale_eta, jet.emscale_phi, tau.jet_emscale_eta, tau.jet_emscale_phi) < .2:
+                    # tau.jet_emscale_eta/phi not in SMWZ D3PDs... using seedCalo_eta/phi instead
+                    if utils.dR(jet.emscale_eta, jet.emscale_phi, tau.seedCalo_eta, tau.seedCalo_phi) < .2:
                         matched = True
                         break
                 if not matched:
@@ -237,6 +238,11 @@ class HTauProcessor(ATLASStudent):
             """
             MET
             """
+            print "etx: %f"%event.MET_LocHadTopo_etx
+            print "C: %f, E: %f, F: %f" % (event.MET_LocHadTopo_etx_CentralReg, event.MET_LocHadTopo_etx_EndcapRegion, event.MET_LocHadTopo_etx_ForwardReg)
+            print "sum: %f"% (event.MET_LocHadTopo_etx_CentralReg + event.MET_LocHadTopo_etx_EndcapRegion + event.MET_LocHadTopo_etx_ForwardReg)
+            print "="*10
+             
             METx = event.MET_LocHadTopo_etx + event.MET_MuonBoy_etx - event.MET_RefMuon_Track_etx
             METy = event.MET_LocHadTopo_ety + event.MET_MuonBoy_ety - event.MET_RefMuon_Track_ety
             MET = math.sqrt(METx**2 + METy**2)
