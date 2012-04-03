@@ -8,6 +8,7 @@ from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
+from mixins import MCParticle
 
 ROOT.gSystem.Load("libMissingMassCalculator.so")
 from rootpy.utils.classfactory import generate
@@ -124,7 +125,7 @@ class HTauProcessor(ATLASStudent):
         self.tree.collection(name="taus", prefix="tau_", size="tau_n")
         self.tree.collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n")
         self.tree.collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
-        self.tree.collection(name="mc", prefix="mc_", size="mc_n")
+        self.tree.collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
         self.tree.collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
         self.tree.collection(name="electrons", prefix="el_", size="el_n")
         self.tree.collection(name="vertices", prefix="vxp_", size="vxp_n")
