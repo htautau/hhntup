@@ -106,16 +106,13 @@ class HTauSkim(ATLASStudent):
         outtree = Tree(name=self.fileset.treename, file=self.output)
         outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
 
-        # copy TrigConfTree from first file in input list
-        # make sure input files are all from the same run
-        # use the prun --useContElementBoundary option if the
-        # input container consists of run datasets
+        # merge TrigConfTrees
         metadirname = '%sMeta' % self.fileset.treename
-        trigconf = intree.file['%s/TrigConfTree' % metadirname]
+        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+        map(trigconfchain.Add, self.fileset.files)
         metadir = self.output.mkdir(metadirname)
         metadir.cd()
-        newtrigconf = trigconf.CloneTree(-1,'fast')
-        newtrigconf.Write()
+        trigconfchain.Merge(self.output, -1, 'fast keep')
         self.output.cd()
         
         # set the event filters
