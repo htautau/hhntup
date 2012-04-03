@@ -104,7 +104,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_charge' % i, tau.charge)
             getattr(tree, 'tau%i_fourvect' % i).set_from(fourvect)
             fourvect.Boost(tree.jet_beta * -1)
-            getattr(tree, 'tau%i_fourvect' % i).set_from(fourvect)
+            getattr(tree, 'tau%i_fourvect_boosted' % i).set_from(fourvect)
 
  
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
