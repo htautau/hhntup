@@ -1,4 +1,6 @@
 #!/bin/bash
 
 selection=`cat selection.txt`
-prun --site ANALY_SFU --inDS data11*physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM*p741/ --outDS user.NoelDawe.data11.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.p741.skim.v1 --exec "root-skim -s '${selection}' -o or.txt -t tau --grid %IN; root-hadd skimmed.root skimmed.*.root" --outputs skimmed.root --nFilesPerJob 10 --rootVer=5.28/00
+ds="data11*physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM*p741/"
+ds="data11_7TeV.00190608.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p741/"
+prun --site ANALY_SFU --bexec "./grid-setup.sh build" --inDS $ds --outDS user.NoelDawe.data11.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.p741.skim.v1 --exec "source grid-setup.sh worker; root-skim -s '${selection}' -o or.txt -t tau --grid %IN; root-hadd skimmed.root skimmed.*.root*" --outputs skimmed.root --nFilesPerJob 10 --extFile atlastools.tar.gz,goodruns.tar.gz,rootpy.tar.gz # --rootVer=5.30/02
