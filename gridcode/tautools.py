@@ -1,5 +1,5 @@
 from decorators import memoize
-from rootpy.hep.vector import FourVector
+from rootpy.vector import LorentzVector as FourVector
 from rootpy.hep import pdg
 
 try:
@@ -101,7 +101,7 @@ class TauDecay(object):
     @property
     def dTheta3d_tau_nu(self):
 
-        return 0.
+        return self.fourvect.Angle(self.fourvect_missing)
 
     def __str__(self):
 
