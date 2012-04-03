@@ -1,0 +1,13 @@
+*.p
+*.pyc
+*.d
+*~
+*.root
+*.log
+*.out
+*.png
+*.jpg
+*.eps
+.nfs*
+build
+*.swp
