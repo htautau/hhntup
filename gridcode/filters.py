@@ -9,6 +9,19 @@ https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MSSMHiggsToTauTauToHH2011Sum
 https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MSSMHiggsToTauTauToLH2011Summer
 """
 
+class TwoGoodTaus(EventFilter):
+
+    def passes(self, event):
+
+        # Only consider taus with at least a calo seed and which have at least one track
+        # in a kinematic region passing the tau muon veto and charge req.
+        event.taus.select(lambda tau: tau.author != 2 and tau.seedCalo_numTrack > 0 and
+                                      tau.pt > 20*GeV and
+                                      tau.muonVeto == 0 and
+                                      abs(tau.charge) == 1)
+        return len(event.taus) > 1
+
+
 class PriVertex(EventFilter):
 
     def passes(self, event):

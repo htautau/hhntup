@@ -51,14 +51,16 @@ class HTauProcessor(ATLASStudent):
         self.output.cd()
         D4PD = Tree(name=self.fileset.name, model=D4PD_model)
         
+        copied_variables = ['actualIntPerXing',
+                            'averageIntPerXing']
+
         if self.fileset.datatype == datasets.MC:
             
             # do a verbatim copy of these branches from the input tree into the output tree
-            copied_variables = tree.glob("jet_AntiKt4TopoEM_*")
-            copied_variables += ['actualIntPerXing',
-                                 'averageIntPerXing']
-            D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
-            tree.always_read(copied_variables)
+            copied_variables += tree.glob("jet_AntiKt4TopoEM_*")
+        
+        D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
+        tree.always_read(copied_variables)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
@@ -72,25 +74,10 @@ class HTauProcessor(ATLASStudent):
             LArHole(),
             JetCrackVeto(),
             ElectronVeto(),
-            MuonVeto()
+            MuonVeto(),
+            TwoGoodTaus()
         ])
         tree.filters += self.event_filters
-
-        twogoodtaus = EventFilter(name='TwoGoodTaus')
-        twogoodjets = EventFilter(name='TwoGoodJets')
-        twomediumtaus = EventFilter(name='TwoMediumTaus')
-        twotauspassevetoloose = EventFilter(name='TwoTausPassTauEVetoLoose')
-        twotauspassevetomedium = EventFilter(name='TwoTausPassTauEVetoMedium')
-        twotauspassevetotight = EventFilter(name='TwoTausPassTauEVetoTight')
-
-        self.event_filters += [
-            twogoodtaus,
-            twogoodjets,
-            twomediumtaus,
-            twotauspassevetoloose,
-            twotauspassevetomedium,
-            twotauspassevetotight
-        ]
 
         cutflow = Cutflow()
 
@@ -107,69 +94,39 @@ class HTauProcessor(ATLASStudent):
         # entering the main event loop...
         for event in tree:
             
-            D4PD.reset() 
-            """
-            Tau selection
-            """
-            # Only consider taus with at least a calo seed and which have at least one track
-            event.taus.select(lambda tau: tau.author != 2 and tau.seedCalo_numTrack > 0)
-            # kinematic region
-            event.taus.select(lambda tau: tau.pt > 20*GeV)
-            # muon veto
-            event.taus.select(lambda tau: tau.muonVeto == 0)
-            # charge requirement
-            event.taus.select(lambda tau: abs(tau.charge) == 1)
-            # Did not reconstruct two candidates so skip event
-            if len(event.taus) < 2:
-                twogoodtaus.failed()
-                continue
-            twogoodtaus.passed()
+            D4PD.reset()
+            cutflow.reset() 
 
             # Sort the taus by BDT score
             event.taus.sort(key=lambda tau: tau.BDTJetScore, reverse=True)
             # Take the two taus with the highest BDT score
             taus = event.taus[:2]
             
-            """
-            Jet selection
-            """
-            # kinematic region
-            jets = [jet for jet in event.jets if jet.pt > 20*GeV]
-            jets = [jet for jet in event.jets if abs(jet.emscale_eta) < 4.5]
+            # Jet selection
+            event.jets.select(lambda jet: jet.pt > 20*GeV and abs(jet.emscale_eta) < 4.5)
+            # Overlap removal between taus and jets
+            event.jets.select(lambda jet: not any([tau for tau in taus if
+                              utils.dR(jet.emscale_eta, jet.emscale_phi, tau.seedCalo_eta, tau.seedCalo_phi) < .2]))
             
-            """
-            Overlap removal between taus and jets
-            """
-            otherjets = []
-            for jet in jets:
-                matched = False
-                for tau in taus:
-                    # tau.jet_emscale_eta/phi not in SMWZ D3PDs... using seedCalo_eta/phi instead
-                    if utils.dR(jet.emscale_eta, jet.emscale_phi, tau.seedCalo_eta, tau.seedCalo_phi) < .2:
-                        matched = True
-                        break
-                if not matched:
-                    otherjets.append(jet)
-            jets = otherjets
-            
-            """
-            Will filter jets by jet vertex fraction (JVF) here...
-            """
+            numJets = len(event.jets)
+            # Will filter jets by jet vertex fraction (JVF) here...
 
-            """
-            VBF jet selection
-            two highest pT jets sorted by eta
-            """
-            best_jets = sorted(sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2], key=lambda jet: jet.eta)
-            if len(best_jets) < 2:
-                # if there are fewer than 2 other jets then skip event
-                twogoodjets.failed()
-                continue
-            twogoodjets.passed()
+            # sort jets by pT
+            event.jets.sort(key=lambda jet: jet.pt, reverse=True)
+            # keep only up to 5 jets
+            event.jets.slice(stop=5)
+
+            # VBF jet selection
+            # select two highest pT jets
+            best_jets = event.jets[:2]
+            # sort by eta
+            best_jets.sort(key=lambda jet: jet.eta)
+             
             """
             Jet variables
             """
-            RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
+            if len(best_jets) > 1:
+                RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
             
             """
             Reco tau variables
@@ -220,7 +177,7 @@ class HTauProcessor(ATLASStudent):
             #D4PD.MMC_mass = missingmass.mass(taus, jets, METx, METy, sumET, self.fileset.datatype)
             D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
             D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
-            D4PD.numJets = len(jets)
+            D4PD.numJets = numJets
             if self.fileset.datatype == datasets.MC:
                 D4PD.mu = event.lbn
 
@@ -228,6 +185,7 @@ class HTauProcessor(ATLASStudent):
             Experimenting here....
             Need to match jets to VBF jets
             """ 
+            """
             if self.fileset.datatype == datasets.MC:
                 if self.fileset.name.startswith("VBFH"):
                     # get partons (already sorted by eta in hepmc)
@@ -240,31 +198,7 @@ class HTauProcessor(ATLASStudent):
                                     utils.dR(jet.eta, jet.phi, parton2.eta, parton2.phi))
                                 )
                         D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(1111)
-            
-            if taus[0].JetBDTMedium == 1 and taus[1].JetBDTMedium == 1:
-                twomediumtaus.passed()
-            else:
-                twomediumtaus.failed()
-                continue
-            
-            if taus[0].electronVetoLoose == 0 and taus[1].electronVetoLoose == 0:
-                twotauspassevetoloose.passed()
-            else:
-                twotauspassevetoloose.failed()
-                continue
-            
-            if taus[0].electronVetoMedium == 0 and taus[1].electronVetoMedium == 0:
-                twotauspassevetomedium.passed()
-            else:
-                twotauspassevetomedium.failed()
-                continue
-            
-            if taus[0].electronVetoTight == 0 and taus[1].electronVetoTight == 0:
-                twotauspassevetotight.passed()
-            else:
-                twotauspassevetotight.failed()
-                continue
-
+            """
             """
             Truth-matching
             presently not possible in SMWZ D3PDs
@@ -314,4 +248,3 @@ class HTauProcessor(ATLASStudent):
             # to avoid any values from this event carrying over into the next
             D4PD.cutflow = cutflow.int()
             D4PD.Fill()
-            cutflow.reset()
