@@ -1,0 +1,211 @@
+########################################################################
+#
+#   data
+#
+########################################################################
+data:
+    container: 'data11*physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM*p741/'
+    local: /cluster/data03/endw/analysis/testdata/data
+    grl: "grl/data11_7TeV.periodAllYear_DetStatus-v33-pro09-01_CoolRunQuery-00-04-00_Tau_h.xml"
+    tree: tauPerf
+    type: DATA
+    class: BACKGROUND
+    label: JET
+    weight: 1.
+########################################################################
+#
+#   Z -> tau + tau / W -> tau + nu / Z -> e + e
+#
+########################################################################
+Ztautau:
+    container: "group10.perf-tau.mc10_7TeV.106052.PythiaZtautau.e574_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    local: /cluster/data03/endw/analysis/testdata/Ztautau
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.5400E-01
+Wtaunu:
+    container: "group10.perf-tau.mc10_7TeV.107054.PythiaWtaunu_incl.e574_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+Zee:
+    container: "group10.perf-tau.mc10_7TeV.106046.PythiaZee_no_filter.e574_s933_s946_r2302_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: ELEC
+    weight: 8.5521E-01
+########################################################################
+#
+#   Z -> tau + tau + jets
+#
+########################################################################
+ZtautauNp0:
+    container: group10.perf-tau.mc10_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp1:
+    container: group10.perf-tau.mc10_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp2:
+    container: group10.perf-tau.mc10_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp3:
+    container: group10.perf-tau.mc10_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp4:
+    container: group10.perf-tau.mc10_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp5:
+    container: group10.perf-tau.mc10_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+########################################################################
+#
+#   Z' M = 250 - 1250 GeV
+#
+########################################################################
+Zprime250:
+    container: "group10.perf-tau.mc10_7TeV.107381.Pythia_Zprime_tautau_SSM250.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime500:
+    container: "group10.perf-tau.mc10_7TeV.107382.Pythia_Zprime_tautau_SSM500.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime750:
+    container: "group10.perf-tau.mc10_7TeV.107383.Pythia_Zprime_tautau_SSM750.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime1000:
+    container: "group10.perf-tau.mc10_7TeV.107384.Pythia_Zprime_tautau_SSM1000.e632_s934_s946_r2310_r2300.01-01-01.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime1250:
+    container: "group10.perf-tau.mc10_7TeV.107385.Pythia_Zprime_tautau_SSM1250.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+########################################################################
+#
+#   VBF Higgs -> tau tau (had) M = 100 - 150 GeV
+#
+########################################################################
+VBFH100hh:
+    container: "group10.perf-tau.mc10_7TeV.125200.Pythia_VBFH100_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.4658E-04
+VBFH105hh:
+    container: "group10.perf-tau.mc10_7TeV.125201.Pythia_VBFH105_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.3942E-04
+VBFH110hh:
+    container: "group10.perf-tau.mc10_7TeV.125202.Pythia_VBFH110_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.3219E-04
+VBFH115hh:
+    container: "group10.perf-tau.mc10_7TeV.125203.Pythia_VBFH115_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.2613E-04
+VBFH120hh:
+    container: "group10.perf-tau.mc10_7TeV.125204.Pythia_VBFH120_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.1929E-04
+VBFH125hh:
+    container: "group10.perf-tau.mc10_7TeV.125205.Pythia_VBFH125_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.1380E-04
+VBFH130hh:
+    container: "group10.perf-tau.mc10_7TeV.125206.Pythia_VBFH130_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    local: "/global/endw/higgs/Pythia_VBFH130_tautauhh.perf-tau"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.0834E-04
+VBFH135hh:
+    container: "group10.perf-tau.mc10_7TeV.125207.Pythia_VBFH135_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.0336E-04
+VBFH140hh:
+    container: "group10.perf-tau.mc10_7TeV.125208.Pythia_VBFH140_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 9.9105E-05
+VBFH145hh:
+    container: "group10.perf-tau.mc10_7TeV.125209.Pythia_VBFH145_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 9.4357E-05
+VBFH150hh:
+    container: "group10.perf-tau.mc10_7TeV.125210.Pythia_VBFH150_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 9.0487E-05
