@@ -43,13 +43,12 @@ class HTauProcessor(ATLASStudent):
         
         
         # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
-        tree = TreeChain(self.fileset.treename, files=self.fileset.files, events=self.events)
-        # for speed improvement enable use of a TTreeCache
-        tree.use_cache(True, cache_size=10000000, learn_entries=30)
-        # initialize the TreeChain
-        # calling this now is optional. It is automatically
-        # initialized at the beginning of the event loop
-        tree.init()
+        tree = TreeChain(self.fileset.treename,
+                         files=self.fileset.files,
+                         events=self.events,
+                         usecache=True,
+                         cache_size=10000000,
+                         learn_entries=30)
         
         # create output tree
         self.output.cd()
@@ -64,6 +63,7 @@ class HTauProcessor(ATLASStudent):
             # do a verbatim copy of these branches from the input tree into the output tree
             copied_variables = tree.glob("jet_AntiKt4TopoEM_*")
             D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
+            tree.always_read(copied_variables)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
