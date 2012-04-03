@@ -54,11 +54,6 @@ class HTauProcessor(ATLASStudent):
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing']
 
-        if self.fileset.datatype == datasets.MC:
-            
-            # do a verbatim copy of these branches from the input tree into the output tree
-            copied_variables += tree.glob("jet_AntiKt4TopoEM_*")
-        
         D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
         tree.always_read(copied_variables)
         
@@ -129,6 +124,11 @@ class HTauProcessor(ATLASStudent):
             """
             if len(best_jets) > 1:
                 RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
+
+            for jet in event.jets:
+                D4PD.jet_fourvect.push_back(jet.fourvect)
+                # not available in rel16 D3PDs
+                #D4PD.jet_jvtxf.push_back(jet.jvtxf)
             
             """
             Reco tau variables

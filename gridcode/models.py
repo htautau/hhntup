@@ -65,8 +65,8 @@ class EventVariables(TreeModel):
 
     Mvis_tau1_tau2 = FloatCol()
     numJets = IntCol()
-    jet_AntiKt4TopoEM_matched = ROOT.vector("int")
-    jet_AntiKt4TopoEM_matched_dR = ROOT.vector("float")
+    jet_fourvect = ROOT.vector('TLorentzVector')
+    jet_jvtxf = ROOT.vector('float')
     numVertices = IntCol()
     MET = FloatCol()
     MET_phi = FloatCol()
