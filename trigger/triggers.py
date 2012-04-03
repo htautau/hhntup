@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from rootpy.io import openFile
+from rootpy.io import open as ropen
 from rootpy.tree import Tree
 from prettytable import PrettyTable
 
-f = openFile("user.NoelDawe.001204._00001.VBFH130hh.root")
+f = ropen("${data}/higgs/VBFH130hh/VBFH130hh.root")
 tree = f.Get("VBFH130hh")
 
 total = tree.GetEntries()
@@ -29,3 +29,7 @@ print table
 accept = tree.GetEntries("EF_tau29_medium1_tau20_medium1 || EF_e20_medium || EF_e60_loose || EF_xe60_noMu")
 
 print accept / float(total)
+
+with open('triggers.txt') as f:
+    triggers = [l.strip() for l in f.readlines()]
+print triggers
