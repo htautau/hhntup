@@ -1,6 +1,6 @@
 import ROOT
 from atlastools.units import *
-from rootpy.utils.classfactory import generate
+from rootpy.classfactory import generate
 from atlastools import datasets
 
 ROOT.gSystem.Load("libMissingMassCalculator.so")
