@@ -28,6 +28,8 @@ from numpy import logspace
 cuts = list(reversed(1 - (logspace(0,1.05,150) - 1)/10))[2:]
 cuts.insert(0,0.)
 
+var, labelname = "Mvis_tau1_tau2/1000", 'vis'
+var, labelname = "MMC_mass", 'MMC'
 
 for i, BDTcut in enumerate(cuts):
     
@@ -37,9 +39,9 @@ for i, BDTcut in enumerate(cuts):
     c.Clear()
     mass.Reset()
     mass2.Reset()
-    t.Draw("Mvis_tau1_tau2/1000", cut, hist=mass)
-    t2.Draw("Mvis_tau1_tau2/1000", cut & "tau1_matched && tau2_matched && EF_tau29_medium1_tau20_medium1", hist=mass2)
-    mass.SetXTitle("M_{vis}(#tau_{1},#tau_{2}) [GeV]")
+    t.Draw(var, cut, hist=mass)
+    t2.Draw(var, cut & "tau1_matched && tau2_matched && EF_tau29_medium1_tau20_medium1", hist=mass2)
+    mass.SetXTitle("M_{%s}(#tau_{1},#tau_{2}) [GeV]" % labelname)
     mass.SetYTitle("Events")
     mass /= sum(mass)
     mass2 /= sum(mass2)
@@ -54,7 +56,7 @@ for i, BDTcut in enumerate(cuts):
     mass2.Draw("hist same")
     label = common.makeLabel(0.7,0.8,"BDT > %.2f"% BDTcut, size=25)
     label.Draw()
-    c.SaveAs("mass_overlay/mass_%04d.png"% i)
+    c.SaveAs("mass_overlay/mass_%s_%04d.png"% (labelname, i))
     
     """
     c.Clear()

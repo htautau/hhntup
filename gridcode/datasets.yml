@@ -14,7 +14,7 @@ data:
     weight: 1.
 ########################################################################
 #
-#   Ztautau / Wtaunu / Zee
+#   Z -> tau + tau / W -> tau + nu / Z -> e + e
 #
 ########################################################################
 Ztautau:
@@ -22,14 +22,14 @@ Ztautau:
     local: /cluster/data03/endw/analysis/testdata/Ztautau
     tree: tauPerf
     type: MC
-    class: SIGNAL
+    class: BACKGROUND
     label: TAU
     weight: 8.5400E-01
 Wtaunu:
     container: "group10.perf-tau.mc10_7TeV.107054.PythiaWtaunu_incl.e574_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
     tree: tauPerf
     type: MC
-    class: SIGNAL
+    class: BACKGROUND
     label: TAU
     weight: 8.9332E+00
 Zee:
@@ -39,6 +39,53 @@ Zee:
     class: BACKGROUND
     label: ELEC
     weight: 8.5521E-01
+########################################################################
+#
+#   Z -> tau + tau + jets
+#
+########################################################################
+ZtautauNp0:
+    container: group10.perf-tau.mc10_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp1:
+    container: group10.perf-tau.mc10_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp2:
+    container: group10.perf-tau.mc10_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp3:
+    container: group10.perf-tau.mc10_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp4:
+    container: group10.perf-tau.mc10_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
+ZtautauNp5:
+    container: group10.perf-tau.mc10_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.e844_s933_s946_r2302_r2300.01-01-06.D3PD_TauMEDIUM/
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: TAU
+    weight: 8.9332E+00
 ########################################################################
 #
 #   Z' M = 250 - 1250 GeV
