@@ -41,7 +41,7 @@ mmc_data.SetMaximum(_max)
 mmc_data.Draw("hist")
 mmc_mc.Draw("hist same")
 
-c.SaveAs("mass_mmc.png")
+c.SaveAs("mass_mmc.eps")
 
 c.Clear()
 

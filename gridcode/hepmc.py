@@ -1,4 +1,4 @@
-from atlastools import pdg
+from rootpy.hep import pdg
 
 def get_VBF_partons(event):
     """
