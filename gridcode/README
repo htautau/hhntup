@@ -1,7 +1,7 @@
-
 more details to come later...
 
-basic instructions:
+Installation:
+=============
 
 install atlastools:
 
@@ -20,17 +20,39 @@ You also need PyYAML:
 If you also want to test the code locally then you will need to install rootpy and goodruns.
 Same procedure as above, just use these urls:
 
-    git://github.com/ndawe/rootpy.git or http://svn.github.com/ndawe/rootpy.git
+    git://github.com/ndawe/rootpy.git (or http://svn.github.com/ndawe/rootpy.git if you want to "svn checkout")
 
-    git://github.com/ndawe/goodruns.git or http://svn.github.com/ndawe/goodruns.git
+    git://github.com/ndawe/goodruns.git (or http://svn.github.com/ndawe/goodruns.git if you want to "svn checkout")
 
 and be sure to use at least Python version 2.6 (2.7 is preferred).
 These additional packages (along with Python 2.7 and ROOT 5.30) are downloaded and installed automatically on the grid
 in the setup.sh script.
 
+
+A tour of the code:
+===================
+
+The main code which loops over all events is in HTauProcessor.py.
+Event and object filters are defined in filters.py.
+"TreeModels" are defined in models.py. These define the branches of the output ntuples.
+tautools.py provides utilities for processing MC taus in the MC block of the D3PDs.
+mixins.py defines "mixin" classes to add functionality to objects defined by TTree branches.
+
+
+Preparing to submit a job to the grid:
+======================================
+
 Download required packages that will be sent to the grid (rather than downloaded by the grid nodes since some don't allow this):
 
     ./setup.sh local
+
+This downloads the "master branch" (the "trunk" in Subversion language) of several packages from github.com as tarballs.
+Do this whenever you want to use an updated version of the software. Most of these packages (especially rootpy and atlastools)
+are updated quite frequently.
+
+
+Submitting jobs to the Grid:
+============================
 
 Make sure you have pandatools setup and run this (replace NoelDawe with your grid name and set --version to whatever you want):
 
@@ -38,4 +60,3 @@ Make sure you have pandatools setup and run this (replace NoelDawe with your gri
 
 This will run on all datasets in datasets.yml matching VBF*. Replace VBF* with or append "data" to also run on data, etc.
 You may also append arguments understood by prun (i.e. --nFilesPerJob 8) at the end of the command above and they will be passes along to prun.
-The main code which runs on the grid is HTauProcessor.py. Event filters are defined in filters.py.
