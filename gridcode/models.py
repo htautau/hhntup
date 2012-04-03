@@ -3,21 +3,21 @@ from rootpy.types import *
 
 class TruthTau(TreeModel):
 
-    hadronic = Bool(default=False)
-    nprong = Int(default=-1111)
-    npi0 = Int(default=-1111)
-    nneutrals = Int(default=-1111)
-    pt = Float(default=0)
-    eta = Float(default=-1111)
-    phi = Float(default=-1111)
-    pt_vis = Float(default=0)
-    eta_vis = Float(default=-1111)
-    phi_vis = Float(default=-1111)
-    nu_pt = Float(default=0)
-    nu_eta = Float(default=-1111)
-    nu_phi = Float(default=-1111)
-    dR_tau_nu = Float(default=-1111)
-    dTheta3d_tau_nu = Float(default=-1111)
+    hadronic = BoolCol(default=False)
+    nprong = IntCol(default=-1111)
+    npi0 = IntCol(default=-1111)
+    nneutrals = IntCol(default=-1111)
+    pt = FloatCol(default=0)
+    eta = FloatCol(default=-1111)
+    phi = FloatCol(default=-1111)
+    pt_vis = FloatCol(default=0)
+    eta_vis = FloatCol(default=-1111)
+    phi_vis = FloatCol(default=-1111)
+    nu_pt = FloatCol(default=0)
+    nu_eta = FloatCol(default=-1111)
+    nu_phi = FloatCol(default=-1111)
+    dR_tau_nu = FloatCol(default=-1111)
+    dTheta3d_tau_nu = FloatCol(default=-1111)
 
 reco_variables = (
     ("BDTJetScore", "F"),
