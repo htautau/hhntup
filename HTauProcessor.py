@@ -28,6 +28,7 @@ class HTauProcessor(ATLASStudent):
             hadronic = Bool(default=False)
             nprong = Int(default=-1111)
             npi0 = Int(default=-1111)
+            nneutrals = Int(default=-1111)
             pt = Float(default=0)
             eta = Float(default=-1111)
             phi = Float(default=-1111)
@@ -168,6 +169,7 @@ class HTauProcessor(ATLASStudent):
                         mc_tree.hadronic = True
                         mc_tree.nprong = decay.nprong
                         mc_tree.npi0 = decay.npi0
+                        mc_tree.nneutrals = decay.nneutrals
                         mc_tree.pt = decay.fourvect.Pt()
                         mc_tree.eta = decay.fourvect.Eta()
                         mc_tree.phi = decay.fourvect.Phi()
