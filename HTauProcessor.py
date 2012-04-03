@@ -239,8 +239,9 @@ class HTauProcessor(ATLASStudent):
             if self.fileset.datatype == datasets.MC:
                 tau_states = hepmc.get_tau_initial_final_states(event)
                 for init, final in tau_states:
+                    print init
                     for thing in final:
-                        print thing
+                        print "\t%s" % thing
                 if self.fileset.name.startswith("VBFH"):
                     VBF_partons = hepmc.get_VBF_partons(event)
 
