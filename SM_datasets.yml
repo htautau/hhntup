@@ -1,0 +1,109 @@
+########################################################################
+#
+#   data
+#
+########################################################################
+data:
+    container: group10.perf-tau.JetTauEtMiss-AOD.01-01-05.D3PD_StreamD3PD_TauMEDIUM/:SFU-LCG2_LOCALGROUPDISK
+    local: /cluster/data03/endw/analysis/testdata/data
+    grl: "grl/data11_7TeV.periodAllYear_DetStatus-v28-pro08-07_CoolRunQuery-00-04-00_Higgs_tautau_lh.xml"
+    tree: tauPerf
+    type: DATA
+    class: BACKGROUND
+    label: JET
+    weight: 1.
+########################################################################
+#
+#   Ztautau / Wtaunu
+#
+########################################################################
+Ztautau:
+    container: "group10.perf-tau.mc10_7TeV.106052.PythiaZtautau.e574_s934_s946_r2310_r2300.01-01-02-00.D3PD_TauMEDIUM/:DESY-HH_PERF-TAU"
+    local: /cluster/data03/endw/analysis/testdata/Ztautau
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 8.5400E-01
+########################################################################
+#
+#   VBF Higgs -> tau tau (had) M = 100 - 150 GeV
+#
+########################################################################
+VBFH100hh:
+    container: "mc10_7TeV.125200.PowHegPythia_VBFH100_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.4658E-04
+VBFH105hh:
+    container: "mc10_7TeV.125201.PowHegPythia_VBFH105_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.3942E-04
+VBFH110hh:
+    container: "mc10_7TeV.125202.PowHegPythia_VBFH110_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.3219E-04
+VBFH115hh:
+    container: "mc10_7TeV.125203.PowHegPythia_VBFH115_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.2613E-04
+VBFH120hh:
+    container: "mc10_7TeV.125204.PowHegPythia_VBFH120_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.1929E-04
+VBFH125hh:
+    container: "mc10_7TeV.125205.PowHegPythia_VBFH125_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.1380E-04
+VBFH130hh:
+    container: "mc10_7TeV.125206.PowHegPythia_VBFH130_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.0834E-04
+VBFH135hh:
+    container: "mc10_7TeV.125207.PowHegPythia_VBFH135_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.0336E-04
+VBFH140hh:
+    container: "mc10_7TeV.125208.PowHegPythia_VBFH140_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 9.9105E-05
+VBFH145hh:
+    container: "mc10_7TeV.125209.PowHegPythia_VBFH145_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 9.4357E-05
+VBFH150hh:
+    container: "mc10_7TeV.125210.PowHegPythia_VBFH150_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    tree: physics
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 9.0487E-05
