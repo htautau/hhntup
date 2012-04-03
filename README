@@ -13,6 +13,10 @@ or if you insist on using an inferior VCS such as Subversion:
 
 Follow the README in atlastools for installation instructions
 
+You also need PyYAML:
+
+    easy_install --user pyyaml
+
 If you also want to test the code locally then you will need to install rootpy and goodruns.
 Same procedure as above, just use these urls:
 
