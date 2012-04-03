@@ -160,12 +160,6 @@ class HTauProcessor(ATLASStudent):
             taus = taus[:2]
             
             """
-            Experimenting here....
-            """ 
-            if self.fileset.datatype == datasets.MC:
-                tau_final_states = hepmc.get_tau_final_states(event)
-
-            """
             Jet selection
             """
             # kinematic region
@@ -237,6 +231,15 @@ class HTauProcessor(ATLASStudent):
             if best_forward_jet and best_backward_jet:
                 self.D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta
 
+            """
+            Experimenting here....
+            Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
+            Need to match jets to VBF jets
+            """ 
+            if self.fileset.datatype == datasets.MC:
+                tau_final_states = hepmc.get_tau_final_states(event)
+                if self.fileset.name.startswith("VBFH"):
+                    VBF_partons = hepmc.get_VBF_partons(event)
 
             """
             Reco tau variables
