@@ -7,9 +7,9 @@ from rootpy.tree.filtering import *
 from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
-from atlastools import pdg
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from mixins import MCParticle
+import hepmc
 
 ROOT.gSystem.Load("libMissingMassCalculator.so")
 from rootpy.utils.classfactory import generate
@@ -162,18 +162,8 @@ class HTauProcessor(ATLASStudent):
             """
             Experimenting here....
             """ 
-            """
             if self.fileset.datatype == datasets.MC:
-                print "mc_parent_index"
-                print [list(a) for a in self.tree.mc_parent_index]
-                print "mc_parents"
-                print [list(a) for a in self.tree.mc_parents]
-                for mc in self.tree.mc:
-                    if mc.pdgId == pdg.Higgs0: # found the Higgs!
-                        for child in mc.ichildren():
-                            print "%s (%i) -->" % (pdg.id_to_name(child.pdgId), child.status)
-                            print " --> ".join(["%s (%i)" % (pdg.id_to_name(c.pdgId), c.status) for c in child.traverse_children()])
-            """
+                tau_final_states = hepmc.get_tau_final_states(event)
 
             """
             Jet selection

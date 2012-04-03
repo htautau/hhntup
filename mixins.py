@@ -3,7 +3,7 @@ class MCParticle(object):
 
     def ichildren(self):
 
-        for child in self.children:
+        for child in self.child_index:
             try:
                 yield getattr(self.tree, self.name)[child]
             except:
@@ -18,7 +18,7 @@ class MCParticle(object):
     
     def iparents(self):
 
-        for parent in self.parents:
+        for parent in self.parent_index:
             try:
                 yield getattr(self.tree, self.name)[parent]
             except:
@@ -30,3 +30,13 @@ class MCParticle(object):
             yield parent
             for ancestor in parent.traverse_parents():
                 yield ancestor
+
+    def is_leaf(self):
+
+        return not len(self.child_index)
+
+    def final_state(self):
+
+        if self.is_leaf():
+            return [self]
+        return [particle for particle in self.traverse_children() if particle.is_leaf()]
