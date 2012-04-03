@@ -35,11 +35,11 @@ class HTauProcessor(ATLASStudent):
         
         # only create truth branches for MC
         if self.fileset.datatype == datasets.MC:
-            D4PD_model = D4PD_model + TrueTauBlock
+            D4PD_model += TrueTauBlock
             
             # add branches for VBF Higgs associated partons
             if self.fileset.name.startswith("VBFH"):
-                D4PD_model = D4PD_model + PartonBlock
+                D4PD_model += PartonBlock
         
         
         # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
