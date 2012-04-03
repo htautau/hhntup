@@ -29,3 +29,4 @@ Make sure you have pandatools setup and run (replace NoelDawe with your grid nam
     grid-submit -m htau_datasets.yml -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
 
 This will run on all datasets in htau_datasets.yml matching VBF*. Replace VBF* with or append "data" to also run on data.
+The main code which runs on the grid is HTauProcessor.py
