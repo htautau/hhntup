@@ -80,7 +80,15 @@ class HTauProcessor(ATLASStudent):
             ElectronVeto(),
             MuonVeto()
         ])
-        tree.set_filters(self.event_filters)
+        tree.filters += self.event_filters
+
+        twogoodtaus = EventFilter(name='TwoGoodTaus')
+        twogoodjets = EventFilter(name='TwoGoodJets')
+
+        self.event_filters += [
+            twogoodtaus,
+            twogoodjets
+        ]
 
         cutflow = Cutflow()
 
@@ -129,7 +137,9 @@ class HTauProcessor(ATLASStudent):
             taus = [tau for tau in taus if abs(tau.charge) == 1]
             # Did not reconstruct two candidates so skip event
             if len(taus) < 2:
+                twogoodtaus.failed()
                 continue
+            twogoodtaus.passed()
 
             # Sort the taus by BDT score
             taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)
@@ -142,10 +152,6 @@ class HTauProcessor(ATLASStudent):
             # kinematic region
             jets = [jet for jet in event.jets if jet.pt > 20*GeV]
             jets = [jet for jet in event.jets if abs(jet.emscale_eta) < 4.5]
-            
-            # HT
-            sumET = event.MET_LocHadTopo_sumet + event.MET_MuonBoy_sumet - event.MET_RefMuon_Track_sumet
-            D4PD.HT = sumET
             
             """
             Overlap removal between taus and jets
@@ -173,7 +179,9 @@ class HTauProcessor(ATLASStudent):
             best_jets = sorted(sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2], key=lambda jet: jet.eta)
             if len(best_jets) < 2:
                 # if there are fewer than 2 other jets then skip event
+                twogoodjets.failed()
                 continue
+            twogoodjets.passed()
 
             """
             MET
@@ -207,6 +215,10 @@ class HTauProcessor(ATLASStudent):
                 phi = -1111.
             D4PD.MET_phi = phi
             
+            # HT TODO: Fix
+            sumET = event.MET_LocHadTopo_sumet + event.MET_MuonBoy_sumet - event.MET_RefMuon_Track_sumet
+            D4PD.HT = sumET
+
             """
             MMC and misc variables
             """
