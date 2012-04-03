@@ -63,7 +63,7 @@ class HTauProcessor(ATLASStudent):
             """
             # do a verbatim copy of these branches from the input tree into the output tree
             copied_variables = tree.glob("jet_AntiKt4TopoEM_*")
-            D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
+            D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
