@@ -169,6 +169,7 @@ class HTauProcessor(ATLASStudent):
             """
             best_jets = sorted(sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2], key=lambda jet: jet.eta)
             if len(best_jets) < 2:
+                # if there are fewer than 2 other jets then skip event
                 continue
 
             """
