@@ -25,14 +25,14 @@ Same procedure as above, just use these urls:
     git://github.com/ndawe/goodruns.git or http://svn.github.com/ndawe/goodruns.git
 
 and be sure to use at least Python version 2.6 (2.7 is preferred).
-These additional packages (alond with Python 2.7 and ROOT 5.30) are downloaded and installed automatically on the grid
+These additional packages (along with Python 2.7 and ROOT 5.30) are downloaded and installed automatically on the grid
 in the setup.sh script.
 
-Download require packages that will be sent to the grid:
+Download required packages that will be sent to the grid (rather than downloaded by the grid nodes since some don't allow this):
 
     ./setup.sh local
 
-Make sure you have pandatools setup and run (replace NoelDawe with your grid name and set --version to whatever you want):
+Make sure you have pandatools setup and run this (replace NoelDawe with your grid name and set --version to whatever you want):
 
     grid-submit -m datasets.yml -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
 
