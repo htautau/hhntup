@@ -104,6 +104,11 @@ function install_python_module() {
         if hash svn 2>&-; then
             echo "Checking out ${1}..."
             svn checkout ${2} ${1}
+            if [ $? -ne 0 ]; then
+                echo "Subversion checkout failed."
+                echo "wget'ting instead..."
+                download_python_module_from_github ${1}
+            fi
         else
             download_python_module_from_github ${1}
         fi
