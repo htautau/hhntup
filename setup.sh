@@ -82,24 +82,14 @@ PYTHON_LIB=`python -c "import distutils.sysconfig; import os; print os.path.dirn
 echo "Python version "${python_version}
 echo "Python lib located in "${PYTHON_LIB}
 
-function download_python_module_from_github() {
+function download_from_github() {
     PACKAGE=${1}
-    ROOT=https://raw.github.com/${GIT_USER}/${PACKAGE}/master/
     if [[ ! -e ${PACKAGE} ]]
     then
-        mkdir ${PACKAGE}
-        cd ${PACKAGE}
-        wget --no-check-certificate ${ROOT}MANIFEST
-        while read line;
-        do
-            if [[ ${line} != \#* ]];
-            then
-                echo "${ROOT}${line}" >> MANIFEST_1
-            fi
-        done < MANIFEST
-        cat MANIFEST_1
-        wget -x -nH --cut-dirs=3 --no-check-certificate -i MANIFEST_1
-        cd ${BASE}
+        wget --no-check-certificate -O ${PACKAGE}.tar.gz https://github.com/${GIT_USER}/${PACKAGE}/tarball/master
+        tar -pzxf ${PACKAGE}.tar.gz
+        rm -f ${PACKAGE}.tar.gz
+        mv ${GIT_USER}-${PACKAGE}-* ${PACKAGE} 
     fi
 }
 
@@ -108,13 +98,13 @@ function install_python_module() {
     if [[ ! -e ${1} ]]
     then
         echo "Checking out ${1}..."
-        if svn checkout ${2} ${1}
+        if svnasd checkout ${2} ${1}
         then
             : # do nothing
         else
             echo "Subversion checkout failed."
             echo "wget'ting instead..."
-            download_python_module_from_github ${1}
+            download_from_github ${1}
         fi
         if [[ -d ${1} ]]
         then
