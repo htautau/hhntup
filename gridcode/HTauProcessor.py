@@ -82,11 +82,11 @@ class HTauProcessor(ATLASStudent):
         tree.set_filters(self.event_filters)
 
         # define tree collections
-        tree.define_collection(name="taus", prefix="tau_", size="tau_n", mixin=TauFourMomentum)
+        tree.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
         # jet_eta etc is AntiKt4LCTopo in tau-perf D3PDs
-        tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n", mixin=FourMomentum)
+        tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n", mix=FourMomentum)
         tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
-        tree.define_collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
+        tree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
         tree.define_collection(name="electrons", prefix="el_", size="el_n")
         tree.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
