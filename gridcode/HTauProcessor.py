@@ -31,10 +31,6 @@ class HTauProcessor(ATLASStudent):
         D4PD_model = RecoTauBlock + RecoJetBlock + EventVariables
         
         if self.fileset.datatype == datasets.MC:
-            # this tree will contain info pertaining to true tau decays
-            # for possible use in the optimization of a missing mass calculator
-            mc_tree = Tree(name = "tau_mc", model=TrueTau_MCBlock)
-            
             # only create truth branches for MC
             D4PD_model += TrueTauBlock
             
@@ -116,25 +112,6 @@ class HTauProcessor(ATLASStudent):
         for event in tree:
             
             D4PD.reset() 
-            """
-            Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
-            """ 
-            if self.fileset.datatype == datasets.MC:
-                tau_decays = tautools.get_tau_decays(event)
-                for decay in tau_decays:
-                    hadronic = decay.hadronic
-                    if hadronic:
-                        mc_tree.hadronic = True
-                        mc_tree.nprong = decay.nprong
-                        mc_tree.npi0 = decay.npi0
-                        mc_tree.nneutrals = decay.nneutrals
-                        mc_tree.fourvect.set_from(decay.fourvect)
-                        mc_tree.fourvect_vis.set_from(decay.fourvect_visible)
-                        mc_tree.fourvect_miss.set_from(decay.fourvect_missing)
-                        mc_tree.dR_tau_nu = decay.dR_tau_nu
-                        mc_tree.dTheta3d_tau_nu = decay.dTheta3d_tau_nu
-                        mc_tree.Fill(reset=True)
-                
             """
             Tau selection
             """
@@ -263,10 +240,8 @@ class HTauProcessor(ATLASStudent):
                     for jet in event.jets:
                         if jet in jets:
                             D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(
-                                min(
-                                    utils.dR(jet.eta, jet.phi, parton1.eta, parton1.phi),
-                                    utils.dR(jet.eta, jet.phi, parton2.eta, parton2.phi)
-                                    )
+                                min(utils.dR(jet.eta, jet.phi, parton1.eta, parton1.phi),
+                                    utils.dR(jet.eta, jet.phi, parton2.eta, parton2.phi))
                                 )
                         D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(1111)
             
