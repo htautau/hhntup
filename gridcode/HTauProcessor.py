@@ -8,6 +8,7 @@ from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
+from rootpy.tree.cutflow import Cutflow
 from mixins import MCParticle, FourMomentum, TauFourMomentum
 import hepmc
 import tautools
@@ -80,6 +81,8 @@ class HTauProcessor(ATLASStudent):
             MuonVeto()
         ])
         tree.set_filters(self.event_filters)
+
+        cutflow = Cutflow()
 
         # define tree collections
         tree.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
@@ -290,4 +293,6 @@ class HTauProcessor(ATLASStudent):
             # fill output ntuple
             # use reset=True to reset all variables to their defaults after the fill
             # to avoid any values from this event carrying over into the next
+            D4PD.cutflow = cutflow.int()
             D4PD.Fill(reset=True)
+            cutflow.reset()

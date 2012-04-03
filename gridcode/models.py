@@ -72,6 +72,7 @@ class EventVariables(TreeModel):
     mu = IntCol()
     jet_beta = Vector3
     parton_beta = Vector3
+    cutflow = IntCol()
 
 
 class RecoJet(TreeModel):
