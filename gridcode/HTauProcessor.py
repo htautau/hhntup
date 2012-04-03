@@ -115,11 +115,11 @@ class HTauProcessor(ATLASStudent):
 
         self.tree = TreeChain(self.fileset.treename, files = self.fileset.files)
         self.tree.init()
-        
+         
         copied_variables = []
         
         if self.fileset.datatype == datasets.MC:
-            copied_variables = self.tree.tree.glob("EF_*")+self.tree.tree.glob("L1_*")+self.tree.tree.glob("L2_*")
+            copied_variables = self.tree.glob("EF_*")+self.tree.glob("L1_*")+self.tree.glob("L2_*")
         
         buffer = TreeBuffer(variables)
         self.output.cd()
