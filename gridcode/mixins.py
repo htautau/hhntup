@@ -2,6 +2,12 @@ from decorators import memoize
 from rootpy.vector import LorentzVector as FourVector
 from rootpy.hep import pdg
 
+"""
+This module contains "mixin" classes for adding
+functionality to Tree objects ("decorating" them).
+"""
+
+
 class FourMomentum(object):
 
     @property

@@ -6,6 +6,10 @@ from atlastools import datasets
 ROOT.gSystem.Load("libMissingMassCalculator.so")
 generate("vector<TLorentzVector>", "<vector>;TLorentzVector.h")
 
+"""
+This module contains utility functions for using libMissingMassCalculator.so
+"""
+
 def mass(taus, jets, METx, METy, sumET, datatype):
     """
     Missing mass calculation

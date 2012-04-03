@@ -7,6 +7,10 @@ try:
 except ImportError:
     import StringIO
 
+"""
+This module contains utilities for working with
+MC tau decays in the MC block of D3PDs.
+"""
 
 class TauDecay(object):
 
