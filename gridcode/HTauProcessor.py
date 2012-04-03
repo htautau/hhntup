@@ -66,7 +66,7 @@ class HTauProcessor(ATLASStudent):
         # passthrough for MC for trigger acceptance studies
         self.event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough = self.fileset.datatype != datasets.DATA),
-            TriggerNoXE(),
+            Trigger(),
             PriVertex(),
             LArError(),
             JetCleaningLoose(passthrough = self.fileset.datatype != datasets.DATA),
@@ -75,6 +75,8 @@ class HTauProcessor(ATLASStudent):
             JetCrackVeto(),
             ElectronVeto(),
             MuonVeto(),
+            TauElectronVeto(),
+            TauMuonVeto(),
             TwoGoodTaus()
         ])
         tree.filters += self.event_filters
