@@ -5,9 +5,8 @@
 ########################################################################
 data:
     container: 'data11*physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM*p741/'
-    local: /cluster/data03/endw/analysis/testdata/data
     grl: "grl/data11_7TeV.periodAllYear_DetStatus-v33-pro09-01_CoolRunQuery-00-04-00_Tau_h.xml"
-    tree: tauPerf
+    tree: tau
     type: DATA
     class: BACKGROUND
     label: JET
