@@ -86,7 +86,7 @@ function download_from_github() {
     PACKAGE=${1}
     if [[ ! -e ${PACKAGE} ]]
     then
-        wget --no-check-certificate -O ${PACKAGE}.tar.gz https://github.com/${GIT_USER}/${PACKAGE}/tarball/master
+        wget --no-check-certificate -O ${PACKAGE}.tar.gz http://github.com/${GIT_USER}/${PACKAGE}/tarball/master
         tar -pzxf ${PACKAGE}.tar.gz
         rm -f ${PACKAGE}.tar.gz
         mv ${GIT_USER}-${PACKAGE}-* ${PACKAGE} 
@@ -98,7 +98,7 @@ function install_python_module() {
     if [[ ! -e ${1} ]]
     then
         echo "Checking out ${1}..."
-        if svnasd checkout ${2} ${1}
+        if svn checkout ${2} ${1}
         then
             : # do nothing
         else
