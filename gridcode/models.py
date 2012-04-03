@@ -1,5 +1,5 @@
 from rootpy.tree import TreeModel
-from rootpy.vector import LorentzVector, Vector3
+from rootpy.vector import LorentzVector, Vector3, Vector2
 from rootpy.types import *
 from atlastools.utils import et2pt
 import ROOT
@@ -68,12 +68,10 @@ class EventVariables(TreeModel):
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
     numVertices = IntCol()
-    MET = FloatCol()
-    MET_phi = FloatCol()
+    MET = Vector2
     HT = FloatCol()
     MMC_mass = FloatCol()
     error = BoolCol()
-    mu = IntCol()
     jet_beta = Vector3
     parton_beta = Vector3
     cutflow = IntCol()

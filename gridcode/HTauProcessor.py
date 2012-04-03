@@ -9,6 +9,7 @@ from filters import *
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.tree.cutflow import Cutflow
+from rootpy.vector import Vector2
 from mixins import MCParticle, FourMomentum, TauFourMomentum
 import hepmc
 import tautools
@@ -161,13 +162,9 @@ class HTauProcessor(ATLASStudent):
             METy = MET_LocHadTopo_ety + MET_MuonBoy_ety - MET_RefMuon_Track_ety
 
             MET = math.sqrt(METx**2 + METy**2)
+            MET_vect = Vector2(METx, METy)
             
-            D4PD.MET = MET
-            if MET > 0:
-                phi = math.asin(METy / MET)
-            else:
-                phi = -1111.
-            D4PD.MET_phi = phi
+            D4PD.MET.set_from(MET_vect)
             
             # HT TODO: Fix
             sumET = event.MET_LocHadTopo_sumet + event.MET_MuonBoy_sumet - event.MET_RefMuon_Track_sumet
@@ -176,12 +173,12 @@ class HTauProcessor(ATLASStudent):
             """
             MMC and misc variables
             """
-            D4PD.MMC_mass = missingmass.mass(taus, event.jets, METx, METy, sumET, self.fileset.datatype)
+            #D4PD.MMC_mass = missingmass.mass(taus, event.jets, METx, METy, sumET, self.fileset.datatype)
             D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
-            D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
+            
+            D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
+                                    (vtx.type == 3 and vtx.nTracks >= 2)])
             D4PD.numJets = numJets
-            if self.fileset.datatype == datasets.MC:
-                D4PD.mu = event.lbn
 
             """
             Experimenting here....
