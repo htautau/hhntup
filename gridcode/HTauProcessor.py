@@ -106,25 +106,9 @@ class HTauProcessor(ATLASStudent):
                         mc_tree.nprong = decay.nprong
                         mc_tree.npi0 = decay.npi0
                         mc_tree.nneutrals = decay.nneutrals
-                        
-                        mc_tree.fourvect.SetPtEtaPhiM(
-                            decay.fourvect.Pt(),
-                            decay.fourvect.Eta(),
-                            decay.fourvect.Phi(),
-                            decay.fourvect.M())
-
-                        mc_tree.fourvect_vis.SetPtEtaPhiM(
-                            decay.fourvect_visible.Pt(),
-                            decay.fourvect_visible.Eta(),
-                            decay.fourvect_visible.Phi(),
-                            decay.fourvect_visible.M())
-
-                        mc_tree.fourvect_miss.SetPtEtaPhiM(
-                            decay.fourvect_missing.Pt(),
-                            decay.fourvect_missing.Eta(),
-                            decay.fourvect_missing.Phi(),
-                            decay.fourvect_missing.M())
-                        
+                        mc_tree.fourvect.set_from(decay.fourvect)
+                        mc_tree.fourvect_vis.set_from(decay.fourvect_visible)
+                        mc_tree.fourvect_miss.set_from(decay.fourvect_missing)
                         mc_tree.dR_tau_nu = decay.dR_tau_nu
                         mc_tree.dTheta3d_tau_nu = decay.dTheta3d_tau_nu
                         mc_tree.Fill(reset=True)
