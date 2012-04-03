@@ -83,7 +83,18 @@ class Triggers(EventFilter):
         elif 188902 <= event.RunNumber <= 191933: # Period L-M
             return event.EF_tau29T_medium1_tau20T_medium1 or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
-        
+
+
+class MCTriggers(EventFilter):
+    
+    def passes(self, event):
+        """
+        OR of all triggers above
+        """
+        return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_noMu or \
+               event.EF_xe60_tight_noMu or event.EF_tau125_medium1 or event.EF_tau29T_medium1_tau20T_medium1 or \
+               event.EF_xe60_verytight_noMu
+
 
 class TwoGoodLooseTaus(EventFilter):
 
@@ -116,10 +127,16 @@ class HTauSkim(ATLASStudent):
         self.output.cd()
         
         # set the event filters
-        self.event_filters = EventFilterList([
-            Triggers(),
-            TwoGoodLooseTaus(passthrough = self.fileset.datatype == datasets.MC)
-        ])
+        if self.fileset.datatype == datasets.DATA:
+            self.event_filters = EventFilterList([
+                Triggers(),
+                TwoGoodLooseTaus()
+            ])
+        else:
+            self.event_filters = EventFilterList([
+                MCTriggers()
+            ])
+
         intree.filters += self.event_filters
 
         # define tau collection
