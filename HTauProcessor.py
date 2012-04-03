@@ -11,6 +11,7 @@ from rootpy.tree import Tree, TreeBuffer, TreeChain, TreeModel
 from rootpy.types import *
 from mixins import MCParticle
 import hepmc
+import tautools
 
 ROOT.gSystem.Load("libMissingMassCalculator.so")
 from rootpy.utils.classfactory import generate
@@ -160,9 +161,8 @@ class HTauProcessor(ATLASStudent):
             Fill tree used for MMC
             """ 
             if self.fileset.datatype == datasets.MC:
-                tau_decays = hepmc.get_tau_decays(event)
+                tau_decays = tautools.get_tau_decays(event)
                 for decay in tau_decays:
-                    print decay
                     hadronic = decay.hadronic
                     if hadronic:
                         mc_tree.hadronic = True
