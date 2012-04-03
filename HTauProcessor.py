@@ -200,7 +200,7 @@ class HTauProcessor(ATLASStudent):
             """
             MMC and misc variables
             """
-            #self.D4PD.MMC_mass.set(missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype))
+            self.D4PD.MMC_mass.set(missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype))
             self.D4PD.Mvis_tau1_tau2.set(utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi))
             self.D4PD.numVertices.set(len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)]))
             self.D4PD.numJets.set(len(jets))
