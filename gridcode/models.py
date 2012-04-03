@@ -1,4 +1,5 @@
 from rootpy.tree import TreeModel
+from rootpy.vector import LorentzVector
 from rootpy.types import *
 
 class TruthTau(TreeModel):
@@ -7,15 +8,11 @@ class TruthTau(TreeModel):
     nprong = IntCol(default=-1111)
     npi0 = IntCol(default=-1111)
     nneutrals = IntCol(default=-1111)
-    pt = FloatCol(default=0)
-    eta = FloatCol(default=-1111)
-    phi = FloatCol(default=-1111)
-    pt_vis = FloatCol(default=0)
-    eta_vis = FloatCol(default=-1111)
-    phi_vis = FloatCol(default=-1111)
-    nu_pt = FloatCol(default=0)
-    nu_eta = FloatCol(default=-1111)
-    nu_phi = FloatCol(default=-1111)
+    
+    fourvect = LorentzVector
+    fourvect_vis = LorentzVector
+    fourvect_miss = LorentzVector
+    
     dR_tau_nu = FloatCol(default=-1111)
     dTheta3d_tau_nu = FloatCol(default=-1111)
 

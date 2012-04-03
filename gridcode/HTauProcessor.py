@@ -51,7 +51,7 @@ class HTauProcessor(ATLASStudent):
                 variables.append(("jet%i_%s" % (jet, v), t))
         
         # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
-        tree = TreeChain(self.fileset.treename, files = self.fileset.files)
+        tree = TreeChain(self.fileset.treename, files=self.fileset.files, events=self.events)
         # for speed improvement enable use of a TTreeCache
         tree.use_cache(True, cache_size=10000000, learn_entries=30)
         # initialize the TreeChain
@@ -116,15 +116,25 @@ class HTauProcessor(ATLASStudent):
                         mc_tree.nprong = decay.nprong
                         mc_tree.npi0 = decay.npi0
                         mc_tree.nneutrals = decay.nneutrals
-                        mc_tree.pt = decay.fourvect.Pt()
-                        mc_tree.eta = decay.fourvect.Eta()
-                        mc_tree.phi = decay.fourvect.Phi()
-                        mc_tree.pt_vis = decay.fourvect_visible.Pt()
-                        mc_tree.eta_vis = decay.fourvect_visible.Eta()
-                        mc_tree.phi_vis = decay.fourvect_visible.Phi()
-                        mc_tree.nu_pt = decay.fourvect_missing.Pt()
-                        mc_tree.nu_eta = decay.fourvect_missing.Eta()
-                        mc_tree.nu_phi = decay.fourvect_missing.Phi()
+                        
+                        mc_tree.fourvect.SetPtEtaPhiM(
+                            decay.fourvect.Pt(),
+                            decay.fourvect.Eta(),
+                            decay.fourvect.Phi(),
+                            decay.fourvect.M())
+
+                        mc_tree.fourvect_vis.SetPtEtaPhiM(
+                            decay.fourvect_visible.Pt(),
+                            decay.fourvect_visible.Eta(),
+                            decay.fourvect_visible.Phi(),
+                            decay.fourvect_visible.M())
+
+                        mc_tree.fourvect_miss.SetPtEtaPhiM(
+                            decay.fourvect_missing.Pt(),
+                            decay.fourvect_missing.Eta(),
+                            decay.fourvect_missing.Phi(),
+                            decay.fourvect_missing.M())
+                        
                         mc_tree.dR_tau_nu = decay.dR_tau_nu
                         mc_tree.dTheta3d_tau_nu = decay.dTheta3d_tau_nu
                         mc_tree.Fill(reset=True)
