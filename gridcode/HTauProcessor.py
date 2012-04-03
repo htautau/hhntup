@@ -18,9 +18,17 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 
 class HTauProcessor(ATLASStudent):
+    """
+    ATLASStudent inherits from rootpy.batch.Student.
+    """
 
     def work(self):
-                
+        """
+        This is the one function that all "ATLASStudent"s must implement.
+        """
+
+        # this tree will contain info pertaining to true tau decays
+        # for possible use in the optimization of a missing mass calculator
         mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TruthTau)
         
         for v, t in reco_variables + common_variables:
@@ -41,11 +49,17 @@ class HTauProcessor(ATLASStudent):
         for v, t in jet_variables + jet_extra_variables + jet_matched_variables:
             for jet in (1, 2):
                 variables.append(("jet%i_%s" % (jet, v), t))
-
+        
+        # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
         tree = TreeChain(self.fileset.treename, files = self.fileset.files)
+        # for speed improvement enable use of a TTreeCache
         tree.use_cache(True, cache_size=10000000, learn_entries=30)
+        # initialize the TreeChain
+        # calling this now is optional. It is automatically
+        # initialized at the beginning of the event loop
         tree.init()
         
+        # create output tree
         buffer = TreeBuffer(variables)
         self.output.cd()
         D4PD = Tree(name = self.fileset.name)
@@ -57,6 +71,7 @@ class HTauProcessor(ATLASStudent):
                                tree.glob("L1_*") + \
                                tree.glob("L2_*")
             """
+            # do a verbatim copy of these branches from the input tree into the output tree
             copied_variables = tree.glob("jet_AntiKt4TopoEM_*")
             D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
         
@@ -86,13 +101,11 @@ class HTauProcessor(ATLASStudent):
         tree.define_collection(name="electrons", prefix="el_", size="el_n")
         tree.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
          
+        # entering the main event loop...
         for event in tree:
              
             """
-            Experimenting here....
             Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
-            Need to match jets to VBF jets
-            Fill tree used for MMC
             """ 
             if self.fileset.datatype == datasets.MC:
                 tau_decays = tautools.get_tau_decays(event)
@@ -153,7 +166,7 @@ class HTauProcessor(ATLASStudent):
             D4PD.HT = sumET
             
             """
-            Overlap removal
+            Overlap removal between taus and jets
             """
             otherjets = []
             for jet in jets:
@@ -315,4 +328,6 @@ class HTauProcessor(ATLASStudent):
                         setattr(D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[j-1], v))
              
             # fill output ntuple
+            # use reset=True to reset all variables to their defaults after the fill
+            # to avoid any values from this event carrying over into the next
             D4PD.Fill(reset=True)
