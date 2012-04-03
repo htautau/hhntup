@@ -188,12 +188,6 @@ class HTauProcessor(ATLASStudent):
                 continue
 
             """
-            Get boost of 2-jet system
-            """
-            total_fourvect = best_jets[0].fourvect + best_jets[1].fourvect
-            beta = total_fourvect.BoostVector()
-
-            """
             MET
             """
             MET_LocHadTopo_etx = event.MET_LocHadTopo_etx_CentralReg + event.MET_LocHadTopo_etx_EndcapRegion + event.MET_LocHadTopo_etx_ForwardReg
