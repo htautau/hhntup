@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Noel Dawe
 
 if [[ $# -eq 0 ]]
 then
