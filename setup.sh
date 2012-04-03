@@ -193,4 +193,5 @@ worker)
     setup_rpm
     setup_python
     setup_root
+    ;;
 esac
