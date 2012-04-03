@@ -196,10 +196,7 @@ class HTauProcessor(ATLASStudent):
             Get boost of 2-jet system
             """
             total_fourmom = best_jets[0].fourmom + best_jets[1].fourmom
-            print total_fourmom.BoostVector()
-
-            total_fourmom.Boost(-1*total_fourmom.BoostVector())
-            print total_fourmom
+            beta = total_fourmom.BoostVector()
 
             """
             MET
