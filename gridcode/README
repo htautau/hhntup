@@ -13,10 +13,6 @@ or if you insist on using an inferior VCS such as Subversion:
 
 Follow the README in atlastools for installation instructions
 
-You also need PyYAML:
-
-    easy_install --user pyyaml
-
 If you also want to test the code locally then you will need to install rootpy and goodruns.
 Same procedure as above, just use these urls:
 
@@ -44,7 +40,7 @@ Submitting jobs to the Grid:
 
 Make sure you have pandatools setup and run this (replace NoelDawe with your grid name and set --version to whatever you want):
 
-    grid-submit -m datasets.yml -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
+    grid-submit -m datasets.cfg -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
 
 This will run on all datasets in datasets.yml matching VBF*. Replace VBF* with or append "data" to also run on data, etc.
 You may also append arguments understood by prun (i.e. --nFilesPerJob 8) at the end of the command above and they will be passes along to prun.
