@@ -1,0 +1,3 @@
+include *.so
+exclude *.pyc
+exclude .git
