@@ -9,7 +9,7 @@ install atlastools:
 
 or if you insist on using an inferior VCS such as Subversion:
     
-    svn checkout http://svn.github.com/ndawe/atlastools.git
+    svn checkout http://svn.github.com/ndawe/atlastools.git atlastools
 
 Follow the README in atlastools for installation instructions
 
