@@ -1,6 +1,6 @@
-from atlastools import pdg
 from decorators import memoize
 from rootpy.hep.vector import FourVector
+from rootpy.hep import pdg
 
 class MCParticle(object):
 
@@ -38,21 +38,16 @@ class MCParticle(object):
             for ancestor in parent.traverse_parents():
                 yield ancestor
 
-    @property
     def is_leaf(self):
 
         return not len(self.child_index)
 
-    @property
-    @memoize
     def final_state(self):
 
         if self.is_leaf():
             return [self]
         return [particle for particle in self.traverse_children() if particle.is_leaf()]
     
-    @property
-    @memoize
     def fourvect(self):
         
         vect = FourVector()

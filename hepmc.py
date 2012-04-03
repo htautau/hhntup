@@ -1,6 +1,12 @@
-from atlastools import pdg
 from decorators import memoize
 from rootpy.hep.vector import FourVector
+from rootpy.hep import pdg
+
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
+
 
 class TauDecay(object):
 
@@ -13,29 +19,25 @@ class TauDecay(object):
         self.final = final_state
     
     @property
-    @memoize
     def charged_pions(self):
         """
         Return all charged pions in final state
         """
-        return [p in self.final if p.pdgId in (pdg.PI_PLUS, pdg.PI_MINUS)]
+        return [p for p in self.final if p.pdgId in (pdg.pi_minus, pdg.pi_plus)]
     
     @property
-    @memoize
     def photons(self):
 
-        return [p in self.final if p.pdgId == pdg.GAMMA]
+        return [p for p in self.final if p.pdgId == pdg.gamma]
 
     @property
-    @memoize
     def neutrinos(self):
         """
         Return all neutrinos in final state
         """
-        return [p in self.final if p.pdgId in (pdg.NUE, pdg.NUM, pdg.NUTAU)]
+        return [p for p in self.final if abs(p.pdgId) in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau)]
     
     @property
-    @memoize
     def hadronic(self):
         """
         Return True if this is a hadronic decay else False for leptonic
@@ -43,7 +45,6 @@ class TauDecay(object):
         return any(self.charged_pions)
     
     @property
-    @memoize
     def nprong(self):
         """
         Return number of charged particles in final state
@@ -51,7 +52,6 @@ class TauDecay(object):
         return len(self.charged_pions)
     
     @property
-    @memoize
     def npi0(self):
         """
         Return number of neutral pions: #(gamma)/2
@@ -61,43 +61,41 @@ class TauDecay(object):
     @property
     def fourvect(self):
         
-        return self.init.fourvect 
+        return self.init.fourvect()
     
     @property
-    @memoize
     def fourvect_visible(self):
 
-        return sum([p.fourvect for p in self.charged_pions + self.photons])
+        return sum([p.fourvect() for p in self.charged_pions + self.photons])
 
     @property
-    @memoize
     def fourvect_missing(self):
 
-        return sum([p.fourvect for p in self.neutrinos])
+        return sum([p.fourvect() for p in self.neutrinos])
 
     @property
-    @memoize
     def dR_tau_nu(self):
 
-        return self.fourvect.DeltaR(self.fourfect_missing)
+        return self.fourvect.DeltaR(self.fourvect_missing)
         
     @property
-    @memoize
     def dTheta3d_tau_nu(self):
 
         return 0.
 
-    @memoize
     def __str__(self):
 
         return self.__repr__()
     
-    @memoize
     def __repr__(self):
-
-        print self.init
+       
+        output = StringIO.StringIO()
+        print >> output, self.init
         for thing in self.final:
-            print "\t%s" % thing
+            print >> output, "\t%s" % thing
+        rep = output.getvalue()
+        output.close()
+        return rep
 
 
 def get_tau_decays(event):

@@ -37,9 +37,9 @@ class HTauProcessor(ATLASStudent):
             nu_eta = Float(default=-1111)
             nu_phi = Float(default=-1111)
             dR_tau_nu = Float(default=-1111)
-            dTheta_tau_nu = Float(default=-1111)
+            dTheta3d_tau_nu = Float(default=-1111)
         
-        mc_tree = Tree(name = "_".join[self.fileset.name, "mc"], model=TruthTau)
+        mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TruthTau)
          
         reco_variables = (
             ("BDTJetScore", "F"),
@@ -162,22 +162,23 @@ class HTauProcessor(ATLASStudent):
             if self.fileset.datatype == datasets.MC:
                 tau_decays = hepmc.get_tau_decays(event)
                 for decay in tau_decays:
-                    hadronic = decay.hadronic()
+                    print decay
+                    hadronic = decay.hadronic
                     if hadronic:
                         mc_tree.hadronic = True
-                        mc_tree.nprong = decay.nprong()
-                        mc_tree.npi0 = decay.npi0()
-                        mc_tree.pt = decay.pt_init()
-                        mc_tree.eta = decay.eta_init()
-                        mc_tree.phi = decay.phi_init()
-                        mc_tree.pt_vis = decay.pt_vis()
-                        mc_tree.eta_vis = decay.eta_vis()
-                        mc_tree.phi_vis = decay.phi_vis()
-                        mc_tree.nu_pt = decay.nu_pt()
-                        mc_tree.nu_eta = decay.nu_eta()
-                        mc_tree.nu_phi = decay.nu_phi()
-                        mc_tree.dR = decay.dR_tau_nu()
-                        mc_tree.dTheta3d = decay.dTheta3d_tau_nu()
+                        mc_tree.nprong = decay.nprong
+                        mc_tree.npi0 = decay.npi0
+                        mc_tree.pt = decay.fourvect.Pt()
+                        mc_tree.eta = decay.fourvect.Eta()
+                        mc_tree.phi = decay.fourvect.Phi()
+                        mc_tree.pt_vis = decay.fourvect_visible.Pt()
+                        mc_tree.eta_vis = decay.fourvect_visible.Eta()
+                        mc_tree.phi_vis = decay.fourvect_visible.Phi()
+                        mc_tree.nu_pt = decay.fourvect_missing.Pt()
+                        mc_tree.nu_eta = decay.fourvect_missing.Eta()
+                        mc_tree.nu_phi = decay.fourvect_missing.Phi()
+                        mc_tree.dR_tau_nu = decay.dR_tau_nu
+                        mc_tree.dTheta3d_tau_nu = decay.dTheta3d_tau_nu
                         mc_tree.Fill(reset=True)
                 
             """
