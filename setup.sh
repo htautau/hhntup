@@ -1,10 +1,14 @@
 #!/bin/bash
 # Author: Noel Dawe
 
-if [[ $# -eq 0 ]]
-then
+function print_help() {
     echo "Usage : $0 [clean|local|build|worker]"
     exit
+}
+
+if [[ $# -eq 0 ]]
+then
+    print_help
 fi
 
 BASE=${PWD}
@@ -191,5 +195,10 @@ worker)
     setup_rpm
     setup_python
     setup_root
+    ;;
+
+*)
+    
+    print_help
     ;;
 esac
