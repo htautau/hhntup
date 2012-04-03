@@ -145,6 +145,7 @@ class HTauProcessor(ATLASStudent):
             # charge requirement
             taus = [tau for tau in taus if abs(tau.charge) == 1]
             # Did not reconstruct two candidates so skip event
+            
             if len(taus) < 2:
                 if self.fileset.datatype == datasets.MC:
                     self.D4PD.selected.set(False)
