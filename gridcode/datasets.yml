@@ -14,17 +14,71 @@ data:
     weight: 1.
 ########################################################################
 #
-#   Ztautau / Wtaunu
+#   Ztautau / Wtaunu / Zee
 #
 ########################################################################
 Ztautau:
-    container: "group10.perf-tau.mc10_7TeV.106052.PythiaZtautau.e574_s934_s946_r2310_r2300.01-01-02-00.D3PD_TauMEDIUM/:DESY-HH_PERF-TAU"
+    container: "group10.perf-tau.mc10_7TeV.106052.PythiaZtautau.e574_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
     local: /cluster/data03/endw/analysis/testdata/Ztautau
     tree: tauPerf
     type: MC
     class: SIGNAL
     label: TAU
     weight: 8.5400E-01
+Wtaunu:
+    container: "group10.perf-tau.mc10_7TeV.107054.PythiaWtaunu_incl.e574_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 8.9332E+00
+Zee:
+    container: "group10.perf-tau.mc10_7TeV.106046.PythiaZee_no_filter.e574_s933_s946_r2302_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: BACKGROUND
+    label: ELEC
+    weight: 8.5521E-01
+########################################################################
+#
+#   Z' M = 250 - 1250 GeV
+#
+########################################################################
+Zprime250:
+    container: "group10.perf-tau.mc10_7TeV.107381.Pythia_Zprime_tautau_SSM250.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime500:
+    container: "group10.perf-tau.mc10_7TeV.107382.Pythia_Zprime_tautau_SSM500.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime750:
+    container: "group10.perf-tau.mc10_7TeV.107383.Pythia_Zprime_tautau_SSM750.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime1000:
+    container: "group10.perf-tau.mc10_7TeV.107384.Pythia_Zprime_tautau_SSM1000.e632_s934_s946_r2310_r2300.01-01-05.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
+Zprime1250:
+    container: "group10.perf-tau.mc10_7TeV.107385.Pythia_Zprime_tautau_SSM1250.e632_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
+    tree: tauPerf
+    type: MC
+    class: SIGNAL
+    label: TAU
+    weight: 1.
 ########################################################################
 #
 #   VBF Higgs -> tau tau (had) M = 100 - 150 GeV
