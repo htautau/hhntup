@@ -72,7 +72,7 @@ class HTauProcessor(ATLASStudent):
         # passthrough for MC for trigger acceptance studies
         self.event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough = self.fileset.datatype != datasets.DATA),
-            Trigger(passthrough = self.fileset.datatype == datasets.MC),
+            Trigger(),
             PriVertex(),
             LArError(),
             JetCleaningLoose(passthrough = self.fileset.datatype != datasets.DATA),
