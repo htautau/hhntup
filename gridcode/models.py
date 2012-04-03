@@ -54,8 +54,6 @@ common_variables = (
 variables = [
     ("Mvis_tau1_tau2","F"),
     ("numJets","I"),
-    ("jetDeltaEta", "F"),
-    ("jetDeltaEta_matched", "F"),
     ("jet_AntiKt4TopoEM_matched", "VI"),
     ("jet_AntiKt4TopoEM_matched_dR", "VF"),
     ("numVertices","I"),

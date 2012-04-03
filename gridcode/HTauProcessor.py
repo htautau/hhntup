@@ -209,32 +209,19 @@ class HTauProcessor(ATLASStudent):
 
             """
             Jet variables
+            Store two highest pT jets
             """
-            # needs improvement (crack, JVF, etc...)
-            forward_jets = [jet for jet in jets if jet.eta > 0]
-            backward_jets = [jet for jet in jets if jet.eta < 0]
-
-            best_forward_jet = None
-            best_backward_jet = None
+            best_jets = sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2]
             
-            if forward_jets:
-                best_forward_jet = max(forward_jets, key=lambda jet: jet.E) 
-            if backward_jets:
-                best_backward_jet = max(backward_jets, key=lambda jet: jet.E)
+            if len(best_jets) == 2:
+                for i, jet in zip((1, 2), (best_jets)):
+                    if jet:
+                        for v, t in jet_variables:
+                            try:
+                                setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
+                            except AttributeError:
+                                pass
 
-            # forward jet is #1, backward jet is #2
-            for i, jet in zip((1, 2), (best_forward_jet, best_backward_jet)):
-                if jet:
-                    for v, t in jet_variables:
-                        try:
-                            setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
-                        except AttributeError:
-                            pass
-
-            if best_forward_jet and best_backward_jet:
-                D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta
-            
-            
             """
             Experimenting here....
             Need to match jets to VBF jets
