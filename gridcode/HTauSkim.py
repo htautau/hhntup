@@ -104,7 +104,6 @@ class HTauSkim(ATLASStudent):
                           events=self.events)
         
         outtree = Tree(name=self.fileset.treename, file=self.output)
-        outtree.Write()
         outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
 
         # copy TrigConfTree from first file in input list
@@ -136,3 +135,4 @@ class HTauSkim(ATLASStudent):
 
         # flush any remaining baskets to disk
         outtree.FlushBaskets()
+        outtree.Write()
