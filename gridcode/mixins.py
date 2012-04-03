@@ -11,10 +11,20 @@ functionality to Tree objects ("decorating" them).
 class FourMomentum(object):
 
     @property
-    def fourmom(self):
+    def fourvect(self):
 
         vect = FourVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        return vect
+
+
+class TauFourMomentum(object):
+
+    @property
+    def fourvect(self):
+
+        vect = FourVector()
+        vect.SetPtEtaPhiM(self.pt, self.seedCalo_eta, self.seedCalo_phi, self.m)
         return vect
 
 

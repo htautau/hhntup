@@ -8,7 +8,7 @@ from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
-from mixins import MCParticle, FourMomentum
+from mixins import MCParticle, FourMomentum, TauFourMomentum
 import hepmc
 import tautools
 from models import *
@@ -82,7 +82,7 @@ class HTauProcessor(ATLASStudent):
         tree.set_filters(self.event_filters)
 
         # define tree collections
-        tree.define_collection(name="taus", prefix="tau_", size="tau_n", mixin=FourMomentum)
+        tree.define_collection(name="taus", prefix="tau_", size="tau_n", mixin=TauFourMomentum)
         # jet_eta etc is AntiKt4LCTopo in tau-perf D3PDs
         tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n", mixin=FourMomentum)
         tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
@@ -141,13 +141,8 @@ class HTauProcessor(ATLASStudent):
             # charge requirement
             taus = [tau for tau in taus if abs(tau.charge) == 1]
             # Did not reconstruct two candidates so skip event
-            
             if len(taus) < 2:
-                if self.fileset.datatype == datasets.MC:
-                    D4PD.selected = False
-                    D4PD.Fill()
                 continue
-            D4PD.selected = True
 
             # Sort the taus by BDT score
             taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)
@@ -195,8 +190,8 @@ class HTauProcessor(ATLASStudent):
             """
             Get boost of 2-jet system
             """
-            total_fourmom = best_jets[0].fourmom + best_jets[1].fourmom
-            beta = total_fourmom.BoostVector()
+            total_fourvect = best_jets[0].fourvect + best_jets[1].fourvect
+            beta = total_fourvect.BoostVector()
 
             """
             MET

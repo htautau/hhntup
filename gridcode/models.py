@@ -86,7 +86,21 @@ class Parton(TreeModel):
 class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + MatchedObject).prefix('tau2_')):
     
     @classmethod
-    def set(cls, tree, tau1, tau2): pass
+    def set(cls, tree, tau1, tau2):
+
+        for i, tau in zip((1,2), (tau1, tau2)):
+        
+            setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
+            setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
+            setattr(tree, 'tau%i_nPi0' % i, tau.nPi0)
+            setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
+            setattr(tree, 'tau%i_charge' % i, tau.charge)
+            getattr(tree, 'tau%i_fourvect' % i).SetPtEtaPhiM(
+                tau1.fourvect.Pt(),
+                tau1.fourvect.Eta(),
+                tau1.fourvect.Phi(),
+                tau1.fourvect.M(),
+            )
 
  
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
@@ -104,5 +118,21 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + Ma
 class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + MatchedObject).prefix('parton2_')):
 
     @classmethod
-    def set(cls, tree, parton1, parton2): pass
+    def set(cls, tree, parton1, parton2):
 
+        fourvect = parton1.fourvect()
+        tree.parton1_fourvect.SetPtEtaPhiM(
+            fourvect.Pt(),
+            fourvect.Eta(),
+            fourvect.Phi(),
+            fourvect.M())
+        
+        fourvect = parton2.fourvect() 
+        tree.parton2_fourvect.SetPtEtaPhiM(
+            fourvect.Pt(),
+            fourvect.Eta(),
+            fourvect.Phi(),
+            fourvect.M())
+
+        tree.parton1_pdgId = parton1.pdgId
+        tree.parton2_pdgId = parton2.pdgId
