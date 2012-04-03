@@ -1,0 +1,9 @@
+Use D3PD trigger utils from here:
+
+svn co svn+ssh://end@svn.cern.ch/reps/atlasoff/Trigger/TrigAnalysis/TrigRootAnalysis/trunk TrigRootAnalysis
+
+cd TrigRootAnalysis
+
+make -f Makefile.standalone
+
+Then get the .so from TrigRootAnalysis/standalone

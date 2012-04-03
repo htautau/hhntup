@@ -1,0 +1,14 @@
+eventviews
+discriminants
+*.pyc
+*.root
+*.log
+*.png
+.git
+.svn
+tmp*
+docs
+plots
+trigger
+samples
+bdts

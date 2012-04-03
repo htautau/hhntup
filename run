@@ -1,0 +1,150 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser(usage="%(prog)s [args] samplename1 samplename2 ...")
+parser.add_argument("-v","--verbose", action="store_true",
+                  help="verbose", default=False)
+parser.add_argument('-n',"--nproc", type=int,
+                  help="number of students (parallel processes)", default=1)
+parser.add_argument("--events", type=int,
+                  help="number of events to process", default=-1)
+parser.add_argument("--queue", action='store_true',
+                  help="use queue to feed files to students", default=False)
+parser.add_argument("--profile", action='store_true',
+                  help="profile execution time of each student's work method", default=False)
+parser.add_argument("--random-sample", type=int,
+                  help="specify length of a random sampling of input files to process", default=None)
+parser.add_argument("--nice", type=int, dest="nice",
+                  help="nice students", default=0)
+parser.add_argument('-p',"--periods",
+                  help="data periods separated by commas or all period by default if not specified", default=None)
+parser.add_argument('-r',"--runs",
+                  help="data runs separated by commas (must not also specify periods)", default=None)
+parser.add_argument("--suffix",
+                  help="suffix appended to sample name", default=None)
+parser.add_argument("--split",
+                    help="n:k split files into n equal subsets and run on kth subset", default=None)
+parser.add_argument('-s',"--student",
+                  help="the file (excluding .py extension) containing a "
+                       "class of the same name inheriting from rootpy.batch.Student", required=True)
+parser.add_argument('datasets', nargs='+')
+args, user_args = parser.parse_known_args()
+
+import sys
+import os
+from atlastools.batch import ATLASSupervisor
+import multiprocessing
+from higgstautau import datasets
+import random
+
+sys.path.insert(0,'.')
+
+if not args.student:
+    sys.exit("Student file not defined!")
+
+dataroot = os.getenv('DATAROOT', None)
+if dataroot is None:
+    sys.exit("$DATAROOT not defined!")
+
+if len(args.datasets) == 0:
+    print "No samples specified!"
+    sys.exit(1)
+
+if len(args.datasets) == 1:
+    if args.datasets[0].lower() == 'all':
+        args = []
+        dirs = glob.glob(os.path.join(dataroot,'*'))
+        for dir in dirs:
+            print dir
+            if os.path.isfile(os.path.join(dir,'meta.yml')):
+                args.append(os.path.basename(dir))
+
+if args.runs != None and args.periods != None:
+    print "Warning: you specified both runs and data periods. Your run selection will override the periods selection"
+    args.periods = None
+
+if args.periods is not None:
+    print "using period(s) %s for data sample" % args.periods
+elif args.runs is not None:
+    print "using run(s) %s for data sample" % args.runs
+
+if args.runs != None:
+    if ',' in args.runs:
+        args.runs = [int(run) for run in args.runs.split(',')]
+    elif '-' in args.runs:
+        begin, end = args.runs.split('-')
+        args.runs = range(int(begin), int(end)+1)
+    else:
+        args.runs = [int(args.runs)]
+
+# expand globs
+_datasets = []
+for dataset in args.datasets:
+    if '*' in dataset:
+        result = datasets.get_datasets(dataset)
+        if not result:
+            sys.exit("No datasets matching %s" % dataset)
+        _datasets += result
+    else:
+        if dataset in datasets.DATASETS:
+            _datasets.append(datasets.DATASETS[dataset])
+        else:
+            sys.exit("No dataset %s" % dataset)
+
+
+def get_chunk(l, n, k):
+    """
+    Get kth chunk of list split into n equal sublists
+    """
+    step = len(l) / n
+    start = step * (k - 1)
+    if k == n:
+        stop = None
+    else:
+        stop = step * k
+    return l[start:stop]
+
+
+supervisors = {}
+for dataset in _datasets:
+    parent_connection, child_connection = multiprocessing.Pipe()
+    outputname = '_'.join([dataset.name, args.suffix]) if args.suffix else dataset.name
+    files = dataset.files
+    
+    if args.random_sample is not None:
+        if args.random_sample < len(files):
+            files = random.sample(files, args.random_sample)
+    
+    if args.split is not None:
+        n, k = args.split.split(':')
+        files = get_chunk(files, int(n), int(k))
+        outputname += '_%d' % int(k)
+    
+    supervisor = ATLASSupervisor(
+        student = args.student,
+        outputname = outputname,
+        files = files,
+        metadata = dataset,
+        nstudents = args.nproc,
+        connection = child_connection,
+        queuemode = args.queue,
+        profile = args.profile,
+        grl = dataset.grl,
+        events = args.events,
+        nice = args.nice,
+        options = user_args)
+    supervisors[parent_connection] = supervisor
+
+for conn, supervisor in supervisors.items():
+    print "Processing %s..." % supervisor.metadata.name
+    supervisor.start()
+
+try:
+    for conn, supervisor in supervisors.items():
+        supervisor.join()
+except KeyboardInterrupt, SystemExit:
+    print "Cleaning up..."
+    for conn, supervisor in supervisors.items():
+        conn.send(None)
+        supervisor.join()

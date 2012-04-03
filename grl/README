@@ -1,0 +1,10 @@
+GRL is taken from here:
+http://http://atlasdqm.web.cern.ch/atlasdqm/grlgen/Higgs/Higgs_tautau_lh_v1/
+
+AND this GRL with the actual GRL observed in the combined /lumi TObjString in
+the output ROOT file.
+
+To create the lumicalc histograms use the GRL here:
+https://atlas-lumicalc.cern.ch/ and add --plots in "Other Options:"
+See
+https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ExtendedPileupReweighting

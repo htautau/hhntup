@@ -1,0 +1,214 @@
+"""
+This module defines the output branches in the final ntuple
+as TreeModels.
+"""
+
+
+from rootpy.tree import TreeModel
+from rootpy.math.physics.vector import LorentzRotation, LorentzVector, Vector3, Vector2
+from rootpy.types import *
+
+from atlastools.utils import et2pt
+from atlastools import utils
+
+from ..models import MatchedObject, TrueTau
+
+import math
+import ROOT
+
+
+class RecoTau(TreeModel):
+
+    BDTJetScore = FloatCol()
+    BDTEleScore = FloatCol()
+
+    JetBDTSigLoose = BoolCol()
+    JetBDTSigMedium = BoolCol()
+    JetBDTSigTight = BoolCol()
+
+    nPi0 = IntCol()
+    seedCalo_numTrack = IntCol()
+    numTrack = IntCol()
+    charge = IntCol()
+
+    fourvect = LorentzVector
+    fourvect_boosted = LorentzVector
+
+
+class EventVariables(TreeModel):
+
+    # event weight given by the PileupReweighting tool
+    weight = FloatCol(default=1.)
+
+    theta_tau1_tau2 = FloatCol()
+    cos_theta_tau1_tau2 = FloatCol()
+    tau1_x = FloatCol()
+    tau2_x = FloatCol()
+
+    # event variables developed by Michel T-M
+    tau1_centrality = FloatCol()
+    tau2_centrality = FloatCol()
+    MET_centrality = FloatCol()
+
+    tau1_centrality_boosted = FloatCol()
+    tau2_centrality_boosted = FloatCol()
+    MET_centrality_boosted = FloatCol()
+
+    mass_collinear_tau1_tau2 = FloatCol()
+    # MMC mass
+    mass_mmc_tau1_tau2 = FloatCol()
+
+    # new ditaumass package mass
+    mass_dtm_tau1_tau2 = DoubleCol()
+    mass_dtm_tau1_tau2_scan = DoubleCol()
+
+    mass2_vis_tau1_tau2 = FloatCol()
+    mass_vis_tau1_tau2 = FloatCol()
+
+    mass_jet1_jet2 = FloatCol()
+    mass_vis_true_tau1_tau2 = FloatCol()
+    mass_true_quark1_quark2 = FloatCol()
+
+    dR_quarks = FloatCol()
+    dR_truetaus = FloatCol()
+    dR_taus = FloatCol()
+    dR_jets = FloatCol()
+    dR_quark_tau = FloatCol()
+
+    dEta_quarks = FloatCol()
+    dEta_jets = FloatCol()
+    dEta_jets_boosted = FloatCol()
+    eta_product_jets = FloatCol()
+    eta_product_jets_boosted = FloatCol()
+
+    numJets = IntCol()
+    jet_fourvect = ROOT.vector('TLorentzVector')
+    jet_jvtxf = ROOT.vector('float')
+    numVertices = IntCol()
+    MET = FloatCol()
+    MET_phi = FloatCol()
+    HT = FloatCol()
+    MET_sig = FloatCol()
+    error = BoolCol()
+    jet_transformation = LorentzRotation
+    jet_beta = Vector3
+    parton_beta = Vector3
+    cutflow = IntCol()
+
+    sphericity = FloatCol()
+    aplanarity = FloatCol()
+
+    sphericity_boosted = FloatCol()
+    aplanarity_boosted = FloatCol()
+
+
+class RecoJet(TreeModel):
+
+    fourvect = LorentzVector
+    fourvect_boosted = LorentzVector
+
+    jvtxf = FloatCol()
+    BDTJetScore = FloatCol()
+
+
+class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + MatchedObject).prefix('tau2_')):
+
+    @classmethod
+    def set(cls, event, tree, tau1, tau2):
+        """
+        MMC and misc variables
+        """
+        tree.mass_vis_tau1_tau2 = utils.Mvis(tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
+        tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
+        tree.theta_tau1_tau2 = tau1.fourvect.Vect().Angle(tau2.fourvect.Vect())
+        tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
+
+        for i, tau in zip((1,2), (tau1, tau2)):
+
+            fourvect = tau.fourvect
+            setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
+            setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
+
+            setattr(tree, 'tau%i_JetBDTSigLoose' % i, tau.JetBDTSigLoose)
+            setattr(tree, 'tau%i_JetBDTSigMedium' % i, tau.JetBDTSigMedium)
+            setattr(tree, 'tau%i_JetBDTSigTight' % i, tau.JetBDTSigTight)
+
+            setattr(tree, 'tau%i_nPi0' % i, tau.nPi0)
+            setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
+            setattr(tree, 'tau%i_numTrack' % i, tau.numTrack)
+            setattr(tree, 'tau%i_charge' % i, tau.charge)
+            getattr(tree, 'tau%i_fourvect' % i).set_from(tau.fourvect)
+            tau.fourvect_boosted.set_from(tau.fourvect)
+            tau.fourvect_boosted.Boost(tree.jet_beta * -1)
+            getattr(tree, 'tau%i_fourvect_boosted' % i).set_from(tau.fourvect_boosted)
+
+
+class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
+
+    @classmethod
+    def set(cls, tree, jet1, jet2):
+        # the jets should already be sorted by eta
+        # sort by eta
+        # jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect.Eta())
+
+        # determine jet CoM frame
+        beta = (jet1.fourvect + jet2.fourvect).BoostVector()
+        tree.jet_beta.set_from(beta)
+
+        jet1.fourvect_boosted.set_from(jet1.fourvect)
+        jet2.fourvect_boosted.set_from(jet2.fourvect)
+        jet1.fourvect_boosted.Boost(beta * -1)
+        jet2.fourvect_boosted.Boost(beta * -1)
+
+        # sort by transformed eta
+        #jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect_boosted.Eta())
+
+        tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
+
+        tree.jet1_fourvect.set_from(jet1.fourvect)
+        tree.jet2_fourvect.set_from(jet2.fourvect)
+
+        tree.jet1_fourvect_boosted.set_from(jet1.fourvect_boosted)
+        tree.jet2_fourvect_boosted.set_from(jet2.fourvect_boosted)
+
+        tree.jet1_jvtxf = jet1.jvtxf
+        tree.jet2_jvtxf = jet2.jvtxf
+
+        tree.dEta_jets = abs(jet1.fourvect.Eta() - jet2.fourvect.Eta())
+        tree.dEta_jets_boosted = abs(jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+
+        tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
+        tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
+                                         jet2.fourvect_boosted.Eta())
+
+
+class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')):
+
+    @classmethod
+    def set(cls, tree, index, tau):
+
+        setattr(tree, 'trueTau%i_nProng' % index, tau.nProng)
+        setattr(tree, 'trueTau%i_nPi0' % index, tau.nPi0)
+        setattr(tree, 'trueTau%i_charge' % index, tau.charge)
+
+        fourvect = getattr(tree, 'trueTau%i_fourvect' % index)
+        fourvect.SetPtEtaPhiM(
+            tau.pt,
+            tau.eta,
+            tau.phi,
+            tau.m)
+
+        fourvect_boosted = getattr(tree, 'trueTau%i_fourvect_boosted' % index)
+        fourvect_boosted.set_from(fourvect)
+        fourvect_boosted.Boost(tree.parton_beta * -1)
+
+        fourvect_vis = getattr(tree, 'trueTau%i_fourvect_vis' % index)
+        fourvect_vis.SetPtEtaPhiM(
+            et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
+            tau.vis_eta,
+            tau.vis_phi,
+            tau.vis_m)
+
+        fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
+        fourvect_vis_boosted.set_from(fourvect_vis)
+        fourvect_vis_boosted.Boost(tree.parton_beta * -1)

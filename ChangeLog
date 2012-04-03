@@ -1,0 +1,11 @@
+2012-03-06 Michel Trottier-McDonald <mtm@cern.ch>
+	* Adding muLHProcessor.py : Event quality and object selection
+	* Adding higgstautau/lephad/models.py
+	* Adding test-lhskim.sh
+
+2012-02-23 Michel Trottier-McDonald <mtm@cern.ch>
+	* Adding muLHSkim.py: Skimming, trimming and object preselection for mu-had channel
+	* Adding higgstautau/lephad/filters.py: Define muTriggers muMCTriggers
+	* Adding this ChangeLog
+	* Adding datasets/lephad/*.txt: Specify datasets for mu-had channel
+	* Modify datasets.cfg: Adding data11 and mc11c datasets for mu-had channel
