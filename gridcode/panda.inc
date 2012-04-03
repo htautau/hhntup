@@ -1,0 +1,12 @@
+include JERProviderPlots.root
+include *.tar.gz
+include *.cfg
+include *.spec
+include *.yml
+include *.so
+exclude *.pyc
+exclude *.root
+exclude *.log
+exclude .git
+exclude .svn
+exclude tmp*
