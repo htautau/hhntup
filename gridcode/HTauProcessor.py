@@ -238,14 +238,28 @@ class HTauProcessor(ATLASStudent):
             """
             MET
             """
-            print "etx: %f"%event.MET_LocHadTopo_etx
-            print "C: %f, E: %f, F: %f" % (event.MET_LocHadTopo_etx_CentralReg, event.MET_LocHadTopo_etx_EndcapRegion, event.MET_LocHadTopo_etx_ForwardReg)
-            print "sum: %f"% (event.MET_LocHadTopo_etx_CentralReg + event.MET_LocHadTopo_etx_EndcapRegion + event.MET_LocHadTopo_etx_ForwardReg)
-            print "="*10
-             
-            METx = event.MET_LocHadTopo_etx + event.MET_MuonBoy_etx - event.MET_RefMuon_Track_etx
-            METy = event.MET_LocHadTopo_ety + event.MET_MuonBoy_ety - event.MET_RefMuon_Track_ety
+            MET_LocHadTopo_etx = event.MET_LocHadTopo_etx_CentralReg + event.MET_LocHadTopo_etx_EndcapRegion + event.MET_LocHadTopo_etx_ForwardReg
+            MET_LocHadTopo_ety = event.MET_LocHadTopo_ety_CentralReg + event.MET_LocHadTopo_ety_EndcapRegion + event.MET_LocHadTopo_ety_ForwardReg
+            
+            try:
+                MET_MuonBoy_etx = event.MET_MuonBoy_etx_CentralReg + event.MET_MuonBoy_etx_EndcapRegion + event.MET_MuonBoy_etx_ForwardReg
+                MET_MuonBoy_ety = event.MET_MuonBoy_ety_CentralReg + event.MET_MuonBoy_ety_EndcapRegion + event.MET_MuonBoy_ety_ForwardReg
+            except AttributeError:
+                MET_MuonBoy_etx = event.MET_MuonBoy_etx
+                MET_MuonBoy_ety = event.MET_MuonBoy_ety
+
+            try:
+                MET_RefMuon_Track_etx = event.MET_RefMuon_Track_etx_CentralReg + event.MET_RefMuon_Track_etx_EndcapRegion + event.MET_RefMuon_Track_etx_ForwardReg
+                MET_RefMuon_Track_ety = event.MET_RefMuon_Track_ety_CentralReg + event.MET_RefMuon_Track_ety_EndcapRegion + event.MET_RefMuon_Track_ety_ForwardReg
+            except:
+                MET_RefMuon_Track_etx = event.MET_RefMuon_Track_etx
+                MET_RefMuon_Track_ety = event.MET_RefMuon_Track_ety
+            
+            METx = MET_LocHadTopo_etx + MET_MuonBoy_etx - MET_RefMuon_Track_etx
+            METy = MET_LocHadTopo_ety + MET_MuonBoy_ety - MET_RefMuon_Track_ety
+
             MET = math.sqrt(METx**2 + METy**2)
+            
             self.D4PD.MET = MET
             if MET > 0:
                 phi = math.asin(METy / MET)
