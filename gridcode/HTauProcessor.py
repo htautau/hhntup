@@ -28,10 +28,15 @@ class HTauProcessor(ATLASStudent):
                 variables.append(("tau%i_%s" % (tau, v), t))
         
         # only create truth branches for MC
-        if self.fileset.datatype != datasets.DATA:
+        if self.fileset.datatype == datasets.MC:
             for v, t in truth_variables + common_variables:
                 for tau in (1, 2):
                     variables.append(("trueTau%i_%s" % (tau, v), t))
+            # add branches for VBF Higgs associated partons
+            if self.fileset.name.startswith("VBFH"):
+                for v, t in parton_variables:
+                    for parton in (1, 2):
+                        variables.append(("parton%i_%s" % (parton, v), t))
         
         for v, t in jet_variables + jet_extra_variables + jet_matched_variables:
             for jet in (1, 2):
@@ -233,7 +238,11 @@ class HTauProcessor(ATLASStudent):
             """ 
             if self.fileset.datatype == datasets.MC:
                 if self.fileset.name.startswith("VBFH"):
+                    # get partons (already sorted by eta in hepmc)
                     parton1, parton2 = hepmc.get_VBF_partons(event)
+                    for i, parton in zip((1, 2), (parton1, parton2)):
+                        for v, t in parton_variables:
+                            setattr(D4PD, "parton%i_%s" % (i, v), getattr(parton, v))
                     for jet in event.jets:
                         if jet in jets:
                             D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(

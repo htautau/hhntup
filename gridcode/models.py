@@ -87,3 +87,13 @@ jet_matched_variables = (
     ("matched_pdgId", "I")
 )
 
+parton_variables = (
+    ("pt", "F"),
+    ("eta", "F"),
+    ("phi", "F"),
+    ("pdgId", "I"),
+)
+
+parton_extra_variables = (
+    ("Et", "F"),
+)
