@@ -103,7 +103,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
             setattr(tree, 'tau%i_charge' % i, tau.charge)
             getattr(tree, 'tau%i_fourvect' % i).set_from(fourvect)
-            fourvect.Boost(tree.jet_beta)
+            fourvect.Boost(tree.jet_beta * -1)
             getattr(tree, 'tau%i_fourvect' % i).set_from(fourvect)
 
  
@@ -124,8 +124,8 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + Matche
         tree.jet1_fourvect_boosted.set_from(jet1_fourvect)
         tree.jet2_fourvect_boosted.set_from(jet2_fourvect)
 
-        tree.jet1_fourvect_boosted.Boost(beta)
-        tree.jet2_fourvect_boosted.Boost(beta)
+        tree.jet1_fourvect_boosted.Boost(beta * -1)
+        tree.jet2_fourvect_boosted.Boost(beta * -1)
 
         try:
             tree.jet1_jvtxf = jet1.jvtxf
@@ -151,7 +151,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + Ma
         
         fourvect_boosted = getattr(tree, 'trueTau%i_fourvect_boosted' % index)
         fourvect_boosted.set_from(fourvect)
-        fourvect_boosted.Boost(tree.parton_beta)
+        fourvect_boosted.Boost(tree.parton_beta * -1)
 
         fourvect_vis = getattr(tree, 'trueTau%i_fourvect_vis' % index)
         fourvect_vis.SetPtEtaPhiM(
@@ -162,7 +162,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + Ma
         
         fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
         fourvect_vis_boosted.set_from(fourvect_vis)
-        fourvect_vis_boosted.Boost(tree.parton_beta)
+        fourvect_vis_boosted.Boost(tree.parton_beta * -1)
 
 
 class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + MatchedObject).prefix('parton2_')):
@@ -179,8 +179,8 @@ class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + Matche
         beta = (parton1_fourvect + parton2_fourvect).BoostVector()
         tree.parton_beta.set_from(beta)
         
-        parton1_fourvect.Boost(beta)
-        parton2_fourvect.Boost(beta)
+        parton1_fourvect.Boost(beta * -1)
+        parton2_fourvect.Boost(beta * -1)
 
         tree.parton1_fourvect_boosted.set_from(parton1_fourvect)
         tree.parton2_fourvect_boosted.set_from(parton2_fourvect)

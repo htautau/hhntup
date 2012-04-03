@@ -26,11 +26,19 @@ h3.SetXTitle("Reco jet #eta")
 h4 = h1.Clone()
 h4.SetXTitle("Reco jet #eta")
 
-t_sm.Draw("parton1_eta","parton1_pt > 20000 && selected",hist=h1)
-t_sm.Draw("parton2_eta","parton2_pt > 20000 && selected",hist=h2)
+h5 = h1.Clone()
+h5.SetXTitle("True quark boosted #eta")
+h6 = h1.Clone()
+h6.SetXTitle("True quark boosted #eta")
 
-t_sm.Draw("jet1_eta","jet1_pt > 20000 && selected",hist=h3)
-t_sm.Draw("jet2_eta","jet2_pt > 20000 && selected",hist=h4)
+t_sm.Draw("parton1_fourvect.Eta()","parton1_fourvect.Pt() > 20000",hist=h1)
+t_sm.Draw("parton2_fourvect.Eta()","parton2_fourvect.Pt() > 20000",hist=h2)
+
+t_sm.Draw("jet1_fourvect.Eta()","jet1_fourvect.Pt() > 20000",hist=h3)
+t_sm.Draw("jet2_fourvect.Eta()","jet2_fourvect.Pt() > 20000",hist=h4)
+
+t_sm.Draw("parton1_fourvect_boosted.Eta()","parton1_fourvect.Pt() > 20000",hist=h5)
+t_sm.Draw("parton2_fourvect_boosted.Eta()","parton2_fourvect.Pt() > 20000",hist=h6)
 
 h1.SetFillColor('red')
 h1.SetFillStyle('\\')
@@ -43,9 +51,20 @@ h2.Draw("hist same")
 
 c.SaveAs("parton_eta.png")
 
+h5.SetFillColor('red')
+h5.SetFillStyle('\\')
+h6.SetFillColor('blue')
+h6.SetFillStyle('/')
+
+c = Canvas()
+h5.Draw("hist")
+h6.Draw("hist same")
+
+c.SaveAs("parton_eta_boosted.png")
+
 c.Clear()
-t_sm.Draw("jet1_eta","jet2_eta > -6 && selected",hist=h3)
-t_sm.Draw("jet2_eta","jet2_eta > -6 && selected",hist=h4)
+t_sm.Draw("jet1_fourvect.Eta()","jet2_fourvect.Eta() > -6",hist=h3)
+t_sm.Draw("jet2_fourvect.Eta()","jet2_fourvect.Eta() > -6",hist=h4)
 
 h3.SetFillColor('red')
 h3.SetFillStyle('\\')
