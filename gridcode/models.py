@@ -1,6 +1,7 @@
 from rootpy.tree import TreeModel
 from rootpy.vector import LorentzVector
 from rootpy.types import *
+from atlastools.utils import et2pt
 import ROOT
 
 class TrueTau_MCBlock(TreeModel):
@@ -37,8 +38,8 @@ class RecoTau(TreeModel):
 
 class TrueTau(TreeModel):
     
-    nprong = IntCol(default=-1111)
-    npi0 = IntCol(default=-1111)
+    nProng = IntCol(default=-1111)
+    nPi0 = IntCol(default=-1111)
     charge = IntCol()
     
     fourvect = LorentzVector
@@ -95,24 +96,44 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_nPi0' % i, tau.nPi0)
             setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
             setattr(tree, 'tau%i_charge' % i, tau.charge)
-            getattr(tree, 'tau%i_fourvect' % i).SetPtEtaPhiM(
-                tau1.fourvect.Pt(),
-                tau1.fourvect.Eta(),
-                tau1.fourvect.Phi(),
-                tau1.fourvect.M(),
-            )
+            LorentzVector.__init__(getattr(tree, 'tau%i_fourvect' % i), tau.fourvect)
 
  
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
 
     @classmethod
-    def set(cls, tree, jet1, jet2): pass
+    def set(cls, tree, jet1, jet2):
+        
+        # call copy constructors
+        LorentzVector.__init__(tree.jet1_fourvect, jet1.fourvect)
+        LorentzVector.__init__(tree.jet2_fourvect, jet2.fourvect)
+
+        try:
+            tree.jet1_jvtxf = jet1.jvtxf
+            tree.jet2_jvtxf = jet2.jvtxf
+        except AttributeError: pass
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')):
 
     @classmethod
-    def set(cls, tree, index, tau): pass
+    def set(cls, tree, index, tau):
+
+        setattr(tree, 'trueTau%i_nProng' % index, tau.nProng)
+        setattr(tree, 'trueTau%i_nPi0' % index, tau.nPi0)
+        setattr(tree, 'trueTau%i_charge' % index, tau.charge)
+    
+        getattr(tree, 'trueTau%i_fourvect' % index).SetPtEtaPhiM(
+            tau.pt,
+            tau.eta,
+            tau.phi,
+            tau.m)
+        
+        getattr(tree, 'trueTau%i_fourvect_vis' % index).SetPtEtaPhiM(
+            et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
+            tau.vis_eta,
+            tau.vis_phi,
+            tau.vis_m)
 
 
 class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + MatchedObject).prefix('parton2_')):
@@ -120,19 +141,9 @@ class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + Matche
     @classmethod
     def set(cls, tree, parton1, parton2):
 
-        fourvect = parton1.fourvect()
-        tree.parton1_fourvect.SetPtEtaPhiM(
-            fourvect.Pt(),
-            fourvect.Eta(),
-            fourvect.Phi(),
-            fourvect.M())
-        
-        fourvect = parton2.fourvect() 
-        tree.parton2_fourvect.SetPtEtaPhiM(
-            fourvect.Pt(),
-            fourvect.Eta(),
-            fourvect.Phi(),
-            fourvect.M())
+        # call copy constructors
+        LorentzVector.__init__(tree.parton1_fourvect, parton1.fourvect())
+        LorentzVector.__init__(tree.parton2_fourvect, parton2.fourvect())
 
         tree.parton1_pdgId = parton1.pdgId
         tree.parton2_pdgId = parton2.pdgId
