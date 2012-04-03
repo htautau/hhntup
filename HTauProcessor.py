@@ -7,7 +7,8 @@ from rootpy.tree.filtering import *
 from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
-from rootpy.tree import Tree, TreeBuffer, TreeChain
+from rootpy.tree import Tree, TreeBuffer, TreeChain, TreeModel
+from rootpy.types import *
 from mixins import MCParticle
 import hepmc
 
@@ -21,6 +22,25 @@ class HTauProcessor(ATLASStudent):
 
     def work(self):
         
+        class TruthTau(TreeModel):
+
+            hadronic = Bool(default=False)
+            nprong = Int(default=-1111)
+            npi0 = Int(default=-1111)
+            pt = Float(default=0)
+            eta = Float(default=-1111)
+            phi = Float(default=-1111)
+            pt_vis = Float(default=0)
+            eta_vis = Float(default=-1111)
+            phi_vis = Float(default=-1111)
+            nu_pt = Float(default=0)
+            nu_eta = Float(default=-1111)
+            nu_phi = Float(default=-1111)
+            dR_tau_nu = Float(default=-1111)
+            dTheta_tau_nu = Float(default=-1111)
+        
+        mc_tree = Tree(name = "_".join[self.fileset.name, "mc"], model=TruthTau)
+         
         reco_variables = (
             ("BDTJetScore", "F"),
             ("BDTEleScore", "F"),
@@ -132,7 +152,34 @@ class HTauProcessor(ATLASStudent):
         self.tree.collection(name="vertices", prefix="vxp_", size="vxp_n")
          
         for event in self.tree:
-
+             
+            """
+            Experimenting here....
+            Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
+            Need to match jets to VBF jets
+            Fill tree used for MMC
+            """ 
+            if self.fileset.datatype == datasets.MC:
+                tau_decays = hepmc.get_tau_decays(event)
+                for decay in tau_decays:
+                    hadronic = decay.hadronic()
+                    if hadronic:
+                        mc_tree.hadronic = True
+                        mc_tree.nprong = decay.nprong()
+                        mc_tree.npi0 = decay.npi0()
+                        mc_tree.pt = decay.pt_init()
+                        mc_tree.eta = decay.eta_init()
+                        mc_tree.phi = decay.phi_init()
+                        mc_tree.pt_vis = decay.pt_vis()
+                        mc_tree.eta_vis = decay.eta_vis()
+                        mc_tree.phi_vis = decay.phi_vis()
+                        mc_tree.nu_pt = decay.nu_pt()
+                        mc_tree.nu_eta = decay.nu_eta()
+                        mc_tree.nu_phi = decay.nu_phi()
+                        mc_tree.dR = decay.dR_tau_nu()
+                        mc_tree.dTheta3d = decay.dTheta3d_tau_nu()
+                        mc_tree.Fill(reset=True)
+                
             """
             Tau selection
             """
@@ -230,21 +277,16 @@ class HTauProcessor(ATLASStudent):
 
             if best_forward_jet and best_backward_jet:
                 self.D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta
-
+            
+            
             """
             Experimenting here....
-            Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
             Need to match jets to VBF jets
             """ 
             if self.fileset.datatype == datasets.MC:
-                tau_states = hepmc.get_tau_initial_final_states(event)
-                for init, final in tau_states:
-                    print init
-                    for thing in final:
-                        print "\t%s" % thing
                 if self.fileset.name.startswith("VBFH"):
                     VBF_partons = hepmc.get_VBF_partons(event)
-
+            
             """
             Reco tau variables
             """
