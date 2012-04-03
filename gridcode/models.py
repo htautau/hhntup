@@ -83,13 +83,26 @@ class Parton(TreeModel):
     pdgId = IntCol()
 
 
-class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + MatchedObject).prefix('tau2_')): pass
+class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + MatchedObject).prefix('tau2_')):
+    
+    @classmethod
+    def set(cls, tree, tau1, tau2): pass
 
  
-class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')): pass
+class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
+
+    @classmethod
+    def set(cls, tree, jet1, jet2): pass
 
 
-class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')): pass
+class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')):
+
+    @classmethod
+    def set(cls, tree, index, tau): pass
 
 
-class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + MatchedObject).prefix('parton2_')): pass
+class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + MatchedObject).prefix('parton2_')):
+
+    @classmethod
+    def set(cls, tree, parton1, parton2): pass
+

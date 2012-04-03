@@ -243,12 +243,7 @@ class HTauProcessor(ATLASStudent):
             """
             Jet variables
             """
-            for i, jet in zip((1, 2), (best_jets)):
-                for v, t in jet_variables:
-                    try:
-                        setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
-                    except AttributeError:
-                        pass
+            RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
 
             """
             Experimenting here....
@@ -258,9 +253,7 @@ class HTauProcessor(ATLASStudent):
                 if self.fileset.name.startswith("VBFH"):
                     # get partons (already sorted by eta in hepmc)
                     parton1, parton2 = hepmc.get_VBF_partons(event)
-                    for i, parton in zip((1, 2), (parton1, parton2)):
-                        for v, t in parton_variables:
-                            setattr(D4PD, "parton%i_%s" % (i, v), getattr(parton, v))
+                    PartonBlock.set(D4PD, parton1, parton2)
                     for jet in event.jets:
                         if jet in jets:
                             D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(
@@ -274,9 +267,7 @@ class HTauProcessor(ATLASStudent):
             """
             Reco tau variables
             """
-            for v, t in reco_variables:
-                for i, tau in zip((1, 2), taus):
-                    setattr(D4PD, "tau%i_%s" % (i, v), getattr(tau, v))
+            RecoTauBlock.set(D4PD, taus[0], taus[1])
             
             """
             Truth-matching
@@ -317,12 +308,10 @@ class HTauProcessor(ATLASStudent):
                             setattr(D4PD, "tau%i_matched_dR" % i, tau.trueTauAssoc_dr)
                             setattr(D4PD, "trueTau%i_matched" % i, 1)
                             setattr(D4PD, "trueTau%i_matched_dR" % i, event.truetaus[matching_truth_index].tauAssoc_dr)
-                            for v, t in truth_variables:
-                                setattr(D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[matching_truth_index], v))
+                            TrueTauBlock.set(D4PD, i, event.truetaus[matching_truth_index])
                 
                 for i, j in zip(unmatched_reco, unmatched_truth):
-                    for v, t in truth_variables:
-                        setattr(D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[j-1], v))
+                    TrueTauBlock.set(D4PD, i, event.truetaus[j-1])
              
             # fill output ntuple
             # use reset=True to reset all variables to their defaults after the fill
