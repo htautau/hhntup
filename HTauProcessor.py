@@ -237,7 +237,10 @@ class HTauProcessor(ATLASStudent):
             Need to match jets to VBF jets
             """ 
             if self.fileset.datatype == datasets.MC:
-                tau_final_states = hepmc.get_tau_final_states(event)
+                tau_states = hepmc.get_tau_initial_final_states(event)
+                for init, final in tau_states:
+                    for thing in final:
+                        print thing
                 if self.fileset.name.startswith("VBFH"):
                     VBF_partons = hepmc.get_VBF_partons(event)
 

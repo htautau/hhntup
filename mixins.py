@@ -1,6 +1,11 @@
+from atlastools import pdg
 
 class MCParticle(object):
 
+    def __init__(self):
+
+        self.__particle = pdg.GetParticle(self.pdgId)
+    
     def ichildren(self):
 
         for child in self.child_index:
@@ -40,3 +45,11 @@ class MCParticle(object):
         if self.is_leaf():
             return [self]
         return [particle for particle in self.traverse_children() if particle.is_leaf()]
+
+    def __repr__(self):
+
+        return self.__str__()
+    
+    def __str__(self):
+
+        return "%s (m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f)" % (self.__particle.GetName(), self.__particle.Mass()*1000., self.pt/1000., self.eta, self.phi)
