@@ -43,13 +43,16 @@ class HTauProcessor(ATLASStudent):
         copied_variables = []
         
         if self.fileset.datatype == datasets.MC:
-            copied_variables = tree.glob("EF_*")+tree.glob("L1_*")+tree.glob("L2_*")
+            copied_variables = tree.glob("EF_*") + \
+                               tree.glob("L1_*") + \
+                               tree.glob("L2_*") + \
+                               tree.glob("jet_AntiKt4TopoEM_*")
         
         buffer = TreeBuffer(variables)
         self.output.cd()
         D4PD = Tree(name = self.fileset.name)
         D4PD.set_branches_from_buffer(buffer)
-        #D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
+        D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
@@ -230,7 +233,16 @@ class HTauProcessor(ATLASStudent):
             """ 
             if self.fileset.datatype == datasets.MC:
                 if self.fileset.name.startswith("VBFH"):
-                    VBF_partons = hepmc.get_VBF_partons(event)
+                    parton1, parton2 = hepmc.get_VBF_partons(event)
+                    for jet in event.jets:
+                        if jet in jets:
+                            D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(
+                                min(
+                                    utils.dR(jet.eta, jet.phi, parton1.eta, parton1.phi),
+                                    utils.dR(jet.eta, jet.phi, parton2.eta, parton2.phi)
+                                    )
+                                )
+                        D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(1111)
             
             """
             Reco tau variables
