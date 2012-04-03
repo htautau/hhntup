@@ -66,7 +66,7 @@ Zprime750:
     label: TAU
     weight: 1.
 Zprime1000:
-    container: "group10.perf-tau.mc10_7TeV.107384.Pythia_Zprime_tautau_SSM1000.e632_s934_s946_r2310_r2300.01-01-05.D3PD_TauMEDIUM/"
+    container: "group10.perf-tau.mc10_7TeV.107384.Pythia_Zprime_tautau_SSM1000.e632_s934_s946_r2310_r2300.01-01-01.D3PD_TauMEDIUM/"
     tree: tauPerf
     type: MC
     class: SIGNAL
