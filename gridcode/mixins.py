@@ -18,7 +18,7 @@ class FourMomentum(object):
     def fourvect(self):
 
         vect = LorentzVector()
-        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        vect.SetPtEtaPhiE(self.pt, self.eta, self.phi, self.E)
         return vect
 
 
