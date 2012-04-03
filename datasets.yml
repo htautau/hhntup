@@ -1,3 +1,8 @@
+########################################################################
+#
+#   data
+#
+########################################################################
 data:
     container: group10.perf-tau.JetTauEtMiss-AOD.01-01-05.D3PD_StreamD3PD_TauMEDIUM/:SFU-LCG2_LOCALGROUPDISK
     local: /cluster/data03/endw/analysis/testdata/data
@@ -7,6 +12,11 @@ data:
     class: BACKGROUND
     label: JET
     weight: 1.
+########################################################################
+#
+#   Ztautau / Wtaunu
+#
+########################################################################
 Ztautau:
     container: "group10.perf-tau.mc10_7TeV.106052.PythiaZtautau.e574_s934_s946_r2310_r2300.01-01-02-00.D3PD_TauMEDIUM/:DESY-HH_PERF-TAU"
     local: /cluster/data03/endw/analysis/testdata/Ztautau
@@ -15,6 +25,11 @@ Ztautau:
     class: SIGNAL
     label: TAU
     weight: 8.5400E-01
+########################################################################
+#
+#   VBF Higgs -> tau tau (had) M = 100 - 150 GeV
+#
+########################################################################
 VBFH100hh:
     container: "group10.perf-tau.mc10_7TeV.125200.Pythia_VBFH100_tautauhh.e776_s933_s946_r2302_r2300.01-01-01.D3PD_TauMEDIUM/:ANALY_DESY-HH"
     tree: tauPerf
