@@ -53,7 +53,11 @@ class HTauProcessor(ATLASStudent):
         D4PD = Tree(name=self.fileset.name, model=D4PD_model)
         
         copied_variables = ['actualIntPerXing',
-                            'averageIntPerXing']
+                            'averageIntPerXing',
+                            'EF_tau29_medium1_tau20_medium1',
+                            'EF_e20_medium',
+                            'EF_e60_loose',
+                            'EF_xe60_noMu']
 
         D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
         tree.always_read(copied_variables)
@@ -62,7 +66,7 @@ class HTauProcessor(ATLASStudent):
         # passthrough for MC for trigger acceptance studies
         self.event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough = self.fileset.datatype != datasets.DATA),
-            Trigger(),
+            TriggerOR(),
             PriVertex(),
             LArError(),
             JetCleaningLoose(passthrough = self.fileset.datatype != datasets.DATA),
