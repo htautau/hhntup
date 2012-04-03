@@ -19,28 +19,28 @@ generate("vector<TLorentzVector>", "<vector>;TLorentzVector.h")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
+class TruthTau(TreeModel):
+
+    hadronic = Bool(default=False)
+    nprong = Int(default=-1111)
+    npi0 = Int(default=-1111)
+    nneutrals = Int(default=-1111)
+    pt = Float(default=0)
+    eta = Float(default=-1111)
+    phi = Float(default=-1111)
+    pt_vis = Float(default=0)
+    eta_vis = Float(default=-1111)
+    phi_vis = Float(default=-1111)
+    nu_pt = Float(default=0)
+    nu_eta = Float(default=-1111)
+    nu_phi = Float(default=-1111)
+    dR_tau_nu = Float(default=-1111)
+    dTheta3d_tau_nu = Float(default=-1111)
+
 class HTauProcessor(ATLASStudent):
 
     def work(self):
-        
-        class TruthTau(TreeModel):
-
-            hadronic = Bool(default=False)
-            nprong = Int(default=-1111)
-            npi0 = Int(default=-1111)
-            nneutrals = Int(default=-1111)
-            pt = Float(default=0)
-            eta = Float(default=-1111)
-            phi = Float(default=-1111)
-            pt_vis = Float(default=0)
-            eta_vis = Float(default=-1111)
-            phi_vis = Float(default=-1111)
-            nu_pt = Float(default=0)
-            nu_eta = Float(default=-1111)
-            nu_phi = Float(default=-1111)
-            dR_tau_nu = Float(default=-1111)
-            dTheta3d_tau_nu = Float(default=-1111)
-        
+                
         mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TruthTau)
          
         reco_variables = (
@@ -164,6 +164,7 @@ class HTauProcessor(ATLASStudent):
             if self.fileset.datatype == datasets.MC:
                 tau_decays = tautools.get_tau_decays(event)
                 for decay in tau_decays:
+                    print decay
                     hadronic = decay.hadronic
                     if hadronic:
                         mc_tree.hadronic = True

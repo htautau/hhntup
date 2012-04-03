@@ -17,6 +17,11 @@ class TauDecay(object):
         """
         self.init = initial_state
         self.final = final_state
+        # some decays are not fully stored in the D3PDs
+        # flag them...
+        self.complete = True
+        if len(final_state) == 1:
+            self.complete = False
     
     @property
     def charged_pions(self):
@@ -119,11 +124,8 @@ def get_tau_decays(event):
     """
     decays = []
     for mc in event.mc:
-        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus):
+        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus) and mc.status == 2:
             init_state = mc
             final_state = mc.final_state()
-            # some decays are not fully stored in the D3PDs
-            # ignore them...
-            if len(final_state) > 1:
-                decays.append(TauDecay(init_state, final_state))
+            decays.append(TauDecay(init_state, final_state))
     return decays
