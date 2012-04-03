@@ -114,7 +114,6 @@ local)
     do
         download_from_github ${package}
     done
-    exit
     ;;
 
 build)
