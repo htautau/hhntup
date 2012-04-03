@@ -74,13 +74,13 @@ class Triggers(EventFilter):
         - Period L-M  :  tau29T_medium1_tau20T_medium1 || tau125_medium1 || xe60_verytight_noMu
         """
         if 177531 <= event.RunNumber <= 186493: # Period A-I
-            return event.tau29_medium1_tau20_medium1 or event.tau100_medium or event.xe60_noMu
+            return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_noMu
         elif 186516 <= event.RunNumber <= 186755: # Period J
-            return event.tau29_medium1_tau20_medium1 or event.tau100_medium or event.xe60_tight_noMu 
+            return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_tight_noMu 
         elif 186873 <= event.RunNumber <= 187815: # Period K
-            return event.tau29_medium1_tau20_medium1 or event.tau125_medium1 or event.xe60_tight_noMu
+            return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau125_medium1 or event.EF_xe60_tight_noMu
         elif 188902 <= event.RunNumber <= 191933: # Period L-M
-            return event.tau29T_medium1_tau20T_medium1 or event.tau125_medium1 or event.xe60_verytight_noMu
+            return event.EF_tau29T_medium1_tau20T_medium1 or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
         else:
             raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
         
@@ -98,24 +98,35 @@ class HTauSkim(ATLASStudent):
 
     def work(self):
         
-        # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
+        # initialize the TreeChain of all input files
         intree = TreeChain(self.fileset.treename,
                           files=self.fileset.files,
                           events=self.events)
         
-        self.output.cd()
-        outtree = Tree(name=self.fileset.treename)
+        outtree = Tree(name=self.fileset.treename, file=self.output)
+        outtree.Write()
         outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
+
+        # copy TrigConfTree from first file in input list
+        # make sure input files are all from the same run
+        # use the prun --useContElementBoundary option if the
+        # input container consists of run datasets
+        metadirname = '%sMeta' % self.fileset.treename
+        trigconf = intree.file['%s/TrigConfTree' % metadirname]
+        metadir = self.output.mkdir(metadirname)
+        metadir.cd()
+        newtrigconf = trigconf.CloneTree(-1,'fast')
+        newtrigconf.Write()
+        self.output.cd()
         
         # set the event filters
-        # passthrough for MC for trigger acceptance studies
         self.event_filters = EventFilterList([
             Triggers(),
             TwoGoodLooseTaus()
         ])
         intree.filters += self.event_filters
 
-        # define tree collections
+        # define tau collection
         intree.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
 
         # entering the main event loop...
@@ -123,5 +134,5 @@ class HTauSkim(ATLASStudent):
             
             outtree.Fill()
 
+        # flush any remaining baskets to disk
         outtree.FlushBaskets()
-        outtree.Write()

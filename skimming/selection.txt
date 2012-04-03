@@ -1,1 +1,0 @@
-tau_author[] != 2 && tau_pt[] > 20000 && tau_seedCalo_numTrack[] > 0 && (tau_JetBDTSigLoose[] == 1 || tau_tauLlhLoose[] == 1)

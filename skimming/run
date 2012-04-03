@@ -1,6 +1,0 @@
-#!/bin/bash
-
-selection=`cat selection.txt`
-ds="data11*physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM*p741/"
-#ds="data11_7TeV.00190608.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p741/"
-prun --site ANALY_SFU_bugaboo --inDS $ds --outDS user.NoelDawe.data11.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.p741.skim.v1 --exec "./root-skim -s '${selection}' -o or.txt -t tau --grid %IN; ./root-hadd skimmed.root skimmed.*.root*" --outputs skimmed.root --nFilesPerJob 3 --athenaTag=AtlasProduction,17.0.5.1 # --rootVer=5.30/02
