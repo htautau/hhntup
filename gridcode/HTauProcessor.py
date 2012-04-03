@@ -72,7 +72,7 @@ class HTauProcessor(ATLASStudent):
         # passthrough for MC for trigger acceptance studies
         self.event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough = self.fileset.datatype != datasets.DATA),
-            Trigger(),
+            TriggerNoXE(),
             PriVertex(),
             LArError(),
             JetCleaningLoose(passthrough = self.fileset.datatype != datasets.DATA),
@@ -87,11 +87,17 @@ class HTauProcessor(ATLASStudent):
         twogoodtaus = EventFilter(name='TwoGoodTaus')
         twogoodjets = EventFilter(name='TwoGoodJets')
         twomediumtaus = EventFilter(name='TwoMediumTaus')
+        twotauspassevetoloose = EventFilter(name='TwoTausPassTauEVetoLoose')
+        twotauspassevetomedium = EventFilter(name='TwoTausPassTauEVetoMedium')
+        twotauspassevetotight = EventFilter(name='TwoTausPassTauEVetoTight')
 
         self.event_filters += [
             twogoodtaus,
             twogoodjets,
-            twomediumtaus
+            twomediumtaus,
+            twotauspassevetoloose,
+            twotauspassevetomedium,
+            twotauspassevetotight
         ]
 
         cutflow = Cutflow()
@@ -108,7 +114,8 @@ class HTauProcessor(ATLASStudent):
          
         # entering the main event loop...
         for event in tree:
-             
+            
+            D4PD.reset() 
             """
             Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
             """ 
@@ -184,12 +191,12 @@ class HTauProcessor(ATLASStudent):
             if len(best_jets) < 2:
                 # if there are fewer than 2 other jets then skip event
                 twogoodjets.failed()
-            else:
-                twogoodjets.passed()
-                """
-                Jet variables
-                """
-                RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
+                continue
+            twogoodjets.passed()
+            """
+            Jet variables
+            """
+            RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
             
             """
             Reco tau variables
@@ -237,7 +244,7 @@ class HTauProcessor(ATLASStudent):
             """
             MMC and misc variables
             """
-            D4PD.MMC_mass = missingmass.mass(taus, jets, METx, METy, sumET, self.fileset.datatype)
+            #D4PD.MMC_mass = missingmass.mass(taus, jets, METx, METy, sumET, self.fileset.datatype)
             D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
             D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
             D4PD.numJets = len(jets)
@@ -267,7 +274,26 @@ class HTauProcessor(ATLASStudent):
                 twomediumtaus.passed()
             else:
                 twomediumtaus.failed()
+                continue
             
+            if taus[0].electronVetoLoose == 0 and taus[1].electronVetoLoose == 0:
+                twotauspassevetoloose.passed()
+            else:
+                twotauspassevetoloose.failed()
+                continue
+            
+            if taus[0].electronVetoMedium == 0 and taus[1].electronVetoMedium == 0:
+                twotauspassevetomedium.passed()
+            else:
+                twotauspassevetomedium.failed()
+                continue
+            
+            if taus[0].electronVetoTight == 0 and taus[1].electronVetoTight == 0:
+                twotauspassevetotight.passed()
+            else:
+                twotauspassevetotight.failed()
+                continue
+
             """
             Truth-matching
             presently not possible in SMWZ D3PDs
@@ -316,5 +342,5 @@ class HTauProcessor(ATLASStudent):
             # use reset=True to reset all variables to their defaults after the fill
             # to avoid any values from this event carrying over into the next
             D4PD.cutflow = cutflow.int()
-            D4PD.Fill(reset=True)
+            D4PD.Fill()
             cutflow.reset()

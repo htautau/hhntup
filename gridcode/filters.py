@@ -33,6 +33,15 @@ class Trigger(EventFilter):
                event.EF_xe60_noMu
 
 
+class TriggerNoXE(EventFilter):
+
+    def passes(self, event):
+        
+        return event.EF_tau29_medium1_tau20_medium1 or \
+               event.EF_e20_medium or \
+               event.EF_e60_loose
+
+
 class MET(EventFilter):
 
     def passes(self, event):
