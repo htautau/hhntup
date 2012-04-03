@@ -1,0 +1,20 @@
+
+more details to come later...
+
+basic instructions:
+
+install atlastools:
+
+    git clone git://github.com/ndawe/atlastools.git
+
+or if you insist on using an inferior VCS such as Subversion:
+    
+    svn checkout http://svn.github.com/ndawe/atlastools.git
+
+Follow the README in atlastools for installation instructions
+
+Make sure you have pandatools setup and run (replace NoelDawe with your grid name and set --version to whatever you want):
+
+    grid-submit -m htau_datasets.yml -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
+
+This will run on all datasets in htau_datasets.yml matching VBF*. Replace VBF* with or append "data" to also run on data.
