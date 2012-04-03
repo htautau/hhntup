@@ -1,32 +1,21 @@
 #!/bin/bash
 
+if [[ $# -eq 0 ]]
+then
+    echo "Usage : $0 [clean|local|build|worker]"
+    exit
+fi
+
 BASE=${PWD}
 
 packages='rootpy goodruns atlastools tabulartext'
-
-if [[ "${1}" = "clean" ]]
-then
-    echo "Cleaning up..."
-    rm -rf cython
-    rm -rf lxml
-    rm -rf yaml
-    rm -rf python
-    rm -rf root
-    rm -rf rpmroot
-    
-    for package in ${packages}
-    do
-        rm -rf ${package}
-        rm -f ${package}.tar.gz
-    done
-    exit
-fi
 
 repo='http://linuxsoft.cern.ch/cern/slc5X/updates/x86_64/RPMS/'
 GIT_USER=ndawe
 
 PYTHON_VERS_MAJOR=2.7
 PYTHON_VERS=2.7.2
+ROOT_VERS=5.30.00
 
 use_precompiled_python=true
 use_precompiled_root=true
@@ -38,70 +27,6 @@ function download_from_github() {
         wget --no-check-certificate -O ${PACKAGE}.tar.gz http://github.com/${GIT_USER}/${PACKAGE}/tarball/master
     fi
 }
-
-if [[ "${1}" = "local" ]]
-then
-    for package in ${packages}
-    do
-        download_from_github ${package}
-    done
-    exit
-fi
-
-# install python and ROOT
-
-if [[ ! -e python ]]
-then
-    if $use_precompiled_python
-    then
-        wget http://hep.phys.sfu.ca/~endw/grid/python.tar.gz
-        tar -zxf python.tar.gz
-        rm -rf python.tar.gz
-    else
-        wget http://www.python.org/ftp/python/${PYTHON_VERS}/Python-${PYTHON_VERS}.tar.bz2
-        tar -xjf Python-${PYTHON_VERS}.tar.bz2
-        cd Python-${PYTHON_VERS}
-        ./configure --enable-shared --prefix=${BASE}/python
-        make -j
-        make install
-        cd ..
-        rm -rf Python-${PYTHON_VERS}
-        rm -rf Python-${PYTHON_VERS}.tar.bz2
-    fi
-fi
-
-export PATH=${BASE}/python/bin${PATH:+:$PATH}
-export PYTHONPATH=${BASE}/python/lib/python${PYTHON_VERS_MAJOR}/site-packages${PYTHONPATH:+:$PYTHONPATH}
-export LD_LIBRARY_PATH=${BASE}/python/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-
-ROOT_VERS=5.30.00
-
-if [[ ! -e root ]]
-then
-    if ${use_precompiled_root}
-    then
-        wget http://hep.phys.sfu.ca/~endw/grid/root.tar.gz
-        tar -zxf root.tar.gz
-        rm -rf root.tar.gz
-    else
-        wget ftp://root.cern.ch/root/root_v${ROOT_VERS}.source.tar.gz
-        gzip -dc root_v${ROOT_VERS}.source.tar.gz | tar -xf -
-        rm -rf root_v${ROOT_VERS}.source.tar.gz
-        cd root
-        ./configure --with-python-libdir=${BASE}/python/lib --with-python-incdir=${BASE}/python/include/python${PYTHON_VERS_MAJOR} \
-                    --with-dcap-libdir=/atlas/software/ATLASLocalRootBase/x86_64/gLite/current/d-cache/dcap/lib64 \
-                    --with-dcap-incdir=/atlas/software/ATLASLocalRootBase/x86_64/gLite/current/d-cache/dcap/include
-        make -j
-        cd ..
-    fi
-fi
-
-source root/bin/thisroot.sh
-
-python_version=`python -c "import distutils.sysconfig; print distutils.sysconfig.get_python_version()"`
-PYTHON_LIB=`python -c "import distutils.sysconfig; import os; print os.path.dirname(distutils.sysconfig.get_python_lib(standard_lib=True))"`
-echo "Python version "${python_version}
-echo "Python lib located in "${PYTHON_LIB}
 
 function install_python_package() {
     cd ${BASE}
@@ -144,27 +69,127 @@ function install_rpm() {
     export RPM_INCLUDE=${BASE}/rpmroot/usr/include/${3}${RPM_INCLUDE:+:$RPM_INCLUDE}
 }
 
-export RPM_INCLUDE=${BASE}/rpmroot/usr/include${RPM_INCLUDE:+:$RPM_INCLUDE}
+function setup_rpm() {
+    export RPM_INCLUDE=${BASE}/rpmroot/usr/include${RPM_INCLUDE:+:$RPM_INCLUDE}
+    export LD_LIBRARY_PATH=${BASE}/rpmroot/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+    export PATH=${BASE}/rpmroot/usr/bin${PATH:+:$PATH}
+}
 
-if [[ ! -e rpmroot ]]
-then
-    install_rpm ${repo} libxml2-2.6.26-2.1.12.x86_64.rpm libxml2
-    install_rpm ${repo} libxml2-devel-2.6.26-2.1.12.x86_64.rpm libxml2
-    install_rpm ${repo} libxslt-1.1.17-2.el5_2.2.x86_64.rpm libxslt
-    install_rpm ${repo} libxslt-devel-1.1.17-2.el5_2.2.x86_64.rpm libxslt
-fi
+function setup_root() {
+    source ${BASE}/root/bin/thisroot.sh
+}
 
-export LD_LIBRARY_PATH=${BASE}/rpmroot/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-export PATH=${BASE}/rpmroot/usr/bin${PATH:+:$PATH}
+function setup_python() {
+    export PATH=${BASE}/python/bin${PATH:+:$PATH}
+    export PYTHONPATH=${BASE}/python/lib/python${PYTHON_VERS_MAJOR}/site-packages${PYTHONPATH:+:$PYTHONPATH}
+    export LD_LIBRARY_PATH=${BASE}/python/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+    python_version=`python -c "import distutils.sysconfig; print distutils.sysconfig.get_python_version()"`
+    PYTHON_LIB=`python -c "import distutils.sysconfig; import os; print os.path.dirname(distutils.sysconfig.get_python_lib(standard_lib=True))"`
+    echo "Python version "${python_version}
+    echo "Python lib located in "${PYTHON_LIB}
+}
 
-if ! ${use_precompiled_python}
-then
-    install_python_package cython http://svn.github.com/cython/cython.git
-    install_python_package lxml http://svn.github.com/lxml/lxml.git
-    install_python_package yaml http://svn.pyyaml.org/pyyaml/tags/3.10/
-fi
+case "${1}" in
+clean)
 
-for package in ${packages}
-do
-    install_python_package ${package}
-done
+    echo "Cleaning up..."
+    rm -rf cython
+    rm -rf lxml
+    rm -rf yaml
+    rm -rf python
+    rm -rf root
+    rm -rf rpmroot
+    
+    for package in ${packages}
+    do
+        rm -rf ${package}
+        rm -f ${package}.tar.gz
+    done
+    exit
+    ;;
+
+local)
+
+    for package in ${packages}
+    do
+        download_from_github ${package}
+    done
+    exit
+    ;;
+
+build)
+
+    # install python and ROOT
+
+    if [[ ! -e python ]]
+    then
+        if $use_precompiled_python
+        then
+            wget http://hep.phys.sfu.ca/~endw/grid/python.tar.gz
+            tar -zxf python.tar.gz
+            rm -rf python.tar.gz
+        else
+            wget http://www.python.org/ftp/python/${PYTHON_VERS}/Python-${PYTHON_VERS}.tar.bz2
+            tar -xjf Python-${PYTHON_VERS}.tar.bz2
+            cd Python-${PYTHON_VERS}
+            ./configure --enable-shared --prefix=${BASE}/python
+            make -j
+            make install
+            cd ..
+            rm -rf Python-${PYTHON_VERS}
+            rm -rf Python-${PYTHON_VERS}.tar.bz2
+        fi
+    fi
+
+    setup_python
+
+    if [[ ! -e root ]]
+    then
+        if ${use_precompiled_root}
+        then
+            wget http://hep.phys.sfu.ca/~endw/grid/root.tar.gz
+            tar -zxf root.tar.gz
+            rm -rf root.tar.gz
+        else
+            wget ftp://root.cern.ch/root/root_v${ROOT_VERS}.source.tar.gz
+            gzip -dc root_v${ROOT_VERS}.source.tar.gz | tar -xf -
+            rm -rf root_v${ROOT_VERS}.source.tar.gz
+            cd root
+            ./configure --with-python-libdir=${BASE}/python/lib --with-python-incdir=${BASE}/python/include/python${PYTHON_VERS_MAJOR} \
+                        --with-dcap-libdir=/atlas/software/ATLASLocalRootBase/x86_64/gLite/current/d-cache/dcap/lib64 \
+                        --with-dcap-incdir=/atlas/software/ATLASLocalRootBase/x86_64/gLite/current/d-cache/dcap/include
+            make -j
+            cd ..
+        fi
+    fi
+    
+    setup_root
+
+    if [[ ! -e rpmroot ]]
+    then
+        install_rpm ${repo} libxml2-2.6.26-2.1.12.x86_64.rpm libxml2
+        install_rpm ${repo} libxml2-devel-2.6.26-2.1.12.x86_64.rpm libxml2
+        install_rpm ${repo} libxslt-1.1.17-2.el5_2.2.x86_64.rpm libxslt
+        install_rpm ${repo} libxslt-devel-1.1.17-2.el5_2.2.x86_64.rpm libxslt
+    fi
+    if ! ${use_precompiled_python}
+    then
+        install_python_package cython http://svn.github.com/cython/cython.git
+        install_python_package lxml http://svn.github.com/lxml/lxml.git
+        install_python_package yaml http://svn.pyyaml.org/pyyaml/tags/3.10/
+    fi
+
+    setup_rpm
+
+    for package in ${packages}
+    do
+        install_python_package ${package}
+    done
+    ;;
+
+worker)
+    
+    setup_rpm
+    setup_python
+    setup_root
+esac
