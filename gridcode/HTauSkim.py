@@ -5,45 +5,45 @@ Skimming procedure
 
 A) For DATA skimming:
 
-1) Trigger
+    1) Trigger
 
-    The lowest un-prescaled trigger can be found in
-    https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled
+        The lowest un-prescaled trigger can be found in
+        https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled
 
-    - Period A-I  :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_noMu
-    - Period J    :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_tight_noMu
-    - Period K    :  tau29_medium1_tau20_medium1 || tau125_medium1 || xe60_tight_noMu
-    - Period L-M  :  tau29T_medium1_tau20T_medium1 || tau125_medium1 || xe60_verytight_noMu
+        - Period A-I  :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_noMu
+        - Period J    :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_tight_noMu
+        - Period K    :  tau29_medium1_tau20_medium1 || tau125_medium1 || xe60_tight_noMu
+        - Period L-M  :  tau29T_medium1_tau20T_medium1 || tau125_medium1 || xe60_verytight_noMu
 
 
-2) Two LOOSE taus
+    2) Two LOOSE taus
 
-    - tau_author!=2 && tau_pT > 18 GeV && tau_numTrack > 0
-    - tau_JetBDTLoose==1 || tau_tauLlhLoose==1
+        - tau_author!=2 && tau_pT > 18 GeV && tau_numTrack > 0
+        - tau_JetBDTLoose==1 || tau_tauLlhLoose==1
 
-    * Note pT>18GeV cut was chosen to be able to fluctuate the TES.
+        * Note pT>18GeV cut was chosen to be able to fluctuate the TES.
 
-    With these two selection (1 & 2), we expect factor 50 reduction which
-    results in ~400-500 GB disk space at 5 fb-1.
+        With these two selection (1 & 2), we expect factor 50 reduction which
+        results in ~400-500 GB disk space at 5 fb-1.
 
 
 B) For MC skimming:
 
-1) Trigger : OR of above.
+    1) Trigger: OR of above.
 
 ==========
 Histograms
 ==========
 
-Some information has to be kept as "histogram" during the skimming.
+Some information has to be kept during the skimming.
 
-Just after "Trigger" requirement, the histograms should be made according
-to each trigger decision.  (three histograms for each variable)
+Just after the "Trigger" requirement, the histograms/trees should be made according
+to each trigger decision.  (three histograms for each variable below)
 
- * number of events with GRL (to check consistency of LumiCalc)
+ * number of events within GRL (to check consistency of LumiCalc)
  * mu-distribution
- * # of vertex
- * # of LOOSE tau (pt>18GeV, LLH||BDT-loose)
+ * # of vertices
+ * # of LOOSE taus (pt>18GeV, LLH||BDT-loose)
  * # of EF tau trigger object  (no matching is necessary)
  * tau pT spectrum
  * EF tau pT spectrum  (no matching is necessary)
@@ -55,10 +55,10 @@ to each trigger decision.  (three histograms for each variable)
 import ROOT
 from atlastools import utils
 from atlastools import datasets
-from atlastools.units import *
+from atlastools.units import GeV
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from atlastools.batch import ATLASStudent
-from rootpy.tree import Tree, TreeBuffer, TreeChain
+from rootpy.tree import Tree, TreeChain
 from mixins import TauFourMomentum
 
 
