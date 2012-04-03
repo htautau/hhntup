@@ -226,7 +226,10 @@ class HTauProcessor(ATLASStudent):
             for i, jet in zip((1, 2), (best_forward_jet, best_backward_jet)):
                 if jet:
                     for v, t in jet_variables:
-                        setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
+                        try:
+                            setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
+                        except AttributeError:
+                            pass
 
             if best_forward_jet and best_backward_jet:
                 D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta

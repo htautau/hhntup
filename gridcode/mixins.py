@@ -1,5 +1,5 @@
 from decorators import memoize
-from rootpy.hep.vector import FourVector
+from rootpy.vector import LorentzVector as FourVector
 from rootpy.hep import pdg
 
 class MCParticle(object):
