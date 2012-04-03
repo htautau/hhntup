@@ -74,6 +74,7 @@ VBFH125hh:
     weight: 1.1380E-04
 VBFH130hh:
     container: "mc10_7TeV.125206.PowHegPythia_VBFH130_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591/"
+    local: "/global/endw/higgs/H130/mc10_7TeV.125206.PowHegPythia_VBFH130_tautauhh.merge.NTUP_SMWZ.e776_s933_s946_r2302_r2300_p591_tid409000_00"
     tree: physics
     type: MC
     class: SIGNAL
