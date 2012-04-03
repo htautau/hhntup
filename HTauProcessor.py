@@ -285,7 +285,7 @@ class HTauProcessor(ATLASStudent):
                         getattr(self.D4PD, "trueTau%i_%s" % (i, v)).set(getattr(event.truetaus[j-1], v))
              
             # fill output ntuple
-            self.D4PD.Fill()
+            self.D4PD.Fill(reset=True)
 
 
 def missingMass(taus, jets, METx, METy, sumET, datatype):
