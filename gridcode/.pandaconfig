@@ -5,3 +5,4 @@ exclude *.root
 exclude *.log
 exclude .git
 exclude .svn
+exclude tmp*
