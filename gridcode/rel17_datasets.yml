@@ -19,7 +19,7 @@ data:
 Ztautau:
     container: "group10.perf-tau.mc10_7TeV.106052.PythiaZtautau.e574_s934_s946_r2310_r2300.01-01-02.D3PD_TauMEDIUM/"
     local: /cluster/data03/endw/analysis/testdata/Ztautau
-    tree: tauPerf
+    tree: tau
     type: MC
     class: BACKGROUND
     label: TAU

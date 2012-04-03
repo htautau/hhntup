@@ -1,7 +1,7 @@
 import ROOT
 from atlastools import utils
 from atlastools.units import *
-from rootpy.tree.filtering import EventFilter
+from rootpy.tree.filtering import EventFilter, EventFilterList
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from mixins import TauFourMomentum
@@ -18,7 +18,7 @@ class TriggerOR(EventFilter):
         are available in this given set of input files.
         This differs period to period.
         """
-        pass
+        return True
         
 
 class TwoGoodLooseTaus(EventFilter):
@@ -41,7 +41,7 @@ triggers = [
     ]
 
 
-class HTauProcessor(ATLASStudent):
+class HTauSkim(ATLASStudent):
 
     def work(self):
         
@@ -51,16 +51,20 @@ class HTauProcessor(ATLASStudent):
                           events=self.events,
                           usecache=False)
         
-        existing_triggers = ['event.%s' % trigger for trigger in triggers if trigger in intree]
-
-        or_cond = ' or '.join(existing_triggers)
-        trigger_or = 'def passed(self, event): return %s' % or_cond
-        or_method = exec trigger_or
-        TriggerOR.passes = or_method
+        existing_triggers = ['event.%s' % trigger for trigger in triggers if (trigger in intree)]
+        
+        print "ORing these triggers:" 
+        for trigger in existing_triggers:
+            print "\t%s" % trigger
+        
+        if existing_triggers:
+            or_cond = ' or '.join(existing_triggers)
+            exec 'def or_passed(self, event): return %s' % or_cond
+            TriggerOR.passes = or_passed
 
         self.output.cd()
         outtree = Tree(name=self.fileset.treename)
-        outtree.set_buffer(tree.buffer, create_branches=True, visible=False)
+        outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
@@ -68,10 +72,10 @@ class HTauProcessor(ATLASStudent):
             TriggerOR(),
             TwoGoodLooseTaus()
         ])
-        tree.filters += self.event_filters
+        intree.filters += self.event_filters
 
         # define tree collections
-        tree.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
+        intree.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
 
         # entering the main event loop...
         for event in intree:
