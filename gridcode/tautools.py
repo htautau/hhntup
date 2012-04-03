@@ -124,7 +124,8 @@ def get_tau_decays(event):
     """
     decays = []
     for mc in event.mc:
-        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus) and mc.status == 2:
+        # include status 11 for Herwig compat.
+        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus) and mc.status in (2, 11):
             init_state = mc
             final_state = mc.final_state()
             decays.append(TauDecay(init_state, final_state))
