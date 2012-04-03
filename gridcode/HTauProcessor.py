@@ -29,26 +29,18 @@ class HTauProcessor(ATLASStudent):
 
         # this tree will contain info pertaining to true tau decays
         # for possible use in the optimization of a missing mass calculator
-        mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TruthTau)
+        mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TrueTau_MCBlock)
         
-        for v, t in reco_variables + common_variables:
-            for tau in (1, 2):
-                variables.append(("tau%i_%s" % (tau, v), t))
+        D4PD_model = RecoTauBlock + RecoJetBlock + EventVariables
         
         # only create truth branches for MC
         if self.fileset.datatype == datasets.MC:
-            for v, t in truth_variables + common_variables:
-                for tau in (1, 2):
-                    variables.append(("trueTau%i_%s" % (tau, v), t))
+            D4PD_model = D4PD_model + TrueTauBlock
+            
             # add branches for VBF Higgs associated partons
             if self.fileset.name.startswith("VBFH"):
-                for v, t in parton_variables:
-                    for parton in (1, 2):
-                        variables.append(("parton%i_%s" % (parton, v), t))
+                D4PD_model = D4PD_model + PartonBlock
         
-        for v, t in jet_variables + jet_extra_variables + jet_matched_variables:
-            for jet in (1, 2):
-                variables.append(("jet%i_%s" % (jet, v), t))
         
         # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
         tree = TreeChain(self.fileset.treename, files=self.fileset.files, events=self.events)
@@ -60,10 +52,8 @@ class HTauProcessor(ATLASStudent):
         tree.init()
         
         # create output tree
-        buffer = TreeBuffer(variables)
         self.output.cd()
-        D4PD = Tree(name = self.fileset.name)
-        D4PD.set_branches_from_buffer(buffer)
+        D4PD = Tree(name=self.fileset.name, model=D4PD_model)
         
         if self.fileset.datatype == datasets.MC:
             """

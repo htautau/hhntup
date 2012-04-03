@@ -1,100 +1,95 @@
 from rootpy.tree import TreeModel
 from rootpy.vector import LorentzVector
 from rootpy.types import *
+import ROOT
 
-class TruthTau(TreeModel):
+class TrueTau_MCBlock(TreeModel):
 
     hadronic = BoolCol(default=False)
     nprong = IntCol(default=-1111)
     npi0 = IntCol(default=-1111)
     nneutrals = IntCol(default=-1111)
-    
+    charge = IntCol()
+
     fourvect = LorentzVector
     fourvect_vis = LorentzVector
     fourvect_miss = LorentzVector
     
+    fourvect_boost = LorentzVector
+    fourvect_vis_boost = LorentzVector
+    fourvect_miss_boost = LorentzVector
+
     dR_tau_nu = FloatCol(default=-1111)
     dTheta3d_tau_nu = FloatCol(default=-1111)
 
-reco_variables = (
-    ("BDTJetScore", "F"),
-    ("BDTEleScore", "F"),
-    ("nPi0", "I"),
-    ("pt", "F"),
-    ("seedCalo_eta", "F"),
-    ("seedCalo_phi", "F"),
-    ("seedCalo_numTrack", "I"),
-    ("charge", "I"),
-)
 
-reco_extra_variables = (
-    ("seedCalo_eta_boost", "F"),
-    ("seedCalo_phi_boost", "F")
-)
+class RecoTau(TreeModel):
+    
+    BDTJetScore = FloatCol()
+    BDTEleScore = FloatCol()
+    nPi0 = IntCol()
+    seedCalo_numTrack = IntCol()
+    charge = IntCol()
 
-truth_variables = (
-    ("pt", "F"),
-    ("m", "F"),
-    ("eta", "F"),
-    ("phi", "F"),
-    ("vis_m", "F"),
-    ("vis_eta", "F"),
-    ("vis_phi", "F"),
-    ("vis_Et", "F"),
-    ("nProng", "I"),
-    ("nPi0", "I"),
-    ("charge", "I"),
-)
+    fourvect = LorentzVector
+    fourvect_boost = LorentzVector
 
-common_variables = (
-    ("matched", "I"),
-    ("matched_dR", "F"),
-    ("matched_collision", "B"),
-)
 
-variables = [
-    ("Mvis_tau1_tau2","F"),
-    ("numJets","I"),
-    ("jet_AntiKt4TopoEM_matched", "VI"),
-    ("jet_AntiKt4TopoEM_matched_dR", "VF"),
-    ("numVertices","I"),
-    ("MET","F"),
-    ("MET_phi","F"),
-    ("HT","F"),
-    ("MMC_mass","F"),
-    ("error", "B"),
-    ("mu", "I"),
-    ("selected", "B")
-]
+class TrueTau(TreeModel):
+    
+    nprong = IntCol(default=-1111)
+    npi0 = IntCol(default=-1111)
+    charge = IntCol()
+    
+    fourvect = LorentzVector
+    fourvect_vis = LorentzVector
 
-jet_variables = (
-    ("E", "F"),
-    ("pt", "F"),
-    ("m", "F"),
-    ("eta", "F"),
-    ("phi", "F"),
-    ("jvtxf", "F")
-)
 
-jet_extra_variables = (
-    ("Et", "F"),
-    ("eta_boost", "F"),
-    ("phi_boost", "F")
-)
+class MatchedObject(TreeModel):
 
-jet_matched_variables = (
-    ("matched", "B"),
-    ("matched_dR", "F"),
-    ("matched_pdgId", "I")
-)
+    matched = IntCol()
+    matched_dR = FloatCol(default=1111)
+    matched_collision = BoolCol()
+    matched_pdgId = IntCol()
 
-parton_variables = (
-    ("pt", "F"),
-    ("eta", "F"),
-    ("phi", "F"),
-    ("pdgId", "I"),
-)
 
-parton_extra_variables = (
-    ("Et", "F"),
-)
+class EventVariables(TreeModel):
+
+    Mvis_tau1_tau2 = FloatCol()
+    numJets = IntCol()
+    jet_AntiKt4TopoEM_matched = ROOT.vector("int")
+    jet_AntiKt4TopoEM_matched_dR = ROOT.vector("float")
+    numVertices = IntCol()
+    MET = FloatCol()
+    MET_phi = FloatCol()
+    HT = FloatCol()
+    MMC_mass = FloatCol()
+    error = BoolCol()
+    mu = IntCol()
+    selected = BoolCol()
+
+
+class RecoJet(TreeModel):
+    
+    fourvect = LorentzVector
+    fourvect_boost = LorentzVector
+
+    jvtxf = FloatCol()
+
+
+class Parton(TreeModel):
+
+    fourvect = LorentzVector
+    pdgId = IntCol()
+
+
+class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + MatchedObject).prefix('tau2_')): pass
+
+ 
+class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')): pass
+
+
+class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')): pass
+
+
+class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + MatchedObject).prefix('parton2_')): pass
