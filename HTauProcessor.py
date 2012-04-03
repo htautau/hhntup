@@ -148,17 +148,21 @@ class HTauProcessor(ATLASStudent):
             
             if len(taus) < 2:
                 if self.fileset.datatype == datasets.MC:
-                    self.D4PD.selected.set(False)
+                    self.D4PD.selected = False
                     self.D4PD.Fill()
                 continue
             if self.fileset.datatype == datasets.MC:
-                self.D4PD.selected.set(True)
+                self.D4PD.selected = True
 
             # Sort the taus by BDT score
             taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)
             # Take the two taus with the highest BDT score
             taus = taus[:2]
-           
+            
+            """
+            Experimenting here....
+            """ 
+            """
             if self.fileset.datatype == datasets.MC:
                 print "mc_parent_index"
                 print [list(a) for a in self.tree.mc_parent_index]
@@ -169,7 +173,8 @@ class HTauProcessor(ATLASStudent):
                         for child in mc.ichildren():
                             print "%s (%i) -->" % (pdg.id_to_name(child.pdgId), child.status)
                             print " --> ".join(["%s (%i)" % (pdg.id_to_name(c.pdgId), c.status) for c in child.traverse_children()])
-             
+            """
+
             """
             Jet selection
             """
@@ -179,7 +184,7 @@ class HTauProcessor(ATLASStudent):
             
             # HT
             sumET = event.MET_LocHadTopo_sumet + event.MET_MuonBoy_sumet - event.MET_RefMuon_Track_sumet
-            self.D4PD.HT.set(sumET)
+            self.D4PD.HT = sumET
             
             """
             Overlap removal
@@ -201,22 +206,22 @@ class HTauProcessor(ATLASStudent):
             METx = event.MET_LocHadTopo_etx + event.MET_MuonBoy_etx - event.MET_RefMuon_Track_etx
             METy = event.MET_LocHadTopo_ety + event.MET_MuonBoy_ety - event.MET_RefMuon_Track_ety
             MET = math.sqrt(METx**2 + METy**2)
-            self.D4PD.MET.set(MET)
+            self.D4PD.MET = MET
             if MET > 0:
                 phi = math.asin(METy / MET)
             else:
                 phi = -1111.
-            self.D4PD.MET_phi.set(phi)
+            self.D4PD.MET_phi = phi
             
             """
             MMC and misc variables
             """
-            self.D4PD.MMC_mass.set(missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype))
-            self.D4PD.Mvis_tau1_tau2.set(utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi))
-            self.D4PD.numVertices.set(len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)]))
-            self.D4PD.numJets.set(len(jets))
+            self.D4PD.MMC_mass = missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype)
+            self.D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
+            self.D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
+            self.D4PD.numJets = len(jets)
             if self.fileset.datatype == datasets.MC:
-                self.D4PD.mu.set(event.lbn)
+                self.D4PD.mu = event.lbn
 
             """
             Jet variables
@@ -237,10 +242,10 @@ class HTauProcessor(ATLASStudent):
             for i, jet in zip((1, 2), (best_forward_jet, best_backward_jet)):
                 if jet:
                     for v, t in jet_variables:
-                        getattr(self.D4PD, "jet%i_%s" % (i, v)).set(getattr(jet, v))
+                        setattr(self.D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
 
             if best_forward_jet and best_backward_jet:
-                self.D4PD.jetDeltaEta.set(best_forward_jet.eta - best_backward_jet.eta)
+                self.D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta
 
 
             """
@@ -248,7 +253,7 @@ class HTauProcessor(ATLASStudent):
             """
             for v, t in reco_variables:
                 for i, tau in zip((1, 2), taus):
-                    getattr(self.D4PD, "tau%i_%s" % (i, v)).set(getattr(tau, v))
+                    setattr(self.D4PD, "tau%i_%s" % (i, v), getattr(tau, v))
             
             """
             Truth-matching
@@ -266,7 +271,7 @@ class HTauProcessor(ATLASStudent):
                             print "dR = %.4f" % tau.tauAssoc_dr
                         else:
                             print ""
-                    self.D4PD.error.set(True)
+                    self.D4PD.error = True
                 matched_truth = []
                 for i, tau in zip((1, 2), taus):
                     matching_truth_index = tau.trueTauAssoc_index
@@ -276,24 +281,24 @@ class HTauProcessor(ATLASStudent):
                         if matching_truth_index+1 not in unmatched_truth or \
                            matching_truth_index in matched_truth:
                             print "ERROR: match collision!"
-                            self.D4PD.tau1_matched_collision.set(True)
-                            self.D4PD.tau2_matched_collision.set(True)
-                            self.D4PD.trueTau1_matched_collision.set(True)
-                            self.D4PD.trueTau2_matched_collision.set(True)
-                            self.D4PD.error.set(True)
+                            self.D4PD.tau1_matched_collision = True
+                            self.D4PD.tau2_matched_collision = True
+                            self.D4PD.trueTau1_matched_collision = True
+                            self.D4PD.trueTau2_matched_collision = True
+                            self.D4PD.error = True
                         else:
                             unmatched_truth.remove(matching_truth_index+1)
                             matched_truth.append(matching_truth_index)
-                            getattr(self.D4PD, "tau%i_matched" % i).set(1)
-                            getattr(self.D4PD, "tau%i_matched_dR" % i).set(tau.trueTauAssoc_dr)
-                            getattr(self.D4PD, "trueTau%i_matched" % i).set(1)
-                            getattr(self.D4PD, "trueTau%i_matched_dR" % i).set(event.truetaus[matching_truth_index].tauAssoc_dr)
+                            setattr(self.D4PD, "tau%i_matched" % i, 1)
+                            setattr(self.D4PD, "tau%i_matched_dR" % i, tau.trueTauAssoc_dr)
+                            setattr(self.D4PD, "trueTau%i_matched" % i, 1)
+                            setattr(self.D4PD, "trueTau%i_matched_dR" % i, event.truetaus[matching_truth_index].tauAssoc_dr)
                             for v, t in truth_variables:
-                                getattr(self.D4PD, "trueTau%i_%s" % (i, v)).set(getattr(event.truetaus[matching_truth_index], v))
+                                setattr(self.D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[matching_truth_index], v))
                 
                 for i, j in zip(unmatched_reco, unmatched_truth):
                     for v, t in truth_variables:
-                        getattr(self.D4PD, "trueTau%i_%s" % (i, v)).set(getattr(event.truetaus[j-1], v))
+                        setattr(self.D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[j-1], v))
              
             # fill output ntuple
             self.D4PD.Fill(reset=True)
