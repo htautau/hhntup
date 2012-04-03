@@ -180,8 +180,19 @@ class HTauProcessor(ATLASStudent):
             if len(best_jets) < 2:
                 # if there are fewer than 2 other jets then skip event
                 twogoodjets.failed()
-                continue
-            twogoodjets.passed()
+            else:
+                twogoodjets.passed()
+                """
+                Jet variables
+                """
+                RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
+            
+            """
+            Reco tau variables
+            This must come after the RecoJetBlock is filled since
+            that sets the jet_beta for boosting the taus
+            """
+            RecoTauBlock.set(D4PD, taus[0], taus[1])
 
             """
             MET
@@ -230,11 +241,6 @@ class HTauProcessor(ATLASStudent):
                 D4PD.mu = event.lbn
 
             """
-            Jet variables
-            """
-            RecoJetBlock.set(D4PD, best_jets[0], best_jets[1])
-
-            """
             Experimenting here....
             Need to match jets to VBF jets
             """ 
@@ -252,11 +258,6 @@ class HTauProcessor(ATLASStudent):
                                     )
                                 )
                         D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(1111)
-            
-            """
-            Reco tau variables
-            """
-            RecoTauBlock.set(D4PD, taus[0], taus[1])
             
             """
             Truth-matching

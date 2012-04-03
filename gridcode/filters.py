@@ -15,11 +15,16 @@ class PriVertex(EventFilter):
 
         return any(ifilter(lambda vertex: vertex.nTracks >= 4 and vertex.type == 1, event.vertices))
 
+
 class Trigger(EventFilter):
 
     def passes(self, event):
         
-        return event.EF_tau29_medium1_tau20_medium1 == 1
+        return event.EF_tau29_medium1_tau20_medium1 or \
+               event.EF_e20_medium or \
+               event.EF_e60_loose or \
+               event.EF_xe60_noMu
+
 
 class MET(EventFilter):
 
@@ -29,6 +34,7 @@ class MET(EventFilter):
         METy = event.MET_LocHadTopo_ety + event.MET_MuonBoy_ety - event.MET_RefMuon_Track_ety
         MET = math.sqrt(METx**2 + METy**2)
         return MET > 25*GeV
+
 
 class JetCleaningLoose(EventFilter):
     """
@@ -51,6 +57,7 @@ class JetCleaningLoose(EventFilter):
          
         return True
 
+
 class JetCleaningMedium(EventFilter):
     """
     https://twiki.cern.ch/twiki/bin/view/AtlasProtected/HowToCleanJets#Bad_jets_rel16_data
@@ -70,17 +77,20 @@ class JetCleaningMedium(EventFilter):
          
         return True
 
+
 class LArError(EventFilter):
 
     def passes(self, event):
 
         return event.larError == 0
 
+
 class LArHole(EventFilter):
 
     def passes(self, event):
 
         return not any(ifilter(lambda jet: jet.pt > 40*GeV and (-0.1 < jet.emscale_eta < 1.5) and (-0.9 < jet.emscale_phi < -0.5), event.jets))
+
 
 class JetCrackVeto(EventFilter):
 
@@ -90,6 +100,7 @@ class JetCrackVeto(EventFilter):
             if jet.pt <= 20*GeV: continue
             if 1.3 < abs(jet.emscale_eta) < 1.7: return False
         return True
+
 
 class ElectronVeto(EventFilter):
 
@@ -105,6 +116,7 @@ class ElectronVeto(EventFilter):
            return False
 
        return True
+
 
 class MuonVeto(EventFilter):
 
