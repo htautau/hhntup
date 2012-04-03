@@ -5,7 +5,6 @@ from rootpy import common
 from atlastools import style
 from rootpy.plotting import Canvas, Hist
 from rootpy.io import open as openFile
-from rootpy.tree import Cut
 common.logon(batch=True)
 common.set_style(style.get_style())
 
@@ -18,10 +17,6 @@ t2 = f2.Get("Ztautau")
 c = Canvas()
 c.cd()
 mass = Hist(100,20,200)
-mass2 = Hist(100,20,200)
-mass2.SetFillStyle("/")
-mass2.SetFillColor("red")
-
 MMC_mass = Hist(100,20,400)
 
 from numpy import logspace
@@ -32,31 +27,20 @@ cuts.insert(0,0.)
 for i, BDTcut in enumerate(cuts):
     
     print "frame %i"% i
-    cut = Cut("(tau1_charge * tau2_charge == -1 ) && tau1_BDTJetScore>%f && tau2_BDTJetScore>%f" % (BDTcut, BDTcut))
+    cut = "(tau1_charge * tau2_charge == -1 ) && tau1_BDTJetScore>%f && tau2_BDTJetScore>%f" % (BDTcut, BDTcut)
 
+    """
     c.Clear()
     mass.Reset()
-    mass2.Reset()
     t.Draw("Mvis_tau1_tau2/1000", cut, hist=mass)
-    t2.Draw("Mvis_tau1_tau2/1000", cut & "tau1_matched && tau2_matched && EF_tau29_medium1_tau20_medium1", hist=mass2)
     mass.SetXTitle("M_{vis}(#tau_{1},#tau_{2}) [GeV]")
     mass.SetYTitle("Events")
-    mass /= sum(mass)
-    mass2 /= sum(mass2)
-    
-    _max = 1.2 * max(max(mass), max(mass2))
-    mass.SetMinimum(0)
-    mass2.SetMinimum(0)
-    mass.SetMaximum(_max)
-    mass2.SetMaximum(_max)
-
     mass.Draw()
-    mass2.Draw("hist same")
-    label = common.makeLabel(0.7,0.8,"BDT > %.2f"% BDTcut, size=25)
+    label = routines.makeLabel(0.7,0.8,"BDT > %.2f"% BDTcut, size=25)
     label.Draw()
-    c.SaveAs("mass_overlay/mass_%04d.png"% i)
-    
+    c.SaveAs("mass/mass_%04d.eps"% i)
     """
+
     c.Clear()
     MMC_mass.Reset()
     t.Draw("MMC_mass", cut, hist=MMC_mass)
@@ -66,7 +50,6 @@ for i, BDTcut in enumerate(cuts):
     label = routines.makeLabel(0.7,0.8,"BDT > %.2f"% BDTcut, size=25)
     label.Draw()
     c.SaveAs("mass/MMC_mass_%04d.eps"% i)
-    """
 
     """
     c.Clear()

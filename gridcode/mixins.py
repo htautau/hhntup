@@ -2,6 +2,16 @@ from decorators import memoize
 from rootpy.vector import LorentzVector as FourVector
 from rootpy.hep import pdg
 
+class FourMomentum(object):
+
+    @property
+    def fourmom(self):
+
+        vect = FourVector()
+        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        return vect
+
+
 class MCParticle(object):
 
     def __init__(self):

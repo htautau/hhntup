@@ -1,3 +1,8 @@
+L1_2TAU8_TAUI ????
+L1_TAU15_XS35
+L1_2TAU8_TAU11
+L1_4J10
+L1_4J15
 EF_tau29_medium_xs28_b15
 EF_tau29_loose_xs45_3J10
 EF_mu15i

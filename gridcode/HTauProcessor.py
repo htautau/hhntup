@@ -8,7 +8,7 @@ from atlastools.filtering import GRLFilter
 from filters import *
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
-from mixins import MCParticle
+from mixins import MCParticle, FourMomentum
 import hepmc
 import tautools
 from models import *
@@ -43,21 +43,22 @@ class HTauProcessor(ATLASStudent):
                 variables.append(("jet%i_%s" % (jet, v), t))
 
         tree = TreeChain(self.fileset.treename, files = self.fileset.files)
+        tree.use_cache(True, cache_size=10000000, learn_entries=30)
         tree.init()
-         
-        copied_variables = []
-        
-        if self.fileset.datatype == datasets.MC:
-            copied_variables = tree.glob("EF_*") + \
-                               tree.glob("L1_*") + \
-                               tree.glob("L2_*") + \
-                               tree.glob("jet_AntiKt4TopoEM_*")
         
         buffer = TreeBuffer(variables)
         self.output.cd()
         D4PD = Tree(name = self.fileset.name)
         D4PD.set_branches_from_buffer(buffer)
-        D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
+        
+        if self.fileset.datatype == datasets.MC:
+            """
+            copied_variables = tree.glob("EF_*") + \
+                               tree.glob("L1_*") + \
+                               tree.glob("L2_*")
+            """
+            copied_variables = tree.glob("jet_AntiKt4TopoEM_*")
+            D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
@@ -76,8 +77,9 @@ class HTauProcessor(ATLASStudent):
         tree.set_filters(self.event_filters)
 
         # define tree collections
-        tree.define_collection(name="taus", prefix="tau_", size="tau_n")
-        tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n")
+        tree.define_collection(name="taus", prefix="tau_", size="tau_n", mixin=FourMomentum)
+        # jet_eta etc is AntiKt4LCTopo in tau-perf D3PDs
+        tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n", mixin=FourMomentum)
         tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
         tree.define_collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
         tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
@@ -166,6 +168,27 @@ class HTauProcessor(ATLASStudent):
             jets = otherjets
             
             """
+            Will filter jets by jet vertex fraction (JVF) here...
+            """
+
+            """
+            VBF jet selection
+            two highest pT jets sorted by eta
+            """
+            best_jets = sorted(sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2], key=lambda jet: jet.eta)
+            if len(best_jets) < 2:
+                continue
+
+            """
+            Get boost of 2-jet system
+            """
+            total_fourmom = best_jets[0].fourmom + best_jets[1].fourmom
+            print total_fourmom.BoostVector()
+
+            total_fourmom.Boost(-1*total_fourmom.BoostVector())
+            print total_fourmom
+
+            """
             MET
             """
             MET_LocHadTopo_etx = event.MET_LocHadTopo_etx_CentralReg + event.MET_LocHadTopo_etx_EndcapRegion + event.MET_LocHadTopo_etx_ForwardReg
@@ -200,7 +223,7 @@ class HTauProcessor(ATLASStudent):
             """
             MMC and misc variables
             """
-            D4PD.MMC_mass = missingmass.mass(taus, jets, METx, METy, sumET, self.fileset.datatype)
+            #D4PD.MMC_mass = missingmass.mass(taus, jets, METx, METy, sumET, self.fileset.datatype)
             D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
             D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
             D4PD.numJets = len(jets)
@@ -209,17 +232,13 @@ class HTauProcessor(ATLASStudent):
 
             """
             Jet variables
-            Store two highest pT jets sorted by eta
             """
-            best_jets = sorted(sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2], key=lambda jet: jet.eta)
-            
-            if len(best_jets) == 2:
-                for i, jet in zip((1, 2), (best_jets)):
-                    for v, t in jet_variables:
-                        try:
-                            setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
-                        except AttributeError:
-                            pass
+            for i, jet in zip((1, 2), (best_jets)):
+                for v, t in jet_variables:
+                    try:
+                        setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
+                    except AttributeError:
+                        pass
 
             """
             Experimenting here....

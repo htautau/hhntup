@@ -30,6 +30,11 @@ reco_variables = (
     ("charge", "I"),
 )
 
+reco_extra_variables = (
+    ("seedCalo_eta_boost", "F"),
+    ("seedCalo_phi_boost", "F")
+)
+
 truth_variables = (
     ("pt", "F"),
     ("m", "F"),
@@ -50,7 +55,6 @@ common_variables = (
     ("matched_collision", "B"),
 )
 
-# define branches for output ntuple
 variables = [
     ("Mvis_tau1_tau2","F"),
     ("numJets","I"),
@@ -77,6 +81,8 @@ jet_variables = (
 
 jet_extra_variables = (
     ("Et", "F"),
+    ("eta_boost", "F"),
+    ("phi_boost", "F")
 )
 
 jet_matched_variables = (

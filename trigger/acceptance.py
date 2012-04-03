@@ -10,7 +10,7 @@ tree = f.Get("VBFH130hh")
 
 total = float(tree.GetEntries())
 
-triggers = tree.glob("EF_*")
+triggers = tree.glob("L1_*")
 
 trigger_table = []
 
