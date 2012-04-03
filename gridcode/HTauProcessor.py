@@ -44,7 +44,7 @@ class HTauProcessor(ATLASStudent):
         tree = TreeChain(self.fileset.treename,
                          files=self.fileset.files,
                          events=self.events,
-                         usecache=True,
+                         cache=True,
                          cache_size=10000000,
                          learn_entries=30)
         
