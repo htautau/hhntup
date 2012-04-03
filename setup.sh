@@ -2,7 +2,8 @@
 
 BASE=${PWD}
 
-if [ "${1}" = "clean" ]; then
+if [[ "${1}" = "clean" ]]
+then
     echo "Cleaning up..."
     rm -rf rootpy
     rm -rf goodruns
@@ -28,8 +29,10 @@ PYTHON_VERS=2.7.2
 use_precompiled_python=true
 use_precompiled_root=true
 
-if [ ! -e python ]; then
-    if $use_precompiled_python; then
+if [[ ! -e python ]]
+then
+    if $use_precompiled_python
+    then
         wget http://hep.phys.sfu.ca/~endw/grid/python.tar.gz
         tar -zxf python.tar.gz
         rm -rf python.tar.gz
@@ -52,8 +55,10 @@ export LD_LIBRARY_PATH=${BASE}/python/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 
 ROOT_VERS=5.30.00
 
-if [ ! -e root ]; then
-    if ${use_precompiled_root}; then
+if [[ ! -e root ]]
+then
+    if ${use_precompiled_root}
+    then
         wget http://hep.phys.sfu.ca/~endw/grid/root.tar.gz
         tar -zxf root.tar.gz
         rm -rf root.tar.gz
@@ -80,7 +85,7 @@ echo "Python lib located in "${PYTHON_LIB}
 function download_python_module_from_github() {
     PACKAGE=${1}
     ROOT=https://raw.github.com/${GIT_USER}/${PACKAGE}/master/
-    if [ ! -e ${PACKAGE} ];
+    if [[ ! -e ${PACKAGE} ]]
     then
         mkdir ${PACKAGE}
         cd ${PACKAGE}
@@ -100,19 +105,19 @@ function download_python_module_from_github() {
 
 function install_python_module() {
     cd ${BASE}
-    if [ ! -e ${1} ]; then
-        if hash svn 2>&-; then
-            echo "Checking out ${1}..."
-            svn checkout ${2} ${1}
-            if [ $? -ne 0 ]; then
-                echo "Subversion checkout failed."
-                echo "wget'ting instead..."
-                download_python_module_from_github ${1}
-            fi
+    if [[ ! -e ${1} ]]
+    then
+        echo "Checking out ${1}..."
+        if svn checkout ${2} ${1}
+        then
+            : # do nothing
         else
+            echo "Subversion checkout failed."
+            echo "wget'ting instead..."
             download_python_module_from_github ${1}
         fi
-        if [ -d ${1} ]; then
+        if [[ -d ${1} ]]
+        then
             echo "Installing ${1}..."
             cd ${1}
             echo ">>> lib dirs: ${PYTHON_LIB}:${BASE}/rpmroot/usr/lib64"
@@ -127,7 +132,8 @@ function install_python_module() {
 
 function install_rpm() {
     cd ${BASE}
-    if [ ! -e rpmroot ]; then
+    if [[ ! -e rpmroot ]]
+    then
         mkdir rpmroot
     fi
     echo "Installing ${2}..."
@@ -141,7 +147,8 @@ function install_rpm() {
 
 export RPM_INCLUDE=${BASE}/rpmroot/usr/include${RPM_INCLUDE:+:$RPM_INCLUDE}
 
-if [ ! -e rpmroot ]; then
+if [[ ! -e rpmroot ]]
+then
     install_rpm ${repo} libxml2-2.6.26-2.1.12.x86_64.rpm libxml2
     install_rpm ${repo} libxml2-devel-2.6.26-2.1.12.x86_64.rpm libxml2
     install_rpm ${repo} libxslt-1.1.17-2.el5_2.2.x86_64.rpm libxslt
@@ -151,7 +158,8 @@ fi
 export LD_LIBRARY_PATH=${BASE}/rpmroot/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export PATH=${BASE}/rpmroot/usr/bin${PATH:+:$PATH}
 
-if ! ${use_precompiled_python}; then
+if ! ${use_precompiled_python}
+then
     install_python_module cython http://svn.github.com/cython/cython.git
     install_python_module lxml http://svn.github.com/lxml/lxml.git
     install_python_module yaml http://svn.pyyaml.org/pyyaml/tags/3.10/
