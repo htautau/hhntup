@@ -36,5 +36,6 @@ Make sure you have pandatools setup and run this (replace NoelDawe with your gri
 
     grid-submit -m datasets.yml -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
 
-This will run on all datasets in htau_datasets.yml matching VBF*. Replace VBF* with or append "data" to also run on data.
+This will run on all datasets in datasets.yml matching VBF*. Replace VBF* with or append "data" to also run on data, etc.
+You may also append arguments understood by prun (i.e. --nFilesPerJob 8) at the end of the command above and they will be passes along to prun.
 The main code which runs on the grid is HTauProcessor.py. Event filters are defined in filters.py.
