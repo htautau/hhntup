@@ -1,5 +1,5 @@
 from decorators import memoize
-from rootpy.vector import LorentzVector as FourVector
+from rootpy.vector import LorentzVector
 from rootpy.hep import pdg
 
 """
@@ -10,29 +10,34 @@ functionality to Tree objects ("decorating" them).
 
 class FourMomentum(object):
 
+    def __init__(self):
+
+        self.fourvect_boosted = LorentzVector()
+    
     @property
     def fourvect(self):
 
-        vect = FourVector()
+        vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
         return vect
 
 
-class TauFourMomentum(object):
+class TauFourMomentum(FourMomentum):
 
     @property
     def fourvect(self):
 
-        vect = FourVector()
+        vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.seedCalo_eta, self.seedCalo_phi, self.m)
         return vect
 
 
-class MCParticle(object):
+class MCParticle(FourMomentum):
 
     def __init__(self):
 
-        self.__particle = pdg.GetParticle(self.pdgId)
+        self._particle = pdg.GetParticle(self.pdgId)
+        FourMomentum.__init__(self)
     
     def ichildren(self):
 
@@ -76,8 +81,8 @@ class MCParticle(object):
     
     def fourvect(self):
         
-        vect = FourVector()
-        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.__particle.Mass()*1000.)
+        vect = LorentzVector()
+        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self._particle.Mass()*1000.)
         return vect 
     
     def __repr__(self):
@@ -86,4 +91,5 @@ class MCParticle(object):
     
     def __str__(self):
 
-        return "%s (m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f)" % (self.__particle.GetName(), self.__particle.Mass()*1000., self.pt/1000., self.eta, self.phi)
+        return "%s (m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f)" % \
+            (self._particle.GetName(), self._particle.Mass() * 1000., self.pt / 1000., self.eta, self.phi)
