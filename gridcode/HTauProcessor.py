@@ -164,7 +164,6 @@ class HTauProcessor(ATLASStudent):
             if self.fileset.datatype == datasets.MC:
                 tau_decays = tautools.get_tau_decays(event)
                 for decay in tau_decays:
-                    print decay
                     hadronic = decay.hadronic
                     if hadronic:
                         mc_tree.hadronic = True
