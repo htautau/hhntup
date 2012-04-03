@@ -88,7 +88,12 @@ class HTauProcessor(ATLASStudent):
         tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
         tree.define_collection(name="electrons", prefix="el_", size="el_n")
         tree.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
-         
+
+        """
+        tree.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
+        tree.define_association(origin='truetaus', target='taus', prefix='tauAssoc_', link='index')
+        """
+
         # entering the main event loop...
         for event in tree:
             
@@ -210,7 +215,7 @@ class HTauProcessor(ATLASStudent):
                     for tau in event.truetaus:
                         print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (tau.pt, tau.eta, tau.phi),
                         if tau.tauAssoc_index >= 0:
-                            matched_tau = event.taus[tau.tauAssoc_index]
+                            matched_tau = event.taus.getitem(tau.tauAssoc_index)
                             print " ==> reco (pT: %.4f, eta: %.4f, phi: %.4f)" % (matched_tau.pt, matched_tau.seedCalo_eta, matched_tau.seedCalo_phi),
                             print "dR = %.4f" % tau.tauAssoc_dr
                         else:
