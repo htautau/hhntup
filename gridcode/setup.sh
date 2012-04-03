@@ -29,7 +29,11 @@ function download_from_github() {
     PACKAGE=${1}
     if [[ ! -e ${PACKAGE}.tar.gz ]]
     then
-        wget --no-check-certificate -O ${PACKAGE}.tar.gz http://github.com/${GIT_USER}/${PACKAGE}/tarball/master
+        if ! wget --no-check-certificate -O ${PACKAGE}.tar.gz http://github.com/${GIT_USER}/${PACKAGE}/tarball/master
+        then
+            echo "Failed to download package ${PACKAGE} from github"
+            exit 1
+        fi
     fi
 }
 
@@ -67,7 +71,11 @@ function install_rpm() {
     fi
     echo "Installing ${2}..."
     cd rpmroot
-    wget ${1}${2}
+    if ! wget ${1}${2}
+    then
+        echo "Failed to download ${1}${2}"
+        exit 1
+    fi
     rpm2cpio ${2} | cpio -idmv
     rm -rf ${2}
     cd ${BASE}
@@ -128,11 +136,19 @@ build)
     then
         if $use_precompiled_python
         then
-            wget http://hep.phys.sfu.ca/~endw/grid/python.tar.gz
+            if ! wget http://hep.phys.sfu.ca/~endw/grid/python.tar.gz
+            then
+                echo "Failed to download Python"
+                exit 1
+            fi
             tar -zxf python.tar.gz
             rm -rf python.tar.gz
         else
-            wget http://www.python.org/ftp/python/${PYTHON_VERS}/Python-${PYTHON_VERS}.tar.bz2
+            if ! wget http://www.python.org/ftp/python/${PYTHON_VERS}/Python-${PYTHON_VERS}.tar.bz2
+            then
+                echo "Failed to download Python"
+                exit 1
+            fi
             tar -xjf Python-${PYTHON_VERS}.tar.bz2
             cd Python-${PYTHON_VERS}
             ./configure --enable-shared --prefix=${BASE}/python
@@ -150,11 +166,19 @@ build)
     then
         if ${use_precompiled_root}
         then
-            wget http://hep.phys.sfu.ca/~endw/grid/root.tar.gz
+            if ! wget http://hep.phys.sfu.ca/~endw/grid/root.tar.gz
+            then
+                echo "Failed to download ROOT"
+                exit 1
+            fi
             tar -zxf root.tar.gz
             rm -rf root.tar.gz
         else
-            wget ftp://root.cern.ch/root/root_v${ROOT_VERS}.source.tar.gz
+            if ! wget ftp://root.cern.ch/root/root_v${ROOT_VERS}.source.tar.gz
+            then
+                echo "Failed to download ROOT"
+                exit 1
+            fi
             gzip -dc root_v${ROOT_VERS}.source.tar.gz | tar -xf -
             rm -rf root_v${ROOT_VERS}.source.tar.gz
             cd root
