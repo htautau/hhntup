@@ -13,6 +13,17 @@ or if you insist on using an inferior VCS such as Subversion:
 
 Follow the README in atlastools for installation instructions
 
+If you also want to test the code locally then you will need to install rootpy and goodruns.
+Same procedure as above, just use these urls:
+
+    git://github.com/ndawe/rootpy.git or http://svn.github.com/ndawe/rootpy.git
+
+    git://github.com/ndawe/goodruns.git or http://svn.github.com/ndawe/goodruns.git
+
+and be sure to use at least Python version 2.6 (2.7 is preferred).
+These additional packages (alond with Python 2.7 and ROOT 5.30) are downloaded and installed automatically on the grid
+in the setup.sh script.
+
 Make sure you have pandatools setup and run (replace NoelDawe with your grid name and set --version to whatever you want):
 
     grid-submit -m htau_datasets.yml -s HTauProcessor -u NoelDawe --version 34 --extFile JERProviderPlots.root VBF*
