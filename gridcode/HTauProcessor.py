@@ -209,18 +209,17 @@ class HTauProcessor(ATLASStudent):
 
             """
             Jet variables
-            Store two highest pT jets
+            Store two highest pT jets sorted by eta
             """
-            best_jets = sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2]
+            best_jets = sorted(sorted(jets, key=lambda jet: jet.pt, reverse=True)[:2], key=lambda jet: jet.eta)
             
             if len(best_jets) == 2:
                 for i, jet in zip((1, 2), (best_jets)):
-                    if jet:
-                        for v, t in jet_variables:
-                            try:
-                                setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
-                            except AttributeError:
-                                pass
+                    for v, t in jet_variables:
+                        try:
+                            setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
+                        except AttributeError:
+                            pass
 
             """
             Experimenting here....
