@@ -55,13 +55,13 @@ class HTauProcessor(ATLASStudent):
         D4PD = Tree(name=self.fileset.name, model=D4PD_model)
         
         if self.fileset.datatype == datasets.MC:
-            """
+            
+            # store triggers for MC
             copied_variables = tree.glob("EF_*") + \
                                tree.glob("L1_*") + \
                                tree.glob("L2_*")
-            """
             # do a verbatim copy of these branches from the input tree into the output tree
-            copied_variables = tree.glob("jet_AntiKt4TopoEM_*")
+            copied_variables += tree.glob("jet_AntiKt4TopoEM_*")
             D4PD.set_buffer(tree.buffer, variables=copied_variables, create_branches=True, visible=False)
             tree.always_read(copied_variables)
         
