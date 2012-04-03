@@ -6,7 +6,7 @@
 data:
     container: group10.perf-tau.JetTauEtMiss-AOD.01-01-05.D3PD_StreamD3PD_TauMEDIUM/:SFU-LCG2_LOCALGROUPDISK
     local: /cluster/data03/endw/analysis/testdata/data
-    grl: "grl/data11_7TeV.periodAllYear_DetStatus-v28-pro08-07_CoolRunQuery-00-04-00_Higgs_tautau_lh.xml"
+    grl: "grl/data11_7TeV.periodAllYear_DetStatus-v28-pro08-07_CoolRunQuery-00-04-00_Tau_h.xml"
     tree: tauPerf
     type: DATA
     class: BACKGROUND
