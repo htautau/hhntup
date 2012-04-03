@@ -159,7 +159,12 @@ class HTauProcessor(ATLASStudent):
             taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)
             # Take the two taus with the highest BDT score
             taus = taus[:2]
-            
+           
+            if self.fileset.datatype == datasets.MC:
+                for mc in self.tree.mc:
+                    for child in mc.iterchildren():
+                        print child.status
+             
             """
             Jet selection
             """
