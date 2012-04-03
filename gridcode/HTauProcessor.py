@@ -86,10 +86,12 @@ class HTauProcessor(ATLASStudent):
 
         twogoodtaus = EventFilter(name='TwoGoodTaus')
         twogoodjets = EventFilter(name='TwoGoodJets')
+        twomediumtaus = EventFilter(name='TwoMediumTaus')
 
         self.event_filters += [
             twogoodtaus,
-            twogoodjets
+            twogoodjets,
+            twomediumtaus
         ]
 
         cutflow = Cutflow()
@@ -260,6 +262,11 @@ class HTauProcessor(ATLASStudent):
                                     )
                                 )
                         D4PD.jet_AntiKt4TopoEM_matched_dR.push_back(1111)
+            
+            if taus[0].JetBDTMedium == 1 and taus[1].JetBDTMedium == 1:
+                twomediumtaus.passed()
+            else:
+                twomediumtaus.failed()
             
             """
             Truth-matching

@@ -16,6 +16,13 @@ class PriVertex(EventFilter):
         return any(ifilter(lambda vertex: vertex.nTracks >= 4 and vertex.type == 1, event.vertices))
 
 
+class OrigTrigger(EventFilter):
+
+    def passes(self, event):
+        
+        return event.EF_tau29_medium1_tau20_medium1
+
+
 class Trigger(EventFilter):
 
     def passes(self, event):
