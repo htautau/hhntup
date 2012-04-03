@@ -96,7 +96,15 @@ class HTauProcessor(ATLASStudent):
             ("pt", "F"),
             ("m", "F"),
             ("eta", "F"),
-            ("phi", "F")
+            ("phi", "F"),
+            ("jvtxf", "F")
+        )
+
+        jet_extra_variables = (
+            ("Et", "F"),
+            ("matched", "B"),
+            ("matched_dR", "F"),
+            ("matched_pdgId", "I")
         )
 
         for v, t in reco_variables + common_variables:
@@ -109,23 +117,23 @@ class HTauProcessor(ATLASStudent):
                 for tau in (1, 2):
                     variables.append(("trueTau%i_%s" % (tau, v), t))
         
-        for v, t in jet_variables:
+        for v, t in jet_variables + jet_extra_variables:
             for jet in (1, 2):
                 variables.append(("jet%i_%s" % (jet, v), t))
 
-        self.tree = TreeChain(self.fileset.treename, files = self.fileset.files)
-        self.tree.init()
+        tree = TreeChain(self.fileset.treename, files = self.fileset.files)
+        tree.init()
          
         copied_variables = []
         
         if self.fileset.datatype == datasets.MC:
-            copied_variables = self.tree.glob("EF_*")+self.tree.glob("L1_*")+self.tree.glob("L2_*")
+            copied_variables = tree.glob("EF_*")+tree.glob("L1_*")+tree.glob("L2_*")
         
         buffer = TreeBuffer(variables)
         self.output.cd()
-        self.D4PD = Tree(name = self.fileset.name)
-        self.D4PD.set_branches_from_buffer(buffer)
-        #self.D4PD.set_branches_from_buffer(self.tree.buffer, copied_variables, visible=False)
+        D4PD = Tree(name = self.fileset.name)
+        D4PD.set_branches_from_buffer(buffer)
+        #D4PD.set_branches_from_buffer(tree.buffer, copied_variables, visible=False)
         
         # set the event filters
         # passthrough for MC for trigger acceptance studies
@@ -142,18 +150,18 @@ class HTauProcessor(ATLASStudent):
                 ElectronVeto(),
                 MuonVeto()
             ])
-            self.tree.set_filters(self.event_filters)
+            tree.set_filters(self.event_filters)
 
         # define tree collections
-        self.tree.define_collection(name="taus", prefix="tau_", size="tau_n")
-        self.tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n")
-        self.tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
-        self.tree.define_collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
-        self.tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
-        self.tree.define_collection(name="electrons", prefix="el_", size="el_n")
-        self.tree.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
+        tree.define_collection(name="taus", prefix="tau_", size="tau_n")
+        tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n")
+        tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
+        tree.define_collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
+        tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
+        tree.define_collection(name="electrons", prefix="el_", size="el_n")
+        tree.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
          
-        for event in self.tree:
+        for event in tree:
              
             """
             Experimenting here....
@@ -198,11 +206,11 @@ class HTauProcessor(ATLASStudent):
             
             if len(taus) < 2:
                 if self.fileset.datatype == datasets.MC:
-                    self.D4PD.selected = False
-                    self.D4PD.Fill()
+                    D4PD.selected = False
+                    D4PD.Fill()
                 continue
             if self.fileset.datatype == datasets.MC:
-                self.D4PD.selected = True
+                D4PD.selected = True
 
             # Sort the taus by BDT score
             taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)
@@ -218,7 +226,7 @@ class HTauProcessor(ATLASStudent):
             
             # HT
             sumET = event.MET_LocHadTopo_sumet + event.MET_MuonBoy_sumet - event.MET_RefMuon_Track_sumet
-            self.D4PD.HT = sumET
+            D4PD.HT = sumET
             
             """
             Overlap removal
@@ -244,14 +252,14 @@ class HTauProcessor(ATLASStudent):
             try:
                 MET_MuonBoy_etx = event.MET_MuonBoy_etx_CentralReg + event.MET_MuonBoy_etx_EndcapRegion + event.MET_MuonBoy_etx_ForwardReg
                 MET_MuonBoy_ety = event.MET_MuonBoy_ety_CentralReg + event.MET_MuonBoy_ety_EndcapRegion + event.MET_MuonBoy_ety_ForwardReg
-            except AttributeError:
+            except AttributeError: # Above are missing in tauPerf D3PDs
                 MET_MuonBoy_etx = event.MET_MuonBoy_etx
                 MET_MuonBoy_ety = event.MET_MuonBoy_ety
 
             try:
                 MET_RefMuon_Track_etx = event.MET_RefMuon_Track_etx_CentralReg + event.MET_RefMuon_Track_etx_EndcapRegion + event.MET_RefMuon_Track_etx_ForwardReg
                 MET_RefMuon_Track_ety = event.MET_RefMuon_Track_ety_CentralReg + event.MET_RefMuon_Track_ety_EndcapRegion + event.MET_RefMuon_Track_ety_ForwardReg
-            except:
+            except AttributeError: # Above are missing in tauPerf D3PDs
                 MET_RefMuon_Track_etx = event.MET_RefMuon_Track_etx
                 MET_RefMuon_Track_ety = event.MET_RefMuon_Track_ety
             
@@ -260,22 +268,22 @@ class HTauProcessor(ATLASStudent):
 
             MET = math.sqrt(METx**2 + METy**2)
             
-            self.D4PD.MET = MET
+            D4PD.MET = MET
             if MET > 0:
                 phi = math.asin(METy / MET)
             else:
                 phi = -1111.
-            self.D4PD.MET_phi = phi
+            D4PD.MET_phi = phi
             
             """
             MMC and misc variables
             """
-            self.D4PD.MMC_mass = missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype)
-            self.D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
-            self.D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
-            self.D4PD.numJets = len(jets)
+            D4PD.MMC_mass = missingMass(taus, jets, METx, METy, sumET, self.fileset.datatype)
+            D4PD.Mvis_tau1_tau2 = utils.Mvis(taus[0].Et, taus[0].seedCalo_phi, taus[1].Et, taus[1].seedCalo_phi)
+            D4PD.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or (vtx.type == 3 and vtx.nTracks >= 2)])
+            D4PD.numJets = len(jets)
             if self.fileset.datatype == datasets.MC:
-                self.D4PD.mu = event.lbn
+                D4PD.mu = event.lbn
 
             """
             Jet variables
@@ -296,10 +304,10 @@ class HTauProcessor(ATLASStudent):
             for i, jet in zip((1, 2), (best_forward_jet, best_backward_jet)):
                 if jet:
                     for v, t in jet_variables:
-                        setattr(self.D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
+                        setattr(D4PD, "jet%i_%s" % (i, v), getattr(jet, v))
 
             if best_forward_jet and best_backward_jet:
-                self.D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta
+                D4PD.jetDeltaEta = best_forward_jet.eta - best_backward_jet.eta
             
             
             """
@@ -315,12 +323,13 @@ class HTauProcessor(ATLASStudent):
             """
             for v, t in reco_variables:
                 for i, tau in zip((1, 2), taus):
-                    setattr(self.D4PD, "tau%i_%s" % (i, v), getattr(tau, v))
+                    setattr(D4PD, "tau%i_%s" % (i, v), getattr(tau, v))
             
             """
             Truth-matching
+            presently not possible in SMWZ D3PDs
             """
-            if self.fileset.datatype == datasets.MC and len(event.truetaus) > 0:
+            if self.fileset.datatype == datasets.MC and hasattr(event, "trueTau_n"):
                 unmatched_reco = [1, 2]
                 unmatched_truth = range(1, min(len(event.truetaus)+1, 3))
                 if len(event.truetaus) > 2:
@@ -333,7 +342,7 @@ class HTauProcessor(ATLASStudent):
                             print "dR = %.4f" % tau.tauAssoc_dr
                         else:
                             print ""
-                    self.D4PD.error = True
+                    D4PD.error = True
                 matched_truth = []
                 for i, tau in zip((1, 2), taus):
                     matching_truth_index = tau.trueTauAssoc_index
@@ -343,27 +352,27 @@ class HTauProcessor(ATLASStudent):
                         if matching_truth_index+1 not in unmatched_truth or \
                            matching_truth_index in matched_truth:
                             print "ERROR: match collision!"
-                            self.D4PD.tau1_matched_collision = True
-                            self.D4PD.tau2_matched_collision = True
-                            self.D4PD.trueTau1_matched_collision = True
-                            self.D4PD.trueTau2_matched_collision = True
-                            self.D4PD.error = True
+                            D4PD.tau1_matched_collision = True
+                            D4PD.tau2_matched_collision = True
+                            D4PD.trueTau1_matched_collision = True
+                            D4PD.trueTau2_matched_collision = True
+                            D4PD.error = True
                         else:
                             unmatched_truth.remove(matching_truth_index+1)
                             matched_truth.append(matching_truth_index)
-                            setattr(self.D4PD, "tau%i_matched" % i, 1)
-                            setattr(self.D4PD, "tau%i_matched_dR" % i, tau.trueTauAssoc_dr)
-                            setattr(self.D4PD, "trueTau%i_matched" % i, 1)
-                            setattr(self.D4PD, "trueTau%i_matched_dR" % i, event.truetaus[matching_truth_index].tauAssoc_dr)
+                            setattr(D4PD, "tau%i_matched" % i, 1)
+                            setattr(D4PD, "tau%i_matched_dR" % i, tau.trueTauAssoc_dr)
+                            setattr(D4PD, "trueTau%i_matched" % i, 1)
+                            setattr(D4PD, "trueTau%i_matched_dR" % i, event.truetaus[matching_truth_index].tauAssoc_dr)
                             for v, t in truth_variables:
-                                setattr(self.D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[matching_truth_index], v))
+                                setattr(D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[matching_truth_index], v))
                 
                 for i, j in zip(unmatched_reco, unmatched_truth):
                     for v, t in truth_variables:
-                        setattr(self.D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[j-1], v))
+                        setattr(D4PD, "trueTau%i_%s" % (i, v), getattr(event.truetaus[j-1], v))
              
             # fill output ntuple
-            self.D4PD.Fill(reset=True)
+            D4PD.Fill(reset=True)
 
 
 def missingMass(taus, jets, METx, METy, sumET, datatype):
