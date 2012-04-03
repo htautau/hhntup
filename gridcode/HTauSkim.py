@@ -48,8 +48,7 @@ class HTauSkim(ATLASStudent):
         # initialize the TreeChain of all input files (each containing one tree named self.fileset.treename)
         intree = TreeChain(self.fileset.treename,
                           files=self.fileset.files,
-                          events=self.events,
-                          usecache=False)
+                          events=self.events)
         
         existing_triggers = ['event.%s' % trigger for trigger in triggers if (trigger in intree)]
         
