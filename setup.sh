@@ -2,32 +2,53 @@
 
 BASE=${PWD}
 
+packages='rootpy goodruns atlastools tabulartext'
+
 if [[ "${1}" = "clean" ]]
 then
     echo "Cleaning up..."
-    rm -rf rootpy
-    rm -rf goodruns
     rm -rf cython
     rm -rf lxml
     rm -rf yaml
-    rm -rf atlastools
     rm -rf python
     rm -rf root
     rm -rf rpmroot
-    rm -rf tabulartext
+    
+    for package in ${packages}
+    do
+        rm -rf ${package}
+        rm -f ${package}.tar.gz
+    done
     exit
 fi
 
 repo='http://linuxsoft.cern.ch/cern/slc5X/updates/x86_64/RPMS/'
 GIT_USER=ndawe
 
-# install python and ROOT
-
 PYTHON_VERS_MAJOR=2.7
 PYTHON_VERS=2.7.2
 
 use_precompiled_python=true
 use_precompiled_root=true
+
+function download_from_github() {
+    PACKAGE=${1}
+    if [[ ! -e ${PACKAGE}.tar.gz ]]
+    then
+        wget --no-check-certificate -O ${PACKAGE}.tar.gz http://github.com/${GIT_USER}/${PACKAGE}/tarball/master
+    fi
+}
+
+if [[ "${1}" = "local" ]]
+then
+    for package in ${packages}
+    do
+        download_from_github ${package}
+    done
+    exit
+fi
+
+# install python and ROOT
 
 if [[ ! -e python ]]
 then
@@ -82,40 +103,28 @@ PYTHON_LIB=`python -c "import distutils.sysconfig; import os; print os.path.dirn
 echo "Python version "${python_version}
 echo "Python lib located in "${PYTHON_LIB}
 
-function download_from_github() {
+function install_python_package() {
+    cd ${BASE}
     PACKAGE=${1}
     if [[ ! -e ${PACKAGE} ]]
     then
-        wget --no-check-certificate -O ${PACKAGE}.tar.gz http://github.com/${GIT_USER}/${PACKAGE}/tarball/master
-        tar -pzxf ${PACKAGE}.tar.gz
-        rm -f ${PACKAGE}.tar.gz
-        mv ${GIT_USER}-${PACKAGE}-* ${PACKAGE} 
-    fi
-}
-
-function install_python_module() {
-    cd ${BASE}
-    if [[ ! -e ${1} ]]
-    then
-        echo "Checking out ${1}..."
-        if svn checkout ${2} ${1}
+        if tar -pzxf ${PACKAGE}.tar.gz
         then
-            : # do nothing
+            rm -f ${PACKAGE}.tar.gz
+            mv ${GIT_USER}-${PACKAGE}-* ${PACKAGE}
+            if [[ -d ${PACKAGE} ]]
+            then
+                echo "Installing ${PACKAGE}..."
+                cd ${PACKAGE}
+                echo ">>> lib dirs: ${PYTHON_LIB}:${BASE}/rpmroot/usr/lib64"
+                echo ">>> include dirs: ${RPM_INCLUDE}"
+                python setup.py build_ext --library-dirs="${PYTHON_LIB}:${BASE}/rpmroot/usr/lib64" --include-dirs="${RPM_INCLUDE}"
+                python setup.py build -e "/usr/bin/env python"
+                python setup.py install
+                cd ..
+            fi
         else
-            echo "Subversion checkout failed."
-            echo "wget'ting instead..."
-            download_from_github ${1}
-        fi
-        if [[ -d ${1} ]]
-        then
-            echo "Installing ${1}..."
-            cd ${1}
-            echo ">>> lib dirs: ${PYTHON_LIB}:${BASE}/rpmroot/usr/lib64"
-            echo ">>> include dirs: ${RPM_INCLUDE}"
-            python setup.py build_ext --library-dirs="${PYTHON_LIB}:${BASE}/rpmroot/usr/lib64" --include-dirs="${RPM_INCLUDE}"
-            python setup.py build -e "/usr/bin/env python"
-            python setup.py install
-            cd ..
+            exit 1
         fi
     fi
 }
@@ -150,12 +159,12 @@ export PATH=${BASE}/rpmroot/usr/bin${PATH:+:$PATH}
 
 if ! ${use_precompiled_python}
 then
-    install_python_module cython http://svn.github.com/cython/cython.git
-    install_python_module lxml http://svn.github.com/lxml/lxml.git
-    install_python_module yaml http://svn.pyyaml.org/pyyaml/tags/3.10/
+    install_python_package cython http://svn.github.com/cython/cython.git
+    install_python_package lxml http://svn.github.com/lxml/lxml.git
+    install_python_package yaml http://svn.pyyaml.org/pyyaml/tags/3.10/
 fi
 
-install_python_module rootpy http://svn.github.com/ndawe/rootpy.git
-install_python_module goodruns http://svn.github.com/ndawe/goodruns.git
-install_python_module atlastools http://svn.github.com/ndawe/atlastools.git
-install_python_module tabulartext http://svn.github.com/ndawe/tabulartext.git
+for package in ${packages}
+do
+    install_python_package ${package}
+done
