@@ -106,7 +106,6 @@ clean)
         rm -rf ${package}
         rm -f ${package}.tar.gz
     done
-    exit
     ;;
 
 local)
