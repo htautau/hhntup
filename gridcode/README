@@ -39,18 +39,6 @@ tautools.py provides utilities for processing MC taus in the MC block of the D3P
 mixins.py defines "mixin" classes to add functionality to objects defined by TTree branches.
 
 
-Preparing to submit a job to the grid:
-======================================
-
-Download required packages that will be sent to the grid (rather than downloaded by the grid nodes since some don't allow this):
-
-    ./setup.sh local
-
-This downloads the "master branch" (the "trunk" in Subversion language) of several packages from github.com as tarballs.
-Do this whenever you want to use an updated version of the software. Most of these packages (especially rootpy and atlastools)
-are updated quite frequently.
-
-
 Submitting jobs to the Grid:
 ============================
 
