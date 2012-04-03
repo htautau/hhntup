@@ -12,11 +12,11 @@ A) For DATA skimming:
 
     - Period A-I  :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_noMu
     - Period J    :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_tight_noMu
-    - Period K    : tau29_medium1_tau20_medium1 || tau125_medium1 || xe60_tight_noMu
-    - Period L-M  : tau29T_medium1_tau20T_medium1 || tau125_medium1 || xe60_verytight_noMu
+    - Period K    :  tau29_medium1_tau20_medium1 || tau125_medium1 || xe60_tight_noMu
+    - Period L-M  :  tau29T_medium1_tau20T_medium1 || tau125_medium1 || xe60_verytight_noMu
 
 
-2) Two LOOSE tau
+2) Two LOOSE taus
 
     - tau_author!=2 && tau_pT > 18 GeV && tau_numTrack > 0
     - tau_JetBDTLoose==1 || tau_tauLlhLoose==1
@@ -64,15 +64,25 @@ from mixins import TauFourMomentum
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 
-class TriggerOR(EventFilter):
+class Triggers(EventFilter):
 
     def passes(self, event):
         """
-        This method is generated dynamically based on which triggers
-        are available in this given set of input files.
-        This differs period to period.
+        - Period A-I  :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_noMu
+        - Period J    :  tau29_medium1_tau20_medium1 || tau100_medium || xe60_tight_noMu
+        - Period K    :  tau29_medium1_tau20_medium1 || tau125_medium1 || xe60_tight_noMu
+        - Period L-M  :  tau29T_medium1_tau20T_medium1 || tau125_medium1 || xe60_verytight_noMu
         """
-        return True
+        if 177531 <= event.RunNumber <= 186493: # Period A-I
+            return event.tau29_medium1_tau20_medium1 or event.tau100_medium or event.xe60_noMu
+        elif 186516 <= event.RunNumber <= 186755: # Period J
+            return event.tau29_medium1_tau20_medium1 or event.tau100_medium or event.xe60_tight_noMu 
+        elif 186873 <= event.RunNumber <= 187815: # Period K
+            return event.tau29_medium1_tau20_medium1 or event.tau125_medium1 or event.xe60_tight_noMu
+        elif 188902 <= event.RunNumber <= 191933: # Period L-M
+            return event.tau29T_medium1_tau20T_medium1 or event.tau125_medium1 or event.xe60_verytight_noMu
+        else:
+            raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
         
 
 class TwoGoodLooseTaus(EventFilter):
@@ -84,17 +94,6 @@ class TwoGoodLooseTaus(EventFilter):
         return len(event.taus) > 1
 
 
-triggers = [
-    'EF_tau29T_medium1_tau20T_medium',
-    'EF_tau125_medium1',
-    'EF_xe60_verytight_noMu',
-    'EF_tau29_medium1_tau20_medium1',
-    'EF_e20_medium',
-    'EF_e60_loose',
-    'EF_xe60_noMu'
-    ]
-
-
 class HTauSkim(ATLASStudent):
 
     def work(self):
@@ -104,17 +103,6 @@ class HTauSkim(ATLASStudent):
                           files=self.fileset.files,
                           events=self.events)
         
-        existing_triggers = ['event.%s' % trigger for trigger in triggers if (trigger in intree)]
-        
-        print "ORing these triggers:" 
-        for trigger in existing_triggers:
-            print "\t%s" % trigger
-        
-        if existing_triggers:
-            or_cond = ' or '.join(existing_triggers)
-            exec 'def or_passed(self, event): return %s' % or_cond
-            TriggerOR.passes = or_passed
-
         self.output.cd()
         outtree = Tree(name=self.fileset.treename)
         outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
@@ -122,7 +110,7 @@ class HTauSkim(ATLASStudent):
         # set the event filters
         # passthrough for MC for trigger acceptance studies
         self.event_filters = EventFilterList([
-            TriggerOR(),
+            Triggers(),
             TwoGoodLooseTaus()
         ])
         intree.filters += self.event_filters
