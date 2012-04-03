@@ -116,23 +116,23 @@ class HTauProcessor(ATLASStudent):
             Tau selection
             """
             # Only consider taus with at least a calo seed and which have at least one track
-            taus = [tau for tau in event.taus if tau.author != 2 and tau.seedCalo_numTrack > 0]
+            event.taus.select(lambda tau: tau.author != 2 and tau.seedCalo_numTrack > 0)
             # kinematic region
-            taus = [tau for tau in taus if tau.pt > 20*GeV]
+            event.taus.select(lambda tau: tau.pt > 20*GeV)
             # muon veto
-            taus = [tau for tau in taus if tau.muonVeto == 0]
+            event.taus.select(lambda tau: tau.muonVeto == 0)
             # charge requirement
-            taus = [tau for tau in taus if abs(tau.charge) == 1]
+            event.taus.select(lambda tau: abs(tau.charge) == 1)
             # Did not reconstruct two candidates so skip event
-            if len(taus) < 2:
+            if len(event.taus) < 2:
                 twogoodtaus.failed()
                 continue
             twogoodtaus.passed()
 
             # Sort the taus by BDT score
-            taus = sorted(taus, key=lambda tau: tau.BDTJetScore, reverse=True)
+            event.taus.sort(key=lambda tau: tau.BDTJetScore, reverse=True)
             # Take the two taus with the highest BDT score
-            taus = taus[:2]
+            taus = event.taus[:2]
             
             """
             Jet selection
