@@ -54,6 +54,7 @@ to each trigger decision.  (three histograms for each variable)
 
 import ROOT
 from atlastools import utils
+from atlastools import datasets
 from atlastools.units import *
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from atlastools.batch import ATLASStudent
@@ -121,7 +122,7 @@ class HTauSkim(ATLASStudent):
         # set the event filters
         self.event_filters = EventFilterList([
             Triggers(),
-            TwoGoodLooseTaus()
+            TwoGoodLooseTaus(passthrough = self.fileset.datatype == datasets.MC)
         ])
         intree.filters += self.event_filters
 
