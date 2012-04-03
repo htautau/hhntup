@@ -10,3 +10,4 @@ build
 *.swp
 *.tar.gz
 *setup.sh
+grid-merge
