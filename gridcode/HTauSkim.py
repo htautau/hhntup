@@ -82,8 +82,7 @@ class Triggers(EventFilter):
             return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau125_medium1 or event.EF_xe60_tight_noMu
         elif 188902 <= event.RunNumber <= 191933: # Period L-M
             return event.EF_tau29T_medium1_tau20T_medium1 or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
-        else:
-            raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
         
 
 class TwoGoodLooseTaus(EventFilter):
