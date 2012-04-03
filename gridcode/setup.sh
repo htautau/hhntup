@@ -192,6 +192,7 @@ build)
 
 worker)
     
+    export ROOTPY_GRIDMODE=true
     setup_rpm
     setup_python
     setup_root

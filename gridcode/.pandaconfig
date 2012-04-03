@@ -1,5 +1,7 @@
 include JERProviderPlots.root
 include *.so
 exclude *.pyc
+exclude *.root
+exclude *.log
 exclude .git
 exclude .svn
