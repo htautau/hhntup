@@ -5,7 +5,7 @@ from atlastools import utils
 from atlastools.units import *
 from rootpy.tree.filtering import *
 from atlastools.filtering import GRLFilter
-from htaufilters import *
+from filters import *
 from atlastools.batch import ATLASStudent
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 
