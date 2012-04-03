@@ -8,3 +8,4 @@
 .nfs*
 build
 *.swp
+*.tar.gz
