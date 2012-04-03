@@ -145,13 +145,13 @@ class HTauProcessor(ATLASStudent):
             self.tree.set_filters(self.event_filters)
 
         # define tree collections
-        self.tree.collection(name="taus", prefix="tau_", size="tau_n")
-        self.tree.collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n")
-        self.tree.collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
-        self.tree.collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
-        self.tree.collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
-        self.tree.collection(name="electrons", prefix="el_", size="el_n")
-        self.tree.collection(name="vertices", prefix="vxp_", size="vxp_n")
+        self.tree.define_collection(name="taus", prefix="tau_", size="tau_n")
+        self.tree.define_collection(name="jets", prefix="jet_AntiKt4TopoEM_", size="jet_AntiKt4TopoEM_n")
+        self.tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n")
+        self.tree.define_collection(name="mc", prefix="mc_", size="mc_n", mixin=MCParticle)
+        self.tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
+        self.tree.define_collection(name="electrons", prefix="el_", size="el_n")
+        self.tree.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
          
         for event in self.tree:
              
