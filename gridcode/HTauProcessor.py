@@ -26,15 +26,15 @@ class HTauProcessor(ATLASStudent):
         """
         This is the one function that all "ATLASStudent"s must implement.
         """
-
-        # this tree will contain info pertaining to true tau decays
-        # for possible use in the optimization of a missing mass calculator
-        mc_tree = Tree(name = "_".join([self.fileset.name, "mc"]), model=TrueTau_MCBlock)
-        
+         
         D4PD_model = RecoTauBlock + RecoJetBlock + EventVariables
         
-        # only create truth branches for MC
         if self.fileset.datatype == datasets.MC:
+            # this tree will contain info pertaining to true tau decays
+            # for possible use in the optimization of a missing mass calculator
+            mc_tree = Tree(name = "tau_mc", model=TrueTau_MCBlock)
+            
+            # only create truth branches for MC
             D4PD_model += TrueTauBlock
             
             # add branches for VBF Higgs associated partons
