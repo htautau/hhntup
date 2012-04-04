@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 
-import os
-import subprocess
-import socket
-import shlex
-import multiprocessing as mp
-from itertools import cycle
+import cluster
 
 
-HOSTNAME = socket.gethostname()
-CWD = os.getcwd()
+hosts = cluster.get_hosts('hosts.sfu.txt')
+setup = cluster.get_setup('setup.noel.txt')
 
-hosts = ['lhc%02d' % i for i in xrange(1, 11)]
 datasets = [
     'data-B',
     'data-D',
@@ -26,34 +20,9 @@ datasets = [
     'data-M',
 ]
 
-NPROC = 10
-CMD = "./run -s HHProcessor.py -n %d --nice 10 %%s" % NPROC
-
-proc_cmds = []
-
-setup = 'source /cluster/data10/endw/bashrc.sfu/bashrc'
-
-for host in cycle(hosts):
-    if len(datasets) == 0:
-        break
-    ds = datasets.pop(0)
-    cmd = CMD % ds
-    print host
-    if not HOSTNAME.startswith(host):
-        cmd = "ssh %s '%s && cd %s && %s'" % (host, setup, CWD, cmd)
-    print cmd
-    proc_cmds.append(cmd)
-
-
-def run(cmd):
-
-    subprocess.call(cmd, shell=True)
-
-
-procs = []
-for cmd in proc_cmds:
-    proc = mp.Process(target=run, args=(cmd,))
-    proc.start()
-    procs.append(proc)
-for proc in procs:
-    proc.join()
+cluster.run('HHProcessor.py',
+            datasets=datasets,
+            hosts=hosts,
+            nproc=10,
+            nice=10,
+            setup=setup)

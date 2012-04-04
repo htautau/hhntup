@@ -1,46 +1,36 @@
 #!/usr/bin/env python
 
-import os
-import subprocess
-import socket
-import shlex
-import multiprocessing as mp
-
-tasks = {
-    'lhc07': ["PowHegPythia_VBFH*_tautauhh.mc11c"],
-    'lhc10': ["PowHegPythia_ggH*_tautauhh.mc11c"],
-    'lhc08': ["AlpgenJimmyZ*Np[0-5]_pt20.mc11c"],
-    'lhc09': ["AlpgenJimmyW*Np[0-5]_pt20.mc11c"],
-}
-
-HOSTNAME = socket.gethostname()
-CWD = os.getcwd()
-NPROC = 4
-NICE = 10
-CMD = "./run -s HHProcessor.py --nproc %d --nice %d " % (NPROC, NICE)
-
-proc_cmds = []
-
-setup = 'source /cluster/data10/endw/bashrc.sfu/bashrc'
-
-for host, samples in tasks.items():
-    cmd = CMD + " ".join(['"%s"' % s for s in samples])
-    print host
-    if not HOSTNAME.startswith(host):
-        cmd = "ssh %s '%s && cd %s && %s'" % (host, setup, CWD, cmd)
-    print cmd
-    proc_cmds.append(cmd)
+import cluster
 
 
-def run(cmd):
+hosts = cluster.get_hosts('hosts.sfu.txt')
+setup = cluster.get_setup('setup.noel.sfu.txt')
 
-    subprocess.call(cmd, shell=True)
+datasets = [
+    "PowHegPythia_VBFH*_tautauhh.mc11c",
+    "PowHegPythia_ggH*_tautauhh.mc11c",
+    "PythiaZH*_tautauhh.mc11c",
+    "PythiaWH*_tautauhh.mc11c",
+    "AlpgenJimmyZ*Np[0-5]_pt20.mc11c",
+    "AlpgenJimmyW*Np[0-5]_pt20.mc11c",
+    "st_tchan_taunu_McAtNlo_Jimmy.mc11c",
+    "st_schan_taunu_McAtNlo_Jimmy.mc11c",
+    "st_Wt_McAtNlo_Jimmy.mc11c",
+    "McAtNlo_JIMMY_WpWm_taunutaunu.mc11c",
+    "gg2WW0240_JIMMY_WW_taunutaunu.mc11c",
+    "McAtNlo_JIMMY_WpZ_taunutautau.mc11c",
+    "McAtNlo_JIMMY_WmZ_taunutautau.mc11c",
+    "McAtNlo_JIMMY_WpZ_qqtautau.mc11c",
+    "McAtNlo_JIMMY_ZZ_4tau.mc11c",
+    "McAtNlo_JIMMY_ZZ_tautaununu.mc11c",
+    "McAtNlo_JIMMY_ZZ_tautauqq.mc11c",
+    "T1_McAtNlo_Jimmy.mc11c",
+    "TTbar_FullHad_McAtNlo_Jimmy.mc11c",
+]
 
-
-procs = []
-for cmd in proc_cmds:
-    proc = mp.Process(target=run, args=(cmd,))
-    proc.start()
-    procs.append(proc)
-for proc in procs:
-    proc.join()
+cluster.run('HHProcessor.py',
+            datasets=datasets,
+            hosts=hosts,
+            nproc=10,
+            nice=10,
+            setup=setup)

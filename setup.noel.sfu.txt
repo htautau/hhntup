@@ -1,0 +1,1 @@
+source /cluster/data10/endw/bashrc.sfu/bashrc

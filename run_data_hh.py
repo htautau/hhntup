@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-import os
-import subprocess
-import socket
-import shlex
-import multiprocessing as mp
+import cluster
 
+
+hosts = cluster.get_hosts('hosts.sfu.txt')
+setup = cluster.get_setup('setup.noel.sfu.txt')
 
 HOSTNAME = socket.gethostname()
 CWD = os.getcwd()
