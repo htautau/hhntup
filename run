@@ -134,6 +134,13 @@ for dataset in _datasets:
         events = args.events,
         nice = args.nice,
         options = user_args)
+    
+    # skip if output file already exists
+    if os.path.exists(supervisor.outputname + '.root'):
+        print "Skipping dataset %s since the output file already exists..." % dataset
+        print "Delete or move it if you want to rerun on this dataset."
+        continue
+    
     supervisors[parent_connection] = supervisor
 
 for conn, supervisor in supervisors.items():

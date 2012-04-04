@@ -7,12 +7,12 @@ hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = [
-    "PowHegPythia_VBFH*_tautauhh.mc11c",
-    "PowHegPythia_ggH*_tautauhh.mc11c",
+    #"PowHegPythia_VBFH*_tautauhh.mc11c",
+    #"PowHegPythia_ggH*_tautauhh.mc11c",
     "PythiaZH*_tautauhh.mc11c",
     "PythiaWH*_tautauhh.mc11c",
-    "AlpgenJimmyZ*Np[0-5]_pt20.mc11c",
-    "AlpgenJimmyW*Np[0-5]_pt20.mc11c",
+    #"AlpgenJimmyZ*Np[0-5]_pt20.mc11c",
+    #"AlpgenJimmyW*Np[0-5]_pt20.mc11c",
     "st_tchan_taunu_McAtNlo_Jimmy.mc11c",
     "st_schan_taunu_McAtNlo_Jimmy.mc11c",
     "st_Wt_McAtNlo_Jimmy.mc11c",
