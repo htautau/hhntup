@@ -12,7 +12,9 @@ HOSTNAME = socket.gethostname()
 
 def get_load(host):
 
-    cmd = "ssh %s 'python -c \"import os; print os.getloadavg()[1]\"'" % host
+    cmd = 'python -c "import os; print os.getloadavg()[1]"'
+    if not HOSTNAME.startswith(host):
+        cmd = "ssh %s '%s'" % (host, cmd)
     load = float(subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].strip())
     return load
 
