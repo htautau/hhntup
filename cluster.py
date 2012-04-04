@@ -4,9 +4,17 @@ import subprocess
 import shlex
 import multiprocessing as mp
 from itertools import cycle
+import shlex
 
 
 HOSTNAME = socket.gethostname()
+
+
+def get_load(host):
+
+    cmd = "ssh %s 'python -c \"import os; print os.getloadavg()[1]\"'" % host
+    load = float(subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].strip())
+    return load
 
 
 def get_hosts(filename):

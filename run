@@ -137,7 +137,7 @@ for dataset in _datasets:
     
     # skip if output file already exists
     if os.path.exists(supervisor.outputname + '.root'):
-        print "Skipping dataset %s since the output file already exists..." % dataset
+        print "Skipping dataset %s since the output file already exists..." % dataset.name
         print "Delete or move it if you want to rerun on this dataset."
         continue
     
