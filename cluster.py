@@ -19,10 +19,22 @@ class Host(object):
 
         return get_load(self.name)
 
+    def load_metric(self):
+
+        return self.load * (self.njobs + 1) + self.njobs
+
     def __cmp__(self, other):
 
-        return cmp(self.load * (self.njobs + 1),
-                   other.load * (other.njobs + 1))
+        return cmp(self.load_metric(),
+                   other.load_metric())
+
+    def __str__(self):
+
+        return "%s(%.3f:%d)" % (self.name, self.load, self.njobs)
+
+    def __repr__(self):
+
+        return str(self)
 
 
 def get_load(host):
@@ -68,13 +80,14 @@ def run(student, datasets, hosts,
     while len(datasets) > 0:
         ds = datasets.pop(0)
         # load balancing
-        host = hosts.sort()[0]
+        hosts.sort()
+        host = hosts[0]
         cmd = CMD % ds
-        if not HOSTNAME.startswith(host):
+        if not HOSTNAME.startswith(host.name):
             if setup is not None:
-                cmd = "ssh %s '%s && cd %s && %s'" % (host, setup, CWD, cmd)
+                cmd = "ssh %s '%s && cd %s && %s'" % (host.name, setup, CWD, cmd)
             else:
-                cmd = "ssh %s 'cd %s && %s'" % (host, CWD, cmd)
+                cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
         print cmd
         proc = mp.Process(target=run_helper, args=(cmd,))
         proc.start()
@@ -83,3 +96,14 @@ def run(student, datasets, hosts,
 
     for proc in procs:
         proc.join()
+
+
+if __name__ == "__main__":
+
+    hosts = get_hosts('hosts.sfu.txt')
+    hosts = [Host(host) for host in hosts]
+
+    for i in xrange(50):
+        hosts.sort()
+        hosts[0].njobs += 1
+        print ' '.join(map(str, hosts))
