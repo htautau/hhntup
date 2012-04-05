@@ -1,13 +1,28 @@
 import socket
 import os
 import subprocess
-import shlex
 import multiprocessing as mp
-from itertools import cycle
-import shlex
 
 
 HOSTNAME = socket.gethostname()
+
+
+class Host(object):
+
+    def __init__(self, name):
+
+        self.name = name
+        self.njobs = 0
+
+    @property
+    def load(self):
+
+        return get_load(self.name)
+
+    def __cmp__(self, other):
+
+        return cmp(self.load * (self.njobs + 1),
+                   other.load * (other.njobs + 1))
 
 
 def get_load(host):
@@ -34,6 +49,11 @@ def get_setup(filename):
                             in f.readlines()])
 
 
+def run_helper(cmd):
+
+        subprocess.call(cmd, shell=True)
+
+
 def run(student, datasets, hosts,
         nproc=1,
         nice=0,
@@ -42,30 +62,24 @@ def run(student, datasets, hosts,
     CMD = "./run -s %s -n %d --nice %d %%s" % (student, nproc, nice)
     CWD = os.getcwd()
 
-    proc_cmds = []
-    for host in cycle(hosts):
-        if len(datasets) == 0:
-            break
+    hosts = [Host(host) for host in hosts]
+
+    procs = []
+    while len(datasets) > 0:
         ds = datasets.pop(0)
+        # load balancing
+        host = hosts.sort()[0]
         cmd = CMD % ds
-        print host
         if not HOSTNAME.startswith(host):
             if setup is not None:
                 cmd = "ssh %s '%s && cd %s && %s'" % (host, setup, CWD, cmd)
             else:
                 cmd = "ssh %s 'cd %s && %s'" % (host, CWD, cmd)
         print cmd
-        proc_cmds.append(cmd)
-
-
-    def run(cmd):
-
-        subprocess.call(cmd, shell=True)
-
-    procs = []
-    for cmd in proc_cmds:
-        proc = mp.Process(target=run, args=(cmd,))
+        proc = mp.Process(target=run_helper, args=(cmd,))
         proc.start()
+        host.njobs += 1
         procs.append(proc)
+
     for proc in procs:
         proc.join()
