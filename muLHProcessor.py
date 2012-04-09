@@ -31,9 +31,6 @@ from higgstautau.pileup import PileupReweighting
 
 from goodruns import GRL
 import subprocess
-
-
-
     
 class muLHProcessor(ATLASStudent):
     """
@@ -76,7 +73,7 @@ class muLHProcessor(ATLASStudent):
         # update the trigger config maps on every file change
         onfilechange.append((update_trigger_config, (trigger_config,)))
 
-        merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        merged_cutflow = Hist(6, 0, 6, name='cutflow', type='D')
         
         def update_cutflow(student, cutflow, name, file):
             cutflow += file.cutflow
@@ -94,7 +91,7 @@ class muLHProcessor(ATLASStudent):
 
         # create output tree
         self.output.cd()
-        tree_mulh = Tree(name=self.metadata.name + '_mulh', model=OutputModel)
+        tree = Tree(name=self.metadata.name + '_mulh', model=OutputModel)
 
 
         copied_variables = ['actualIntPerXing',
@@ -106,7 +103,7 @@ class muLHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             copied_variables += mc_triggers
 
-        tree_mulh.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
+        tree.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
 
         chain.always_read(copied_variables)
 
@@ -121,22 +118,17 @@ class muLHProcessor(ATLASStudent):
             JetOverlapRemoval(),
             JetCleaning(eta_max = 9999.0),
             ElectronLArHole(),
-            TauPreSelection(),
             TauLArHole(),
             LArHole(datatype=self.metadata.datatype),
             LArError(),
-            FinalOverlapRemoval(),
+            LeptonOverlapRemoval(),
+            DileptonVeto(),
             MuonSelection(),
+            TauPreSelection(),
             TauSelection(),
             JetSelection(),
-            HasOneMuon(),
-            HasGoodTau()
+            FinalOverlapRemoval()
         ])
-
-        if self.metadata.datatype == datasets.MC:
-            event_filters.insert(1, muMCTriggers())
-        else:
-            event_filters.insert(1, muTriggers())
 
         self.filters['event'] = event_filters
 
@@ -152,8 +144,8 @@ class muLHProcessor(ATLASStudent):
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
 
         # define tree objects
-        tree_mulh.define_object(name='tau', prefix='tau_')
-        tree_mulh.define_object(name='muon', prefix='muon_')
+        tree.define_object(name='tau', prefix='tau_')
+        tree.define_object(name='muon', prefix='muon_')
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
@@ -168,7 +160,7 @@ class muLHProcessor(ATLASStudent):
         # entering the main event loop...
         for event in chain:
 
-            tree_mulh.reset()
+            tree.reset()
             cutflow.reset()
             
             # Select tau with highest BDT score and surviving muon
@@ -178,24 +170,24 @@ class muLHProcessor(ATLASStudent):
             """
             RecoTauMuBlock filling
             """
-            RecoTauMuBlock.set(event, tree_mulh, Tau, Muon)
+            RecoTauMuBlock.set(event, tree, Tau, Muon)
 
 
             """
             Jets
             """
             numJets = len(event.jets)
-            tree_mulh.numJets = numJets
+            tree.numJets = numJets
             
             for jet in event.jets:
-                tree_mulh.jet_fourvect.push_back(jet.fourvect)
-                tree_mulh.jet_jvtxf.push_back(jet.jvtxf)
+                tree.jet_fourvect.push_back(jet.fourvect)
+                tree.jet_jvtxf.push_back(jet.jvtxf)
 
 
             """
             Miscellaneous
             """
-            tree_mulh.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
+            tree.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
                                          (vtx.type == 3 and vtx.nTracks >= 2)])
 
             HT = 0
@@ -205,31 +197,32 @@ class muLHProcessor(ATLASStudent):
             for jet in event.jets:
                 HT += jet.fourvect.Pt()
 
-            tree_mulh.HT = HT
+            tree.HT = HT
 
             #missing ET
             METx = event.MET_RefFinal_BDTMedium_etx
             METy = event.MET_RefFinal_BDTMedium_ety
             MET_vect = Vector2(METx, METy)
             MET = MET_vect.Mod()
-            getattr(tree_mulh, 'MET_vect').set_from(MET_vect)
+            tree.MET = MET
+            getattr(tree, 'MET_vect').set_from(MET_vect)
             sumET = event.MET_RefFinal_BDTMedium_sumet
-            tree_mulh.MET_sig = (2. * MET_vect.Mod() / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
+            tree.MET_sig = (2. * MET_vect.Mod() / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
 
             #transverse mass
             muET = Muon.fourvect.Pt()
             muPhiVector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
             mT = sqrt(2*MET*muET*(1 - cos(muPhiVector.DeltaPhi(MET_vect))))
-            tree_mulh.mass_transverse_met_muon = mT
+            tree.mass_transverse_met_muon = mT
 
             """
             Higgs fancier mass calculation
             """
             collin_mass, tau_x, muon_x = mass.collinearmass(Tau, Muon, METx, METy)
-            tree_mulh.mass_collinear_tau_muon = collin_mass
-            tree_mulh.tau_x  = tau_x
-            tree_mulh.muon_x = muon_x
-            tree_mulh.mass_mmc_tau_muon = 91#mass.missingmass(Tau, Muon, event.jets, METx, METy, sumET, self.metadata.datatype, 1)
+            tree.mass_collinear_tau_muon = collin_mass
+            tree.tau_x  = tau_x
+            tree.muon_x = muon_x
+            tree.mass_mmc_tau_muon = 91#mass.missingmass(Tau, Muon, event.jets, METx, METy, sumET, self.metadata.datatype, 1)
 
 
 
@@ -256,11 +249,16 @@ class muLHProcessor(ATLASStudent):
                 PtSum2 += (jet.fourvect.Pt())**2
                 allJets += jet.fourvect
 
+            leadJetPt = 0.0
+            if len(event.jets) > 0:
+                leadJetPt = event.jets[0].fourvect.Pt()
+            tree.leadJetPt = leadJetPt
+
             PtSum  += (Tau.fourvect.Pt() + Muon.fourvect.Pt())
             PtSum2 += (Tau.fourvect.Pt()**2 + Muon.fourvect.Pt()**2)
 
-            tree_mulh.neff_pt = PtSum2/(PtSum**2)
-            tree_mulh.mass_all_jets = allJets.M()
+            tree.neff_pt = PtSum2/(PtSum**2)
+            tree.mass_all_jets = allJets.M()
             
             if len(event.jets) >= 2:
                 event.jets.sort(key=lambda jet: jet.pt, reverse=True)
@@ -280,23 +278,21 @@ class muLHProcessor(ATLASStudent):
                                                                             jet2])
 
 
-            tree_mulh.mass_j1_j2 = mass_j1_j2
-            tree_mulh.eta_product_j1_j2 = eta_product_j1_j2
-            tree_mulh.eta_delta_j1_j2 = eta_delta_j1_j2
-            tree_mulh.tau_centrality_j1_j2 = tau_centrality_j1_j2
-            tree_mulh.muon_centrality_j1_j2 = muon_centrality_j1_j2
+            tree.mass_j1_j2 = mass_j1_j2
+            tree.eta_product_j1_j2 = eta_product_j1_j2
+            tree.eta_delta_j1_j2 = eta_delta_j1_j2
+            tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
+            tree.muon_centrality_j1_j2 = muon_centrality_j1_j2
 
             tau2Vector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
             muon2Vector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
             
-            tree_mulh.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, muon2Vector, MET_vect)
+            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, muon2Vector, MET_vect)
 
-            tree_mulh.sphericity = sphericity
-            tree_mulh.aplanarity = aplanarity
+            tree.sphericity = sphericity
+            tree.aplanarity = aplanarity
 
-            # fill output ntuple
-            tree_mulh.cutflow = cutflow.int()
-            tree_mulh.Fill()
+            event_weight = 1.0
 
             #Get pileup weight
             if self.metadata.datatype == datasets.MC:
@@ -309,11 +305,15 @@ class muLHProcessor(ATLASStudent):
                 if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
                     event_weight *= 0.29186
                     
-                tree_mulh.weight = event_weight
+            tree.weight = event_weight
+
+            # fill output ntuple
+            tree.cutflow = cutflow.int()
+            tree.Fill()
 
         self.output.cd()
-        tree_mulh.FlushBaskets()
-        tree_mulh.Write()
+        tree.FlushBaskets()
+        tree.Write()
 
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())

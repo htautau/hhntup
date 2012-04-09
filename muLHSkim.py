@@ -100,12 +100,12 @@ class muLHSkim(ATLASStudent):
 
         # Define additional trimming
         blocks_to_remove= ['ph_*',
-                           'trig_*',
                            'L1_*',
                            'L2_*',
                            'EF_*',
                            'cl_*',
                            'trk_*',
+                           'tau_otherTrk_*',
                            'jet_AntiKt6LCTopo_*',
                            'jet_AntiKt4TopoEM_*',
                            'mu_muid*',

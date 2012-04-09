@@ -1,3 +1,19 @@
+2012-04-09 Michel Trottier-McDonald <mtm@cern.ch>
+	* Migrating from atlasoff to atlasgrp
+
+2012-04-07 Michel Trottier-McDonald <mtm@cern.ch>
+	* Patched up the overlap removal order, to correct the muon and tau overlaps
+
+2012-04-02 Michel Trottier-McDonald <mtm@cern.ch>
+	* Migration to the ATLAS HSG4 SVN
+	* Setting tauBDTJetScore back to medium in preselection
+	* Adding MET in the Processor files
+	* Fixed the histogram matching bins
+	* Now requiring pt>18GeV for matched EFMG object, although that isn't quite enough
+	* Putting back the trig_* block in the skim: I need it for muon trigger matching
+	* Adding the electron triggers into the MC D3PD skims
+	* Removing the tau_OtherTrk_* block from the D3PD skims
+
 2012-03-06 Michel Trottier-McDonald <mtm@cern.ch>
 	* Adding muLHProcessor.py : Event quality and object selection
 	* Adding higgstautau/lephad/models.py

@@ -42,6 +42,7 @@ class RecoMET(TreeModel):
 
     MET_vect = Vector2
     MET_sig  = FloatCol()
+    MET      = FloatCol()
 
 
 class RecoJet(TreeModel):
@@ -82,6 +83,8 @@ class EventVariables(TreeModel):
     neff_pt = FloatCol()
     mass_all_jets = FloatCol()
 
+    leadJetPt = FloatCol()
+
     sphericity = FloatCol()
     aplanarity = FloatCol()
 
@@ -120,38 +123,3 @@ class RecoTauMuBlock((RecoTau).prefix('tau_') + (RecoMuon).prefix('muon_')):
         track_iso = muon.ptcone40/muon_pt <= 0.06
         calo_iso  = muon.etcone20/muon_pt <= 0.04
         setattr(tree, 'muon_isolated', (track_iso and calo_iso))
-
-
-class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
-
-    @classmethod
-    def set(cls, tree, jet1, jet2):
-
-        # sort by eta
-        jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect.Eta())
-
-        # determine jet CoM frame
-        beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-        tree.jet_beta.set_from(beta)
-
-        jet1.fourvect_boosted.set_from(jet1.fourvect)
-        jet2.fourvect_boosted.set_from(jet2.fourvect)
-        jet1.fourvect_boosted.Boost(beta * -1)
-        jet2.fourvect_boosted.Boost(beta * -1)
-
-        # sort by transformed eta
-        #jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect_boosted.Eta())
-
-        tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
-
-        tree.jet1_fourvect.set_from(jet1.fourvect)
-        tree.jet2_fourvect.set_from(jet2.fourvect)
-
-        tree.jet1_fourvect_boosted.set_from(jet1.fourvect_boosted)
-        tree.jet2_fourvect_boosted.set_from(jet2.fourvect_boosted)
-
-        tree.jet1_jvtxf = jet1.jvtxf
-        tree.jet2_jvtxf = jet2.jvtxf
-
-        tree.dEta_jets = abs(jet1.fourvect.Eta() - jet2.fourvect.Eta())
-        tree.dEta_jets_boosted = abs(jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())

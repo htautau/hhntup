@@ -173,12 +173,18 @@ class muTriggers(EventFilter):
 
 data_triggers = [
     'EF_mu18_MG',
-    'EF_mu18_MG_medium'
+    'EF_mu18_MG_medium',
+    'EF_e20_medium',
+    'EF_e22_medium',
+    'EF_e22vh_medium1'
 ]
 
 mc_triggers = [
     'EF_mu18_MG',
-    'EF_mu18_MG_medium'
+    'EF_mu18_MG_medium',
+    'EF_e20_medium',
+    'EF_e22_medium',
+    'EF_e22vh_medium1'
 ]
 
 
@@ -253,7 +259,7 @@ def tau_preselection(tau):
 
     if not (tau.pt > 20*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigLoose == 1) : return False
+    if not (tau.JetBDTSigMedium == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
     if not (tau.author != 2) : return False
     if not (abs(tau.charge) == 1) : return False
@@ -286,7 +292,15 @@ def muon_selection(mu):
     if not (mu.isCombinedMuon) : return False
     if not (mu.EFMG_matched) : return False
 
-    return True
+    # Find out if the muon is matched to a good trigger muon
+    nMatches = mu.EFMG_n
+    goodMatch = False
+    for i in range(0, nMatches):
+        if mu.EFMG_pt[i] > 18000: goodMatch = True
+
+    return goodMatch
+
+
 
 
 def electron_preselection(e):
@@ -381,7 +395,7 @@ class TauPreSelection(EventFilter):
     def passes(self, event):
 
         event.taus.select(lambda tau : tau_preselection(tau))
-        return True
+        return len(event.taus) > 0
 
 
 class TauSelection(EventFilter):
@@ -390,7 +404,7 @@ class TauSelection(EventFilter):
     def passes(self, event):
 
         event.taus.select(lambda tau : tau_selection(tau))
-        return len(event.taus) > 0
+        return len(event.taus) == 1
 
 
 class JetPreSelection(EventFilter):
@@ -421,39 +435,38 @@ class JetOverlapRemoval(EventFilter):
         return True
 
 
+class LeptonOverlapRemoval(EventFilter):
+    """ Muons > Electrons """
+
+    def passes(self, event):
+        """ Remove electrons matching muons """
+
+        event.electrons.select(lambda electron: not any([muon for muon in event.muons if (utils.dR(muon.eta, muon.phi, electron.eta, electron.phi) < 0.2)]))
+
+        return True
+
+
 class FinalOverlapRemoval(EventFilter):
     """Muons > Electrons > Taus > Jets"""
 
     def passes(self, event):
 
-        #Remove taus matching eletrons
         event.taus.select(lambda tau: not any([electron for electron in event.electrons if (utils.dR(electron.eta, electron.phi, tau.eta, tau.phi) < 0.2)]))
+        event.taus.select(lambda tau: not any([muon for muon in event.muons if (utils.dR(muon.eta, muon.phi, tau.eta, tau.phi) < 0.2)]))
+        event.jets.select(lambda jet: not any([tau for tau in event.taus if (utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.2)]))
 
-        #Remove electrons matching muons
-        event.electrons.select(lambda electron: not any([muon for muon in event.muons if (utils.dR(muon.eta, muon.phi, electron.eta, electron.phi) < 0.2)]))
-            
-        #Select tau candidate with highest BDT score and remove from jet collection
-        Tau = None
-        nTaus = len(event.taus)
-        if nTaus > 0:
-            event.taus.sort(key=lambda tau: tau.BDTJetScore, reverse=True)
-            Tau = event.taus[0]
-
-        if Tau:
-            event.jets.select(lambda jet: not (utils.dR(Tau.eta, Tau.phi, jet.eta, jet.phi) < .2))
-
-        return True
+        return len(event.taus) == 1
             
 
 
-class HasOneMuon(EventFilter):
+class DileptonVeto(EventFilter):
     """Keep events with one muon only"""
 
     def passes(self, event):
-        return len(event.muons) == 1
+        return len(event.muons) + len(event.electrons) == 1
 
 
-class HasGoodTau(EventFilter):
+class HasTau(EventFilter):
     """Keep events with at least one good tau"""
 
     def passes(self, event):
