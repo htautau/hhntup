@@ -31,6 +31,8 @@ from higgstautau.pileup import PileupReweighting
 
 from goodruns import GRL
 import subprocess
+
+import random
     
 class muLHProcessor(ATLASStudent):
     """
@@ -91,7 +93,8 @@ class muLHProcessor(ATLASStudent):
 
         # create output tree
         self.output.cd()
-        tree = Tree(name=self.metadata.name + '_mulh', model=OutputModel)
+        tree_train = Tree(name=self.metadata.name + '_mulh_train', model=OutputModel)
+        tree_test = Tree(name=self.metadata.name + '_mulh_test', model=OutputModel)
 
 
         copied_variables = ['actualIntPerXing',
@@ -103,7 +106,8 @@ class muLHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             copied_variables += mc_triggers
 
-        tree.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
+        tree_train.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
+        tree_test.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
 
         chain.always_read(copied_variables)
 
@@ -144,8 +148,10 @@ class muLHProcessor(ATLASStudent):
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
 
         # define tree objects
-        tree.define_object(name='tau', prefix='tau_')
-        tree.define_object(name='muon', prefix='muon_')
+        tree_train.define_object(name='tau', prefix='tau_')
+        tree_train.define_object(name='muon', prefix='muon_')
+        tree_test.define_object(name='tau', prefix='tau_')
+        tree_test.define_object(name='muon', prefix='muon_')
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
@@ -160,8 +166,16 @@ class muLHProcessor(ATLASStudent):
         # entering the main event loop...
         for event in chain:
 
-            tree.reset()
+            tree_train.reset()
+            tree_test.reset()
             cutflow.reset()
+
+            #Select if the event goes into the training or the testing tree
+            tree = None
+            if random.random() < 0.5:
+                tree = tree_train
+            else:
+                tree = tree_test
             
             # Select tau with highest BDT score and surviving muon
             Tau = event.taus[0]
@@ -312,8 +326,10 @@ class muLHProcessor(ATLASStudent):
             tree.Fill()
 
         self.output.cd()
-        tree.FlushBaskets()
-        tree.Write()
+        tree_train.FlushBaskets()
+        tree_train.Write()
+        tree_test.FlushBaskets()
+        tree_test.Write()
 
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
