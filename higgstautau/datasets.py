@@ -586,7 +586,7 @@ def update_dataset_db(
                                      dirs=dirs)
 
 
-def get_datasets(pattern, regex=False):
+def get_datasets(pattern):
 
     data = []
     patterns = pattern
@@ -594,8 +594,7 @@ def get_datasets(pattern, regex=False):
         patterns = [pattern]
     for name, ds in DATASETS.items():
         for pattern in patterns:
-            if (regex and re.match(pattern, name)) or \
-               fnmatch.fnmatch(name, pattern):
+            if re.match(pattern, name) or fnmatch.fnmatch(name, pattern):
                 data.append(ds)
                 continue
     return data

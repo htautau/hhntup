@@ -81,16 +81,10 @@ if args.runs != None:
 # expand globs
 _datasets = []
 for dataset in args.datasets:
-    if '*' in dataset:
-        result = datasets.get_datasets(dataset)
-        if not result:
-            sys.exit("No datasets matching %s" % dataset)
-        _datasets += result
-    else:
-        if dataset in datasets.DATASETS:
-            _datasets.append(datasets.DATASETS[dataset])
-        else:
-            sys.exit("No dataset %s" % dataset)
+    result = datasets.get_datasets(dataset)
+    if not result:
+        sys.exit("No datasets matching %s" % dataset)
+    _datasets += result
 
 
 def get_chunk(l, n, k):
