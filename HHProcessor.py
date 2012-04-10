@@ -458,9 +458,10 @@ class HHProcessor(ATLASStudent):
             tree.cutflow = cutflow.int()
             if self.metadata.datatype == datasets.MC:
                 # set the event weight
-                tree.weight = pileup_tool.GetCombinedWeight(event.RunNumber,
-                                                            event.mc_channel_number,
-                                                            event.averageIntPerXing)
+                tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
+                                                                   event.mc_channel_number,
+                                                                   event.averageIntPerXing)
+            tree.mc_weight = event.mc_event_weight
             tree.Fill()
 
         self.output.cd()

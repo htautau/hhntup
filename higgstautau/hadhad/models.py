@@ -38,7 +38,8 @@ class RecoTau(TreeModel):
 class EventVariables(TreeModel):
 
     # event weight given by the PileupReweighting tool
-    weight = FloatCol(default=1.)
+    pileup_weight = FloatCol(default=1.)
+    mc_weight = FloatCol(default=1.)
 
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
