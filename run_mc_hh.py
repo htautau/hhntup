@@ -7,10 +7,12 @@ hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = [
+    # signal
     "PowHegPythia_VBFH*_tautauhh.mc11c",
     "PowHegPythia_ggH*_tautauhh.mc11c",
     "PythiaZH*_tautauhh.mc11c",
     "PythiaWH*_tautauhh.mc11c",
+    # background
     "AlpgenJimmyZtautauNp[0-5]_pt20.mc11c",
     "AlpgenJimmyWtaunuNp[0-5]_pt20.mc11c",
     "AlpgenJimmyZmumuNp[0-5]_pt20.mc11c",
