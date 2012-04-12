@@ -102,7 +102,6 @@ class muLHSkim(ATLASStudent):
         blocks_to_remove= ['ph_*',
                            'L1_*',
                            'L2_*',
-                           'EF_*',
                            'cl_*',
                            'trk_*',
                            'tau_otherTrk_*',

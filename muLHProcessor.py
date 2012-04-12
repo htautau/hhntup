@@ -244,11 +244,17 @@ class muLHProcessor(ATLASStudent):
             Calculate fancier quantities for BDT input
             """
 
+            tau2Vector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
+            muon2Vector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
+            
+            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, muon2Vector, MET_vect)
+
             mass_j1_j2 = -1111
             eta_product_j1_j2 = -1111
             eta_delta_j1_j2 = -1111
             tau_centrality_j1_j2 = -1111
             muon_centrality_j1_j2 = -1111
+            tau_j1_j2_phi_centrality = -1111
             sphericity = -1111
             aplanarity = -1111
 
@@ -280,6 +286,11 @@ class muLHProcessor(ATLASStudent):
                 jet1 = event.jets[0].fourvect
                 jet2 = event.jets[1].fourvect
 
+                jet1_2Vector = Vector2(jet1.Px(), jet1.Py())
+                jet2_2Vector = Vector2(jet2.Px(), jet2.Py())
+
+                tau_j1_j2_phi_centrality = eventshapes.phi_centrality(jet1_2Vector, jet2_2Vector, tau2Vector)
+
                 mass_j1_j2 = (jet1 + jet2).M()
                 eta_product_j1_j2 = jet1.Eta() * jet2.Eta()
                 eta_delta_j1_j2 = abs(jet1.Eta() - jet2.Eta())
@@ -297,11 +308,7 @@ class muLHProcessor(ATLASStudent):
             tree.eta_delta_j1_j2 = eta_delta_j1_j2
             tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
             tree.muon_centrality_j1_j2 = muon_centrality_j1_j2
-
-            tau2Vector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
-            muon2Vector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
-            
-            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, muon2Vector, MET_vect)
+            tree.tau_j1_j2_phi_centrality = tau_j1_j2_phi_centrality
 
             tree.sphericity = sphericity
             tree.aplanarity = aplanarity

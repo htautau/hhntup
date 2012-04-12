@@ -1,3 +1,7 @@
+2012-04-12 Michel Trottier-McDonald <mtm@cern.ch>
+	* Implemented the run_mc_lh.py and run_data_lh.py scripts
+	* Added back the EF_* block adn the trig_* block in the skims
+
 2012-04-09 Michel Trottier-McDonald <mtm@cern.ch>
 	* Migrating from atlasoff to atlasgrp
 	* Splitting Processor Trees into testing and training trees

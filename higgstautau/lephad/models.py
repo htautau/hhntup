@@ -20,6 +20,7 @@ import ROOT
 class RecoTau(TreeModel):
 
     BDTJetScore = FloatCol()
+    chpiemeovercaloeme = FloatCol()
 
     JetBDTSigLoose = BoolCol()
     JetBDTSigMedium = BoolCol()
@@ -79,6 +80,7 @@ class EventVariables(TreeModel):
     tau_centrality_j1_j2 = FloatCol()
     muon_centrality_j1_j2 = FloatCol()
     met_phi_centrality = FloatCol()
+    tau_j1_j2_phi_centrality = FloatCol()
 
     neff_pt = FloatCol()
     mass_all_jets = FloatCol()
@@ -112,6 +114,7 @@ class RecoTauMuBlock((RecoTau).prefix('tau_') + (RecoMuon).prefix('muon_')):
         setattr(tree, 'tau_JetBDTSigTight', tau.JetBDTSigTight)
         setattr(tree, 'tau_numTrack', tau.numTrack)
         setattr(tree, 'tau_charge', tau.charge)
+        setattr(tree, 'tau_chpiemeovercaloeme', tau.calcVars_ChPiEMEOverCaloEME)
         getattr(tree, 'tau_fourvect').set_from(tau.fourvect)
 
         #Set muon variables
