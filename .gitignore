@@ -20,3 +20,4 @@ build
 *.pickle
 grid-merge
 xsec_cache
+externaltools
