@@ -8,6 +8,11 @@ For DATA skimming:
 
     1) Triggers
 
+        if 177986 <= event.RunNumber <= 187815: # Periods B-K
+            return event.EF_tau29_medium1_tau20_medium1
+        elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+            return event.EF_tau29T_medium1_tau20T_medium1
+
         See Triggers in filters.py
 
     2) Two LOOSE taus
@@ -24,7 +29,7 @@ For DATA skimming:
 For MC skimming:
 ----------------
 
-    1) Triggers: OR of above.
+    1) Triggers: same as above.
 
 
 ======================
