@@ -189,6 +189,46 @@ class TauLeadSublead(EventFilter):
         return event.taus[0].pt > self.lead and event.taus[1].pt > self.sublead
 
 
+class Triggers(EventFilter):
+
+    triggers = [
+        'EF_tau29_medium1_tau20_medium1',
+        'EF_tau29T_medium1_tau20T_medium1'
+    ]
+
+    def passes(self, event):
+        try:
+            if 177986 <= event.RunNumber <= 187815: # Periods B-K
+                return event.EF_tau29_medium1_tau20_medium1
+            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+                return event.EF_tau29T_medium1_tau20T_medium1
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+data_triggers = [
+    'EF_tau29_medium1_tau20_medium1',
+    'EF_tau29T_medium1_tau20T_medium1'
+    'EF_tau100_medium',
+    'EF_tau125_medium1',
+    'EF_xe60_noMu',
+    'EF_xe60_tight_noMu',
+    'EF_xe60_verytight_noMu',
+]
+
+mc_triggers = [
+    'EF_tau29_medium1_tau20_medium1',
+    'L1_2TAU11_TAU15',
+    'EF_tau100_medium',
+    'EF_tau125_medium1',
+    'EF_xe60_noMu',
+    'EF_xe60_tight_noMu',
+    'EF_xe60_verytight_noMu'
+]
+
+
 class SkimmingDataTriggers(EventFilter):
 
     def passes(self, event):
@@ -227,41 +267,6 @@ class SkimmingDataTriggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
-class Triggers(EventFilter):
-
-    def passes(self, event):
-        try:
-            if 177986 <= event.RunNumber <= 187815: # Periods B-K
-                return event.EF_tau29_medium1_tau20_medium1
-            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-                return event.EF_tau29T_medium1_tau20T_medium1
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
-
-
-data_triggers = [
-    'EF_tau29_medium1_tau20_medium1',
-    'EF_tau29T_medium1_tau20T_medium1'
-    'EF_tau100_medium',
-    'EF_tau125_medium1',
-    'EF_xe60_noMu',
-    'EF_xe60_tight_noMu',
-    'EF_xe60_verytight_noMu',
-]
-
-mc_triggers = [
-    'EF_tau29_medium1_tau20_medium1',
-    'L1_2TAU11_TAU15',
-    'EF_tau100_medium',
-    'EF_tau125_medium1',
-    'EF_xe60_noMu',
-    'EF_xe60_tight_noMu',
-    'EF_xe60_verytight_noMu'
-]
-
-
 class SkimmingMCTriggers(EventFilter):
 
     def passes(self, event):
@@ -273,24 +278,6 @@ class SkimmingMCTriggers(EventFilter):
         """
         return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_noMu or \
                event.EF_xe60_tight_noMu or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
-
-
-class MCTriggers(EventFilter):
-
-    def passes(self, event):
-        """
-        EF_tau29T_medium1_tau20T_medium1 is not available in new MC11 so we use the equivalent:
-        EF_tau29_medium1_tau20_medium1 && L1_2TAU11_TAU15
-        """
-        try:
-            if 177986 <= event.RunNumber <= 187815: # Periods B-K
-                return event.EF_tau29_medium1_tau20_medium1
-            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-                return event.EF_tau29_medium1_tau20_medium1 and event.L1_2TAU11_TAU15
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
 class JetCrackVeto(EventFilter):

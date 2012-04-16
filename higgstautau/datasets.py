@@ -10,7 +10,7 @@ This module generates a database of all MC and data datasets
 USE_PYAMI = True
 try:
     from pyAMI.client import AMIClient
-    from pyAMI.query import get_dataset_xsec_effic, \
+    from pyAMI.query import get_dataset_xsec_min_max_effic, \
                             get_dataset_info, \
                             get_provenance, \
                             get_periods, \
@@ -169,21 +169,28 @@ class Dataset(yaml.YAMLObject):
         global XSEC_CACHE_MODIFIED
 
         if self.datatype == DATA:
-            return 1., 1.
+            return 1., 1., 1., 1.
         if self.name in XSEC_CACHE:
             return XSEC_CACHE[self.name]
         elif USE_PYAMI:
             if self.ds in DS_NOPROV:
-                xsec, effic = get_dataset_xsec_effic(amiclient, DS_NOPROV[self.ds])
+                xsec, xsec_min, xsec_max, effic = get_dataset_xsec_min_max_effic(amiclient, DS_NOPROV[self.ds])
             else:
-                xsec, effic = get_dataset_xsec_effic(amiclient, self.ds)
-            if 'tautauhh' in self.name:
-                xsec *= 0.412997
-            XSEC_CACHE[self.name] = (xsec, effic)
+                xsec, xsec_min, xsec_max, effic = get_dataset_xsec_min_max_effic(amiclient, self.ds)
+            #if 'tautauhh' in self.name:
+            #    xsec *= 0.412997
+            XSEC_CACHE[self.name] = (xsec, xsec_min, xsec_max, effic)
             XSEC_CACHE_MODIFIED = True
-            return (xsec, effic)
+            return (xsec, xsec_min, xsec_max, effic)
         else:
-            return (None, None)
+            return (None, None, None, None)
+
+    @cached_property
+    def xsec_factor(self):
+
+        if 'tautauhh' in self.name:
+            return 0.412997
+        return 1.
 
     @cached_property
     def files(self):
