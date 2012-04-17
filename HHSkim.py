@@ -123,7 +123,6 @@ ch.SetBranchStatus("mu_staco_nTRTOutliers",    1)
 ch.SetBranchStatus("MET_*Reg*",    0)
 """
 
-
 import ROOT
 import math
 
@@ -142,7 +141,11 @@ from higgstautau.mixins import TauFourMomentum
 from higgstautau.hadhad.filters import Triggers
 import goodruns
 
-from externaltools import CoEPPTrigTool
+from externaltools import CoEPPTrigTool, PileupReweighting
+from ROOT import Root
+
+
+PileupReweighting = Root.TPileupReweighting
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
@@ -158,7 +161,6 @@ class SkimExtraTauPtModel(TreeModel):
     tau_pt = FloatCol()
 
 #TODO create pileup reweighting files for MC
-#TODO store mc_event_weight for events failing skim in MC
 
 class HHSkim(ATLASStudent):
 
@@ -184,6 +186,7 @@ class HHSkim(ATLASStudent):
                 'trig_EF_tau_pt',
                 'actualIntPerXing',
                 'averageIntPerXing',
+                'mc_event_weight',
                 'MET_RefFinal_BDTMedium_phi',
                 'MET_RefFinal_BDTMedium_et'
                 'MET_RefFinal_BDTMedium_sumet',
@@ -222,10 +225,25 @@ class HHSkim(ATLASStudent):
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
 
+        if self.metadata.datatype == datasets.MC:
+            # Initialize the pileup reweighting tool
+            pileup_tool = PileupReweighting()
+            pileup_tool.UsePeriodConfig("MC11b")
+            pileup_tool.Initialize()
+
         nevents = 0
+        nevents_mc_weight = 0
         # entering the main event loop...
         for event in intree:
+
             nevents += 1
+            nevents_mc_weight += event.mc_event_weight
+
+            if self.metadata.datatype == datasets.MC:
+                print event.RunNumber
+                pileup_tool.Fill(event.RunNumber, event.mc_channel_number,
+                                 event.mc_event_weight, event.averageIntPerXing);
+
             if trigger_filter(event):
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
@@ -241,6 +259,7 @@ class HHSkim(ATLASStudent):
                 else:
                     outtree_extra.number_of_good_vertices = number_of_good_vertices
                     outtree_extra.number_of_good_taus = number_of_good_taus
+                    outtree_extra.mc_event_weight = event.mc_event_weight
                     if event.taus:
                         # There can be at most one good tau if this event failed the skim
                         outtree_extra.tau_pt = event.taus[0].pt
@@ -251,8 +270,9 @@ class HHSkim(ATLASStudent):
         self.output.cd()
 
         # store the original number of events
-        cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        cutflow = Hist(2, 0, 2, name='cutflow', type='D')
         cutflow[0] = nevents
+        cutflow[1] = nevents_mc_weight
         cutflow.Write()
 
         # flush any baskets remaining in memory to disk
@@ -261,3 +281,7 @@ class HHSkim(ATLASStudent):
         if self.metadata.datatype == datasets.DATA:
             outtree_extra.FlushBaskets()
             outtree_extra.Write()
+
+        if self.metadata.datatype == datasets.MC:
+            # write the pileup reweighting file
+            pileup_tool.WriteToFile()
