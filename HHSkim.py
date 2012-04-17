@@ -56,8 +56,6 @@ to each trigger decision.  (three histograms for each variable below)
 Branch removal
 ==============
 
-Branches to remove suggested by Zinonas
-
 ch.SetBranchStatus("cl_*",    0)
 ch.SetBranchStatus("ph_*",    0)
 

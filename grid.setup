@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [[ -f externaltools/setup.sh ]]
+then
+    source externaltools/setup.sh
+fi
