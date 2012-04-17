@@ -52,6 +52,19 @@ to each trigger decision.  (three histograms for each variable below)
  * anything else???
 
 
+=================
+Trigger Emulation
+=================
+
+Emulation is performed using the CoEPPTrigTool package
+
+177531 - 178264 use the values in TrigTauHypo-00-02-35  (A-C)
+
+179710 - 180776 use the values in TrigTauHypo-00-02-42  (D-E)
+
+182013 - 191933 use the values in TrigTauHypo-00-03-02  (F-M)
+
+
 ==============
 Branch removal
 ==============
