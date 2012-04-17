@@ -65,9 +65,9 @@ ch.SetBranchStatus("jet_AntiKt6*",    0)
 ch.SetBranchStatus("jet_flavor_*",    0)
 ch.SetBranchStatus("jet_*Assoc*",    0)
 
->#ch.SetBranchStatus("tau_otherTrk_*",    0)
->#ch.SetBranchStatus("tau_cell_*",    0)
->#ch.SetBranchStatus("tau_cluster_*",    0)
+ch.SetBranchStatus("tau_otherTrk_*",    0)
+ch.SetBranchStatus("tau_cell_*",    0)
+ch.SetBranchStatus("tau_cluster_*",    0)
 
 ch.SetBranchStatus("EF_2e*",    0)
 ch.SetBranchStatus("EF_2mu*",    0)
@@ -172,7 +172,79 @@ class HHSkim(ATLASStudent):
         outtree = Tree(name=self.metadata.treename,
                        file=self.output,
                        model=SkimExtraModel)
-        outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
+
+
+        removed_branches = intree.glob([
+            "cl_*",
+            "ph_*",
+
+            "jet_AntiKt4TopoEM_*",
+            "jet_AntiKt4LCTopo_*",
+            "jet_AntiKt6*",
+            "jet_flavor_*",
+            "jet_*Assoc*",
+
+            "tau_otherTrk_*",
+            "tau_cell_*",
+            "tau_cluster_*",
+
+            "EF_2e*",
+            "EF_2mu*",
+            "EF_2j*",
+            "EF_xe*",
+            "EF_xs*",
+            "EF_e*",
+            "EF_mu*",
+            "EF_MU*",
+            "EF_g*",
+            "EF_j*",
+            "EF_g*",
+            "L1_*",
+            "L2_*",
+
+            "muonTruth*",
+            "jet_antikt4truth_*",
+            "collcand_*",
+
+            "el_*",
+            "mu_*",
+            "MET_*Reg*",
+            ],
+            prune=[
+            "el_cl_E",
+            "el_tracketa",
+            "el_trackphi",
+            "el_author",
+            "el_charge",
+            "el_loosePP",
+            "el_mediumPP",
+            "el_tightPP",
+            "el_OQ",
+
+            "mu_staco_E",
+            "mu_staco_pt",
+            "mu_staco_eta",
+            "mu_staco_phi",
+            "mu_staco_loose",
+            "mu_staco_medium",
+            "mu_staco_tight",
+            "mu_staco_isSegmentTaggedMuon",
+            "mu_staco_expectBLayerHit",
+            "mu_staco_nBLHits",
+            "mu_staco_nPixHits",
+            "mu_staco_nPixelDeadSensors",
+            "mu_staco_nSCTHits",
+            "mu_staco_nSCTDeadSensors",
+            "mu_staco_nPixHoles",
+            "mu_staco_nSCTHoles",
+            "mu_staco_nTRTHits",
+            "mu_staco_nTRTOutliers",
+            ])
+
+        outtree.set_buffer(intree.buffer,
+                           ignore_variables=removed_branches,
+                           create_branches=True,
+                           visible=False)
 
         if self.metadata.datatype == datasets.DATA:
             # outtree_extra holds info for events not included in the skim
@@ -184,7 +256,6 @@ class HHSkim(ATLASStudent):
                 'trig_EF_tau_pt',
                 'actualIntPerXing',
                 'averageIntPerXing',
-                'mc_event_weight',
                 'MET_RefFinal_BDTMedium_phi',
                 'MET_RefFinal_BDTMedium_et'
                 'MET_RefFinal_BDTMedium_sumet',
@@ -235,10 +306,9 @@ class HHSkim(ATLASStudent):
         for event in intree:
 
             nevents += 1
-            nevents_mc_weight += event.mc_event_weight
 
             if self.metadata.datatype == datasets.MC:
-                print event.RunNumber
+                nevents_mc_weight += event.mc_event_weight
                 pileup_tool.Fill(event.RunNumber, event.mc_channel_number,
                                  event.mc_event_weight, event.averageIntPerXing);
 
@@ -257,7 +327,6 @@ class HHSkim(ATLASStudent):
                 else:
                     outtree_extra.number_of_good_vertices = number_of_good_vertices
                     outtree_extra.number_of_good_taus = number_of_good_taus
-                    outtree_extra.mc_event_weight = event.mc_event_weight
                     if event.taus:
                         # There can be at most one good tau if this event failed the skim
                         outtree_extra.tau_pt = event.taus[0].pt
@@ -267,11 +336,16 @@ class HHSkim(ATLASStudent):
 
         self.output.cd()
 
+        if self.metadata.datatype == datasets.MC:
+            # store the original weighted number of events
+            cutflow = Hist(2, 0, 2, name='cutflow', type='D')
+            cutflow[1] = nevents_mc_weight
+        else:
+            cutflow = Hist(1, 0, 1, name='cutflow', type='D')
         # store the original number of events
-        cutflow = Hist(2, 0, 2, name='cutflow', type='D')
         cutflow[0] = nevents
-        cutflow[1] = nevents_mc_weight
         cutflow.Write()
+
 
         # flush any baskets remaining in memory to disk
         outtree.FlushBaskets()
