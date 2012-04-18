@@ -158,14 +158,14 @@ class LHSkim(ATLASStudent):
             self.output.cd()
 
         # set the event filters
-        trigger_filter = None
-        if self.metadata.datatype == datasets.DATA:
-            if self.metadata.title == datasets.MUON:
-                trigger_filter = muTriggers()
-            if self.metadata.title == datasets.ELEC:
-                trigger_filter = eTriggers()
-        else:
-            trigger_filter = MCTriggers()
+        # trigger_filter = None
+        # if self.metadata.datatype == datasets.DATA:
+        #     if self.metadata.title == datasets.MUON:
+        #         trigger_filter = muTriggers()
+        #     if self.metadata.title == datasets.ELEC:
+        #         trigger_filter = eTriggers()
+        # else:
+        #     trigger_filter = MCTriggers()
 
         # define collections for preselection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
@@ -185,7 +185,7 @@ class LHSkim(ATLASStudent):
         # entering the main event loop...
         for event in intree:
             nevents += 1
-            if trigger_filter(event):
+            if True:#trigger_filter(event):
                 nevents_passing_trigger +=1
                 #Vertex requirements
                 event.vertices.select(lambda vxp: vertex_selection(vxp))
@@ -214,34 +214,35 @@ class LHSkim(ATLASStudent):
                 if number_of_good_electrons > 0:
                     nevents_with_good_electrons +=1
 
-                if (number_of_good_taus > 0 and self.metadata.datatype == datasets.DATA):
-                    if (number_of_good_muons > 0 and self.metadata.title == datasets.MUON) or \
-                        (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC) or \
-                        (self.metadata.datatype == datasets.MC):
-                        nevents_with_good_lephad +=1
-                        outtree.number_of_good_vertices = number_of_good_vertices
-                        outtree.number_of_good_taus = number_of_good_taus
-                        outtree.number_of_good_muons = number_of_good_muons
-                        outtree.number_of_good_electrons = number_of_good_electrons
-                        outtree.Fill()
+                # if ((number_of_good_taus > 0 and self.metadata.datatype == datasets.DATA) and
+                #     ((number_of_good_muons > 0 and self.metadata.title == datasets.MUON) or \
+                #     (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC))) or \
+                #     (self.metadata.datatype == datasets.MC):
+                if True:
+                    nevents_with_good_lephad +=1
+                    outtree.number_of_good_vertices = number_of_good_vertices
+                    outtree.number_of_good_taus = number_of_good_taus
+                    outtree.number_of_good_muons = number_of_good_muons
+                    outtree.number_of_good_electrons = number_of_good_electrons
+                    outtree.Fill()
+                else:
+                    outtree_extra.number_of_good_vertices = number_of_good_vertices
+                    outtree_extra.number_of_good_taus = number_of_good_taus
+                    outtree_extra.number_of_good_muons = number_of_good_muons
+                    outtree_extra.number_of_good_electrons = number_of_good_electrons
+                    if event.taus:
+                        # There can be at most one good tau if this event failed the skim
+                        outtree_extra.tau_pt = event.taus[0].pt
                     else:
-                        outtree_extra.number_of_good_vertices = number_of_good_vertices
-                        outtree_extra.number_of_good_taus = number_of_good_taus
-                        outtree_extra.number_of_good_muons = number_of_good_muons
-                        outtree_extra.number_of_good_electrons = number_of_good_electrons
-                        if event.taus:
-                            # There can be at most one good tau if this event failed the skim
-                            outtree_extra.tau_pt = event.taus[0].pt
-                        else:
-                            outtree_extra.tau_pt = -1111.
-                        outtree_extra.Fill()
+                        outtree_extra.tau_pt = -1111.
+                    outtree_extra.Fill()
 
-                        if event.muons:
-                            # There can be at most one good muon if this event failed the skim
-                            outtree_extra.muon_pt = event.muons[0].pt
-                        else:
-                            outtree_extra.muon_pt = -1111.
-                        outtree_extra.Fill()
+                    if event.muons:
+                        # There can be at most one good muon if this event failed the skim
+                        outtree_extra.muon_pt = event.muons[0].pt
+                    else:
+                        outtree_extra.muon_pt = -1111.
+                    outtree_extra.Fill()
 
         self.output.cd()
 

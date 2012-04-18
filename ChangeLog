@@ -3,8 +3,9 @@
 	* Slightly changed run restrictions in trigger requirements to
 	capture all MC runs
 	* Added no trigger requirement for 2012 runs
-	* added *_skimselection as placeholders for the object requirement
+	* Added *_skimselection as placeholders for the object requirement
 	done in skimming
+	* Added back the L1_* and L2_* trigger bits as well
 
 2012-04-17 Michel Trottier-McDonald <mtm@cern.ch>
 	* Cleaned up the lephad section of datasets.cfg, adapted to ehad +
@@ -14,7 +15,7 @@
 
 2012-04-12 Michel Trottier-McDonald <mtm@cern.ch>
 	* Implemented the run_mc_lh.py and run_data_lh.py scripts
-	* Added back the EF_* block adn the trig_* block in the skims
+	* Added back the EF_* block and the trig_* block in the skims
 
 2012-04-09 Michel Trottier-McDonald <mtm@cern.ch>
 	* Migrating from atlasoff to atlasgrp
