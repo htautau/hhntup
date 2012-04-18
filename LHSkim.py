@@ -185,7 +185,7 @@ class LHSkim(ATLASStudent):
         # entering the main event loop...
         for event in intree:
             nevents += 1
-            if True:#trigger_filter(event):
+            if trigger_filter(event):
                 nevents_passing_trigger +=1
                 #Vertex requirements
                 event.vertices.select(lambda vxp: vertex_selection(vxp))
