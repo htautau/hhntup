@@ -62,9 +62,9 @@ from rootpy.registry import lookup_demotion
 
 from higgstautau.mixins import TauFourMomentum
 from higgstautau.mixins import FourMomentum
-from higgstautau.lephad.filters import muTriggers, muMCTriggers, \
+from higgstautau.lephad.filters import muTriggers, eTriggers, MCTriggers, \
                                        data_triggers, mc_triggers, \
-                                       tau_preselection, muon_preselection, vertex_selection
+                                       tau_skimselection, muon_skimselection, electron_skimselection, vertex_selection
 import goodruns
 
 
@@ -76,6 +76,7 @@ class SkimExtraModel(TreeModel):
     number_of_good_vertices = IntCol()
     number_of_good_taus = IntCol()
     number_of_good_muons = IntCol()
+    number_of_good_electrons = IntCol()
 
 
 class SkimExtraTauPtModel(TreeModel):
@@ -84,7 +85,7 @@ class SkimExtraTauPtModel(TreeModel):
     muon_pt = FloatCol()
 
 
-class muLHSkim(ATLASStudent):
+class LHSkim(ATLASStudent):
 
     def work(self):
 
@@ -100,8 +101,6 @@ class muLHSkim(ATLASStudent):
 
         # Define additional trimming
         blocks_to_remove= ['ph_*',
-                           'L1_*',
-                           'L2_*',
                            'cl_*',
                            'trk_*',
                            'tau_otherTrk_*',
@@ -159,14 +158,19 @@ class muLHSkim(ATLASStudent):
             self.output.cd()
 
         # set the event filters
+        trigger_filter = None
         if self.metadata.datatype == datasets.DATA:
-            trigger_filter = muTriggers()
+            if self.metadata.title == datasets.MUON:
+                trigger_filter = muTriggers()
+            if self.metadata.title == datasets.ELEC:
+                trigger_filter = eTriggers()
         else:
-            trigger_filter = muMCTriggers()
+            trigger_filter = MCTriggers()
 
         # define collections for preselection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
+        intree.define_collection(name='electrons', prefix='el_', size='el_n')
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
 
         #Cut Flow counters
@@ -174,6 +178,7 @@ class muLHSkim(ATLASStudent):
         nevents_passing_trigger = 0
         nevents_with_good_vertices = 0
         nevents_with_good_muons = 0
+        nevents_with_good_electrons = 0
         nevents_with_good_taus = 0
         nevents_with_good_lephad = 0
         
@@ -190,53 +195,65 @@ class muLHSkim(ATLASStudent):
 
                 # Tau Preselection
                 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Taus
-                event.taus.select(lambda tau : tau_preselection(tau))
+                event.taus.select(lambda tau : tau_skimselection(tau))
                 number_of_good_taus = len(event.taus)
                 if number_of_good_taus > 0:
                     nevents_with_good_taus +=1
 
                 # Muon Preselection
                 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Muons
-                event.muons.select(lambda mu : muon_preselection(mu)) 
+                event.muons.select(lambda mu : muon_skimselection(mu)) 
                 number_of_good_muons = len(event.muons)
                 if number_of_good_muons > 0:
                     nevents_with_good_muons +=1
-                
-                if (number_of_good_taus > 0 and number_of_good_muons > 0 and self.metadata.datatype == datasets.DATA) or \
-                       (self.metadata.datatype == datasets.MC):
-                    nevents_with_good_lephad +=1
-                    outtree.number_of_good_vertices = number_of_good_vertices
-                    outtree.number_of_good_taus = number_of_good_taus
-                    outtree.number_of_good_muons = number_of_good_muons
-                    outtree.Fill()
-                else:
-                    outtree_extra.number_of_good_vertices = number_of_good_vertices
-                    outtree_extra.number_of_good_taus = number_of_good_taus
-                    outtree_extra.number_of_good_muons = number_of_good_muons
-                    if event.taus:
-                        # There can be at most one good tau if this event failed the skim
-                        outtree_extra.tau_pt = event.taus[0].pt
-                    else:
-                        outtree_extra.tau_pt = -1111.
-                    outtree_extra.Fill()
 
-                    if event.muons:
-                        # There can be at most one good muon if this event failed the skim
-                        outtree_extra.muon_pt = event.muons[0].pt
+                # Electron Preselection
+                # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Electrons
+                event.electrons.select(lambda e : electron_skimselection(e)) 
+                number_of_good_electrons = len(event.electrons)
+                if number_of_good_electrons > 0:
+                    nevents_with_good_electrons +=1
+
+                if (number_of_good_taus > 0 and self.metadata.datatype == datasets.DATA):
+                    if (number_of_good_muons > 0 and self.metadata.title == datasets.MUON) or \
+                        (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC) or \
+                        (self.metadata.datatype == datasets.MC):
+                        nevents_with_good_lephad +=1
+                        outtree.number_of_good_vertices = number_of_good_vertices
+                        outtree.number_of_good_taus = number_of_good_taus
+                        outtree.number_of_good_muons = number_of_good_muons
+                        outtree.number_of_good_electrons = number_of_good_electrons
+                        outtree.Fill()
                     else:
-                        outtree_extra.muon_pt = -1111.
-                    outtree_extra.Fill()
+                        outtree_extra.number_of_good_vertices = number_of_good_vertices
+                        outtree_extra.number_of_good_taus = number_of_good_taus
+                        outtree_extra.number_of_good_muons = number_of_good_muons
+                        outtree_extra.number_of_good_electrons = number_of_good_electrons
+                        if event.taus:
+                            # There can be at most one good tau if this event failed the skim
+                            outtree_extra.tau_pt = event.taus[0].pt
+                        else:
+                            outtree_extra.tau_pt = -1111.
+                        outtree_extra.Fill()
+
+                        if event.muons:
+                            # There can be at most one good muon if this event failed the skim
+                            outtree_extra.muon_pt = event.muons[0].pt
+                        else:
+                            outtree_extra.muon_pt = -1111.
+                        outtree_extra.Fill()
 
         self.output.cd()
 
         # store the original number of events
-        cutflow = Hist(6, 0, 6, name='cutflow', type='D')
+        cutflow = Hist(7, 0, 7, name='cutflow', type='D')
         cutflow[0] = nevents
         cutflow[1] = nevents_passing_trigger
         cutflow[2] = nevents_with_good_vertices
         cutflow[3] = nevents_with_good_muons
-        cutflow[4] = nevents_with_good_taus
-        cutflow[5] = nevents_with_good_lephad
+        cutflow[4] = nevents_with_good_electrons
+        cutflow[5] = nevents_with_good_taus
+        cutflow[6] = nevents_with_good_lephad
         cutflow.Write()
 
         # flush any baskets remaining in memory to disk

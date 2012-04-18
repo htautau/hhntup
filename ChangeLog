@@ -1,3 +1,17 @@
+2012-04-18 Michel Trottier-McDonald <mtm@cern.ch>
+	* Renamed muLHSkim to LHSkim
+	* Slightly changed run restrictions in trigger requirements to
+	capture all MC runs
+	* Added no trigger requirement for 2012 runs
+	* added *_skimselection as placeholders for the object requirement
+	done in skimming
+
+2012-04-17 Michel Trottier-McDonald <mtm@cern.ch>
+	* Cleaned up the lephad section of datasets.cfg, adapted to ehad +
+	muhad
+	* Adapted muLHSkim.py
+	* Corrected run error in the mu data trigger filter
+
 2012-04-12 Michel Trottier-McDonald <mtm@cern.ch>
 	* Implemented the run_mc_lh.py and run_data_lh.py scripts
 	* Added back the EF_* block adn the trig_* block in the skims

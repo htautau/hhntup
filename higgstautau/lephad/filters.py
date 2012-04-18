@@ -157,14 +157,44 @@ class muTriggers(EventFilter):
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
-        period B-H  (177986-184169) : EF_mu18_MG
-        period I-M  (185353-191933) : EF_mu18_MG_medium
+        period B-I  (177986-186493) : EF_mu18_MG
+        period J-M  (186516-191933) : EF_mu18_MG_medium
         """
         try:
-            if 177986 <= event.RunNumber <= 184169: # Period B-H 1237.26 pb-1
+            if 177986 <= event.RunNumber <= 186493:
                 return event.EF_mu18_MG
-            elif 185353 <= event.RunNumber <= 191933: # Period I-M 3982.9 pb-1
+            elif 186516 <= event.RunNumber <= 191933:
                 return event.EF_mu18_MG_medium
+            elif 200000 <= event.RunNumber:
+                return True
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+
+
+class eTriggers(EventFilter):
+
+    def passes(self, event):
+        """
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
+
+        period B-J  (177986-186755) : EF_e20_medium
+        period K    (186873-187815) : EF_e22_medium
+        period L-M  (188902-191933) : EF_e22vh_medium1
+        """
+        try:
+            if 177986 <= event.RunNumber <= 186755:
+                return event.EF_e20_medium
+            elif 186873 <= event.RunNumber <= 187815:
+                return event.EF_e22_medium
+            elif 188902 <= event.RunNumber <= 191933:
+                return event.EF_e22vh_medium1
+            elif 200000 <= event.RunNumber:
+                return True
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -195,18 +225,48 @@ class muMCTriggers(EventFilter):
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
-        period B-H  (177986-187815) : EF_mu18_MG
+        period B-K  (177986-187815) : EF_mu18_MG
         period I-M  (188902-191933) : EF_mu18_MG_medium
         """
         try:
-            if 177986 <= event.RunNumber <= 187815: # Period B-H 1237.26 pb-1
+            if 177986 <= event.RunNumber <= 187815:
                 return event.EF_mu18_MG
-            elif 188902 <= event.RunNumber <= 191933: # Period I-M 3982.9 pb-1
+            elif 188902 <= event.RunNumber:
                 return event.EF_mu18_MG_medium
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+class eMCTriggers(EventFilter):
+
+    def passes(self, event):
+        """
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
+
+        period B-K  (177986-187815) : EF_e20_medium
+        period I-M  (188902-191933) : EF_e22vh_medium1
+        """
+        try:
+            if 177986 <= event.RunNumber <= 187815:
+                return event.EF_e20_medium
+            elif 188902 <= event.RunNumber:
+                return event.EF_e22vh_medium1
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+class MCTriggers(EventFilter):
+
+    def passes(self, event):
+        muonTrig = muMCTriggers()
+        elecTrig = eTriggers()
+        
+        return muonTrig.passes(event) or elecTrig.passes(event)
 
 
 class JetCrackVeto(EventFilter):
@@ -269,6 +329,21 @@ def tau_preselection(tau):
     return True
 
 
+def tau_skimselection(tau):
+    """ Does the complete tau preselection """
+
+    if not (tau.pt > 20*GeV) : return False
+    if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
+    if not (tau.JetBDTSigMedium == 1) : return False
+    if not (abs(tau.eta) < 2.5) : return False
+    if not (tau.author != 2) : return False
+    if not (abs(tau.charge) == 1) : return False
+    if not (tau.EleBDTMedium == 0) : return False
+    if not (tau.muonVeto == 0) : return False
+
+    return True
+
+
 def tau_selection(tau):
     """ Finalizes the tau selection """
 
@@ -276,6 +351,17 @@ def tau_selection(tau):
 
 
 def muon_preselection(mu):
+    """ Does the complete muon preselection """
+
+    if not (mu.pt > 10*GeV) : return False
+    if not (muon_has_good_track(mu)) : return False
+    if not (abs(mu.eta) < 2.5) : return False
+    if not (mu.loose) : return False
+
+    return True
+
+
+def muon_skimselection(mu):
     """ Does the complete muon preselection """
 
     if not (mu.pt > 10*GeV) : return False
@@ -304,6 +390,22 @@ def muon_selection(mu):
 
 
 def electron_preselection(e):
+    """ Does the complete electron preselection """
+
+    cl_eta = e.cl_eta
+    trk_eta = e.tracketa
+    cl_Et = e.cl_E/cosh(trk_eta)
+    
+    if not (cl_Et > 15*GeV) : return False
+    if not (abs(cl_eta) < 2.47) : return False
+    if (1.37 < abs(cl_eta) < 1.52) : return False
+    if not (e.author == 1 or e.author == 3) : return False
+    if not (e.mediumPP) : return False
+
+    return True
+
+
+def electron_skimselection(e):
     """ Does the complete electron preselection """
 
     cl_eta = e.cl_eta
