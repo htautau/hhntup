@@ -158,14 +158,14 @@ class LHSkim(ATLASStudent):
             self.output.cd()
 
         # set the event filters
-        # trigger_filter = None
-        # if self.metadata.datatype == datasets.DATA:
-        #     if self.metadata.title == datasets.MUON:
-        #         trigger_filter = muTriggers()
-        #     if self.metadata.title == datasets.ELEC:
-        #         trigger_filter = eTriggers()
-        # else:
-        #     trigger_filter = MCTriggers()
+        trigger_filter = None
+        if self.metadata.datatype == datasets.DATA:
+            if self.metadata.title == datasets.MUON:
+                trigger_filter = muTriggers()
+            if self.metadata.title == datasets.ELEC:
+                trigger_filter = eTriggers()
+        else:
+            trigger_filter = MCTriggers()
 
         # define collections for preselection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
@@ -214,11 +214,10 @@ class LHSkim(ATLASStudent):
                 if number_of_good_electrons > 0:
                     nevents_with_good_electrons +=1
 
-                # if ((number_of_good_taus > 0 and self.metadata.datatype == datasets.DATA) and
-                #     ((number_of_good_muons > 0 and self.metadata.title == datasets.MUON) or \
-                #     (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC))) or \
-                #     (self.metadata.datatype == datasets.MC):
-                if True:
+                if ((number_of_good_taus > 0 and self.metadata.datatype == datasets.DATA) and
+                    ((number_of_good_muons > 0 and self.metadata.title == datasets.MUON) or \
+                    (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC))) or \
+                    (self.metadata.datatype == datasets.MC):
                     nevents_with_good_lephad +=1
                     outtree.number_of_good_vertices = number_of_good_vertices
                     outtree.number_of_good_taus = number_of_good_taus
