@@ -154,11 +154,81 @@ import goodruns
 
 from externaltools import CoEPPTrigTool, PileupReweighting
 from ROOT import Root
+from ROOT import CoEPP
 
 
 PileupReweighting = Root.TPileupReweighting
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
+
+branches_remove = [
+    "cl_*",
+    "ph_*",
+
+    "jet_AntiKt4TopoEM_*",
+    "jet_AntiKt4LCTopo_*",
+    "jet_AntiKt6*",
+    "jet_flavor_*",
+    "jet_*Assoc*",
+
+    "tau_otherTrk_*",
+    "tau_cell_*",
+    "tau_cluster_*",
+
+    "EF_2e*",
+    "EF_2mu*",
+    "EF_2j*",
+    "EF_xe*",
+    "EF_xs*",
+    "EF_e*",
+    "EF_mu*",
+    "EF_MU*",
+    "EF_g*",
+    "EF_j*",
+    "EF_g*",
+    "L1_*",
+    "L2_*",
+
+    "muonTruth*",
+    "jet_antikt4truth_*",
+    "collcand_*",
+
+    "el_*",
+    "mu_*",
+    "MET_*Reg*",
+]
+
+# override globs above
+branches_keep = [
+    "el_cl_E",
+    "el_tracketa",
+    "el_trackphi",
+    "el_author",
+    "el_charge",
+    "el_loosePP",
+    "el_mediumPP",
+    "el_tightPP",
+    "el_OQ",
+
+    "mu_staco_E",
+    "mu_staco_pt",
+    "mu_staco_eta",
+    "mu_staco_phi",
+    "mu_staco_loose",
+    "mu_staco_medium",
+    "mu_staco_tight",
+    "mu_staco_isSegmentTaggedMuon",
+    "mu_staco_expectBLayerHit",
+    "mu_staco_nBLHits",
+    "mu_staco_nPixHits",
+    "mu_staco_nPixelDeadSensors",
+    "mu_staco_nSCTHits",
+    "mu_staco_nSCTDeadSensors",
+    "mu_staco_nPixHoles",
+    "mu_staco_nSCTHoles",
+    "mu_staco_nTRTHits",
+    "mu_staco_nTRTOutliers",
+]
 
 
 class SkimExtraModel(TreeModel):
@@ -186,73 +256,7 @@ class HHSkim(ATLASStudent):
                        file=self.output,
                        model=SkimExtraModel)
 
-
-        removed_branches = intree.glob([
-            "cl_*",
-            "ph_*",
-
-            "jet_AntiKt4TopoEM_*",
-            "jet_AntiKt4LCTopo_*",
-            "jet_AntiKt6*",
-            "jet_flavor_*",
-            "jet_*Assoc*",
-
-            "tau_otherTrk_*",
-            "tau_cell_*",
-            "tau_cluster_*",
-
-            "EF_2e*",
-            "EF_2mu*",
-            "EF_2j*",
-            "EF_xe*",
-            "EF_xs*",
-            "EF_e*",
-            "EF_mu*",
-            "EF_MU*",
-            "EF_g*",
-            "EF_j*",
-            "EF_g*",
-            "L1_*",
-            "L2_*",
-
-            "muonTruth*",
-            "jet_antikt4truth_*",
-            "collcand_*",
-
-            "el_*",
-            "mu_*",
-            "MET_*Reg*",
-            ],
-            prune=[
-            "el_cl_E",
-            "el_tracketa",
-            "el_trackphi",
-            "el_author",
-            "el_charge",
-            "el_loosePP",
-            "el_mediumPP",
-            "el_tightPP",
-            "el_OQ",
-
-            "mu_staco_E",
-            "mu_staco_pt",
-            "mu_staco_eta",
-            "mu_staco_phi",
-            "mu_staco_loose",
-            "mu_staco_medium",
-            "mu_staco_tight",
-            "mu_staco_isSegmentTaggedMuon",
-            "mu_staco_expectBLayerHit",
-            "mu_staco_nBLHits",
-            "mu_staco_nPixHits",
-            "mu_staco_nPixelDeadSensors",
-            "mu_staco_nSCTHits",
-            "mu_staco_nSCTDeadSensors",
-            "mu_staco_nPixHoles",
-            "mu_staco_nSCTHoles",
-            "mu_staco_nTRTHits",
-            "mu_staco_nTRTOutliers",
-            ])
+        removed_branches = intree.glob(branches_remove, prune=branches_keep)
 
         outtree.set_buffer(intree.buffer,
                            ignore_variables=removed_branches,
@@ -308,10 +312,20 @@ class HHSkim(ATLASStudent):
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
 
         if self.metadata.datatype == datasets.MC:
-            # Initialize the pileup reweighting tool
+            # initialize the pileup reweighting tool
             pileup_tool = PileupReweighting()
             pileup_tool.UsePeriodConfig("MC11b")
             pileup_tool.Initialize()
+
+            # initialize the trigger emulation tool
+            trigger_tool_wrapper = CoEPP.OfficialWrapper()
+            trigger_tool = CoEPP.TriggerTool()
+            trigger_tool.setWrapper(trigger_tool_wrapper)
+            trigger_config = CoEPPTrigTool.get_resource('tute05_config.xml')
+            trigger_tool.setXMLFile(trigger_config)
+            trigger_tool.initializeFromXML()
+            trigger = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
+            trigger.switchOn()
 
         nevents = 0
         nevents_mc_weight = 0
@@ -324,6 +338,9 @@ class HHSkim(ATLASStudent):
                 nevents_mc_weight += event.mc_event_weight
                 pileup_tool.Fill(event.RunNumber, event.mc_channel_number,
                                  event.mc_event_weight, event.averageIntPerXing);
+
+                trigger_tool_wrapper.setEventNumber(event._entry.value)
+                trigger_tool.executeTriggers()
 
             if trigger_filter(event):
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
@@ -370,3 +387,7 @@ class HHSkim(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             # write the pileup reweighting file
             pileup_tool.WriteToFile()
+
+            # finalize the trigger_tool
+            trigger_tool.finalize()
+            trigger_tool.summary()
