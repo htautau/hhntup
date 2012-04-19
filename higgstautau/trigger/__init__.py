@@ -16,7 +16,7 @@ def get_trigger_config():
     return D3PD.TrigConfigSvcD3PD()
 
 
-def update_trigger_config(tool, name, file):
+def update_trigger_config(tool, name, file, tree):
 
     configTreeName = "%sMeta/TrigConfTree"% name
     configTree = file.Get(configTreeName)

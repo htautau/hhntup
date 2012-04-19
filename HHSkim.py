@@ -217,7 +217,7 @@ class HHSkim(ATLASStudent):
             trigger_tool_wrapper = CoEPP.OfficialWrapper()
             trigger_tool = CoEPP.TriggerTool()
             trigger_tool.setWrapper(trigger_tool_wrapper)
-            trigger_config = CoEPPTrigTool.get_resource('trigger_config.xml')
+            trigger_config = CoEPPTrigTool.get_resource('tute05_config.xml')
             trigger_tool.setXMLFile(trigger_config)
             trigger_tool.initializeFromXML()
             trigger = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
@@ -226,7 +226,7 @@ class HHSkim(ATLASStudent):
             def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
 
                 trigger_tool_wrapper.loadMainTree(tree)
-                trigger_tool_wrapper.loadMetaTree(file.Get('%s/TrigConfTree' % name))
+                trigger_tool_wrapper.loadMetaTree(file.Get('%sMeta/TrigConfTree' % name))
 
             onfilechange.append((update_trigger_trees, (self, trigger_tool_wrapper,)))
 
@@ -289,7 +289,7 @@ class HHSkim(ATLASStudent):
                 trigger_tool_wrapper.setEventNumber(event._entry.value)
                 trigger_tool.executeTriggers()
 
-            if (self.metadata.datatype == datasets.MC and trigger_tool.passed()) or trigger_filter(event):
+            if (self.metadata.datatype == datasets.MC and trigger.passed()) or trigger_filter(event):
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
                 event.taus.select(lambda tau: tau.author != 2 and tau.numTrack > 0 and

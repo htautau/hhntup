@@ -76,7 +76,7 @@ class HHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.DATA:
             merged_grl = GRL()
 
-            def update_grl(student, grl, name, file):
+            def update_grl(student, grl, name, file, tree):
 
                 grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
 
@@ -86,7 +86,7 @@ class HHProcessor(ATLASStudent):
         onfilechange.append((update_trigger_config, (trigger_config,)))
 
         merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
-        def update_cutflow(student, cutflow, name, file):
+        def update_cutflow(student, cutflow, name, file, tree):
 
             cutflow += file.cutflow
 
@@ -116,11 +116,11 @@ class HHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             copied_variables += mc_triggers
 
-        tree_hh_2jet.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
-        tree_hh_01jet.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
+        tree_hh_2jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        tree_hh_01jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
 
-        #tree_hh_1jet.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
-        #tree_hh_0jet.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
+        #tree_hh_1jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        #tree_hh_0jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
 
         chain.always_read(copied_variables)
 
