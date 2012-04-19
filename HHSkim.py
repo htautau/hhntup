@@ -179,16 +179,62 @@ class SkimExtraTauPtModel(TreeModel):
 
     tau_pt = FloatCol()
 
-#TODO create pileup reweighting files for MC
 
 class HHSkim(ATLASStudent):
 
     def work(self):
 
+        # merge TrigConfTrees
+        metadirname = '%sMeta' % self.metadata.treename
+        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+        map(trigconfchain.Add, self.files)
+        metadir = self.output.mkdir(metadirname)
+        metadir.cd()
+        trigconfchain.Merge(self.output, -1, 'fast keep')
+        self.output.cd()
+
+        if self.metadata.datatype == datasets.DATA:
+            # merge GRL XML strings
+            grls = []
+            merged_grl = goodruns.GRL()
+            for fname in self.files:
+                merged_grl |= goodruns.GRL('%s:/Lumi/%s' % (fname, self.metadata.treename))
+            lumi_dir = self.output.mkdir('Lumi')
+            lumi_dir.cd()
+            xml_string= ROOT.TObjString(merged_grl.str())
+            xml_string.Write(self.metadata.treename)
+            self.output.cd()
+
+        onfilechange = []
+
+        if self.metadata.datatype == datasets.MC:
+            # initialize the pileup reweighting tool
+            pileup_tool = PileupReweighting()
+            pileup_tool.UsePeriodConfig("MC11b")
+            pileup_tool.Initialize()
+
+            # initialize the trigger emulation tool
+            trigger_tool_wrapper = CoEPP.OfficialWrapper()
+            trigger_tool = CoEPP.TriggerTool()
+            trigger_tool.setWrapper(trigger_tool_wrapper)
+            trigger_config = CoEPPTrigTool.get_resource('tute05_config.xml')
+            trigger_tool.setXMLFile(trigger_config)
+            trigger_tool.initializeFromXML()
+            trigger = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
+            trigger.switchOn()
+
+            def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
+
+                trigger_tool_wrapper.loadMainTree(tree)
+                trigger_tool_wrapper.loadMetaTree(file.Get('%s/TrigConfTree' % name))
+
+            onfilechange.append((update_trigger_trees, (self, trigger_tool_wrapper,)))
+
         # initialize the TreeChain of all input files
         intree = TreeChain(self.metadata.treename,
-                          files=self.files,
-                          events=self.events)
+                           files=self.files,
+                           events=self.events,
+                           onfilechange=onfilechange)
 
         outtree = Tree(name=self.metadata.treename,
                        file=self.output,
@@ -221,49 +267,12 @@ class HHSkim(ATLASStudent):
 
             outtree_extra.set_buffer(intree.buffer, variables=extra_variables, create_branches=True, visible=False)
 
-        # merge TrigConfTrees
-        metadirname = '%sMeta' % self.metadata.treename
-        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-        map(trigconfchain.Add, self.files)
-        metadir = self.output.mkdir(metadirname)
-        metadir.cd()
-        trigconfchain.Merge(self.output, -1, 'fast keep')
-        self.output.cd()
-
-        if self.metadata.datatype == datasets.DATA:
-            # merge GRL XML strings
-            grls = []
-            merged_grl = goodruns.GRL()
-            for fname in self.files:
-                merged_grl |= goodruns.GRL('%s:/Lumi/%s' % (fname, self.metadata.treename))
-            lumi_dir = self.output.mkdir('Lumi')
-            lumi_dir.cd()
-            xml_string= ROOT.TObjString(merged_grl.str())
-            xml_string.Write(self.metadata.treename)
-            self.output.cd()
-
         # set the event filters
         trigger_filter = Triggers()
 
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
-
-        if self.metadata.datatype == datasets.MC:
-            # initialize the pileup reweighting tool
-            pileup_tool = PileupReweighting()
-            pileup_tool.UsePeriodConfig("MC11b")
-            pileup_tool.Initialize()
-
-            # initialize the trigger emulation tool
-            trigger_tool_wrapper = CoEPP.OfficialWrapper()
-            trigger_tool = CoEPP.TriggerTool()
-            trigger_tool.setWrapper(trigger_tool_wrapper)
-            trigger_config = CoEPPTrigTool.get_resource('tute05_config.xml')
-            trigger_tool.setXMLFile(trigger_config)
-            trigger_tool.initializeFromXML()
-            trigger = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
-            trigger.switchOn()
 
         nevents = 0
         nevents_mc_weight = 0
@@ -280,7 +289,7 @@ class HHSkim(ATLASStudent):
                 trigger_tool_wrapper.setEventNumber(event._entry.value)
                 trigger_tool.executeTriggers()
 
-            if trigger_filter(event):
+            if (self.metadata.datatype == datasets.MC and trigger_tool.passed()) or trigger_filter(event):
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
                 event.taus.select(lambda tau: tau.author != 2 and tau.numTrack > 0 and
