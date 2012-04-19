@@ -217,7 +217,7 @@ class HHSkim(ATLASStudent):
             trigger_tool_wrapper = CoEPP.OfficialWrapper()
             trigger_tool = CoEPP.TriggerTool()
             trigger_tool.setWrapper(trigger_tool_wrapper)
-            trigger_config = CoEPPTrigTool.get_resource('tute05_config.xml')
+            trigger_config = CoEPPTrigTool.get_resource('trigger_config.xml')
             trigger_tool.setXMLFile(trigger_config)
             trigger_tool.initializeFromXML()
             trigger = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
