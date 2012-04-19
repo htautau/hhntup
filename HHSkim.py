@@ -69,69 +69,7 @@ Emulation is performed using the CoEPPTrigTool package
 Branch removal
 ==============
 
-ch.SetBranchStatus("cl_*",    0)
-ch.SetBranchStatus("ph_*",    0)
-
-ch.SetBranchStatus("jet_AntiKt4TopoEM_*",    0)
-ch.SetBranchStatus("jet_AntiKt4LCTopo_*",    0)
-ch.SetBranchStatus("jet_AntiKt6*",    0)
-ch.SetBranchStatus("jet_flavor_*",    0)
-ch.SetBranchStatus("jet_*Assoc*",    0)
-
-ch.SetBranchStatus("tau_otherTrk_*",    0)
-ch.SetBranchStatus("tau_cell_*",    0)
-ch.SetBranchStatus("tau_cluster_*",    0)
-
-ch.SetBranchStatus("EF_2e*",    0)
-ch.SetBranchStatus("EF_2mu*",    0)
-ch.SetBranchStatus("EF_2j*",    0)
-ch.SetBranchStatus("EF_xe*",    0)
-ch.SetBranchStatus("EF_xs*",    0)
-ch.SetBranchStatus("EF_e*",    0)
-ch.SetBranchStatus("EF_mu*",    0)
-ch.SetBranchStatus("EF_MU*",    0)
-ch.SetBranchStatus("EF_g*",    0)
-ch.SetBranchStatus("EF_j*",    0)
-ch.SetBranchStatus("EF_g*",    0)
-ch.SetBranchStatus("L1_*",    0)
-ch.SetBranchStatus("L2_*",    0)
-
-ch.SetBranchStatus("muonTruth*",    0)
-ch.SetBranchStatus("jet_antikt4truth_*",    0)
-ch.SetBranchStatus("collcand_*",    0)
-
-ch.SetBranchStatus("el_*",    0)
-ch.SetBranchStatus("el_cl_E",    1)
-ch.SetBranchStatus("el_tracketa",    1)
-ch.SetBranchStatus("el_trackphi",    1)
-ch.SetBranchStatus("el_author",    1)
-ch.SetBranchStatus("el_charge",    1)
-ch.SetBranchStatus("el_loosePP",    1)
-ch.SetBranchStatus("el_mediumPP",    1)
-ch.SetBranchStatus("el_tightPP",    1)
-ch.SetBranchStatus("el_OQ",    1)
-
-ch.SetBranchStatus("mu_*",    0)
-ch.SetBranchStatus("mu_staco_E",    1)
-ch.SetBranchStatus("mu_staco_pt",    1)
-ch.SetBranchStatus("mu_staco_eta",    1)
-ch.SetBranchStatus("mu_staco_phi",    1)
-ch.SetBranchStatus("mu_staco_loose",    1)
-ch.SetBranchStatus("mu_staco_medium",    1)
-ch.SetBranchStatus("mu_staco_tight",    1)
-ch.SetBranchStatus("mu_staco_isSegmentTaggedMuon",    1)
-ch.SetBranchStatus("mu_staco_expectBLayerHit",    1)
-ch.SetBranchStatus("mu_staco_nBLHits",    1)
-ch.SetBranchStatus("mu_staco_nPixHits",    1)
-ch.SetBranchStatus("mu_staco_nPixelDeadSensors",    1)
-ch.SetBranchStatus("mu_staco_nSCTHits",    1)
-ch.SetBranchStatus("mu_staco_nSCTDeadSensors",    1)
-ch.SetBranchStatus("mu_staco_nPixHoles",    1)
-ch.SetBranchStatus("mu_staco_nSCTHoles",    1)
-ch.SetBranchStatus("mu_staco_nTRTHits",    1)
-ch.SetBranchStatus("mu_staco_nTRTOutliers",    1)
-
-ch.SetBranchStatus("MET_*Reg*",    0)
+See branches_remove and branches_keep below
 """
 
 import ROOT
@@ -375,7 +313,6 @@ class HHSkim(ATLASStudent):
         # store the original number of events
         cutflow[0] = nevents
         cutflow.Write()
-
 
         # flush any baskets remaining in memory to disk
         outtree.FlushBaskets()
