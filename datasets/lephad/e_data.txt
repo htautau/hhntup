@@ -1,4 +1,4 @@
-data11_7TeV.00177986.physics_Egamma.merge.NTUP_TAUMEDIUM.r2603_p659_p851/
+data11_7TeV.00190256.physics_Egamma.merge.NTUP_TAUMEDIUM.f408_m1007_p851/
 data11_7TeV.00178020.physics_Egamma.merge.NTUP_TAUMEDIUM.r2603_p659_p851/
 data11_7TeV.00178021.physics_Egamma.merge.NTUP_TAUMEDIUM.r2603_p659_p851/
 data11_7TeV.00178026.physics_Egamma.merge.NTUP_TAUMEDIUM.r2603_p659_p851/

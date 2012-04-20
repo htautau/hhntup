@@ -126,11 +126,6 @@ class TauLArHole(EventFilter):
 
         return True
 
-        # event.taus.select(lambda tau:
-        #         not ((tau.track_n > 0)
-        #              and (-0.1 < tau.track_eta[0] < 1.55)
-        #              and (-0.9 < tau.track_phi[0] < -0.5)))
-        # return len(event.taus) >= 1
 
 
 class ElectronLArHole(EventFilter):
@@ -174,6 +169,29 @@ class muTriggers(EventFilter):
 
 
 
+class AllmuTriggers(EventFilter):
+
+    def passes(self, event):
+
+        TriggerList = ['EF_mu18',
+                       'EF_mu18_MG',
+                       'EF_mu18_medium',
+                       'EF_mu18_MG_medium',
+                       'EF_tau16_loose_mu15',
+                       'EF_tau20_medium_mu15']
+
+        TriggersToOR = 0
+
+        for trig in TriggerList:
+            try:
+                TriggersToOR += getattr(event, trig)
+            except AttributeError:
+                pass
+                
+        if TriggersToOR > 0: return True
+        else: return False
+
+
 
 class eTriggers(EventFilter):
 
@@ -199,6 +217,30 @@ class eTriggers(EventFilter):
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+
+class AlleTriggers(EventFilter):
+
+    def passes(self, event):
+
+        TriggerList = ['EF_e20_medium',
+                       'EF_e22_medium',
+                       'EF_e22vh_medium1',
+                       'EF_tau16_loose_e15_medium',
+                       'EF_tau20_medium_e15_medium',
+                       'EF_tau20_medium_e15vh_medium']
+
+        TriggersToOR = 0
+
+        for trig in TriggerList:
+            try:
+                TriggersToOR += getattr(event, trig)
+            except AttributeError:
+                pass
+                
+        if TriggersToOR: return True
+        else: return False
 
 
 data_triggers = [
@@ -260,13 +302,25 @@ class eMCTriggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
+
 class MCTriggers(EventFilter):
 
     def passes(self, event):
         muonTrig = muMCTriggers()
-        elecTrig = eTriggers()
+        elecTrig = eMCTriggers()
         
         return muonTrig.passes(event) or elecTrig.passes(event)
+
+
+
+class AllMCTriggers(EventFilter):
+
+    def passes(self, event):
+        muonTrig = AllmuTriggers()
+        elecTrig = AlleTriggers()
+        
+        return muonTrig.passes(event) or elecTrig.passes(event)
+
 
 
 class JetCrackVeto(EventFilter):
@@ -332,14 +386,9 @@ def tau_preselection(tau):
 def tau_skimselection(tau):
     """ Does the complete tau preselection """
 
-    if not (tau.pt > 20*GeV) : return False
+    if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigMedium == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
-    if not (tau.author != 2) : return False
-    if not (abs(tau.charge) == 1) : return False
-    if not (tau.EleBDTMedium == 0) : return False
-    if not (tau.muonVeto == 0) : return False
 
     return True
 
@@ -364,9 +413,9 @@ def muon_preselection(mu):
 def muon_skimselection(mu):
     """ Does the complete muon preselection """
 
-    if not (mu.pt > 10*GeV) : return False
-    if not (muon_has_good_track(mu)) : return False
-    if not (abs(mu.eta) < 2.5) : return False
+    if not (mu.pt > 13*GeV) : return False
+    #if not (muon_has_good_track(mu)) : return False
+    if not (abs(mu.eta) < 3.0) : return False
     if not (mu.loose) : return False
 
     return True
@@ -413,8 +462,8 @@ def electron_skimselection(e):
     cl_Et = e.cl_E/cosh(trk_eta)
     
     if not (cl_Et > 15*GeV) : return False
-    if not (abs(cl_eta) < 2.47) : return False
-    if (1.37 < abs(cl_eta) < 1.52) : return False
+    if not (abs(cl_eta) < 3.0) : return False
+    #if (1.37 < abs(cl_eta) < 1.52) : return False
     if not (e.author == 1 or e.author == 3) : return False
     if not (e.mediumPP) : return False
 

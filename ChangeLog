@@ -1,3 +1,7 @@
+2012-04-20 Michel Trottier-McDonald <mtm@cern.ch>
+	* Extensively modified LHSkim.py to meet lephad requirements
+	* Added AllTriggers condition, which is just a big OR of all needed triggers
+
 2012-04-18 Michel Trottier-McDonald <mtm@cern.ch>
 	* Renamed muLHSkim to LHSkim
 	* Slightly changed run restrictions in trigger requirements to
