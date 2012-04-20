@@ -33,7 +33,7 @@ from goodruns import GRL
 import subprocess
 
 import random
-    
+
 class muLHProcessor(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
@@ -67,7 +67,7 @@ class muLHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.DATA:
             merged_grl = GRL()
 
-            def update_grl(student, grl, name, file):
+            def update_grl(student, grl, name, file, tree):
                 grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
 
             onfilechange.append((update_grl, (self, merged_grl,)))
@@ -76,8 +76,8 @@ class muLHProcessor(ATLASStudent):
         onfilechange.append((update_trigger_config, (trigger_config,)))
 
         merged_cutflow = Hist(6, 0, 6, name='cutflow', type='D')
-        
-        def update_cutflow(student, cutflow, name, file):
+
+        def update_cutflow(student, cutflow, name, file, tree):
             cutflow += file.cutflow
 
         onfilechange.append((update_cutflow, (self, merged_cutflow,)))
@@ -102,12 +102,12 @@ class muLHProcessor(ATLASStudent):
                             'RunNumber',
                             'EventNumber',
                             'lbn']
-        
+
         if self.metadata.datatype == datasets.MC:
             copied_variables += mc_triggers
 
-        tree_train.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
-        tree_test.set_buffer(chain.buffer, variables=copied_variables, create_branches=True, visible=False)
+        tree_train.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        tree_test.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
 
         chain.always_read(copied_variables)
 
@@ -118,7 +118,7 @@ class muLHProcessor(ATLASStudent):
             PriVertex(),
             JetPreSelection(),
             MuonPreSelection(),
-            ElectronPreSelection(),            
+            ElectronPreSelection(),
             JetOverlapRemoval(),
             JetCleaning(eta_max = 9999.0),
             ElectronLArHole(),
@@ -176,7 +176,7 @@ class muLHProcessor(ATLASStudent):
                 tree = tree_train
             else:
                 tree = tree_test
-            
+
             # Select tau with highest BDT score and surviving muon
             Tau = event.taus[0]
             Muon = event.muons[0]
@@ -192,7 +192,7 @@ class muLHProcessor(ATLASStudent):
             """
             numJets = len(event.jets)
             tree.numJets = numJets
-            
+
             for jet in event.jets:
                 tree.jet_fourvect.push_back(jet.fourvect)
                 tree.jet_jvtxf.push_back(jet.jvtxf)
@@ -246,7 +246,7 @@ class muLHProcessor(ATLASStudent):
 
             tau2Vector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
             muon2Vector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
-            
+
             tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, muon2Vector, MET_vect)
 
             mass_j1_j2 = -1111
@@ -263,7 +263,7 @@ class muLHProcessor(ATLASStudent):
             PtSum2 = 0
 
             allJets = LorentzVector()
-            
+
             for jet in event.jets:
                 PtSum  += jet.fourvect.Pt()
                 PtSum2 += (jet.fourvect.Pt())**2
@@ -279,10 +279,10 @@ class muLHProcessor(ATLASStudent):
 
             tree.neff_pt = PtSum2/(PtSum**2)
             tree.mass_all_jets = allJets.M()
-            
+
             if len(event.jets) >= 2:
                 event.jets.sort(key=lambda jet: jet.pt, reverse=True)
-                
+
                 jet1 = event.jets[0].fourvect
                 jet2 = event.jets[1].fourvect
 
@@ -325,7 +325,7 @@ class muLHProcessor(ATLASStudent):
                 # Correct for trigger luminosity in period I-K
                 if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
                     event_weight *= 0.29186
-                    
+
             tree.weight = event_weight
 
             # fill output ntuple

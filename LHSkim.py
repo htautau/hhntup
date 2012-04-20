@@ -109,7 +109,7 @@ class LHSkim(ATLASStudent):
                            'mu_muid*',
                            'mu_calo*'
                            ]
-        
+
         variables_to_keep = outtree.glob('*', prune=blocks_to_remove) + data_triggers
         outtree.activate(variables_to_keep, exclusive=True)
 
@@ -134,7 +134,7 @@ class LHSkim(ATLASStudent):
                 'lbn'
             ] + data_triggers
 
-            outtree_extra.set_buffer(intree.buffer, variables=extra_variables, create_branches=True, visible=False)
+            outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # merge TrigConfTrees
         metadirname = '%sMeta' % self.metadata.treename
@@ -181,7 +181,7 @@ class LHSkim(ATLASStudent):
         nevents_with_good_electrons = 0
         nevents_with_good_taus = 0
         nevents_with_good_lephad = 0
-        
+
         # entering the main event loop...
         for event in intree:
             nevents += 1
@@ -202,14 +202,14 @@ class LHSkim(ATLASStudent):
 
                 # Muon Preselection
                 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Muons
-                event.muons.select(lambda mu : muon_skimselection(mu)) 
+                event.muons.select(lambda mu : muon_skimselection(mu))
                 number_of_good_muons = len(event.muons)
                 if number_of_good_muons > 0:
                     nevents_with_good_muons +=1
 
                 # Electron Preselection
                 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Electrons
-                event.electrons.select(lambda e : electron_skimselection(e)) 
+                event.electrons.select(lambda e : electron_skimselection(e))
                 number_of_good_electrons = len(event.electrons)
                 if number_of_good_electrons > 0:
                     nevents_with_good_electrons +=1
