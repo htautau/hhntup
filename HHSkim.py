@@ -217,11 +217,24 @@ class HHSkim(ATLASStudent):
             trigger_tool_wrapper = CoEPP.OfficialWrapper()
             trigger_tool = CoEPP.TriggerTool()
             trigger_tool.setWrapper(trigger_tool_wrapper)
-            trigger_config = CoEPPTrigTool.get_resource('tute05_config.xml')
+            trigger_config = CoEPPTrigTool.get_resource('config_EF_DiTau.xml')
             trigger_tool.setXMLFile(trigger_config)
             trigger_tool.initializeFromXML()
-            trigger = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
-            trigger.switchOn()
+
+            trigger_A = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
+            trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_42")
+            trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_42")
+
+            trigger_A.switchOn()
+            trigger_B.switchOn()
+            trigger_C.switchOn()
+
+            trigger_run_dict = {
+                180164: trigger_A,
+                183003: trigger_B,
+                186169: trigger_B,
+                189751: trigger_C,
+            }
 
             def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
 
@@ -288,6 +301,7 @@ class HHSkim(ATLASStudent):
 
                 trigger_tool_wrapper.setEventNumber(event._entry.value)
                 trigger_tool.executeTriggers()
+                trigger = trigger_run_dict[event.RunNumber]
 
             if (self.metadata.datatype == datasets.MC and trigger.passed()) or trigger_filter(event):
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))

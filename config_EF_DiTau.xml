@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE TriggerConfiguration SYSTEM "TriggerConfig.dtd"[
+  <!ENTITY EF_tau20_medium1_Hypo_00_02_42 SYSTEM "triggers/TrigTauHypo_00_02_42/EF_tau20_medium1_Hypo_00_02_42.xml">
+  <!ENTITY EF_tau29_medium1_Hypo_00_02_42 SYSTEM "triggers/TrigTauHypo_00_02_42/EF_tau29_medium1_Hypo_00_02_42.xml">
+  <!ENTITY EF_tau29_medium1_tau20_medium1_Hypo_00_02_42 SYSTEM "triggers/TrigTauHypo_00_02_42/EF_tau29_medium1_tau20_medium1_Hypo_00_02_42.xml">
+
+  <!ENTITY EF_tau20_medium1_Hypo_00_03_02 SYSTEM "triggers/TrigTauHypo_00_03_02/EF_tau20_medium1_Hypo_00_03_02.xml">
+  <!ENTITY EF_tau29_medium1_Hypo_00_03_02 SYSTEM "triggers/TrigTauHypo_00_03_02/EF_tau29_medium1_Hypo_00_03_02.xml">
+  <!ENTITY EF_tau29_medium1_tau20_medium1_Hypo_00_03_02 SYSTEM "triggers/TrigTauHypo_00_03_02/EF_tau29_medium1_tau20_medium1_Hypo_00_03_02.xml">
+
+  <!ENTITY EF_tau20T_medium1_Hypo_00_03_02 SYSTEM "triggers/TrigTauHypo_00_03_02/EF_tau20T_medium1_Hypo_00_03_02.xml">
+  <!ENTITY EF_tau29T_medium1_Hypo_00_03_02 SYSTEM "triggers/TrigTauHypo_00_03_02/EF_tau29T_medium1_Hypo_00_03_02.xml">
+  <!ENTITY EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02 SYSTEM "triggers/TrigTauHypo_00_03_02/EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02.xml">
+]>
+
+<TriggerConfiguration>
+  &EF_tau20_medium1_Hypo_00_02_42;
+  &EF_tau29_medium1_Hypo_00_02_42;
+  &EF_tau29_medium1_tau20_medium1_Hypo_00_02_42;
+
+  &EF_tau20_medium1_Hypo_00_03_02;
+  &EF_tau29_medium1_Hypo_00_03_02;
+  &EF_tau29_medium1_tau20_medium1_Hypo_00_03_02;
+
+  &EF_tau20T_medium1_Hypo_00_03_02;
+  &EF_tau29T_medium1_Hypo_00_03_02;
+  &EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02;
+</TriggerConfiguration>
+

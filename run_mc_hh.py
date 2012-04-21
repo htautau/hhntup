@@ -14,10 +14,13 @@ datasets = [
     "PythiaWH*_tautauhh.mc11c",
     # background
     "AlpgenJimmyZtautauNp[0-5]_pt20.mc11c",
+    "AlpgenJimmyZtautauNp[0-5]_Mll10to40_pt20.mc11c",
     "AlpgenJimmyWtaunuNp[0-5]_pt20.mc11c",
     "AlpgenJimmyZmumuNp[0-5]_pt20.mc11c",
+    "AlpgenJimmyZmumuNp[0-5]_Mll10to40_pt20.mc11c",
     "AlpgenJimmyWmunuNp[0-5]_pt20.mc11c",
     "AlpgenJimmyZeeNp[0-5]_pt20.mc11c",
+    "AlpgenJimmyZeeNp[0-5]_Mll10to40_pt20.mc11c",
     "AlpgenJimmyWenuNp[0-5]_pt20.mc11c",
     "st_tchan_taunu_McAtNlo_Jimmy.mc11c",
     "st_schan_taunu_McAtNlo_Jimmy.mc11c",
