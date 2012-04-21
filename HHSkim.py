@@ -222,12 +222,12 @@ class HHSkim(ATLASStudent):
             trigger_tool.initializeFromXML()
 
             trigger_A = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
-            trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_42")
-            trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_42")
+            trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
+            trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
 
-            trigger_A.switchOn()
-            trigger_B.switchOn()
-            trigger_C.switchOn()
+            #trigger_A.switchOn()
+            #trigger_B.switchOn()
+            #trigger_C.switchOn()
 
             trigger_run_dict = {
                 180164: trigger_A,
@@ -256,7 +256,7 @@ class HHSkim(ATLASStudent):
         removed_branches = intree.glob(branches_remove, prune=branches_keep)
 
         outtree.set_buffer(intree.buffer,
-                           ignore_variables=removed_branches,
+                           ignore_branches=removed_branches,
                            create_branches=True,
                            visible=False)
 
@@ -278,7 +278,7 @@ class HHSkim(ATLASStudent):
                 'lbn'
             ] + Triggers.triggers
 
-            outtree_extra.set_buffer(intree.buffer, variables=extra_variables, create_branches=True, visible=False)
+            outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # set the event filters
         trigger_filter = Triggers()
@@ -300,8 +300,9 @@ class HHSkim(ATLASStudent):
                                  event.mc_event_weight, event.averageIntPerXing);
 
                 trigger_tool_wrapper.setEventNumber(event._entry.value)
-                trigger_tool.executeTriggers()
                 trigger = trigger_run_dict[event.RunNumber]
+                trigger.switchOn()
+                trigger_tool.executeTriggers()
 
             if (self.metadata.datatype == datasets.MC and trigger.passed()) or trigger_filter(event):
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
@@ -324,6 +325,9 @@ class HHSkim(ATLASStudent):
                     else:
                         outtree_extra.tau_pt = -1111.
                     outtree_extra.Fill()
+
+            if self.metadata.datatype == datasets.MC:
+                trigger.switchOff()
 
         self.output.cd()
 
