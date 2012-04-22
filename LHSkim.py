@@ -105,7 +105,7 @@ class LHSkim(ATLASStudent):
 
         # Cut Flow counters
         nevents = 0
-        nevents_mc_weight = 0
+        nevents_mc_weights = 0
         nevents_passing_trigger = 0
         nevents_with_good_muons = 0
         nevents_with_good_electrons = 0
@@ -117,7 +117,7 @@ class LHSkim(ATLASStudent):
         for event in intree:
             nevents += 1
             if self.metadata.datatype == datasets.MC:
-                nevents_mc_weight += event.mc_event_weight
+                nevents_mc_weights += event.mc_event_weight
                 
             if trigger_filter(event):
                 nevents_passing_trigger +=1
