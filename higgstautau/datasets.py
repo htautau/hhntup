@@ -689,5 +689,4 @@ if __name__ == '__main__':
             print "%i datasets in database" % len(DATASETS)
         else:
             for name in sorted(DATASETS.keys()):
-                print name
-                print '\t' + DATASETS[name].ds
+                print "%s => %s" % (name, DATASETS[name].ds)
