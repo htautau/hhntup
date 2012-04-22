@@ -1,3 +1,7 @@
+2012-04-22 Michel Trottier-McDonald <mtm@cern.ch>
+	* Corrected muon and electron pt threshold at selection
+	* Cleaned up the lephad/filters.py a bit
+
 2012-04-20 Michel Trottier-McDonald <mtm@cern.ch>
 	* Extensively modified LHSkim.py to meet lephad requirements
 	* Added AllTriggers condition, which is just a big OR of all needed triggers
