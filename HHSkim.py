@@ -58,11 +58,10 @@ Trigger Emulation
 
 Emulation is performed using the CoEPPTrigTool package
 
-177531 - 178264 use the values in TrigTauHypo-00-02-35  (A-C)
-
-179710 - 180776 use the values in TrigTauHypo-00-02-42  (D-E)
-
-182013 - 191933 use the values in TrigTauHypo-00-03-02  (F-M)
+180164: EF_tau29_medium1_tau20_medium1_Hypo_00_02_42
+183003: EF_tau29_medium1_tau20_medium1_Hypo_00_03_02
+186169: EF_tau29_medium1_tau20_medium1_Hypo_00_03_02
+189751: EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02
 
 
 ==============
@@ -98,6 +97,8 @@ from ROOT import CoEPP
 PileupReweighting = Root.TPileupReweighting
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
+
+WRITE_ALL = True
 
 branches_remove = [
     "cl_*",
@@ -180,6 +181,13 @@ class SkimExtraTauPtModel(TreeModel):
     tau_pt = FloatCol()
 
 
+class TriggerEmulation(TreeModel):
+
+    EF_tau29_medium1_tau20_medium1_EMULATED = BoolCol()
+    EF_tau29T_medium1_tau20T_medium1_EMULATED = BoolCol()
+    tau_trigger_match_index = ROOT.vector('int')
+
+
 class HHSkim(ATLASStudent):
 
     def work(self):
@@ -230,10 +238,10 @@ class HHSkim(ATLASStudent):
             #trigger_C.switchOn()
 
             trigger_run_dict = {
-                180164: trigger_A,
-                183003: trigger_B,
-                186169: trigger_B,
-                189751: trigger_C,
+                180164: (trigger_A, 'EF_tau29_medium1_tau20_medium1'),
+                183003: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
+                186169: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
+                189751: (trigger_C, 'EF_tau29T_medium1_tau20T_medium1'),
             }
 
             def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
@@ -249,9 +257,13 @@ class HHSkim(ATLASStudent):
                            events=self.events,
                            onfilechange=onfilechange)
 
+        Model = SkimExtraModel
+        if self.metadata.datatype == datasets.MC:
+            Model += TriggerEmulation
+
         outtree = Tree(name=self.metadata.treename,
                        file=self.output,
-                       model=SkimExtraModel)
+                       model=Model)
 
         removed_branches = intree.glob(branches_remove, prune=branches_keep)
 
@@ -300,19 +312,54 @@ class HHSkim(ATLASStudent):
                                  event.mc_event_weight, event.averageIntPerXing);
 
                 trigger_tool_wrapper.setEventNumber(event._entry.value)
-                trigger = trigger_run_dict[event.RunNumber]
+                trigger, triggername = trigger_run_dict[event.RunNumber]
                 trigger.switchOn()
                 trigger_tool.executeTriggers()
 
+                outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
+                outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
+                outtree.tau_trigger_match_index.clear()
+
+
             if (self.metadata.datatype == datasets.MC and trigger.passed()) or trigger_filter(event):
+
+                if self.metadata.datatype == datasets.MC:
+                    if triggername == 'EF_tau29_medium1_tau20_medium1':
+                        outtree.EF_tau29_medium1_tau20_medium1_EMULATED = True
+                    else:
+                        outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = True
+
+                    # trigger matching
+                    trig1 = trigger.getTrigger1()
+                    trig2 = trigger.getTrigger2()
+                    for tau in event.taus:
+                        idx = -1
+                        idx1 = trig1.matchIndex(tau.fourvect)
+                        idx2 = trig2.matchIndex(tau.fourvect)
+                        if idx1 == idx2 != -1:
+                            idx = idx1
+                        elif idx1 == -1 and idx2 > -1:
+                            idx = idx2
+                        elif idx2 == -1 and idx1 > -1:
+                            idx = idx1
+                        elif idx2 != idx1: # both >-1 and non-equal
+                            # take index of closer one using dR
+                            trigtau1TLV = trigger_tool.buildEFTauTLV(idx1)
+                            trigtau2TLV = trigger_tool.buildEFTauTLV(idx2)
+                            if trigtau1TLV.DeltaR(tau.fourvect) < trigtau2TLV.DeltaR(tau.fourvect):
+                                idx = idx1
+                            else:
+                                idx = idx2
+
+                        outtree.tau_trigger_match_index.push_back(idx)
+
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
                 event.taus.select(lambda tau: tau.author != 2 and tau.numTrack > 0 and
                                               tau.pt > 18*GeV and
                                               (tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1))
                 number_of_good_taus = len(event.taus)
-                if (number_of_good_taus > 1 and self.metadata.datatype == datasets.DATA) or \
-                    self.metadata.datatype == datasets.MC:
+                if (number_of_good_taus > 1 and self.metadata.datatype == datasets.DATA) or self.metadata.datatype == datasets.MC:
                     outtree.number_of_good_vertices = number_of_good_vertices
                     outtree.number_of_good_taus = number_of_good_taus
                     outtree.Fill()
@@ -325,6 +372,8 @@ class HHSkim(ATLASStudent):
                     else:
                         outtree_extra.tau_pt = -1111.
                     outtree_extra.Fill()
+            elif WRITE_ALL and self.metadata.datatype == datasets.MC:
+                outtree.Fill()
 
             if self.metadata.datatype == datasets.MC:
                 trigger.switchOff()
