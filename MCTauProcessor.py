@@ -100,13 +100,15 @@ class MCTauProcessor(ATLASStudent):
             tau_decays = tautools.get_tau_decays(event, parent_pdgid=(23, 25))
             # There should be exactly two taus
             if len(tau_decays) != 2:
-                print "#MCTAUS != 2: %i" % len(tau_decays)
+                #print "#MCTAUS != 2: %i" % len(tau_decays)
+                """
                 for decay in tautools.get_tau_decays(event, status=None):
                     print "status:"
                     print decay.init.status
                     print "parents:"
                     for parent in decay.init.iparents():
                         print parent.pdgId
+                """
                 continue
             decay1, decay2 = tau_decays
 

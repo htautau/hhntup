@@ -104,6 +104,12 @@ branches_remove = [
     "cl_*",
     "ph_*",
 
+    # these large mc branches are useless since
+    # they contain barcodes and not indices
+    # use mc_parent_index and mc_child_index
+    "mc_children",
+    "mc_parents",
+
     "jet_AntiKt4TopoEM_*",
     "jet_AntiKt4LCTopo_*",
     "jet_AntiKt6*",
@@ -400,6 +406,11 @@ class HHSkim(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             # write the pileup reweighting file
             pileup_tool.WriteToFile()
+
+            # turn on triggers so they show up as "active" in the report
+            trigger_A.switchOn()
+            trigger_B.switchOn()
+            trigger_C.switchOn()
 
             # finalize the trigger_tool
             trigger_tool.finalize()
