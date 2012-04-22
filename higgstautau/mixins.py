@@ -118,11 +118,19 @@ class MCParticle(FourMomentum):
         return not len(self.child_index)
 
     @cached_property
+    def first_self(self):
+
+        for parent in self.iparents():
+            if parent.pdgId == self.pdgId:
+                return parent.first_self
+        return self
+
+    @cached_property
     def last_self(self):
 
         for child in self.ichildren():
             if child.pdgId == self.pdgId:
-                return child.last_self()
+                return child.last_self
         return self
 
     @cached_property
@@ -145,8 +153,15 @@ class MCParticle(FourMomentum):
 
     def __str__(self):
 
-        return "%s (m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f)" % \
+        return ("%s ("
+                "status: %d, "
+                "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f, "
+                "x: %.4f, y: %.4f, z: %.4f)") % \
             (self._particle.GetName(),
+             self.status,
              self._particle.Mass() * GeV,
              self.pt / GeV,
-             self.eta, self.phi)
+             self.eta, self.phi,
+             self.vx_x,
+             self.vx_y,
+             self.vx_z)

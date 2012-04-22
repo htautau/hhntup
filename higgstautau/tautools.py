@@ -170,12 +170,12 @@ class TauDecay(object):
         return rep
 
 
-def get_tau_decays(event, parent_pdgid=None, status=(2, 11)):
+def get_tau_decays(event, parent_pdgid=None, status=None):
     """
     Get all taus and their decay products
 
     parent_pdgid: pdgid or list of pdgids of accepted parent particles
-    status: accepted status (include 11 for Herwig)
+    status: accepted status
     """
     if parent_pdgid is not None:
         if not isinstance(parent_pdgid, (list, tuple)):
@@ -183,16 +183,19 @@ def get_tau_decays(event, parent_pdgid=None, status=(2, 11)):
     if status is not None:
         if not isinstance(status, (list, tuple)):
             status = [status]
+    else:
+        # 2 for Pythia, 11 for Herwig, 195 for AlpgenJimmy
+        status=(2, 11, 195)
     decays = []
     for mc in event.mc:
         if mc.pdgId in (pdg.tau_plus, pdg.tau_minus):
             if status is None or mc.status in status:
                 init_state = mc
                 if parent_pdgid is not None:
-                    accept = True
-                    for parent in mc.iparents():
-                        if parent.pdgId not in parent_pdgid:
-                            accept = False
+                    accept = False
+                    for parent in mc.first_self.iparents():
+                        if parent.pdgId in parent_pdgid:
+                            accept = True
                             break
                     if not accept:
                         continue

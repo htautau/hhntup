@@ -98,6 +98,7 @@ class MCTauProcessor(ATLASStudent):
             """
             # Only accept taus from a Z or Higgs
             tau_decays = tautools.get_tau_decays(event, parent_pdgid=(23, 25))
+
             # There should be exactly two taus
             if len(tau_decays) != 2:
                 #print "#MCTAUS != 2: %i" % len(tau_decays)
