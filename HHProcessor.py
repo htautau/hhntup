@@ -25,9 +25,9 @@ from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau.hadhad.extrafilters import *
 from higgstautau import mass
-from higgstautau.mass.ditaumass import HAD1P, HAD3P
+#from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.pileup import PileupReweighting
+from higgstautau.pileup import PileupReweighting, TPileupReweighting
 
 from goodruns import GRL
 import subprocess
@@ -198,8 +198,8 @@ class HHProcessor(ATLASStudent):
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
-            pileup_tool = PileupReweighting()
-            pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)
+            pileup_tool = TPileupReweighting()
+            pileup_tool.AddConfigFile(PileupReweighting.get_resource('%s_defaults.prw.root' % self.metadata.category))
             pileup_tool.AddLumiCalcFile('grl/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(1)
@@ -358,6 +358,13 @@ class HHProcessor(ATLASStudent):
                                                              tau2_2vector,
                                                              MET_vect)
 
+
+            """
+            Mass
+            """
+            tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
+
+            """
             if tau1.numTrack <= 1:
                 taumode1 = HAD1P
             else:
@@ -368,12 +375,6 @@ class HHProcessor(ATLASStudent):
             else:
                 taumode2 = HAD3P
 
-            """
-            Mass
-            """
-            tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
-
-            """
             tree.mass_dtm_tau1_tau2 = mass.ditaumass(tau1.fourvect, taumode1,
                                                      tau2.fourvect, taumode2,
                                                      METx, METy, MET_res) / GeV
