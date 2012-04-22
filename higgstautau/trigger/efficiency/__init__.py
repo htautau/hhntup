@@ -1,8 +1,10 @@
 import os
 import ROOT
 
-ROOT.gSystem.Load(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                  'libTauTriggerCorrections.so'))
+#ROOT.gSystem.Load(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+#                  'libTauTriggerCorrections.so'))
+from externaltools import TauTriggerCorrections
+
 from ROOT import TauTriggerCorrections
 
 __all__ = []

@@ -85,7 +85,7 @@ def run(student, datasets, hosts,
         cmd = CMD % ds
         if not HOSTNAME.startswith(host.name):
             if setup is not None:
-                cmd = "ssh %s '%s && cd %s && %s'" % (host.name, setup, CWD, cmd)
+                cmd = "ssh %s 'cd %s && %s && %s'" % (host.name, CWD, setup, cmd)
             else:
                 cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
         print cmd

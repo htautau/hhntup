@@ -1,1 +1,2 @@
 source /cluster/data10/endw/bashrc/bashrc.sfu
+source grid.setup

@@ -1,8 +1,10 @@
 import os
 import ROOT
 
-ROOT.gSystem.Load(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                  'libTrigRootAnalysis.so'))
+#ROOT.gSystem.Load(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+#                  'libTrigRootAnalysis.so'))
+from externaltools import TrigRootAnalysis
+
 from ROOT import D3PD
 
 __all__ = [

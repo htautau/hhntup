@@ -4,8 +4,10 @@ from atlastools import datasets
 import os
 from math import sqrt
 
+#ROOT.gSystem.Load(os.path.join(os.path.dirname(__file__), "libMissingMassCalculator.so"))
+from externaltools import MissingMassCalculator
 
-ROOT.gSystem.Load(os.path.join(os.path.dirname(__file__), "libMissingMassCalculator.so"))
+
 MMC = ROOT.MissingMassCalculator()
 MMC.SetAlgorithmVersion(1)
 MMC.SetNiterFit1(20)
