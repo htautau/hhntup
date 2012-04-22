@@ -199,7 +199,7 @@ class HHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
             pileup_tool = TPileupReweighting()
-            pileup_tool.AddConfigFile(PileupReweighting.get_resource('%s_defaults.prw.root' % self.metadata.category))
+            pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc11b_defaults.prw.root'))
             pileup_tool.AddLumiCalcFile('grl/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(1)
