@@ -195,10 +195,11 @@ class Dataset(yaml.YAMLObject):
     @cached_property
     def files(self):
 
-        files = []
+        _files = []
         for dir in self.dirs:
-            files += glob.glob(os.path.join(dir, '*.root*'))
-        return files
+            for path, dirs, files in os.walk(dir):
+                _files += [os.path.join(path, f) for f in fnmatch.filter(files, '*.root*')]
+        return _files
 
 
 def dataset_constructor(loader, node):
