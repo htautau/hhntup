@@ -307,6 +307,7 @@ class HHSkim(ATLASStudent):
 
         nevents = 0
         nevents_mc_weight = 0
+        emulated_trigger_passed = False
         # entering the main event loop...
         for event in intree:
 
@@ -321,15 +322,16 @@ class HHSkim(ATLASStudent):
                 trigger, triggername = trigger_run_dict[event.RunNumber]
                 trigger.switchOn()
                 trigger_tool.executeTriggers()
+                emulated_trigger_passed = trigger.passed()
 
                 outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
                 outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
                 outtree.tau_trigger_match_index.clear()
 
 
-            if (self.metadata.datatype == datasets.MC and trigger.passed()) or trigger_filter(event):
+            if emulated_trigger_passed or trigger_filter(event):
 
-                if self.metadata.datatype == datasets.MC:
+                if emulated_trigger_passed:
                     if triggername == 'EF_tau29_medium1_tau20_medium1':
                         outtree.EF_tau29_medium1_tau20_medium1_EMULATED = True
                     else:
