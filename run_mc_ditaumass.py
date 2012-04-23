@@ -91,6 +91,6 @@ datasets = [
 cluster.run('MCTauProcessor.py',
             datasets=datasets,
             hosts=hosts,
-            nproc=10,
+            nproc=20,
             nice=10,
             setup=setup)
