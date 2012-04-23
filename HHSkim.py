@@ -98,7 +98,7 @@ PileupReweighting = Root.TPileupReweighting
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
-WRITE_ALL = True
+WRITE_ALL = False
 
 branches_remove = [
     "cl_*",
