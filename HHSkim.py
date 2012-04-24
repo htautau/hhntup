@@ -192,6 +192,7 @@ class TriggerEmulation(TreeModel):
     EF_tau29_medium1_tau20_medium1_EMULATED = BoolCol()
     EF_tau29T_medium1_tau20T_medium1_EMULATED = BoolCol()
     tau_trigger_match_index = ROOT.vector('int')
+    tau_trigger_match_thresh = ROOT.vector('int')
 
 
 class HHSkim(ATLASStudent):
@@ -327,6 +328,7 @@ class HHSkim(ATLASStudent):
                 outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
                 outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
                 outtree.tau_trigger_match_index.clear()
+                outtree.tau_trigger_match_thresh.clear()
 
 
             if emulated_trigger_passed or trigger_filter(event):
@@ -338,28 +340,35 @@ class HHSkim(ATLASStudent):
                         outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = True
 
                     # trigger matching
-                    trig1 = trigger.getTrigger1()
-                    trig2 = trigger.getTrigger2()
+                    trig1 = trigger.getTrigger1() # EF_tau29(T)_medium1
+                    trig2 = trigger.getTrigger2() # EF_tau20(T)_medium1
                     for tau in event.taus:
+                        thresh = 0
                         idx = -1
                         idx1 = trig1.matchIndex(tau.fourvect)
                         idx2 = trig2.matchIndex(tau.fourvect)
                         if idx1 == idx2 != -1:
                             idx = idx1
+                            thresh = 29
                         elif idx1 == -1 and idx2 > -1:
                             idx = idx2
+                            thresh = 20
                         elif idx2 == -1 and idx1 > -1:
                             idx = idx1
+                            thresh = 29
                         elif idx2 != idx1: # both >-1 and non-equal
                             # take index of closer one using dR
                             trigtau1TLV = trigger_tool.buildEFTauTLV(idx1)
                             trigtau2TLV = trigger_tool.buildEFTauTLV(idx2)
                             if trigtau1TLV.DeltaR(tau.fourvect) < trigtau2TLV.DeltaR(tau.fourvect):
                                 idx = idx1
+                                thresh = 29
                             else:
                                 idx = idx2
+                                thresh = 20
 
                         outtree.tau_trigger_match_index.push_back(idx)
+                        outtree.tau_trigger_match_thresh.push_back(thresh)
 
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
