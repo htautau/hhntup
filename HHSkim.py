@@ -93,6 +93,8 @@ from externaltools import CoEPPTrigTool, PileupReweighting
 from ROOT import Root
 from ROOT import CoEPP
 
+#import sys
+#sys.setrecursionlimit(5000)
 
 PileupReweighting = Root.TPileupReweighting
 
