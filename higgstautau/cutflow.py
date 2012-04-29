@@ -17,6 +17,7 @@ def get_parser():
     parser.add_argument('--mass', type=int, default=125)
     parser.add_argument('--proc', default='HHProcessor')
     parser.add_argument('--noweight', action='store_true', default=False)
+    parser.add_argument('--verbose', action='store_true', default=False)
     #parser.add_argument('--dir', default='samples/midpt')
     return parser
 
@@ -32,7 +33,7 @@ def make_cutflow(samples, args, num_format="%.1f"):
     # build table
     cutflow_table = {}
     for i, (latex_name, text_name, sample) in enumerate(samples):
-        matched_samples = datasets.get_datasets(sample, regex=True)
+        matched_samples = datasets.get_datasets(sample)
         total_cutflow = None
         total = 0
         for ds in matched_samples:
@@ -47,15 +48,16 @@ def make_cutflow(samples, args, num_format="%.1f"):
                 # scale MC by lumi and xsec
                 if ds.datatype != datasets.DATA and not args.noweight:
                     events = rfile.cutflow[0]
-                    xsec, effic = ds.xsec_effic
-                    print '-' * 30
-                    print ds.name
+                    xsec, xsec_min, xsec_max, effic = ds.xsec_effic
                     weight = 1E3 * lumi * xsec / (effic * events)
-                    print "xsec: %f [nb]" % xsec
-                    print "effic: %f" % effic
-                    print "events: %d" % events
-                    print "lumi: %f [1/pb]" % lumi
-                    print "weight (1E3 * lumi * xsec / (effic * events)): %f" % weight
+                    if args.verbose:
+                        print '-' * 30
+                        print ds.name
+                        print "xsec: %f [nb]" % xsec
+                        print "effic: %f" % effic
+                        print "events: %d" % events
+                        print "lumi: %f [1/pb]" % lumi
+                        print "weight (1E3 * lumi * xsec / (effic * events)): %f" % weight
                     cutflow *= weight
                     ds_total *= weight
 

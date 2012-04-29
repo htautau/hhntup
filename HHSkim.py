@@ -98,7 +98,7 @@ from ROOT import CoEPP
 
 PileupReweighting = Root.TPileupReweighting
 
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
+#ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 WRITE_ALL = False
 
