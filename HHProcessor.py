@@ -114,8 +114,10 @@ class HHProcessor(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
+        """
         if self.metadata.datatype == datasets.MC:
             copied_variables += mc_triggers
+        """
 
         tree_hh_2jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
         tree_hh_01jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
@@ -362,7 +364,7 @@ class HHProcessor(ATLASStudent):
             """
             Mass
             """
-            tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            #tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
 
             """
             if tau1.numTrack <= 1:
