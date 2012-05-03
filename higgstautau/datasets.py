@@ -60,8 +60,8 @@ DATA_LEPHAD_EGAMMA_STREAM = 'Egamma'
 """
 HadHad constants
 """
-MC_HADHAD_PATH = '/global/endw/mc11_7TeV/higgs_tautau_hh_skim_p851'
-MC_HADHAD_PREFIX = 'user.NoelDawe.HTauSkim'
+MC_HADHAD_PATH = '/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851'
+MC_HADHAD_PREFIX = 'user.NoelDawe.HHSkim'
 
 DATA_HADHAD_PATH = '/global/endw/data11_7TeV/higgs_tautau_hh_skim_p851'
 DATA_HADHAD_PREFIX = 'user.NoelDawe.HTauSkim'

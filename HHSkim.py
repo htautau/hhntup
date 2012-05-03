@@ -147,6 +147,7 @@ branches_remove = [
 
 # override globs above
 branches_keep = [
+    "el_n",
     "el_cl_E",
     "el_tracketa",
     "el_trackphi",
@@ -157,6 +158,7 @@ branches_keep = [
     "el_tightPP",
     "el_OQ",
 
+    "mu_staco_n",
     "mu_staco_E",
     "mu_staco_pt",
     "mu_staco_eta",
