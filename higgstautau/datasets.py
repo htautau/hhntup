@@ -113,6 +113,9 @@ MC_CATEGORIES = {
               'merge': (3109, 3063, 2993)},
 }
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
 """
 Any datasets which don't have the provenance stored properly in AMI
 should be hardcoded here (it happens)
@@ -120,17 +123,10 @@ should be hardcoded here (it happens)
 DS_NOPROV = {}
 
 """
-The dataset database is stored in YAML format
-"""
-DATASETS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'datasets.yml')
-DATASETS_MODIFIED = False
-DATASETS = {}
-
-"""
 Cross-sections are cached so that we don't need to keep asking AMI
 for them over and over
 """
-XSEC_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'xsec_cache')
+XSEC_CACHE_FILE = os.path.join(HERE, 'xsec_cache')
 XSEC_CACHE_MODIFIED = False
 XSEC_CACHE = {}
 
@@ -140,6 +136,305 @@ if USE_PYAMI:
     if not os.path.exists(AMI_CONFIG):
         create_auth_config()
     amiclient.read_config(AMI_CONFIG)
+
+
+class Database(dict):
+
+    def __init__(self, name='datasets'):
+
+        super(Database, self).__init__()
+        self.name = name
+        self.filepath = os.path.join(HERE, '%s.yml' % self.name)
+        if os.path.isfile(self.filepath):
+            with open(self.filepath) as db:
+                print "Loading '%s' dataset database..." % self.name
+                d = yaml.load(db)
+                if d:
+                    self.update(d)
+        self.modified = False
+
+    def write(self):
+
+        if self.modified:
+            with open(self.filepath, 'w') as db:
+                print "Saving '%s' dataset database to disk..." % self.name
+                yaml.dump(dict(self), db)
+
+    def reset(self):
+
+        return self.clear()
+
+    def clear(self):
+
+        # erase all datasets in database
+        print "Resetting '%s' dataset database..." % self.name
+        super(Database, self).clear()
+        self.modified = True
+
+    def validate(self,
+                 pattern=None,
+                 datatype=MC):
+
+        ds = {}
+        for name, info in self.items():
+            if info.datatype == datatype:
+                if pattern is None or fnmatch.fnmatch(name, pattern):
+                    ds[name] = info
+        incomplete = []
+        for name, info in ds.items():
+            print "Validating %s..." % name
+            complete = validate_single((name, info), child=False)
+            print "Complete: %s" % complete
+            print '-'*50
+            if not complete:
+                incomplete.append(info.ds)
+        """
+        pool = Pool(processes=cpu_count())
+        for result, complete in pool.map(validate_single, sorted(ds.items(), key=itemgetter(0))):
+            print result
+            print "Complete: %s" % complete
+            print '-'*50
+            if not complete:
+                all_complete = False
+        """
+        if not incomplete:
+            print "ALL DATASETS ARE COMPLETE"
+        else:
+            print "SOME DATASETS ARE NOT COMPLETE"
+            print "INCOMPLETE DATASETS:"
+            for ds in incomplete:
+                print ds
+
+    def scan(self,
+             mc_path=None,
+             mc_prefix=None,
+             mc_pattern=None,
+             data_path=None,
+             data_prefix=None,
+             data_pattern=None,
+             versioned=False,
+             deep=False):
+        """
+        Update the dataset database
+        """
+        print "Updating '%s' dataset database..." % self.name
+        self.modified = True
+
+        if mc_path is not None:
+            if versioned:
+                pattern1 = ('^mc11_7TeV.(?P<id>\d+)'
+                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
+                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
+                            '.v(?P<version>\d+).(?P<suffix>\S+)$')
+                pattern2 = ('^mc11_7TeV.(?P<id>\d+)'
+                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
+                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
+                            '.v(?P<version>\d+).(?P<suffix>\S+)$')
+            else:
+                pattern1 = ('^mc11_7TeV.(?P<id>\d+)'
+                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
+                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
+                            '_(?P<suffix>\S+)$')
+                pattern2 = ('^mc11_7TeV.(?P<id>\d+)'
+                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
+                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
+                            '_(?P<suffix>\S+)$')
+
+            if mc_prefix:
+                pattern1 = ('^%s.' % mc_prefix) + pattern1[1:]
+                pattern2 = ('^%s.' % mc_prefix) + pattern2[1:]
+
+            MC_PATTERN1 = re.compile(pattern1)
+            MC_PATTERN2 = re.compile(pattern2)
+
+            if deep:
+                mc_dirs = get_all_dirs_under(mc_path)
+            else:
+                if mc_prefix:
+                    mc_dirs = glob.glob(os.path.join(mc_path, mc_prefix) + '*')
+                else:
+                    mc_dirs = glob.glob(os.path.join(mc_path, '*'))
+
+            for dir in mc_dirs:
+                dirname, basename = os.path.split(dir)
+                match  = re.match(MC_PATTERN1, basename)
+                match2 = re.match(MC_PATTERN2, basename)
+
+                if (match2 and not match): match = match2
+
+                if match:
+                    name = match.group('name')
+                    tag = match.group('tag')
+                    try:
+                        version = int(match.group('version'))
+                    except IndexError:
+                        version = 0
+                    tag_match = re.match(MC_TAG_PATTERN1, tag)
+                    tag_match2 = re.match(MC_TAG_PATTERN2, tag)
+                    MC_TAG_PATTERN = MC_TAG_PATTERN1
+
+                    if (tag_match2 and not tag_match) :
+                        tag_match = tag_match2
+                        MC_TAG_PATTERN = MC_TAG_PATTERN2
+
+                    if not tag_match:
+                        print "Dataset not tag-matched: %s" % basename
+                        continue
+                    cat = None
+                    for cat_name, cat_params in MC_CATEGORIES.items():
+                        if int(tag_match.group('reco')) in cat_params['reco']:
+                            cat = cat_name
+                            break
+                    if cat is None:
+                        print "Dataset does not match a category: %s" % basename
+                        continue
+                    name += '.' + cat
+                    dataset = self.get(name, None)
+                    if dataset is not None and version == dataset.version:
+                        if tag != dataset.tag:
+                            this_reco = int(tag_match.group('reco'))
+                            other_reco = int(re.match(dataset.tag_pattern,
+                                                      dataset.tag).group('reco'))
+                            use_mergetag = True
+                            try:
+                                this_merge = int(tag_match.group('recomerge'))
+                                other_merge = int(re.match(dataset.tag_pattern,
+                                                           dataset.tag).group('recomerge'))
+                            except IndexError:
+                                use_mergetag = False
+
+                            cat_params = MC_CATEGORIES[cat]
+                            reco_tags = list(cat_params['reco'])
+                            merge_tags = list(cat_params['merge'])
+                            assert(this_reco in reco_tags and other_reco in reco_tags)
+                            take_this = False
+                            if reco_tags.index(this_reco) < reco_tags.index(other_reco):
+                                take_this = True
+                            elif use_mergetag and this_reco == other_reco and \
+                                    merge_tags.index(this_merge) < merge_tags.index(other_merge):
+                                take_this = True
+
+                            if take_this:
+                                print "taking %s over %s" % (basename, dataset.ds)
+                                DATASETS[name] = Dataset(name=name,
+                                                datatype=MC,
+                                                treename=MC_TREENAME,
+                                                ds='mc11_7TeV.' +
+                                                match.group('id') + '.' +
+                                                match.group('name') +
+                                                '.merge.NTUP_TAUMEDIUM.' +
+                                                match.group('tag'),
+                                                id=int(match.group('id')),
+                                                category=cat,
+                                                version=version,
+                                                tag_pattern=MC_TAG_PATTERN.pattern,
+                                                tag=tag,
+                                                dirs=[dir],
+                                                file_pattern=mc_pattern)
+                        else:
+                            dataset.dirs.append(dir)
+                    elif dataset is None or (dataset is not None and version > dataset.version):
+                        self[name] = Dataset(name=name,
+                                            datatype=MC,
+                                            treename=MC_TREENAME,
+                                            ds='mc11_7TeV.' +
+                                            match.group('id') + '.' +
+                                            match.group('name') +
+                                            '.merge.NTUP_TAUMEDIUM.' +
+                                            match.group('tag'),
+                                            id=int(match.group('id')),
+                                            category=cat,
+                                            version=version,
+                                            tag_pattern=MC_TAG_PATTERN.pattern,
+                                            tag=tag,
+                                            dirs=[dir],
+                                            file_pattern=mc_pattern)
+                else:
+                    print "Dataset not matched: %s" % basename
+
+        if data_path is not None:
+            if data_prefix:
+                data_dirs = glob.glob(os.path.join(data_path, data_prefix) + '*')
+            else:
+                data_dirs = glob.glob(os.path.join(data_path, '*'))
+
+            self['data'] = Dataset(name='data',
+                                       datatype=DATA,
+                                       treename=DATA_TREENAME,
+                                       ds='data',
+                                       id=1,
+                                       # The GRL is the same for both lephad and hadhad analyses
+                                       grl=GRL,
+                                       dirs=data_dirs,
+                                       file_pattern=data_pattern)
+            # TODO create datasets for each run and each period
+            runs = {}
+            for dir in data_dirs:
+                if os.path.isdir(dir):
+                    match = re.match(DATA_PATTERN, dir)
+                    if match:
+                        run = int(match.group('run'))
+                        tag = match.group('tag')
+                        if run not in runs:
+                            runs[run] = {'tag': tag, 'dirs': [dir]}
+                        else:
+                            runs[run]['dirs'].append(dir)
+                            if tag != runs[run]['tag']:
+                                print 'multiple copies of run with different tags: %s' % runs[run]['dirs']
+                    else:
+                        print "this dir does not match valid ds name: %s" % dir
+                else:
+                    print "this is not a dir: %s" % dir
+            for run, info in runs.items():
+                name = 'data-%d' % run
+                self[name] = Dataset(name=name,
+                                         datatype=DATA,
+                                         treename=DATA_TREENAME,
+                                         ds=name,
+                                         id=1,
+                                         grl=GRL,
+                                         dirs=info['dirs'],
+                                         file_pattern=data_pattern)
+            if USE_PYAMI:
+                run_periods = get_periods(amiclient, year=YEAR, level=2)
+                run_periods = [p.name for p in run_periods]
+                period_runs = {}
+                for period in run_periods:
+                    if period == 'VdM':
+                        continue
+                    _runs = get_runs(amiclient, periods=period, year=YEAR)
+                    for run in _runs:
+                        period_runs[run] = period
+                periods = {}
+                for run, info in runs.items():
+                    _period = period_runs[run]
+                    if _period in periods:
+                        periods[_period] += info['dirs']
+                    else:
+                        periods[_period] = info['dirs'][:]
+                for period, dirs in periods.items():
+                    name = 'data-%s' % period
+                    self[name] = Dataset(name=name,
+                                             datatype=DATA,
+                                             treename=DATA_TREENAME,
+                                             ds=name,
+                                             id=1,
+                                             grl=GRL,
+                                             dirs=dirs,
+                                             file_pattern=data_pattern)
+
+    def search(self, pattern):
+
+        data = []
+        patterns = pattern
+        if not isinstance(pattern, (list, tuple)):
+            patterns = [pattern]
+        for name, ds in self.items():
+            for pattern in patterns:
+                if re.match(pattern, name) or fnmatch.fnmatch(name, pattern):
+                    data.append(ds)
+                    continue
+        return data
 
 
 class Dataset(yaml.YAMLObject):
@@ -216,10 +511,6 @@ def dataset_constructor(loader, node):
 yaml.add_constructor(u'!Dataset', dataset_constructor)
 
 
-if os.path.isfile(DATASETS_FILE):
-    with open(DATASETS_FILE) as cache:
-        print "Loading dataset database..."
-        DATASETS = yaml.load(cache)
 
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
@@ -234,25 +525,6 @@ def write_cache():
         with open(XSEC_CACHE_FILE, 'w') as cache:
             print "Saving cross-section cache to disk..."
             pickle.dump(XSEC_CACHE, cache)
-
-
-@atexit.register
-def write_datasets():
-
-    if DATASETS_MODIFIED:
-        with open(DATASETS_FILE, 'w') as dsfile:
-            print "Saving dataset database to disk..."
-            yaml.dump(DATASETS, dsfile)
-
-
-def reset():
-
-    global DATASETS
-    global DATASETS_MODIFIED
-    # erase any previous datasets
-    print "Resetting dataset database..."
-    DATASETS = {}
-    DATASETS_MODIFIED = True
 
 
 def validate_single(args, child=True):
@@ -323,41 +595,6 @@ def validate_single(args, child=True):
         return False
 
 
-def validate_datasets(
-        pattern=None,
-        datatype=MC):
-
-    ds = {}
-    for name, info in DATASETS.items():
-        if info.datatype == datatype:
-            if pattern is None or fnmatch.fnmatch(name, pattern):
-                ds[name] = info
-    incomplete = []
-    for name, info in ds.items():
-        print "Validating %s..." % name
-        complete = validate_single((name, info), child=False)
-        print "Complete: %s" % complete
-        print '-'*50
-        if not complete:
-            incomplete.append(info.ds)
-    """
-    pool = Pool(processes=cpu_count())
-    for result, complete in pool.map(validate_single, sorted(ds.items(), key=itemgetter(0))):
-        print result
-        print "Complete: %s" % complete
-        print '-'*50
-        if not complete:
-            all_complete = False
-    """
-    if not incomplete:
-        print "ALL DATASETS ARE COMPLETE"
-    else:
-        print "SOME DATASETS ARE NOT COMPLETE"
-        print "INCOMPLETE DATASETS:"
-        for ds in incomplete:
-            print ds
-
-
 def get_all_dirs_under(path):
     """
     Get list of all directories under path
@@ -386,242 +623,6 @@ def get_all_dirs_under(path):
     return dirs
 
 
-def update_dataset_db(
-        mc_path=None,
-        mc_prefix=None,
-        mc_pattern=None,
-        data_path=None,
-        data_prefix=None,
-        data_pattern=None,
-        versioned=False,
-        deep=False):
-    """
-    Update the dataset database
-    """
-
-    global DATASETS_MODIFIED
-    global DATASETS
-
-    DATASETS_MODIFIED = True
-
-    if mc_path is not None:
-        if versioned:
-            pattern1 = ('^mc11_7TeV.(?P<id>\d+)'
-                        '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                        '.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                        '.v(?P<version>\d+).(?P<suffix>\S+)$')
-            pattern2 = ('^mc11_7TeV.(?P<id>\d+)'
-                        '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                        '.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                        '.v(?P<version>\d+).(?P<suffix>\S+)$')
-        else:
-            pattern1 = ('^mc11_7TeV.(?P<id>\d+)'
-                        '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                        '.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                        '_(?P<suffix>\S+)$')
-            pattern2 = ('^mc11_7TeV.(?P<id>\d+)'
-                        '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                        '.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                        '_(?P<suffix>\S+)$')
-
-        if mc_prefix:
-            pattern1 = ('^%s.' % mc_prefix) + pattern1[1:]
-            pattern2 = ('^%s.' % mc_prefix) + pattern2[1:]
-
-        MC_PATTERN1 = re.compile(pattern1)
-        MC_PATTERN2 = re.compile(pattern2)
-
-        if deep:
-            mc_dirs = get_all_dirs_under(mc_path)
-        else:
-            if mc_prefix:
-                mc_dirs = glob.glob(os.path.join(mc_path, mc_prefix) + '*')
-            else:
-                mc_dirs = glob.glob(os.path.join(mc_path, '*'))
-
-        for dir in mc_dirs:
-            dirname, basename = os.path.split(dir)
-            match  = re.match(MC_PATTERN1, basename)
-            match2 = re.match(MC_PATTERN2, basename)
-
-            if (match2 and not match): match = match2
-
-            if match:
-                name = match.group('name')
-                tag = match.group('tag')
-                try:
-                    version = int(match.group('version'))
-                except IndexError:
-                    version = 0
-                tag_match = re.match(MC_TAG_PATTERN1, tag)
-                tag_match2 = re.match(MC_TAG_PATTERN2, tag)
-                MC_TAG_PATTERN = MC_TAG_PATTERN1
-
-                if (tag_match2 and not tag_match) :
-                    tag_match = tag_match2
-                    MC_TAG_PATTERN = MC_TAG_PATTERN2
-
-                if not tag_match:
-                    print "Dataset not tag-matched: %s" % basename
-                    continue
-                cat = None
-                for cat_name, cat_params in MC_CATEGORIES.items():
-                    if int(tag_match.group('reco')) in cat_params['reco']:
-                        cat = cat_name
-                        break
-                if cat is None:
-                    print "Dataset does not match a category: %s" % basename
-                    continue
-                name += '.' + cat
-                dataset = DATASETS.get(name, None)
-                if dataset is not None and version == dataset.version:
-                    if tag != dataset.tag:
-                        this_reco = int(tag_match.group('reco'))
-                        other_reco = int(re.match(dataset.tag_pattern,
-                                                  dataset.tag).group('reco'))
-                        use_mergetag = True
-                        try:
-                            this_merge = int(tag_match.group('recomerge'))
-                            other_merge = int(re.match(dataset.tag_pattern,
-                                                       dataset.tag).group('recomerge'))
-                        except IndexError:
-                            use_mergetag = False
-
-                        cat_params = MC_CATEGORIES[cat]
-                        reco_tags = list(cat_params['reco'])
-                        merge_tags = list(cat_params['merge'])
-                        assert(this_reco in reco_tags and other_reco in reco_tags)
-                        take_this = False
-                        if reco_tags.index(this_reco) < reco_tags.index(other_reco):
-                            take_this = True
-                        elif use_mergetag and this_reco == other_reco and \
-                                merge_tags.index(this_merge) < merge_tags.index(other_merge):
-                            take_this = True
-
-                        if take_this:
-                            print "taking %s over %s" % (basename, dataset.ds)
-                            DATASETS[name] = Dataset(name=name,
-                                            datatype=MC,
-                                            treename=MC_TREENAME,
-                                            ds='mc11_7TeV.' +
-                                            match.group('id') + '.' +
-                                            match.group('name') +
-                                            '.merge.NTUP_TAUMEDIUM.' +
-                                            match.group('tag'),
-                                            id=int(match.group('id')),
-                                            category=cat,
-                                            version=version,
-                                            tag_pattern=MC_TAG_PATTERN.pattern,
-                                            tag=tag,
-                                            dirs=[dir],
-                                            file_pattern=mc_pattern)
-                    else:
-                        dataset.dirs.append(dir)
-                elif dataset is None or (dataset is not None and version > dataset.version):
-                    DATASETS[name] = Dataset(name=name,
-                                        datatype=MC,
-                                        treename=MC_TREENAME,
-                                        ds='mc11_7TeV.' +
-                                        match.group('id') + '.' +
-                                        match.group('name') +
-                                        '.merge.NTUP_TAUMEDIUM.' +
-                                        match.group('tag'),
-                                        id=int(match.group('id')),
-                                        category=cat,
-                                        version=version,
-                                        tag_pattern=MC_TAG_PATTERN.pattern,
-                                        tag=tag,
-                                        dirs=[dir],
-                                        file_pattern=mc_pattern)
-            else:
-                print "Dataset not matched: %s" % basename
-
-    if data_path is not None:
-        if data_prefix:
-            data_dirs = glob.glob(os.path.join(data_path, data_prefix) + '*')
-        else:
-            data_dirs = glob.glob(os.path.join(data_path, '*'))
-
-        DATASETS['data'] = Dataset(name='data',
-                                   datatype=DATA,
-                                   treename=DATA_TREENAME,
-                                   ds='data',
-                                   id=1,
-                                   # The GRL is the same for both lephad and hadhad analyses
-                                   grl=GRL,
-                                   dirs=data_dirs,
-                                   file_pattern=data_pattern)
-        # TODO create datasets for each run and each period
-        runs = {}
-        for dir in data_dirs:
-            if os.path.isdir(dir):
-                match = re.match(DATA_PATTERN, dir)
-                if match:
-                    run = int(match.group('run'))
-                    tag = match.group('tag')
-                    if run not in runs:
-                        runs[run] = {'tag': tag, 'dirs': [dir]}
-                    else:
-                        runs[run]['dirs'].append(dir)
-                        if tag != runs[run]['tag']:
-                            print 'multiple copies of run with different tags: %s' % runs[run]['dirs']
-                else:
-                    print "this dir does not match valid ds name: %s" % dir
-            else:
-                print "this is not a dir: %s" % dir
-        for run, info in runs.items():
-            name = 'data-%d' % run
-            DATASETS[name] = Dataset(name=name,
-                                     datatype=DATA,
-                                     treename=DATA_TREENAME,
-                                     ds=name,
-                                     id=1,
-                                     grl=GRL,
-                                     dirs=info['dirs'],
-                                     file_pattern=data_pattern)
-        if USE_PYAMI:
-            run_periods = get_periods(amiclient, year=YEAR, level=2)
-            run_periods = [p.name for p in run_periods]
-            period_runs = {}
-            for period in run_periods:
-                if period == 'VdM':
-                    continue
-                _runs = get_runs(amiclient, periods=period, year=YEAR)
-                for run in _runs:
-                    period_runs[run] = period
-            periods = {}
-            for run, info in runs.items():
-                _period = period_runs[run]
-                if _period in periods:
-                    periods[_period] += info['dirs']
-                else:
-                    periods[_period] = info['dirs'][:]
-            for period, dirs in periods.items():
-                name = 'data-%s' % period
-                DATASETS[name] = Dataset(name=name,
-                                         datatype=DATA,
-                                         treename=DATA_TREENAME,
-                                         ds=name,
-                                         id=1,
-                                         grl=GRL,
-                                         dirs=dirs,
-                                         file_pattern=data_pattern)
-
-
-def get_datasets(pattern):
-
-    data = []
-    patterns = pattern
-    if not isinstance(pattern, (list, tuple)):
-        patterns = [pattern]
-    for name, ds in DATASETS.items():
-        for pattern in patterns:
-            if re.match(pattern, name) or fnmatch.fnmatch(name, pattern):
-                data.append(ds)
-                continue
-    return data
-
-
 if __name__ == '__main__':
 
     """
@@ -647,6 +648,8 @@ if __name__ == '__main__':
     parser.add_argument('--data-path', default=None)
     parser.add_argument('--data-prefix', default=None)
     parser.add_argument('--data-pattern', default='*.root*')
+
+    parser.add_argument('--name', default='datasets')
 
     parser.add_argument('analysis',
                         choices=('mulh', 'elh', 'hh', 'custom'),
@@ -690,14 +693,13 @@ if __name__ == '__main__':
         data_prefix = args.data_prefix
         data_pattern = args.data_pattern
 
+    db = Database(name=args.name)
+
     if args.reset:
-        reset()
+        db.clear()
 
     if mc_path is not None or data_path is not None:
-        print "Updating dataset database..."
-
-        update_dataset_db(
-                mc_path=mc_path,
+        db.scan(mc_path=mc_path,
                 mc_prefix=mc_prefix,
                 mc_pattern=mc_pattern,
                 data_path=data_path,
@@ -708,12 +710,12 @@ if __name__ == '__main__':
 
     if args.validate or args.validate_pattern is not None:
         # check for missing events etc...
-        print "Validating datasets in database..."
-        validate_datasets(pattern=args.validate_pattern,
-                          datatype=MC)
+        db.validate(pattern=args.validate_pattern,
+                    datatype=MC)
     else:
         if args.info:
-            print "%i datasets in database" % len(DATASETS)
+            print "%i datasets in database" % len(db)
         else:
-            for name in sorted(DATASETS.keys()):
-                print "%s => %s" % (name, DATASETS[name].ds)
+            for name in sorted(db.keys()):
+                print "%s => %s" % (name, db[name].ds)
+    db.write()
