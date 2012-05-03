@@ -51,21 +51,25 @@ LepHad constants
 """
 MC_LEPHAD_PATH = '/global/mtm/data/SKIMS/MC'
 MC_LEPHAD_PREFIX = 'user.mtm.muLHSkim'
+MC_LEPHAD_FILE_PATTERN = '*.root*'
 
 DATA_LEPHAD_PATH = '/global/mtm/data/SKIMS/DATA'
 DATA_LEPHAD_PREFIX = 'user.mtm.muLHSkim'
 DATA_LEPHAD_MUON_STREAM = 'Muons'
 DATA_LEPHAD_EGAMMA_STREAM = 'Egamma'
+DATA_LEPHAD_FILE_PATTERN = '*.root*'
 
 """
 HadHad constants
 """
 MC_HADHAD_PATH = '/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851'
 MC_HADHAD_PREFIX = 'user.NoelDawe.HHSkim'
+MC_HADHAD_FILE_PATTERN = '*HHSkim*.root*'
 
 DATA_HADHAD_PATH = '/global/endw/data11_7TeV/higgs_tautau_hh_skim_p851'
 DATA_HADHAD_PREFIX = 'user.NoelDawe.HTauSkim'
 DATA_HADHAD_STREAM = 'JetTauEtmiss'
+DATA_HADHAD_FILE_PATTERN = '*HTauSkim*.root*'
 
 """
 Common constants
@@ -144,6 +148,7 @@ class Dataset(yaml.YAMLObject):
 
     def __init__(self, name, datatype, treename,
                  ds, dirs,
+                 file_pattern='*.root*',
                  id=None,
                  category=None,
                  version=None,
@@ -161,6 +166,7 @@ class Dataset(yaml.YAMLObject):
         self.tag_pattern = tag_pattern
         self.tag = tag
         self.dirs = dirs
+        self.file_pattern = file_pattern
         self.grl = grl
 
     @cached_property
@@ -198,7 +204,8 @@ class Dataset(yaml.YAMLObject):
         _files = []
         for dir in self.dirs:
             for path, dirs, files in os.walk(dir):
-                _files += [os.path.join(path, f) for f in fnmatch.filter(files, '*.root*')]
+                _files += [os.path.join(path, f) for f in
+                           fnmatch.filter(files, self.file_pattern)]
         return _files
 
 
@@ -382,8 +389,10 @@ def get_all_dirs_under(path):
 def update_dataset_db(
         mc_path=None,
         mc_prefix=None,
+        mc_pattern=None,
         data_path=None,
         data_prefix=None,
+        data_pattern=None,
         versioned=False,
         deep=False):
     """
@@ -504,7 +513,8 @@ def update_dataset_db(
                                             version=version,
                                             tag_pattern=MC_TAG_PATTERN.pattern,
                                             tag=tag,
-                                            dirs=[dir])
+                                            dirs=[dir],
+                                            file_pattern=mc_pattern)
                     else:
                         dataset.dirs.append(dir)
                 elif dataset is None or (dataset is not None and version > dataset.version):
@@ -521,7 +531,8 @@ def update_dataset_db(
                                         version=version,
                                         tag_pattern=MC_TAG_PATTERN.pattern,
                                         tag=tag,
-                                        dirs=[dir])
+                                        dirs=[dir],
+                                        file_pattern=mc_pattern)
             else:
                 print "Dataset not matched: %s" % basename
 
@@ -538,7 +549,8 @@ def update_dataset_db(
                                    id=1,
                                    # The GRL is the same for both lephad and hadhad analyses
                                    grl=GRL,
-                                   dirs=data_dirs)
+                                   dirs=data_dirs,
+                                   file_pattern=data_pattern)
         # TODO create datasets for each run and each period
         runs = {}
         for dir in data_dirs:
@@ -565,7 +577,8 @@ def update_dataset_db(
                                      ds=name,
                                      id=1,
                                      grl=GRL,
-                                     dirs=info['dirs'])
+                                     dirs=info['dirs'],
+                                     file_pattern=data_pattern)
         if USE_PYAMI:
             run_periods = get_periods(amiclient, year=YEAR, level=2)
             run_periods = [p.name for p in run_periods]
@@ -586,12 +599,13 @@ def update_dataset_db(
             for period, dirs in periods.items():
                 name = 'data-%s' % period
                 DATASETS[name] = Dataset(name=name,
-                                     datatype=DATA,
-                                     treename=DATA_TREENAME,
-                                     ds=name,
-                                     id=1,
-                                     grl=GRL,
-                                     dirs=dirs)
+                                         datatype=DATA,
+                                         treename=DATA_TREENAME,
+                                         ds=name,
+                                         id=1,
+                                         grl=GRL,
+                                         dirs=dirs,
+                                         file_pattern=data_pattern)
 
 
 def get_datasets(pattern):
@@ -628,8 +642,11 @@ if __name__ == '__main__':
 
     parser.add_argument('--mc-path', default=None)
     parser.add_argument('--mc-prefix', default=None)
+    parser.add_argument('--mc-pattern', default='*.root*')
+
     parser.add_argument('--data-path', default=None)
     parser.add_argument('--data-prefix', default=None)
+    parser.add_argument('--data-pattern', default='*.root*')
 
     parser.add_argument('analysis',
                         choices=('mulh', 'elh', 'hh', 'custom'),
@@ -644,26 +661,34 @@ if __name__ == '__main__':
     if args.analysis == 'hh':
         mc_path = MC_HADHAD_PATH
         mc_prefix = MC_HADHAD_PREFIX
+        mc_pattern = MC_HADHAD_FILE_PATTERN
         data_path = DATA_HADHAD_PATH
         data_prefix = DATA_HADHAD_PREFIX
+        data_pattern = DATA_HADHAD_FILE_PATTERN
         args.versioned = True
     elif args.analysis == 'mulh':
         mc_path = MC_LEPHAD_PATH
         mc_prefix = MC_LEPHAD_PREFIX
+        mc_pattern = MC_LEPHAD_FILE_PATTERN
         data_path = DATA_LEPHAD_PATH
         data_prefix = DATA_LEPHAD_PREFIX
+        data_pattern = DATA_LEPHAD_FILE_PATTERN
         args.versioned = True
     elif args.analysis == 'elh':
         mc_path = MC_LEPHAD_PATH
         mc_prefix = MC_LEPHAD_PREFIX
+        mc_pattern = MC_LEPHAD_FILE_PATTERN
         data_path = DATA_LEPHAD_PATH
         data_prefix = DATA_LEPHAD_PREFIX
+        data_pattern = DATA_LEPHAD_FILE_PATTERN
         args.versioned = True
     else: # custom
         mc_path = args.mc_path
         mc_prefix = args.mc_prefix
+        mc_pattern = args.mc_pattern
         data_path = args.data_path
         data_prefix = args.data_prefix
+        data_pattern = args.data_pattern
 
     if args.reset:
         reset()
@@ -674,8 +699,10 @@ if __name__ == '__main__':
         update_dataset_db(
                 mc_path=mc_path,
                 mc_prefix=mc_prefix,
+                mc_pattern=mc_pattern,
                 data_path=data_path,
                 data_prefix=data_prefix,
+                data_pattern=data_pattern,
                 deep=args.deep,
                 versioned=args.versioned)
 
