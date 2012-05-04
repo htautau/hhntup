@@ -31,8 +31,15 @@ class RecoTau(TreeModel):
     numTrack = IntCol()
     charge = IntCol()
 
+    centrality = FloatCol()
+    centrality_boosted = FloatCol()
+
     fourvect = LorentzVector
     fourvect_boosted = LorentzVector
+
+    # efficiency scale factor if matches truth
+    # else fake rate scale factor
+    weight = FloatCol()
 
 
 class EventVariables(TreeModel):
@@ -46,13 +53,7 @@ class EventVariables(TreeModel):
     tau1_x = FloatCol()
     tau2_x = FloatCol()
 
-    # event variables developed by Michel T-M
-    tau1_centrality = FloatCol()
-    tau2_centrality = FloatCol()
     MET_centrality = FloatCol()
-
-    tau1_centrality_boosted = FloatCol()
-    tau2_centrality_boosted = FloatCol()
     MET_centrality_boosted = FloatCol()
 
     mass_collinear_tau1_tau2 = FloatCol()

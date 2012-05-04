@@ -201,7 +201,7 @@ class HHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
             pileup_tool = TPileupReweighting()
-            pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc11b_defaults.prw.root'))
+            pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
             pileup_tool.AddLumiCalcFile('grl/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(1)
@@ -247,29 +247,16 @@ class HHProcessor(ATLASStudent):
             jets = list(event.jets)
             # sort by decreasing pT
             jets.sort(key=lambda jet: jet.pt, reverse=True)
-            # take the two jets with the highest pT
-            leading_jets = jets[:2]
-            # sort by increasing eta
-            leading_jets.sort(key=lambda jet: jet.eta)
+            leading_jets = []
 
-            """ VBF cuts proposed by Zinonas
-            if len(leading_jets) >= 2:
-                jet1, jet2 = leading_jets
-                # pT of leading and subleading jets
-                if jet1.pt > 40 * GeV and jet2.pt > 30 * GeV:
-                    # opposite hemispheres
-                    if jet1.eta * jet2.eta < 0:
-                        # eta gap requirement
-                        if abs(jet1.eta - jet2.eta) > 3:
-                            # mass requirement
-                            if (jet1.fourvect + jet2.fourvect).M() > 200 * GeV:
-                                # require that taus are in the middle
-                                if jet1.eta < tau1.eta < jet2.eta and \
-                                   jet1.eta < tau2.eta < jet2.eta:
-                                       VBF_jets = [jet1, jet2]
-            """
+            if len(jets) >= 2:
+                # require leading above 50 and subleading above 30
+                if leading_jets[0].pt > 50 * GeV and leading_jets[1].pt > 30 * GeV:
+                    leading_jets = jets[:2]
+                    # sort by increasing eta
+                    leading_jets.sort(key=lambda jet: jet.eta)
 
-            if len(leading_jets) >= 2: # VBF optimized
+            if leading_jets: # VBF optimized
                 current_channel = CHAN_2JET
                 tree = tree_hh_2jet
                 jet1, jet2 = leading_jets
@@ -393,8 +380,7 @@ class HHProcessor(ATLASStudent):
                                     (vtx.type == 3 and vtx.nTracks >= 2)])
 
             """
-            Experimenting here....
-            match jets to VBF jets
+            Match jets to VBF partons
             """
             if self.metadata.datatype == datasets.MC:
                 if 'VBF' in self.metadata.name:
@@ -410,7 +396,6 @@ class HHProcessor(ATLASStudent):
 
             """
             Truth-matching
-            presently not possible in SMWZ D3PDs
             """
             if self.metadata.datatype == datasets.MC and hasattr(event, "trueTau_n"):
                 # match only with visible true taus
