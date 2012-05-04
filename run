@@ -28,6 +28,8 @@ parser.add_argument("--split",
 parser.add_argument('-s',"--student",
                   help="the file (excluding .py extension) containing a "
                        "class of the same name inheriting from rootpy.batch.Student", required=True)
+parser.add_argument("--db",
+                  help="name of the datasets database file (excluding the .yml extension)", default='datasets')
 parser.add_argument('datasets', nargs='+')
 args, user_args = parser.parse_known_args()
 
@@ -78,10 +80,12 @@ if args.runs != None:
     else:
         args.runs = [int(args.runs)]
 
+db = datasets.Database(args.db)
+
 # expand globs
 _datasets = []
 for dataset in args.datasets:
-    result = datasets.get_datasets(dataset)
+    result = db.search(dataset)
     if not result:
         sys.exit("No datasets matching %s" % dataset)
     _datasets += result
