@@ -38,6 +38,19 @@ class FourMomentum(object):
 
 class TauFourMomentum(FourMomentum):
 
+    def __init__(self):
+
+        self.weight = 1.
+
+        self.centrality = 0.
+        self.centrality_boosted = 0.
+
+        self.matched = False
+        self.matched_dR = 9999.
+        self.matched_collision = False
+
+        super(TauFourMomentum, self).__init__()
+
     @cached_property
     def fourvect(self):
 
