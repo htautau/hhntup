@@ -144,6 +144,18 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             tau.fourvect_boosted.Boost(tree.jet_beta * -1)
             getattr(tree, 'tau%i_fourvect_boosted' % i).set_from(tau.fourvect_boosted)
 
+            setattr(tree, 'tau%i_centrality' % i, tau.centrality)
+            setattr(tree, 'tau%i_centrality_boosted' % i, tau.centrality_boosted)
+
+            setattr(tree, 'tau%i_weight' % i, tau.weight)
+
+            setattr(tree, 'tau%i_matched' % i, tau.matched)
+            setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)
+            setattr(tree, 'tau%i_matched_collision' % i, tau.matched_collision)
+
+
+
+
 
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
 
