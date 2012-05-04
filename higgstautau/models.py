@@ -49,7 +49,7 @@ class TrueTau(TreeModel):
 
 class MatchedObject(TreeModel):
 
-    matched = IntCol()
+    matched = BoolCol()
     matched_dR = FloatCol(default=1111)
     matched_collision = BoolCol()
     matched_pdgId = IntCol()

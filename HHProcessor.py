@@ -220,17 +220,6 @@ class HHProcessor(ATLASStudent):
             # remove pileup and UE
             # event.jets.select(lambda jet: True if abs(jet.eta) > 2.1 else jet.jvtxf > .5)
 
-            # find pair of jets with highest dijet mass
-            """
-            highest_mass = 0
-            best_jets = ()
-            for i, jet1 in enumerate(event.jets[:-1]):
-                for jet2 in event.jets[i+1:]:
-                    dijet_mass = (jet1.fourvect + jet2.fourvect).M()
-                    if dijet_mass > highest_mass:
-                        highest_mass = dijet_mass
-                        best_jets = (jet1, jet2)
-            """
             # Sort the taus by BDT score
             # event.taus.sort(key=lambda tau: tau.BDTJetScore, reverse=True)
             # Take the two taus with the highest BDT score
@@ -266,7 +255,6 @@ class HHProcessor(ATLASStudent):
                 This must come after the RecoJetBlock is filled since
                 that sets the jet_beta for boosting the taus
                 """
-                RecoTauBlock.set(event, tree, tau1, tau2)
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                         [tau1.fourvect,
                          tau2.fourvect,
@@ -290,45 +278,38 @@ class HHProcessor(ATLASStudent):
                 tree.aplanarity_boosted = aplanarity_b
 
                 # tau centrality (degree to which they are between the two jets)
-                tree.tau1_centrality = eventshapes.eta_centrality(tau1.fourvect.Eta(),
+                tau1.centrality = eventshapes.eta_centrality(tau1.fourvect.Eta(),
                                                                   jet1.fourvect.Eta(),
                                                                   jet2.fourvect.Eta())
 
-                tree.tau2_centrality = eventshapes.eta_centrality(tau2.fourvect.Eta(),
+                tau2.centrality = eventshapes.eta_centrality(tau2.fourvect.Eta(),
                                                                   jet1.fourvect.Eta(),
                                                                   jet2.fourvect.Eta())
                 # boosted tau centrality
-                tree.tau1_centrality_boosted = eventshapes.eta_centrality(
+                tau1.centrality_boosted = eventshapes.eta_centrality(
                         tau1.fourvect_boosted.Eta(),
                         jet1.fourvect_boosted.Eta(),
                         jet2.fourvect_boosted.Eta())
 
-                tree.tau2_centrality_boosted = eventshapes.eta_centrality(
+                tau2.centrality_boosted = eventshapes.eta_centrality(
                         tau2.fourvect_boosted.Eta(),
                         jet1.fourvect_boosted.Eta(),
                         jet2.fourvect_boosted.Eta())
 
                 """
                 elif len(leading_jets) == 1: # one jet
-                current_channel = CHAN_1JET
-                tree = tree_hh_1jet
-                RecoTauBlock.set(event, tree, tau1, tau2)
+                    current_channel = CHAN_1JET
+                    tree = tree_hh_1jet
                 """
 
             else: # 0 or 1 jet
                 current_channel = CHAN_01JET
                 tree = tree_hh_01jet
-                RecoTauBlock.set(event, tree, tau1, tau2)
 
-
-            """
-            Jet variables
-            """
+            # Jet variables
             tree.numJets = len(event.jets)
 
-            """
-            MET
-            """
+            # MET
             METx = event.MET_RefFinal_BDTMedium_etx
             METy = event.MET_RefFinal_BDTMedium_ety
             MET_vect = Vector2(METx, METy)
@@ -347,10 +328,7 @@ class HHProcessor(ATLASStudent):
                                                              tau2_2vector,
                                                              MET_vect)
 
-
-            """
-            Mass
-            """
+            # Mass
             #tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
 
             """
@@ -379,9 +357,7 @@ class HHProcessor(ATLASStudent):
             tree.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
                                     (vtx.type == 3 and vtx.nTracks >= 2)])
 
-            """
-            Match jets to VBF partons
-            """
+            # Match jets to VBF partons
             if self.metadata.datatype == datasets.MC:
                 if 'VBF' in self.metadata.name:
                     # get partons (already sorted by eta in hepmc)
@@ -394,10 +370,8 @@ class HHProcessor(ATLASStudent):
                                 if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
                                     setattr(tree, 'jet%i_matched' % i, True)
 
-            """
-            Truth-matching
-            """
-            if self.metadata.datatype == datasets.MC and hasattr(event, "trueTau_n"):
+            # Truth-matching
+            if self.metadata.datatype == datasets.MC:
                 # match only with visible true taus
                 event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
@@ -424,16 +398,16 @@ class HHProcessor(ATLASStudent):
                         if matching_truth_index not in unmatched_truth or \
                            matching_truth_index in matched_truth:
                             print "ERROR: match collision!"
-                            tree.tau1_matched_collision = True
-                            tree.tau2_matched_collision = True
+                            tau1.matched_collision = True
+                            tau2.matched_collision = True
                             tree.trueTau1_matched_collision = True
                             tree.trueTau2_matched_collision = True
                             tree.error = True
                         else:
                             unmatched_truth.remove(matching_truth_index)
                             matched_truth.append(matching_truth_index)
-                            setattr(tree, "tau%i_matched" % (i+1), 1)
-                            setattr(tree, "tau%i_matched_dR" % (i+1), tau.trueTauAssoc_dr)
+                            tau.matched = True
+                            tau.matched_dR = tau.trueTauAssoc_dr
                             setattr(tree, "trueTau%i_matched" % (i+1), 1)
                             setattr(tree, "trueTau%i_matched_dR" % (i+1), event.truetaus.getitem(matching_truth_index).tauAssoc_dr)
                             TrueTauBlock.set(tree, i+1, event.truetaus.getitem(matching_truth_index))
@@ -442,6 +416,17 @@ class HHProcessor(ATLASStudent):
                     TrueTauBlock.set(tree, i+1, event.truetaus.getitem(j))
 
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
+
+                for tau in (tau1, tau2):
+                    if tau.matched:
+                        # efficiency scale factor
+                        tau.weight = 1.
+                    else:
+                        # fake rate scale factor
+                        tau.weight = 1.
+
+            # fill tau block
+            RecoTauBlock.set(event, tree, tau1, tau2)
 
             # fill output ntuple
             tree.cutflow = cutflow.int()
