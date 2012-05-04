@@ -669,6 +669,7 @@ if __name__ == '__main__':
         data_prefix = DATA_HADHAD_PREFIX
         data_pattern = DATA_HADHAD_FILE_PATTERN
         args.versioned = True
+        args.name = 'datasets_hh'
     elif args.analysis == 'mulh':
         mc_path = MC_LEPHAD_PATH
         mc_prefix = MC_LEPHAD_PREFIX
@@ -677,6 +678,7 @@ if __name__ == '__main__':
         data_prefix = DATA_LEPHAD_PREFIX
         data_pattern = DATA_LEPHAD_FILE_PATTERN
         args.versioned = True
+        args.name = 'datasets_mulh'
     elif args.analysis == 'elh':
         mc_path = MC_LEPHAD_PATH
         mc_prefix = MC_LEPHAD_PREFIX
@@ -685,6 +687,7 @@ if __name__ == '__main__':
         data_prefix = DATA_LEPHAD_PREFIX
         data_pattern = DATA_LEPHAD_FILE_PATTERN
         args.versioned = True
+        args.name = 'datasets_elh'
     else: # custom
         mc_path = args.mc_path
         mc_prefix = args.mc_prefix
