@@ -431,7 +431,14 @@ class Database(dict):
             patterns = [pattern]
         for name, ds in self.items():
             for pattern in patterns:
-                if re.match(pattern, name) or fnmatch.fnmatch(name, pattern):
+                if fnmatch.fnmatch(name, pattern):
+                    data.append(ds)
+                    continue
+                if not pattern.startswith('^'):
+                    pattern = '^' + pattern
+                if not pattern.endswith('$'):
+                    pattern = pattern + '$'
+                if re.match(pattern, name):
                     data.append(ds)
                     continue
         return data
