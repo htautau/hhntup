@@ -429,7 +429,13 @@ class HHProcessor(ATLASStudent):
                         tau.weight = 1.
                     else:
                         # fake rate scale factor
-                        tau.weight = 1.
+                        if event.RunNumber >= 188902:
+                            trig = "EF_tau%dT_medium1"
+                        else:
+                            trig = "EF_tau%d_medium1"
+                        tau.weight = fakerate_tool.getScaleFactor(
+                                tau.pt, "Medium",
+                                trig % tau.trigger_match_thresh)
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
