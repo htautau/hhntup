@@ -88,8 +88,7 @@ def run(student,
         hosts.sort()
         host = hosts[0]
         cmd = CMD % ds
-        if not HOSTNAME.startswith(host.name):
-                cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
+        cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
         print "%s: %s" % (host.name, cmd)
         proc = mp.Process(target=run_helper, args=(cmd,))
         proc.start()
