@@ -23,7 +23,6 @@ from higgstautau import eventshapes
 from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
-from higgstautau.hadhad.extrafilters import *
 from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.trigger import update_trigger_config, get_trigger_config
@@ -32,6 +31,8 @@ from higgstautau.pileup import PileupReweighting, TPileupReweighting
 from goodruns import GRL
 import subprocess
 
+from externaltools import TauFakeRates
+from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
@@ -59,6 +60,10 @@ class HHProcessor(ATLASStudent):
         """
         This is the one function that all "ATLASStudent"s must implement.
         """
+
+        # fake rate scale factor tool
+        fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
+        fakerate_tool = TFR.FakeRateScaler(fakerate_table)
 
         # trigger config tool to read trigger info in the ntuples
         trigger_config = get_trigger_config()
@@ -131,7 +136,7 @@ class HHProcessor(ATLASStudent):
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            Triggers(),
+            Triggers(datatype=self.metadata.datatype),
             PriVertex(),
             LArError(),
             #SomeJets(),
@@ -151,7 +156,8 @@ class HHProcessor(ATLASStudent):
             TauCrack(),
             #TauLArHole(), #only veto taus, not entire event
             TauLoose(),
-            TauTriggerMatch(config=trigger_config),
+            TauTriggerMatch(config=trigger_config,
+                            datatype=self.metadata.datatype),
             TauLeadSublead(lead=35*GeV,
                            sublead=25*GeV),
             #TauJVF(),
@@ -240,7 +246,7 @@ class HHProcessor(ATLASStudent):
 
             if len(jets) >= 2:
                 # require leading above 50 and subleading above 30
-                if leading_jets[0].pt > 50 * GeV and leading_jets[1].pt > 30 * GeV:
+                if jets[0].pt > 50 * GeV and jets[1].pt > 30 * GeV:
                     leading_jets = jets[:2]
                     # sort by increasing eta
                     leading_jets.sort(key=lambda jet: jet.eta)

@@ -5,6 +5,7 @@ from atlastools.units import GeV
 from atlastools import datasets
 from math import *
 
+
 """
 See main documentation here:
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToHH2012Winter
@@ -136,6 +137,79 @@ class TauLeadSublead(EventFilter):
         return event.taus[0].pt > self.lead and event.taus[1].pt > self.sublead
 
 
+class TauTriggerMatch(EventFilter):
+
+    def __init__(self,
+                 config,
+                 datatype,
+                 dR=0.2,
+                 **kwargs):
+
+        super(TauTriggerMatch, self).__init__(**kwargs)
+        self.config = config
+        self.dR = dR
+
+        """
+        WARNING: possible bias if matching between MC and data differs
+        """
+        if datatype == datasets.DATA:
+            from ..trigger import utils as triggerutils
+            self.triggerutils = triggerutils
+            self.passes = self.passes_data
+        else:
+            self.passes = self.passes_mc
+
+    def passes_mc(self, event):
+
+        """
+        Matching performed during skim with CoEPPTrigTool
+        """
+        event.taus.select(lambda tau: tau.trigger_match_index > -1)
+        return len(event.taus) == MIN_TAUS
+
+    def passes_data(self, event):
+
+        if 177986 <= event.RunNumber <= 187815: # Periods B-K
+            trigger = 'EF_tau29_medium1_tau20_medium1'
+        elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+            trigger = 'EF_tau29T_medium1_tau20T_medium1'
+        else:
+            raise ValueError("No trigger defined for run %i" % event.RunNumber)
+
+        # erase any previous selection on trigger taus
+        # (just to be safe, there should not be any)
+        event.taus_EF.reset()
+        # get indices of trigger taus associated with this trigger
+        trigger_idx = self.triggerutils.get_tau_trigger_obj_idx(
+                            self.config,
+                            event,
+                            trigger)
+        # select the trigger taus
+        event.taus_EF.select_indices(trigger_idx)
+        #print list(event.taus_EF)
+        matched_taus = []
+        for triggertau in event.taus_EF:
+            # find closest matching reco offline tau
+            closest_dR = 99999
+            closest_tau = None
+            closest_idx = -1
+            for i, tau in enumerate(event.taus):
+                dR = utils.dR(triggertau.eta, triggertau.phi, tau.eta, tau.phi)
+                if dR < self.dR and dR < closest_dR:
+                    closest_dR = dR
+                    closest_tau = tau
+                    closest_idx = i
+            if closest_tau is not None:
+                matched_taus.append(closest_tau)
+                # remove match from consideration by future matches (greedy match)
+                event.taus.mask_indices([closest_idx])
+        # select only the matching offline taus (if any)
+        event.taus.reset()
+        event.taus.select_indices([tau.index for tau in matched_taus])
+        # event passes if at least two taus selected
+        return len(event.taus) == MIN_TAUS
+
+
 class Triggers(EventFilter):
 
     triggers = [
@@ -143,7 +217,26 @@ class Triggers(EventFilter):
         'EF_tau29T_medium1_tau20T_medium1'
     ]
 
-    def passes(self, event):
+    def __init__(self, datatype, **kwargs):
+
+        if datatype == datasets.DATA:
+            self.passes = self.passes_data
+        else:
+            self.passes = self.passes_mc
+        super(Triggers, self).__init__(**kwargs)
+
+    def passes_mc(self, event):
+        try:
+            if 177986 <= event.RunNumber <= 187815: # Periods B-K
+                return event.EF_tau29_medium1_tau20_medium1_EMULATED
+            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+                return event.EF_tau29T_medium1_tau20T_medium1_EMULATED
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+    def passes_data(self, event):
         try:
             if 177986 <= event.RunNumber <= 187815: # Periods B-K
                 return event.EF_tau29_medium1_tau20_medium1

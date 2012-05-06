@@ -66,12 +66,15 @@ def run_helper(cmd):
         subprocess.call(cmd, shell=True)
 
 
-def run(student, datasets, hosts,
+def run(student,
+        db,
+        datasets,
+        hosts,
         nproc=1,
         nice=0,
         setup=None):
 
-    CMD = "./run -s %s -n %d --nice %d %%s" % (student, nproc, nice)
+    CMD = "./run -s %s -n %d --db %s --nice %d %%s" % (student, nproc, db, nice)
     CWD = os.getcwd()
 
     hosts = [Host(host) for host in hosts]

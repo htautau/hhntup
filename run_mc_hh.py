@@ -38,6 +38,7 @@ datasets = [
 ]
 
 cluster.run('HHProcessor.py',
+            db='datasets_hh',
             datasets=datasets,
             hosts=hosts,
             nproc=10,

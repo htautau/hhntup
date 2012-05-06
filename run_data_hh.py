@@ -12,7 +12,7 @@ CWD = os.getcwd()
 hosts = ['lhc%02d' % i for i in xrange(1, 11)]
 
 NPROC = 10
-CMD = "./run -s HHProcessor.py -n %d --nice 10 --split %d:%%d data" % (NPROC, len(hosts))
+CMD = "./run -s HHProcessor.py -n %d --db datasets_hh --nice 10 --split %d:%%d data" % (NPROC, len(hosts))
 
 proc_cmds = []
 

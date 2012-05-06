@@ -154,9 +154,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_matched_collision' % i, tau.matched_collision)
 
 
-
-
-
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
 
     @classmethod
