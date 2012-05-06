@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
 import cluster
+import socket
+import os
+import multiprocessing as mp
+import subprocess
 
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
@@ -9,20 +13,16 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 HOSTNAME = socket.gethostname()
 CWD = os.getcwd()
 
-hosts = ['lhc%02d' % i for i in xrange(1, 11)]
-
 NPROC = 10
-CMD = "./run -s HHProcessor.py -n %d --db datasets_hh --nice 10 --split %d:%%d data" % (NPROC, len(hosts))
+CMD = "%s && ./run -s HHProcessor.py -n %d --db datasets_hh --nice 10 --split %d:%%d data" % (setup, NPROC, len(hosts))
 
 proc_cmds = []
-
-setup = 'source /cluster/data10/endw/bashrc.sfu/bashrc'
 
 for i, host in enumerate(hosts):
     cmd = CMD % (i + 1)
     print host
     if not HOSTNAME.startswith(host):
-        cmd = "ssh %s '%s && cd %s && %s'" % (host, setup, CWD, cmd)
+        cmd = "ssh %s 'cd %s && %s'" % (host, CWD, cmd)
     print cmd
     proc_cmds.append(cmd)
 
