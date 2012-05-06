@@ -20,10 +20,8 @@ proc_cmds = []
 
 for i, host in enumerate(hosts):
     cmd = CMD % (i + 1)
-    print host
-    if not HOSTNAME.startswith(host):
-        cmd = "ssh %s 'cd %s && %s'" % (host, CWD, cmd)
-    print cmd
+    cmd = "ssh %s 'cd %s && %s'" % (host, CWD, cmd)
+    print "%s: %s" % (host, cmd)
     proc_cmds.append(cmd)
 
 
