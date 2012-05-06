@@ -91,7 +91,11 @@ class HHProcessor(ATLASStudent):
         # update the trigger config maps on every file change
         onfilechange.append((update_trigger_config, (trigger_config,)))
 
-        merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        if self.metadata.datatype == datasets.DATA:
+            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        else:
+            merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
+
         def update_cutflow(student, cutflow, name, file, tree):
 
             cutflow += file.cutflow
