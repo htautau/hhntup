@@ -16,24 +16,28 @@ def get_parser():
     parser.add_argument('--short', action='store_true', default=False)
     parser.add_argument('--mass', type=int, default=125)
     parser.add_argument('--proc', default='HHProcessor')
+    parser.add_argument('--db')
     parser.add_argument('--noweight', action='store_true', default=False)
     parser.add_argument('--verbose', action='store_true', default=False)
     #parser.add_argument('--dir', default='samples/midpt')
     return parser
 
 
-def make_cutflow(samples, args, num_format="%.1f"):
+def make_cutflow(samples,
+                 args,
+                 num_format="%.1f"):
 
     lumi = total_lumi()
 
     data_num_format = "%d"
 
     filters = None
+    db = datasets.Database(args.db)
 
     # build table
     cutflow_table = {}
     for i, (latex_name, text_name, sample) in enumerate(samples):
-        matched_samples = datasets.get_datasets(sample)
+        matched_samples = db.search(sample)
         total_cutflow = None
         total = 0
         for ds in matched_samples:
