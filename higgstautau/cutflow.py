@@ -82,6 +82,7 @@ def make_cutflow(samples,
     if args.format == 'text':
         print "Higgs mass of %d GeV" % args.mass
         print "Integrated luminosity of %.3f fb^-1" % (lumi/1000.)
+        print
         sample_names = [sample[1] for sample in samples]
         table = PrettyTable(['Filter'] + sample_names)
         if args.short:
@@ -96,6 +97,7 @@ def make_cutflow(samples,
     else:
         print "Higgs mass of %d GeV\\\\" % args.mass
         print "Integrated luminosity of %.3f fb$^{-1}$\\\\" % (lumi/1000.)
+        print
         sample_names = [sample[0] for sample in samples]
         print r'\begin{center}'
         print r'\begin{scriptsize}'

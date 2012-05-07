@@ -140,14 +140,15 @@ if USE_PYAMI:
 
 class Database(dict):
 
-    def __init__(self, name='datasets'):
+    def __init__(self, name='datasets', verbose=False):
 
         super(Database, self).__init__()
         self.name = name
+        self.verbose = verbose
         self.filepath = os.path.join(HERE, '%s.yml' % self.name)
         if os.path.isfile(self.filepath):
             with open(self.filepath) as db:
-                print "Loading '%s' dataset database..." % self.name
+                if self.verbose: print "Loading '%s' dataset database..." % self.name
                 d = yaml.load(db)
                 if d:
                     self.update(d)
@@ -157,7 +158,7 @@ class Database(dict):
 
         if self.modified:
             with open(self.filepath, 'w') as db:
-                print "Saving '%s' dataset database to disk..." % self.name
+                if self.verbose: print "Saving '%s' dataset database to disk..." % self.name
                 yaml.dump(dict(self), db)
 
     def reset(self):
@@ -167,7 +168,7 @@ class Database(dict):
     def clear(self):
 
         # erase all datasets in database
-        print "Resetting '%s' dataset database..." % self.name
+        if self.verbose: print "Resetting '%s' dataset database..." % self.name
         super(Database, self).clear()
         self.modified = True
 
@@ -217,7 +218,7 @@ class Database(dict):
         """
         Update the dataset database
         """
-        print "Updating '%s' dataset database..." % self.name
+        if self.verbose: print "Updating '%s' dataset database..." % self.name
         self.modified = True
 
         if mc_path is not None:
@@ -521,7 +522,7 @@ yaml.add_constructor(u'!Dataset', dataset_constructor)
 
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
-        print "Loading cross-section cache..."
+        #print "Loading cross-section cache..."
         XSEC_CACHE = pickle.load(cache)
 
 
@@ -530,7 +531,7 @@ def write_cache():
 
     if XSEC_CACHE_MODIFIED:
         with open(XSEC_CACHE_FILE, 'w') as cache:
-            print "Saving cross-section cache to disk..."
+            #print "Saving cross-section cache to disk..."
             pickle.dump(XSEC_CACHE, cache)
 
 
@@ -703,7 +704,7 @@ if __name__ == '__main__':
         data_prefix = args.data_prefix
         data_pattern = args.data_pattern
 
-    db = Database(name=args.name)
+    db = Database(name=args.name, verbose=True)
 
     if args.reset:
         db.clear()
