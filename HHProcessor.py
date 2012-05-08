@@ -152,13 +152,13 @@ class HHProcessor(ATLASStudent):
             MuonVeto(),
             TauAuthor(),
             TauHasTrack(),
-            TauCharge(),
+            #TauCharge(),  Also use 2p, 4p etc for QCD shape in non-OS events
             TauMuonVeto(),
             TauElectronVeto(),
             TauPT(),
             TauEta(),
             TauCrack(),
-            #TauLArHole(), #only veto taus, not entire event
+            #TauLArHole(), # only veto taus, not entire event
             TauLoose(),
             TauTriggerMatch(config=trigger_config,
                             datatype=self.metadata.datatype),
@@ -230,11 +230,9 @@ class HHProcessor(ATLASStudent):
             # remove pileup and UE
             # event.jets.select(lambda jet: True if abs(jet.eta) > 2.1 else jet.jvtxf > .5)
 
-            # Sort the taus by BDT score
-            # event.taus.sort(key=lambda tau: tau.BDTJetScore, reverse=True)
-            # Take the two taus with the highest BDT score
-            # taus = event.taus[:2]
+            # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
+
             # Jet selection
             event.jets.select(lambda jet: jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
 
@@ -253,7 +251,7 @@ class HHProcessor(ATLASStudent):
                 if jets[0].pt > 50 * GeV and jets[1].pt > 30 * GeV:
                     leading_jets = jets[:2]
                     # sort by increasing eta
-                    leading_jets.sort(key=lambda jet: jet.eta)
+                    # leading_jets.sort(key=lambda jet: jet.eta)
 
             if leading_jets: # VBF optimized
                 current_channel = CHAN_2JET
@@ -288,13 +286,16 @@ class HHProcessor(ATLASStudent):
                 tree.aplanarity_boosted = aplanarity_b
 
                 # tau centrality (degree to which they are between the two jets)
-                tau1.centrality = eventshapes.eta_centrality(tau1.fourvect.Eta(),
-                                                                  jet1.fourvect.Eta(),
-                                                                  jet2.fourvect.Eta())
+                tau1.centrality = eventshapes.eta_centrality(
+                        tau1.fourvect.Eta(),
+                        jet1.fourvect.Eta(),
+                        jet2.fourvect.Eta())
 
-                tau2.centrality = eventshapes.eta_centrality(tau2.fourvect.Eta(),
-                                                                  jet1.fourvect.Eta(),
-                                                                  jet2.fourvect.Eta())
+                tau2.centrality = eventshapes.eta_centrality(
+                        tau2.fourvect.Eta(),
+                        jet1.fourvect.Eta(),
+                        jet2.fourvect.Eta())
+
                 # boosted tau centrality
                 tau1.centrality_boosted = eventshapes.eta_centrality(
                         tau1.fourvect_boosted.Eta(),
@@ -339,7 +340,7 @@ class HHProcessor(ATLASStudent):
                                                              MET_vect)
 
             # Mass
-            #tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
 
             """
             if tau1.numTrack <= 1:
@@ -373,6 +374,9 @@ class HHProcessor(ATLASStudent):
                     # get partons (already sorted by eta in hepmc)
                     parton1, parton2 = hepmc.get_VBF_partons(event)
                     tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
+
+                    # order here needs to be revised since jets are no longer
+                    # sorted by eta but instead by pT
                     PartonBlock.set(tree, parton1, parton2)
                     if current_channel == CHAN_2JET:
                         for i, jet in zip((1, 2), (jet1, jet2)):
