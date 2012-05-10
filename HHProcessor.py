@@ -23,6 +23,7 @@ from higgstautau import eventshapes
 from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
+from higgstautau.hadhad.categories import *
 from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.trigger import update_trigger_config, get_trigger_config
@@ -113,9 +114,7 @@ class HHProcessor(ATLASStudent):
 
         # create output tree
         self.output.cd()
-        tree_hh_2jet = Tree(name=self.metadata.name + '_2jet', model=OutputModel)
-        #tree_hh_1jet = Tree(name=self.metadata.name + '_1jet', model=OutputModel)
-        tree_hh_01jet = Tree(name=self.metadata.name + '_01jet', model=OutputModel)
+        tree = Tree(name='higgstautauhh', model=OutputModel)
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
@@ -123,17 +122,7 @@ class HHProcessor(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
-        """
-        if self.metadata.datatype == datasets.MC:
-            copied_variables += mc_triggers
-        """
-
-        tree_hh_2jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
-        tree_hh_01jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
-
-        #tree_hh_1jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
-        #tree_hh_0jet.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
-
+        tree.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
         chain.always_read(copied_variables)
 
         # set the event filters
@@ -188,25 +177,15 @@ class HHProcessor(ATLASStudent):
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
 
         # define tree objects
-        tree_hh_2jet.define_object(name='tau1', prefix='tau1_')
-        tree_hh_2jet.define_object(name='tau2', prefix='tau2_')
-        tree_hh_2jet.define_object(name='jet1', prefix='jet1_')
-        tree_hh_2jet.define_object(name='jet2', prefix='jet2_')
-
-        tree_hh_01jet.define_object(name='tau1', prefix='tau1_')
-        tree_hh_01jet.define_object(name='tau2', prefix='tau2_')
-        #tree_hh_1jet.define_object(name='jet1', prefix='jet1_')
-
-        #tree_hh_0jet.define_object(name='tau1', prefix='tau1_')
-        #tree_hh_0jet.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='tau1', prefix='tau1_')
+        tree.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='jet1', prefix='jet1_')
+        tree.define_object(name='jet2', prefix='jet2_')
 
         """ Associations not currently implemented in rootpy
         chain.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
         chain.define_association(origin='truetaus', target='taus', prefix='tauAssoc_', link='index')
         """
-
-        #CHAN_0JET, CHAN_1JET, CHAN_2JET = range(3)
-        CHAN_01JET, CHAN_2JET = range(2)
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
@@ -219,14 +198,8 @@ class HHProcessor(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
-
-            #tree_hh_0jet.reset()
-            #tree_hh_1jet.reset()
-            tree_hh_01jet.reset()
-            tree_hh_2jet.reset()
-
+            tree.reset()
             cutflow.reset()
-
             # remove pileup and UE
             # event.jets.select(lambda jet: True if abs(jet.eta) > 2.1 else jet.jvtxf > .5)
 
@@ -254,8 +227,9 @@ class HHProcessor(ATLASStudent):
                     # leading_jets.sort(key=lambda jet: jet.eta)
 
             if leading_jets: # VBF optimized
-                current_channel = CHAN_2JET
-                tree = tree_hh_2jet
+                current_channel = CATEGORY_2JET
+                tree.category = CATEGORY_2JET
+
                 jet1, jet2 = leading_jets
                 RecoJetBlock.set(tree, jet1, jet2)
                 """
@@ -307,15 +281,9 @@ class HHProcessor(ATLASStudent):
                         jet1.fourvect_boosted.Eta(),
                         jet2.fourvect_boosted.Eta())
 
-                """
-                elif len(leading_jets) == 1: # one jet
-                    current_channel = CHAN_1JET
-                    tree = tree_hh_1jet
-                """
-
             else: # 0 or 1 jet
-                current_channel = CHAN_01JET
-                tree = tree_hh_01jet
+                current_channel = CATEGORY_01JET
+                tree.category = CATEGORY_01JET
 
             # Jet variables
             tree.numJets = len(event.jets)
@@ -378,7 +346,7 @@ class HHProcessor(ATLASStudent):
                     # order here needs to be revised since jets are no longer
                     # sorted by eta but instead by pT
                     PartonBlock.set(tree, parton1, parton2)
-                    if current_channel == CHAN_2JET:
+                    if current_channel == CATEGORY_2JET:
                         for i, jet in zip((1, 2), (jet1, jet2)):
                             for parton in (parton1, parton2):
                                 if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
@@ -459,12 +427,8 @@ class HHProcessor(ATLASStudent):
             tree.Fill()
 
         self.output.cd()
-        tree_hh_2jet.FlushBaskets()
-        tree_hh_2jet.Write()
-        #tree_hh_1jet.FlushBaskets()
-        #tree_hh_1jet.Write()
-        tree_hh_01jet.FlushBaskets()
-        tree_hh_01jet.Write()
+        tree.FlushBaskets()
+        tree.Write()
 
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
