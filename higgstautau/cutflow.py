@@ -14,7 +14,6 @@ def get_parser():
     parser = ArgumentParser()
     parser.add_argument('--format', choices=('latex', 'text'), default='text')
     parser.add_argument('--short', action='store_true', default=False)
-    parser.add_argument('--mass', type=int, default=125)
     parser.add_argument('--proc', default='HHProcessor')
     parser.add_argument('--db')
     parser.add_argument('--noweight', action='store_true', default=False)
@@ -38,6 +37,8 @@ def make_cutflow(samples,
     cutflow_table = {}
     for i, (latex_name, text_name, sample) in enumerate(samples):
         matched_samples = db.search(sample)
+        if not matched_samples:
+            raise datasets.NoMatchingDatasetsFound(sample)
         total_cutflow = None
         total = 0
         for ds in matched_samples:
@@ -53,7 +54,7 @@ def make_cutflow(samples,
                 if ds.datatype != datasets.DATA and not args.noweight:
                     events = rfile.cutflow[0]
                     xsec, xsec_min, xsec_max, effic = ds.xsec_effic
-                    weight = 1E3 * lumi * xsec / (effic * events)
+                    weight = 1E3 * lumi * xsec * ds.xsec_factor / (effic * events)
                     if args.verbose:
                         print '-' * 30
                         print ds.name
@@ -80,9 +81,7 @@ def make_cutflow(samples,
 
     print
     if args.format == 'text':
-        print "Higgs mass of %d GeV" % args.mass
-        print "Integrated luminosity of %.3f fb^-1" % (lumi/1000.)
-        print
+        #print "Integrated luminosity of %.3f fb^-1" % (lumi/1000.)
         sample_names = [sample[1] for sample in samples]
         table = PrettyTable(['Filter'] + sample_names)
         if args.short:
@@ -95,9 +94,7 @@ def make_cutflow(samples,
                                                           for passing, error in row])
         print table.get_string(hrules=1)
     else:
-        print "Higgs mass of %d GeV\\\\" % args.mass
-        print "Integrated luminosity of %.3f fb$^{-1}$\\\\" % (lumi/1000.)
-        print
+        #print "Integrated luminosity of %.3f fb$^{-1}$\\\\" % (lumi/1000.)
         sample_names = [sample[0] for sample in samples]
         print r'\begin{center}'
         print r'\begin{scriptsize}'
