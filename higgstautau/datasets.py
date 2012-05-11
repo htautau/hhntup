@@ -138,6 +138,10 @@ if USE_PYAMI:
     amiclient.read_config(AMI_CONFIG)
 
 
+class NoMatchingDatasetsFound(Exception):
+    pass
+
+
 class Database(dict):
 
     def __init__(self, name='datasets', verbose=False):
@@ -486,8 +490,6 @@ class Dataset(yaml.YAMLObject):
                 xsec, xsec_min, xsec_max, effic = get_dataset_xsec_min_max_effic(amiclient, DS_NOPROV[self.ds])
             else:
                 xsec, xsec_min, xsec_max, effic = get_dataset_xsec_min_max_effic(amiclient, self.ds)
-            #if 'tautauhh' in self.name:
-            #    xsec *= 0.412997
             XSEC_CACHE[self.name] = (xsec, xsec_min, xsec_max, effic)
             XSEC_CACHE_MODIFIED = True
             return (xsec, xsec_min, xsec_max, effic)
