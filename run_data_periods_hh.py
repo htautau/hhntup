@@ -4,7 +4,7 @@ import cluster
 
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
-setup = cluster.get_setup('setup.noel.txt')
+setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = [
     'data-B',
