@@ -145,7 +145,28 @@ class ElectronLArHole(EventFilter):
         return True
 
 
-class muTriggers(EventFilter):
+
+class JetCrackVeto(EventFilter):
+
+    def passes(self, event):
+
+        for jet in event.jets:
+            if jet.pt <= 20*GeV: continue
+            if 1.3 < abs(jet.emscale_eta) < 1.7: return False
+        return True
+
+
+
+############################################################
+# TRIGGERS
+############################################################
+
+#--------------------------------------------
+# Muon Data Triggers
+#--------------------------------------------
+
+# Muon Single Lepton Triggers
+class muSLTriggers(EventFilter):
 
     def passes(self, event):
         """
@@ -168,8 +189,32 @@ class muTriggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
+# Muon combined triggers
+class muLTTriggers(EventFilter):
 
-class AllmuTriggers(EventFilter):
+    def passes(self, event):
+        """
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
+
+        period B-J  (177986-186755) : EF_tau16_loose_mu15
+        period K-M  (186873-191933) : EF_tau20_medium_mu15
+        """
+        try:
+            if 177986 <= event.RunNumber <= 186755:
+                return event.EF_tau16_loose_mu15
+            elif 186873 <= event.RunNumber <= 191933:
+                return event.EF_tau20_medium_mu15
+            elif 200000 <= event.RunNumber:
+                return True
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+# Muon any trigger
+class AnyMuTriggers(EventFilter):
 
     def passes(self, event):
 
@@ -192,8 +237,23 @@ class AllmuTriggers(EventFilter):
         else: return False
 
 
+# Muon SLT or LLT
+class AllMuTriggers(EventFilter):
 
-class eTriggers(EventFilter):
+    def passes(self, event):
+        SLT = muSLTriggers()
+        LLT = muLTTriggers()
+
+        return SLT.passes(event) or LLT.passes(event)
+
+
+
+#--------------------------------------------
+# Electron Data Triggers
+#--------------------------------------------
+
+# Electron single lepton triggers
+class eSLTriggers(EventFilter):
 
     def passes(self, event):
         """
@@ -219,8 +279,35 @@ class eTriggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
+# Electron combined triggers
+class eLTTriggers(EventFilter):
 
-class AlleTriggers(EventFilter):
+    def passes(self, event):
+        """
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
+
+        period B-J  (177986-186755) : EF_tau16_e15_medium
+        period K    (186873-187815) : EF_tau20_medium_e15_medium
+        period L-M  (188902-191933) : EF_tau20_medium_e15vh_medium
+        """
+        try:
+            if 177986 <= event.RunNumber <= 186755:
+                return event.EF_tau16_e15_medium
+            elif 186873 <= event.RunNumber <= 187815:
+                return event.EF_tau20_medium_e15_medium
+            elif 188902 <= event.RunNumber <= 191933:
+                return event.EF_tau20_medium_e15vh_medium
+            elif 200000 <= event.RunNumber:
+                return True
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+# Electron any trigger
+class AnyETriggers(EventFilter):
 
     def passes(self, event):
 
@@ -243,24 +330,23 @@ class AlleTriggers(EventFilter):
         else: return False
 
 
-data_triggers = [
-    'EF_mu18_MG',
-    'EF_mu18_MG_medium',
-    'EF_e20_medium',
-    'EF_e22_medium',
-    'EF_e22vh_medium1'
-]
+# Electron SLT or LLT
+class AllETriggers(EventFilter):
 
-mc_triggers = [
-    'EF_mu18_MG',
-    'EF_mu18_MG_medium',
-    'EF_e20_medium',
-    'EF_e22_medium',
-    'EF_e22vh_medium1'
-]
+    def passes(self, event):
+        SLT = eSLTriggers()
+        LLT = eLTTriggers()
+
+        return SLT.passes(event) or LLT.passes(event)
 
 
-class muMCTriggers(EventFilter):
+#--------------------------------------------
+# Muon MC Triggers
+#--------------------------------------------
+
+            
+# Muon single lepton triggers
+class muMCSLTriggers(EventFilter):
 
     def passes(self, event):
         """
@@ -268,7 +354,7 @@ class muMCTriggers(EventFilter):
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
         period B-K  (177986-187815) : EF_mu18_MG
-        period I-M  (188902-191933) : EF_mu18_MG_medium
+        period L-M  (188902-191933) : EF_mu18_MG_medium
         """
         try:
             if 177986 <= event.RunNumber <= 187815:
@@ -281,7 +367,34 @@ class muMCTriggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
-class eMCTriggers(EventFilter):
+# Muon combined triggers
+class muMCLTTriggers(EventFilter):
+
+    def passes(self, event):
+        """
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
+
+        period B-K  (177986-187815) : EF_tau16_loose_mu15
+        period L-M  (188902-191933) : EF_tau20_medium_mu15
+        """
+        try:
+            if 177986 <= event.RunNumber <= 187815:
+                return event.EF_tau16_loose_mu15
+            elif 188902 <= event.RunNumber:
+                return event.EF_tau20_medium_mu15
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+
+#--------------------------------------------
+# Electron MC Triggers
+#--------------------------------------------
+
+# Electron single lepton triggers
+class eMCSLTriggers(EventFilter):
 
     def passes(self, event):
         """
@@ -289,7 +402,7 @@ class eMCTriggers(EventFilter):
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
         period B-K  (177986-187815) : EF_e20_medium
-        period I-M  (188902-191933) : EF_e22vh_medium1
+        period L-M  (188902-191933) : EF_e22vh_medium1
         """
         try:
             if 177986 <= event.RunNumber <= 187815:
@@ -302,52 +415,53 @@ class eMCTriggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
-
-class MCTriggers(EventFilter):
+# Electron combined triggers
+class eMCLTTriggers(EventFilter):
 
     def passes(self, event):
-        muonTrig = muMCTriggers()
-        elecTrig = eMCTriggers()
-        
-        return muonTrig.passes(event) or elecTrig.passes(event)
+        """
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
+
+        period B-K  (177986-187815) : EF_tau16_loose_e15_medium
+        period L-M  (188902-191933) : EF_tau20_medium_e15vh_medium
+        """
+        try:
+            if 177986 <= event.RunNumber <= 187815:
+                return event.EF_tau16_loose_e15_medium
+            elif 188902 <= event.RunNumber:
+                return event.EF_tau20_medium_e15vh_medium
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
 
+#--------------------------------------------
+# Lepton MC Triggers
+#--------------------------------------------
 
+# Apply MC triggers
 class AllMCTriggers(EventFilter):
 
     def passes(self, event):
-        muonTrig = AllmuTriggers()
-        elecTrig = AlleTriggers()
+        muonSLT = muMCSLTriggers()
+        elecSLT = eMCSLTriggers()
+        muonLTT = muMCLTTriggers()
+        elecLTT = eMCLTTriggers()
+        
+        return muonSLT.passes(event) or elecSLT.passes(event) or muonLTT.passes(event) or elecLTT.passes(event)
+
+
+# Use any trigger
+class AnyMCTriggers(EventFilter):
+
+    def passes(self, event):
+        muonTrig = AnyMuTriggers()
+        elecTrig = AnyETriggers()
         
         return muonTrig.passes(event) or elecTrig.passes(event)
 
-
-
-class JetCrackVeto(EventFilter):
-
-    def passes(self, event):
-
-        for jet in event.jets:
-            if jet.pt <= 20*GeV: continue
-            if 1.3 < abs(jet.emscale_eta) < 1.7: return False
-        return True
-
-
-class ElectronVeto(EventFilter):
-
-    def passes(self, event):
-
-       for el in event.electrons:
-           pt = el.cl_E / cosh(el.tracketa)
-           if pt <= 15*GeV: continue
-           if not (abs(el.cl_eta) < 1.37 or 1.52 < abs(el.cl_eta) < 2.47): continue
-           if not (el.OQ & 1446) == 0: continue
-           if el.author not in (1, 3): continue
-           if el.mediumPP != 1: continue
-           if not abs(el.charge) == 1: continue
-           return False
-
-       return True
 
 
 ############################################################
@@ -359,6 +473,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
+        #if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True
@@ -595,6 +710,31 @@ class JetSelection(EventFilter):
         return True
 
 
+############################################################
+# OBJECT OVERLAP TOOLS
+############################################################
+
+def OverlapCheck(event, DoMuonCheck = False, DoElectronCheck = False):
+    """
+    Check for overlap between object, so that not a single object fires both
+    the tau and the lepton requirements
+    """
+
+    if DoElectronCheck:
+        for e in event.electrons:
+            for tau in event.taus:
+                if utils.dR(e.eta, e.phi, tau.eta, tau.phi) > 0.2:
+                    return True
+                
+    if DoMuonCheck:
+        for mu in event.muons:
+            for tau in event.taus:
+                if utils.dR(mu.eta, mu.phi, tau.eta, tau.phi) > 0.2:
+                    return True
+
+    return False
+
+    
 class JetOverlapRemoval(EventFilter):
     """Muons > Electrons > Taus > Jets"""
 
