@@ -101,9 +101,12 @@ def make_cutflow(samples,
         sample_names = [sample[1] for sample in samples]
         table = TextTable(max_width=-1)
         #table.set_deco()
-        dtypes = ['t'] + ['f'] * len(cutflows)
-        for i in data_index:
-            dtypes[i + 1] = 'i'
+        if args.noweight:
+            dtypes = ['t'] + ['i'] * len(cutflows)
+        else:
+            dtypes = ['t'] + ['f'] * len(cutflows)
+            for i in data_index:
+                dtypes[i + 1] = 'i'
         table.set_cols_dtype(dtypes)
         table.set_precision(args.precision)
         #table.set_cols_align(["l", "r", "r", "r", "l"])
