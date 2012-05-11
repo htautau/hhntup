@@ -1,0 +1,3 @@
+egammaAnalysisUtils-00-02-70 (Recommended for Moriond)
+svn+ssh://svn.cern.ch/reps/atlasoff/Reconstruction/egamma/egammaAnalysis/egammaAnalysisUtils/tags/egammaAnalysisUtils-00-02-70
+

@@ -64,6 +64,8 @@ class EventVariables(TreeModel):
     mass2_vis_tau_muon = FloatCol()
     theta_tau_muon = FloatCol()
     cos_theta_tau_muon = FloatCol()
+    pt_ratio_tau_muon = FloatCol()
+    dphi_met_muon = FloatCol()
 
     numJets = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
@@ -81,6 +83,7 @@ class EventVariables(TreeModel):
     muon_centrality_j1_j2 = FloatCol()
     met_phi_centrality = FloatCol()
     tau_j1_j2_phi_centrality = FloatCol()
+    
 
     neff_pt = FloatCol()
     mass_all_jets = FloatCol()
@@ -91,6 +94,8 @@ class EventVariables(TreeModel):
     aplanarity = FloatCol()
 
     weight = FloatCol()
+
+    nvtx = IntCol()
     
 
 
@@ -106,6 +111,7 @@ class RecoTauMuBlock((RecoTau).prefix('tau_') + (RecoMuon).prefix('muon_')):
         tree.theta_tau_muon = tau.fourvect.Vect().Angle(muon.fourvect.Vect())
         tree.cos_theta_tau_muon = math.cos(tree.theta_tau_muon)
         tree.charge_product_tau_muon = tau.charge * muon.charge
+        tree.pt_ratio_tau_muon = muon.fourvect.Pt()/tau.fourvect.Pt()
 
         #Set tau variables
         setattr(tree, 'tau_BDTJetScore', tau.BDTJetScore)

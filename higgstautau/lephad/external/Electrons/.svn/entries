@@ -1,0 +1,84 @@
+10
+
+dir
+0
+svn+ssh://svn.cern.ch/reps/atlasgrp/Physics/Higgs/HSG4/software/common/higgspy/trunk/higgstautau/lephad/external/Electrons
+svn+ssh://svn.cern.ch/reps/atlasgrp
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4525493e-7705-40b1-a816-d608a930855b
+
+EnergyRescaler.h
+file
+
+
+
+add
+
+CaloIsoCorrection.cxx
+file
+
+
+
+add
+
+version.txt
+file
+
+
+
+add
+
+__init__.py
+file
+
+
+
+add
+
+CaloIsoCorrection.h
+file
+
+
+
+add
+
+egammaSFclass.cxx
+file
+
+
+
+add
+
+EnergyRescaler.cxx
+file
+
+
+
+add
+
+egammaSFclass.h
+file
+
+
+
+add
+
