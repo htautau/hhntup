@@ -7,6 +7,7 @@ from tabulartext import PrettyTable, TextTable
 from rootpy.io import open as ropen
 import math
 import os
+import sys
 
 
 def get_parser():
@@ -29,13 +30,15 @@ def tab(s, tabstr=4 * ' '):
     return '\n'.join(((tabstr) + x if x else x) for x in s.splitlines())
 
 
-def make_cutflow(samples,
-                 args,
-                 num_format="%.1f"):
+def make_cutflow(samples, args):
+
+    filters, cutflows = make_cutflow_table(samples, args)
+    print_cutflow(samples, filters, cutflows, args)
+
+
+def make_cutflow_table(samples, args):
 
     lumi = total_lumi()
-
-    data_num_format = "%d"
 
     filters = None
     db = datasets.Database(args.db)
@@ -94,13 +97,17 @@ def make_cutflow(samples,
     filters.insert(0, 'Total')
 
     cutflows = [cutflow_table[i] for i in xrange(len(samples))]
+    return filters, cutflows
 
-    print
+
+def print_cutflow(samples, filters, cutflows, args, stream=None):
+
+    if stream is None:
+        stream = sys.stdout
+    print >> stream
     if args.format == 'text':
-        #print "Integrated luminosity of %.3f fb^-1" % (lumi/1000.)
         sample_names = [sample[1] for sample in samples]
         table = TextTable(max_width=-1)
-        #table.set_deco()
         if args.noweight:
             dtypes = ['t'] + ['i'] * len(cutflows)
         else:
@@ -109,8 +116,6 @@ def make_cutflow(samples,
                 dtypes[i + 1] = 'i'
         table.set_cols_dtype(dtypes)
         table.set_precision(args.precision)
-        #table.set_cols_align(["l", "r", "r", "r", "l"])
-        #table = PrettyTable(['Filter'] + sample_names)
         if args.errors:
             for i, row in enumerate(zip(*cutflows)):
                 table.add_row([filters[i]] + ["%s(%s)" % (num_format % passing,
@@ -118,33 +123,31 @@ def make_cutflow(samples,
                                                           for passing, error in row])
         else:
             table.add_rows([['Filter'] + sample_names] + zip(*([filters] + cutflows)))
-        #table_str = table.get_string(hrules=1)
         table_str = table.draw()
         if args.rst:
-            print ".. table::"
-            print "   :class: %s" % args.rst_class
-            print
-            print tab(table_str, 3 * ' ')
+            print >> stream, ".. table::"
+            print >> stream, "   :class: %s" % args.rst_class
+            print >> stream
+            print >> stream, tab(table_str, 3 * ' ')
         else:
-            print table_str
+            print >> stream, table_str
     else:
-        #print "Integrated luminosity of %.3f fb$^{-1}$\\\\" % (lumi/1000.)
         sample_names = [sample[0] for sample in samples]
-        print r'\begin{center}'
-        print r'\begin{scriptsize}'
-        print r'\begin{tabular}{%s}' % ('|'.join(['c' for i in xrange(len(samples) + 1)]))
-        print " & ".join(['Filter'] + sample_names) + '\\\\'
-        print r'\hline\hline'
+        print >> stream, r'\begin{center}'
+        print >> stream, r'\begin{scriptsize}'
+        print >> stream, r'\begin{tabular}{%s}' % ('|'.join(['c' for i in xrange(len(samples) + 1)]))
+        print >> stream, " & ".join(['Filter'] + sample_names) + '\\\\'
+        print >> stream, r'\hline\hline'
         if args.short:
             for i, row in enumerate(zip(*cutflows)):
-                print " & ".join([filters[i]] + [num_format % passing
+                print >> stream, " & ".join([filters[i]] + [num_format % passing
                                   for passing, error in row]) + '\\\\'
         else:
             for i, row in enumerate(zip(*cutflows)):
-                print " & ".join([filters[i]] + ["$%s\pm%s$" % (num_format % passing,
+                print >> stream, " & ".join([filters[i]] + ["$%s\pm%s$" % (num_format % passing,
                                                                 num_format % error)
                                   for passing, error in row]) + '\\\\'
-        print r'\end{tabular}'
-        print r'\end{scriptsize}'
-        print r'\end{center}'
-    print
+        print >> stream, r'\end{tabular}'
+        print >> stream, r'\end{scriptsize}'
+        print >> stream, r'\end{center}'
+    print >> stream
