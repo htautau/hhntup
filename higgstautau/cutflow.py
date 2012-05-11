@@ -32,8 +32,8 @@ def tab(s, tabstr=4 * ' '):
 
 def make_cutflow(samples, args):
 
-    filters, cutflows = make_cutflow_table(samples, args)
-    print_cutflow(samples, filters, cutflows, args)
+    filters, cutflows, data_index = make_cutflow_table(samples, args)
+    print_cutflow(samples, filters, cutflows, data_index, args)
 
 
 def make_cutflow_table(samples, args):
@@ -97,10 +97,10 @@ def make_cutflow_table(samples, args):
     filters.insert(0, 'Total')
 
     cutflows = [cutflow_table[i] for i in xrange(len(samples))]
-    return filters, cutflows
+    return filters, cutflows, data_index
 
 
-def print_cutflow(samples, filters, cutflows, args, stream=None):
+def print_cutflow(samples, filters, cutflows, data_index, args, stream=None):
 
     if stream is None:
         stream = sys.stdout
