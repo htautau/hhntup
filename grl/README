@@ -1,5 +1,5 @@
-GRL is taken from here:
-http://http://atlasdqm.web.cern.ch/atlasdqm/grlgen/Higgs/Higgs_tautau_lh_v1/
+GRLs are taken from here:
+http://atlasdqm.web.cern.ch/atlasdqm/grlgen/Higgs/Higgs_tautau_lh_v1/
 
 AND this GRL with the actual GRL observed in the combined /lumi TObjString in
 the output ROOT file.
