@@ -89,14 +89,6 @@ from higgstautau.mixins import TauFourMomentum
 from higgstautau.hadhad.filters import Triggers
 import goodruns
 
-from externaltools import CoEPPTrigTool, PileupReweighting
-from ROOT import Root
-from ROOT import CoEPP
-
-#import sys
-#sys.setrecursionlimit(5000)
-
-PileupReweighting = Root.TPileupReweighting
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
@@ -227,6 +219,12 @@ class HHSkim(ATLASStudent):
         onfilechange = []
 
         if self.metadata.datatype == datasets.MC:
+            from externaltools import CoEPPTrigTool, PileupReweighting
+            from ROOT import Root
+            from ROOT import CoEPP
+
+            PileupReweighting = Root.TPileupReweighting
+
             # initialize the pileup reweighting tool
             pileup_tool = PileupReweighting()
             pileup_tool.UsePeriodConfig("MC11b")
