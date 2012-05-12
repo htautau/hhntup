@@ -211,21 +211,41 @@ class TauTriggerMatch(EventFilter):
 
 
 class Triggers(EventFilter):
-
-    triggers = [
+    """
+    See lowest unprescaled triggers here:
+    https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
+    """
+    triggers_11 = [
         'EF_tau29_medium1_tau20_medium1',
         'EF_tau29T_medium1_tau20T_medium1'
     ]
 
-    def __init__(self, datatype, **kwargs):
+    triggers_12 = [
+        'EF_tau29Ti_medium1_tau20Ti_medium1',
+        'EF_2tau38T_medium1'
+    ]
 
-        if datatype == datasets.DATA:
-            self.passes = self.passes_data
+    def __init__(self, datatype, year=None, **kwargs):
+
+        if year is None:
+            import datetime
+            year = datetime.datetime.now().year
+        year %= 1000
+        if year == 11:
+            if datatype == datasets.DATA:
+                self.passes = self.passes_data11
+            else:
+                self.passes = self.passes_mc11
+        elif year == 12:
+            if datatype == datasets.DATA:
+                self.passes = self.passes_data12
+            else:
+                self.passes = self.passes_mc12
         else:
-            self.passes = self.passes_mc
+            raise ValueError("No triggers defined for year %d" % year)
         super(Triggers, self).__init__(**kwargs)
 
-    def passes_mc(self, event):
+    def passes_mc11(self, event):
         try:
             if 177986 <= event.RunNumber <= 187815: # Periods B-K
                 return event.EF_tau29_medium1_tau20_medium1_EMULATED
@@ -236,7 +256,7 @@ class Triggers(EventFilter):
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
-    def passes_data(self, event):
+    def passes_data11(self, event):
         try:
             if 177986 <= event.RunNumber <= 187815: # Periods B-K
                 return event.EF_tau29_medium1_tau20_medium1
@@ -246,6 +266,20 @@ class Triggers(EventFilter):
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+    def passes_data12(self, event):
+        try:
+            return event.EF_tau29Ti_medium1_tau20Ti_medium1
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+
+    def passes_mc12(self, event):
+        try:
+            return event.EF_tau29Ti_medium1_tau20Ti_medium1
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
 
 
 data_triggers = [

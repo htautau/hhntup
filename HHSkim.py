@@ -299,12 +299,20 @@ class HHSkim(ATLASStudent):
                 'EventNumber',
                 'RunNumber',
                 'lbn'
-            ] + Triggers.triggers
+            ]
+
+            if self.metadata.year % 1000 == 11:
+                extra_variables += Triggers.triggers_11
+            elif self.metadata.year % 1000 == 12:
+                extra_variables += Triggers.triggers_12
+            else:
+                raise ValueError("No triggers defined for year %d" % year)
 
             outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # set the event filters
-        trigger_filter = Triggers()
+        trigger_filter = Triggers(datatype=self.metadata.datatype,
+                                  year=self.metadata.year)
 
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
