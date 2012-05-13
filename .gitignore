@@ -21,3 +21,10 @@ build
 grid-merge
 xsec_cache
 externaltools*
+MC.txt
+clean.sh
+datasets/lephad/tau_data.txt
+submitLarge.sh
+submitProcessor.sh
+submitSmall.sh
+higgstautau/lephad/external
