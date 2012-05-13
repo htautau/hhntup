@@ -1,8 +1,0 @@
-Main folder:
-MissingMassCalculator-00-00-06 (faster)
-svn+ssh://kongt@svn.cern.ch/reps/atlasoff/PhysicsAnalysis/AnalysisCommon/MissingMassCalculator/tags/MissingMassCalculator-00-00-06
-
-Moriond folder:
-MissingMassCalculator-00-00-05-branch (Recommended for Moriond)
-svn+ssh://kongt@svn.cern.ch/reps/atlasoff/PhysicsAnalysis/AnalysisCommon/MissingMassCalculator/branches/MissingMassCalculator-00-00-05-branch
-

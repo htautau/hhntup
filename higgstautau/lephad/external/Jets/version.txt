@@ -1,6 +1,0 @@
-JetUncertainties-00-03-07 (Recommended for Moriond)
-svn+ssh://svn.cern.ch/reps/atlasoff/Reconstruction/Jet/JetUncertainties/tags/JetUncertainties-00-03-07
-
-JetResolution-00-00-09 (?)
-svn+ssh://svn.cern.ch/reps/atlasoff/Reconstruction/Jet/JetResolution/tags/JetResolution-00-00-09
-

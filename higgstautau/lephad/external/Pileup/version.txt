@@ -1,3 +1,0 @@
-PileupReweighting-00-02-01 (Recommended for Moriond)
-svn+ssh://svn.cern.ch/reps/atlasoff/PhysicsAnalysis/AnalysisCommon/PileupReweighting/tags/PileupReweighting-00-02-01
-

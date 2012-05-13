@@ -1,3 +1,14 @@
+2012-05-13 Michel Trottier-McDonald <mtm@cern.ch>
+	* higgstautau/lephad/external out of the repository
+	* Added a script to export the external tools
+
+2012-05-11 Michel Trottier-McDonald <mtm@cern.ch>
+	* Ported changes to bitbucket repository
+	* Adapted LHSkim.py to HSG4 lephad common skimming
+	* Added external directory for lephad correction tools
+	* Implemented important correction tools for muhad channel
+	* Added a few variables to models and muLHProcessor.py
+
 2012-04-22 Michel Trottier-McDonald <mtm@cern.ch>
 	* Corrected muon and electron pt threshold at selection
 	* Cleaned up the lephad/filters.py a bit

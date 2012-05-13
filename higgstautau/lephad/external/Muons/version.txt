@@ -1,6 +1,0 @@
-MuonEfficiencyCorrections-01-01-01 (Recommended for Moriond)
-svn+ssh://svn.cern.ch/reps/atlasoff/PhysicsAnalysis/MuonID/MuonIDAnalysis/MuonEfficiencyCorrections/tags/MuonEfficiencyCorrections-01-01-01
-
-MuonMomentumCorrections-00-05-00
-svn+ssh://svn.cern.ch/reps/atlasoff/PhysicsAnalysis/MuonID/MuonIDAnalysis/MuonMomentumCorrections/tags/MuonMomentumCorrections-00-05-00
-
