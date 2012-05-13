@@ -89,14 +89,6 @@ from higgstautau.mixins import TauFourMomentum
 from higgstautau.hadhad.filters import Triggers
 import goodruns
 
-from externaltools import CoEPPTrigTool, PileupReweighting
-from ROOT import Root
-from ROOT import CoEPP
-
-#import sys
-#sys.setrecursionlimit(5000)
-
-PileupReweighting = Root.TPileupReweighting
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
@@ -227,6 +219,12 @@ class HHSkim(ATLASStudent):
         onfilechange = []
 
         if self.metadata.datatype == datasets.MC:
+            from externaltools import CoEPPTrigTool, PileupReweighting
+            from ROOT import Root
+            from ROOT import CoEPP
+
+            PileupReweighting = Root.TPileupReweighting
+
             # initialize the pileup reweighting tool
             pileup_tool = PileupReweighting()
             pileup_tool.UsePeriodConfig("MC11b")
@@ -299,12 +297,20 @@ class HHSkim(ATLASStudent):
                 'EventNumber',
                 'RunNumber',
                 'lbn'
-            ] + Triggers.triggers
+            ]
+
+            if self.metadata.year % 1000 == 11:
+                extra_variables += Triggers.triggers_11
+            elif self.metadata.year % 1000 == 12:
+                extra_variables += Triggers.triggers_12
+            else:
+                raise ValueError("No triggers defined for year %d" % year)
 
             outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # set the event filters
-        trigger_filter = Triggers()
+        trigger_filter = Triggers(datatype=self.metadata.datatype,
+                                  year=self.metadata.year)
 
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
