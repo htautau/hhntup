@@ -44,7 +44,7 @@ import yaml
 from atlastools.datasets import DATA, MC
 
 YEAR = 11
-GRL = 'grl/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml'
+GRL = 'grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml'
 
 """
 LepHad constants
