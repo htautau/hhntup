@@ -19,8 +19,9 @@ from rootpy.registry import lookup_demotion
 
 from higgstautau.mixins import TauFourMomentum
 from higgstautau.mixins import FourMomentum
-from higgstautau.lephad.filters import AllmuTriggers, AlleTriggers, AllMCTriggers, \
-                                       tau_skimselection, muon_skimselection, electron_skimselection
+from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
+                                       OverlapCheck #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
+
 import goodruns
 
 
@@ -60,6 +61,15 @@ class LHSkim(ATLASStudent):
                            ]
 
         variables_to_keep = outtree.glob('*', prune=blocks_to_remove)
+        
+        variables_to_keep += ['jet_AntiKt4TopoEM_n',
+                              'jet_AntiKt4TopoEM_pt',
+                              'jet_AntiKt4TopoEM_eta',
+                              'jet_AntiKt4TopoEM_phi',
+                              'jet_AntiKt4TopoEM_flavor_weight_JetFitterCOMBNN',
+                              'jet_AntiKt4TopoEM_flavor_weight_SV1',
+                              'jet_AntiKt4TopoEM_flavor_weight_IP3D']
+        
         outtree.activate(variables_to_keep, exclusive=True)
 
 
@@ -87,14 +97,14 @@ class LHSkim(ATLASStudent):
 
 
         # set the event filters
-        trigger_filter = None
-        if self.metadata.datatype == datasets.DATA:
-            if self.metadata.title == datasets.MUON:
-                trigger_filter = AllmuTriggers()
-            if self.metadata.title == datasets.ELEC:
-                trigger_filter = AlleTriggers()
-        else:
-            trigger_filter = AllMCTriggers()
+        # trigger_filter = None
+        # if self.metadata.datatype == datasets.DATA:
+        #     if self.metadata.title == datasets.MUON:
+        #         trigger_filter = AnyMuTriggers()
+        #     if self.metadata.title == datasets.ELEC:
+        #         trigger_filter = AnyETriggers()
+        # else:
+        #     trigger_filter = AnyMCTriggers()
 
 
         # Define collections for preselection
@@ -119,7 +129,7 @@ class LHSkim(ATLASStudent):
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weights += event.mc_event_weight
                 
-            if trigger_filter(event):
+            if True: #trigger_filter(event):
                 nevents_passing_trigger +=1
 
                 # Tau Skim Selection
@@ -142,14 +152,16 @@ class LHSkim(ATLASStudent):
 
                 # Steer object selection for data and MC
                 hasTau = number_of_good_taus > 0
-                hasLeptonData = (number_of_good_muons > 0 and self.metadata.title == datasets.MUON) or \
-                                (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC)
-                hasLeptonMC = (number_of_good_muons > 0 or number_of_good_electrons > 0)
+                hasLeptonData = (number_of_good_muons > 0 and self.metadata.title == datasets.MUON and OverlapCheck(event, DoMuonCheck = True)) or \
+                                (number_of_good_electrons > 0 and self.metadata.title == datasets.ELEC and OverlapCheck(event, DoElectronCheck = True))
+                hasLeptonMC = (number_of_good_muons > 0 and OverlapCheck(event, DoMuonCheck = True)) or \
+                              (number_of_good_electrons > 0 and OverlapCheck(event, DoElectronCheck = True))
+                isLepTau = self.metadata.title == datasets.TAU
                 isData = self.metadata.datatype == datasets.DATA
                 isMC = self.metadata.datatype == datasets.MC
 
                 # Fill the event
-                if (isData and hasTau and hasLeptonData) or (isMC and hasTau and hasLeptonMC):
+                if (isData and hasTau and hasLeptonData) or (isMC and hasTau and hasLeptonMC) or (isData and hasTau and hasLeptonMC and isLepTau):
                     nevents_with_good_lephad +=1
                     outtree.number_of_good_taus = number_of_good_taus
                     outtree.number_of_good_muons = number_of_good_muons

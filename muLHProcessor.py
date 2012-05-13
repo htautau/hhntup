@@ -23,11 +23,12 @@ from higgstautau import eventshapes
 from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.lephad.filters import *
+from higgstautau.lephad.correctiontools import *
 from higgstautau.filters import PriVertex, JetCleaning, LArError, LArHole
 from higgstautau import mass
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger import utils as triggerutils
-from higgstautau.pileup import PileupReweighting
+from higgstautau.pileup import TPileupReweighting
 
 from goodruns import GRL
 import subprocess
@@ -75,7 +76,7 @@ class muLHProcessor(ATLASStudent):
         # update the trigger config maps on every file change
         onfilechange.append((update_trigger_config, (trigger_config,)))
 
-        merged_cutflow = Hist(6, 0, 6, name='cutflow', type='D')
+        merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
 
         def update_cutflow(student, cutflow, name, file, tree):
             cutflow += file.cutflow
@@ -103,19 +104,27 @@ class muLHProcessor(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
-        if self.metadata.datatype == datasets.MC:
-            copied_variables += mc_triggers
-
         tree_train.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
         tree_test.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
 
         chain.always_read(copied_variables)
 
         # set the event filters
+
+        Trigger = muMCSLTriggers
+        if self.metadata.datatype == datasets.DATA:
+            Trigger = muSLTriggers
+
+        
+
+        
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
+            Trigger(),
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             PriVertex(),
+            MuonPtSmearing(datatype=self.metadata.datatype),
+            EgammaERescaling(datatype=self.metadata.datatype),
             JetPreSelection(),
             MuonPreSelection(),
             ElectronPreSelection(),
@@ -142,9 +151,10 @@ class muLHProcessor(ATLASStudent):
 
         # define tree collections
         chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n", mix=FourMomentum)
-        chain.define_collection(name="electrons", prefix="el_", size="el_n", mix=FourMomentum)
-        chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=FourMomentum)
+        chain.define_collection(name="electrons", prefix="el_", size="el_n", mix=ElFourMomentum)
+        chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
         chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
+        chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
 
         # define tree objects
@@ -155,12 +165,13 @@ class muLHProcessor(ATLASStudent):
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
-            pileup_tool = PileupReweighting()
+            pileup_tool = TPileupReweighting()
             pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)
             pileup_tool.AddLumiCalcFile('grl/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(1)
             pileup_tool.Initialize()
+            print pileup_tool.getIntegratedLumiVector()
 
 
         # entering the main event loop...
@@ -226,8 +237,11 @@ class muLHProcessor(ATLASStudent):
             #transverse mass
             muET = Muon.fourvect.Pt()
             muPhiVector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
-            mT = sqrt(2*MET*muET*(1 - cos(muPhiVector.DeltaPhi(MET_vect))))
+            dPhi_MET_muon = muPhiVector.DeltaPhi(MET_vect)
+            mT = sqrt(2*MET*muET*(1 - cos(dPhi_MET_muon)))
             tree.mass_transverse_met_muon = mT
+            tree.dphi_met_muon = dPhi_MET_muon
+            
 
             """
             Higgs fancier mass calculation
@@ -313,6 +327,8 @@ class muLHProcessor(ATLASStudent):
             tree.sphericity = sphericity
             tree.aplanarity = aplanarity
 
+            tree.nvtx = event.vxp_n
+
             event_weight = 1.0
 
             #Get pileup weight
@@ -326,6 +342,15 @@ class muLHProcessor(ATLASStudent):
                 if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
                     event_weight *= 0.29186
 
+                #Tau/Electron misidentification correction
+                event_weight *= TauEfficiencySF(event, self.metadata.datatype)
+
+                #Muon Scale factors
+                event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
+
+                #ggF Reweighting
+                event_weight *= ggFreweighting(event, self.metadata.name)
+            
             tree.weight = event_weight
 
             # fill output ntuple
