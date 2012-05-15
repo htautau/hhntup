@@ -1,4 +1,4 @@
-mH (GeV) 	Cross Section (pb) 	+error % 	- error % 	+scale % 	-scale % 	+(PDF+αs) % 	-(PDF+αs) %
+#mH (GeV) 	Cross Section (pb) 	+error % 	- error % 	+scale % 	-scale % 	+(PDF+αs) % 	-(PDF+αs) %
 90.0 	29.47 	22.9 	-15.6 	14.8 	-8.7 	8.1 	-6.9
 95.0 	26.58 	21.9 	-15.9 	13.9 	-9.0 	8.0 	-6.9
 100.0 	24.02 	21.2 	-15.6 	13.3 	-8.6 	7.9 	-7.0
