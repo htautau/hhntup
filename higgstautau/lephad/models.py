@@ -76,6 +76,10 @@ class EventVariables(TreeModel):
 
     charge_product_tau_muon = IntCol()
     mass_transverse_met_muon = FloatCol()
+    mass_transverse_met_tau = FloatCol()
+    ddr_tau_muon = FloatCol()
+
+    
     mass_j1_j2 = FloatCol()
     eta_product_j1_j2 = FloatCol()
     eta_delta_j1_j2 = FloatCol()

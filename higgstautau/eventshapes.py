@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from rootpy.math.physics.vector import Vector2
+from ROOT import TMath, TLorentzVector
 
 
 def sphericity_aplanarity(vects):
@@ -59,3 +60,23 @@ def phi_centrality(vec_a, vec_b, vec_c):
     B = math.sin(bPhi - cPhi)/math.sin(bPhi - aPhi)
 
     return (A+B)/math.sqrt(A**2 + B**2)
+
+
+def DeltaDeltaR(tau_4vec, lep_4vec, MET_2vec):
+    """
+    Calculate the difference in dR between the expected dR (from Landau function) and measured dR
+    between tau and lepton
+    """
+
+    visTauLep = tau_4vec + lep_4vec
+    MET_4Vec = TLorentzVector()
+    MET_4Vec.SetPtEtaPhiM(MET_2vec.Mod(), 0, MET_2vec.Phi(), 0)
+    TauLep = visTauLep + MET_4Vec
+    TauLepPt = TauLep.Pt()/1000
+    
+    expecteddR = 18.5279*TMath.Landau(TauLepPt, -14.8407, 67.7441)
+    
+    dR = tau_4vec.DeltaR(lep_4vec)
+
+    return abs(dR - expecteddR)
+    

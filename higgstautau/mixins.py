@@ -73,6 +73,22 @@ class TauFourMomentum(FourMomentum):
         return ldtrkindex
 
 
+
+class ElFourMomentum(FourMomentum):
+
+    @cached_property
+    def fourvect(self):
+
+        e   = self.cl_E
+        eta = self.tracketa
+        phi = self.trackphi
+        et  = e/cosh(eta)
+
+        vect = LorentzVector()
+        vect.SetPtEtaPhiM(et, eta, phi, self.m)
+        return vect
+
+
 class MCTauFourMomentum(FourMomentum):
 
     @cached_property
