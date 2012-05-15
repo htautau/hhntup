@@ -167,7 +167,7 @@ class muLHProcessor(ATLASStudent):
             # Initialize the pileup reweighting tool
             pileup_tool = TPileupReweighting()
             pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)
-            pileup_tool.AddLumiCalcFile('grl/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root')
+            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(1)
             pileup_tool.Initialize()
@@ -236,11 +236,20 @@ class muLHProcessor(ATLASStudent):
 
             #transverse mass
             muET = Muon.fourvect.Pt()
+            tauET = Tau.fourvect.Pt()
             muPhiVector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
+            tauPhiVector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
             dPhi_MET_muon = muPhiVector.DeltaPhi(MET_vect)
+            dPhi_MET_tau  = tauPhiVector.DeltaPhi(MET_vect)
             mT = sqrt(2*MET*muET*(1 - cos(dPhi_MET_muon)))
+            mTtau = sqrt(2*MET*tauET*(1 - cos(dPhi_MET_tau)))
             tree.mass_transverse_met_muon = mT
+            tree.mass_transverse_met_tau = mTtau
             tree.dphi_met_muon = dPhi_MET_muon
+
+            #ddR
+            ddR = eventshapes.DeltaDeltaR(Tau.fourvect, Muon.fourvect, MET_vect)
+            tree.ddr_tau_muon = ddR
             
 
             """

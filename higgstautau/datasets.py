@@ -50,11 +50,11 @@ GRL = 'grl/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_H
 LepHad constants
 """
 MC_LEPHAD_PATH = '/global/mtm/data/SKIMS/MC'
-MC_LEPHAD_PREFIX = 'user.mtm.muLHSkim'
+MC_LEPHAD_PREFIX = 'user.mtm.LHSkim'
 MC_LEPHAD_FILE_PATTERN = '*.root*'
 
-DATA_LEPHAD_PATH = '/global/mtm/data/SKIMS/DATA'
-DATA_LEPHAD_PREFIX = 'user.mtm.muLHSkim'
+DATA_LEPHAD_PATH = '/global/mtm/data/SKIMS/DATA/MUON'
+DATA_LEPHAD_PREFIX = 'user.mtm.LHSkim'
 DATA_LEPHAD_MUON_STREAM = 'Muons'
 DATA_LEPHAD_EGAMMA_STREAM = 'Egamma'
 DATA_LEPHAD_FILE_PATTERN = '*.root*'
