@@ -1,3 +1,6 @@
+2012-05-15 Michel Trottier-McDonald <mtm@cern.ch>
+	* Adapted datasets.py to electron channel
+
 2012-05-13 Michel Trottier-McDonald <mtm@cern.ch>
 	* higgstautau/lephad/external out of the repository
 	* Added a script to export the external tools

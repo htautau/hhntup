@@ -53,11 +53,14 @@ MC_LEPHAD_PATH = '/global/mtm/data/SKIMS/MC'
 MC_LEPHAD_PREFIX = 'user.mtm.LHSkim'
 MC_LEPHAD_FILE_PATTERN = '*.root*'
 
-DATA_LEPHAD_PATH = '/global/mtm/data/SKIMS/DATA/MUON'
 DATA_LEPHAD_PREFIX = 'user.mtm.LHSkim'
-DATA_LEPHAD_MUON_STREAM = 'Muons'
-DATA_LEPHAD_EGAMMA_STREAM = 'Egamma'
 DATA_LEPHAD_FILE_PATTERN = '*.root*'
+
+DATA_MUHAD_PATH = '/global/mtm/data/SKIMS/DATA/MUON'
+DATA_MUHAD_STREAM = 'Muons'
+
+DATA_EHAD_PATH = '/global/mtm/data/SKIMS/DATA/EGAMMA'
+DATA_EHAD_EGAMMA_STREAM = 'Egamma'
 
 """
 HadHad constants
@@ -684,7 +687,7 @@ if __name__ == '__main__':
         mc_path = MC_LEPHAD_PATH
         mc_prefix = MC_LEPHAD_PREFIX
         mc_pattern = MC_LEPHAD_FILE_PATTERN
-        data_path = DATA_LEPHAD_PATH
+        data_path = DATA_MUHAD_PATH
         data_prefix = DATA_LEPHAD_PREFIX
         data_pattern = DATA_LEPHAD_FILE_PATTERN
         args.versioned = True
@@ -693,7 +696,7 @@ if __name__ == '__main__':
         mc_path = MC_LEPHAD_PATH
         mc_prefix = MC_LEPHAD_PREFIX
         mc_pattern = MC_LEPHAD_FILE_PATTERN
-        data_path = DATA_LEPHAD_PATH
+        data_path = DATA_EHAD_PATH
         data_prefix = DATA_LEPHAD_PREFIX
         data_pattern = DATA_LEPHAD_FILE_PATTERN
         args.versioned = True
