@@ -310,7 +310,8 @@ class HHSkim(ATLASStudent):
 
         # set the event filters
         trigger_filter = Triggers(datatype=self.metadata.datatype,
-                                  year=self.metadata.year)
+                                  year=self.metadata.year,
+                                  skim=True)
 
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)

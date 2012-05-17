@@ -225,7 +225,7 @@ class Triggers(EventFilter):
         'EF_2tau38T_medium1'
     ]
 
-    def __init__(self, datatype, year=None, **kwargs):
+    def __init__(self, datatype, year=None, skim=False, **kwargs):
 
         if year is None:
             import datetime
@@ -235,7 +235,10 @@ class Triggers(EventFilter):
             if datatype == datasets.DATA:
                 self.passes = self.passes_data11
             else:
-                self.passes = self.passes_mc11
+                if skim:
+                    self.passes = self.passes_mc11_skim
+                else:
+                    self.passes = self.passes_mc11
         elif year == 12:
             if datatype == datasets.DATA:
                 self.passes = self.passes_data12
@@ -251,6 +254,17 @@ class Triggers(EventFilter):
                 return event.EF_tau29_medium1_tau20_medium1_EMULATED
             elif 188902 <= event.RunNumber <= 191933: # Periods L-M
                 return event.EF_tau29T_medium1_tau20T_medium1_EMULATED
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+
+    def passes_mc11_skim(self, event):
+        try:
+            if 177986 <= event.RunNumber <= 187815: # Periods B-K
+                return event.EF_tau29_medium1_tau20_medium1
+            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+                return event.EF_tau29T_medium1_tau20T_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
