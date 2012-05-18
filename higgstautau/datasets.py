@@ -500,13 +500,6 @@ class Dataset(yaml.YAMLObject):
             return (None, None, None, None)
 
     @cached_property
-    def xsec_factor(self):
-
-        if 'tautauhh' in self.name:
-            return 0.412997
-        return 1.
-
-    @cached_property
     def files(self):
 
         _files = []
