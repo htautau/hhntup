@@ -129,7 +129,9 @@ class HHProcessor(ATLASStudent):
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            Triggers(datatype=self.metadata.datatype),
+            Triggers(datatype=self.metadata.datatype,
+                     year=2011,
+                     skim=False),
             PriVertex(),
             LArError(),
             #SomeJets(),
@@ -190,8 +192,9 @@ class HHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
             pileup_tool = TPileupReweighting()
-            pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
-            pileup_tool.AddLumiCalcFile('grl/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
+            #pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
+            pileup_tool.AddConfigFile('higgstautau/pileup/mc11c_defaults.prw.root')
+            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(1)
             pileup_tool.Initialize()
