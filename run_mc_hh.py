@@ -32,7 +32,7 @@ datasets = [
     "McAtNlo_JIMMY_WmZ_*",
     "McAtNlo_JIMMY_WpWm_*",
     "McAtNlo_JIMMY_WpZ_*",
-    "McAtNlo_JIMMY_ZZ_",
+    "McAtNlo_JIMMY_ZZ_*",
 ]
 
 cluster.run('HHProcessor.py',
