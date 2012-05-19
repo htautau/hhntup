@@ -134,8 +134,6 @@ class HHProcessor(ATLASStudent):
                      skim=False),
             PriVertex(),
             LArError(),
-            #SomeJets(),
-            #SomeTaus(),
             LArHole(datatype=self.metadata.datatype),
             JetCleaning(),
             #JetCrackVeto(),
@@ -148,14 +146,12 @@ class HHProcessor(ATLASStudent):
             TauPT(),
             TauEta(),
             TauCrack(),
-            #TauLArHole(), # only veto taus, not entire event
+            TauLArHole(), # only veto taus, not entire event
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
                             datatype=self.metadata.datatype),
             TauLeadSublead(lead=35*GeV,
                            sublead=25*GeV),
-            #TauJVF(),
-            #Tau1Track3Track()
         ])
 
         self.filters['event'] = event_filters
