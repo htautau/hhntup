@@ -12,61 +12,11 @@ from math import *
 from . import jetcleaning
 
 
-def in_lar_hole(eta, phi):
-
-    return (-0.2 < eta < 1.6) and (-0.988 < phi < -0.392)
-
-
-class LArHole(EventFilter):
-
-    def __init__(self, datatype, **kwargs):
-
-        super(LArHole, self).__init__(**kwargs)
-        if datatype == datasets.DATA:
-            self.passes = self.passes_data
-        else:
-            self.passes = self.passes_mc
-
-    def passes_data(self, event):
-
-        if not 180614 <= event.RunNumber <= 184169:
-            return True
-
-        for jet in event.jets:
-            if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL): continue
-            if in_lar_hole(jet.eta, jet.phi): return False
-        return True
-
-    def passes_mc(self, event):
-
-        if not 180614 <= event.RunNumber <= 184169:
-            return True
-
-        for jet in event.jets:
-            if not jet.pt > 20 * GeV: continue
-            if in_lar_hole(jet.eta, jet.phi): return False
-        return True
-
-
 class PriVertex(EventFilter):
 
     def passes(self, event):
 
         return any(ifilter(lambda vxp: vxp.type == 1 and vxp.nTracks >= 4, event.vertices))
-
-
-class SomeJets(EventFilter):
-
-    def passes(self, event):
-
-        return len(event.jets) > 0
-
-
-class SomeTaus(EventFilter):
-
-    def passes(self, event):
-
-        return len(event.taus) > 0
 
 
 class JetCleaning(EventFilter):
@@ -109,3 +59,38 @@ class LArError(EventFilter):
 
         return event.larError <= 1
 
+
+def in_lar_hole(eta, phi):
+
+    return (-0.2 < eta < 1.6) and (-0.988 < phi < -0.392)
+
+
+class LArHole(EventFilter):
+
+    def __init__(self, datatype, **kwargs):
+
+        super(LArHole, self).__init__(**kwargs)
+        if datatype == datasets.DATA:
+            self.passes = self.passes_data
+        else:
+            self.passes = self.passes_mc
+
+    def passes_data(self, event):
+
+        if not 180614 <= event.RunNumber <= 184169:
+            return True
+
+        for jet in event.jets:
+            if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL): continue
+            if in_lar_hole(jet.eta, jet.phi): return False
+        return True
+
+    def passes_mc(self, event):
+
+        if not 180614 <= event.RunNumber <= 184169:
+            return True
+
+        for jet in event.jets:
+            if not jet.pt > 20 * GeV: continue
+            if in_lar_hole(jet.eta, jet.phi): return False
+        return True
