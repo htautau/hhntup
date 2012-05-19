@@ -143,14 +143,13 @@ class HHProcessor(ATLASStudent):
             MuonVeto(),
             TauAuthor(),
             TauHasTrack(),
-            #TauCharge(),  Also use 2p, 4p etc for QCD shape in non-OS events
             TauMuonVeto(),
             TauElectronVeto(),
             TauPT(),
             TauEta(),
             TauCrack(),
             #TauLArHole(), # only veto taus, not entire event
-            TauLoose(),
+            TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
                             datatype=self.metadata.datatype),
             TauLeadSublead(lead=35*GeV,

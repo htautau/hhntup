@@ -87,11 +87,19 @@ class TauCharge(EventFilter):
         return len(event.taus) >= MIN_TAUS
 
 
-class TauLoose(EventFilter):
+class TauIDLoose(EventFilter):
 
     def passes(self, event):
 
         event.taus.select(lambda tau: tau.JetBDTSigLoose)
+        return len(event.taus) >= MIN_TAUS
+
+
+class TauIDMedium(EventFilter):
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.JetBDTSigMedium)
         return len(event.taus) >= MIN_TAUS
 
 
