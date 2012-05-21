@@ -4,7 +4,7 @@ from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
-
+import datetime
 
 """
 See main documentation here:
@@ -151,11 +151,15 @@ class TauTriggerMatch(EventFilter):
                  config,
                  datatype,
                  dR=0.2,
+                 year=None,
                  **kwargs):
 
         super(TauTriggerMatch, self).__init__(**kwargs)
         self.config = config
         self.dR = dR
+        if year is None:
+            year = datetime.datetime.now().year
+        year %= 1000
 
         """
         WARNING: possible bias if matching between MC and data differs
@@ -163,19 +167,25 @@ class TauTriggerMatch(EventFilter):
         if datatype == datasets.DATA:
             from ..trigger import utils as triggerutils
             self.triggerutils = triggerutils
-            self.passes = self.passes_data
+            if year == 11:
+                self.passes = self.passes_data11
+            else:
+                raise ValueError("No trigger matching defined for year %d" % year)
         else:
-            self.passes = self.passes_mc
+            if year == 11:
+                self.passes = self.passes_mc11
+            else:
+                raise ValueError("No trigger matching defined for year %d" % year)
 
-    def passes_mc(self, event):
+    def passes_mc11(self, event):
 
         """
-        Matching performed during skim with CoEPPTrigTool
+        Matching performed during first skim with CoEPPTrigTool
         """
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
         return len(event.taus) == MIN_TAUS
 
-    def passes_data(self, event):
+    def passes_data11(self, event):
 
         if 177986 <= event.RunNumber <= 187815: # Periods B-K
             trigger = 'EF_tau29_medium1_tau20_medium1'
@@ -236,7 +246,6 @@ class Triggers(EventFilter):
     def __init__(self, datatype, year=None, skim=False, **kwargs):
 
         if year is None:
-            import datetime
             year = datetime.datetime.now().year
         year %= 1000
         if year == 11:
