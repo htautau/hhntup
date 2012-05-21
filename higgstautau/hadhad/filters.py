@@ -291,14 +291,14 @@ class Triggers(EventFilter):
 
     def passes_data12(self, event):
         try:
-            return event.EF_tau29Ti_medium1_tau20Ti_medium1
+            return event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
 
     def passes_mc12(self, event):
         try:
-            return event.EF_tau29Ti_medium1_tau20Ti_medium1
+            return event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
