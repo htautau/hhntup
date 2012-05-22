@@ -242,10 +242,6 @@ class HHSkim(ATLASStudent):
             trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
             trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
 
-            #trigger_A.switchOn()
-            #trigger_B.switchOn()
-            #trigger_C.switchOn()
-
             trigger_run_dict = {
                 180164: (trigger_A, 'EF_tau29_medium1_tau20_medium1'),
                 183003: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
