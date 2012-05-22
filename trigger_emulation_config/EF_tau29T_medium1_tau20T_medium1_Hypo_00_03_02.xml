@@ -1,0 +1,6 @@
+<Trigger Class="EmulatedEFDiTauTrigger"
+    Name="EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02"
+    Chain="EF_tau29T_medium1_tau20T_medium1">
+  <Item Name="Trigger1" Value="EF_tau29T_medium1_Hypo_00_03_02" />
+  <Item Name="Trigger2" Value="EF_tau20T_medium1_Hypo_00_03_02" />
+</Trigger>
