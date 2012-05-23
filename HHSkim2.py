@@ -14,6 +14,8 @@ from rootpy.plotting import Hist
 
 from higgstautau.mixins import TauFourMomentum
 from higgstautau.hadhad.filters import Triggers
+from higgstautau.trigger import update_trigger_config, get_trigger_config
+
 import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
@@ -73,6 +75,12 @@ class HHSkim2(ATLASStudent):
 
         onfilechange = []
 
+        # trigger config tool to read trigger info in the ntuples
+        trigger_config = get_trigger_config()
+
+        # update the trigger config maps on every file change
+        onfilechange.append((update_trigger_config, (trigger_config,)))
+
         # initialize the TreeChain of all input files
         chain = TreeChain(self.metadata.treename,
                           files=self.files,
@@ -84,8 +92,8 @@ class HHSkim2(ATLASStudent):
             Model = TriggerMatching
 
         tree = Tree(name=self.metadata.treename,
-                       file=self.output,
-                       model=Model)
+                    file=self.output,
+                    model=Model)
 
         tree.set_buffer(chain.buffer,
                         create_branches=True)
@@ -112,7 +120,9 @@ class HHSkim2(ATLASStudent):
             TauLArHole(),
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
-                            datatype=self.metadata.datatype),
+                            datatype=self.metadata.datatype,
+                            skim=True,
+                            tree=tree),
             TauLeadSublead(lead=35*GeV,
                            sublead=25*GeV),
         ])

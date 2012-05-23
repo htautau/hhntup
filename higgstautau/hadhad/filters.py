@@ -152,6 +152,8 @@ class TauTriggerMatch(EventFilter):
                  datatype,
                  dR=0.2,
                  year=None,
+                 skim=False,
+                 tree=None,
                  **kwargs):
 
         super(TauTriggerMatch, self).__init__(**kwargs)
@@ -160,6 +162,8 @@ class TauTriggerMatch(EventFilter):
         if year is None:
             year = datetime.datetime.now().year
         year %= 1000
+        self.skim = skim
+        self.tree = tree
 
         """
         WARNING: possible bias if matching between MC and data differs
@@ -206,6 +210,7 @@ class TauTriggerMatch(EventFilter):
         event.taus_EF.select_indices(trigger_idx)
         #print list(event.taus_EF)
         matched_taus = []
+        matches = {}
         for triggertau in event.taus_EF:
             # find closest matching reco offline tau
             closest_dR = 99999
@@ -218,11 +223,28 @@ class TauTriggerMatch(EventFilter):
                     closest_tau = tau
                     closest_idx = i
             if closest_tau is not None:
+                if self.skim:
+                    if triggertau.pt > 29 * GeV:
+                        thresh = 29
+                    else:
+                        thresh = 20
+                    matches[closest_tau.index] = (triggertau.index, thresh)
                 matched_taus.append(closest_tau)
                 # remove match from consideration by future matches (greedy match)
                 event.taus.mask_indices([closest_idx])
         # select only the matching offline taus (if any)
         event.taus.reset()
+        if self.skim:
+            self.tree.tau_trigger_match_index.clear()
+            self.tree.tau_trigger_match_thresh.clear()
+            for i in xrange(event.taus_n):
+                if i in matches:
+                    idx, thresh = matches[i]
+                    self.tree.tau_trigger_match_index.push_back(idx)
+                    self.tree.tau_trigger_match_thresh.push_back(thresh)
+                else:
+                    self.tree.tau_trigger_match_index.push_back(-1)
+                    self.tree.tau_trigger_match_thresh.push_back(0)
         event.taus.select_indices([tau.index for tau in matched_taus])
         # event passes if at least two taus selected
         return len(event.taus) == MIN_TAUS
