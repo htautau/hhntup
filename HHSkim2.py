@@ -179,6 +179,7 @@ class HHSkim2(ATLASStudent):
         for event in chain:
             assert len(event.taus) == 2
             selected_idx = [tau.index for tau in event.taus]
+            selected_idx.sort()
             if self.metadata.datatype == datasets.MC:
                 # set the event weight
                 tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
