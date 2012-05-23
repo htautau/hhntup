@@ -36,7 +36,7 @@ from externaltools import TauFakeRates
 from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-
+YEAR = 2011
 
 class HHProcessor(ATLASStudent):
     """
@@ -129,7 +129,7 @@ class HHProcessor(ATLASStudent):
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             Triggers(datatype=self.metadata.datatype,
-                     year=2011,
+                     year=YEAR,
                      skim=False),
             PriVertex(),
             LArError(),
@@ -148,6 +148,7 @@ class HHProcessor(ATLASStudent):
             TauLArHole(), # only veto taus, not entire event
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
+                            year=YEAR,
                             datatype=self.metadata.datatype),
             TauLeadSublead(lead=35*GeV,
                            sublead=25*GeV),

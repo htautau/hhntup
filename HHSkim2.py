@@ -5,21 +5,23 @@ from atlastools import utils
 from atlastools import datasets
 from atlastools.units import GeV
 from atlastools.batch import ATLASStudent
+from atlastools.filtering import GRLFilter
 
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel
 from rootpy.types import *
 from rootpy.io import open as ropen
-from rootpy.plotting import Hist
 
-from higgstautau.mixins import TauFourMomentum
-from higgstautau.hadhad.filters import Triggers
+from higgstautau.mixins import *
+from higgstautau.filters import *
+from higgstautau.hadhad.filters import *
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 
 import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 VERBOSE = True
+YEAR = 2011
 
 class TriggerMatching(TreeModel):
 
@@ -49,6 +51,7 @@ class HHSkim2(ATLASStudent):
             with ropen(fname) as f:
                 if cutflow is None:
                     cutflow = f.cutflow.Clone()
+                    cutflow.SetDirectory(0)
                 else:
                     cutflow += f.cutflow
         self.output.cd()
@@ -102,7 +105,7 @@ class HHSkim2(ATLASStudent):
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             Triggers(datatype=self.metadata.datatype,
-                     year=2011,
+                     year=YEAR,
                      skim=False),
             PriVertex(),
             LArError(),
@@ -120,6 +123,7 @@ class HHSkim2(ATLASStudent):
             TauLArHole(),
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
+                            year=YEAR,
                             datatype=self.metadata.datatype,
                             skim=True,
                             tree=tree),
