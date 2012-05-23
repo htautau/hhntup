@@ -207,6 +207,8 @@ class HHSkim2(ATLASStudent):
 
         if VALIDATE:
             validate_log.close()
+            # sort the output by event number for MC
+            # sort +2 -3 -n skim2_validate_mc_125205.txt -o skim2_validate_mc_125205.txt
 
         self.output.cd()
 
