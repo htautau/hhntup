@@ -162,8 +162,12 @@ class HHSkim2(ATLASStudent):
         tree.define_object(name='jet1', prefix='jet1_')
         tree.define_object(name='jet2', prefix='jet2_')
 
-        if VALIDATE:
-            validate_log = open(self.metadata.name + '_validate.log', 'w')
+        if VALIDATE: # only validate on a single data run or MC channel
+            chain.GetEntry(0)
+            if self.metadata.datatype == datasets.MC:
+                validate_log = open('mc_%d_validate.txt' % chain.mc_channel_number, 'w')
+            else:
+                validate_log = open('data_%d_validate.txt' % chain.RunNumber, 'w')
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool

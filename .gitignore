@@ -1,5 +1,6 @@
 samples
 eventviews
+*validate.txt
 *.xml
 *.pdf
 *.p
