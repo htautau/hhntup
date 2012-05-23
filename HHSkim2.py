@@ -19,7 +19,7 @@ from higgstautau.trigger import update_trigger_config, get_trigger_config
 import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-
+VERBOSE = True
 
 class TriggerMatching(TreeModel):
 
@@ -152,6 +152,11 @@ class HHSkim2(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
+            if VERBOSE:
+                print event.EventNumber,
+                for tau in event.taus:
+                    print tau.index,
+                print
             tree.Fill()
 
         self.output.cd()
