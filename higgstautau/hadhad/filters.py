@@ -237,7 +237,7 @@ class TauTriggerMatch(EventFilter):
         if self.skim:
             self.tree.tau_trigger_match_index.clear()
             self.tree.tau_trigger_match_thresh.clear()
-            for i in xrange(event.taus_n):
+            for i in xrange(event.tau_n):
                 if i in matches:
                     idx, thresh = matches[i]
                     self.tree.tau_trigger_match_index.push_back(idx)
