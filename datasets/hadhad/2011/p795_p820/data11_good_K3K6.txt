@@ -1,9 +1,0 @@
-data11_7TeV.00187453.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
-data11_7TeV.00187457.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
-data11_7TeV.00187501.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
-data11_7TeV.00187543.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p795/
-data11_7TeV.00187552.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
-data11_7TeV.00187763.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
-data11_7TeV.00187811.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
-data11_7TeV.00187812.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p795/
-data11_7TeV.00187815.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p820/
