@@ -20,7 +20,7 @@ from higgstautau.trigger import update_trigger_config, get_trigger_config
 import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-VERBOSE = True
+VALIDATE = True
 YEAR = 2011
 
 class TriggerMatching(TreeModel):
@@ -154,14 +154,20 @@ class HHSkim2(ATLASStudent):
         tree.define_object(name='jet1', prefix='jet1_')
         tree.define_object(name='jet2', prefix='jet2_')
 
+        if VALIDATE:
+            validate_log = open(self.metadata.name + '_validate.log', 'w')
+
         # entering the main event loop...
         for event in chain:
-            if VERBOSE:
-                print event.EventNumber,
+            if VALIDATE:
+                print >> validate_log, event.EventNumber,
                 for tau in event.taus:
-                    print tau.index,
-                print
+                    print >> validate_log, tau.index,
+                print >> validate_log
             tree.Fill()
+
+        if VALIDATE:
+            validate_log.close()
 
         self.output.cd()
 
