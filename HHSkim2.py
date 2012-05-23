@@ -50,7 +50,7 @@ class HHSkim2(ATLASStudent):
         for fname in self.files:
             with ropen(fname) as f:
                 if cutflow is None:
-                    cutflow = f.cutflow.Clone()
+                    cutflow = f.cutflow.Clone(name='cutflow')
                     cutflow.SetDirectory(0)
                 else:
                     cutflow += f.cutflow
