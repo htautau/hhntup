@@ -21,7 +21,7 @@ from higgstautau.pileup import PileupReweighting, TPileupReweighting
 import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-VALIDATE = True
+VALIDATE = False
 YEAR = 2011
 
 
