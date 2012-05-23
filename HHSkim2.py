@@ -16,6 +16,7 @@ from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau.trigger import update_trigger_config, get_trigger_config
+from higgstautau.pileup import PileupReweighting, TPileupReweighting
 
 import goodruns
 
@@ -23,10 +24,17 @@ import goodruns
 VALIDATE = True
 YEAR = 2011
 
+
 class TriggerMatching(TreeModel):
 
     tau_trigger_match_index = ROOT.vector('int')
     tau_trigger_match_thresh = ROOT.vector('int')
+
+
+class Skim2Variables(TreeModel):
+
+    tau_selected = ROOT.vector('bool')
+    pileup_weight = FloatCol(default=1.)
 
 
 class HHSkim2(ATLASStudent):
@@ -90,9 +98,9 @@ class HHSkim2(ATLASStudent):
                           events=self.events,
                           onfilechange=onfilechange)
 
-        Model = None
+        Model = Skim2Variables
         if self.metadata.datatype == datasets.DATA:
-            Model = TriggerMatching
+            Model += TriggerMatching
 
         tree = Tree(name=self.metadata.treename,
                     file=self.output,
@@ -157,13 +165,39 @@ class HHSkim2(ATLASStudent):
         if VALIDATE:
             validate_log = open(self.metadata.name + '_validate.log', 'w')
 
+        if self.metadata.datatype == datasets.MC:
+            # Initialize the pileup reweighting tool
+            pileup_tool = TPileupReweighting()
+            #pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
+            pileup_tool.AddConfigFile('higgstautau/pileup/mc11c_defaults.prw.root')
+            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
+            # discard unrepresented data (with mu not simulated in MC)
+            pileup_tool.SetUnrepresentedDataAction(2)
+            pileup_tool.Initialize()
+
         # entering the main event loop...
         for event in chain:
+            assert len(event.taus) == 2
+            selected_idx = [tau.index for tau in event.taus]
+            if self.metadata.datatype == datasets.MC:
+                # set the event weight
+                tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
+                                                                   event.mc_channel_number,
+                                                                   event.averageIntPerXing)
             if VALIDATE:
-                print >> validate_log, event.EventNumber,
-                for tau in event.taus:
-                    print >> validate_log, tau.index,
+                if self.metadata.datatype == datasets.MC:
+                    print >> validate_log, event.mc_channel_number,
+                print >> validate_log, event.RunNumber, event.EventNumber,
+                print >> validate_log, "%.4f" % tree.pileup_weight,
+                for idx in selected_idx:
+                    print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
                 print >> validate_log
+            tree.tau_selected.clear()
+            for i in xrange(event.tau_n):
+                if i in selected_idx:
+                    tree.tau_selected.push_back(True)
+                else:
+                    tree.tau_selected.push_back(False)
             tree.Fill()
 
         if VALIDATE:
