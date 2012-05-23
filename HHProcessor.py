@@ -126,7 +126,6 @@ class HHProcessor(ATLASStudent):
         chain.always_read(copied_variables)
 
         # set the event filters
-        # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             Triggers(datatype=self.metadata.datatype,

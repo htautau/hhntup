@@ -26,6 +26,9 @@ class TriggerMatching(TreeModel):
 
 
 class HHSkim2(ATLASStudent):
+    """
+    Apply cleaning
+    """
 
     def work(self):
 
@@ -40,12 +43,12 @@ class HHSkim2(ATLASStudent):
 
         # merge the cutflow hists from the first skim
         cutflow = None
-        for file in self.files:
-            with ropen(file) as f:
+        for fname in self.files:
+            with ropen(fname) as f:
                 if cutflow is None:
-                    cutflow = file.cutflow.Clone()
+                    cutflow = f.cutflow.Clone()
                 else:
-                    cutflow += file.cutflow
+                    cutflow += f.cutflow
         self.output.cd()
         cutflow.Write()
 
@@ -71,28 +74,78 @@ class HHSkim2(ATLASStudent):
         onfilechange = []
 
         # initialize the TreeChain of all input files
-        intree = TreeChain(self.metadata.treename,
-                           files=self.files,
-                           events=self.events,
-                           onfilechange=onfilechange)
+        chain = TreeChain(self.metadata.treename,
+                          files=self.files,
+                          events=self.events,
+                          onfilechange=onfilechange)
 
         Model = None
         if self.metadata.datatype == datasets.DATA:
-            Model += TriggerMatching
+            Model = TriggerMatching
 
-        outtree = Tree(name=self.metadata.treename,
+        tree = Tree(name=self.metadata.treename,
                        file=self.output,
                        model=Model)
 
-        outtree.set_buffer(intree.buffer,
-                           create_branches=True)
+        tree.set_buffer(chain.buffer,
+                        create_branches=True)
+
+        # set the event filters
+        event_filters = EventFilterList([
+            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            Triggers(datatype=self.metadata.datatype,
+                     year=2011,
+                     skim=False),
+            PriVertex(),
+            LArError(),
+            LArHole(datatype=self.metadata.datatype),
+            JetCleaning(),
+            ElectronVeto(),
+            MuonVeto(),
+            TauAuthor(),
+            TauHasTrack(),
+            TauMuonVeto(),
+            TauElectronVeto(),
+            TauPT(),
+            TauEta(),
+            TauCrack(),
+            TauLArHole(),
+            TauIDMedium(),
+            TauTriggerMatch(config=trigger_config,
+                            datatype=self.metadata.datatype),
+            TauLeadSublead(lead=35*GeV,
+                           sublead=25*GeV),
+        ])
+
+        self.filters['event'] = event_filters
+
+        chain.filters += event_filters
+
+        # define tree collections
+        chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
+        chain.define_collection(name="taus_EF", prefix="trig_EF_tau_",
+                                size="trig_EF_tau_n", mix=TauFourMomentum)
+
+        # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
+        chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
+        chain.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n", mix=MCTauFourMomentum)
+        chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
+        chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
+        chain.define_collection(name="electrons", prefix="el_", size="el_n")
+        chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
+
+        # define tree objects
+        tree.define_object(name='tau1', prefix='tau1_')
+        tree.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='jet1', prefix='jet1_')
+        tree.define_object(name='jet2', prefix='jet2_')
 
         # entering the main event loop...
-        for event in intree:
-            outtree.Fill()
+        for event in chain:
+            tree.Fill()
 
         self.output.cd()
 
         # flush any baskets remaining in memory to disk
-        outtree.FlushBaskets()
-        outtree.Write()
+        tree.FlushBaskets()
+        tree.Write()
