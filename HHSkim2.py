@@ -165,9 +165,9 @@ class HHSkim2(ATLASStudent):
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
             if self.metadata.datatype == datasets.MC:
-                validate_log = open('mc_%d_validate.txt' % chain.mc_channel_number, 'w')
+                validate_log = open('skim2_validate_mc_%d.txt' % chain.mc_channel_number, 'w')
             else:
-                validate_log = open('data_%d_validate.txt' % chain.RunNumber, 'w')
+                validate_log = open('skim2_validate_data_%d.txt' % chain.RunNumber, 'w')
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
