@@ -105,9 +105,9 @@ branches_remove = [
     "mc_parents",
 
     "jet_AntiKt4TopoEM_*",
-    "jet_AntiKt4LCTopo_*",
+    #"jet_AntiKt4LCTopo_*",  <== need these for MET systematics
     "jet_AntiKt6*",
-    "jet_flavor_*",
+    #"jet_flavor_*",  <== need these for systematics...
     "jet_*Assoc*",
 
     "tau_otherTrk_*",
