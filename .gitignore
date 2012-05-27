@@ -19,6 +19,7 @@ build
 *.png
 *.eps
 *.pickle
+.svn
 grid-merge
 xsec_cache
 externaltools*
