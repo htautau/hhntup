@@ -303,6 +303,18 @@ class HHSkim(ATLASStudent):
                 raise ValueError("No triggers defined for year %d" % year)
 
             outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
+        else:
+            # write out some branches for all events
+            # that failed the skim before trigger only for MC
+            # Used to get the total pileup reweighting sum
+            outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_trigger',
+                                 file=self.output)
+            extra_variables = [
+                    'actualIntPerXing',
+                    'averageIntPerXing',
+                    'RunNumber',
+                ]
+            outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # set the event filters
         trigger_filter = Triggers(datatype=self.metadata.datatype,
@@ -387,7 +399,7 @@ class HHSkim(ATLASStudent):
                     outtree.number_of_good_vertices = number_of_good_vertices
                     outtree.number_of_good_taus = number_of_good_taus
                     outtree.Fill()
-                else:
+                else: # data
                     outtree_extra.number_of_good_vertices = number_of_good_vertices
                     outtree_extra.number_of_good_taus = number_of_good_taus
                     if event.taus:
@@ -396,8 +408,10 @@ class HHSkim(ATLASStudent):
                     else:
                         outtree_extra.tau_pt = -1111.
                     outtree_extra.Fill()
-            elif WRITE_ALL and self.metadata.datatype == datasets.MC:
-                outtree.Fill()
+            elif self.metadata.datatype == datasets.MC:
+                outtree_extra.Fill()
+                if WRITE_ALL:
+                    outtree.Fill()
 
             if self.metadata.datatype == datasets.MC:
                 trigger.switchOff()
@@ -417,9 +431,8 @@ class HHSkim(ATLASStudent):
         # flush any baskets remaining in memory to disk
         outtree.FlushBaskets()
         outtree.Write()
-        if self.metadata.datatype == datasets.DATA:
-            outtree_extra.FlushBaskets()
-            outtree_extra.Write()
+        outtree_extra.FlushBaskets()
+        outtree_extra.Write()
 
         if self.metadata.datatype == datasets.MC:
             # write the pileup reweighting file
