@@ -83,6 +83,13 @@ class HHSkim2(ATLASStudent):
             map(extra_trees.Add, self.files)
             extra_trees.Merge(self.output, -1, 'fast keep')
             self.output.cd()
+        else:
+            # merge outtree_extras from the first skim
+            extra_trees = ROOT.TChain(self.metadata.treename +
+                                      '_failed_skim_before_trigger')
+            map(extra_trees.Add, self.files)
+            extra_trees.Merge(self.output, -1, 'fast keep')
+            self.output.cd()
 
         onfilechange = []
 
