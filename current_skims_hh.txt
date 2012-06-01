@@ -3,6 +3,12 @@ Data11
 
 user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/
 
+Data12
+======
+
+group.phys-higgs.HHSkim.data12_8TeV*p1011.v1/
+
+
 MC11
 ====
 
