@@ -269,8 +269,7 @@ class eLHProcessor(ATLASStudent):
             tree.dphi_met_electron = dPhi_MET_electron
 
             # ddR
-            ddR = eventshapes.DeltaDeltaR(Tau.fourvect, Electron.fourvect, MET_vect)
-            tree.ddr_tau_electron = ddR
+            tree.ddr_tau_electron, tree.dr_tau_electron, tree.higgs_pt = eventshapes.DeltaDeltaR(Tau.fourvect, Electron.fourvect, MET_vect)
  
             """
             Higgs fancier mass calculation
