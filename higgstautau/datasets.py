@@ -80,11 +80,11 @@ Common constants
 MC_TREENAME = 'tau'
 DATA_TREENAME = 'tau'
 
-DATA_PATTERN = re.compile('^(?P<prefix>\S+.)?data11_7TeV.'
-                          '(?P<run>\d+).physics_'
+DATA_PATTERN = re.compile('^(?P<prefix>\S+\.)?data11_7TeV\.'
+                          '(?P<run>\d+)\.physics_'
                           '(?P<stream>\S+)?'
-                          '.merge.NTUP_TAUMEDIUM.(?P<tag>\w+)'
-                          '(.(?P<suffix>\S+))?$')
+                          '\.merge\.NTUP_TAUMEDIUM\.(?P<tag>\w+)'
+                          '(\.(?P<suffix>\S+))?$')
 
 MC_TAG_PATTERN1 = re.compile('^e(?P<evnt>\d+)_'
                              's(?P<digi>\d+)_'
@@ -230,27 +230,27 @@ class Database(dict):
 
         if mc_path is not None:
             if versioned:
-                pattern1 = ('^mc11_7TeV.(?P<id>\d+)'
-                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '.v(?P<version>\d+).(?P<suffix>\S+)$')
-                pattern2 = ('^mc11_7TeV.(?P<id>\d+)'
-                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '.v(?P<version>\d+).(?P<suffix>\S+)$')
+                pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
+                            '\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
+                pattern2 = ('^mc11_7TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
+                            '\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
             else:
-                pattern1 = ('^mc11_7TeV.(?P<id>\d+)'
-                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
+                pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
                             '_(?P<suffix>\S+)$')
-                pattern2 = ('^mc11_7TeV.(?P<id>\d+)'
-                            '.(?P<name>\w+)(.merge.NTUP_TAUMEDIUM)?'
-                            '.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
+                pattern2 = ('^mc11_7TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
                             '_(?P<suffix>\S+)$')
 
             if mc_prefix:
-                pattern1 = ('^%s.' % mc_prefix) + pattern1[1:]
-                pattern2 = ('^%s.' % mc_prefix) + pattern2[1:]
+                pattern1 = ('^%s\.' % mc_prefix) + pattern1[1:]
+                pattern2 = ('^%s\.' % mc_prefix) + pattern2[1:]
 
             MC_PATTERN1 = re.compile(pattern1)
             MC_PATTERN2 = re.compile(pattern2)
