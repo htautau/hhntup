@@ -1,11 +1,9 @@
-setup-higgs() {
-    export SW_EDGE=/atlas/software/bleedingedge
-    export PATH=${SW_EDGE}/python-2.7.2-64/bin${PATH:+:$PATH}
-    export LD_LIBRARY_PATH=${SW_EDGE}/python-2.7.2-64/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-    source ${SW_EDGE}/root-5.32-64/bin/thisroot.sh
-    export PATH=${HOME}/.local/bin${PATH:+:$PATH}
-    export DATAROOT=/global/andres/data/higgs/skims
-}
-
-setup-higgs
-
+cd ..
+. setup.sh
+cd higgspy
+export SW_EDGE=/atlas/software/bleedingedge
+export PATH=${SW_EDGE}/python-2.7.2-64/bin${PATH:+:$PATH}
+export LD_LIBRARY_PATH=${SW_EDGE}/python-2.7.2-64/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+source ${SW_EDGE}/root-5.32-64/bin/thisroot.sh
+export PATH=${HOME}/.local/bin${PATH:+:$PATH}
+export DATAROOT=/global/mtm/data/SKIMS

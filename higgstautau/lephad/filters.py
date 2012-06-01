@@ -2,6 +2,7 @@ from rootpy.tree.filtering import *
 from itertools import ifilter
 from atlastools import utils
 from atlastools.units import GeV
+from rootpy.math.physics.vector import LorentzVector
 
 try:
     from atlasutils.jets import cleaning as jetcleaning
@@ -19,6 +20,26 @@ See main documentation here:
 """
 
 MIN_TAUS = 1
+
+
+class SetElectronsFourVector(EventFilter):
+
+    def passes(self, event):
+        
+        for el in event.electrons:
+            if ((el.nSCTHits + el.nPixHits) < 4):
+                eta = el.cl_eta
+                phi = el.cl_phi
+                et  = el.cl_pt
+            else:
+                eta = el.tracketa
+                phi = el.trackphi
+                et  = el.cl_E / cosh(el.tracketa)
+            vect = LorentzVector()
+            vect.SetPtEtaPhiE(et, eta, phi, el.cl_E)
+            setattr(el, 'fourvect', vect)
+
+        return True
 
 
 class TauElectronVeto(EventFilter):
@@ -556,46 +577,40 @@ def muon_selection(mu):
 # ELECTRON SELECTION
 ############################################################
 
-def electron_skimselection(e):
+def electron_skimselection(el):
     """ Does the complete electron preselection """
 
-    cl_eta = e.cl_eta
-    trk_eta = e.tracketa
-    cl_Et = e.cl_E/cosh(trk_eta)
-    
-    if not (cl_Et > 15*GeV) : return False
-    if not (abs(cl_eta) < 3.0) : return False
-    if not (e.author == 1 or e.author == 3) : return False
-    if not (e.mediumPP) : return False
+    el_cl_Et = getattr(el,'fourvect').Pt()
+
+    if not (el_cl_Et > 15*GeV) : return False
+    if not (abs(el.cl_eta) < 3.0) : return False
+    if not (el.author == 1 or el.author == 3) : return False
+    if not (el.mediumPP) : return False
 
     return True
 
 
-def electron_preselection(e):
+def electron_preselection(el):
     """ Does the complete electron preselection """
 
-    cl_eta = e.cl_eta
-    trk_eta = e.tracketa
-    cl_Et = e.cl_E/cosh(trk_eta)
-    
-    if not (cl_Et > 15*GeV) : return False
-    if not (abs(cl_eta) < 2.47) : return False
-    if (1.37 < abs(cl_eta) < 1.52) : return False
-    if not (e.author == 1 or e.author == 3) : return False
-    if not (e.mediumPP) : return False
+    el_cl_Et = getattr(el,'fourvect').Pt()
+
+    if not (el_cl_Et > 15*GeV) : return False
+    if not (abs(el.cl_eta) < 2.47) : return False
+    if (1.37 < abs(el.cl_eta) < 1.52) : return False
+    if not (el.author == 1 or el.author == 3) : return False
+    if not (el.mediumPP) : return False
 
     return True
 
 
-def electron_selection(e):
+def electron_selection(el):
     """ Finalizes the electron selection"""
 
-    cl_eta = e.cl_eta
-    trk_eta = e.tracketa
-    cl_Et = e.cl_E/cosh(trk_eta)
+    el_cl_Et = getattr(el,'fourvect').Pt()
 
-    if not (cl_Et > 25*GeV) : return False
-    if not (e.tightPP) : return False
+    if not (el_cl_Et > 25*GeV) : return False
+    if not (el.tightPP) : return False
 
     return True
 
@@ -719,11 +734,10 @@ def OverlapCheck(event, DoMuonCheck = False, DoElectronCheck = False):
     Check for overlap between object, so that not a single object fires both
     the tau and the lepton requirements
     """
-
     if DoElectronCheck:
-        for e in event.electrons:
+        for el in event.electrons:
             for tau in event.taus:
-                if utils.dR(e.eta, e.phi, tau.eta, tau.phi) > 0.2:
+                if utils.dR(getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi(), tau.eta, tau.phi) > 0.2:
                     return True
                 
     if DoMuonCheck:
@@ -740,8 +754,8 @@ class JetOverlapRemoval(EventFilter):
 
     def passes(self, event):
         """ Remove jets matching muons and electrons """
-        event.jets.select(lambda jet: not any([muon for muon in event.muons if (utils.dR(muon.eta, muon.phi, jet.eta, jet.phi) < 0.2)]))
-        event.jets.select(lambda jet: not any([electron for electron in event.electrons if (utils.dR(electron.eta, electron.phi, jet.eta, jet.phi) < 0.2)]))
+        event.jets.select(lambda jet: not any([mu for mu in event.muons if (utils.dR(mu.eta, mu.phi, jet.eta, jet.phi) < 0.2)]))
+        event.jets.select(lambda jet: not any([el for el in event.electrons if (utils.dR(getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi(), jet.eta, jet.phi) < 0.2)]))
         return True
 
 
@@ -751,7 +765,7 @@ class LeptonOverlapRemoval(EventFilter):
     def passes(self, event):
         """ Remove electrons matching muons """
 
-        event.electrons.select(lambda electron: not any([muon for muon in event.muons if (utils.dR(muon.eta, muon.phi, electron.eta, electron.phi) < 0.2)]))
+        event.electrons.select(lambda el: not any([mu for mu in event.muons if (utils.dR(mu.eta, mu.phi, getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi()) < 0.2)]))
 
         return True
 
@@ -761,8 +775,8 @@ class FinalOverlapRemoval(EventFilter):
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: not any([electron for electron in event.electrons if (utils.dR(electron.eta, electron.phi, tau.eta, tau.phi) < 0.2)]))
-        event.taus.select(lambda tau: not any([muon for muon in event.muons if (utils.dR(muon.eta, muon.phi, tau.eta, tau.phi) < 0.2)]))
+        event.taus.select(lambda tau: not any([el for el in event.electrons if (utils.dR(getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi(), tau.eta, tau.phi) < 0.2)]))
+        event.taus.select(lambda tau: not any([mu for mu in event.muons if (utils.dR(mu.eta, mu.phi, tau.eta, tau.phi) < 0.2)]))
         event.jets.select(lambda jet: not any([tau for tau in event.taus if (utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.2)]))
 
         return len(event.taus) == 1

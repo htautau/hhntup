@@ -8,8 +8,7 @@ from external.Muons     import muonSmear, getMuonSF, muonTriggerSF
 from external.Electrons import egammaER
 from external.ggF       import getggFTool
 from ROOT import *
-
-
+from higgstautau.mixins import *
 
 
 #################################################
@@ -67,11 +66,10 @@ class MuonPtSmearing(EventFilter):
             py_smear = pt_smear*sin(mu.phi)
 
             event.MET_RefFinal_BDTMedium_etx += (px-px_smear)*mu.MET_BDTMedium_wpx[0]
-            event.MET_RefFinal_BDTMedium_ety += (py-py_smear)*mu.MET_BDTMedium_wpx[0]
+            event.MET_RefFinal_BDTMedium_ety += (py-py_smear)*mu.MET_BDTMedium_wpy[0]
             event.MET_RefFinal_BDTMedium_sumet -= (pt-pt_smear)*mu.MET_BDTMedium_wet[0]
 
         return True
-
 
 
 #################################################
@@ -80,7 +78,8 @@ class MuonPtSmearing(EventFilter):
 
 class EgammaERescaling(EventFilter):
     """
-    Rescales the electron energy using the official ATLAS tool
+    Rescales/smeares the electron energy using the official ATLAS tool.
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EnergyScaleResolutionRecommendations
     """
 
     def __init__(self, datatype, **kwargs):
@@ -90,66 +89,64 @@ class EgammaERescaling(EventFilter):
 
     def passes(self, event):
 
-        # Seed with event number, reproducible smear for different analyses
-        egammaER.SetRandomSeed(event.EventNumber)
-
         for el in event.electrons:
 
-            # Obtain egamma raw Et to be corrected
-            raw_e    = el.cl_E
-            trk_eta  = el.tracketa
-            trk_phi  = el.trackphi
-            raw_et   = raw_e/cosh(trk_eta)
-            raw_eta  = el.cl_eta
-            raw_phi  = el.cl_phi
-            corrected_e = -1
+            # Seed with event number, reproducible smear for different analyses
+            egammaER.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(getattr(el,'fourvect').Phi()+pi)*1000000.))
 
-            # Treat MC first
+            raw_e  = el.cl_E
+            raw_et = getattr(el,'fourvect').Pt()
+            corrected_e  = raw_e
+            corrected_et = raw_et
+
+            # Calibration for electrons in the transition region in Data and MC
+            scaleFactorForTransitionRegion = egammaER.applyMCCalibrationMeV(el.cl_eta, raw_et, 'ELECTRON')
+            corrected_e  *= scaleFactorForTransitionRegion
+            corrected_et *= scaleFactorForTransitionRegion
+
             if self.datatype == datasets.MC:
-                #Scaling correction
-                new_et = egammaER.applyMCCalibrationMeV(raw_eta, raw_et, 'ELECTRON')
-                new_e  = new_et*cosh(trk_eta)
-
-                #Smearing correction
+                # Smearing correction in MC
                 sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
-                smearFactor = egammaER.getSmearingCorrectionMeV(raw_eta, new_e, sys, False, '2011')
-
-                corrected_e = new_e*smearFactor
-
-            # Treat Data
+                smearFactor = egammaER.getSmearingCorrectionMeV(el.cl_eta, corrected_e, sys, False, '2011')
+                corrected_e  *= smearFactor
+                corrected_et *= smearFactor
             else:
-                #Calibration correction in data
+                # Calibration correction in Data
                 sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
-                new_e  = egammaER.applyEnergyCorrectionMeV(raw_eta, raw_phi, raw_e, raw_et, sys, 'ELECTRON')
-                new_et = new_e/cosh(trk_eta)
+                scaleFactor = 1
+                if corrected_e > 0:
+                    scaleFactor = egammaER.applyEnergyCorrectionMeV(el.cl_eta, el.cl_phi, corrected_e, corrected_et, sys, 'ELECTRON') / corrected_e
+                corrected_e  *= scaleFactor
+                corrected_et *= scaleFactor
 
-                #Scaling correction
-                scaleFactor = egammaER.applyMCCalibrationMeV(new_e, new_et, 'ELECTRON')
-
-                corrected_e = new_e*scaleFactor
-
-            # Modify E in transient D3PD
-            el.cl_E = corrected_e
-            corrected_et = corrected_e*cosh(trk_eta)
+ 
+            # Modify E and Et in transient D3PD
+            el.cl_E  = corrected_e
+            el.cl_et = corrected_et
             
-            #Adjust MET accordingly
-            px = raw_et*cos(trk_phi)
-            py = raw_et*sin(trk_phi)
+            # Adjust MET accordingly
+            if ((el.nSCTHits + el.nPixHits) < 4):
+                px = raw_et * cos(el.cl_phi)
+                py = raw_et * sin(el.cl_phi)
+                corrected_px = corrected_et * cos(el.cl_phi)
+                corrected_py = corrected_et * sin(el.cl_phi)
+            else:
+                px = raw_et * cos(el.trackphi)
+                py = raw_et * sin(el.trackphi)
+                corrected_px = corrected_et * cos(el.trackphi)
+                corrected_py = corrected_et * sin(el.trackphi)
 
-            corrected_px = corrected_et*cos(trk_phi)
-            corrected_py = corrected_et*sin(trk_phi)
-
-            event.MET_RefFinal_BDTMedium_etx += (px-corrected_px)*el.MET_BDTMedium_wpx[0]
-            event.MET_RefFinal_BDTMedium_ety += (py-corrected_py)*el.MET_BDTMedium_wpx[0]
-            event.MET_RefFinal_BDTMedium_sumet -= (raw_et-corrected_et)*el.MET_BDTMedium_wet[0]
+            event.MET_RefFinal_BDTMedium_etx += ( px - corrected_px ) * el.MET_BDTMedium_wpx[0]
+            event.MET_RefFinal_BDTMedium_ety += ( py - corrected_py ) * el.MET_BDTMedium_wpy[0]
+            event.MET_RefFinal_BDTMedium_sumet -= ( raw_et - corrected_et ) * el.MET_BDTMedium_wet[0]
             
         return True
-
 
 
 #################################################
 # Tau/Electron Misidentification correction
 #################################################
+
 def TauEfficiencySF(event, datatype):
     """
     Apply Tau Efficiency Scale Factor correction
@@ -178,7 +175,6 @@ def TauEfficiencySF(event, datatype):
     return 1.0
 
 
-
 #################################################
 # Muon Efficiency corrections
 #################################################
@@ -187,15 +183,14 @@ def MuonSF(event, datatype, pileup_tool):
     """
     Apply Muon Efficiency correction for trigger and others
     """
-
-    #Weight
-    w = 1.0
-
-    #Load muonSF tool
-    muonSF = getMuonSF(pileup_tool)
-
     # Apply only on MC
     if datatype != datasets.MC: return 1.0
+
+    # Weight
+    w = 1.0
+
+    # Load muonSF tool
+    muonSF = getMuonSF(pileup_tool)
 
     #Store electrons and muons for the trigger efficiency tool
     std_muons     = std.vector(TLorentzVector)()
@@ -220,6 +215,86 @@ def MuonSF(event, datatype, pileup_tool):
 
     return w
     
+
+#################################################
+# Electron Efficiency corrections
+#################################################
+
+def ElectronSF(event, datatype, pileupTool):
+
+    ## Apply only on MC
+    if datatype != datasets.MC: return 1.0
+
+    ## Weight
+    weight = 1.0
+
+    """
+    Electron efficiency correction.
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EfficiencyMeasurements
+    """
+
+    ## Load muonSF tool
+    muonSF = getMuonSF(pileupTool)
+
+    ## Store electrons and muons for the trigger efficiency tool
+    v_muTLVs = std.vector(TLorentzVector)()
+    v_elTLVs = std.vector(TLorentzVector)()
+
+    for mu in event.muons:
+        print "There should not be a muon"
+        muTLV = TLorentzVector()
+        muTLV.SetPtEtaPhiM(mu.pt, mu.eta, mu.phi, mu.m)
+        v_muTLVs.push_back(muTLV)
+        weight *= muonSF.scaleFactor(muTLV)
+
+    for iel, el in enumerate(event.electrons):
+        if iel > 0:
+            print 'WARNING in ElectronSF(): using more than 1 electron in efficiency correction'
+        elTLV = TLorentzVector()
+        pt = getattr(el,'fourvect').Pt()
+        eta = el.cl_eta
+        phi = el.cl_phi
+        E = el.cl_E
+        elTLV.SetPtEtaPhiE(pt,eta,phi,E)
+        v_elTLVs.push_back(elTLV)
+        reconstructionEffCorr = (egammaSF.scaleFactor(el.cl_eta, getattr(el,'fourvect').Pt(), 4, 0, 6, True)).first # track + reco eff SF
+        identificationEffCorr = (egammaSF.scaleFactor(el.cl_eta, getattr(el,'fourvect').Pt(), 7, 0, 6, True)).first # ID eff SF
+        ## We don't use electrons in the forward region, so we don't need to apply SF for them.
+        totalEffCorr = reconstructionEffCorr * identificationEffCorr
+        weight *= totalEffCorr
+
+    """
+    Trigger efficiency correction.
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
+    https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool
+    """
+    if v_muTLVs.size() > 0: print 'WARNING in ElectronSF(): vector of muons is NOT empty'
+    ## From the 
+    ## https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool 
+    ## Twiki: 
+    ## * The RunNumber should be ideally randomly generated using the recommended pileup reweighting tool 
+    ##   to assure close correspondance to actual data run numbers.
+    ## * The vector of muons and electrons should be filled for muons and electrons separately 
+    ##   using ALL good leptons that passed the object selection, not just the trigger matched ones. 
+    ##   Independently of this, the analysis should require that at least one lepton be trigger matched 
+    ##   or else a bias can be introduced (especially for single lepton analyses; the bias decreases 
+    ##   with the number of leptons).
+    ## From the
+    ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
+    ## Twiki:
+    ## * The trigger matching is not applied for this analysis because of missing information in D3PDs.
+    ## From the 
+    ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons 
+    ## Twiki:
+    ## * The trigger matching is not applied for this analysis because of missing information in D3PDs, 
+    ##   but this is a small effect.
+    pileupTool.SetRandomSeed(314159 + event.mc_channel_number*2718 + event.EventNumber)
+    randomRunNumber = pileupTool.GetRandomRunNumber(event.RunNumber)
+    trigSF = (leptonTriggerSF.GetTriggerSF(randomRunNumber, False, v_muTLVs, 1, v_elTLVs, 2)).first
+    weight *= trigSF
+
+    return weight
+
 
 #################################################
 #ggF reweighting
