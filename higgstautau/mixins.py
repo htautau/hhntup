@@ -1,3 +1,4 @@
+import math
 from decorators import cached_property
 from rootpy.math.physics.vector import LorentzVector
 from rootpy.hep import pdg
@@ -79,13 +80,18 @@ class ElFourMomentum(FourMomentum):
     @cached_property
     def fourvect(self):
 
-        e   = self.cl_E
-        eta = self.tracketa
-        phi = self.trackphi
-        et  = e/cosh(eta)
+        if ((self.nSCTHits + self.nPixHits) < 4):
+            print 'Electron with low number of tracks'
+            eta = self.cl_eta
+            phi = self.cl_phi
+            et  = self.cl_et
+        else:
+            eta = self.tracketa
+            phi = self.trackphi
+            et  = self.cl_E / math.cosh(self.tracketa)
 
         vect = LorentzVector()
-        vect.SetPtEtaPhiM(et, eta, phi, self.m)
+        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
         return vect
 
 

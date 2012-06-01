@@ -24,7 +24,7 @@ from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.lephad.filters import *
 from higgstautau.lephad.correctiontools import *
-from higgstautau.filters import PriVertex, JetCleaning, LArError, LArHole
+#from higgstautau.filters import PriVertex, JetCleaning, LArError, LArHole
 from higgstautau import mass
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger import utils as triggerutils
@@ -35,7 +35,7 @@ import subprocess
 
 import random
 
-class muLHProcessor(ATLASStudent):
+class eLHProcessor(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
     """
@@ -62,7 +62,7 @@ class muLHProcessor(ATLASStudent):
         # trigger config tool to read trigger info in the ntuples
         trigger_config = get_trigger_config()
 
-        OutputModel = RecoTauMuBlock + EventVariables + RecoMET
+        OutputModel = RecoTauElectronBlock + TauElectronEventVariables + RecoMET
 
         onfilechange = []
         if self.metadata.datatype == datasets.DATA:
@@ -85,18 +85,17 @@ class muLHProcessor(ATLASStudent):
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
         chain = TreeChain(self.metadata.treename,
-                         files=self.files,
-                         events=self.events,
-                         cache=True,
-                         cache_size=10000000,
-                         learn_entries=30,
-                         onfilechange=onfilechange)
+                          files=self.files,
+                          events=self.events,
+                          cache=True,
+                          cache_size=10000000,
+                          learn_entries=30,
+                          onfilechange=onfilechange)
 
         # create output tree
         self.output.cd()
-        tree_train = Tree(name=self.metadata.name + '_mulh_train', model=OutputModel)
-        tree_test = Tree(name=self.metadata.name + '_mulh_test', model=OutputModel)
-
+        tree_train = Tree(name=self.metadata.name + '_elh_train', model=OutputModel)
+        tree_test = Tree(name=self.metadata.name + '_elh_test', model=OutputModel)
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
@@ -109,39 +108,58 @@ class muLHProcessor(ATLASStudent):
 
         chain.always_read(copied_variables)
 
-        # set the event filters
+        ###########################
+        ## Set the event filters ##
+        ###########################
 
-        Trigger = muMCSLTriggers
-        if self.metadata.datatype == datasets.DATA:
-            Trigger = muSLTriggers
+        # Use single-lepton triggers
+        Trigger = eMCSLTriggers
+        if ( self.metadata.datatype == datasets.DATA ):
+            Trigger = eSLTriggers
 
-        
-
-        
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
-            Trigger(),
-            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            PriVertex(),
-            MuonPtSmearing(datatype=self.metadata.datatype),
-            EgammaERescaling(datatype=self.metadata.datatype),
-            JetPreSelection(),
-            MuonPreSelection(),
-            ElectronPreSelection(),
-            JetOverlapRemoval(),
-            JetCleaning(eta_max = 9999.0),
-            ElectronLArHole(),
-            TauLArHole(),
-            LArHole(datatype=self.metadata.datatype),
-            LArError(),
-            LeptonOverlapRemoval(),
-            DileptonVeto(),
-            MuonSelection(),
-            TauPreSelection(),
-            TauSelection(),
-            JetSelection(),
-            FinalOverlapRemoval()
-        ])
+                SetElectronsFourVector(),
+                # Require the event to fire a single-lepton trigger.
+                Trigger(),
+                GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+                # At least 1 PV (not pile-up vertex) with Ntracks > 3.
+                PriVertex(),
+                MuonPtSmearing(datatype=self.metadata.datatype),
+                EgammaERescaling(datatype=self.metadata.datatype),
+                # Keep only jets with pt > 20 GeV. Keep event.
+                JetPreSelection(),
+                # Keep only muons with pt > 10 GeV, |eta| < 2.5, loose ID, has_good_track. Keep event.
+                MuonPreSelection(),
+                # Keep only electrons with cl_Et > 15 GeV, eta acceptance, medium ID, author. Keep event.
+                ElectronPreSelection(),
+                # Remove jets matching muons or electrons.
+                JetOverlapRemoval(),
+                # Remove bad jets.
+                JetCleaning(eta_max = 9999.0),
+                # Event should not pass if there is an electron in the LArHole region in the corresponding run #'s.
+                ElectronLArHole(),
+                # Event should not pass if there is a tau in the LArHole region in the corresponding run #'s.
+                TauLArHole(),
+                # Event should not pass if there is a jet (with enough high pt) in the LArHole region in the corresponding run #'s.
+                LArHole(datatype=self.metadata.datatype),
+                # Event should not pass if larError flag is > 1.
+                LArError(),
+                # Remove electrons matching muons.
+                LeptonOverlapRemoval(),
+                # There should be only 1 electron or muon.
+                DileptonVeto(),
+                # Remove event if there is not at least one tightPP electron with cl_Et > 25 GeV.
+                ElectronSelection(),
+                # There must be at least one tau with pt > 20 GeV, |eta| < 2.5, numTrack = 1 or 3, BDT medium ID, charge = +/-1, author != 2, EleBDTMedium == 0, muonVeto == 0.
+                TauPreSelection(),
+                # There must be only one tau.
+                TauSelection(),
+                # Keep only jets with pt > 25 GeV, |eta| < 4.5, JVF > 0.75 if |eta| < 2.4.
+                JetSelection(),
+                # Remove taus that overlap with selected muons or electrons, and remove jets that overlap with surviving selected taus.
+                FinalOverlapRemoval()
+                ])
 
         self.filters['event'] = event_filters
 
@@ -159,44 +177,46 @@ class muLHProcessor(ATLASStudent):
 
         # define tree objects
         tree_train.define_object(name='tau', prefix='tau_')
-        tree_train.define_object(name='muon', prefix='muon_')
+        tree_train.define_object(name='electron', prefix='el_')
         tree_test.define_object(name='tau', prefix='tau_')
-        tree_test.define_object(name='muon', prefix='muon_')
+        tree_test.define_object(name='electron', prefix='el_')
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
             pileup_tool = TPileupReweighting()
-            pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)
-            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root')
+            pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)   # <--- Default file, NOT the one generated with the tool
+            #pileup_tool.AddLumiCalcFile('higgstautau/lephad/external/Pileup/ilumicalc_histograms_None_178044-191933_slimmed.root')
+            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root') # <--- "None" ? Shouldn't be with a trigger ?
             # discard unrepresented data (with mu not simulated in MC)
-            pileup_tool.SetUnrepresentedDataAction(1)
+            pileup_tool.SetUnrepresentedDataAction(2)
             pileup_tool.Initialize()
-            print pileup_tool.getIntegratedLumiVector()
-
 
         # entering the main event loop...
-        for event in chain:
+        for event in chain: # <--- the filters are applied at this point; the loop is over events that pass the filters
 
             tree_train.reset()
             tree_test.reset()
             cutflow.reset()
 
-            #Select if the event goes into the training or the testing tree
+            # Select if the event goes into the training or the testing tree
             tree = None
+            #if event.EventNumber % 2 == 0:
+            #    tree = tree_train
+            #else:
+            #    tree = tree_test
             if random.random() < 0.5:
                 tree = tree_train
             else:
                 tree = tree_test
 
-            # Select tau with highest BDT score and surviving muon
+            # Select tau with highest BDT score and surviving electron
             Tau = event.taus[0]
-            Muon = event.muons[0]
+            Electron = event.electrons[0]
 
             """
-            RecoTauMuBlock filling
+            RecoTauElectronBlock filling
             """
-            RecoTauMuBlock.set(event, tree, Tau, Muon)
-
+            RecoTauElectronBlock.set(event, tree, Tau, Electron)
 
             """
             Jets
@@ -215,16 +235,17 @@ class muLHProcessor(ATLASStudent):
             tree.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
                                          (vtx.type == 3 and vtx.nTracks >= 2)])
 
-            HT = 0
 
+            # HT
+            HT = 0
             HT += Tau.fourvect.Pt()
-            HT += Muon.fourvect.Pt()
+            HT += Electron.fourvect.Pt()
             for jet in event.jets:
                 HT += jet.fourvect.Pt()
-
             tree.HT = HT
 
-            #missing ET
+
+            # missing ET
             METx = event.MET_RefFinal_BDTMedium_etx
             METy = event.MET_RefFinal_BDTMedium_ety
             MET_vect = Vector2(METx, METy)
@@ -234,32 +255,30 @@ class muLHProcessor(ATLASStudent):
             sumET = event.MET_RefFinal_BDTMedium_sumet
             tree.MET_sig = (2. * MET_vect.Mod() / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
 
-            #transverse mass
-            muET = Muon.fourvect.Pt()
+            # transverse mass
+            elET = Electron.fourvect.Pt()
             tauET = Tau.fourvect.Pt()
-            muPhiVector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
+            elPhiVector = Vector2(Electron.fourvect.Px(), Electron.fourvect.Py())
             tauPhiVector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
-            dPhi_MET_muon = muPhiVector.DeltaPhi(MET_vect)
+            dPhi_MET_electron = elPhiVector.DeltaPhi(MET_vect)
             dPhi_MET_tau  = tauPhiVector.DeltaPhi(MET_vect)
-            mT = sqrt(2*MET*muET*(1 - cos(dPhi_MET_muon)))
+            mT = sqrt(2*MET*elET*(1 - cos(dPhi_MET_electron)))
             mTtau = sqrt(2*MET*tauET*(1 - cos(dPhi_MET_tau)))
-            tree.mass_transverse_met_muon = mT
+            tree.mass_transverse_met_electron = mT
             tree.mass_transverse_met_tau = mTtau
-            tree.dphi_met_muon = dPhi_MET_muon
+            tree.dphi_met_electron = dPhi_MET_electron
 
-            #ddR
-            tree.ddr_tau_muon, tree.dr_tau_muon, tree.higgs_pt = eventshapes.DeltaDeltaR(Tau.fourvect, Muon.fourvect, MET_vect)
-            
-
+            # ddR
+            tree.ddr_tau_electron, tree.dr_tau_electron, tree.higgs_pt = eventshapes.DeltaDeltaR(Tau.fourvect, Electron.fourvect, MET_vect)
+ 
             """
             Higgs fancier mass calculation
             """
-            collin_mass, tau_x, muon_x = mass.collinearmass(Tau, Muon, METx, METy)
-            tree.mass_collinear_tau_muon = collin_mass
-            tree.tau_x  = tau_x
-            tree.muon_x = muon_x
-            tree.mass_mmc_tau_muon = mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
-
+            collin_mass, tau_x, electron_x = mass.collinearmass(Tau, Electron, METx, METy)
+            tree.mass_collinear_tau_electron = collin_mass
+            tree.tau_x = tau_x
+            tree.electron_x = electron_x
+            tree.mass_mmc_tau_electron = 91#mass.missingmass(Tau, Muon, event.jets, METx, METy, sumET, self.metadata.datatype, 1)
 
 
             """
@@ -267,15 +286,15 @@ class muLHProcessor(ATLASStudent):
             """
 
             tau2Vector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
-            muon2Vector = Vector2(Muon.fourvect.Px(), Muon.fourvect.Py())
+            electron2Vector = Vector2(Electron.fourvect.Px(), Electron.fourvect.Py()) # <--- is the electron cluster Et multiplied by (cos(phi),sin(phi)) where phi is obtained as recommended by EGamma group
 
-            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, muon2Vector, MET_vect)
+            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, electron2Vector, MET_vect)
 
             mass_j1_j2 = -1111
             eta_product_j1_j2 = -1111
             eta_delta_j1_j2 = -1111
             tau_centrality_j1_j2 = -1111
-            muon_centrality_j1_j2 = -1111
+            electron_centrality_j1_j2 = -1111
             tau_j1_j2_phi_centrality = -1111
             sphericity = -1111
             aplanarity = -1111
@@ -296,8 +315,8 @@ class muLHProcessor(ATLASStudent):
                 leadJetPt = event.jets[0].fourvect.Pt()
             tree.leadJetPt = leadJetPt
 
-            PtSum  += (Tau.fourvect.Pt() + Muon.fourvect.Pt())
-            PtSum2 += (Tau.fourvect.Pt()**2 + Muon.fourvect.Pt()**2)
+            PtSum  += (Tau.fourvect.Pt() + Electron.fourvect.Pt())
+            PtSum2 += (Tau.fourvect.Pt()**2 + Electron.fourvect.Pt()**2)
 
             tree.neff_pt = PtSum2/(PtSum**2)
             tree.mass_all_jets = allJets.M()
@@ -317,10 +336,10 @@ class muLHProcessor(ATLASStudent):
                 eta_product_j1_j2 = jet1.Eta() * jet2.Eta()
                 eta_delta_j1_j2 = abs(jet1.Eta() - jet2.Eta())
                 tau_centrality_j1_j2 = eventshapes.eta_centrality(Tau.fourvect.Eta(), jet1.Eta(), jet2.Eta())
-                muon_centrality_j1_j2 = eventshapes.eta_centrality(Muon.fourvect.Eta(), jet1.Eta(), jet2.Eta())
+                electron_centrality_j1_j2 = eventshapes.eta_centrality(Electron.fourvect.Eta(), jet1.Eta(), jet2.Eta())
 
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect,
-                                                                            Muon.fourvect,
+                                                                            Electron.fourvect,
                                                                             jet1,
                                                                             jet2])
 
@@ -329,7 +348,7 @@ class muLHProcessor(ATLASStudent):
             tree.eta_product_j1_j2 = eta_product_j1_j2
             tree.eta_delta_j1_j2 = eta_delta_j1_j2
             tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
-            tree.muon_centrality_j1_j2 = muon_centrality_j1_j2
+            tree.electron_centrality_j1_j2 = electron_centrality_j1_j2
             tree.tau_j1_j2_phi_centrality = tau_j1_j2_phi_centrality
 
             tree.sphericity = sphericity
@@ -339,7 +358,7 @@ class muLHProcessor(ATLASStudent):
 
             event_weight = 1.0
 
-            #Get pileup weight
+            # Get pileup weight
             if self.metadata.datatype == datasets.MC:
                 # set the event pileup weight
                 event_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
@@ -347,18 +366,18 @@ class muLHProcessor(ATLASStudent):
                                                              event.averageIntPerXing)
 
                 # Correct for trigger luminosity in period I-K
-                if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
-                    event_weight *= 0.29186
+                if 185353 <= event.RunNumber <= 187815 and not event.EF_e22_medium:
+                    event_weight *= 0.49528
 
-                #Tau/Electron misidentification correction
+                # Tau/Electron misidentification correction
                 event_weight *= TauEfficiencySF(event, self.metadata.datatype)
 
-                #Muon Scale factors
-                event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
+                # Electron scale factors
+                event_weight *= ElectronSF(event, self.metadata.datatype, pileup_tool)
 
-                #ggF Reweighting
+                # ggF Reweighting
                 event_weight *= ggFreweighting(event, self.metadata.name)
-            
+
             tree.weight = event_weight
 
             # fill output ntuple

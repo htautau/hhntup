@@ -11,6 +11,7 @@ datasets = [
 ]
 
 cluster.run('eLHProcessor.py',
+            db='datasets_elh',
             datasets=datasets,
             hosts=hosts,
             nproc=8,
