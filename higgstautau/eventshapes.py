@@ -78,5 +78,5 @@ def DeltaDeltaR(tau_4vec, lep_4vec, MET_2vec):
     
     dR = tau_4vec.DeltaR(lep_4vec)
 
-    return abs(dR - expecteddR)
+    return abs(dR - expecteddR), dR, TauLepPt
     
