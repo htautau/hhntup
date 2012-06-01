@@ -7,4 +7,3 @@ lhc06
 lhc07
 lhc08
 lhc09
-lhc10

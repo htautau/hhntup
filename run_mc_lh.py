@@ -107,6 +107,7 @@ datasets = [
 ]
 
 cluster.run('muLHProcessor.py',
+            db='datasets_lh',
             datasets=datasets,
             hosts=hosts,
             nproc=8,
