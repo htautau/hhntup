@@ -78,6 +78,8 @@ class EventVariables(TreeModel):
     mass_transverse_met_muon = FloatCol()
     mass_transverse_met_tau = FloatCol()
     ddr_tau_muon = FloatCol()
+    dr_tau_muon = FloatCol()
+    higgs_pt = FloatCol()
 
     
     mass_j1_j2 = FloatCol()

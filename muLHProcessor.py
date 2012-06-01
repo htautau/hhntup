@@ -248,8 +248,7 @@ class muLHProcessor(ATLASStudent):
             tree.dphi_met_muon = dPhi_MET_muon
 
             #ddR
-            ddR = eventshapes.DeltaDeltaR(Tau.fourvect, Muon.fourvect, MET_vect)
-            tree.ddr_tau_muon = ddR
+            tree.ddr_tau_muon, tree.dr_tau_muon, tree.higgs_pt = eventshapes.DeltaDeltaR(Tau.fourvect, Muon.fourvect, MET_vect)
             
 
             """
@@ -259,7 +258,7 @@ class muLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_muon = collin_mass
             tree.tau_x  = tau_x
             tree.muon_x = muon_x
-            tree.mass_mmc_tau_muon = 91#mass.missingmass(Tau, Muon, event.jets, METx, METy, sumET, self.metadata.datatype, 1)
+            tree.mass_mmc_tau_muon = mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
 
 
 
