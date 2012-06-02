@@ -4,8 +4,8 @@ from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
-from external.Muons     import muonSmear, getMuonSF, muonTriggerSF
-from external.Electrons import egammaER
+from external.Muons     import muonSmear, getMuonSF, muonTriggerSF, leptonTriggerSF
+from external.Electrons import egammaER, egammaSF
 from external.ggF       import getggFTool
 from ROOT import *
 from higgstautau.mixins import *
