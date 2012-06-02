@@ -142,8 +142,6 @@ class HHSkim2(ATLASStudent):
                             datatype=self.metadata.datatype,
                             skim=True,
                             tree=tree),
-            TauLeadSublead(lead=35*GeV,
-                           sublead=25*GeV),
         ])
 
         self.filters['event'] = event_filters
