@@ -14,4 +14,4 @@ MC11
 ====
 
 group.phys-higgs.HHSkim.mc11_7TeV*p851.v1/
-group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1/
+group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v1/
