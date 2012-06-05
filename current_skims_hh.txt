@@ -2,7 +2,7 @@ Data11
 ======
 
 user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/
-group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v2/
+group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v3/
 
 Data12
 ======

@@ -350,7 +350,8 @@ class HHSkim(ATLASStudent):
                 outtree.tau_trigger_match_thresh.clear()
 
 
-            if emulated_trigger_passed or trigger_filter(event):
+            if self.metadata.datatype == datasets.EMBED or \
+               emulated_trigger_passed or trigger_filter(event):
 
                 if emulated_trigger_passed:
                     if triggername == 'EF_tau29_medium1_tau20_medium1':
@@ -395,11 +396,13 @@ class HHSkim(ATLASStudent):
                                               tau.pt > 18*GeV and
                                               (tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1))
                 number_of_good_taus = len(event.taus)
-                if (number_of_good_taus > 1 and self.metadata.datatype == datasets.DATA) or self.metadata.datatype == datasets.MC:
+                if (number_of_good_taus > 1 and
+                    (self.metadata.datatype in (datasets.DATA, datasets.EMBED))) \
+                   or self.metadata.datatype == datasets.MC:
                     outtree.number_of_good_vertices = number_of_good_vertices
                     outtree.number_of_good_taus = number_of_good_taus
                     outtree.Fill()
-                else: # data
+                elif self.metadata.datatype == datasets.DATA:
                     outtree_extra.number_of_good_vertices = number_of_good_vertices
                     outtree_extra.number_of_good_taus = number_of_good_taus
                     if event.taus:

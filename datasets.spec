@@ -3,7 +3,7 @@
     local = string(default='')
     grl = string(default='')
     tree = string(default=tau)
-    type = option(DATA, MC, default=MC)
+    type = option(DATA, MC, EMBED, default=MC)
     year = integer(default=11)
     class = option(SIGNAL, BACKGROUND, default=BACKGROUND)
     label = option(TAU, ELEC, MUON, JET, default=TAU)
