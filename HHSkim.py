@@ -175,7 +175,6 @@ branches_keep = [
 class SkimExtraModel(TreeModel):
 
     number_of_good_vertices = IntCol()
-    number_of_good_taus = IntCol()
 
 
 class SkimExtraTauPtModel(TreeModel):
@@ -307,13 +306,17 @@ class HHSkim(ATLASStudent):
             # write out some branches for all events
             # that failed the skim before trigger only for MC
             # Used to get the total pileup reweighting sum
-            outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_trigger',
-                                 file=self.output)
+            if self.metadata.datatype == datasets.MC:
+                outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_trigger',
+                                     file=self.output)
+            else: #embedding
+                outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_selection',
+                                     file=self.output)
             extra_variables = [
-                    'actualIntPerXing',
-                    'averageIntPerXing',
-                    'RunNumber',
-                ]
+                'actualIntPerXing',
+                'averageIntPerXing',
+                'RunNumber',
+            ]
             outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # set the event filters
@@ -400,17 +403,18 @@ class HHSkim(ATLASStudent):
                     (self.metadata.datatype in (datasets.DATA, datasets.EMBED))) \
                    or self.metadata.datatype == datasets.MC:
                     outtree.number_of_good_vertices = number_of_good_vertices
-                    outtree.number_of_good_taus = number_of_good_taus
                     outtree.Fill()
                 elif self.metadata.datatype == datasets.DATA:
                     outtree_extra.number_of_good_vertices = number_of_good_vertices
-                    outtree_extra.number_of_good_taus = number_of_good_taus
                     if event.taus:
                         # There can be at most one good tau if this event failed the skim
                         outtree_extra.tau_pt = event.taus[0].pt
                     else:
                         outtree_extra.tau_pt = -1111.
                     outtree_extra.Fill()
+                elif self.metadata.datatype == datasets.EMBED:
+
+
             elif self.metadata.datatype == datasets.MC:
                 outtree_extra.Fill()
                 if WRITE_ALL:
