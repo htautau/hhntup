@@ -85,7 +85,7 @@ from rootpy.types import *
 from rootpy.io import open as ropen
 from rootpy.plotting import Hist
 
-from higgstautau.mixins import TauFourMomentum
+from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
 import goodruns
 
@@ -194,14 +194,15 @@ class HHSkim(ATLASStudent):
 
     def work(self):
 
-        # merge TrigConfTrees
-        metadirname = '%sMeta' % self.metadata.treename
-        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-        map(trigconfchain.Add, self.files)
-        metadir = self.output.mkdir(metadirname)
-        metadir.cd()
-        trigconfchain.Merge(self.output, -1, 'fast keep')
-        self.output.cd()
+        if self.metadata.datatype != datasets.EMBED:
+            # merge TrigConfTrees
+            metadirname = '%sMeta' % self.metadata.treename
+            trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+            map(trigconfchain.Add, self.files)
+            metadir = self.output.mkdir(metadirname)
+            metadir.cd()
+            trigconfchain.Merge(self.output, -1, 'fast keep')
+            self.output.cd()
 
         if self.metadata.datatype == datasets.DATA:
             # merge GRL XML strings
@@ -327,6 +328,7 @@ class HHSkim(ATLASStudent):
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
+        intree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
 
         nevents = 0
         nevents_mc_weight = 0
@@ -335,6 +337,20 @@ class HHSkim(ATLASStudent):
         for event in intree:
 
             nevents += 1
+
+            if self.metadata.datatype == datasets.EMBED:
+                # fix averageIntPerXing
+                # HACK: stored in pz of mc particle with pdg ID 39
+                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
+                averageIntPerXing = None
+                for p in intree.mc:
+                    if p.pdgId == 39:
+                        averageIntPerXing = p.fourvect.Pz()
+                        break
+                if averageIntPerXing is not None:
+                    event.averageIntPerXing = averageIntPerXing
+                else:
+                    raise ValueError("pdgID 39 not found!")
 
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weight += event.mc_event_weight
@@ -413,7 +429,7 @@ class HHSkim(ATLASStudent):
                         outtree_extra.tau_pt = -1111.
                     outtree_extra.Fill()
                 elif self.metadata.datatype == datasets.EMBED:
-
+                    outtree_extra.Fill()
 
             elif self.metadata.datatype == datasets.MC:
                 outtree_extra.Fill()
