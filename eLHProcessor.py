@@ -224,9 +224,20 @@ class eLHProcessor(ATLASStudent):
             numJets = len(event.jets)
             tree.numJets = numJets
 
+            numJets30 = 0
+            numJets35 = 0
+
             for jet in event.jets:
                 tree.jet_fourvect.push_back(jet.fourvect)
                 tree.jet_jvtxf.push_back(jet.jvtxf)
+                tree.jet_btag.push_back(jet.flavor_weight_JetFitterCOMBNN)
+                if jet.fourvect.Pt() > 30*GeV:
+                    numJets30 += 1
+                    if jet.fourvect.Pt() > 30*GeV:
+                        numJets35 += 1
+
+            tree.numJets30 = numJets30
+            tree.numJets35 = numJets35
 
 
             """
