@@ -120,6 +120,7 @@ class muLHProcessor(ATLASStudent):
         
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
+            SetElectronsFourVector(),
             Trigger(),
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             PriVertex(),
@@ -169,7 +170,7 @@ class muLHProcessor(ATLASStudent):
             pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)
             pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
-            pileup_tool.SetUnrepresentedDataAction(1)
+            pileup_tool.SetUnrepresentedDataAction(2)
             pileup_tool.Initialize()
             print pileup_tool.getIntegratedLumiVector()
 
@@ -204,9 +205,21 @@ class muLHProcessor(ATLASStudent):
             numJets = len(event.jets)
             tree.numJets = numJets
 
+            numJets30 = 0
+            numJets35 = 0
+
             for jet in event.jets:
                 tree.jet_fourvect.push_back(jet.fourvect)
                 tree.jet_jvtxf.push_back(jet.jvtxf)
+                tree.jet_btag.push_back(jet.flavor_weight_JetFitterCOMBNN)
+                if jet.fourvect.Pt() > 30*GeV:
+                    numJets30 += 1
+                    if jet.fourvect.Pt() > 30*GeV:
+                        numJets35 += 1
+
+            tree.numJets30 = numJets30
+            tree.numJets35 = numJets35
+                
 
 
             """
@@ -258,7 +271,7 @@ class muLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_muon = collin_mass
             tree.tau_x  = tau_x
             tree.muon_x = muon_x
-            tree.mass_mmc_tau_muon = mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
+            tree.mass_mmc_tau_muon = 91#mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
 
 
 

@@ -75,8 +75,11 @@ class TauElectronEventVariables(TreeModel):
     dphi_met_electron = FloatCol()
 
     numJets = IntCol()
+    numJets30 = IntCol()
+    numJets35 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
+    jet_btag  = ROOT.vector('float')
     numVertices = IntCol()
     HT = FloatCol()
     cutflow = IntCol()
@@ -121,8 +124,11 @@ class EventVariables(TreeModel):
     dphi_met_muon = FloatCol()
 
     numJets = IntCol()
+    numJets30 = IntCol()
+    numJets35 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
+    jet_btag  = ROOT.vector('float')
     numVertices = IntCol()
     HT = FloatCol()
     cutflow = IntCol()

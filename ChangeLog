@@ -1,3 +1,7 @@
+2012-06-11 Michel Trottier-McDonald <mtm@cern.ch>
+	* Added sample groups for skimming in datasets.cfg
+	* Adding numJets30 and numJets35 to eLHProcessor, as well as btagging variables for jets
+
 2012-05-15 Michel Trottier-McDonald <mtm@cern.ch>
 	* Adapted datasets.py to electron channel
 
