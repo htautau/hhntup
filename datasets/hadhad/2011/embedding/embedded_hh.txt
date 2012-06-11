@@ -1,0 +1,11 @@
+group.phys-higgs.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/
+group.phys-higgs.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0/

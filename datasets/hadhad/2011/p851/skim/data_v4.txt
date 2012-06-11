@@ -112,7 +112,6 @@ user.NoelDawe.HTauSkim.data11_7TeV.00190933.physics_JetTauEtmiss.merge.NTUP_TAUM
 user.NoelDawe.HTauSkim.data11_7TeV.00183412.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851.v4/
 user.NoelDawe.HTauSkim.data11_7TeV.00190300.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f409_m1007_p851.v4/
 user.NoelDawe.HTauSkim.data11_7TeV.00191235.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851.v4/
-user.NoelDawe.HTauSkim.data11_7TeV.physics_JetTauEtmiss.NTUP_TAUMEDIUM.p851.v4/
 user.NoelDawe.HTauSkim.data11_7TeV.00183079.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851.v4/
 user.NoelDawe.HTauSkim.data11_7TeV.00183602.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851.v4/
 user.NoelDawe.HTauSkim.data11_7TeV.00189965.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f406_m991_p851.v4/

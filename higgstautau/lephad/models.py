@@ -88,6 +88,8 @@ class TauElectronEventVariables(TreeModel):
     mass_transverse_met_electron = FloatCol()
     mass_transverse_met_tau = FloatCol()
     ddr_tau_electron = FloatCol()
+    dr_tau_electron = FloatCol()
+    higgs_pt = FloatCol()
 
     mass_j1_j2 = FloatCol()
     eta_product_j1_j2 = FloatCol()

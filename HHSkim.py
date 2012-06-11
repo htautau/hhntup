@@ -85,7 +85,7 @@ from rootpy.types import *
 from rootpy.io import open as ropen
 from rootpy.plotting import Hist
 
-from higgstautau.mixins import TauFourMomentum
+from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
 import goodruns
 
@@ -175,7 +175,6 @@ branches_keep = [
 class SkimExtraModel(TreeModel):
 
     number_of_good_vertices = IntCol()
-    number_of_good_taus = IntCol()
 
 
 class SkimExtraTauPtModel(TreeModel):
@@ -195,14 +194,15 @@ class HHSkim(ATLASStudent):
 
     def work(self):
 
-        # merge TrigConfTrees
-        metadirname = '%sMeta' % self.metadata.treename
-        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-        map(trigconfchain.Add, self.files)
-        metadir = self.output.mkdir(metadirname)
-        metadir.cd()
-        trigconfchain.Merge(self.output, -1, 'fast keep')
-        self.output.cd()
+        if self.metadata.datatype != datasets.EMBED:
+            # merge TrigConfTrees
+            metadirname = '%sMeta' % self.metadata.treename
+            trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+            map(trigconfchain.Add, self.files)
+            metadir = self.output.mkdir(metadirname)
+            metadir.cd()
+            trigconfchain.Merge(self.output, -1, 'fast keep')
+            self.output.cd()
 
         if self.metadata.datatype == datasets.DATA:
             # merge GRL XML strings
@@ -307,13 +307,17 @@ class HHSkim(ATLASStudent):
             # write out some branches for all events
             # that failed the skim before trigger only for MC
             # Used to get the total pileup reweighting sum
-            outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_trigger',
-                                 file=self.output)
+            if self.metadata.datatype == datasets.MC:
+                outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_trigger',
+                                     file=self.output)
+            else: #embedding
+                outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_selection',
+                                     file=self.output)
             extra_variables = [
-                    'actualIntPerXing',
-                    'averageIntPerXing',
-                    'RunNumber',
-                ]
+                'actualIntPerXing',
+                'averageIntPerXing',
+                'RunNumber',
+            ]
             outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
 
         # set the event filters
@@ -324,6 +328,7 @@ class HHSkim(ATLASStudent):
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
+        intree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
 
         nevents = 0
         nevents_mc_weight = 0
@@ -332,6 +337,20 @@ class HHSkim(ATLASStudent):
         for event in intree:
 
             nevents += 1
+
+            if self.metadata.datatype == datasets.EMBED:
+                # fix averageIntPerXing
+                # HACK: stored in pz of mc particle with pdg ID 39
+                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
+                averageIntPerXing = None
+                for p in intree.mc:
+                    if p.pdgId == 39:
+                        averageIntPerXing = p.fourvect.Pz()
+                        break
+                if averageIntPerXing is not None:
+                    event.averageIntPerXing = averageIntPerXing
+                else:
+                    raise ValueError("pdgID 39 not found!")
 
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weight += event.mc_event_weight
@@ -350,7 +369,8 @@ class HHSkim(ATLASStudent):
                 outtree.tau_trigger_match_thresh.clear()
 
 
-            if emulated_trigger_passed or trigger_filter(event):
+            if self.metadata.datatype == datasets.EMBED or \
+               emulated_trigger_passed or trigger_filter(event):
 
                 if emulated_trigger_passed:
                     if triggername == 'EF_tau29_medium1_tau20_medium1':
@@ -395,19 +415,22 @@ class HHSkim(ATLASStudent):
                                               tau.pt > 18*GeV and
                                               (tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1))
                 number_of_good_taus = len(event.taus)
-                if (number_of_good_taus > 1 and self.metadata.datatype == datasets.DATA) or self.metadata.datatype == datasets.MC:
+                if (number_of_good_taus > 1 and
+                    (self.metadata.datatype in (datasets.DATA, datasets.EMBED))) \
+                   or self.metadata.datatype == datasets.MC:
                     outtree.number_of_good_vertices = number_of_good_vertices
-                    outtree.number_of_good_taus = number_of_good_taus
                     outtree.Fill()
-                else: # data
+                elif self.metadata.datatype == datasets.DATA:
                     outtree_extra.number_of_good_vertices = number_of_good_vertices
-                    outtree_extra.number_of_good_taus = number_of_good_taus
                     if event.taus:
                         # There can be at most one good tau if this event failed the skim
                         outtree_extra.tau_pt = event.taus[0].pt
                     else:
                         outtree_extra.tau_pt = -1111.
                     outtree_extra.Fill()
+                elif self.metadata.datatype == datasets.EMBED:
+                    outtree_extra.Fill()
+
             elif self.metadata.datatype == datasets.MC:
                 outtree_extra.Fill()
                 if WRITE_ALL:
