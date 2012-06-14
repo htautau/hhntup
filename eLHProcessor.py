@@ -289,7 +289,10 @@ class eLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_electron = collin_mass
             tree.tau_x = tau_x
             tree.electron_x = electron_x
-            tree.mass_mmc_tau_electron = 91#mass.missingmass(Tau, Muon, event.jets, METx, METy, sumET, self.metadata.datatype, 1)
+            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
+            tree.mass_mmc_tau_electron = mmc_mass
+            tree.pt_mmc_tau_electron = mmc_pt
+            tree.met_mmc_tau_electron = mmc_met
 
 
             """
