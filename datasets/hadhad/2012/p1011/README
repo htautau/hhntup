@@ -1,1 +1,3 @@
 ami list data --project data12_8TeV --type NTUP_TAUMEDIUM --parent-type AOD --grl ../../../grl/2012/data12_8TeV.periodAllYear_DetStatus-v45-pro13_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml p1011 | sed 's/$/\//g' > p1011.txt
+
+for ds in `ami list data --project data12_8TeV --type NTUP_TAUMEDIUM --parent-type AOD p1011 | sed 's/$/_p1015\//g'`; do rucio-ls $ds; done
