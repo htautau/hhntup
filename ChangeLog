@@ -1,3 +1,7 @@
+2012-06-13 Michel Trottier-McDonald <mtm@cern.ch>
+	* Adding MMC kinematics, Resonance Pt and MET for both lephad processors
+	* Adding lists of samples for 2012 lephad skimming
+
 2012-06-11 Michel Trottier-McDonald <mtm@cern.ch>
 	* Added sample groups for skimming in datasets.cfg
 	* Adding numJets30 and numJets35 to eLHProcessor, as well as btagging variables for jets

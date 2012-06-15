@@ -17,10 +17,9 @@ from rootpy.io import open as ropen
 from rootpy.plotting import Hist
 from rootpy.registry import lookup_demotion
 
-from higgstautau.mixins import TauFourMomentum
-from higgstautau.mixins import FourMomentum
+from higgstautau.mixins import TauFourMomentum, ElFourMomentum
 from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
-                                       OverlapCheck #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
+                                       OverlapCheck, SetElectronsFourVector #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
 
 import goodruns
 
@@ -106,11 +105,18 @@ class LHSkim(ATLASStudent):
         # else:
         #     trigger_filter = AnyMCTriggers()
 
+        event_filters = EventFilterList([
+            SetElectronsFourVector()
+        ])
+
+        self.filters['event'] = event_filters
+        intree.filters += event_filters
+
 
         # Define collections for preselection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
-        intree.define_collection(name='electrons', prefix='el_', size='el_n')
+        intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
 
 
         # Cut Flow counters

@@ -271,7 +271,10 @@ class muLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_muon = collin_mass
             tree.tau_x  = tau_x
             tree.muon_x = muon_x
-            tree.mass_mmc_tau_muon = 91#mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
+            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
+            tree.mass_mmc_tau_muon = mmc_mass
+            tree.pt_mmc_tau_muon = mmc_pt
+            tree.met_mmc_tau_muon = mmc_met
 
 
 
