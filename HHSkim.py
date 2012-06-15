@@ -350,7 +350,9 @@ class HHSkim(ATLASStudent):
                 if averageIntPerXing is not None:
                     event.averageIntPerXing = averageIntPerXing
                 else:
-                    raise ValueError("pdgID 39 not found!")
+                    print "pdgID 39 not found! Skipping event..."
+                    nevents -= 1
+                    continue
 
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weight += event.mc_event_weight
