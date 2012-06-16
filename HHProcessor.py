@@ -218,16 +218,14 @@ class HHProcessor(ATLASStudent):
             leading_jets = []
 
             current_channel = CATEGORY_GGF
-            if jets:
-                # leading jet above 50 GeV
-                if jets[0].pt > 50 * GeV:
-                    leading_jets.append(jets[0])
-                    current_channel = CATEGORY_BOOSTED
-                if len(jets) >= 2:
-                    # subleading jet above 30
-                    if jets[1].pt > 30 * GeV:
-                        leading_jets.append(jets[1])
-                        current_channel = CATEGORY_VBF
+            # leading jet above 50 GeV
+            if jets and jets[0].pt > 50 * GeV:
+                leading_jets.append(jets[0])
+                current_channel = CATEGORY_BOOSTED
+                # subleading jet above 30
+                if len(jets) >= 2 and jets[1].pt > 30 * GeV:
+                    leading_jets.append(jets[1])
+                    current_channel = CATEGORY_VBF
             tree.category = current_channel
 
             if current_channel == CATEGORY_VBF: # VBF optimized
@@ -323,7 +321,7 @@ class HHProcessor(ATLASStudent):
             tree.sum_pt = sum([tau1.pt, tau2.pt] +
                               [jet.pt for jet in leading_jets])
             tree.sum_pt_full = sum([tau1.pt, tau2.pt] +
-                                   [jet.pt for jet in event.jets])
+                                   [jet.pt for jet in jets])
 
             # MET
             METx = event.MET_RefFinal_BDTMedium_etx
