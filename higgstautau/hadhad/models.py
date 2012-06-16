@@ -93,6 +93,7 @@ class EventVariables(TreeModel):
     numVertices = IntCol()
     MET = FloatCol()
     MET_phi = FloatCol()
+    MET_mmc = FloatCol()
     HT = FloatCol()
     MET_sig = FloatCol()
     error = BoolCol()
@@ -104,8 +105,15 @@ class EventVariables(TreeModel):
     sphericity = FloatCol()
     aplanarity = FloatCol()
 
+    sphericity_full = FloatCol()
+    aplanarity_full = FloatCol()
+
     sphericity_boosted = FloatCol()
     aplanarity_boosted = FloatCol()
+
+    higgs_pt = FloatCol()
+    sum_pt = FloatCol()
+    sum_pt_full = FloatCol()
 
 
 class RecoJet(TreeModel):
@@ -162,40 +170,43 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
 
     @classmethod
-    def set(cls, tree, jet1, jet2):
-        # the jets should already be sorted by eta
-        # sort by eta
-        # jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect.Eta())
-
-        # determine jet CoM frame
-        beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-        tree.jet_beta.set_from(beta)
-
-        jet1.fourvect_boosted.set_from(jet1.fourvect)
-        jet2.fourvect_boosted.set_from(jet2.fourvect)
-        jet1.fourvect_boosted.Boost(beta * -1)
-        jet2.fourvect_boosted.Boost(beta * -1)
-
-        # sort by transformed eta
-        #jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect_boosted.Eta())
-
-        tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
+    def set(cls, tree, jet1, jet2=None):
 
         tree.jet1_fourvect.set_from(jet1.fourvect)
-        tree.jet2_fourvect.set_from(jet2.fourvect)
-
-        tree.jet1_fourvect_boosted.set_from(jet1.fourvect_boosted)
-        tree.jet2_fourvect_boosted.set_from(jet2.fourvect_boosted)
-
         tree.jet1_jvtxf = jet1.jvtxf
-        tree.jet2_jvtxf = jet2.jvtxf
 
-        tree.dEta_jets = abs(jet1.fourvect.Eta() - jet2.fourvect.Eta())
-        tree.dEta_jets_boosted = abs(jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+        if jet2 is not None:
+            # the jets should already be sorted by eta
+            # sort by eta
+            # jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect.Eta())
 
-        tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
-        tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
-                                         jet2.fourvect_boosted.Eta())
+            # determine jet CoM frame
+            beta = (jet1.fourvect + jet2.fourvect).BoostVector()
+            tree.jet_beta.set_from(beta)
+
+            jet1.fourvect_boosted.set_from(jet1.fourvect)
+            jet2.fourvect_boosted.set_from(jet2.fourvect)
+            jet1.fourvect_boosted.Boost(beta * -1)
+            jet2.fourvect_boosted.Boost(beta * -1)
+
+            # sort by transformed eta
+            #jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect_boosted.Eta())
+
+            tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
+
+            tree.jet2_fourvect.set_from(jet2.fourvect)
+
+            tree.jet1_fourvect_boosted.set_from(jet1.fourvect_boosted)
+            tree.jet2_fourvect_boosted.set_from(jet2.fourvect_boosted)
+
+            tree.jet2_jvtxf = jet2.jvtxf
+
+            tree.dEta_jets = abs(jet1.fourvect.Eta() - jet2.fourvect.Eta())
+            tree.dEta_jets_boosted = abs(jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+
+            tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
+            tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
+                                             jet2.fourvect_boosted.Eta())
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')):
