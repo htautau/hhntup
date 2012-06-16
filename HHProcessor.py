@@ -320,6 +320,10 @@ class HHProcessor(ATLASStudent):
 
             # Jet variables
             tree.numJets = len(event.jets)
+            tree.sum_pt = sum([tau1.pt, tau2.pt] +
+                              [jet.pt for jet in leading_jets])
+            tree.sum_pt_full = sum([tau1.pt, tau2.pt] +
+                                   [jet.pt for jet in event.jets])
 
             # MET
             METx = event.MET_RefFinal_BDTMedium_etx
