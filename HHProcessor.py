@@ -149,7 +149,9 @@ class HHProcessor(ATLASStudent):
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
                             year=YEAR,
-                            datatype=self.metadata.datatype),
+                            datatype=self.metadata.datatype,
+                            skim=False,
+                            tree=tree),
             TauLeadSublead(lead=35*GeV,
                            sublead=25*GeV),
         ])
