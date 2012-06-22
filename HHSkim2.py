@@ -44,14 +44,15 @@ class HHSkim2(ATLASStudent):
 
     def work(self):
 
-        # merge TrigConfTrees
-        metadirname = '%sMeta' % self.metadata.treename
-        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-        map(trigconfchain.Add, self.files)
-        metadir = self.output.mkdir(metadirname)
-        metadir.cd()
-        trigconfchain.Merge(self.output, -1, 'fast keep')
-        self.output.cd()
+        if self.metadata.datatype != datasets.EMBED:
+            # merge TrigConfTrees
+            metadirname = '%sMeta' % self.metadata.treename
+            trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+            map(trigconfchain.Add, self.files)
+            metadir = self.output.mkdir(metadirname)
+            metadir.cd()
+            trigconfchain.Merge(self.output, -1, 'fast keep')
+            self.output.cd()
 
         # merge the cutflow hists from the first skim
         cutflow = None
@@ -85,19 +86,25 @@ class HHSkim2(ATLASStudent):
             self.output.cd()
         else:
             # merge outtree_extras from the first skim
-            extra_trees = ROOT.TChain(self.metadata.treename +
+            if self.metadata.datatype == datasets.MC:
+                extra_trees = ROOT.TChain(self.metadata.treename +
                                       '_failed_skim_before_trigger')
+            else: #embedding
+                extra_trees = ROOT.TChain(self.metadata.treename +
+                                      '_failed_skim_before_selection')
             map(extra_trees.Add, self.files)
             extra_trees.Merge(self.output, -1, 'fast keep')
             self.output.cd()
 
         onfilechange = []
+        trigger_config = None
 
-        # trigger config tool to read trigger info in the ntuples
-        trigger_config = get_trigger_config()
+        if self.metadata.datatype != datasets.EMBED:
+            # trigger config tool to read trigger info in the ntuples
+            trigger_config = get_trigger_config()
 
-        # update the trigger config maps on every file change
-        onfilechange.append((update_trigger_config, (trigger_config,)))
+            # update the trigger config maps on every file change
+            onfilechange.append((update_trigger_config, (trigger_config,)))
 
         # initialize the TreeChain of all input files
         chain = TreeChain(self.metadata.treename,
