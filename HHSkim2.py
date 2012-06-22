@@ -121,7 +121,8 @@ class HHSkim2(ATLASStudent):
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             Triggers(datatype=self.metadata.datatype,
                      year=YEAR,
-                     skim=False),
+                     skim=False,
+                     passthrough=self.metadata.datatype == datasets.EMBED),
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
@@ -141,7 +142,8 @@ class HHSkim2(ATLASStudent):
                             year=YEAR,
                             datatype=self.metadata.datatype,
                             skim=True,
-                            tree=tree),
+                            tree=tree,
+                            passthrough=self.metadata.datatype == datasets.EMBED),
         ])
 
         self.filters['event'] = event_filters
@@ -186,6 +188,10 @@ class HHSkim2(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
+            if self.metadata.datatype == datasets.EMBED:
+                # select two leading taus by pT
+                event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+                event.taus.slice(stop=2)
             assert len(event.taus) == 2
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
