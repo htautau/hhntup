@@ -25,7 +25,7 @@ Embedding11
 ===========
 
 group.phys-higgs.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1/
-
+group.phys-higgs.HHSkim2.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1.v1/
 
 Embedding12
 ===========
