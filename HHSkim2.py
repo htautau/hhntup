@@ -22,7 +22,6 @@ import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 VALIDATE = False
-YEAR = 2011
 
 
 class TriggerMatching(TreeModel):
@@ -127,7 +126,7 @@ class HHSkim2(ATLASStudent):
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             Triggers(datatype=self.metadata.datatype,
-                     year=YEAR,
+                     year=self.metadata.year,
                      skim=False,
                      passthrough=self.metadata.datatype == datasets.EMBED),
             PriVertex(),
@@ -146,7 +145,7 @@ class HHSkim2(ATLASStudent):
             TauLArHole(),
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
-                            year=YEAR,
+                            year=self.metadata.year,
                             datatype=self.metadata.datatype,
                             skim=True,
                             tree=tree,
