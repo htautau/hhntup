@@ -124,7 +124,7 @@ class HHSkim2(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA or self.metadata.year == 2012),
             Triggers(datatype=self.metadata.datatype,
                      year=self.metadata.year,
                      skim=False,
