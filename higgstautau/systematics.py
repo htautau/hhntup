@@ -3,6 +3,7 @@ Adapted from the Example.C in MissingETUtility/macros
 """
 # stdlib Python imports
 import sys
+from math import sin
 
 # ROOT imports
 import ROOT
@@ -344,6 +345,9 @@ class Systematic(EventFilter):
                     if vertex.nTracks > 1:
                         nvtxjets += 1
 
+        """
+        JET SYSTEMATICS
+        """
         # First, we get the jet energy scale uncertainties and
         # systematic variation in the jet resolutions
         jesUp = ROOT.vector('float')()
@@ -444,6 +448,9 @@ class Systematic(EventFilter):
 
         del jetRandom
 
+        """
+        ELECTRON SYSTEMATICS
+        """
         # Here we get the electron energy scale and resolution systematics
         eesUp = ROOT.vector('float')()
         eesDown = ROOT.vector('float')()
@@ -451,35 +458,49 @@ class Systematic(EventFilter):
         eerDown = ROOT.vector('float')()
         el_smeared_pt = ROOT.vector('float')()
 
-        for el in event.electrons:
+        for iel, el in enumerate(event.electrons):
 
             self.egammaTool.SetRandomSeed(int(1e5*abs(el.phi)))
 
             # Smear to match the data resolution, or by systematic variations
-            smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, True)
-            smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, True)
-            smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, True)
+            smear = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 0, True)
+            smearUp = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 2, True)
+            smearDown = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 1, True)
 
-            el_smeared_pt.push_back(smear*el_pt.at(iEl))
-            eerUp.push_back((smearUp - smear)/smear)
-            eerDown.push_back((smearDown - smear)/smear)
+            el_smeared_pt.push_back(smear * el.pt)
+            eerUp.push_back((smearUp - smear) / smear)
+            eerDown.push_back((smearDown - smear) / smear)
 
             # Correct the measured energies in data, and scale by systematic variations
             correction = 1.
             if isData:
-                correction = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                    el_E.at(iEl),el_cl_pt.at(iEl),0,"ELECTRON") / el_E.at(iEl)
+                correction = self.egammaTool.applyEnergyCorrectionMeV(
+                        el.cl_eta,
+                        el.cl_phi,
+                        el.E,
+                        el.cl_pt,
+                        0,"ELECTRON") / el.E
 
-            el_smeared_pt.at(iEl)*= correction
-            energyUp = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                el_E.at(iEl),el_cl_pt.at(iEl),2,"ELECTRON") / (correction*el_E.at(iEl)) - 1
-            energyDown = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                  el_E.at(iEl),el_cl_pt.at(iEl),1,"ELECTRON") / (correction*el_E.at(iEl)) - 1
+            el_smeared_pt.at(iel) *= correction
+            energyUp = self.egammaTool.applyEnergyCorrectionMeV(
+                    el.cl_eta,
+                    el.cl_phi,
+                    el.E,
+                    el.cl_pt,
+                    2,"ELECTRON") / (correction * el.E) - 1
+            energyDown = self.egammaTool.applyEnergyCorrectionMeV(
+                    el.cl_eta,
+                    el.cl_phi,
+                    el.E,
+                    el.cl_pt,
+                    1,"ELECTRON") / (correction * el.E) - 1
 
             eesUp.push_back(energyUp)
             eesDown.push_back(energyDown)
 
-
+        """
+        PHOTON SYSTEMATICS
+        """
         # Now we get the same for photons
         pesUp = ROOT.vector('float')()
         pesDown = ROOT.vector('float')()
@@ -487,34 +508,51 @@ class Systematic(EventFilter):
         perDown = ROOT.vector('float')()
         ph_smeared_pt = ROOT.vector('float')()
 
-        for (unsigned int iPh = 0; iPh < ph_pt.size(); ++iPh) {
+        for iph, ph in enumerate(event.photons):
 
-            self.egammaTool.SetRandomSeed(int(1.e+5*fabs(ph_phi.at(iPh))))
+            self.egammaTool.SetRandomSeed(int(1e5*abs(ph.phi)))
 
             # Smear to match the data resolution, or by systematic variations
-            smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, True)
-            smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, True)
-            smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, True)
+            smear = self.egammaTool.getSmearingCorrectionMeV(ph.cl_eta, ph.E, 0, True)
+            smearUp = self.egammaTool.getSmearingCorrectionMeV(ph.cl_eta, ph.E, 2, True)
+            smearDown = self.egammaTool.getSmearingCorrectionMeV(ph.cl_eta, ph.E, 1, True)
 
-            ph_smeared_pt.push_back(smear*ph_pt.at(iPh))
-            perUp.push_back((smearUp - smear)/smear)
-            perDown.push_back((smearDown - smear)/smear)
+            ph_smeared_pt.push_back(smear * ph.pt)
+            perUp.push_back((smearUp - smear) / smear)
+            perDown.push_back((smearDown - smear) / smear)
 
             # Correct the measured energies in data, and scale by systematic variations
             # Conversions are treated differently.
             correction = 1.
-            photontype = "CONVERTED_PHOTON" if ph_isConv.at(iPh) else "UNCONVERTED_PHOTON"
+            photontype = "CONVERTED_PHOTON" if ph.isConv else "UNCONVERTED_PHOTON"
             if isData:
-                correction = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),ph_E.at(iPh),ph_cl_pt.at(iPh),0,photontype) / ph_E.at(iPh)
-            ph_smeared_pt.at(iPh) *= correction
-            energyUp = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
-                                  ph_E.at(iPh),ph_cl_pt.at(iPh),2,photontype) / (correction*ph_E.at(iPh)) - 1
-            energyDown = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
-                                  ph_E.at(iPh),ph_cl_pt.at(iPh),1,photontype) / (correction*ph_E.at(iPh)) - 1
+                correction = self.egammaTool.applyEnergyCorrectionMeV(
+                        ph.cl_eta,
+                        ph.cl_phi,
+                        ph.E,
+                        ph.cl_pt,
+                        0,photontype) / ph.E
+
+            ph_smeared_pt.at(iph) *= correction
+            energyUp = self.egammaTool.applyEnergyCorrectionMeV(
+                    ph.cl_eta,
+                    ph.cl_phi,
+                    ph.E,
+                    ph.cl_pt,
+                    2,photontype) / (correction * ph.E) - 1
+            energyDown = self.egammaTool.applyEnergyCorrectionMeV(
+                    ph.cl_eta,
+                    ph.cl_phi,
+                    ph.E,
+                    ph.cl_pt,
+                    1,photontype) / (correction * ph.E) - 1
 
             pesUp.push_back(energyUp)
             pesDown.push_back(energyDown)
 
+        """
+        MUON SYSTEMATICS
+        """
         # And now the same for muons. We need resolution shifts for ID and MS,
         # and different treatment for the MS four-vector (for standalone muons).
         mu_smeared_pt = ROOT.vector('float')()
@@ -530,18 +568,18 @@ class Systematic(EventFilter):
         mesUp = ROOT.vector('float')()
         mesDown = ROOT.vector('float')()
 
-        for muon in event.muons:
+        for mu in event.muons:
 
-            ptcb = mu_pt.at(iMu)
-            ptid = (mu_id_qoverp_exPV.at(iMu) != 0.) ? fabs(sin(mu_id_theta_exPV.at(iMu))/mu_id_qoverp_exPV.at(iMu)) : 0.
-            ptms = (mu_ms_qoverp.at(iMu) != 0.) ? fabs(sin(mu_ms_theta.at(iMu))/mu_ms_qoverp.at(iMu)) : 0.
-            self.muonTool.SetSeed(int(1.e+5*fabs(mu_phi.at(iMu))))
-            etaMu = mu_eta.at(iMu)
-            charge = mu_charge.at(iMu)
+            ptcb = mu.pt
+            ptid = (mu.id_qoverp_exPV != 0.) ? abs(sin(mu.id_theta_exPV)/mu.id_qoverp_exPV) : 0.
+            ptms = (mu.ms_qoverp != 0.) ? abs(sin(mu.ms_theta)/mu.ms_qoverp) : 0.
+            self.muonTool.SetSeed(int(1.e+5*fabs(mu.phi)))
+            etaMu = mu.eta
+            charge = mu.charge
             self.muonTool.Event(ptms, ptid, ptcb, etaMu, charge)
 
             smearedCombinedPt = self.muonTool.pTCB()
-            if not mu_isCombinedMuon.at(iMu):
+            if not mu.isCombinedMuon:
                 smearedCombinedPt = self.muonTool.pTMS() + self.muonTool.pTID()
 
             smearedMSPt = self.muonTool.pTMS()
@@ -549,9 +587,10 @@ class Systematic(EventFilter):
             mu_smeared_ms_pt.push_back(smearedMSPt)
             mu_smeared_pt.push_back(smearedCombinedPt)
 
-            double ptMS_smeared, ptID_smeared, ptCB_smeared
-            float smearedpTMS, smearedpTID, smearedpTCB
-            smearedpTMS = 0.1; smearedpTID = 0.1; smearedpTCB = 0.1
+            smearedpTMS = 0.1
+            smearedpTID = 0.1
+            smearedpTCB = 0.1
+
             self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSLOW")
             smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
             smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
@@ -576,20 +615,24 @@ class Systematic(EventFilter):
             mesUp.push_back(scalesyst)
             mesDown.push_back(-scalesyst)
 
+        """
+        TAU SYSTEMATICS
+        """
         tesUp = ROOT.vector('float')()
         tesDown = ROOT.vector('float')()
 
         # And for taus (this is test code, do not use without tau group approval)
-        for int iTau=0; iTau<tau_n; iTau++:
-            double pt = tau_pt.at(iTau)
-            double eta = tau_eta.at(iTau)
-            int nProng = tau_nProng.at(iTau)
-            double uncert = self.tesTool.GetTESUncertainty(pt/1e3, eta, nProng)
-
+        for tau in event.taus:
+            pt = tau.pt
+            eta = tau.eta
+            nProng = tau.nProng
+            double uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
             if uncert < 0:
                 uncert = 0
             tesUp.push_back(uncert)
-            tesDown.push_back(-1*uncert)
+            tesDown.push_back(-1 * uncert)
+
+
 
         # This demonstration is for doing smearing and systematics
         self.systUtil.reset()
