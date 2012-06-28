@@ -238,16 +238,16 @@ class Systematic(EventFilter):
         # Usually, comparing etx and/or ety is more informative, because et could be right if
         # etx and ety were flipped, for example. They also add linearly, which et doesn't.
 
-        METObject RefEle_util = self.testUtil.getMissingET(METUtil::RefEle)
-        METObject RefGamma_util = self.testUtil.getMissingET(METUtil::RefGamma)
-        METObject RefTau_util = self.testUtil.getMissingET(METUtil::RefTau)
-        METObject RefMuon_util = self.testUtil.getMissingET(METUtil::RefMuon)
-        METObject RefJet_util = self.testUtil.getMissingET(METUtil::RefJet)
-        METObject SoftJets_util = self.testUtil.getMissingET(METUtil::SoftJets)
-        #      METObject refCellOut_util = self.testUtil.getMissingET(METUtil::CellOut)
-        METObject CellOutEflow_util = self.testUtil.getMissingET(METUtil::CellOutEflow)
-        METObject MuonTotal_util = self.testUtil.getMissingET(METUtil::MuonTotal)
-        METObject RefFinal_util = self.testUtil.getMissingET(METUtil::RefFinal)
+        RefEle_util = self.testUtil.getMissingET(METUtil.RefEle)
+        RefGamma_util = self.testUtil.getMissingET(METUtil.RefGamma)
+        RefTau_util = self.testUtil.getMissingET(METUtil.RefTau)
+        RefMuon_util = self.testUtil.getMissingET(METUtil.RefMuon)
+        RefJet_util = self.testUtil.getMissingET(METUtil.RefJet)
+        SoftJets_util = self.testUtil.getMissingET(METUtil.SoftJets)
+        #refCellOut_util = self.testUtil.getMissingET(METUtil.CellOut)
+        CellOutEflow_util = self.testUtil.getMissingET(METUtil.CellOutEflow)
+        MuonTotal_util = self.testUtil.getMissingET(METUtil.MuonTotal)
+        RefFinal_util = self.testUtil.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
             print >> self.stream, "** Manual consistency check **" << endl
@@ -270,7 +270,7 @@ class Systematic(EventFilter):
         refFinal_test = METObject(MET_RefFinal_etx,
                   MET_RefFinal_ety,
                   MET_RefFinal_sumet)
-        check_refFinal = self.testUtil.checkConsistency(refFinal_test,METUtil::RefFinal)
+        check_refFinal = self.testUtil.checkConsistency(refFinal_test,METUtil.RefFinal)
         if check_refFinal:
             print >> self.stream, "RefFinal checks out!"
         else:
@@ -386,138 +386,135 @@ class Systematic(EventFilter):
               }
             }
 
-        # The bool is the "isPos" argument
-        jesShiftUp = self.jesTool.getRelUncert(jet_pt.at(iJet),
-                         jet_eta.at(iJet),drmin,
-                         True, nvtxjets, averageIntPerXing)
-        jesShiftDown = -1*self.jesTool.getRelUncert(jet_pt.at(iJet),
-                          jet_eta.at(iJet),drmin,
-                          False, nvtxjets, averageIntPerXing)
-        }
-        jesUp.push_back(jesShiftUp)
-        jesDown.push_back(jesShiftDown)
+            # The bool is the "isPos" argument
+            jesShiftUp = self.jesTool.getRelUncert(jet_pt.at(iJet),
+                             jet_eta.at(iJet),drmin,
+                             True, nvtxjets, averageIntPerXing)
+            jesShiftDown = -1*self.jesTool.getRelUncert(jet_pt.at(iJet),
+                              jet_eta.at(iJet),drmin,
+                              False, nvtxjets, averageIntPerXing)
+            jesUp.push_back(jesShiftUp)
+            jesDown.push_back(jesShiftDown)
 
-        # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
-        if(jet_pt.at(iJet) > 20e3 && jet_pt.at(iJet) < 5000e3){
-            double pt = jet_pt.at(iJet)
-            double eta = jet_eta.at(iJet)
-            if(fabs(eta)>4.5) eta = eta>0 ? 4.49 : -4.49
+            # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
+            if(jet_pt.at(iJet) > 20e3 && jet_pt.at(iJet) < 5000e3){
+                double pt = jet_pt.at(iJet)
+                double eta = jet_eta.at(iJet)
+                if(fabs(eta)>4.5) eta = eta>0 ? 4.49 : -4.49
 
-            double S = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-            double U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-            double smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
+                double S = self.jerTool.getRelResolutionMC(pt/1e3,eta)
+                double U = self.jerTool.getResolutionUncert(pt/1e3,eta)
+                double smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
 
-            # You can set the seed however you like, but if reproducibility
-            # is required, setting it to something like object phi ensures
-            # a good mix of randomness and reproducibility.
-            jetRandom.SetSeed(int(1.e5*jet_phi.at(iJet)))
-            jerShift = jetRandom.Gaus(0, smearingFactorSyst)
-        }
+                # You can set the seed however you like, but if reproducibility
+                # is required, setting it to something like object phi ensures
+                # a good mix of randomness and reproducibility.
+                jetRandom.SetSeed(int(1.e5*jet_phi.at(iJet)))
+                jerShift = jetRandom.Gaus(0, smearingFactorSyst)
+            }
 
-        jerUp.push_back(jerShift)
-        jerDown.push_back(-1*jerShift); # Usually not used, see below.
+            jerUp.push_back(jerShift)
+            jerDown.push_back(-1*jerShift); # Usually not used, see below.
 
-        ###################################
-        # Note: The JERDown shift is essentially meaningless.
-        # If one is smearing central values, then there is an alternate
-        # definition, i.e. from r16:
-        #
-        # S = self.jerTool.getRelResolutionData(pt/1e3,eta)
-        # SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-        # U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-        # smearingFactorMC = sqrt( S*S - SMC*SMC )
-        # smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
-        # smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
-        #
-        # float jerShift = jetRandom.Gaus(1,smearingFactorMC)
-        # float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
-        # float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
-        #
-        # jet_smeared_pt = pt*jerShift
-        # jerUp.push_back(jerShiftUp-1)
-        # jerDown.push_back(jerShiftDown-1)
-        #
-        # This means that we smear the MC jets to match the resolution in data
-        # for central values, or the resolution +/- uncertainty.
-        # The standard practice is only to use res + uncertainty.
-        #
-        ###################################
+            ###################################
+            # Note: The JERDown shift is essentially meaningless.
+            # If one is smearing central values, then there is an alternate
+            # definition, i.e. from r16:
+            #
+            # S = self.jerTool.getRelResolutionData(pt/1e3,eta)
+            # SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
+            # U = self.jerTool.getResolutionUncert(pt/1e3,eta)
+            # smearingFactorMC = sqrt( S*S - SMC*SMC )
+            # smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
+            # smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
+            #
+            # float jerShift = jetRandom.Gaus(1,smearingFactorMC)
+            # float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
+            # float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
+            #
+            # jet_smeared_pt = pt*jerShift
+            # jerUp.push_back(jerShiftUp-1)
+            # jerDown.push_back(jerShiftDown-1)
+            #
+            # This means that we smear the MC jets to match the resolution in data
+            # for central values, or the resolution +/- uncertainty.
+            # The standard practice is only to use res + uncertainty.
+            #
+            ###################################
 
-        }#end of jet loop
-
-        delete jetRandom
+        del jetRandom
 
         # Here we get the electron energy scale and resolution systematics
-        vector<float> eesUp
-        vector<float> eesDown
-        vector<float> eerUp
-        vector<float> eerDown
-        vector<float> *el_smeared_pt = new vector<float>
+        eesUp = ROOT.vector('float')()
+        eesDown = ROOT.vector('float')()
+        eerUp = ROOT.vector('float')()
+        eerDown = ROOT.vector('float')()
+        el_smeared_pt = ROOT.vector('float')()
 
         for (unsigned int iEl = 0; iEl < el_pt.size(); ++iEl) {
 
-        self.egammaTool.SetRandomSeed(int(1e5*fabs(el_phi.at(iEl))))
+            self.egammaTool.SetRandomSeed(int(1e5*fabs(el_phi.at(iEl))))
 
-        # Smear to match the data resolution, or by systematic variations
-        float smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, True)
-        float smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, True)
-        float smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, True)
+            # Smear to match the data resolution, or by systematic variations
+            float smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, True)
+            float smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, True)
+            float smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, True)
 
-        el_smeared_pt.push_back(smear*el_pt.at(iEl))
-        eerUp.push_back((smearUp - smear)/smear)
-        eerDown.push_back((smearDown - smear)/smear)
+            el_smeared_pt.push_back(smear*el_pt.at(iEl))
+            eerUp.push_back((smearUp - smear)/smear)
+            eerDown.push_back((smearDown - smear)/smear)
 
-        # Correct the measured energies in data, and scale by systematic variations
-        float correction = 1.
-        if(isData)
-          correction = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                el_E.at(iEl),el_cl_pt.at(iEl),0,"ELECTRON") / el_E.at(iEl)
-        el_smeared_pt.at(iEl)*= correction
-        double energyUp = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                   el_E.at(iEl),el_cl_pt.at(iEl),2,"ELECTRON") / (correction*el_E.at(iEl)) - 1
-        double energyDown = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                     el_E.at(iEl),el_cl_pt.at(iEl),1,"ELECTRON") / (correction*el_E.at(iEl)) - 1
+            # Correct the measured energies in data, and scale by systematic variations
+            correction = 1.
+            if isData:
+                correction = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
+                                    el_E.at(iEl),el_cl_pt.at(iEl),0,"ELECTRON") / el_E.at(iEl)
 
-        eesUp.push_back(energyUp)
-        eesDown.push_back(energyDown)
+            el_smeared_pt.at(iEl)*= correction
+            double energyUp = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
+                                       el_E.at(iEl),el_cl_pt.at(iEl),2,"ELECTRON") / (correction*el_E.at(iEl)) - 1
+            double energyDown = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
+                                         el_E.at(iEl),el_cl_pt.at(iEl),1,"ELECTRON") / (correction*el_E.at(iEl)) - 1
+
+            eesUp.push_back(energyUp)
+            eesDown.push_back(energyDown)
         } #end of electron loop
 
 
         # Now we get the same for photons
-        vector<float> pesUp
-        vector<float> pesDown
-        vector<float> perUp
-        vector<float> perDown
-        vector<float> *ph_smeared_pt = new vector<float>
+        pesUp = ROOT.vector('float')()
+        pesDown = ROOT.vector('float')()
+        perUp = ROOT.vector('float')()
+        perDown = ROOT.vector('float')()
+        ph_smeared_pt = ROOT.vector('float')()
 
         for (unsigned int iPh = 0; iPh < ph_pt.size(); ++iPh) {
 
-        self.egammaTool.SetRandomSeed(int(1.e+5*fabs(ph_phi.at(iPh))))
+            self.egammaTool.SetRandomSeed(int(1.e+5*fabs(ph_phi.at(iPh))))
 
-        # Smear to match the data resolution, or by systematic variations
-        float smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, True)
-        float smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, True)
-        float smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, True)
+            # Smear to match the data resolution, or by systematic variations
+            float smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, True)
+            float smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, True)
+            float smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, True)
 
-        ph_smeared_pt.push_back(smear*ph_pt.at(iPh))
-        perUp.push_back((smearUp - smear)/smear)
-        perDown.push_back((smearDown - smear)/smear)
+            ph_smeared_pt.push_back(smear*ph_pt.at(iPh))
+            perUp.push_back((smearUp - smear)/smear)
+            perDown.push_back((smearDown - smear)/smear)
 
-        # Correct the measured energies in data, and scale by systematic variations
-        # Conversions are treated differently.
-        float correction = 1.
-        string photontype = ph_isConv.at(iPh) ? "CONVERTED_PHOTON" : "UNCONVERTED_PHOTON"
-        if(isData)
-          correction = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),ph_E.at(iPh),ph_cl_pt.at(iPh),0,photontype) / ph_E.at(iPh)
-        ph_smeared_pt.at(iPh)*= correction
-        double energyUp = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
-                                     ph_E.at(iPh),ph_cl_pt.at(iPh),2,photontype) / (correction*ph_E.at(iPh)) - 1
-        double energyDown = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
-                                       ph_E.at(iPh),ph_cl_pt.at(iPh),1,photontype) / (correction*ph_E.at(iPh)) - 1
+            # Correct the measured energies in data, and scale by systematic variations
+            # Conversions are treated differently.
+            float correction = 1.
+            string photontype = ph_isConv.at(iPh) ? "CONVERTED_PHOTON" : "UNCONVERTED_PHOTON"
+            if(isData)
+              correction = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),ph_E.at(iPh),ph_cl_pt.at(iPh),0,photontype) / ph_E.at(iPh)
+            ph_smeared_pt.at(iPh)*= correction
+            double energyUp = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
+                                         ph_E.at(iPh),ph_cl_pt.at(iPh),2,photontype) / (correction*ph_E.at(iPh)) - 1
+            double energyDown = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
+                                           ph_E.at(iPh),ph_cl_pt.at(iPh),1,photontype) / (correction*ph_E.at(iPh)) - 1
 
-        pesUp.push_back(energyUp)
-        pesDown.push_back(energyDown)
-        }#end of photon loop
+            pesUp.push_back(energyUp)
+            pesDown.push_back(energyDown)
 
         # And now the same for muons. We need resolution shifts for ID and MS,
         # and different treatment for the MS four-vector (for standalone muons).
