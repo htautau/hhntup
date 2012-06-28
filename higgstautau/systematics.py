@@ -451,14 +451,14 @@ class Systematic(EventFilter):
         eerDown = ROOT.vector('float')()
         el_smeared_pt = ROOT.vector('float')()
 
-        for (unsigned int iEl = 0; iEl < el_pt.size(); ++iEl) {
+        for el in event.electrons:
 
-            self.egammaTool.SetRandomSeed(int(1e5*fabs(el_phi.at(iEl))))
+            self.egammaTool.SetRandomSeed(int(1e5*abs(el.phi)))
 
             # Smear to match the data resolution, or by systematic variations
-            float smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, True)
-            float smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, True)
-            float smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, True)
+            smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, True)
+            smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, True)
+            smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, True)
 
             el_smeared_pt.push_back(smear*el_pt.at(iEl))
             eerUp.push_back((smearUp - smear)/smear)
@@ -471,14 +471,13 @@ class Systematic(EventFilter):
                                     el_E.at(iEl),el_cl_pt.at(iEl),0,"ELECTRON") / el_E.at(iEl)
 
             el_smeared_pt.at(iEl)*= correction
-            double energyUp = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                       el_E.at(iEl),el_cl_pt.at(iEl),2,"ELECTRON") / (correction*el_E.at(iEl)) - 1
-            double energyDown = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
-                                         el_E.at(iEl),el_cl_pt.at(iEl),1,"ELECTRON") / (correction*el_E.at(iEl)) - 1
+            energyUp = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
+                                el_E.at(iEl),el_cl_pt.at(iEl),2,"ELECTRON") / (correction*el_E.at(iEl)) - 1
+            energyDown = self.egammaTool.applyEnergyCorrectionMeV(el_cl_eta.at(iEl),el_cl_phi.at(iEl),
+                                  el_E.at(iEl),el_cl_pt.at(iEl),1,"ELECTRON") / (correction*el_E.at(iEl)) - 1
 
             eesUp.push_back(energyUp)
             eesDown.push_back(energyDown)
-        } #end of electron loop
 
 
         # Now we get the same for photons
@@ -493,9 +492,9 @@ class Systematic(EventFilter):
             self.egammaTool.SetRandomSeed(int(1.e+5*fabs(ph_phi.at(iPh))))
 
             # Smear to match the data resolution, or by systematic variations
-            float smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, True)
-            float smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, True)
-            float smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, True)
+            smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, True)
+            smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, True)
+            smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, True)
 
             ph_smeared_pt.push_back(smear*ph_pt.at(iPh))
             perUp.push_back((smearUp - smear)/smear)
@@ -503,79 +502,79 @@ class Systematic(EventFilter):
 
             # Correct the measured energies in data, and scale by systematic variations
             # Conversions are treated differently.
-            float correction = 1.
-            string photontype = ph_isConv.at(iPh) ? "CONVERTED_PHOTON" : "UNCONVERTED_PHOTON"
-            if(isData)
-              correction = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),ph_E.at(iPh),ph_cl_pt.at(iPh),0,photontype) / ph_E.at(iPh)
-            ph_smeared_pt.at(iPh)*= correction
-            double energyUp = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
-                                         ph_E.at(iPh),ph_cl_pt.at(iPh),2,photontype) / (correction*ph_E.at(iPh)) - 1
-            double energyDown = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
-                                           ph_E.at(iPh),ph_cl_pt.at(iPh),1,photontype) / (correction*ph_E.at(iPh)) - 1
+            correction = 1.
+            photontype = "CONVERTED_PHOTON" if ph_isConv.at(iPh) else "UNCONVERTED_PHOTON"
+            if isData:
+                correction = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),ph_E.at(iPh),ph_cl_pt.at(iPh),0,photontype) / ph_E.at(iPh)
+            ph_smeared_pt.at(iPh) *= correction
+            energyUp = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
+                                  ph_E.at(iPh),ph_cl_pt.at(iPh),2,photontype) / (correction*ph_E.at(iPh)) - 1
+            energyDown = self.egammaTool.applyEnergyCorrectionMeV(ph_cl_eta.at(iPh),ph_cl_phi.at(iPh),
+                                  ph_E.at(iPh),ph_cl_pt.at(iPh),1,photontype) / (correction*ph_E.at(iPh)) - 1
 
             pesUp.push_back(energyUp)
             pesDown.push_back(energyDown)
 
         # And now the same for muons. We need resolution shifts for ID and MS,
         # and different treatment for the MS four-vector (for standalone muons).
-        vector<float> *mu_smeared_pt = new vector<float>
-        vector<float> *mu_smeared_ms_pt = new vector<float>
+        mu_smeared_pt = ROOT.vector('float')()
+        mu_smeared_ms_pt = ROOT.vector('float')()
 
-        vector<float> cb_meridUp
-        vector<float> cb_meridDown
-        vector<float> cb_mermsUp
-        vector<float> cb_mermsDown
-        vector<float> mermsUp
-        vector<float> mermsDown
+        cb_meridUp = ROOT.vector('float')()
+        cb_meridDown = ROOT.vector('float')()
+        cb_mermsUp = ROOT.vector('float')()
+        cb_mermsDown = ROOT.vector('float')()
+        mermsUp = ROOT.vector('float')()
+        mermsDown = ROOT.vector('float')()
 
-        vector<float> mesUp
-        vector<float> mesDown
+        mesUp = ROOT.vector('float')()
+        mesDown = ROOT.vector('float')()
 
-        for(unsigned int iMu = 0; iMu < mu_pt.size(); ++iMu){
+        for muon in event.muons:
 
-        double ptcb = mu_pt.at(iMu)
-        double ptid = (mu_id_qoverp_exPV.at(iMu) != 0.) ? fabs(sin(mu_id_theta_exPV.at(iMu))/mu_id_qoverp_exPV.at(iMu)) : 0.
-        double ptms = (mu_ms_qoverp.at(iMu) != 0.) ? fabs(sin(mu_ms_theta.at(iMu))/mu_ms_qoverp.at(iMu)) : 0.
-        self.muonTool.SetSeed(int(1.e+5*fabs(mu_phi.at(iMu))))
-        double etaMu = mu_eta.at(iMu)
-        double charge = mu_charge.at(iMu)
-        self.muonTool.Event(ptms, ptid, ptcb, etaMu, charge)
+            ptcb = mu_pt.at(iMu)
+            ptid = (mu_id_qoverp_exPV.at(iMu) != 0.) ? fabs(sin(mu_id_theta_exPV.at(iMu))/mu_id_qoverp_exPV.at(iMu)) : 0.
+            ptms = (mu_ms_qoverp.at(iMu) != 0.) ? fabs(sin(mu_ms_theta.at(iMu))/mu_ms_qoverp.at(iMu)) : 0.
+            self.muonTool.SetSeed(int(1.e+5*fabs(mu_phi.at(iMu))))
+            etaMu = mu_eta.at(iMu)
+            charge = mu_charge.at(iMu)
+            self.muonTool.Event(ptms, ptid, ptcb, etaMu, charge)
 
-        Float_t smearedCombinedPt = self.muonTool.pTCB()
-        if(!mu_isCombinedMuon.at(iMu)) smearedCombinedPt = self.muonTool.pTMS() + self.muonTool.pTID()
+            smearedCombinedPt = self.muonTool.pTCB()
+            if not mu_isCombinedMuon.at(iMu):
+                smearedCombinedPt = self.muonTool.pTMS() + self.muonTool.pTID()
 
-        Float_t smearedMSPt = self.muonTool.pTMS()
+            smearedMSPt = self.muonTool.pTMS()
 
-        mu_smeared_ms_pt.push_back(smearedMSPt)
-        mu_smeared_pt.push_back(smearedCombinedPt)
+            mu_smeared_ms_pt.push_back(smearedMSPt)
+            mu_smeared_pt.push_back(smearedCombinedPt)
 
-        double ptMS_smeared, ptID_smeared, ptCB_smeared
-        float smearedpTMS, smearedpTID, smearedpTCB
-        smearedpTMS = 0.1; smearedpTID = 0.1; smearedpTCB = 0.1
-        self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSLOW")
-        smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
-        smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-        mermsDown.push_back(smearedpTMS)
-        cb_mermsDown.push_back(smearedpTCB)
-        self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSUP")
-        smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
-        smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-        mermsUp.push_back(smearedpTMS)
-        cb_mermsUp.push_back(smearedpTCB)
-        self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "IDUP")
-        smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-        cb_meridUp.push_back(smearedpTCB)
-        self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "IDLOW")
-        smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-        cb_meridDown.push_back(smearedpTCB)
+            double ptMS_smeared, ptID_smeared, ptCB_smeared
+            float smearedpTMS, smearedpTID, smearedpTCB
+            smearedpTMS = 0.1; smearedpTID = 0.1; smearedpTCB = 0.1
+            self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSLOW")
+            smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
+            smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
+            mermsDown.push_back(smearedpTMS)
+            cb_mermsDown.push_back(smearedpTCB)
+            self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSUP")
+            smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
+            smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
+            mermsUp.push_back(smearedpTMS)
+            cb_mermsUp.push_back(smearedpTCB)
+            self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "IDUP")
+            smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
+            cb_meridUp.push_back(smearedpTCB)
+            self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "IDLOW")
+            smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
+            cb_meridDown.push_back(smearedpTCB)
 
-        int detRegion = self.muonTool.DetRegion()
-        if(detRegion==-1) detRegion = 3
-        double scalesyst = self.muonTool.getScaleSyst_CB().at(detRegion)
-        mesUp.push_back(scalesyst)
-        mesDown.push_back(-scalesyst)
-
-        }#end of muon loop
+            detRegion = self.muonTool.DetRegion()
+            if detRegion == -1:
+                detRegion = 3
+            scalesyst = self.muonTool.getScaleSyst_CB().at(detRegion)
+            mesUp.push_back(scalesyst)
+            mesDown.push_back(-scalesyst)
 
         tesUp = ROOT.vector('float')()
         tesDown = ROOT.vector('float')()
