@@ -49,18 +49,22 @@ GRL = 'grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04
 """
 LepHad constants
 """
-MC_LEPHAD_PATH = '/global/mtm/data/SKIMS/MC'
-MC_LEPHAD_PREFIX = 'user.mtm.LHSkim'
+MC_LEPHAD_PATH = '/global/oneil/lephad/skims/mc11_samples_used_for_analysis'
+MC_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
 MC_LEPHAD_FILE_PATTERN = '*.root*'
 
-DATA_LEPHAD_PREFIX = 'user.mtm.LHSkim'
+DATA_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
 DATA_LEPHAD_FILE_PATTERN = '*.root*'
 
-DATA_MUHAD_PATH = '/global/mtm/data/SKIMS/DATA/MUON'
+DATA_MUHAD_PATH = '/global/oneil/lephad/skims/data11/muons'
 DATA_MUHAD_STREAM = 'Muons'
 
-DATA_EHAD_PATH = '/global/mtm/data/SKIMS/DATA/EGAMMA'
+DATA_EHAD_PATH = '/global/oneil/lephad/skims/data11/electrons'
 DATA_EHAD_EGAMMA_STREAM = 'Egamma'
+
+EMBD_LEPHAD_PATH = '/global/oneil/lephad/skims/Ztautau_embedded11'
+EMBD_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
+EMBD_LEPHAD_FILE_PATTERN = '*.root*'
 
 """
 HadHad constants
@@ -79,6 +83,7 @@ Common constants
 """
 MC_TREENAME = 'tau'
 DATA_TREENAME = 'tau'
+EMBD_TREENAME = 'tau'
 
 DATA_PATTERN = re.compile('^(?P<prefix>\S+\.)?data11_7TeV\.'
                           '(?P<run>\d+)\.physics_'
@@ -99,6 +104,13 @@ MC_TAG_PATTERN2 = re.compile('^e(?P<evnt>\d+)_'
                              's(?P<digimerge>\d+)_'
                              'r(?P<reco>\d+)_'
                              'p(?P<ntup>\d+)$')
+
+# Embedded sample pattern
+EMBD_PATTERN = re.compile('^(?P<prefix>\S+\.)?group.phys-higgs\.period'
+                          '(?P<period>\S+)\.DESD_SGLMU.pro10.embedding-'
+                          '(?P<embedtag>\S+)?'
+                          '\.Ztautau_lh_isol_mfsim_rereco_(?P<tag>\w+)'
+                          '(_EXT0\.small\.(?P<skimtag>\S+)\.(?P<suffix>\S+))?$')
 
 """
 MC11a/b/c categories are defined here
@@ -220,6 +232,9 @@ class Database(dict):
              data_path=None,
              data_prefix=None,
              data_pattern=None,
+             embd_path=None,
+             embd_prefix=None,
+             embd_pattern=None,
              versioned=False,
              deep=False):
         """
@@ -233,11 +248,11 @@ class Database(dict):
                 pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
                             '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
+                            '(?P<format>\S+)\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
                 pattern2 = ('^mc11_7TeV\.(?P<id>\d+)'
                             '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
+                            '(?P<format>\S+)\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
             else:
                 pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
                             '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
@@ -359,6 +374,54 @@ class Database(dict):
                                             file_pattern=mc_pattern)
                 else:
                     print "Dataset not matched: %s" % basename
+
+        #######################################################################
+        if embd_path is not None:
+            if embd_prefix:
+                embd_dirs = glob.glob(os.path.join(embd_path, embd_prefix) + '*')
+            else:
+                embd_dirs = glob.glob(os.path.join(embd_path, '*'))
+
+            self['embd'] = Dataset(name='embd',
+                                       datatype=DATA,
+                                       treename=EMBD_TREENAME,
+                                       ds='embd',
+                                       id=1,
+                                       # The GRL is the same for both lephad and hadhad analyses
+                                       grl=GRL,
+                                       dirs=embd_dirs,
+                                       file_pattern=embd_pattern)
+            # TODO create datasets for each run and each period
+            periods = {}
+            for dir in embd_dirs:
+                if os.path.isdir(dir):
+                    match = re.match(EMBD_PATTERN, dir)
+                    if match:
+                        period = match.group('period')
+                        tag = match.group('tag')
+                        if period not in periods:
+                            periods[period] = {'tag': tag, 'dirs': [dir]}
+                        else:
+                            periods[period]['dirs'].append(dir)
+                            if tag != periods[period]['tag']:
+                                print 'multiple copies of run with different tags: %s' % periods[period]['dirs']
+                    else:
+                        print "this dir does not match valid ds name: %s" % dir
+                else:
+                    print "this is not a dir: %s" % dir
+                    
+            for period, info in periods.items():
+                name = 'embd-%s' % period
+                self[name] = Dataset(name=name,
+                                         datatype=DATA,
+                                         treename=EMBD_TREENAME,
+                                         ds=name,
+                                         id=1,
+                                         grl=GRL,
+                                         dirs=info['dirs'],
+                                         file_pattern=embd_pattern)
+                
+        #######################################################################
 
         if data_path is not None:
             if data_prefix:
@@ -683,6 +746,9 @@ if __name__ == '__main__':
         data_path = DATA_MUHAD_PATH
         data_prefix = DATA_LEPHAD_PREFIX
         data_pattern = DATA_LEPHAD_FILE_PATTERN
+        embd_path = EMBD_LEPHAD_PATH
+        embd_prefix = EMBD_LEPHAD_PREFIX
+        embd_pattern = EMBD_LEPHAD_FILE_PATTERN
         args.versioned = True
         args.name = 'datasets_mulh'
     elif args.analysis == 'elh':
@@ -692,6 +758,9 @@ if __name__ == '__main__':
         data_path = DATA_EHAD_PATH
         data_prefix = DATA_LEPHAD_PREFIX
         data_pattern = DATA_LEPHAD_FILE_PATTERN
+        embd_path = EMBD_LEPHAD_PATH
+        embd_prefix = EMBD_LEPHAD_PREFIX
+        embd_pattern = EMBD_LEPHAD_FILE_PATTERN
         args.versioned = True
         args.name = 'datasets_elh'
     else: # custom
@@ -707,13 +776,16 @@ if __name__ == '__main__':
     if args.reset:
         db.clear()
 
-    if mc_path is not None or data_path is not None:
+    if mc_path is not None or data_path is not None or embd_path is not None:
         db.scan(mc_path=mc_path,
                 mc_prefix=mc_prefix,
                 mc_pattern=mc_pattern,
                 data_path=data_path,
                 data_prefix=data_prefix,
                 data_pattern=data_pattern,
+                embd_path=embd_path,
+                embd_prefix=embd_prefix,
+                embd_pattern=embd_pattern,
                 deep=args.deep,
                 versioned=args.versioned)
 
