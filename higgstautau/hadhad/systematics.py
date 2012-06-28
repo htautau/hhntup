@@ -1,8 +1,13 @@
 """
 Adapted from the Example.C in MissingETUtility/macros
 """
+# stdlib Python imports
 import sys
 
+# ROOT imports
+from ROOT import TH1D, TFile, TRandom3
+
+# ATLAS tools imports
 # MissingETUtility
 from ROOT import METUtility
 # JetUncertainties
@@ -30,7 +35,7 @@ class Systematic(EventFilter):
             self.stream = stream
 
         # Initialise your METUtility object
-        self.testUtil = new METUtility
+        self.testUtil = METUtility()
 
         # *** Demonstration of the configuration here  ***
         # *** All values that are set are the defaults ***
@@ -38,46 +43,49 @@ class Systematic(EventFilter):
         # Turn on (off) the relevant MET terms
         # Standard MET_RefFinal has:
         # RefEle, RefGamma, RefTau, RefJet, SoftJets, RefMuon, MuonTotal, (CellOut), CellOut_Eflow
-        self.testUtil.defineMissingET(true, true, true, true, true, true, true, false, true)
+        self.testUtil.defineMissingET(True, True, True, True, True, True, True, False, True)
 
         # SUSY group, MET_Simplified20 has
         # RefEle, (RefGamma), (RefTau), RefJet, (SoftJets), (RefMuon), MuonTotal, CellOut, (CellOut_Eflow)
-        # self.testUtil.defineMissingET(true, false, true, true, false, false, true, true, false)
+        # self.testUtil.defineMissingET(True, False, True, True, False, False, True, True, False)
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
         self.testUtil.setSoftJetCut(20e3)
 
         # Whether to use MUID muons (otherwise STACO).
-        self.testUtil.setIsMuid(false)
+        self.testUtil.setIsMuid(False)
 
         # Whether METUtility should scream at you over every little thing
-        self.testUtil.setVerbosity(false)
+        self.testUtil.setVerbosity(False)
 
-        self.systUtil = new METUtility
+        self.systUtil = METUtility()
 
         # Some other options are available, but not recommended/deprecated
 
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
-        self.jesTool = new MultijetJESUncertaintyProvider("MultijetJES_Preliminary.config",
-                 "InsituJES2011_AllNuisanceParameters.config",
-                 "AntiKt4LCTopoJets","MC11c")
+        self.jesTool = MultijetJESUncertaintyProvider(
+            "MultijetJES_Preliminary.config",
+            "InsituJES2011_AllNuisanceParameters.config",
+            "AntiKt4LCTopoJets","MC11c")
 
         # Tag assumed: JetResolution-01-00-00
-        self.jerTool = new JERProvider("AntiKt4LCTopoJES", "Truth", "../../Jet/JetResolution/share/JERProviderPlots.root")
+        self.jerTool = JERProvider(
+            "AntiKt4LCTopoJES", "Truth",
+            "../../Jet/JetResolution/share/JERProviderPlots.root")
         self.jerTool.init()
 
         # Tag assumed: egammaAnalysisUtils-00-02-76
-        self.egammaTool = new eg2011::EnergyRescaler
+        self.egammaTool = eg2011.EnergyRescaler()
         self.egammaTool.useDefaultCalibConstants("2011")
 
         # Tag assumed: MuonMomentumCorrections-00-05-03
-        self.muonTool = new MuonSmear::SmearingClass("Data11","staco","q_pT","Rel17")
+        self.muonTool = MuonSmear.SmearingClass("Data11","staco","q_pT","Rel17")
         self.muonTool.UseScale(1)
         self.muonTool.UseImprovedCombine()
 
         # No tag yet, testing code
-        self.tesTool = new TESUncertaintyProvider
+        self.tesTool = TESUncertaintyProvider()
 
         # Prepare an output file
         self.outfile = new TFile("metutil_example.root","RECREATE")
@@ -306,92 +314,92 @@ class Systematic(EventFilter):
         # This is still under development, and requires all object resolutions to be set.
 
     def DemoMetSystematics(self, event):
-#######################################
-# Demonstrates how to set up the METUtility with object momenta
-# such that MET_RefFinal can be rebuilt matching the values in D3PD.
-#
-# *** *** *** *** *** DISCLAIMER *** *** *** *** ***
-#
-# These examples of uncertainty-setting are meant to
-# demonstrate how the uncertainties should be passed
-# to METUtility.  Recommendations on just which ones
-# you are meant to be using come from the CP groups.
+        #######################################
+        # Demonstrates how to set up the METUtility with object momenta
+        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
+        #
+        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
+        #
+        # These examples of uncertainty-setting are meant to
+        # demonstrate how the uncertainties should be passed
+        # to METUtility.  Recommendations on just which ones
+        # you are meant to be using come from the CP groups.
 
-# Check for a good primary vertex
-# This is needed for jet and soft term systematics
-    bool goodPV = false
-    int nvtxsoftmet = 0
-    int nvtxjets = 0
-    if(vxp_n>0) {
-# Most D3PDs contain the vx_type branch, but some don't.
-# Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
-# If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
-# to the first vertex in the collection.
-# Otherwise, you should ensure that the vx_type branch is available.
-    for(int i=0; i<vxp_n; i++) {
-      if(vxp_type.at(i) == 1 && vxp_nTracks.at(i)>2 && fabs(vxp_z.at(i))<200.) goodPV = true
-    }
-    if(goodPV) {
-      for(int i=0; i<vxp_n; i++) {
-    if(vxp_nTracks.at(i)>2) nvtxsoftmet++
-    if(vxp_nTracks.at(i)>1) nvtxjets++
-      }
-    }
-    }
-# First, we get the jet energy scale uncertainties and
-# systematic variation in the jet resolutions
-    vector<float> jesUp
-    vector<float> jesDown
-    vector<float> jerUp
-    vector<float> jerDown
-
-# Note on use of ROOT random number generators:
-# TRandom and TRandom2 have many documented deficiencies.
-# TRandom3 is generally considered safely usable.
-# Also note that ROOT's gRandom calls TRandom3.
-    TRandom3 *jetRandom = new TRandom3
-
-    for(int iJet = 0; iJet < jet_n; ++iJet){
-    float jesShiftUp = 0.0
-    float jesShiftDown = 0.0
-    float jerShift = 1.0
-# Safest to assume nothing about the uncertainties on soft jets.
-# These will go into SoftJets anyhow, and so the JES systematics
-# aren't used.
-
-    if(jet_pt.at(iJet) > 20e3
-       && jet_pt.at(iJet) < 7000e3
-       && fabs(jet_eta.at(iJet)) < 4.5){
-
-      # delta R cut needed to apply close-by jets uncertainty
-      float drmin=9999
-      double pi = TMath::Pi()
-      if( jet_pt.at(iJet)>20000) {
-    for (int ii = 0; ii < jet_n; ii++ ) {
-      if(jet_emscale_pt.at(ii)>7000) {
-        if(iJet!=ii) {
-          double deta = jet_eta.at(iJet) - jet_eta.at(ii)
-          double dphi = fabs(fmod((jet_phi.at(iJet)
-                       - jet_phi.at(ii))+3*pi,2*pi)-pi)
-          double dr = sqrt(deta*deta+dphi*dphi)
-          if(dr<drmin) drmin=dr
+        # Check for a good primary vertex
+        # This is needed for jet and soft term systematics
+        bool goodPV = False
+        int nvtxsoftmet = 0
+        int nvtxjets = 0
+        if(vxp_n>0) {
+        # Most D3PDs contain the vx_type branch, but some don't.
+        # Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
+        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
+        # to the first vertex in the collection.
+        # Otherwise, you should ensure that the vx_type branch is available.
+        for(int i=0; i<vxp_n; i++) {
+          if(vxp_type.at(i) == 1 && vxp_nTracks.at(i)>2 && fabs(vxp_z.at(i))<200.) goodPV = True
         }
-      }
-    }
-      }
+        if(goodPV) {
+          for(int i=0; i<vxp_n; i++) {
+        if(vxp_nTracks.at(i)>2) nvtxsoftmet++
+        if(vxp_nTracks.at(i)>1) nvtxjets++
+          }
+        }
+        }
+        # First, we get the jet energy scale uncertainties and
+        # systematic variation in the jet resolutions
+        vector<float> jesUp
+        vector<float> jesDown
+        vector<float> jerUp
+        vector<float> jerDown
 
-      # The bool is the "isPos" argument
-      jesShiftUp = self.jesTool.getRelUncert(jet_pt.at(iJet),
-                       jet_eta.at(iJet),drmin,
-                       true, nvtxjets, averageIntPerXing)
-      jesShiftDown = -1*self.jesTool.getRelUncert(jet_pt.at(iJet),
-                        jet_eta.at(iJet),drmin,
-                        false, nvtxjets, averageIntPerXing)
-    }
-    jesUp.push_back(jesShiftUp)
-    jesDown.push_back(jesShiftDown)
+        # Note on use of ROOT random number generators:
+        # TRandom and TRandom2 have many documented deficiencies.
+        # TRandom3 is generally considered safely usable.
+        # Also note that ROOT's gRandom calls TRandom3.
+        jetRandom = TRandom3
 
-# Allowable range is > 10 GeV, but anything below 20 enters SoftJets
+        for(int iJet = 0; iJet < jet_n; ++iJet){
+        float jesShiftUp = 0.0
+        float jesShiftDown = 0.0
+        float jerShift = 1.0
+        # Safest to assume nothing about the uncertainties on soft jets.
+        # These will go into SoftJets anyhow, and so the JES systematics
+        # aren't used.
+
+        if(jet_pt.at(iJet) > 20e3
+           && jet_pt.at(iJet) < 7000e3
+           && fabs(jet_eta.at(iJet)) < 4.5){
+
+          # delta R cut needed to apply close-by jets uncertainty
+          float drmin=9999
+          double pi = TMath::Pi()
+          if( jet_pt.at(iJet)>20000) {
+        for (int ii = 0; ii < jet_n; ii++ ) {
+          if(jet_emscale_pt.at(ii)>7000) {
+            if(iJet!=ii) {
+              double deta = jet_eta.at(iJet) - jet_eta.at(ii)
+              double dphi = fabs(fmod((jet_phi.at(iJet)
+                           - jet_phi.at(ii))+3*pi,2*pi)-pi)
+              double dr = sqrt(deta*deta+dphi*dphi)
+              if(dr<drmin) drmin=dr
+            }
+          }
+        }
+        }
+
+        # The bool is the "isPos" argument
+        jesShiftUp = self.jesTool.getRelUncert(jet_pt.at(iJet),
+                         jet_eta.at(iJet),drmin,
+                         True, nvtxjets, averageIntPerXing)
+        jesShiftDown = -1*self.jesTool.getRelUncert(jet_pt.at(iJet),
+                          jet_eta.at(iJet),drmin,
+                          False, nvtxjets, averageIntPerXing)
+        }
+        jesUp.push_back(jesShiftUp)
+        jesDown.push_back(jesShiftDown)
+
+        # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
     if(jet_pt.at(iJet) > 20e3 && jet_pt.at(iJet) < 5000e3){
       double pt = jet_pt.at(iJet)
       double eta = jet_eta.at(iJet)
@@ -453,9 +461,9 @@ class Systematic(EventFilter):
     self.egammaTool.SetRandomSeed(int(1e5*fabs(el_phi.at(iEl))))
 
 # Smear to match the data resolution, or by systematic variations
-    float smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, true)
-    float smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, true)
-    float smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, true)
+    float smear = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 0, True)
+    float smearUp = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 2, True)
+    float smearDown = self.egammaTool.getSmearingCorrectionMeV(el_cl_eta.at(iEl), el_E.at(iEl), 1, True)
 
     el_smeared_pt.push_back(smear*el_pt.at(iEl))
     eerUp.push_back((smearUp - smear)/smear)
@@ -489,9 +497,9 @@ class Systematic(EventFilter):
     self.egammaTool.SetRandomSeed(int(1.e+5*fabs(ph_phi.at(iPh))))
 
 # Smear to match the data resolution, or by systematic variations
-    float smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, true)
-    float smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, true)
-    float smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, true)
+    float smear = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 0, True)
+    float smearUp = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 2, True)
+    float smearDown = self.egammaTool.getSmearingCorrectionMeV(ph_cl_eta.at(iPh), ph_E.at(iPh), 1, True)
 
     ph_smeared_pt.push_back(smear*ph_pt.at(iPh))
     perUp.push_back((smearUp - smear)/smear)
@@ -830,5 +838,6 @@ class Systematic(EventFilter):
     }
 
     def Terminate(self):
+
         self.outfile.Write()
         self.outfile.Close()
