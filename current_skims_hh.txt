@@ -8,7 +8,7 @@ Data12
 ======
 
 group.phys-higgs.HHSkim.data12_8TeV*p1011_p1015.v1/
-
+group.phys-higgs.HHSkim2.HHSkim.data12_8TeV*p1011.v1.v4/
 
 MC11
 ====
@@ -19,7 +19,7 @@ group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v1/
 MC12
 ====
 
-Coming soon...
+group.phys-higgs.HHSkim.mc12_8TeV*p1011.v1/
 
 Embedding11
 ===========
