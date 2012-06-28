@@ -128,6 +128,7 @@ class HHProcessor(ATLASStudent):
         # set the event filters
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            Systematics(),
             Triggers(datatype=self.metadata.datatype,
                      year=YEAR,
                      skim=False),
