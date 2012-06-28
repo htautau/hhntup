@@ -70,7 +70,7 @@ class LArHole(EventFilter):
     def __init__(self, datatype, **kwargs):
 
         super(LArHole, self).__init__(**kwargs)
-        if datatype == datasets.DATA:
+        if datatype in (datasets.DATA, datasets.EMBED):
             self.passes = self.passes_data
         else:
             self.passes = self.passes_mc

@@ -128,6 +128,7 @@ class HHProcessor(ATLASStudent):
         # set the event filters
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            Systematics(),
             Triggers(datatype=self.metadata.datatype,
                      year=YEAR,
                      skim=False),
@@ -149,7 +150,9 @@ class HHProcessor(ATLASStudent):
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
                             year=YEAR,
-                            datatype=self.metadata.datatype),
+                            datatype=self.metadata.datatype,
+                            skim=False,
+                            tree=tree),
             TauLeadSublead(lead=35*GeV,
                            sublead=25*GeV),
         ])
@@ -217,17 +220,18 @@ class HHProcessor(ATLASStudent):
             jets.sort(key=lambda jet: jet.pt, reverse=True)
             leading_jets = []
 
-            if len(jets) >= 2:
-                # require leading above 50 and subleading above 30
-                if jets[0].pt > 50 * GeV and jets[1].pt > 30 * GeV:
-                    leading_jets = jets[:2]
-                    # sort by increasing eta
-                    # leading_jets.sort(key=lambda jet: jet.eta)
+            current_channel = CATEGORY_GGF
+            # leading jet above 50 GeV
+            if jets and jets[0].pt > 50 * GeV:
+                leading_jets.append(jets[0])
+                current_channel = CATEGORY_BOOSTED
+                # subleading jet above 30
+                if len(jets) >= 2 and jets[1].pt > 30 * GeV:
+                    leading_jets.append(jets[1])
+                    current_channel = CATEGORY_VBF
+            tree.category = current_channel
 
-            if leading_jets: # VBF optimized
-                current_channel = CATEGORY_2JET
-                tree.category = CATEGORY_2JET
-
+            if current_channel == CATEGORY_VBF: # VBF optimized
                 jet1, jet2 = leading_jets
                 RecoJetBlock.set(tree, jet1, jet2)
                 """
@@ -245,6 +249,15 @@ class HHProcessor(ATLASStudent):
                 tree.sphericity = sphericity
                 # aplanarity
                 tree.aplanarity = aplanarity
+
+                sphericity_full, aplanarity_full = eventshapes.sphericity_aplanarity(
+                        [tau1.fourvect,
+                         tau2.fourvect] + [jet.fourvect for jet in jets])
+
+                # boosted sphericity
+                tree.sphericity_full = sphericity_full
+                # boosted aplanarity
+                tree.aplanarity_full = aplanarity_full
 
                 sphericity_b, aplanarity_b = eventshapes.sphericity_aplanarity(
                         [tau1.fourvect_boosted,
@@ -279,12 +292,39 @@ class HHProcessor(ATLASStudent):
                         jet1.fourvect_boosted.Eta(),
                         jet2.fourvect_boosted.Eta())
 
-            else: # 0 or 1 jet
-                current_channel = CATEGORY_01JET
-                tree.category = CATEGORY_01JET
+            elif current_channel == CATEGORY_BOOSTED:
+                jet1 = leading_jets[0]
+                RecoJetBlock.set(tree, jet1)
+                """
+                Reco tau variables
+                This must come after the RecoJetBlock is filled since
+                that sets the jet_beta for boosting the taus
+                """
+                sphericity, aplanarity = eventshapes.sphericity_aplanarity(
+                        [tau1.fourvect,
+                         tau2.fourvect,
+                         jet1.fourvect])
+
+                # sphericity
+                tree.sphericity = sphericity
+                # aplanarity
+                tree.aplanarity = aplanarity
+
+                sphericity_full, aplanarity_full = eventshapes.sphericity_aplanarity(
+                        [tau1.fourvect,
+                         tau2.fourvect] + [jet.fourvect for jet in jets])
+
+                # boosted sphericity
+                tree.sphericity_full = sphericity_full
+                # boosted aplanarity
+                tree.aplanarity_full = aplanarity_full
 
             # Jet variables
             tree.numJets = len(event.jets)
+            tree.sum_pt = sum([tau1.pt, tau2.pt] +
+                              [jet.pt for jet in leading_jets])
+            tree.sum_pt_full = sum([tau1.pt, tau2.pt] +
+                                   [jet.pt for jet in jets])
 
             # MET
             METx = event.MET_RefFinal_BDTMedium_etx
@@ -306,7 +346,10 @@ class HHProcessor(ATLASStudent):
                                                              MET_vect)
 
             # Mass
-            tree.mass_mmc_tau1_tau2 = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            mmc_mass, mmc_pt, mmc_met = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            tree.mass_mmc_tau1_tau2 = mmc_mass
+            tree.higgs_pt = mmc_pt
+            tree.MET_mmc = mmc_met
 
             """
             if tau1.numTrack <= 1:
@@ -344,7 +387,7 @@ class HHProcessor(ATLASStudent):
                     # order here needs to be revised since jets are no longer
                     # sorted by eta but instead by pT
                     PartonBlock.set(tree, parton1, parton2)
-                    if current_channel == CATEGORY_2JET:
+                    if current_channel == CATEGORY_VBF:
                         for i, jet in zip((1, 2), (jet1, jet2)):
                             for parton in (parton1, parton2):
                                 if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:

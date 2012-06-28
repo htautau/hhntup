@@ -8,7 +8,7 @@ Data12
 ======
 
 group.phys-higgs.HHSkim.data12_8TeV*p1011_p1015.v1/
-
+group.phys-higgs.HHSkim2.HHSkim.data12_8TeV*p1011.v1.v4/
 
 MC11
 ====
@@ -19,13 +19,13 @@ group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v1/
 MC12
 ====
 
-Coming soon...
+group.phys-higgs.HHSkim.mc12_8TeV*p1011.v1/
 
 Embedding11
 ===========
 
 group.phys-higgs.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1/
-
+group.phys-higgs.HHSkim2.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1.v1/
 
 Embedding12
 ===========

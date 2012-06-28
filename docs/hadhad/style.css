@@ -1,0 +1,111 @@
+/*
+:Author: Noel Dawe
+:Contact: noel.dawe@cern.ch
+:Copyright: This stylesheet has been placed in the public domain.
+
+Stylesheet for use with Docutils.
+*/
+
+@import url(html4css1.css);
+
+/* Your customizations go here.  For example: */
+
+/*
+body {
+    text-align: center;
+}
+
+.document {
+    margin: auto 1.5em;
+    display: inline-block;
+    width: 1000px;
+    text-align: left;
+}
+*/
+
+div.warning {
+    border: 1px solid #333;
+}
+
+div.note {
+    border: 1px solid #333;
+    background-color: #ccc;
+}
+
+/*
+ h1, h2, h3, h4, h5, h6, p.topic-title {
+  font-family: sans-serif }
+ */
+
+/* links */
+
+
+a:link { 
+    color: #0066FF;
+    text-decoration: none;
+    }
+a:visited { 
+    color: #0066FF;
+    }
+a:hover { 
+    color: #fff;
+    background-color: #0066FF;
+    text-decoration: none;
+    }
+a:active { 
+    color: #0066FF;
+    }
+
+a.toc-backref:link { 
+    color: #000;
+    text-decoration: none;
+    }
+a.toc-backref:visited { 
+    color: #000;
+    }
+a.toc-backref:hover { 
+    color: #fff;
+    background-color: #000;
+    text-decoration: none;
+    }
+a.toc-backref:active { 
+    color: #000;
+    }
+
+/* tables */
+
+table.citation {
+    white-space: nowrap;
+}
+
+table.cutflow
+{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    margin: 20px 0px 20px 10px;
+    text-align: left;
+    border-collapse: collapse;
+    border: 1px solid #000;
+}
+
+table.cutflow th
+{
+    padding: 12px 17px 12px 17px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #eee;
+    background:#888;
+    border-bottom: 1px dashed #000;
+}
+
+table.cutflow td
+{
+    padding: 7px 17px 7px 17px;
+    color: #000;
+}
+
+table.cutflow tbody tr:hover td
+{
+    color: #000;
+    background: #ccc;
+}

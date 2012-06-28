@@ -219,42 +219,47 @@ class HHSkim(ATLASStudent):
         onfilechange = []
 
         if self.metadata.datatype == datasets.MC:
-            from externaltools import CoEPPTrigTool, PileupReweighting
+            from externaltools import PileupReweighting
             from ROOT import Root
-            from ROOT import CoEPP
 
             PileupReweighting = Root.TPileupReweighting
 
             # initialize the pileup reweighting tool
             pileup_tool = PileupReweighting()
-            pileup_tool.UsePeriodConfig("MC11b")
+            if self.metadata.year == 2011:
+                pileup_tool.UsePeriodConfig("MC11b")
+            elif self.metadata.year == 2012:
+                pileup_tool.UsePeriodConfig("MC12a")
             pileup_tool.Initialize()
 
-            # initialize the trigger emulation tool
-            trigger_tool_wrapper = CoEPP.OfficialWrapper()
-            trigger_tool = CoEPP.TriggerTool()
-            trigger_tool.setWrapper(trigger_tool_wrapper)
-            trigger_config = CoEPPTrigTool.get_resource('config_EF_DiTau.xml')
-            trigger_tool.setXMLFile(trigger_config)
-            trigger_tool.initializeFromXML()
+            if self.metadata.year == 2011: # only can emulate 2011 currently...
+                from externaltools import CoEPPTrigTool
+                from ROOT import CoEPP
+                # initialize the trigger emulation tool
+                trigger_tool_wrapper = CoEPP.OfficialWrapper()
+                trigger_tool = CoEPP.TriggerTool()
+                trigger_tool.setWrapper(trigger_tool_wrapper)
+                trigger_config = CoEPPTrigTool.get_resource('config_EF_DiTau.xml')
+                trigger_tool.setXMLFile(trigger_config)
+                trigger_tool.initializeFromXML()
 
-            trigger_A = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
-            trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
-            trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
+                trigger_A = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
+                trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
+                trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
 
-            trigger_run_dict = {
-                180164: (trigger_A, 'EF_tau29_medium1_tau20_medium1'),
-                183003: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
-                186169: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
-                189751: (trigger_C, 'EF_tau29T_medium1_tau20T_medium1'),
-            }
+                trigger_run_dict = {
+                    180164: (trigger_A, 'EF_tau29_medium1_tau20_medium1'),
+                    183003: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
+                    186169: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
+                    189751: (trigger_C, 'EF_tau29T_medium1_tau20T_medium1'),
+                }
 
-            def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
+                def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
 
-                trigger_tool_wrapper.loadMainTree(tree)
-                trigger_tool_wrapper.loadMetaTree(file.Get('%sMeta/TrigConfTree' % name))
+                    trigger_tool_wrapper.loadMainTree(tree)
+                    trigger_tool_wrapper.loadMetaTree(file.Get('%sMeta/TrigConfTree' % name))
 
-            onfilechange.append((update_trigger_trees, (self, trigger_tool_wrapper,)))
+                onfilechange.append((update_trigger_trees, (self, trigger_tool_wrapper,)))
 
         # initialize the TreeChain of all input files
         intree = TreeChain(self.metadata.treename,
@@ -350,23 +355,26 @@ class HHSkim(ATLASStudent):
                 if averageIntPerXing is not None:
                     event.averageIntPerXing = averageIntPerXing
                 else:
-                    raise ValueError("pdgID 39 not found!")
+                    print "pdgID 39 not found! Skipping event..."
+                    nevents -= 1
+                    continue
 
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weight += event.mc_event_weight
                 pileup_tool.Fill(event.RunNumber, event.mc_channel_number,
                                  event.mc_event_weight, event.averageIntPerXing);
 
-                trigger_tool_wrapper.setEventNumber(event._entry.value)
-                trigger, triggername = trigger_run_dict[event.RunNumber]
-                trigger.switchOn()
-                trigger_tool.executeTriggers()
-                emulated_trigger_passed = trigger.passed()
+                if self.metadata.year == 2011:
+                    trigger_tool_wrapper.setEventNumber(event._entry.value)
+                    trigger, triggername = trigger_run_dict[event.RunNumber]
+                    trigger.switchOn()
+                    trigger_tool.executeTriggers()
+                    emulated_trigger_passed = trigger.passed()
 
-                outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
-                outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
-                outtree.tau_trigger_match_index.clear()
-                outtree.tau_trigger_match_thresh.clear()
+                    outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
+                    outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
+                    outtree.tau_trigger_match_index.clear()
+                    outtree.tau_trigger_match_thresh.clear()
 
 
             if self.metadata.datatype == datasets.EMBED or \
@@ -436,7 +444,8 @@ class HHSkim(ATLASStudent):
                 if WRITE_ALL:
                     outtree.Fill()
 
-            if self.metadata.datatype == datasets.MC:
+            if self.metadata.datatype == datasets.MC \
+               and self.metadata.year == 2011:
                 trigger.switchOff()
 
         self.output.cd()
@@ -461,11 +470,12 @@ class HHSkim(ATLASStudent):
             # write the pileup reweighting file
             pileup_tool.WriteToFile()
 
-            # turn on triggers so they show up as "active" in the report
-            trigger_A.switchOn()
-            trigger_B.switchOn()
-            trigger_C.switchOn()
+            if self.metadata.year == 2011:
+                # turn on triggers so they show up as "active" in the report
+                trigger_A.switchOn()
+                trigger_B.switchOn()
+                trigger_C.switchOn()
 
-            # finalize the trigger_tool
-            trigger_tool.finalize()
-            trigger_tool.summary()
+                # finalize the trigger_tool
+                trigger_tool.finalize()
+                trigger_tool.summary()

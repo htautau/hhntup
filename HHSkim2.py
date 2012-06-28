@@ -22,7 +22,6 @@ import goodruns
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 VALIDATE = False
-YEAR = 2011
 
 
 class TriggerMatching(TreeModel):
@@ -44,14 +43,15 @@ class HHSkim2(ATLASStudent):
 
     def work(self):
 
-        # merge TrigConfTrees
-        metadirname = '%sMeta' % self.metadata.treename
-        trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-        map(trigconfchain.Add, self.files)
-        metadir = self.output.mkdir(metadirname)
-        metadir.cd()
-        trigconfchain.Merge(self.output, -1, 'fast keep')
-        self.output.cd()
+        if self.metadata.datatype != datasets.EMBED:
+            # merge TrigConfTrees
+            metadirname = '%sMeta' % self.metadata.treename
+            trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+            map(trigconfchain.Add, self.files)
+            metadir = self.output.mkdir(metadirname)
+            metadir.cd()
+            trigconfchain.Merge(self.output, -1, 'fast keep')
+            self.output.cd()
 
         # merge the cutflow hists from the first skim
         cutflow = None
@@ -85,19 +85,25 @@ class HHSkim2(ATLASStudent):
             self.output.cd()
         else:
             # merge outtree_extras from the first skim
-            extra_trees = ROOT.TChain(self.metadata.treename +
+            if self.metadata.datatype == datasets.MC:
+                extra_trees = ROOT.TChain(self.metadata.treename +
                                       '_failed_skim_before_trigger')
+            else: #embedding
+                extra_trees = ROOT.TChain(self.metadata.treename +
+                                      '_failed_skim_before_selection')
             map(extra_trees.Add, self.files)
             extra_trees.Merge(self.output, -1, 'fast keep')
             self.output.cd()
 
         onfilechange = []
+        trigger_config = None
 
-        # trigger config tool to read trigger info in the ntuples
-        trigger_config = get_trigger_config()
+        if self.metadata.datatype != datasets.EMBED:
+            # trigger config tool to read trigger info in the ntuples
+            trigger_config = get_trigger_config()
 
-        # update the trigger config maps on every file change
-        onfilechange.append((update_trigger_config, (trigger_config,)))
+            # update the trigger config maps on every file change
+            onfilechange.append((update_trigger_config, (trigger_config,)))
 
         # initialize the TreeChain of all input files
         chain = TreeChain(self.metadata.treename,
@@ -118,10 +124,11 @@ class HHSkim2(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA or self.metadata.year == 2012),
             Triggers(datatype=self.metadata.datatype,
-                     year=YEAR,
-                     skim=False),
+                     year=self.metadata.year,
+                     skim=False,
+                     passthrough=self.metadata.datatype == datasets.EMBED),
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
@@ -138,10 +145,11 @@ class HHSkim2(ATLASStudent):
             TauLArHole(),
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
-                            year=YEAR,
+                            year=self.metadata.year,
                             datatype=self.metadata.datatype,
                             skim=True,
-                            tree=tree),
+                            tree=tree,
+                            passthrough=self.metadata.datatype == datasets.EMBED),
         ])
 
         self.filters['event'] = event_filters
@@ -186,6 +194,10 @@ class HHSkim2(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
+            if self.metadata.datatype == datasets.EMBED:
+                # select two leading taus by pT
+                event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+                event.taus.slice(stop=2)
             assert len(event.taus) == 2
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()

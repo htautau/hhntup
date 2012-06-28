@@ -147,6 +147,11 @@ class TauLeadSublead(EventFilter):
 
 class TauTriggerMatch(EventFilter):
 
+    triggers_12 = [
+        'EF_2tau38T_medium1',
+        'EF_tau29Ti_medium1_tau20Ti_medium1',
+    ]
+
     def __init__(self,
                  config,
                  datatype,
@@ -173,9 +178,11 @@ class TauTriggerMatch(EventFilter):
             self.triggerutils = triggerutils
             if year == 11:
                 self.passes = self.passes_data11
+            elif year == 12:
+                self.passes = self.passes_data12
             else:
                 raise ValueError("No trigger matching defined for year %d" % year)
-        else:
+        else: # MC
             if year == 11:
                 self.passes = self.passes_mc11
             else:
@@ -197,41 +204,56 @@ class TauTriggerMatch(EventFilter):
             trigger = 'EF_tau29T_medium1_tau20T_medium1'
         else:
             raise ValueError("No trigger defined for run %i" % event.RunNumber)
+        self.data_match(event, [trigger])
+        # event passes if at least two taus selected
+        return len(event.taus) == MIN_TAUS
 
-        # erase any previous selection on trigger taus
-        # (just to be safe, there should not be any)
-        event.taus_EF.reset()
-        # get indices of trigger taus associated with this trigger
-        trigger_idx = self.triggerutils.get_tau_trigger_obj_idx(
-                            self.config,
-                            event,
-                            trigger)
-        # select the trigger taus
-        event.taus_EF.select_indices(trigger_idx)
-        #print list(event.taus_EF)
+    def passes_data12(self, event):
+
+        self.data_match(event, self.triggers_12)
+        # event passes if at least two taus selected
+        return len(event.taus) == MIN_TAUS
+
+    def data_match(self, event, triggers):
+        """
+        triggers: list of triggers that are ORed. Order them by priority i.e.
+        put triggers with higher pT thesholds before triggers with lower
+        thresholds.
+        """
         matched_taus = []
         matches = {}
-        for triggertau in event.taus_EF:
-            # find closest matching reco offline tau
-            closest_dR = 99999
-            closest_tau = None
-            closest_idx = -1
-            for i, tau in enumerate(event.taus):
-                dR = utils.dR(triggertau.eta, triggertau.phi, tau.eta, tau.phi)
-                if dR < self.dR and dR < closest_dR:
-                    closest_dR = dR
-                    closest_tau = tau
-                    closest_idx = i
-            if closest_tau is not None:
-                if self.skim:
-                    if triggertau.pt > 29 * GeV:
-                        thresh = 29
-                    else:
-                        thresh = 20
-                    matches[closest_tau.index] = (triggertau.index, thresh)
-                matched_taus.append(closest_tau)
-                # remove match from consideration by future matches (greedy match)
-                event.taus.mask_indices([closest_idx])
+        for trigger in triggers:
+            # get indices of trigger taus associated with this trigger
+            trigger_idx = self.triggerutils.get_tau_trigger_obj_idx(
+                self.config,
+                event,
+                trigger)
+            # erase any previous selection on trigger taus
+            # (just to be safe, there should not be any)
+            event.taus_EF.reset()
+            # select the trigger taus
+            event.taus_EF.select_indices(trigger_idx)
+            for triggertau in event.taus_EF:
+                # find closest matching reco offline tau
+                closest_dR = 99999
+                closest_tau = None
+                closest_idx = -1
+                for i, tau in enumerate(event.taus):
+                    dR = utils.dR(triggertau.eta, triggertau.phi, tau.eta, tau.phi)
+                    if dR < self.dR and dR < closest_dR:
+                        closest_dR = dR
+                        closest_tau = tau
+                        closest_idx = i
+                if closest_tau is not None:
+                    if self.skim:
+                        if triggertau.pt > 29 * GeV:
+                            thresh = 29
+                        else:
+                            thresh = 20
+                        matches[closest_tau.index] = (triggertau.index, thresh)
+                    matched_taus.append(closest_tau)
+                    # remove match from consideration by future matches (greedy match)
+                    event.taus.mask_indices([closest_idx])
         # select only the matching offline taus (if any)
         event.taus.reset()
         if self.skim:
@@ -246,8 +268,6 @@ class TauTriggerMatch(EventFilter):
                     self.tree.tau_trigger_match_index.push_back(-1)
                     self.tree.tau_trigger_match_thresh.push_back(0)
         event.taus.select_indices([tau.index for tau in matched_taus])
-        # event passes if at least two taus selected
-        return len(event.taus) == MIN_TAUS
 
 
 class Triggers(EventFilter):
