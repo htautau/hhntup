@@ -1,0 +1,333 @@
+'AlpgenJimmyZtautauNp0_pt20.mc11c':
+    name: Ztautau Np0
+    latex: '$Z\rightarrow\tau\tau$ Np0'
+'AlpgenJimmyZtautauNp1_pt20.mc11c':
+    name: Ztautau Np1
+    latex: '$Z\rightarrow\tau\tau$ Np1'
+'AlpgenJimmyZtautauNp2_pt20.mc11c':
+    name: Ztautau Np2
+    latex: '$Z\rightarrow\tau\tau$ Np2'
+'AlpgenJimmyZtautauNp3_pt20.mc11c':
+    name: Ztautau Np3
+    latex: '$Z\rightarrow\tau\tau$ Np3'
+'AlpgenJimmyZtautauNp4_pt20.mc11c':
+    name: Ztautau Np4
+    latex: '$Z\rightarrow\tau\tau$ Np4'
+'AlpgenJimmyZtautauNp5_pt20.mc11c':
+    name: Ztautau Np5
+    latex: '$Z\rightarrow\tau\tau$ Np5'
+'AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c':
+    name: Ztautau Np0 Mll10to40
+    latex: '$Z\rightarrow\tau\tau$ Mll10to40 Np0'
+'AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c':
+    name: Ztautau Np1 Mll10to40
+    latex: '$Z\rightarrow\tau\tau$ Mll10to40 Np1'
+'AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c':
+    name: Ztautau Np2 Mll10to40
+    latex: '$Z\rightarrow\tau\tau$ Mll10to40 Np2'
+'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c':
+    name: Ztautau Np3 Mll10to40
+    latex: '$Z\rightarrow\tau\tau$ Mll10to40 Np3'
+'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c':
+    name: Ztautau Np4 Mll10to40
+    latex: '$Z\rightarrow\tau\tau$ Mll10to40 Np4'
+'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c':
+    name: Ztautau Np5 Mll10to40
+    latex: '$Z\rightarrow\tau\tau$ Mll10to40 Np5'
+'AlpgenJimmyZmumuNp0_pt20.mc11c':
+    name: Zmumu Np0 
+    latex: '$Z\rightarrow\mu\mu$ Np0'
+'AlpgenJimmyZmumuNp1_pt20.mc11c':
+    name: Zmumu Np1
+    latex: '$Z\rightarrow\mu\mu$ Np1'
+'AlpgenJimmyZmumuNp2_pt20.mc11c':
+    name: Zmumu Np2
+    latex: '$Z\rightarrow\mu\mu$ Np2'
+'AlpgenJimmyZmumuNp3_pt20.mc11c':
+    name: Zmumu Np3
+    latex: '$Z\rightarrow\mu\mu$ Np3'
+'AlpgenJimmyZmumuNp4_pt20.mc11c':
+    name: Zmumu Np4
+    latex: '$Z\rightarrow\mu\mu$ Np4'
+'AlpgenJimmyZmumuNp5_pt20.mc11c':
+    name: Zmumu Np5
+    latex: '$Z\rightarrow\mu\mu$ Np5'
+'AlpgenJimmyZmumuNp0_Mll10to40_pt20.mc11c':
+    name: Zmumu Np0 Mll10to40
+    latex: '$Z\rightarrow\mu\mu$ Mll10to40 Np0'
+'AlpgenJimmyZmumuNp1_Mll10to40_pt20.mc11c':
+    name: Zmumu Np1 Mll10to40
+    latex: '$Z\rightarrow\mu\mu$ Mll10to40 Np1'
+'AlpgenJimmyZmumuNp2_Mll10to40_pt20.mc11c':
+    name: Zmumu Np2 Mll10to40
+    latex: '$Z\rightarrow\mu\mu$ Mll10to40 Np2'
+'AlpgenJimmyZmumuNp3_Mll10to40_pt20.mc11c':
+    name: Zmumu Np3 Mll10to40
+    latex: '$Z\rightarrow\mu\mu$ Mll10to40 Np3'
+'AlpgenJimmyZmumuNp4_Mll10to40_pt20.mc11c':
+    name: Zmumu Np4 Mll10to40
+    latex: '$Z\rightarrow\mu\mu$ Mll10to40 Np4'
+'AlpgenJimmyZmumuNp5_Mll10to40_pt20.mc11c':
+    name: Zmumu Np5 Mll10to40
+    latex: '$Z\rightarrow\mu\mu$ Mll10to40 Np5'
+'AlpgenJimmyZeeNp0_pt20.mc11c':
+    name: Zee Np0
+    latex: '$Z\rightarrow ee$ Np0'
+'AlpgenJimmyZeeNp1_pt20.mc11c':
+    name: Zee Np1
+    latex: '$Z\rightarrow ee$ Np1'
+'AlpgenJimmyZeeNp2_pt20.mc11c':
+    name: Zee Np2
+    latex: '$Z\rightarrow ee$ Np2'
+'AlpgenJimmyZeeNp3_pt20.mc11c':
+    name: Zee Np3
+    latex: '$Z\rightarrow ee$ Np3'
+'AlpgenJimmyZeeNp4_pt20.mc11c':
+    name: Zee Np4
+    latex: '$Z\rightarrow ee$ Np4'
+'AlpgenJimmyZeeNp5_pt20.mc11c':
+    name: Zee Np5
+    latex: '$Z\rightarrow ee$ Np5'
+'AlpgenJimmyZeeNp0_Mll10to40_pt20.mc11c':
+    name: Zee Np0 Mll10to40
+    latex: '$Z\rightarrow ee$ Np0'
+'AlpgenJimmyZeeNp1_Mll10to40_pt20.mc11c':
+    name: Zee Np1 Mll10to40
+    latex: '$Z\rightarrow ee$ Np1'
+'AlpgenJimmyZeeNp2_Mll10to40_pt20.mc11c':
+    name: Zee Np2 Mll10to40
+    latex: '$Z\rightarrow ee$ Np2'
+'AlpgenJimmyZeeNp3_Mll10to40_pt20.mc11c':
+    name: Zee Np3 Mll10to40
+    latex: '$Z\rightarrow ee$ Np3'
+'AlpgenJimmyZeeNp4_Mll10to40_pt20.mc11c':
+    name: Zee Np4 Mll10to40
+    latex: '$Z\rightarrow ee$ Np4'
+'AlpgenJimmyZeeNp5_Mll10to40_pt20.mc11c':
+    name: Zee Np5 Mll10to40
+    latex: '$Z\rightarrow ee$ Np5'
+'AlpgenJimmyWtaunuNp0_pt20.mc11c':
+    name: Wtaunu Np0
+    latex: '$W\rightarrow\tau\nu$ Np0'
+'AlpgenJimmyWtaunuNp1_pt20.mc11c':
+    name: Wtaunu Np1
+    latex: '$W\rightarrow\tau\nu$ Np1'
+'AlpgenJimmyWtaunuNp2_pt20.mc11c':
+    name: Wtaunu Np2
+    latex: '$W\rightarrow\tau\nu$ Np2'
+'AlpgenJimmyWtaunuNp3_pt20.mc11c':
+    name: Wtaunu Np3
+    latex: '$W\rightarrow\tau\nu$ Np3'
+'AlpgenJimmyWtaunuNp4_pt20.mc11c':
+    name: Wtaunu Np4
+    latex: '$W\rightarrow\tau\nu$ Np4'
+'AlpgenJimmyWtaunuNp5_pt20.mc11c':
+    name: Wtaunu Np5
+    latex: '$W\rightarrow\tau\nu$ Np5'
+'AlpgenJimmyWmunuNp0_pt20.mc11c':
+    name: Wmunu Np0
+    latex: '$W\rightarrow\mu\nu$ Np0'
+'AlpgenJimmyWmunuNp1_pt20.mc11c':
+    name: Wmunu Np1
+    latex: '$W\rightarrow\mu\nu$ Np1'
+'AlpgenJimmyWmunuNp2_pt20.mc11c':
+    name: Wmunu Np2
+    latex: '$W\rightarrow\mu\nu$ Np2'
+'AlpgenJimmyWmunuNp3_pt20.mc11c':
+    name: Wmunu Np3
+    latex: '$W\rightarrow\mu\nu$ Np3'
+'AlpgenJimmyWmunuNp4_pt20.mc11c':
+    name: Wmunu Np4
+    latex: '$W\rightarrow\mu\nu$ Np4'
+'AlpgenJimmyWmunuNp5_pt20.mc11c':
+    name: Wmunu Np5
+    latex: '$W\rightarrow\mu\nu$ Np5'
+'AlpgenJimmyWenuNp0_pt20.mc11c':
+    name: Wenu Np0
+    latex: '$W\rightarrow e\nu$ Np0'
+'AlpgenJimmyWenuNp1_pt20.mc11c':
+    name: Wenu Np1
+    latex: '$W\rightarrow e\nu$ Np1'
+'AlpgenJimmyWenuNp2_pt20.mc11c':
+    name: Wenu Np2
+    latex: '$W\rightarrow e\nu$ Np2'
+'AlpgenJimmyWenuNp3_pt20.mc11c':
+    name: Wenu Np3
+    latex: '$W\rightarrow e\nu$ Np3'
+'AlpgenJimmyWenuNp4_pt20.mc11c':
+    name: Wenu Np4
+    latex: '$W\rightarrow e\nu$ Np4'
+'AlpgenJimmyWenuNp5_pt20.mc11c':
+    name: Wenu Np5
+    latex: '$W\rightarrow e\nu$ Np5'
+'st_tchan_taunu_McAtNlo_Jimmy.mc11c':
+    name: t-channel single top
+    latex: t-channel single top
+'st_schan_taunu_McAtNlo_Jimmy.mc11c':
+    name: s-channel single top
+    latex: s-channel single top
+'st_Wt_McAtNlo_Jimmy.mc11c':
+    name: Wt mode single top
+    latex: Wt mode single top
+'T1_McAtNlo_Jimmy.mc11c':
+    name: ttbar LL LH
+    latex: '$t\bar{t}$ LL LH' 
+'TTbar_FullHad_McAtNlo_Jimmy.mc11c':
+    name: ttbar HH
+    latex: '$t\bar{t}$ hh.mc11c'
+'McAtNlo_JIMMY_WpWm_taunutaunu.mc11c':
+    name: WpWm
+    latex: WpWm
+'gg2WW0240_JIMMY_WW_taunutaunu.mc11c':
+    name: WW
+    latex: WW
+'McAtNlo_JIMMY_WpZ_taunutautau.mc11c':
+    name: WpZ
+    latex: WpZ
+'McAtNlo_JIMMY_WmZ_taunutautau.mc11c':
+    name: WmZ
+    latex: WmZ
+'McAtNlo_JIMMY_WpZ_qqtautau.mc11c':
+    name: WpZ
+    latex: WpZ
+'McAtNlo_JIMMY_ZZ_4tau.mc11c':
+    name: ZZ 4tau
+    latex: ZZ 4tau
+'McAtNlo_JIMMY_ZZ_tautaununu.mc11c':
+    name: ZZ tautaununu
+    latex: ZZ tautaununu
+'McAtNlo_JIMMY_ZZ_tautauqq.mc11c':
+    name: ZZ tautauqq
+    latex: ZZ tautauqq
+'PowHegPythia_ggH100_tautauhh.mc11c':
+    name: ggH100
+    latex: 
+'PowHegPythia_ggH105_tautauhh.mc11c':
+    name: ggH105 
+    latex:
+'PowHegPythia_ggH110_tautauhh.mc11c':
+    name: ggH110
+    latex:
+'PowHegPythia_ggH115_tautauhh.mc11c':
+    name: ggH115
+    latex:
+'PowHegPythia_ggH120_tautauhh.mc11c':
+    name: ggH120
+    latex:
+'PowHegPythia_ggH125_tautauhh.mc11c':
+    name: ggH125
+    latex:
+'PowHegPythia_ggH130_tautauhh.mc11c':
+    name: ggH130
+    latex:
+'PowHegPythia_ggH135_tautauhh.mc11c':
+    name: ggH135
+    latex:
+'PowHegPythia_ggH140_tautauhh.mc11c':
+    name: ggH140
+    latex:
+'PowHegPythia_ggH145_tautauhh.mc11c':
+    name: ggH145
+    latex:
+'PowHegPythia_ggH150_tautauhh.mc11c':
+    name: ggH150
+    latex:
+'PowHegPythia_VBFH100_tautauhh.mc11c':
+    name: VBFH100
+    latex:
+'PowHegPythia_VBFH105_tautauhh.mc11c':
+    name: VBFH105
+    latex:
+'PowHegPythia_VBFH110_tautauhh.mc11c':
+    name: VBFH110
+    latex:
+'PowHegPythia_VBFH115_tautauhh.mc11c':
+    name: VBFH115
+    latex:
+'PowHegPythia_VBFH120_tautauhh.mc11c':
+    name: VBFH120
+    latex:
+'PowHegPythia_VBFH125_tautauhh.mc11c':
+    name: VBFH125
+    latex:
+'PowHegPythia_VBFH130_tautauhh.mc11c':
+    name: VBFH130
+    latex:
+'PowHegPythia_VBFH135_tautauhh.mc11c':
+    name: VBFH135
+    latex:
+'PowHegPythia_VBFH140_tautauhh.mc11c':
+    name: VBFH140
+    latex:
+'PowHegPythia_VBFH145_tautauhh.mc11c':
+    name: VBFH145
+    latex:
+'PowHegPythia_VBFH150_tautauhh.mc11c':
+    name: VBFH150
+    latex:
+'PythiaWH100_tautauhh.mc11c':
+    name: WH100
+    latex:
+'PythiaWH105_tautauhh.mc11c':
+    name: WH105
+    latex:
+'PythiaWH110_tautauhh.mc11c':
+    name: WH110
+    latex:
+'PythiaWH115_tautauhh.mc11c':
+    name: WH115
+    latex:
+'PythiaWH120_tautauhh.mc11c':
+    name: WH120
+    latex:
+'PythiaWH125_tautauhh.mc11c':
+    name: WH125
+    latex:
+'PythiaWH130_tautauhh.mc11c':
+    name: WH130
+    latex:
+'PythiaWH135_tautauhh.mc11c':
+    name: WH135
+    latex:
+'PythiaWH140_tautauhh.mc11c':
+    name: WH140
+    latex:
+'PythiaWH145_tautauhh.mc11c':
+    name: WH145
+    latex:
+'PythiaWH150_tautauhh.mc11c':
+    name: WH150
+    latex:
+'PythiaZH100_tautauhh.mc11c':
+    name: ZH100
+    latex:
+'PythiaZH105_tautauhh.mc11c':
+    name: ZH105
+    latex:
+'PythiaZH110_tautauhh.mc11c':
+    name: ZH110
+    latex:
+'PythiaZH115_tautauhh.mc11c':
+    name: ZH115
+    latex:
+'PythiaZH120_tautauhh.mc11c':
+    name: ZH120
+    latex:
+'PythiaZH125_tautauhh.mc11c':
+    name: ZH125
+    latex:
+'PythiaZH130_tautauhh.mc11c':
+    name: ZH130
+    latex:
+'PythiaZH135_tautauhh.mc11c':
+    name: ZH135
+    latex:
+'PythiaZH140_tautauhh.mc11c':
+    name: ZH140
+    latex:
+'PythiaZH145_tautauhh.mc11c':
+    name: ZH145
+    latex:
+'PythiaZH150_tautauhh.mc11c':
+    name: ZH150
+    latex:
