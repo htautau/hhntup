@@ -357,34 +357,34 @@ class Systematic(EventFilter):
         # Also note that ROOT's gRandom calls TRandom3.
         jetRandom = ROOT.TRandom3()
 
-        for(int iJet = 0; iJet < jet_n; ++iJet){
-        float jesShiftUp = 0.0
-        float jesShiftDown = 0.0
-        float jerShift = 1.0
-        # Safest to assume nothing about the uncertainties on soft jets.
-        # These will go into SoftJets anyhow, and so the JES systematics
-        # aren't used.
+        # jet_ is jet_AntiKt4LCTopo in tau D3PDs
+        for jet in event.jets:
+            jesShiftUp = 0.0
+            jesShiftDown = 0.0
+            jerShift = 1.0
+            # Safest to assume nothing about the uncertainties on soft jets.
+            # These will go into SoftJets anyhow, and so the JES systematics
+            # aren't used.
 
-        if(jet_pt.at(iJet) > 20e3
-           && jet_pt.at(iJet) < 7000e3
-           && fabs(jet_eta.at(iJet)) < 4.5){
+            if(jet_pt.at(iJet) > 20e3
+               && jet_pt.at(iJet) < 7000e3
+               && fabs(jet_eta.at(iJet)) < 4.5){
 
-          # delta R cut needed to apply close-by jets uncertainty
-          float drmin=9999
-          double pi = TMath::Pi()
-          if( jet_pt.at(iJet)>20000) {
-        for (int ii = 0; ii < jet_n; ii++ ) {
-          if(jet_emscale_pt.at(ii)>7000) {
-            if(iJet!=ii) {
-              double deta = jet_eta.at(iJet) - jet_eta.at(ii)
-              double dphi = fabs(fmod((jet_phi.at(iJet)
-                           - jet_phi.at(ii))+3*pi,2*pi)-pi)
-              double dr = sqrt(deta*deta+dphi*dphi)
-              if(dr<drmin) drmin=dr
+              # delta R cut needed to apply close-by jets uncertainty
+              float drmin=9999
+              double pi = TMath::Pi()
+              if( jet_pt.at(iJet)>20000) {
+            for (int ii = 0; ii < jet_n; ii++ ) {
+              if(jet_emscale_pt.at(ii)>7000) {
+                if(iJet!=ii) {
+                  double deta = jet_eta.at(iJet) - jet_eta.at(ii)
+                  double dphi = fabs(fmod((jet_phi.at(iJet)
+                               - jet_phi.at(ii))+3*pi,2*pi)-pi)
+                  double dr = sqrt(deta*deta+dphi*dphi)
+                  if(dr<drmin) drmin=dr
+                }
+              }
             }
-          }
-        }
-        }
 
         # The bool is the "isPos" argument
         jesShiftUp = self.jesTool.getRelUncert(jet_pt.at(iJet),
