@@ -5,7 +5,8 @@ Adapted from the Example.C in MissingETUtility/macros
 import sys
 
 # ROOT imports
-from ROOT import TH1D, TFile, TRandom3
+import ROOT
+from ROOT import TH1D, TFile
 
 # ATLAS tools imports
 # MissingETUtility
@@ -266,10 +267,10 @@ class Systematic(EventFilter):
         # then feed it to the checkConsistency() method.
         # The difference can be retrieved via a reference argument.
 
-        METObject refFinal_test(MET_RefFinal_etx,
+        refFinal_test = METObject(MET_RefFinal_etx,
                   MET_RefFinal_ety,
                   MET_RefFinal_sumet)
-        bool check_refFinal = self.testUtil.checkConsistency(refFinal_test,METUtil::RefFinal)
+        check_refFinal = self.testUtil.checkConsistency(refFinal_test,METUtil::RefFinal)
         if check_refFinal:
             print >> self.stream, "RefFinal checks out!"
         else:
@@ -277,23 +278,24 @@ class Systematic(EventFilter):
 
         # By filling a vector of terms, you can test all of them in one function call.
         # The sum (and sumET) will be tested as well. (Can't get the difference this way).
-        METObject refEle_test(MET_RefEle_etx,
+        refEle_test = METObject(MET_RefEle_etx,
                 MET_RefEle_ety,
                 MET_RefEle_sumet)
-        METObject refGamma_test(MET_RefGamma_etx,
+        refGamma_test = METObject(MET_RefGamma_etx,
                 MET_RefGamma_ety,
                 MET_RefGamma_sumet)
-        METObject refJet_test(MET_RefJet_etx,
+        refJet_test = METObject(MET_RefJet_etx,
                 MET_RefJet_ety,
                 MET_RefJet_sumet)
-        METObject muonBoy_test(MET_MuonBoy_etx,
+        muonBoy_test = METObject(MET_MuonBoy_etx,
                  MET_MuonBoy_ety,
                  MET_MuonBoy_sumet)
-        vector<pair<int,METObject> > testvector
-        testvector.push_back(pair<int,METObject>(METUtil::RefEle,refEle_test))
-        testvector.push_back(pair<int,METObject>(METUtil::RefGamma,refGamma_test))
-        testvector.push_back(pair<int,METObject>(METUtil::RefJet,refJet_test))
-        testvector.push_back(pair<int,METObject>(METUtil::MuonTotal,muonBoy_test))
+
+        testvector = ROOT.vector('pair<int,METObject>')()
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefEle,refEle_test))
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefGamma,refGamma_test))
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefJet,refJet_test))
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.MuonTotal,muonBoy_test))
 
         check = self.testUtil.checkConsistency(testvector)
         if check:
@@ -322,37 +324,38 @@ class Systematic(EventFilter):
 
         # Check for a good primary vertex
         # This is needed for jet and soft term systematics
-        bool goodPV = False
-        int nvtxsoftmet = 0
-        int nvtxjets = 0
-        if(vxp_n>0) {
-        # Most D3PDs contain the vx_type branch, but some don't.
-        # Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
-        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
-        # to the first vertex in the collection.
-        # Otherwise, you should ensure that the vx_type branch is available.
-        for(int i=0; i<vxp_n; i++) {
-          if(vxp_type.at(i) == 1 && vxp_nTracks.at(i)>2 && fabs(vxp_z.at(i))<200.) goodPV = True
-        }
-        if(goodPV) {
-          for(int i=0; i<vxp_n; i++) {
-        if(vxp_nTracks.at(i)>2) nvtxsoftmet++
-        if(vxp_nTracks.at(i)>1) nvtxjets++
-          }
-        }
-        }
+        goodPV = False
+        nvtxsoftmet = 0
+        nvtxjets = 0
+
+        if event.vertices:
+            # Most D3PDs contain the vx_type branch, but some don't.
+            # Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
+            # If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
+            # to the first vertex in the collection.
+            # Otherwise, you should ensure that the vx_type branch is available.
+            for vertex in event.vertices:
+                if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
+                    goodPV = True
+            if goodPV:
+                for vertex in event.vertices:
+                    if vertex.nTracks > 2:
+                        nvtxsoftmet += 1
+                    if vertex.nTracks > 1:
+                        nvtxjets += 1
+
         # First, we get the jet energy scale uncertainties and
         # systematic variation in the jet resolutions
-        vector<float> jesUp
-        vector<float> jesDown
-        vector<float> jerUp
-        vector<float> jerDown
+        jesUp = ROOT.vector('float')()
+        jesDown = ROOT.vector('float')()
+        jerUp = ROOT.vector('float')()
+        jerDown = ROOT.vector('float')()
 
         # Note on use of ROOT random number generators:
         # TRandom and TRandom2 have many documented deficiencies.
         # TRandom3 is generally considered safely usable.
         # Also note that ROOT's gRandom calls TRandom3.
-        jetRandom = TRandom3
+        jetRandom = ROOT.TRandom3()
 
         for(int iJet = 0; iJet < jet_n; ++iJet){
         float jesShiftUp = 0.0
@@ -577,20 +580,20 @@ class Systematic(EventFilter):
 
         }#end of muon loop
 
-        vector<float> tesUp
-        vector<float> tesDown
+        tesUp = ROOT.vector('float')()
+        tesDown = ROOT.vector('float')()
 
         # And for taus (this is test code, do not use without tau group approval)
-        for(int iTau=0; iTau<tau_n; iTau++) {
-        double pt = tau_pt.at(iTau)
-        double eta = tau_eta.at(iTau)
-        int nProng = tau_nProng.at(iTau)
-        double uncert = self.tesTool.GetTESUncertainty(pt/1e3, eta, nProng)
+        for int iTau=0; iTau<tau_n; iTau++:
+            double pt = tau_pt.at(iTau)
+            double eta = tau_eta.at(iTau)
+            int nProng = tau_nProng.at(iTau)
+            double uncert = self.tesTool.GetTESUncertainty(pt/1e3, eta, nProng)
 
-        if(uncert < 0) uncert = 0
-        tesUp.push_back(uncert)
-        tesDown.push_back(-1*uncert)
-        }
+            if uncert < 0:
+                uncert = 0
+            tesUp.push_back(uncert)
+            tesDown.push_back(-1*uncert)
 
         # This demonstration is for doing smearing and systematics
         self.systUtil.reset()
