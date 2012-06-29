@@ -28,9 +28,9 @@ from ROOT import MultijetJESUncertaintyProvider
 # JetResolution
 from ROOT import JERProvider
 # egammaAnalysisUtils
-from ROOT import EnergyRescaler
+from ROOT import eg2011
 # MuonMomentumCorrections
-from ROOT import SmearingClass
+from ROOT import MuonSmear
 # MissingETUtility
 from ROOT import TESUncertaintyProvider
 
@@ -161,7 +161,7 @@ class Systematics(EventFilter):
         # Tag assumed: JetResolution-01-00-00
         self.jerTool = JERProvider(
             "AntiKt4LCTopoJES", "Truth",
-            "../../Jet/JetResolution/share/JERProviderPlots.root")
+            JetResolution.get_resource('JERProviderPlots.root'))
         self.jerTool.init()
 
         # Tag assumed: egammaAnalysisUtils-00-02-76
@@ -177,6 +177,12 @@ class Systematics(EventFilter):
         self.tesTool = TESUncertaintyProvider()
 
     def passes(self, event):
+
+        # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
+        if self.datatype = datasets.DATA:
+            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
+        else:
+            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
 
         # Check for a good primary vertex
         # This is needed for jet and soft term systematics
@@ -219,58 +225,138 @@ class Systematics(EventFilter):
         self.systUtil.setOriJetParameters(event.jet_pt)
 
         # Putting in smeared and/or scaled objects will cause that to be reflected in MET
-        self.systUtil.setElectronParameters(el_smeared_pt, el_eta, el_phi,
-                        el_MET_wet, el_MET_wpx, el_MET_wpy,
-                        el_MET_statusWord)
+        self.systUtil.setElectronParameters(
+                event.el_smeared_pt,
+                event.el_eta,
+                event.el_phi,
+                event.el_MET_wet,
+                event.el_MET_wpx,
+                event.el_MET_wpy,
+                event.el_MET_statusWord)
 
-        self.systUtil.setPhotonParameters(ph_smeared_pt, ph_eta, ph_phi,
-                      ph_MET_wet, ph_MET_wpx, ph_MET_wpy,
-                      ph_MET_statusWord)
+        self.systUtil.setPhotonParameters(
+                event.ph_smeared_pt,
+                event.ph_eta,
+                event.ph_phi,
+                event.ph_MET_wet,
+                event.ph_MET_wpx,
+                event.ph_MET_wpy,
+                event.ph_MET_statusWord)
 
-        self.systUtil.setTauParameters(tau_pt, tau_eta, tau_phi,
-                       tau_MET_wet, tau_MET_wpx, tau_MET_wpy,
-                       tau_MET_statusWord)
+        self.systUtil.setTauParameters(
+                event.tau_pt,
+                event.tau_eta,
+                event.tau_phi,
+                event.tau_MET_wet,
+                event.tau_MET_wpx,
+                event.tau_MET_wpy,
+                event.tau_MET_statusWord)
 
-        self.systUtil.setMuonParameters(mu_smeared_pt, mu_eta, mu_phi,
-                    mu_MET_wet, mu_MET_wpx, mu_MET_wpy,
-                    mu_MET_statusWord)
+        self.systUtil.setMuonParameters(
+                event.mu_smeared_pt,
+                event.mu_eta,
+                event.mu_phi,
+                event.mu_MET_wet,
+                event.mu_MET_wpx,
+                event.mu_MET_wpy,
+                event.mu_MET_statusWord)
 
         # In this instance there is an overloaded version of setExtraMuonParameters that accepts smeared pTs for spectro
-        self.systUtil.setExtraMuonParameters(mu_smeared_ms_pt, mu_ms_theta, mu_ms_phi)
+        self.systUtil.setExtraMuonParameters(
+                event.mu_smeared_ms_pt,
+                event.mu_ms_theta,
+                event.mu_ms_phi)
 
-        self.systUtil.setMETTerm(METUtil.RefTau, MET_RefTau_etx, MET_RefTau_ety, MET_RefTau_sumet)
-        self.systUtil.setMETTerm(METUtil.RefMuon, MET_RefMuon_etx, MET_RefMuon_ety, MET_RefMuon_sumet)
-        self.systUtil.setMETTerm(METUtil.SoftJets, MET_SoftJets_etx, MET_SoftJets_ety, MET_SoftJets_sumet)
+        self.systUtil.setMETTerm(
+                METUtil.RefTau,
+                event.MET_RefTau_etx,
+                event.MET_RefTau_ety,
+                event.MET_RefTau_sumet)
+
+        self.systUtil.setMETTerm(
+                METUtil.RefMuon,
+                event.MET_RefMuon_etx,
+                event.MET_RefMuon_ety,
+                event.MET_RefMuon_sumet)
+
+        self.systUtil.setMETTerm(
+                METUtil.SoftJets,
+                event.MET_SoftJets_etx,
+                event.MET_SoftJets_ety,
+                event.MET_SoftJets_sumet)
+
         #   self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
-        self.systUtil.setMETTerm(METUtil.CellOutEflow, MET_CellOut_Eflow_etx, MET_CellOut_Eflow_ety, MET_CellOut_Eflow_sumet)
+        self.systUtil.setMETTerm(
+                METUtil.CellOutEflow,
+                event.MET_CellOut_Eflow_etx,
+                event.MET_CellOut_Eflow_ety,
+                event.MET_CellOut_Eflow_sumet)
 
         # These set up the systematic "SoftTerms_ptHard"
         self.systUtil.setNvtx(nvtxsoftmet)
-        #  if(!isData)
+        #  if self.datatype != datasets.DATA:
         #    self.systUtil.setMETTerm(METUtil.Truth, MET_Truth_NonInt_etx, MET_Truth_NonInt_ety, MET_Truth_NonInt_sumet)
 
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Jets, jesUp, jesDown)
-        self.systUtil.setObjectResolutionShift(METUtil.Jets, jerUp, jerDown)
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Jets,
+                jesUp,
+                jesDown)
 
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Electrons, eesUp, eesDown)
-        self.systUtil.setObjectResolutionShift(METUtil.Electrons, eerUp, eerDown)
+        self.systUtil.setObjectResolutionShift(
+                METUtil.Jets,
+                jerUp,
+                jerDown)
 
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Photons, pesUp, pesDown)
-        self.systUtil.setObjectResolutionShift(METUtil.Photons, perUp, perDown)
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Electrons,
+                eesUp,
+                eesDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.Electrons,
+                eerUp,
+                eerDown)
+
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Photons,
+                pesUp,
+                pesDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.Photons,
+                perUp,
+                perDown)
 
         # Muons are complicated, and MET makes use of track, spectro, and combined quantites,
         # so we need all of their resolutions.
         # comboms reflects that it is the combined muon res affected by shifting ms res up and down.
         # comboid is for shifting the id res up and down
-        self.systUtil.setObjectResolutionShift(METUtil.MuonsComboMS, cb_mermsUp, cb_mermsDown)
-        self.systUtil.setObjectResolutionShift(METUtil.MuonsComboID, cb_meridUp, cb_meridDown)
-        self.systUtil.setObjectResolutionShift(METUtil.SpectroMuons, mermsUp, mermsDown)
+        self.systUtil.setObjectResolutionShift(
+                METUtil.MuonsComboMS,
+                cb_mermsUp,
+                cb_mermsDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.MuonsComboID,
+                cb_meridUp,
+                cb_meridDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.SpectroMuons,
+                mermsUp,
+                mermsDown)
 
         # For now the mes only affects combined
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Muons, mesUp, mesDown)
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Muons,
+                mesUp,
+                mesDown)
 
         # Taus are just in as an example
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Taus, tesUp, tesDown)
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Taus,
+                tesUp,
+                tesDown)
 
         # Fill histograms
         met_RefFinal = self.systUtil.getMissingET(METUtil.RefFinal)
@@ -330,12 +416,6 @@ class Systematics(EventFilter):
 
         met_RefFinal_MERMSDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSDown)
         self.h_RefFinal_MERMSDown.Fill(met_RefFinal_MERMSDown.et()/1000)
-
-        # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
-        if isData:
-            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
-        else:
-            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
 
         # Soft terms systematics
         met_RefFinal_ScaleSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp)
@@ -507,7 +587,7 @@ class Systematics(EventFilter):
 
             # Correct the measured energies in data, and scale by systematic variations
             correction = 1.
-            if isData:
+            if self.datatype == datasets.DATA:
                 correction = self.egammaTool.applyEnergyCorrectionMeV(
                         el.cl_eta,
                         el.cl_phi,
@@ -559,7 +639,7 @@ class Systematics(EventFilter):
             # Conversions are treated differently.
             correction = 1.
             photontype = "CONVERTED_PHOTON" if ph.isConv else "UNCONVERTED_PHOTON"
-            if isData:
+            if self.datatype == datasets.DATA:
                 correction = self.egammaTool.applyEnergyCorrectionMeV(
                         ph.cl_eta,
                         ph.cl_phi,
