@@ -7,14 +7,22 @@ import math
 from math import sin, sqrt, pow
 
 from atlastools import utils
+from atlastools import datasets
 
 # ROOT imports
 import ROOT
 from ROOT import TH1D, TFile
 
 # ATLAS tools imports
+from externaltools import MissingETUtility
+from externaltools import MuonMomentumCorrections
+from externaltools import JetUncertainties
+from externaltools import JetResolution
+from externaltools import egammaAnalysisUtils
+
 # MissingETUtility
 from ROOT import METUtility
+from ROOT import METUtil
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
 # JetResolution
@@ -27,10 +35,86 @@ from ROOT import SmearingClass
 from ROOT import TESUncertaintyProvider
 
 
-class Systematic(EventFilter):
+class Systematics(EventFilter):
 
-    def __init__(self, datatype, year, verbose=False, stream=None, **kwargs):
+    # electrons
+    EES_UP = METUtil.EESUp
+    EES_DOWN = METUtil.EESDown
+    EER_UP = METUtil.EERUp
+    EER_DOWN = METUtil.EERDown
 
+    # photons
+    PES_UP = METUtil.PESUp
+    PES_DOWN = METUtil.PESDown
+    PER_UP = METUtil.PERUp
+    PER_DOWN = METUtil.PERDown
+
+    # taus
+    TES_UP = METUtil.TESUp
+    TES_DOWN = METUtil.TESDown
+    TER_UP = METUtil.TERUp
+    TER_DOWN = METUtil.TERDown
+
+    # jets
+    JES_UP = METUtil.JESUp
+    JES_DOWN = METUtil.JESDown
+    JER_UP = METUtil.JERUp
+    JER_DOWN = METUtil.JERDown
+
+    # muons
+    MERID_UP = METUtil.MERIDUp
+    MERID_DOWN = METUtil.MERIDDown
+    MERMS_UP = METUtil.MERMSUp
+    MERMS_DOWN = METUtil.MERMSDown
+    MES_UP = METUtil.MESUp
+    MES_DOWN = METUtil.MESDown
+
+    # cells ?
+    CES_UP = METUtil.CESUp
+    CES_DOWN = METUtil.CESDown
+    CER_UP = METUtil.CERUp
+    CER_DOWN = METUtil.CERDown
+
+    # tracks
+    TRKES_UP = METUtil.TrkESUp
+    TRKES_DOWN = METUtil.TrkESDown
+    TRKER_UP = METUtil.TrkERUp
+    TRKER_DOWN = METUtil.TrkERDown
+
+    # clusters
+    ALLCLUSTERS_UP = METUtil.AllClustersUp
+    ALLCLUSTERS_DOWN = METUtil.AllClustersDown
+
+    # soft terms
+    RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
+    RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
+
+    RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
+    RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
+
+    SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
+    SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
+
+    RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
+    RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
+
+    SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
+    SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
+
+    # pileup
+    PILEUP_UP = METUtil.PileupUp
+    PILEUP_DOWN = METUtil.PileupDown
+
+    def __init__(self,
+            systematic,
+            datatype,
+            year,
+            verbose=False,
+            stream=None,
+            **kwargs):
+
+        super(Systematics, self).__init__(**kwargs)
+        self.systematic = systematic
         self.datatype = datatype
         self.year = year
         self.verbose = verbose
@@ -92,239 +176,7 @@ class Systematic(EventFilter):
         # No tag yet, testing code
         self.tesTool = TESUncertaintyProvider()
 
-        # Prepare an output file
-        self.outfile = TFile("metutil_example.root","RECREATE")
-        # Set up a bunch of histograms
-        self.h_RefFinal = TH1D("self.h_RefFinal", "RefFinal",50,0,1000)
-        # Jet systematics
-        self.h_RefFinal_JESUp = TH1D("self.h_RefFinal_JESUp", "RefFinal JESUp",50,0,1000)
-        self.h_RefFinal_JESDown = TH1D("self.h_RefFinal_JESDown", "RefFinal JESDown",50,0,1000)
-        self.h_RefFinal_JERUp = TH1D("self.h_RefFinal_JERUp", "RefFinal JERUp",50,0,1000)
-        # Electron systematics
-        self.h_RefFinal_EESUp = TH1D("self.h_RefFinal_EESUp", "RefFinal EESUp",50,0,1000)
-        self.h_RefFinal_EESDown = TH1D("self.h_RefFinal_EESDown",
-        "RefFinal EESDown",50,0,1000)
-        self.h_RefFinal_EERUp = TH1D("self.h_RefFinal_EERUp",
-          "RefFinal EERUp",50,0,1000)
-        self.h_RefFinal_EERDown = TH1D("self.h_RefFinal_EERDown",
-        "RefFinal EERDown",50,0,1000)
-        # Photon systematics
-        self.h_RefFinal_PESUp = TH1D("self.h_RefFinal_PESUp",
-          "RefFinal PESUp",50,0,1000)
-        self.h_RefFinal_PESDown = TH1D("self.h_RefFinal_PESDown",
-        "RefFinal PESDown",50,0,1000)
-        self.h_RefFinal_PERUp = TH1D("self.h_RefFinal_PERUp",
-          "RefFinal PERUp",50,0,1000)
-        self.h_RefFinal_PERDown = TH1D("self.h_RefFinal_PERDown",
-        "RefFinal PERDown",50,0,1000)
-        # Muon systematics
-        self.h_RefFinal_MESUp = TH1D("self.h_RefFinal_MESUp",
-          "RefFinal MESUp",50,0,1000)
-        self.h_RefFinal_MESDown = TH1D("self.h_RefFinal_MESDown",
-        "RefFinal MESDown",50,0,1000)
-        self.h_RefFinal_MERIDUp = TH1D("self.h_RefFinal_MERIDUp",
-        "RefFinal MERIDUp",50,0,1000)
-        self.h_RefFinal_MERIDDown = TH1D("self.h_RefFinal_MERIDDown",
-          "RefFinal MERIDDown",50,0,1000)
-        self.h_RefFinal_MERMSUp = TH1D("self.h_RefFinal_MERMSUp",
-        "RefFinal MERMSUp",50,0,1000)
-        self.h_RefFinal_MERMSDown = TH1D("self.h_RefFinal_MERMSDown",
-          "RefFinal MERMSDown",50,0,1000)
-        # Soft terms systematics
-        self.h_RefFinal_ScaleSoftTermsUp = TH1D("self.h_RefFinal_ScaleSoftTermsUp",
-             "RefFinal ScaleSoftTermsUp",50,0,1000)
-        self.h_RefFinal_ScaleSoftTermsDown = TH1D("self.h_RefFinal_ScaleSoftTermsDown",
-               "RefFinal ScaleSoftTermsDown",50,0,1000)
-        self.h_RefFinal_ResoSoftTermsUp = TH1D("self.h_RefFinal_ResoSoftTermsUp",
-            "RefFinal ResoSoftTermsUp",50,0,1000)
-        self.h_RefFinal_ResoSoftTermsDown = TH1D("self.h_RefFinal_ResoSoftTermsDown",
-              "RefFinal ResoSoftTermsDown",50,0,1000)
-        # Alternate soft terms systematics
-        self.h_RefFinal_ScaleSoftTermsUp_ptHard = TH1D("self.h_RefFinal_ScaleSoftTermsUp_ptHard",
-                "RefFinal ScaleSoftTermsUp_ptHard",50,0,1000)
-        self.h_RefFinal_ScaleSoftTermsDown_ptHard = TH1D("self.h_RefFinal_ScaleSoftTermsDown_ptHard",
-                  "RefFinal ScaleSoftTermsDown_ptHard",50,0,1000)
-        self.h_RefFinal_ResoSoftTermsUp_ptHard = TH1D("self.h_RefFinal_ResoSoftTermsUp_ptHard",
-                   "RefFinal ResoSoftTermsUp_ptHard",50,0,1000)
-        self.h_RefFinal_ResoSoftTermsUpDown_ptHard = TH1D("self.h_RefFinal_ResoSoftTermsUpDown_ptHard",
-                   "RefFinal ResoSoftTermsUpDown_ptHard",50,0,1000)
-        self.h_RefFinal_ResoSoftTermsDownUp_ptHard = TH1D("self.h_RefFinal_ResoSoftTermsDownUp_ptHard",
-                   "RefFinal ResoSoftTermsDownUp_ptHard",50,0,1000)
-        self.h_RefFinal_ResoSoftTermsDown_ptHard = TH1D("self.h_RefFinal_ResoSoftTermsDown_ptHard",
-                 "RefFinal ResoSoftTermsDown_ptHard",50,0,1000)
-
-
     def passes(self, event):
-
-        # See this method for an example of setting up the METUtility
-        # such that it can rebuild the D3PD nominal MET values.
-        self.CheckMetRebuilding()
-
-        # See this method for an example of how to pass object systematics
-        # to METUtility such that they can be propagated to the MET.
-        self.DemoMetSystematics()
-        return True
-
-    def CheckMetRebuilding(self, event):
-
-        # Demonstrates how to set up the METUtility with object momenta such that
-        # MET_RefFinal can be rebuilt matching the values in D3PD.
-
-        # Start with a clean METUtility
-        self.testUtil.reset()
-
-        # For these, just the kinematics need to be set
-        self.testUtil.setElectronParameters(el_pt, el_eta, el_phi,
-                        el_MET_wet, el_MET_wpx, el_MET_wpy,
-                        el_MET_statusWord)
-
-        self.testUtil.setPhotonParameters(ph_pt, ph_eta, ph_phi,
-                      ph_MET_wet, ph_MET_wpx, ph_MET_wpy,
-                      ph_MET_statusWord)
-
-        #  Tau rebuilding is unsafe. The tau finding is frequently rerun in D3PD.
-        #  self.testUtil.setTauParameters(tau_pt, tau_eta, tau_phi,
-        #			     tau_MET_wet, tau_MET_wpx, tau_MET_wpy,
-        #			     tau_MET_statusWord)
-
-        #  Cluster rebuilding is just for specialist studies
-        #  self.testUtil.setClusterParameters(cl_pt, cl_eta, cl_phi,
-        #				 cl_MET_wet, cl_MET_wpx, cl_MET_wpy,
-        #				 cl_MET_statusWord)
-
-        #  Track rebuilding is just for specialist studies
-        #  self.testUtil.setTrackParameters(trk_pt, trk_eta, trk_phi,
-        #			       trk_MET_wet, trk_MET_wpx, trk_MET_wpy,
-        #			       trk_MET_statusWord)
-
-        # The SoftJets term is now to be taken from D3PD, and no "hard jets" are allowed
-        # to enter it. Recalibration or smearing could cause jets that were above the
-        # 20 GeV threshold to drop below it, so we supply the original pT's to prevent
-        # them from being moved out of RefJet.
-        self.testUtil.setJetParameters(jet_pt, jet_eta, jet_phi, jet_E,
-                       jet_MET_wet, jet_MET_wpx, jet_MET_wpy,
-                       jet_MET_statusWord)
-        self.testUtil.setOriJetParameters(jet_pt)
-
-        # Muons may be ID, combined, or standalone. For the latter especially,
-        # we need to set the MS four-momenta because they are treated differently.
-        self.testUtil.setMuonParameters(mu_pt, mu_eta, mu_phi,
-                      mu_MET_wet, mu_MET_wpx, mu_MET_wpy,
-                      mu_MET_statusWord)
-        self.testUtil.setExtraMuonParameters(mu_ms_qoverp, mu_ms_theta, mu_ms_phi, mu_charge)
-        # An alternative version of this method is demonstrated below, and takes pT, eta, phi instead.
-        # This is more convenient when one needs to smear the pT, for example.
-
-        # When the terms are not rebuilt from the objects, due to incomplete info,
-        # then one needs to set the term directly from the stored value in the D3PD.
-        # This might also be done if you aren't interested in the possible variations
-        # of that term. E.g. if you only care about photons, no need to rebuild muons.
-
-        # self.testUtil.setMETTerm(METUtil.RefJet, MET_RefJet_etx, MET_RefJet_ety, MET_RefJet_sumet)
-        self.testUtil.setMETTerm(METUtil.SoftJets, MET_SoftJets_etx, MET_SoftJets_ety, MET_SoftJets_sumet)
-        # self.testUtil.setMETTerm(METUtil.RefEle, MET_RefEle_etx, MET_RefEle_ety, MET_RefEle_sumet)
-        # self.testUtil.setMETTerm(METUtil.RefGamma, MET_RefGamma_etx, MET_RefGamma_ety, MET_RefGamma_sumet)
-
-        # *** Note the difference in naming -- there is normally no MET_MuonTotal term.
-        #     It's usually Muon_Total, Muon_Total_Muid, something like that.
-        #     MET_RefFinal in particular uses MET_MuonBoy.
-        # self.testUtil.setMETTerm(METUtil.MuonTotal, MET_MuonBoy_etx, MET_MuonBoy_ety, MET_MuonBoy_sumet)
-
-        # *** Note that RefMuon is not rebuilt from muons -- it is a calorimeter term.
-        self.testUtil.setMETTerm(METUtil.RefMuon, MET_RefMuon_etx, MET_RefMuon_ety, MET_RefMuon_sumet)
-        self.testUtil.setMETTerm(METUtil.RefTau, MET_RefTau_etx, MET_RefTau_ety, MET_RefTau_sumet)
-        # self.testUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
-        self.testUtil.setMETTerm(METUtil.CellOutEflow, MET_CellOut_Eflow_etx, MET_CellOut_Eflow_ety, MET_CellOut_Eflow_sumet)
-
-        # This is the simple check, where you compare the terms manually against what's in the D3PD.
-        # Note: every call to getMissingET recomputes the terms, so if you need to get more than one
-        # value, e.g. etx, ety, et, sumET, it's more efficient to get the METObject.
-        # Usually, comparing etx and/or ety is more informative, because et could be right if
-        # etx and ety were flipped, for example. They also add linearly, which et doesn't.
-
-        RefEle_util = self.testUtil.getMissingET(METUtil.RefEle)
-        RefGamma_util = self.testUtil.getMissingET(METUtil.RefGamma)
-        RefTau_util = self.testUtil.getMissingET(METUtil.RefTau)
-        RefMuon_util = self.testUtil.getMissingET(METUtil.RefMuon)
-        RefJet_util = self.testUtil.getMissingET(METUtil.RefJet)
-        SoftJets_util = self.testUtil.getMissingET(METUtil.SoftJets)
-        #refCellOut_util = self.testUtil.getMissingET(METUtil.CellOut)
-        CellOutEflow_util = self.testUtil.getMissingET(METUtil.CellOutEflow)
-        MuonTotal_util = self.testUtil.getMissingET(METUtil.MuonTotal)
-        RefFinal_util = self.testUtil.getMissingET(METUtil.RefFinal)
-
-        if self.verbose:
-            print >> self.stream, "** Manual consistency check **" << endl
-            print >> self.stream, "Term:    Original   vs    Tool output"
-            print >> self.stream, "RefEle etx: "    << MET_RefEle_etx   << " vs " << RefEle_util.etx()
-            print >> self.stream, "RefGamma etx: "  << MET_RefGamma_etx << " vs " << RefGamma_util.etx()
-            print >> self.stream, "RefTau etx: "    << MET_RefTau_etx   << " vs " << RefTau_util.etx()
-            print >> self.stream, "RefMuon etx: "   << MET_RefMuon_etx  << " vs " << RefMuon_util.etx()
-            print >> self.stream, "RefJet etx: "    << MET_RefJet_etx   << " vs " << RefJet_util.etx()
-            print >> self.stream, "SoftJets etx: "   << MET_SoftJets_etx << " vs " << SoftJets_util.etx()
-            print >> self.stream, "MuonBoy etx: "   << MET_MuonBoy_etx  << " vs " << MuonTotal_util.etx()
-            print >> self.stream, "CellOut_Eflow etx: " << MET_CellOut_Eflow_etx << " vs " << CellOutEflow_util.etx()
-            print >> self.stream, "RefFinal etx: "  << MET_RefFinal_etx << " vs " << RefFinal_util.etx()  << endl
-
-        # If you don't want to test manually, there's a built-in consistency check.
-        # To test just one term, fill a METObject with the appropriate values,
-        # then feed it to the checkConsistency() method.
-        # The difference can be retrieved via a reference argument.
-
-        refFinal_test = METObject(MET_RefFinal_etx,
-                  MET_RefFinal_ety,
-                  MET_RefFinal_sumet)
-        check_refFinal = self.testUtil.checkConsistency(refFinal_test,METUtil.RefFinal)
-        if check_refFinal:
-            print >> self.stream, "RefFinal checks out!"
-        else:
-            print >> self.stream, "RefFinal doesn't check out!"
-
-        # By filling a vector of terms, you can test all of them in one function call.
-        # The sum (and sumET) will be tested as well. (Can't get the difference this way).
-        refEle_test = METObject(MET_RefEle_etx,
-                MET_RefEle_ety,
-                MET_RefEle_sumet)
-        refGamma_test = METObject(MET_RefGamma_etx,
-                MET_RefGamma_ety,
-                MET_RefGamma_sumet)
-        refJet_test = METObject(MET_RefJet_etx,
-                MET_RefJet_ety,
-                MET_RefJet_sumet)
-        muonBoy_test = METObject(MET_MuonBoy_etx,
-                 MET_MuonBoy_ety,
-                 MET_MuonBoy_sumet)
-
-        testvector = ROOT.vector('pair<int,METObject>')()
-        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefEle,refEle_test))
-        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefGamma,refGamma_test))
-        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefJet,refJet_test))
-        testvector.push_back(ROOT.pair('int,METObject')(METUtil.MuonTotal,muonBoy_test))
-
-        check = self.testUtil.checkConsistency(testvector)
-        if check:
-            print >> self.stream, "MET checks out!"
-        else:
-            print >> self.stream, "MET doesn't check out!"
-
-        # In addition to the etx, ety, sumet retrieval, you can also get the MET significance.
-        # By default, METObject.sig() returns etx() / ( 0.5*sqrt(sumet()) )
-        #
-        # There is also the possibility of returning a more sophisticated estimator for
-        # the significance, activated by calling METUtility.doSignificance() in setup.
-        # This is still under development, and requires all object resolutions to be set.
-
-    def DemoMetSystematics(self, event):
-        #######################################
-        # Demonstrates how to set up the METUtility with object momenta
-        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
-        #
-        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
-        #
-        # These examples of uncertainty-setting are meant to
-        # demonstrate how the uncertainties should be passed
-        # to METUtility.  Recommendations on just which ones
-        # you are meant to be using come from the CP groups.
 
         # Check for a good primary vertex
         # This is needed for jet and soft term systematics
@@ -347,6 +199,189 @@ class Systematic(EventFilter):
                         nvtxsoftmet += 1
                     if vertex.nTracks > 1:
                         nvtxjets += 1
+
+        # See this method for an example of how to pass object systematics
+        # to METUtility such that they can be propagated to the MET.
+        self.run_systematics()
+
+        # This demonstration is for doing smearing and systematics
+        self.systUtil.reset()
+        self.systUtil.setJetParameters(
+                event.jet_pt,
+                event.jet_eta,
+                event.jet_phi,
+                event.jet_E,
+                event.jet_MET_wet,
+                event.jet_MET_wpx,
+                event.jet_MET_wpy,
+                event.jet_MET_statusWord)
+
+        self.systUtil.setOriJetParameters(event.jet_pt)
+
+        # Putting in smeared and/or scaled objects will cause that to be reflected in MET
+        self.systUtil.setElectronParameters(el_smeared_pt, el_eta, el_phi,
+                        el_MET_wet, el_MET_wpx, el_MET_wpy,
+                        el_MET_statusWord)
+
+        self.systUtil.setPhotonParameters(ph_smeared_pt, ph_eta, ph_phi,
+                      ph_MET_wet, ph_MET_wpx, ph_MET_wpy,
+                      ph_MET_statusWord)
+
+        self.systUtil.setTauParameters(tau_pt, tau_eta, tau_phi,
+                       tau_MET_wet, tau_MET_wpx, tau_MET_wpy,
+                       tau_MET_statusWord)
+
+        self.systUtil.setMuonParameters(mu_smeared_pt, mu_eta, mu_phi,
+                    mu_MET_wet, mu_MET_wpx, mu_MET_wpy,
+                    mu_MET_statusWord)
+
+        # In this instance there is an overloaded version of setExtraMuonParameters that accepts smeared pTs for spectro
+        self.systUtil.setExtraMuonParameters(mu_smeared_ms_pt, mu_ms_theta, mu_ms_phi)
+
+        self.systUtil.setMETTerm(METUtil.RefTau, MET_RefTau_etx, MET_RefTau_ety, MET_RefTau_sumet)
+        self.systUtil.setMETTerm(METUtil.RefMuon, MET_RefMuon_etx, MET_RefMuon_ety, MET_RefMuon_sumet)
+        self.systUtil.setMETTerm(METUtil.SoftJets, MET_SoftJets_etx, MET_SoftJets_ety, MET_SoftJets_sumet)
+        #   self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
+        self.systUtil.setMETTerm(METUtil.CellOutEflow, MET_CellOut_Eflow_etx, MET_CellOut_Eflow_ety, MET_CellOut_Eflow_sumet)
+
+        # These set up the systematic "SoftTerms_ptHard"
+        self.systUtil.setNvtx(nvtxsoftmet)
+        #  if(!isData)
+        #    self.systUtil.setMETTerm(METUtil.Truth, MET_Truth_NonInt_etx, MET_Truth_NonInt_ety, MET_Truth_NonInt_sumet)
+
+        self.systUtil.setObjectEnergyUncertainties(METUtil.Jets, jesUp, jesDown)
+        self.systUtil.setObjectResolutionShift(METUtil.Jets, jerUp, jerDown)
+
+        self.systUtil.setObjectEnergyUncertainties(METUtil.Electrons, eesUp, eesDown)
+        self.systUtil.setObjectResolutionShift(METUtil.Electrons, eerUp, eerDown)
+
+        self.systUtil.setObjectEnergyUncertainties(METUtil.Photons, pesUp, pesDown)
+        self.systUtil.setObjectResolutionShift(METUtil.Photons, perUp, perDown)
+
+        # Muons are complicated, and MET makes use of track, spectro, and combined quantites,
+        # so we need all of their resolutions.
+        # comboms reflects that it is the combined muon res affected by shifting ms res up and down.
+        # comboid is for shifting the id res up and down
+        self.systUtil.setObjectResolutionShift(METUtil.MuonsComboMS, cb_mermsUp, cb_mermsDown)
+        self.systUtil.setObjectResolutionShift(METUtil.MuonsComboID, cb_meridUp, cb_meridDown)
+        self.systUtil.setObjectResolutionShift(METUtil.SpectroMuons, mermsUp, mermsDown)
+
+        # For now the mes only affects combined
+        self.systUtil.setObjectEnergyUncertainties(METUtil.Muons, mesUp, mesDown)
+
+        # Taus are just in as an example
+        self.systUtil.setObjectEnergyUncertainties(METUtil.Taus, tesUp, tesDown)
+
+        # Fill histograms
+        met_RefFinal = self.systUtil.getMissingET(METUtil.RefFinal)
+        self.h_RefFinal.Fill(met_RefFinal.et()/1000)
+
+        # Jet systematics
+        met_RefFinal_JESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JESUp)
+        self.h_RefFinal_JESUp.Fill(met_RefFinal_JESUp.et()/1000)
+
+        met_RefFinal_JESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JESDown)
+        self.h_RefFinal_JESDown.Fill(met_RefFinal_JESDown.et()/1000)
+
+        met_RefFinal_JERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JERUp)
+        self.h_RefFinal_JERUp.Fill(met_RefFinal_JERUp.et()/1000)
+
+        # Electron systematics
+        met_RefFinal_EESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EESUp)
+        self.h_RefFinal_EESUp.Fill(met_RefFinal_EESUp.et()/1000)
+
+        met_RefFinal_EESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EESDown)
+        self.h_RefFinal_EESDown.Fill(met_RefFinal_EESDown.et()/1000)
+
+        met_RefFinal_EERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EERUp)
+        self.h_RefFinal_EERUp.Fill(met_RefFinal_EERUp.et()/1000)
+
+        met_RefFinal_EERDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EERDown)
+        self.h_RefFinal_EERDown.Fill(met_RefFinal_EERDown.et()/1000)
+
+        # Photon systematics
+        met_RefFinal_PESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PESUp)
+        self.h_RefFinal_PESUp.Fill(met_RefFinal_PESUp.et()/1000)
+
+        met_RefFinal_PESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PESDown)
+        self.h_RefFinal_PESDown.Fill(met_RefFinal_PESDown.et()/1000)
+
+        met_RefFinal_PERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PERUp)
+        self.h_RefFinal_PERUp.Fill(met_RefFinal_PERUp.et()/1000)
+
+        met_RefFinal_PERDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PERDown)
+        self.h_RefFinal_PERDown.Fill(met_RefFinal_PERDown.et()/1000)
+
+        # Muon systematics
+        met_RefFinal_MESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MESUp)
+        self.h_RefFinal_MESUp.Fill(met_RefFinal_MESUp.et()/1000)
+
+        met_RefFinal_MESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MESDown)
+        self.h_RefFinal_MESDown.Fill(met_RefFinal_MESDown.et()/1000)
+
+        met_RefFinal_MERIDUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERIDUp)
+        self.h_RefFinal_MERIDUp.Fill(met_RefFinal_MERIDUp.et()/1000)
+
+        met_RefFinal_MERIDDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERIDDown)
+        self.h_RefFinal_MERIDDown.Fill(met_RefFinal_MERIDDown.et()/1000)
+
+        met_RefFinal_MERMSUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSUp)
+        self.h_RefFinal_MERMSUp.Fill(met_RefFinal_MERMSUp.et()/1000)
+
+        met_RefFinal_MERMSDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSDown)
+        self.h_RefFinal_MERMSDown.Fill(met_RefFinal_MERMSDown.et()/1000)
+
+        # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
+        if isData:
+            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
+        else:
+            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
+
+        # Soft terms systematics
+        met_RefFinal_ScaleSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp)
+        self.h_RefFinal_ScaleSoftTermsUp.Fill(met_RefFinal_ScaleSoftTermsUp.et()/1000)
+
+        met_RefFinal_ScaleSoftTermsDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsDown)
+        self.h_RefFinal_ScaleSoftTermsDown.Fill(met_RefFinal_ScaleSoftTermsDown.et()/1000)
+
+        met_RefFinal_ResoSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUp)
+        self.h_RefFinal_ResoSoftTermsUp.Fill(met_RefFinal_ResoSoftTermsUp.et()/1000)
+
+        met_RefFinal_ResoSoftTermsDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDown)
+        self.h_RefFinal_ResoSoftTermsDown.Fill(met_RefFinal_ResoSoftTermsDown.et()/1000)
+
+        # Alternate soft terms systematics
+        met_RefFinal_ScaleSoftTermsUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp_ptHard)
+        self.h_RefFinal_ScaleSoftTermsUp_ptHard.Fill(met_RefFinal_ScaleSoftTermsUp_ptHard.et()/1000)
+
+        met_RefFinal_ScaleSoftTermsDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsDown_ptHard)
+        self.h_RefFinal_ScaleSoftTermsDown_ptHard.Fill(met_RefFinal_ScaleSoftTermsDown_ptHard.et()/1000)
+
+        met_RefFinal_ResoSoftTermsUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUp_ptHard)
+        self.h_RefFinal_ResoSoftTermsUp_ptHard.Fill(met_RefFinal_ResoSoftTermsUp_ptHard.et()/1000)
+
+        met_RefFinal_ResoSoftTermsUpDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUpDown_ptHard)
+        self.h_RefFinal_ResoSoftTermsUpDown_ptHard.Fill(met_RefFinal_ResoSoftTermsUpDown_ptHard.et()/1000)
+
+        met_RefFinal_ResoSoftTermsDownUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDownUp_ptHard)
+        self.h_RefFinal_ResoSoftTermsDownUp_ptHard.Fill(met_RefFinal_ResoSoftTermsDownUp_ptHard.et()/1000)
+
+        met_RefFinal_ResoSoftTermsDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDown_ptHard)
+        self.h_RefFinal_ResoSoftTermsDown_ptHard.Fill(met_RefFinal_ResoSoftTermsDown_ptHard.et()/1000)
+        return True
+
+    def DemoMetSystematics(self, event):
+        #######################################
+        # Demonstrates how to set up the METUtility with object momenta
+        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
+        #
+        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
+        #
+        # These examples of uncertainty-setting are meant to
+        # demonstrate how the uncertainties should be passed
+        # to METUtility.  Recommendations on just which ones
+        # you are meant to be using come from the CP groups.
+
 
         """
         JET SYSTEMATICS
@@ -633,246 +668,193 @@ class Systematic(EventFilter):
 
 
 
-        # This demonstration is for doing smearing and systematics
-        self.systUtil.reset()
-        self.systUtil.setJetParameters(jet_pt, jet_eta, jet_phi, jet_E,
-                       jet_MET_wet, jet_MET_wpx, jet_MET_wpy,
-                       jet_MET_statusWord)
-        self.systUtil.setOriJetParameters(jet_pt)
+    def consistency(self, event):
 
-        # Putting in smeared and/or scaled objects will cause that to be reflected in MET
-        self.systUtil.setElectronParameters(el_smeared_pt, el_eta, el_phi,
-                        el_MET_wet, el_MET_wpx, el_MET_wpy,
-                        el_MET_statusWord)
-        self.systUtil.setPhotonParameters(ph_smeared_pt, ph_eta, ph_phi,
-                      ph_MET_wet, ph_MET_wpx, ph_MET_wpy,
-                      ph_MET_statusWord)
-        self.systUtil.setTauParameters(tau_pt, tau_eta, tau_phi,
-                       tau_MET_wet, tau_MET_wpx, tau_MET_wpy,
-                       tau_MET_statusWord)
-        self.systUtil.setMuonParameters(mu_smeared_pt, mu_eta, mu_phi,
-                    mu_MET_wet, mu_MET_wpx, mu_MET_wpy,
-                    mu_MET_statusWord)
-        # In this instance there is an overloaded version of setExtraMuonParameters that accepts smeared pTs for spectro
-        self.systUtil.setExtraMuonParameters(mu_smeared_ms_pt, mu_ms_theta, mu_ms_phi)
+        # Demonstrates how to set up the METUtility with object momenta such that
+        # MET_RefFinal can be rebuilt matching the values in D3PD.
 
-        self.systUtil.setMETTerm(METUtil.RefTau, MET_RefTau_etx, MET_RefTau_ety, MET_RefTau_sumet)
-        self.systUtil.setMETTerm(METUtil.RefMuon, MET_RefMuon_etx, MET_RefMuon_ety, MET_RefMuon_sumet)
-        self.systUtil.setMETTerm(METUtil.SoftJets, MET_SoftJets_etx, MET_SoftJets_ety, MET_SoftJets_sumet)
-        #   self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
-        self.systUtil.setMETTerm(METUtil.CellOutEflow, MET_CellOut_Eflow_etx, MET_CellOut_Eflow_ety, MET_CellOut_Eflow_sumet)
+        # Start with a clean METUtility
+        self.testUtil.reset()
 
-        # These set up the systematic "SoftTerms_ptHard"
-        self.systUtil.setNvtx(nvtxsoftmet)
-        #  if(!isData)
-        #    self.systUtil.setMETTerm(METUtil.Truth, MET_Truth_NonInt_etx, MET_Truth_NonInt_ety, MET_Truth_NonInt_sumet)
+        # For these, just the kinematics need to be set
+        self.testUtil.setElectronParameters(
+                event.el_pt,
+                event.el_eta,
+                event.el_phi,
+                event.el_MET_wet,
+                event.el_MET_wpx,
+                event.el_MET_wpy,
+                event.el_MET_statusWord)
 
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Jets, jesUp, jesDown)
-        self.systUtil.setObjectResolutionShift(METUtil.Jets, jerUp, jerDown)
+        self.testUtil.setPhotonParameters(
+                event.ph_pt,
+                event.ph_eta,
+                event.ph_phi,
+                event.ph_MET_wet,
+                event.ph_MET_wpx,
+                event.ph_MET_wpy,
+                event.ph_MET_statusWord)
 
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Electrons, eesUp, eesDown)
-        self.systUtil.setObjectResolutionShift(METUtil.Electrons, eerUp, eerDown)
+        #  Tau rebuilding is unsafe. The tau finding is frequently rerun in D3PD.
+        #  self.testUtil.setTauParameters(tau_pt, tau_eta, tau_phi,
+        #			     tau_MET_wet, tau_MET_wpx, tau_MET_wpy,
+        #			     tau_MET_statusWord)
 
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Photons, pesUp, pesDown)
-        self.systUtil.setObjectResolutionShift(METUtil.Photons, perUp, perDown)
+        #  Cluster rebuilding is just for specialist studies
+        #  self.testUtil.setClusterParameters(cl_pt, cl_eta, cl_phi,
+        #				 cl_MET_wet, cl_MET_wpx, cl_MET_wpy,
+        #				 cl_MET_statusWord)
 
-        # Muons are complicated, and MET makes use of track, spectro, and combined quantites,
-        # so we need all of their resolutions.
-        # comboms reflects that it is the combined muon res affected by shifting ms res up and down.
-        # comboid is for shifting the id res up and down
-        self.systUtil.setObjectResolutionShift(METUtil.MuonsComboMS, cb_mermsUp, cb_mermsDown)
-        self.systUtil.setObjectResolutionShift(METUtil.MuonsComboID, cb_meridUp, cb_meridDown)
-        self.systUtil.setObjectResolutionShift(METUtil.SpectroMuons, mermsUp, mermsDown)
+        #  Track rebuilding is just for specialist studies
+        #  self.testUtil.setTrackParameters(trk_pt, trk_eta, trk_phi,
+        #			       trk_MET_wet, trk_MET_wpx, trk_MET_wpy,
+        #			       trk_MET_statusWord)
 
-        # For now the mes only affects combined
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Muons, mesUp, mesDown)
+        # The SoftJets term is now to be taken from D3PD, and no "hard jets" are allowed
+        # to enter it. Recalibration or smearing could cause jets that were above the
+        # 20 GeV threshold to drop below it, so we supply the original pT's to prevent
+        # them from being moved out of RefJet.
+        self.testUtil.setJetParameters(
+                event.jet_pt,
+                event.jet_eta,
+                event.jet_phi,
+                event.jet_E,
+                event.jet_MET_wet,
+                event.jet_MET_wpx,
+                event.jet_MET_wpy,
+                event.jet_MET_statusWord)
+        self.testUtil.setOriJetParameters(event.jet_pt)
 
-        # Taus are just in as an example
-        self.systUtil.setObjectEnergyUncertainties(METUtil.Taus, tesUp, tesDown)
+        # Muons may be ID, combined, or standalone. For the latter especially,
+        # we need to set the MS four-momenta because they are treated differently.
+        self.testUtil.setMuonParameters(
+                event.mu_pt,
+                event.mu_eta,
+                event.mu_phi,
+                event.mu_MET_wet,
+                event.mu_MET_wpx,
+                event.mu_MET_wpy,
+                event.mu_MET_statusWord)
+        self.testUtil.setExtraMuonParameters(
+                event.mu_ms_qoverp,
+                event.mu_ms_theta,
+                event.mu_ms_phi,
+                event.mu_charge)
+        # An alternative version of this method is demonstrated below, and takes pT, eta, phi instead.
+        # This is more convenient when one needs to smear the pT, for example.
 
-        # Fill histograms
+        # When the terms are not rebuilt from the objects, due to incomplete info,
+        # then one needs to set the term directly from the stored value in the D3PD.
+        # This might also be done if you aren't interested in the possible variations
+        # of that term. E.g. if you only care about photons, no need to rebuild muons.
 
-        METObject met_RefFinal = self.systUtil.getMissingET(METUtil.RefFinal)
-        self.h_RefFinal.Fill(met_RefFinal.et()/1000)
-        # Jet systematics
-        METObject met_RefFinal_JESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JESUp)
-        self.h_RefFinal_JESUp.Fill(met_RefFinal_JESUp.et()/1000)
-        METObject met_RefFinal_JESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JESDown)
-        self.h_RefFinal_JESDown.Fill(met_RefFinal_JESDown.et()/1000)
-        METObject met_RefFinal_JERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JERUp)
-        self.h_RefFinal_JERUp.Fill(met_RefFinal_JERUp.et()/1000)
-        # Electron systematics
-        METObject met_RefFinal_EESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EESUp)
-        self.h_RefFinal_EESUp.Fill(met_RefFinal_EESUp.et()/1000)
-        METObject met_RefFinal_EESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EESDown)
-        self.h_RefFinal_EESDown.Fill(met_RefFinal_EESDown.et()/1000)
-        METObject met_RefFinal_EERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EERUp)
-        self.h_RefFinal_EERUp.Fill(met_RefFinal_EERUp.et()/1000)
-        METObject met_RefFinal_EERDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EERDown)
-        self.h_RefFinal_EERDown.Fill(met_RefFinal_EERDown.et()/1000)
-        # Photon systematics
-        METObject met_RefFinal_PESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PESUp)
-        self.h_RefFinal_PESUp.Fill(met_RefFinal_PESUp.et()/1000)
-        METObject met_RefFinal_PESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PESDown)
-        self.h_RefFinal_PESDown.Fill(met_RefFinal_PESDown.et()/1000)
-        METObject met_RefFinal_PERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PERUp)
-        self.h_RefFinal_PERUp.Fill(met_RefFinal_PERUp.et()/1000)
-        METObject met_RefFinal_PERDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PERDown)
-        self.h_RefFinal_PERDown.Fill(met_RefFinal_PERDown.et()/1000)
-        # Muon systematics
-        METObject met_RefFinal_MESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MESUp)
-        self.h_RefFinal_MESUp.Fill(met_RefFinal_MESUp.et()/1000)
-        METObject met_RefFinal_MESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MESDown)
-        self.h_RefFinal_MESDown.Fill(met_RefFinal_MESDown.et()/1000)
-        METObject met_RefFinal_MERIDUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERIDUp)
-        self.h_RefFinal_MERIDUp.Fill(met_RefFinal_MERIDUp.et()/1000)
-        METObject met_RefFinal_MERIDDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERIDDown)
-        self.h_RefFinal_MERIDDown.Fill(met_RefFinal_MERIDDown.et()/1000)
-        METObject met_RefFinal_MERMSUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSUp)
-        self.h_RefFinal_MERMSUp.Fill(met_RefFinal_MERMSUp.et()/1000)
-        METObject met_RefFinal_MERMSDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSDown)
-        self.h_RefFinal_MERMSDown.Fill(met_RefFinal_MERMSDown.et()/1000)
+        # self.testUtil.setMETTerm(METUtil.RefJet, MET_RefJet_etx, MET_RefJet_ety, MET_RefJet_sumet)
+        self.testUtil.setMETTerm(
+                METUtil.SoftJets,
+                event.MET_SoftJets_etx,
+                event.MET_SoftJets_ety,
+                event.MET_SoftJets_sumet)
+        # self.testUtil.setMETTerm(METUtil.RefEle, MET_RefEle_etx, MET_RefEle_ety, MET_RefEle_sumet)
+        # self.testUtil.setMETTerm(METUtil.RefGamma, MET_RefGamma_etx, MET_RefGamma_ety, MET_RefGamma_sumet)
 
-        # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
-        if(isData) gRandom.SetSeed(UInt_t(RunNumber * EventNumber))
-        else gRandom.SetSeed(UInt_t(mc_channel_number * EventNumber))
-        # Soft terms systematics
-        METObject met_RefFinal_ScaleSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp)
-        self.h_RefFinal_ScaleSoftTermsUp.Fill(met_RefFinal_ScaleSoftTermsUp.et()/1000)
-        METObject met_RefFinal_ScaleSoftTermsDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsDown)
-        self.h_RefFinal_ScaleSoftTermsDown.Fill(met_RefFinal_ScaleSoftTermsDown.et()/1000)
-        METObject met_RefFinal_ResoSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUp)
-        self.h_RefFinal_ResoSoftTermsUp.Fill(met_RefFinal_ResoSoftTermsUp.et()/1000)
-        METObject met_RefFinal_ResoSoftTermsDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDown)
-        self.h_RefFinal_ResoSoftTermsDown.Fill(met_RefFinal_ResoSoftTermsDown.et()/1000)
-        METObject met_RefFinal_ScaleSoftTermsUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp_ptHard)
-        # Alternate soft terms systematics
-        self.h_RefFinal_ScaleSoftTermsUp_ptHard.Fill(met_RefFinal_ScaleSoftTermsUp_ptHard.et()/1000)
-        METObject met_RefFinal_ScaleSoftTermsDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsDown_ptHard)
-        self.h_RefFinal_ScaleSoftTermsDown_ptHard.Fill(met_RefFinal_ScaleSoftTermsDown_ptHard.et()/1000)
-        METObject met_RefFinal_ResoSoftTermsUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUp_ptHard)
-        self.h_RefFinal_ResoSoftTermsUp_ptHard.Fill(met_RefFinal_ResoSoftTermsUp_ptHard.et()/1000)
-        METObject met_RefFinal_ResoSoftTermsUpDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUpDown_ptHard)
-        self.h_RefFinal_ResoSoftTermsUpDown_ptHard.Fill(met_RefFinal_ResoSoftTermsUpDown_ptHard.et()/1000)
-        METObject met_RefFinal_ResoSoftTermsDownUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDownUp_ptHard)
-        self.h_RefFinal_ResoSoftTermsDownUp_ptHard.Fill(met_RefFinal_ResoSoftTermsDownUp_ptHard.et()/1000)
-        METObject met_RefFinal_ResoSoftTermsDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDown_ptHard)
-        self.h_RefFinal_ResoSoftTermsDown_ptHard.Fill(met_RefFinal_ResoSoftTermsDown_ptHard.et()/1000)
+        # *** Note the difference in naming -- there is normally no MET_MuonTotal term.
+        #     It's usually Muon_Total, Muon_Total_Muid, something like that.
+        #     MET_RefFinal in particular uses MET_MuonBoy.
+        # self.testUtil.setMETTerm(METUtil.MuonTotal, MET_MuonBoy_etx, MET_MuonBoy_ety, MET_MuonBoy_sumet)
 
-        # Print out some information on each event
+        # *** Note that RefMuon is not rebuilt from muons -- it is a calorimeter term.
+        self.testUtil.setMETTerm(
+                METUtil.RefMuon,
+                event.MET_RefMuon_etx,
+                event.MET_RefMuon_ety,
+                event.MET_RefMuon_sumet)
+        self.testUtil.setMETTerm(
+                METUtil.RefTau,
+                event.MET_RefTau_etx,
+                event.MET_RefTau_ety,
+                event.MET_RefTau_sumet)
+        # self.testUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
+        self.testUtil.setMETTerm(
+                METUtil.CellOutEflow,
+                event.MET_CellOut_Eflow_etx,
+                event.MET_CellOut_Eflow_ety,
+                event.MET_CellOut_Eflow_sumet)
+
+        # This is the simple check, where you compare the terms manually against what's in the D3PD.
+        # Note: every call to getMissingET recomputes the terms, so if you need to get more than one
+        # value, e.g. etx, ety, et, sumET, it's more efficient to get the METObject.
+        # Usually, comparing etx and/or ety is more informative, because et could be right if
+        # etx and ety were flipped, for example. They also add linearly, which et doesn't.
+
+        RefEle_util = self.testUtil.getMissingET(METUtil.RefEle)
+        RefGamma_util = self.testUtil.getMissingET(METUtil.RefGamma)
+        RefTau_util = self.testUtil.getMissingET(METUtil.RefTau)
+        RefMuon_util = self.testUtil.getMissingET(METUtil.RefMuon)
+        RefJet_util = self.testUtil.getMissingET(METUtil.RefJet)
+        SoftJets_util = self.testUtil.getMissingET(METUtil.SoftJets)
+        #refCellOut_util = self.testUtil.getMissingET(METUtil.CellOut)
+        CellOutEflow_util = self.testUtil.getMissingET(METUtil.CellOutEflow)
+        MuonTotal_util = self.testUtil.getMissingET(METUtil.MuonTotal)
+        RefFinal_util = self.testUtil.getMissingET(METUtil.RefFinal)
+
         if self.verbose:
-            print >> self.stream, "Demonstration of smearing and systematics"
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "All these are the scalar MET term"
-            print >> self.stream, "RefEle (smeared): " << self.systUtil.getMissingET(METUtil.RefEle).et()
-            #     print >> self.stream, "RefGamma: " << self.systUtil.getMissingET(METUtil.RefGamma).et()
-            print >> self.stream, "RefTau: ", self.systUtil.getMissingET(METUtil.RefTau).et()
-            print >> self.stream, "RefJet: ", self.systUtil.getMissingET(METUtil.RefJet).et()
-            print >> self.stream, "SoftJets: ", self.systUtil.getMissingET(METUtil.SoftJets).et()
-            print >> self.stream, "RefMuon: ", self.systUtil.getMissingET(METUtil.RefMuon).et()
-            print >> self.stream, "MuonBoy (smeared and scaled): " << self.systUtil.getMissingET(METUtil.MuonTotal).et()
-            print >> self.stream, "CellOut_Eflow: " << self.systUtil.getMissingET(METUtil.CellOutEflow).et()
-            print >> self.stream, "RefFinal: " << self.systUtil.getMissingET(METUtil.RefFinal).et()
-            print >> self.stream, "Truth: " << self.systUtil.getMissingET(METUtil.Truth).et()
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "HardTerms: " << self.systUtil.getMissingET(METUtil.HardTerms).et()
-            print >> self.stream, "HardTerms stands for the sum of Ref* and MuonBoy."
-            print >> self.stream, "SoftTerms: " << self.systUtil.getMissingET(METUtil.SoftTerms).et()
-            print >> self.stream, "SoftTerms stands for the sum of CellOut(_Eflow) and SoftJets."
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream,
+            print >> self.stream, "** Manual consistency check **" << endl
+            print >> self.stream, "Term:    Original   vs    Tool output"
+            print >> self.stream, "RefEle etx: "    << MET_RefEle_etx   << " vs " << RefEle_util.etx()
+            print >> self.stream, "RefGamma etx: "  << MET_RefGamma_etx << " vs " << RefGamma_util.etx()
+            print >> self.stream, "RefTau etx: "    << MET_RefTau_etx   << " vs " << RefTau_util.etx()
+            print >> self.stream, "RefMuon etx: "   << MET_RefMuon_etx  << " vs " << RefMuon_util.etx()
+            print >> self.stream, "RefJet etx: "    << MET_RefJet_etx   << " vs " << RefJet_util.etx()
+            print >> self.stream, "SoftJets etx: "   << MET_SoftJets_etx << " vs " << SoftJets_util.etx()
+            print >> self.stream, "MuonBoy etx: "   << MET_MuonBoy_etx  << " vs " << MuonTotal_util.etx()
+            print >> self.stream, "CellOut_Eflow etx: " << MET_CellOut_Eflow_etx << " vs " << CellOutEflow_util.etx()
+            print >> self.stream, "RefFinal etx: "  << MET_RefFinal_etx << " vs " << RefFinal_util.etx()  << endl
 
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "RefJet JESUp: " << self.systUtil.getMissingET(METUtil.RefJet,METUtil.JESUp).et()
-             << ",  JESDown: " << self.systUtil.getMissingET(METUtil.RefJet,METUtil.JESDown).et()
-            print >> self.stream, "RefJet JES Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefJet,METUtil.JES).et()
-            print >> self.stream, "RefFinal JESUp: " << met_RefFinal_JESUp.et()
-             << ", JESDown: " << met_RefFinal_JESDown.et()
-            print >> self.stream, "RefFinal JES Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.JES).et()
-            print >> self.stream, "RefJet JERUp: " << self.systUtil.getMissingET(METUtil.RefJet,METUtil.JERUp).et()
-             << ", JERDown: " << self.systUtil.getMissingET(METUtil.RefJet,METUtil.JERDown).et()
-            print >> self.stream, "RefJet JER Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefJet,METUtil.JER).et()
-            print >> self.stream, "RefFinal JERUp: " << met_RefFinal_JERUp.et()
-             << ", JERDown: " << self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JERDown).et()
-            print >> self.stream, "RefFinal JER Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.JER).et()
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "RefEle EESUp: " << self.systUtil.getMissingET(METUtil.RefEle,METUtil.EESUp).et()
-             << ",  EESDown: " << self.systUtil.getMissingET(METUtil.RefEle,METUtil.EESDown).et()
-            print >> self.stream, "RefFinal EESUp: " << met_RefFinal_EESUp.et()
-             << ",  EESDown: " << met_RefFinal_EESDown.et()
-            print >> self.stream, "RefFinal EES Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.EES).et()
-            print >> self.stream, "RefEle EERUp: " << self.systUtil.getMissingET(METUtil.RefEle,METUtil.EERUp).et()
-             << ",  EERDown: " << self.systUtil.getMissingET(METUtil.RefEle,METUtil.EERDown).et()
-            print >> self.stream, "RefFinal EERUp: " << met_RefFinal_EERUp.et()
-             << ",  EERDown: " << met_RefFinal_EERDown.et()
-            print >> self.stream, "RefFinal EER Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.EER).et()
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "MuonBoy MESUp: " << self.systUtil.getMissingET(METUtil.MuonTotal,METUtil.MESUp).et()
-             << ",  MESDown: " << self.systUtil.getMissingET(METUtil.MuonTotal,METUtil.MESDown).et()
-            print >> self.stream, "RefFinal MESUp: " << met_RefFinal_MESUp.et()
-             << ",  MESDown: " << met_RefFinal_MESDown.et()
-            print >> self.stream, "RefFinal MES Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.MES).et()
-            print >> self.stream, "MuonBoy MERIDUp: " << self.systUtil.getMissingET(METUtil.MuonTotal,METUtil.MERIDUp).et()
-             << ",  MERIDDown: " << self.systUtil.getMissingET(METUtil.MuonTotal,METUtil.MERIDDown).et()
-            print >> self.stream, "RefFinal MERIDUp: " << met_RefFinal_MERIDUp.et()
-             << ",  MERIDDown: " << met_RefFinal_MERIDDown.et()
-            print >> self.stream, "RefFinal MERID Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.MERID).et()
-            print >> self.stream, "MuonBoy MERMSUp: " << self.systUtil.getMissingET(METUtil.MuonTotal,METUtil.MERMSUp).et()
-             << ",  MERMSDown: " << self.systUtil.getMissingET(METUtil.MuonTotal,METUtil.MERMSDown).et()
-            print >> self.stream, "RefFinal MERMSUp: " << met_RefFinal_MERMSUp.et()
-             << ",  MERMSDown: " << met_RefFinal_MERMSDown.et()
-            print >> self.stream, "RefFinal MERMS Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.MERMS).et()
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "RefTau TESUp: " << self.systUtil.getMissingET(METUtil.RefTau,METUtil.TESUp).et()
-             << ",  TESDown: " << self.systUtil.getMissingET(METUtil.RefTau,METUtil.TESDown).et()
-            print >> self.stream, "RefFinal TESUp: " << self.systUtil.getMissingET(METUtil.RefFinal,METUtil.TESUp).et()
-             << ",  TESDown: " << self.systUtil.getMissingET(METUtil.RefFinal,METUtil.TESDown).et()
-            print >> self.stream, "RefFinal TES Diff (up - Down)/none : " << self.systUtil.getMissingETDiff(METUtil.RefFinal,METUtil.TES).et()
-            print >> self.stream, "+++++++++++++++++++++++++++++"
+        # If you don't want to test manually, there's a built-in consistency check.
+        # To test just one term, fill a METObject with the appropriate values,
+        # then feed it to the checkConsistency() method.
+        # The difference can be retrieved via a reference argument.
 
+        refFinal_test = METObject(MET_RefFinal_etx,
+                  MET_RefFinal_ety,
+                  MET_RefFinal_sumet)
+        check_refFinal = self.testUtil.checkConsistency(refFinal_test,METUtil.RefFinal)
+        if check_refFinal:
+            print >> self.stream, "RefFinal checks out!"
+        else:
+            print >> self.stream, "RefFinal doesn't check out!"
 
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "Now follow the soft terms. Apart from AllClusters, these already include pileup contributions."
-            print >> self.stream, endl
-            print >> self.stream, "AllClusters is the PLHC systematic on CellOut(_Eflow) and SoftJets."
-            print >> self.stream, "RefFinal AllClusters Up: " << self.systUtil.getMissingET(METUtil.RefFinal,METUtil.AllClustersUp).et()
-             << ", RefFinal AllClusters Down: " << self.systUtil.getMissingET(METUtil.RefFinal,METUtil.AllClustersDown).et()
+        # By filling a vector of terms, you can test all of them in one function call.
+        # The sum (and sumET) will be tested as well. (Can't get the difference this way).
+        refEle_test = METObject(MET_RefEle_etx,
+                MET_RefEle_ety,
+                MET_RefEle_sumet)
+        refGamma_test = METObject(MET_RefGamma_etx,
+                MET_RefGamma_ety,
+                MET_RefGamma_sumet)
+        refJet_test = METObject(MET_RefJet_etx,
+                MET_RefJet_ety,
+                MET_RefJet_sumet)
+        muonBoy_test = METObject(MET_MuonBoy_etx,
+                 MET_MuonBoy_ety,
+                 MET_MuonBoy_sumet)
 
-            print >> self.stream, endl
-            print >> self.stream, "These are the April 2012 systematics. For information, please see:"
-            print >> self.stream, "https:#indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=161247"
-            print >> self.stream, endl
+        testvector = ROOT.vector('pair<int,METObject>')()
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefEle,refEle_test))
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefGamma,refGamma_test))
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.RefJet,refJet_test))
+        testvector.push_back(ROOT.pair('int,METObject')(METUtil.MuonTotal,muonBoy_test))
 
-            print >> self.stream, "ScaleSoftTerms is the systematic on the scale CellOut(_Eflow) and SoftJets."
+        check = self.testUtil.checkConsistency(testvector)
+        if check:
+            print >> self.stream, "MET checks out!"
+        else:
+            print >> self.stream, "MET doesn't check out!"
 
-                # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
-            if(isData) gRandom.SetSeed(UInt_t(RunNumber * EventNumber))
-            else gRandom.SetSeed(UInt_t(mc_channel_number * EventNumber))
+        # In addition to the etx, ety, sumet retrieval, you can also get the MET significance.
+        # By default, METObject.sig() returns etx() / ( 0.5*sqrt(sumet()) )
+        #
+        # There is also the possibility of returning a more sophisticated estimator for
+        # the significance, activated by calling METUtility.doSignificance() in setup.
+        # This is still under development, and requires all object resolutions to be set.
 
-            print >> self.stream, "RefFinal ScaleSoftTerms Up: " << met_RefFinal_ScaleSoftTermsUp.et()
-             << ", RefFinal ScaleSoftTerms Down: " << met_RefFinal_ScaleSoftTermsDown.et()
-            print >> self.stream, "ResoSoftTerms is the systematic on the scale CellOut(_Eflow) and SoftJets."
-            print >> self.stream, "RefFinal ResoSoftTerms Up: " << met_RefFinal_ResoSoftTermsUp.et()
-             << ", RefFinal ResoSoftTerms Down: " << met_RefFinal_ResoSoftTermsDown.et()
-
-            print >> self.stream, "ScaleSoftTerms_ptHard is the systematic on the scale CellOut(_Eflow) and SoftJets."
-            print >> self.stream, "RefFinal ScaleSoftTerms_ptHard Up: " << met_RefFinal_ScaleSoftTermsUp_ptHard.et()
-             << ", RefFinal ScaleSoftTerms_ptHard Down: " << met_RefFinal_ScaleSoftTermsDown_ptHard.et()
-            print >> self.stream, "ResoSoftTerms is the systematic on the scale CellOut(_Eflow) and SoftJets."
-            print >> self.stream, "This is parameterised in terms of longitudinal and transverse components, which can be varied coherently or anti-coherently."
-            print >> self.stream, "RefFinal ResoSoftTerms_ptHard Up: " << met_RefFinal_ResoSoftTermsUp_ptHard.et()
-             << ", RefFinal ResoSoftTerms_ptHard Down: " << met_RefFinal_ResoSoftTermsDown_ptHard.et()
-            print >> self.stream, "RefFinal ResoSoftTerms_ptHard UpDown: " << met_RefFinal_ResoSoftTermsUpDown_ptHard.et()
-             << ", RefFinal ResoSoftTerms_ptHard DownUp: " << met_RefFinal_ResoSoftTermsDownUp_ptHard.et()
-
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-            print >> self.stream, "Combined errors, giving an uncertainty on MET"
-            METObject smearedMET = self.systUtil.getMissingET(METUtil.RefFinal)
-            print >> self.stream, "RefFinal MET = " << smearedMET.et() << " +- " << self.systUtil.absDeltaMissingET(METUtil.RefFinal).et()
-             << " (" << 100*self.systUtil.deltaMissingET(METUtil.RefFinal).et() << "%)"
-            print >> self.stream, "+++++++++++++++++++++++++++++"
-
-    def Terminate(self):
-
-        self.outfile.Write()
-        self.outfile.Close()
