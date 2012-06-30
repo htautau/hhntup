@@ -229,7 +229,9 @@ class Systematics(EventFilter):
         self.egammaTool.useDefaultCalibConstants("2011")
 
         # Tag assumed: MuonMomentumCorrections-00-05-03
-        self.muonTool = MuonSmear.SmearingClass("Data11","staco","q_pT","Rel17")
+        self.muonTool = MuonSmear.SmearingClass(
+                "Data11","staco","q_pT","Rel17",
+                MuonMomentumCorrections.RESOURCE_PATH)
         self.muonTool.UseScale(1)
         self.muonTool.UseImprovedCombine()
 
