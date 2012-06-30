@@ -354,28 +354,28 @@ class Systematics(EventFilter):
 
         self.systUtil.setMETTerm(
                 METUtil.RefTau,
-                event.MET_RefTau_etx,
-                event.MET_RefTau_ety,
-                event.MET_RefTau_sumet)
+                event.MET_RefTau_BDTMedium_etx,
+                event.MET_RefTau_BDTMedium_ety,
+                event.MET_RefTau_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.RefMuon,
-                event.MET_RefMuon_etx,
-                event.MET_RefMuon_ety,
-                event.MET_RefMuon_sumet)
+                event.MET_RefMuon_BDTMedium_etx,
+                event.MET_RefMuon_BDTMedium_ety,
+                event.MET_RefMuon_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.SoftJets,
-                event.MET_SoftJets_etx,
-                event.MET_SoftJets_ety,
-                event.MET_SoftJets_sumet)
+                event.MET_SoftJets_BDTMedium_etx,
+                event.MET_SoftJets_BDTMedium_ety,
+                event.MET_SoftJets_BDTMedium_sumet)
 
         #self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
         self.systUtil.setMETTerm(
                 METUtil.CellOutEflow,
-                event.MET_CellOut_Eflow_etx,
-                event.MET_CellOut_Eflow_ety,
-                event.MET_CellOut_Eflow_sumet)
+                event.MET_CellOut_Eflow_BDTMedium_etx,
+                event.MET_CellOut_Eflow_BDTMedium_ety,
+                event.MET_CellOut_Eflow_BDTMedium_sumet)
 
         # These set up the systematic "SoftTerms_ptHard"
         self.systUtil.setNvtx(nvtxsoftmet)
