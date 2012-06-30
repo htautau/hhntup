@@ -11,7 +11,6 @@ from atlastools import datasets
 
 # ROOT imports
 import ROOT
-from ROOT import TH1D, TFile
 
 # ATLAS tools imports
 from externaltools import MissingETUtility
@@ -39,75 +38,96 @@ from ROOT import TESUncertaintyProvider
 class Systematics(EventFilter):
 
     # electrons
-    EES_UP = METUtil.EESUp
-    EES_DOWN = METUtil.EESDown
-    EER_UP = METUtil.EERUp
-    EER_DOWN = METUtil.EERDown
+    class Electrons(object):
+
+        EES_UP = METUtil.EESUp
+        EES_DOWN = METUtil.EESDown
+        EER_UP = METUtil.EERUp
+        EER_DOWN = METUtil.EERDown
 
     # photons
-    PES_UP = METUtil.PESUp
-    PES_DOWN = METUtil.PESDown
-    PER_UP = METUtil.PERUp
-    PER_DOWN = METUtil.PERDown
+    class Photons(object):
+
+        PES_UP = METUtil.PESUp
+        PES_DOWN = METUtil.PESDown
+        PER_UP = METUtil.PERUp
+        PER_DOWN = METUtil.PERDown
 
     # taus
-    TES_UP = METUtil.TESUp
-    TES_DOWN = METUtil.TESDown
-    TER_UP = METUtil.TERUp
-    TER_DOWN = METUtil.TERDown
+    class Taus(object):
+
+        TES_UP = METUtil.TESUp
+        TES_DOWN = METUtil.TESDown
+        TER_UP = METUtil.TERUp
+        TER_DOWN = METUtil.TERDown
 
     # jets
-    JES_UP = METUtil.JESUp
-    JES_DOWN = METUtil.JESDown
-    JER_UP = METUtil.JERUp
-    JER_DOWN = METUtil.JERDown
+    class Jets(object):
+
+        JES_UP = METUtil.JESUp
+        JES_DOWN = METUtil.JESDown
+        JER_UP = METUtil.JERUp
+        JER_DOWN = METUtil.JERDown
 
     # muons
-    MERID_UP = METUtil.MERIDUp
-    MERID_DOWN = METUtil.MERIDDown
-    MERMS_UP = METUtil.MERMSUp
-    MERMS_DOWN = METUtil.MERMSDown
-    MES_UP = METUtil.MESUp
-    MES_DOWN = METUtil.MESDown
+    class Muons(object):
+
+        MERID_UP = METUtil.MERIDUp
+        MERID_DOWN = METUtil.MERIDDown
+        MERMS_UP = METUtil.MERMSUp
+        MERMS_DOWN = METUtil.MERMSDown
+        MES_UP = METUtil.MESUp
+        MES_DOWN = METUtil.MESDown
 
     # cells ?
-    CES_UP = METUtil.CESUp
-    CES_DOWN = METUtil.CESDown
-    CER_UP = METUtil.CERUp
-    CER_DOWN = METUtil.CERDown
+    class Cells(object):
+
+        CES_UP = METUtil.CESUp
+        CES_DOWN = METUtil.CESDown
+        CER_UP = METUtil.CERUp
+        CER_DOWN = METUtil.CERDown
 
     # tracks
-    TRKES_UP = METUtil.TrkESUp
-    TRKES_DOWN = METUtil.TrkESDown
-    TRKER_UP = METUtil.TrkERUp
-    TRKER_DOWN = METUtil.TrkERDown
+    class Tracks(object):
+
+        TRKES_UP = METUtil.TrkESUp
+        TRKES_DOWN = METUtil.TrkESDown
+        TRKER_UP = METUtil.TrkERUp
+        TRKER_DOWN = METUtil.TrkERDown
 
     # clusters
-    ALLCLUSTERS_UP = METUtil.AllClustersUp
-    ALLCLUSTERS_DOWN = METUtil.AllClustersDown
+    class Clusters(object):
+
+        ALLCLUSTERS_UP = METUtil.AllClustersUp
+        ALLCLUSTERS_DOWN = METUtil.AllClustersDown
 
     # soft terms
-    RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
-    RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
+    class Soft(object):
 
-    RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
-    RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
+        RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
+        RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
 
-    SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
-    SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
+        RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
+        RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
 
-    RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
-    RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
+        SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
+        SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
 
-    SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
-    SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
+        RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
+        RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
+
+        SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
+        SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
 
     # pileup
-    PILEUP_UP = METUtil.PileupUp
-    PILEUP_DOWN = METUtil.PileupDown
+    class Pileup(object):
+
+        PILEUP_UP = METUtil.PileupUp
+        PILEUP_DOWN = METUtil.PileupDown
 
     def __init__(self,
-            systematic,
+            systematic_type,
+            systematic_term,
             datatype,
             year,
             verbose=False,
@@ -116,9 +136,12 @@ class Systematics(EventFilter):
 
         super(Systematics, self).__init__(**kwargs)
 
-        # systematic must equal one of the class constants above or None
+        # systematic_type must equal one of the classes above or None
         # to disable systematics
-        self.systematic = systematic
+        self.systematic_type = systematic_type
+        # systematic_term must equal one of the associated terms for
+        # sytematic_type
+        self.systematic_term = systematic_term
         self.datatype = datatype
         self.year = year
         self.verbose = verbose
@@ -211,6 +234,20 @@ class Systematics(EventFilter):
         # No tag yet, testing code
         self.tesTool = TESUncertaintyProvider()
 
+        if self.systematic_type == Systematics.Jets:
+            self.run_systematics = self.jet_systematics
+        elif self.systematic_type == Systematics.Electrons:
+            self.run_systematics = self.electron_systematics
+        elif self.systematic_type == Systematics.Photons:
+            self.run_systematics = self.photon_systematics
+        elif self.systematic_type == Systematics.Muons:
+            self.run_systematics = self.muon_systematics
+        elif self.systematic_type == Systematics.Taus:
+            self.run_systematics = self.tau_systematics
+        else:
+            raise ValueError("%s is not a valid systematic type" %
+                             self.systematic_type)
+
     def passes(self, event):
         #######################################
         # Demonstrates how to set up the METUtility with object momenta
@@ -223,7 +260,7 @@ class Systematics(EventFilter):
         # to METUtility.  Recommendations on just which ones
         # you are meant to be using come from the CP groups.
 
-        if self.systematic is None:
+        if self.systematic_type is None:
             # do not apply any systematics
             return True
 
@@ -343,7 +380,8 @@ class Systematics(EventFilter):
         #if self.datatype != datasets.DATA:
         #    self.systUtil.setMETTerm(METUtil.Truth, MET_Truth_NonInt_etx, MET_Truth_NonInt_ety, MET_Truth_NonInt_sumet)
 
-        MET = self.systUtil.getMissingET(METUtil.RefFinal, self.systematic)
+        self.run_systematics(event)
+        MET = self.systUtil.getMissingET(METUtil.RefFinal, self.systematic_term)
 
         # update the MET with the shifted value
         event.MET_RefFinal_etx = MET.etx()
@@ -351,7 +389,13 @@ class Systematics(EventFilter):
         event.MET_RefFinal_et = MET.et()
         event.MET_RefFinal_sumet = MET.sumet()
         event.MET_RefFinal_phi = MET.phi()
+
+        self.update_event(event)
         return True
+
+    def update_event(event):
+
+        pass
 
     def jet_systematics(self, event):
         """
@@ -497,7 +541,7 @@ class Systematics(EventFilter):
                         el.cl_pt,
                         0,"ELECTRON") / el.E
 
-            el_smeared_pt.at(iel) *= correction
+            el_smeared_pt[iel] *= correction
             energyUp = self.egammaTool.applyEnergyCorrectionMeV(
                     el.cl_eta,
                     el.cl_phi,
@@ -560,7 +604,7 @@ class Systematics(EventFilter):
                         ph.cl_pt,
                         0,photontype) / ph.E
 
-            self.ph_smeared_pt.at(iph) *= correction
+            self.ph_smeared_pt[iph] *= correction
             energyUp = self.egammaTool.applyEnergyCorrectionMeV(
                     ph.cl_eta,
                     ph.cl_phi,
@@ -609,8 +653,8 @@ class Systematics(EventFilter):
         for mu in event.muons:
 
             ptcb = mu.pt
-            ptid = (mu.id_qoverp_exPV != 0.) ? abs(sin(mu.id_theta_exPV)/mu.id_qoverp_exPV) : 0.
-            ptms = (mu.ms_qoverp != 0.) ? abs(sin(mu.ms_theta)/mu.ms_qoverp) : 0.
+            ptid = abs(sin(mu.id_theta_exPV)/mu.id_qoverp_exPV) if mu.id_qoverp_exPV != 0. else 0.
+            ptms = abs(sin(mu.ms_theta)/mu.ms_qoverp) if mu.ms_qoverp != 0. else 0.
             self.muonTool.SetSeed(int(1.e+5*fabs(mu.phi)))
             etaMu = mu.eta
             charge = mu.charge
@@ -690,7 +734,7 @@ class Systematics(EventFilter):
             pt = tau.pt
             eta = tau.eta
             nProng = tau.nProng
-            double uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
+            uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
             if uncert < 0:
                 uncert = 0
             self.tesUp.push_back(uncert)
