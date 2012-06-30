@@ -13,7 +13,9 @@ MC11:
 
 MC12:
 
-On the way... (waiting for D3PDs)
+(some datasets still missing)
+* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*p1011.v1/**
+* Stage II: On the way... 
 
 Data11:
 
@@ -23,7 +25,7 @@ Data11:
 Data12:
 
 * Stage I: **group.phys-higgs.HHSkim.data12_8TeV*p1011_p1015.v1/**
-* Stage II: On the way...
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.data12_8TeV*p1011.v1.v4/**
 
 Embedding11:
 
