@@ -131,7 +131,7 @@ class HHProcessor(ATLASStudent):
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             Systematics(systematic_type = Systematics.Jets,
                         systematic_term = Systematics.Jets.JES_UP,
-                        year = self.metadata.year,
+                        year = YEAR,
                         datatype = self.metadata.datatype),
             Triggers(datatype=self.metadata.datatype,
                      year=YEAR,

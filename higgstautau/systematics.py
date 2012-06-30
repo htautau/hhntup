@@ -9,6 +9,8 @@ from math import sin, sqrt, pow
 from atlastools import utils
 from atlastools import datasets
 
+from rootpy.tree.filtering import EventFilter
+
 # ROOT imports
 import ROOT
 
@@ -212,8 +214,8 @@ class Systematics(EventFilter):
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
         self.jesTool = MultijetJESUncertaintyProvider(
-            "MultijetJES_Preliminary.config",
-            "InsituJES2011_AllNuisanceParameters.config",
+            JetUncertainties.get_resource("MultijetJES_Preliminary.config"),
+            JetUncertainties.get_resource("InsituJES2011_AllNuisanceParameters.config"),
             "AntiKt4LCTopoJets","MC11c")
 
         # Tag assumed: JetResolution-01-00-00
