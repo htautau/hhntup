@@ -23,6 +23,7 @@ from externaltools import egammaAnalysisUtils
 # MissingETUtility
 from ROOT import METUtility
 from ROOT import METUtil
+from ROOT import METObject
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
 # JetResolution
@@ -114,6 +115,9 @@ class Systematics(EventFilter):
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
+
+        # systematic must equal one of the class constants above or None
+        # to disable systematics
         self.systematic = systematic
         self.datatype = datatype
         self.year = year
@@ -123,8 +127,41 @@ class Systematics(EventFilter):
         else:
             self.stream = stream
 
+        self.jesUp = ROOT.vector('float')()
+        self.jesDown = ROOT.vector('float')()
+        self.jerUp = ROOT.vector('float')()
+        self.jerDown = ROOT.vector('float')()
+
+        self.eesUp = ROOT.vector('float')()
+        self.eesDown = ROOT.vector('float')()
+        self.eerUp = ROOT.vector('float')()
+        self.eerDown = ROOT.vector('float')()
+        self.el_smeared_pt = ROOT.vector('float')()
+
+        self.pesUp = ROOT.vector('float')()
+        self.pesDown = ROOT.vector('float')()
+        self.perUp = ROOT.vector('float')()
+        self.perDown = ROOT.vector('float')()
+        self.ph_smeared_pt = ROOT.vector('float')()
+
+        self.mu_smeared_pt = ROOT.vector('float')()
+        self.mu_smeared_ms_pt = ROOT.vector('float')()
+
+        self.cb_meridUp = ROOT.vector('float')()
+        self.cb_meridDown = ROOT.vector('float')()
+        self.cb_mermsUp = ROOT.vector('float')()
+        self.cb_mermsDown = ROOT.vector('float')()
+        self.mermsUp = ROOT.vector('float')()
+        self.mermsDown = ROOT.vector('float')()
+
+        self.mesUp = ROOT.vector('float')()
+        self.mesDown = ROOT.vector('float')()
+
+        self.tesUp = ROOT.vector('float')()
+        self.tesDown = ROOT.vector('float')()
+
         # Initialise your METUtility object
-        self.testUtil = METUtility()
+        self.systUtil = METUtility()
 
         # *** Demonstration of the configuration here  ***
         # *** All values that are set are the defaults ***
@@ -132,22 +169,20 @@ class Systematics(EventFilter):
         # Turn on (off) the relevant MET terms
         # Standard MET_RefFinal has:
         # RefEle, RefGamma, RefTau, RefJet, SoftJets, RefMuon, MuonTotal, (CellOut), CellOut_Eflow
-        self.testUtil.defineMissingET(True, True, True, True, True, True, True, False, True)
+        self.systUtil.defineMissingET(True, True, True, True, True, True, True, False, True)
 
         # SUSY group, MET_Simplified20 has
         # RefEle, (RefGamma), (RefTau), RefJet, (SoftJets), (RefMuon), MuonTotal, CellOut, (CellOut_Eflow)
-        # self.testUtil.defineMissingET(True, False, True, True, False, False, True, True, False)
+        # self.systUtil.defineMissingET(True, False, True, True, False, False, True, True, False)
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
-        self.testUtil.setSoftJetCut(20e3)
+        self.systUtil.setSoftJetCut(20e3)
 
         # Whether to use MUID muons (otherwise STACO).
-        self.testUtil.setIsMuid(False)
+        self.systUtil.setIsMuid(False)
 
         # Whether METUtility should scream at you over every little thing
-        self.testUtil.setVerbosity(False)
-
-        self.systUtil = METUtility()
+        self.systUtil.setVerbosity(False)
 
         # Some other options are available, but not recommended/deprecated
 
@@ -177,9 +212,23 @@ class Systematics(EventFilter):
         self.tesTool = TESUncertaintyProvider()
 
     def passes(self, event):
+        #######################################
+        # Demonstrates how to set up the METUtility with object momenta
+        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
+        #
+        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
+        #
+        # These examples of uncertainty-setting are meant to
+        # demonstrate how the uncertainties should be passed
+        # to METUtility.  Recommendations on just which ones
+        # you are meant to be using come from the CP groups.
+
+        if self.systematic is None:
+            # do not apply any systematics
+            return True
 
         # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
-        if self.datatype = datasets.DATA:
+        if self.datatype in (datasets.DATA, datasets.EMBED):
             ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
         else:
             ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
@@ -206,10 +255,6 @@ class Systematics(EventFilter):
                     if vertex.nTracks > 1:
                         nvtxjets += 1
 
-        # See this method for an example of how to pass object systematics
-        # to METUtility such that they can be propagated to the MET.
-        self.run_systematics()
-
         # This demonstration is for doing smearing and systematics
         self.systUtil.reset()
         self.systUtil.setJetParameters(
@@ -226,7 +271,7 @@ class Systematics(EventFilter):
 
         # Putting in smeared and/or scaled objects will cause that to be reflected in MET
         self.systUtil.setElectronParameters(
-                event.el_smeared_pt,
+                event.el_pt, # or smeared pT
                 event.el_eta,
                 event.el_phi,
                 event.el_MET_wet,
@@ -235,7 +280,7 @@ class Systematics(EventFilter):
                 event.el_MET_statusWord)
 
         self.systUtil.setPhotonParameters(
-                event.ph_smeared_pt,
+                event.ph_pt, # or smeared pT
                 event.ph_eta,
                 event.ph_phi,
                 event.ph_MET_wet,
@@ -253,19 +298,20 @@ class Systematics(EventFilter):
                 event.tau_MET_statusWord)
 
         self.systUtil.setMuonParameters(
-                event.mu_smeared_pt,
-                event.mu_eta,
-                event.mu_phi,
-                event.mu_MET_wet,
-                event.mu_MET_wpx,
-                event.mu_MET_wpy,
-                event.mu_MET_statusWord)
+                event.mu_staco_pt, # or smeared pT
+                event.mu_staco_eta,
+                event.mu_staco_phi,
+                event.mu_staco_MET_wet,
+                event.mu_staco_MET_wpx,
+                event.mu_staco_MET_wpy,
+                event.mu_staco_MET_statusWord)
 
-        # In this instance there is an overloaded version of setExtraMuonParameters that accepts smeared pTs for spectro
+        # In this instance there is an overloaded version of
+        # setExtraMuonParameters that accepts smeared pTs for spectro
         self.systUtil.setExtraMuonParameters(
-                event.mu_smeared_ms_pt,
-                event.mu_ms_theta,
-                event.mu_ms_phi)
+                event.mu_staco_ms_pt, # or smeared pT
+                event.mu_staco_ms_theta,
+                event.mu_staco_ms_phi)
 
         self.systUtil.setMETTerm(
                 METUtil.RefTau,
@@ -285,7 +331,7 @@ class Systematics(EventFilter):
                 event.MET_SoftJets_ety,
                 event.MET_SoftJets_sumet)
 
-        #   self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
+        #self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
         self.systUtil.setMETTerm(
                 METUtil.CellOutEflow,
                 event.MET_CellOut_Eflow_etx,
@@ -294,184 +340,29 @@ class Systematics(EventFilter):
 
         # These set up the systematic "SoftTerms_ptHard"
         self.systUtil.setNvtx(nvtxsoftmet)
-        #  if self.datatype != datasets.DATA:
+        #if self.datatype != datasets.DATA:
         #    self.systUtil.setMETTerm(METUtil.Truth, MET_Truth_NonInt_etx, MET_Truth_NonInt_ety, MET_Truth_NonInt_sumet)
 
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Jets,
-                jesUp,
-                jesDown)
+        MET = self.systUtil.getMissingET(METUtil.RefFinal, self.systematic)
 
-        self.systUtil.setObjectResolutionShift(
-                METUtil.Jets,
-                jerUp,
-                jerDown)
-
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Electrons,
-                eesUp,
-                eesDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.Electrons,
-                eerUp,
-                eerDown)
-
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Photons,
-                pesUp,
-                pesDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.Photons,
-                perUp,
-                perDown)
-
-        # Muons are complicated, and MET makes use of track, spectro, and combined quantites,
-        # so we need all of their resolutions.
-        # comboms reflects that it is the combined muon res affected by shifting ms res up and down.
-        # comboid is for shifting the id res up and down
-        self.systUtil.setObjectResolutionShift(
-                METUtil.MuonsComboMS,
-                cb_mermsUp,
-                cb_mermsDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.MuonsComboID,
-                cb_meridUp,
-                cb_meridDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.SpectroMuons,
-                mermsUp,
-                mermsDown)
-
-        # For now the mes only affects combined
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Muons,
-                mesUp,
-                mesDown)
-
-        # Taus are just in as an example
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Taus,
-                tesUp,
-                tesDown)
-
-        # Fill histograms
-        met_RefFinal = self.systUtil.getMissingET(METUtil.RefFinal)
-        self.h_RefFinal.Fill(met_RefFinal.et()/1000)
-
-        # Jet systematics
-        met_RefFinal_JESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JESUp)
-        self.h_RefFinal_JESUp.Fill(met_RefFinal_JESUp.et()/1000)
-
-        met_RefFinal_JESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JESDown)
-        self.h_RefFinal_JESDown.Fill(met_RefFinal_JESDown.et()/1000)
-
-        met_RefFinal_JERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.JERUp)
-        self.h_RefFinal_JERUp.Fill(met_RefFinal_JERUp.et()/1000)
-
-        # Electron systematics
-        met_RefFinal_EESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EESUp)
-        self.h_RefFinal_EESUp.Fill(met_RefFinal_EESUp.et()/1000)
-
-        met_RefFinal_EESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EESDown)
-        self.h_RefFinal_EESDown.Fill(met_RefFinal_EESDown.et()/1000)
-
-        met_RefFinal_EERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EERUp)
-        self.h_RefFinal_EERUp.Fill(met_RefFinal_EERUp.et()/1000)
-
-        met_RefFinal_EERDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.EERDown)
-        self.h_RefFinal_EERDown.Fill(met_RefFinal_EERDown.et()/1000)
-
-        # Photon systematics
-        met_RefFinal_PESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PESUp)
-        self.h_RefFinal_PESUp.Fill(met_RefFinal_PESUp.et()/1000)
-
-        met_RefFinal_PESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PESDown)
-        self.h_RefFinal_PESDown.Fill(met_RefFinal_PESDown.et()/1000)
-
-        met_RefFinal_PERUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PERUp)
-        self.h_RefFinal_PERUp.Fill(met_RefFinal_PERUp.et()/1000)
-
-        met_RefFinal_PERDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.PERDown)
-        self.h_RefFinal_PERDown.Fill(met_RefFinal_PERDown.et()/1000)
-
-        # Muon systematics
-        met_RefFinal_MESUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MESUp)
-        self.h_RefFinal_MESUp.Fill(met_RefFinal_MESUp.et()/1000)
-
-        met_RefFinal_MESDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MESDown)
-        self.h_RefFinal_MESDown.Fill(met_RefFinal_MESDown.et()/1000)
-
-        met_RefFinal_MERIDUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERIDUp)
-        self.h_RefFinal_MERIDUp.Fill(met_RefFinal_MERIDUp.et()/1000)
-
-        met_RefFinal_MERIDDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERIDDown)
-        self.h_RefFinal_MERIDDown.Fill(met_RefFinal_MERIDDown.et()/1000)
-
-        met_RefFinal_MERMSUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSUp)
-        self.h_RefFinal_MERMSUp.Fill(met_RefFinal_MERMSUp.et()/1000)
-
-        met_RefFinal_MERMSDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.MERMSDown)
-        self.h_RefFinal_MERMSDown.Fill(met_RefFinal_MERMSDown.et()/1000)
-
-        # Soft terms systematics
-        met_RefFinal_ScaleSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp)
-        self.h_RefFinal_ScaleSoftTermsUp.Fill(met_RefFinal_ScaleSoftTermsUp.et()/1000)
-
-        met_RefFinal_ScaleSoftTermsDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsDown)
-        self.h_RefFinal_ScaleSoftTermsDown.Fill(met_RefFinal_ScaleSoftTermsDown.et()/1000)
-
-        met_RefFinal_ResoSoftTermsUp = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUp)
-        self.h_RefFinal_ResoSoftTermsUp.Fill(met_RefFinal_ResoSoftTermsUp.et()/1000)
-
-        met_RefFinal_ResoSoftTermsDown = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDown)
-        self.h_RefFinal_ResoSoftTermsDown.Fill(met_RefFinal_ResoSoftTermsDown.et()/1000)
-
-        # Alternate soft terms systematics
-        met_RefFinal_ScaleSoftTermsUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsUp_ptHard)
-        self.h_RefFinal_ScaleSoftTermsUp_ptHard.Fill(met_RefFinal_ScaleSoftTermsUp_ptHard.et()/1000)
-
-        met_RefFinal_ScaleSoftTermsDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ScaleSoftTermsDown_ptHard)
-        self.h_RefFinal_ScaleSoftTermsDown_ptHard.Fill(met_RefFinal_ScaleSoftTermsDown_ptHard.et()/1000)
-
-        met_RefFinal_ResoSoftTermsUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUp_ptHard)
-        self.h_RefFinal_ResoSoftTermsUp_ptHard.Fill(met_RefFinal_ResoSoftTermsUp_ptHard.et()/1000)
-
-        met_RefFinal_ResoSoftTermsUpDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsUpDown_ptHard)
-        self.h_RefFinal_ResoSoftTermsUpDown_ptHard.Fill(met_RefFinal_ResoSoftTermsUpDown_ptHard.et()/1000)
-
-        met_RefFinal_ResoSoftTermsDownUp_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDownUp_ptHard)
-        self.h_RefFinal_ResoSoftTermsDownUp_ptHard.Fill(met_RefFinal_ResoSoftTermsDownUp_ptHard.et()/1000)
-
-        met_RefFinal_ResoSoftTermsDown_ptHard = self.systUtil.getMissingET(METUtil.RefFinal,METUtil.ResoSoftTermsDown_ptHard)
-        self.h_RefFinal_ResoSoftTermsDown_ptHard.Fill(met_RefFinal_ResoSoftTermsDown_ptHard.et()/1000)
+        # update the MET with the shifted value
+        event.MET_RefFinal_etx = MET.etx()
+        event.MET_RefFinal_ety = MET.ety()
+        event.MET_RefFinal_et = MET.et()
+        event.MET_RefFinal_sumet = MET.sumet()
+        event.MET_RefFinal_phi = MET.phi()
         return True
 
-    def DemoMetSystematics(self, event):
-        #######################################
-        # Demonstrates how to set up the METUtility with object momenta
-        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
-        #
-        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
-        #
-        # These examples of uncertainty-setting are meant to
-        # demonstrate how the uncertainties should be passed
-        # to METUtility.  Recommendations on just which ones
-        # you are meant to be using come from the CP groups.
-
-
+    def jet_systematics(self, event):
         """
         JET SYSTEMATICS
         """
         # First, we get the jet energy scale uncertainties and
         # systematic variation in the jet resolutions
-        jesUp = ROOT.vector('float')()
-        jesDown = ROOT.vector('float')()
-        jerUp = ROOT.vector('float')()
-        jerDown = ROOT.vector('float')()
+        self.jesUp.clear()
+        self.jesDown.clear()
+        self.jerUp.clear()
+        self.jerDown.clear()
 
         # Note on use of ROOT random number generators:
         # TRandom and TRandom2 have many documented deficiencies.
@@ -511,8 +402,8 @@ class Systematics(EventFilter):
                                   jet.eta,drmin,
                                   False, nvtxjets, averageIntPerXing)
 
-            jesUp.push_back(jesShiftUp)
-            jesDown.push_back(jesShiftDown)
+            self.jesUp.push_back(jesShiftUp)
+            self.jesDown.push_back(jesShiftDown)
 
             # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
             if jet.pt > 20e3 and jet.pt < 5000e3:
@@ -531,8 +422,8 @@ class Systematics(EventFilter):
                 jetRandom.SetSeed(int(1.e5 * jet.phi))
                 jerShift = jetRandom.Gaus(0, smearingFactorSyst)
 
-            jerUp.push_back(jerShift)
-            jerDown.push_back(-1 * jerShift); # Usually not used, see below.
+            self.jerUp.push_back(jerShift)
+            self.jerDown.push_back(-1 * jerShift); # Usually not used, see below.
 
             ###################################
             # Note: The JERDown shift is essentially meaningless.
@@ -562,15 +453,26 @@ class Systematics(EventFilter):
 
         del jetRandom
 
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Jets,
+                self.jesUp,
+                self.jesDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.Jets,
+                self.jerUp,
+                self.jerDown)
+
+    def electron_systematics(self, event):
         """
         ELECTRON SYSTEMATICS
         """
         # Here we get the electron energy scale and resolution systematics
-        eesUp = ROOT.vector('float')()
-        eesDown = ROOT.vector('float')()
-        eerUp = ROOT.vector('float')()
-        eerDown = ROOT.vector('float')()
-        el_smeared_pt = ROOT.vector('float')()
+        self.eesUp.clear()
+        self.eesDown.clear()
+        self.eerUp.clear()
+        self.eerDown.clear()
+        self.el_smeared_pt.clear()
 
         for iel, el in enumerate(event.electrons):
 
@@ -581,9 +483,9 @@ class Systematics(EventFilter):
             smearUp = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 2, True)
             smearDown = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 1, True)
 
-            el_smeared_pt.push_back(smear * el.pt)
-            eerUp.push_back((smearUp - smear) / smear)
-            eerDown.push_back((smearDown - smear) / smear)
+            self.el_smeared_pt.push_back(smear * el.pt)
+            self.eerUp.push_back((smearUp - smear) / smear)
+            self.eerDown.push_back((smearDown - smear) / smear)
 
             # Correct the measured energies in data, and scale by systematic variations
             correction = 1.
@@ -609,18 +511,29 @@ class Systematics(EventFilter):
                     el.cl_pt,
                     1,"ELECTRON") / (correction * el.E) - 1
 
-            eesUp.push_back(energyUp)
-            eesDown.push_back(energyDown)
+            self.eesUp.push_back(energyUp)
+            self.eesDown.push_back(energyDown)
 
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Electrons,
+                self.eesUp,
+                self.eesDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.Electrons,
+                self.eerUp,
+                self.eerDown)
+
+    def photon_systematics(self, event):
         """
         PHOTON SYSTEMATICS
         """
         # Now we get the same for photons
-        pesUp = ROOT.vector('float')()
-        pesDown = ROOT.vector('float')()
-        perUp = ROOT.vector('float')()
-        perDown = ROOT.vector('float')()
-        ph_smeared_pt = ROOT.vector('float')()
+        self.pesUp.clear()
+        self.pesDown.clear()
+        self.perUp.clear()
+        self.perDown.clear()
+        self.ph_smeared_pt.clear()
 
         for iph, ph in enumerate(event.photons):
 
@@ -631,9 +544,9 @@ class Systematics(EventFilter):
             smearUp = self.egammaTool.getSmearingCorrectionMeV(ph.cl_eta, ph.E, 2, True)
             smearDown = self.egammaTool.getSmearingCorrectionMeV(ph.cl_eta, ph.E, 1, True)
 
-            ph_smeared_pt.push_back(smear * ph.pt)
-            perUp.push_back((smearUp - smear) / smear)
-            perDown.push_back((smearDown - smear) / smear)
+            self.ph_smeared_pt.push_back(smear * ph.pt)
+            self.perUp.push_back((smearUp - smear) / smear)
+            self.perDown.push_back((smearDown - smear) / smear)
 
             # Correct the measured energies in data, and scale by systematic variations
             # Conversions are treated differently.
@@ -647,7 +560,7 @@ class Systematics(EventFilter):
                         ph.cl_pt,
                         0,photontype) / ph.E
 
-            ph_smeared_pt.at(iph) *= correction
+            self.ph_smeared_pt.at(iph) *= correction
             energyUp = self.egammaTool.applyEnergyCorrectionMeV(
                     ph.cl_eta,
                     ph.cl_phi,
@@ -661,26 +574,37 @@ class Systematics(EventFilter):
                     ph.cl_pt,
                     1,photontype) / (correction * ph.E) - 1
 
-            pesUp.push_back(energyUp)
-            pesDown.push_back(energyDown)
+            self.pesUp.push_back(energyUp)
+            self.pesDown.push_back(energyDown)
 
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Photons,
+                self.pesUp,
+                self.pesDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.Photons,
+                self.perUp,
+                self.perDown)
+
+    def muon_systematics(self, event):
         """
         MUON SYSTEMATICS
         """
         # And now the same for muons. We need resolution shifts for ID and MS,
         # and different treatment for the MS four-vector (for standalone muons).
-        mu_smeared_pt = ROOT.vector('float')()
-        mu_smeared_ms_pt = ROOT.vector('float')()
+        self.mu_smeared_pt.clear()
+        self.mu_smeared_ms_pt.clear()
 
-        cb_meridUp = ROOT.vector('float')()
-        cb_meridDown = ROOT.vector('float')()
-        cb_mermsUp = ROOT.vector('float')()
-        cb_mermsDown = ROOT.vector('float')()
-        mermsUp = ROOT.vector('float')()
-        mermsDown = ROOT.vector('float')()
+        self.cb_meridUp.clear()
+        self.cb_meridDown.clear()
+        self.cb_mermsUp.clear()
+        self.cb_mermsDown.clear()
+        self.mermsUp.clear()
+        self.mermsDown.clear()
 
-        mesUp = ROOT.vector('float')()
-        mesDown = ROOT.vector('float')()
+        self.mesUp.clear()
+        self.mesDown.clear()
 
         for mu in event.muons:
 
@@ -698,8 +622,8 @@ class Systematics(EventFilter):
 
             smearedMSPt = self.muonTool.pTMS()
 
-            mu_smeared_ms_pt.push_back(smearedMSPt)
-            mu_smeared_pt.push_back(smearedCombinedPt)
+            self.mu_smeared_ms_pt.push_back(smearedMSPt)
+            self.mu_smeared_pt.push_back(smearedCombinedPt)
 
             smearedpTMS = 0.1
             smearedpTID = 0.1
@@ -708,32 +632,58 @@ class Systematics(EventFilter):
             self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSLOW")
             smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
             smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-            mermsDown.push_back(smearedpTMS)
-            cb_mermsDown.push_back(smearedpTCB)
+            self.mermsDown.push_back(smearedpTMS)
+            self.cb_mermsDown.push_back(smearedpTCB)
             self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "MSUP")
             smearedpTMS = ptMS_smeared/smearedMSPt - 1.0
             smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-            mermsUp.push_back(smearedpTMS)
-            cb_mermsUp.push_back(smearedpTCB)
+            self.mermsUp.push_back(smearedpTMS)
+            self.cb_mermsUp.push_back(smearedpTCB)
             self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "IDUP")
             smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-            cb_meridUp.push_back(smearedpTCB)
+            self.cb_meridUp.push_back(smearedpTCB)
             self.muonTool.PTVar(ptMS_smeared, ptID_smeared, ptCB_smeared, "IDLOW")
             smearedpTCB = ptCB_smeared/smearedCombinedPt - 1.0
-            cb_meridDown.push_back(smearedpTCB)
+            self.cb_meridDown.push_back(smearedpTCB)
 
             detRegion = self.muonTool.DetRegion()
             if detRegion == -1:
                 detRegion = 3
             scalesyst = self.muonTool.getScaleSyst_CB().at(detRegion)
-            mesUp.push_back(scalesyst)
-            mesDown.push_back(-scalesyst)
+            self.mesUp.push_back(scalesyst)
+            self.mesDown.push_back(-scalesyst)
 
+        # Muons are complicated, and MET makes use of track, spectro, and combined quantites,
+        # so we need all of their resolutions.
+        # comboms reflects that it is the combined muon res affected by shifting ms res up and down.
+        # comboid is for shifting the id res up and down
+        self.systUtil.setObjectResolutionShift(
+                METUtil.MuonsComboMS,
+                self.cb_mermsUp,
+                self.cb_mermsDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.MuonsComboID,
+                self.cb_meridUp,
+                self.cb_meridDown)
+
+        self.systUtil.setObjectResolutionShift(
+                METUtil.SpectroMuons,
+                self.mermsUp,
+                self.mermsDown)
+
+        # For now the mes only affects combined
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Muons,
+                self.mesUp,
+                self.mesDown)
+
+    def tau_systematics(self, event):
         """
         TAU SYSTEMATICS
         """
-        tesUp = ROOT.vector('float')()
-        tesDown = ROOT.vector('float')()
+        self.tesUp.clear()
+        self.tesDown.clear()
 
         # And for taus (this is test code, do not use without tau group approval)
         for tau in event.taus:
@@ -743,9 +693,14 @@ class Systematics(EventFilter):
             double uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
             if uncert < 0:
                 uncert = 0
-            tesUp.push_back(uncert)
-            tesDown.push_back(-1 * uncert)
+            self.tesUp.push_back(uncert)
+            self.tesDown.push_back(-1 * uncert)
 
+        # Taus are just in as an example
+        self.systUtil.setObjectEnergyUncertainties(
+                METUtil.Taus,
+                self.tesUp,
+                self.tesDown)
 
 
     def consistency(self, event):
