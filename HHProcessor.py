@@ -28,6 +28,7 @@ from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
+from higgstautau.systematics import Systematics
 
 from goodruns import GRL
 import subprocess
@@ -128,7 +129,10 @@ class HHProcessor(ATLASStudent):
         # set the event filters
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            Systematics(),
+            Systematics(systematic_type = Systematics.Jets,
+                        systematic_term = Systematics.Jets.JES_UP,
+                        year = YEAR,
+                        datatype = self.metadata.datatype),
             Triggers(datatype=self.metadata.datatype,
                      year=YEAR,
                      skim=False),

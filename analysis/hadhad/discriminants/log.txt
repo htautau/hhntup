@@ -1,0 +1,292 @@
+--- Factory                  : Parsing option string: 
+--- Factory                  : ... "V:!Silent:!Color:DrawProgressBar"
+--- Factory                  : The following options are set:
+--- Factory                  : - By User:
+--- Factory                  :     V: "True" [Verbose flag]
+--- Factory                  :     Color: "False" [Flag for coloured screen output (default: True, if in batch mode: False)]
+--- Factory                  :     Silent: "False" [Batch mode: boolean silent flag inhibiting any output from TMVA after the creation of the factory class object (default: False)]
+--- Factory                  :     DrawProgressBar: "True" [Draw progress bar to display training, testing and evaluation schedule (default: True)]
+--- Factory                  : - Default:
+--- Factory                  :     Transformations: "" [List of transformations to test; formatting example: "Transformations=I;D;P;U;G,D", for identity, decorrelation, PCA, Uniform and Gaussianisation followed by decorrelation transformations]
+--- Factory                  :     AnalysisType: "Auto" [Set the analysis type (Classification, Regression, Multiclass, Auto) (default: Auto)]
+--- Factory                  : You are running ROOT Version: 5.30/00, Jun 27, 2011
+--- Factory                  : 
+--- Factory                  : _/_/_/_/_/ _|      _|  _|      _|    _|_|   
+--- Factory                  :    _/      _|_|  _|_|  _|      _|  _|    _| 
+--- Factory                  :   _/       _|  _|  _|  _|      _|  _|_|_|_| 
+--- Factory                  :  _/        _|      _|    _|  _|    _|    _| 
+--- Factory                  : _/         _|      _|      _|      _|    _| 
+--- Factory                  : 
+--- Factory                  : ___________TMVA Version 4.1.2, Jun 21, 2011
+--- Factory                  : 
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- Factory                  : Add Tree PowHegPythia_VBFH130_tautauhh of type Signal with 2313 events
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Factory                  : Add Tree data_M of type Background with 43012 events
+--- DataSetInfo              : Class index : 0  name : Signal
+--- DataSetInfo              : Class index : 1  name : Background
+--- Factory                  : Booking method: BDT
+--- <VERBOSE> Configurable             : Parsing option string: 
+--- <VERBOSE> Configurable             : ... "!H:V:UseYesNoLeaf=False:NTrees=10:MaxDepth=100000:BoostType=AdaBoost:AdaBoostBeta=0.2:SeparationType=GiniIndex:PruneMethod=NoPruning:PruneStrength=-1:PruneBeforeBoost=False:PruningValFraction=0.50:NNodesMax=100000:nCuts=20"
+--- <VERBOSE> Configurable             : The following options are set:
+--- <VERBOSE> Configurable             : - By User:
+--- <VERBOSE> Configurable             :     <none>
+--- <VERBOSE> Configurable             : - Default:
+--- <VERBOSE> Configurable             :     Boost_num: "0" [Number of times the classifier will be boosted]
+--- DataSetFactory           : Splitmode is: "RANDOM" the mixmode is: "SAMEASSPLITMODE"
+--- DataSetFactory           : Create training and testing trees -- looping over class "Signal" ...
+--- DataSetFactory           : Weight expression for class 'Signal': ""
+--- DataSetFactory           : Create training and testing trees -- looping over class "Background" ...
+--- DataSetFactory           : Weight expression for class 'Background': ""
+--- DataSetFactory           : Number of events in input trees (after possible flattening of arrays):
+--- DataSetFactory           :     Signal          -- number of events       : 2313   / sum of weights: 2313 
+--- DataSetFactory           :     Background      -- number of events       : 43012  / sum of weights: 43012
+--- DataSetFactory           :     Signal     tree -- total number of entries: 2313 
+--- DataSetFactory           :     Background tree -- total number of entries: 43012
+--- DataSetFactory           : Preselection: (will effect number of requested training and testing events)
+--- DataSetFactory           :     No preselection cuts applied on event classes
+--- DataSetFactory           : Weight renormalisation mode: "EqualNumEvents": renormalise class weights ...
+--- DataSetFactory           : ... so that Sum[i=1..N_j]{w_i} = N_classA, j=classA, classB, ...
+--- DataSetFactory           : ... (note that N_j is the sum of training and test events)
+--- DataSetFactory           : --> Rescale Signal     event weights by factor: 1
+--- DataSetFactory           : --> Rescale Background event weights by factor: 0.0537524
+--- DataSetFactory           : Number of training and testing events after rescaling:
+--- DataSetFactory           : ------------------------------------------------------
+--- DataSetFactory           : Signal     -- training events            : 1156 (sum of weights: 1156) - requested were 0 events
+--- DataSetFactory           : Signal     -- testing events             : 1156 (sum of weights: 1156) - requested were 0 events
+--- DataSetFactory           : Signal     -- training and testing events: 2312 (sum of weights: 2312)
+--- DataSetFactory           : Background -- training events            : 21506 (sum of weights: 1156) - requested were 0 events
+--- DataSetFactory           : Background -- testing events             : 21506 (sum of weights: 1156) - requested were 0 events
+--- DataSetFactory           : Background -- training and testing events: 43012 (sum of weights: 2312)
+--- DataSetFactory           : Create internal training tree
+--- DataSetFactory           : Create internal testing tree
+--- DataSetInfo              : Correlation matrix (Signal):
+--- DataSetInfo              : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              :                      tau1_BDTJetScore tau2_BDTJetScore sphericity sphericity_boosted aplanarity aplanarity_boosted  tau1_x  tau2_x cos_theta_tau1_tau2 jet1_jvtxf jet2_jvtxf dEta_jets dEta_jets_boosted
+--- DataSetInfo              :    tau1_BDTJetScore:           +1.000           +0.542     +0.034             -0.008     +0.003             -0.000  -0.006  +0.044              -0.009     -0.043     +0.012    +0.023            +0.030
+--- DataSetInfo              :    tau2_BDTJetScore:           +0.542           +1.000     +0.055             +0.066     +0.028             +0.094  +0.037  +0.073              +0.018     -0.035     +0.043    +0.047            +0.051
+--- DataSetInfo              :          sphericity:           +0.034           +0.055     +1.000             +0.737     +0.698             +0.468  +0.011  -0.015              -0.008     +0.377     +0.377    -0.032            +0.018
+--- DataSetInfo              :  sphericity_boosted:           -0.008           +0.066     +0.737             +1.000     +0.512             +0.592  +0.067  +0.019              +0.014     +0.321     +0.308    +0.094            +0.136
+--- DataSetInfo              :          aplanarity:           +0.003           +0.028     +0.698             +0.512     +1.000             +0.712  +0.061  +0.024              -0.041     +0.275     +0.273    -0.044            -0.006
+--- DataSetInfo              :  aplanarity_boosted:           -0.000           +0.094     +0.468             +0.592     +0.712             +1.000  +0.058  +0.003              -0.035     +0.199     +0.195    +0.045            +0.087
+--- DataSetInfo              :              tau1_x:           -0.006           +0.037     +0.011             +0.067     +0.061             +0.058  +1.000  +0.420              -0.085     -0.037     -0.070    -0.072            -0.094
+--- DataSetInfo              :              tau2_x:           +0.044           +0.073     -0.015             +0.019     +0.024             +0.003  +0.420  +1.000              -0.022     -0.074     -0.081    -0.041            -0.067
+--- DataSetInfo              : cos_theta_tau1_tau2:           -0.009           +0.018     -0.008             +0.014     -0.041             -0.035  -0.085  -0.022              +1.000     +0.090     +0.045    +0.067            +0.097
+--- DataSetInfo              :          jet1_jvtxf:           -0.043           -0.035     +0.377             +0.321     +0.275             +0.199  -0.037  -0.074              +0.090     +1.000     +0.024    -0.134            -0.068
+--- DataSetInfo              :          jet2_jvtxf:           +0.012           +0.043     +0.377             +0.308     +0.273             +0.195  -0.070  -0.081              +0.045     +0.024     +1.000    -0.122            -0.083
+--- DataSetInfo              :           dEta_jets:           +0.023           +0.047     -0.032             +0.094     -0.044             +0.045  -0.072  -0.041              +0.067     -0.134     -0.122    +1.000            +0.943
+--- DataSetInfo              :   dEta_jets_boosted:           +0.030           +0.051     +0.018             +0.136     -0.006             +0.087  -0.094  -0.067              +0.097     -0.068     -0.083    +0.943            +1.000
+--- DataSetInfo              : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              : Correlation matrix (Background):
+--- DataSetInfo              : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              :                      tau1_BDTJetScore tau2_BDTJetScore sphericity sphericity_boosted aplanarity aplanarity_boosted  tau1_x  tau2_x cos_theta_tau1_tau2 jet1_jvtxf jet2_jvtxf dEta_jets dEta_jets_boosted
+--- DataSetInfo              :    tau1_BDTJetScore:           +1.000           +0.486     -0.013             -0.019     -0.005             -0.006  -0.028  +0.014              -0.023     -0.027     -0.034    -0.033            -0.033
+--- DataSetInfo              :    tau2_BDTJetScore:           +0.486           +1.000     -0.023             -0.029     -0.012             -0.012  -0.005  +0.020              -0.037     -0.039     -0.044    -0.041            -0.038
+--- DataSetInfo              :          sphericity:           -0.013           -0.023     +1.000             +0.702     +0.776             +0.495  -0.076  -0.081              +0.016     +0.556     +0.544    +0.373            +0.402
+--- DataSetInfo              :  sphericity_boosted:           -0.019           -0.029     +0.702             +1.000     +0.601             +0.703  -0.038  -0.057              +0.037     +0.448     +0.438    +0.443            +0.433
+--- DataSetInfo              :          aplanarity:           -0.005           -0.012     +0.776             +0.601     +1.000             +0.617  -0.071  -0.065              +0.019     +0.442     +0.437    +0.277            +0.296
+--- DataSetInfo              :  aplanarity_boosted:           -0.006           -0.012     +0.495             +0.703     +0.617             +1.000  -0.039  -0.037              +0.029     +0.302     +0.290    +0.296            +0.288
+--- DataSetInfo              :              tau1_x:           -0.028           -0.005     -0.076             -0.038     -0.071             -0.039  +1.000  +0.244              +0.183     -0.021     -0.016    -0.024            -0.025
+--- DataSetInfo              :              tau2_x:           +0.014           +0.020     -0.081             -0.057     -0.065             -0.037  +0.244  +1.000              +0.184     -0.051     -0.041    -0.053            -0.052
+--- DataSetInfo              : cos_theta_tau1_tau2:           -0.023           -0.037     +0.016             +0.037     +0.019             +0.029  +0.183  +0.184              +1.000     +0.042     +0.048    +0.048            +0.057
+--- DataSetInfo              :          jet1_jvtxf:           -0.027           -0.039     +0.556             +0.448     +0.442             +0.302  -0.021  -0.051              +0.042     +1.000     +0.404    +0.308            +0.347
+--- DataSetInfo              :          jet2_jvtxf:           -0.034           -0.044     +0.544             +0.438     +0.437             +0.290  -0.016  -0.041              +0.048     +0.404     +1.000    +0.296            +0.338
+--- DataSetInfo              :           dEta_jets:           -0.033           -0.041     +0.373             +0.443     +0.277             +0.296  -0.024  -0.053              +0.048     +0.308     +0.296    +1.000            +0.958
+--- DataSetInfo              :   dEta_jets_boosted:           -0.033           -0.038     +0.402             +0.433     +0.296             +0.288  -0.025  -0.052              +0.057     +0.347     +0.338    +0.958            +1.000
+--- DataSetInfo              : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetFactory           :  
+--- <VERBOSE> BDT                      : Parsing option string: 
+--- <VERBOSE> BDT                      : ... "!H:V:UseYesNoLeaf=False:NTrees=10:MaxDepth=100000:BoostType=AdaBoost:AdaBoostBeta=0.2:SeparationType=GiniIndex:PruneMethod=NoPruning:PruneStrength=-1:PruneBeforeBoost=False:PruningValFraction=0.50:NNodesMax=100000:nCuts=20"
+--- <VERBOSE> BDT                      : The following options are set:
+--- <VERBOSE> BDT                      : - By User:
+--- <VERBOSE> BDT                      :     V: "True" [Verbose output (short form of "VerbosityLevel" below - overrides the latter one)]
+--- <VERBOSE> BDT                      :     H: "False" [Print method-specific help message]
+--- <VERBOSE> BDT                      :     NTrees: "10" [Number of trees in the forest]
+--- <VERBOSE> BDT                      :     BoostType: "AdaBoost" [Boosting type for the trees in the forest]
+--- <VERBOSE> BDT                      :     AdaBoostBeta: "2.000000e-01" [Parameter for AdaBoost algorithm]
+--- <VERBOSE> BDT                      :     UseYesNoLeaf: "False" [Use Sig or Bkg categories, or the purity=S/(S+B) as classification of the leaf node]
+--- <VERBOSE> BDT                      :     SeparationType: "GiniIndex" [Separation criterion for node splitting]
+--- <VERBOSE> BDT                      :     nCuts: "20" [Number of steps during node cut optimisation]
+--- <VERBOSE> BDT                      :     PruneStrength: "-1.000000e+00" [Pruning strength]
+--- <VERBOSE> BDT                      :     PruneMethod: "NoPruning" [Method used for pruning (removal) of statistically insignificant branches]
+--- <VERBOSE> BDT                      :     PruneBeforeBoost: "False" [Flag to prune the tree before applying boosting algorithm]
+--- <VERBOSE> BDT                      :     PruningValFraction: "5.000000e-01" [Fraction of events to use for optimizing automatic pruning.]
+--- <VERBOSE> BDT                      :     NNodesMax: "100000" [Max number of nodes in tree]
+--- <VERBOSE> BDT                      :     MaxDepth: "100000" [Max depth of the decision tree allowed]
+--- <VERBOSE> BDT                      : - Default:
+--- <VERBOSE> BDT                      :     VerbosityLevel: "Default" [Verbosity level]
+--- <VERBOSE> BDT                      :     VarTransform: "None" [List of variable transformations performed before training, e.g., "D_Background,P_Signal,G,N_AllClasses" for: "Decorrelation, PCA-transformation, Gaussianisation, Normalisation, each for the given class of events ('AllClasses' denotes all events of all classes, if no class indication is given, 'All' is assumed)"]
+--- <VERBOSE> BDT                      :     CreateMVAPdfs: "False" [Create PDFs for classifier outputs (signal and background)]
+--- <VERBOSE> BDT                      :     IgnoreNegWeightsInTraining: "False" [Events with negative weights are ignored in the training (but are included for testing and performance evaluation)]
+--- <VERBOSE> BDT                      :     RenormByClass: "False" [Individually re-normalize each event class to the original size after boosting]
+--- <VERBOSE> BDT                      :     AdaBoostR2Loss: "Quadratic" [Type of Loss function in AdaBoostR2t (Linear,Quadratic or Exponential)]
+--- <VERBOSE> BDT                      :     UseBaggedGrad: "False" [Use only a random subsample of all events for growing the trees in each iteration. (Only valid for GradBoost)]
+--- <VERBOSE> BDT                      :     GradBaggingFraction: "6.000000e-01" [Defines the fraction of events to be used in each iteration when UseBaggedGrad=kTRUE. (Only valid for GradBoost)]
+--- <VERBOSE> BDT                      :     Shrinkage: "1.000000e+00" [Learning rate for GradBoost algorithm]
+--- <VERBOSE> BDT                      :     UseRandomisedTrees: "False" [Choose at each node splitting a random set of variables]
+--- <VERBOSE> BDT                      :     UseNvars: "4" [Number of variables used if randomised tree option is chosen]
+--- <VERBOSE> BDT                      :     UsePoissonNvars: "True" [Interpret "UseNvars" not as fixed number but as mean of a Possion distribution in each split]
+--- <VERBOSE> BDT                      :     UseNTrainEvents: "22662" [Number of randomly picked training events used in randomised (and bagged) trees]
+--- <VERBOSE> BDT                      :     UseWeightedTrees: "True" [Use weighted trees or simple average in classification from the forest]
+--- <VERBOSE> BDT                      :     NodePurityLimit: "5.000000e-01" [In boosting/pruning, nodes with purity > NodePurityLimit are signal; background otherwise.]
+--- <VERBOSE> BDT                      :     nEventsMin: "40" [Minimum number of events required in a leaf node (default: Classification: max(40, N_train/(Nvar^2)/10), Regression: 10)]
+--- <VERBOSE> BDT                      :     UseFisherCuts: "False" [Use multivariate splits using the Fisher criterion]
+--- <VERBOSE> BDT                      :     MinLinCorrForFisher: "8.000000e-01" [The minimum linear correlation between two variables demanded for use in Fisher criterion in node splitting]
+--- <VERBOSE> BDT                      :     UseExclusiveVars: "False" [Variables already used in fisher criterion are not anymore analysed individually for node splitting]
+--- <VERBOSE> BDT                      :     DoBoostMonitor: "False" [Create control plot with ROC integral vs tree number]
+--- <VERBOSE> BDT                      :     NegWeightTreatment: "InverseBoostNegWeights" [How to treat events with negative weights in the BDT training (particular the boosting) : Ignore;  Boost With inverse boostweight; Pair events with negative and positive weights in traning sample and *annihilate* them (experimental!); Randomly pair events with negative and positive weights in leaf node and do not boost them (experimental!) ]
+--- Factory                  :  
+--- Factory                  : Train all methods for Classification ...
+--- Factory                  : Train method: BDT for Classification
+--- TFHandler_BDT            : ------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT            :            Variable                   Mean                   RMS           [        Min                   Max ]
+--- TFHandler_BDT            : ------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT            :    tau1_BDTJetScore:              0.85270             0.086733   [              0.47179               1.0000 ]
+--- TFHandler_BDT            :    tau2_BDTJetScore:              0.74274             0.097404   [              0.43445              0.99065 ]
+--- TFHandler_BDT            :          sphericity:             0.058424              0.11499   [               0.0000              0.79973 ]
+--- TFHandler_BDT            :  sphericity_boosted:             0.062005              0.12030   [               0.0000              0.83532 ]
+--- TFHandler_BDT            :          aplanarity:            0.0080804             0.021734   [               0.0000              0.32880 ]
+--- TFHandler_BDT            :  aplanarity_boosted:            0.0069202             0.020259   [               0.0000              0.31857 ]
+--- TFHandler_BDT            :              tau1_x:              0.81606              0.18402   [              0.10918              0.99999 ]
+--- TFHandler_BDT            :              tau2_x:              0.81034              0.18954   [              0.11501               1.0000 ]
+--- TFHandler_BDT            : cos_theta_tau1_tau2:             -0.11235              0.58140   [              -1.0000              0.99620 ]
+--- TFHandler_BDT            :          jet1_jvtxf:              0.17960              0.61712   [              -1.0000               1.0000 ]
+--- TFHandler_BDT            :          jet2_jvtxf:              0.19661              0.61499   [              -1.0000               1.0000 ]
+--- TFHandler_BDT            :           dEta_jets:               1.5693               2.0698   [               0.0000               8.5038 ]
+--- TFHandler_BDT            :   dEta_jets_boosted:               1.8279               2.4100   [               0.0000               12.168 ]
+--- TFHandler_BDT            : ------------------------------------------------------------------------------------------------------------------
+--- BDT                      : Begin training
+--- BDT                      : Training 10 Decision Trees ... patience please
+--- BDT                      : <Train> elapsed time: 0.981 sec                              
+--- BDT                      : <Train> average number of nodes (w/o pruning) : 385
+--- BDT                      : End of training                                              
+--- BDT                      : Elapsed time for training with 22662 events: 0.989 sec         
+--- BDT                      : Create MVA output for classification on training sample
+--- BDT                      : Evaluation of BDT on training sample (22662 events)
+--- BDT                      : Elapsed time for evaluation of 22662 events: 0.0927 sec       
+--- BDT                      : Creating weight file in xml format: weights/VBF_BDT_BDT.weights.xml
+--- BDT                      : Creating standalone response class: weights/VBF_BDT_BDT.class.C
+--- BDT                      : Write monitoring histograms to file: VBF_BDT.root:/Method_BDT/BDT
+--- Factory                  : Training finished
+--- Factory                  : 
+--- Factory                  : Ranking input variables (method specific)...
+--- BDT                      : Ranking result (top variable is best ranked)
+--- BDT                      : -----------------------------------------------------
+--- BDT                      : Rank : Variable            : Variable Importance
+--- BDT                      : -----------------------------------------------------
+--- BDT                      :    1 : dEta_jets           : 4.513e-01
+--- BDT                      :    2 : dEta_jets_boosted   : 2.257e-01
+--- BDT                      :    3 : tau2_BDTJetScore    : 1.008e-01
+--- BDT                      :    4 : tau2_x              : 5.571e-02
+--- BDT                      :    5 : tau1_x              : 5.302e-02
+--- BDT                      :    6 : tau1_BDTJetScore    : 2.940e-02
+--- BDT                      :    7 : cos_theta_tau1_tau2 : 2.695e-02
+--- BDT                      :    8 : jet2_jvtxf          : 2.287e-02
+--- BDT                      :    9 : jet1_jvtxf          : 9.718e-03
+--- BDT                      :   10 : aplanarity          : 7.671e-03
+--- BDT                      :   11 : sphericity_boosted  : 7.203e-03
+--- BDT                      :   12 : sphericity          : 5.818e-03
+--- BDT                      :   13 : aplanarity_boosted  : 3.803e-03
+--- BDT                      : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : === Destroy and recreate all methods via weight files for testing ===
+--- Factory                  : 
+--- MethodBase               : Reading weight file: weights/VBF_BDT_BDT.weights.xml
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.1.2
+--- BDT                      : MVA method was trained with ROOT Version: 5.30/00
+--- Factory                  : Test all methods...
+--- Factory                  : Test method: BDT for Classification performance
+--- BDT                      : Evaluation of BDT on testing sample (22662 events)
+--- BDT                      : Elapsed time for evaluation of 22662 events: 0.0794 sec       
+--- Factory                  : Evaluate all methods...
+--- Factory                  : Evaluate classifier: BDT
+--- BDT                      : Loop over test events and fill histograms with classifier response...
+--- Factory                  : Write evaluation histograms to file
+--- TFHandler_BDT            : Plot event variables for BDT
+--- TFHandler_BDT            : ------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT            :            Variable                   Mean                   RMS           [        Min                   Max ]
+--- TFHandler_BDT            : ------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT            :    tau1_BDTJetScore:              0.85519             0.087751   [              0.48859               1.0000 ]
+--- TFHandler_BDT            :    tau2_BDTJetScore:              0.74578             0.099313   [              0.43508              0.99266 ]
+--- TFHandler_BDT            :          sphericity:             0.058932              0.11636   [               0.0000              0.86538 ]
+--- TFHandler_BDT            :  sphericity_boosted:             0.062370              0.12306   [               0.0000              0.76204 ]
+--- TFHandler_BDT            :          aplanarity:            0.0084257             0.022785   [               0.0000              0.35503 ]
+--- TFHandler_BDT            :  aplanarity_boosted:            0.0068488             0.019334   [               0.0000              0.26298 ]
+--- TFHandler_BDT            :              tau1_x:              0.81457              0.18130   [              0.14051              0.99999 ]
+--- TFHandler_BDT            :              tau2_x:              0.81682              0.18707   [             0.094908               1.0000 ]
+--- TFHandler_BDT            : cos_theta_tau1_tau2:             -0.11274              0.58988   [             -0.99999              0.99636 ]
+--- TFHandler_BDT            :          jet1_jvtxf:              0.20023              0.61138   [              -1.0000               1.0000 ]
+--- TFHandler_BDT            :          jet2_jvtxf:              0.18626              0.61559   [              -1.0000               1.0000 ]
+--- TFHandler_BDT            :           dEta_jets:               1.5626               2.0671   [               0.0000               8.1350 ]
+--- TFHandler_BDT            :   dEta_jets_boosted:               1.8150               2.4124   [               0.0000               12.668 ]
+--- TFHandler_BDT            : ------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT            : Create scatter and profile plots in target-file directory: 
+--- TFHandler_BDT            : VBF_BDT.root:/Method_BDT/BDT/CorrelationPlots
+--- Factory                  : Correlations between input variables and MVA response (signal):
+--- Factory                  : ----------------
+--- Factory                  :                          BDT
+--- Factory                  :    tau1_BDTJetScore:  +0.264
+--- Factory                  :    tau2_BDTJetScore:  +0.335
+--- Factory                  :          sphericity:  +0.038
+--- Factory                  :  sphericity_boosted:  +0.105
+--- Factory                  :          aplanarity:  -0.005
+--- Factory                  :  aplanarity_boosted:  +0.050
+--- Factory                  :              tau1_x:  -0.380
+--- Factory                  :              tau2_x:  -0.372
+--- Factory                  : cos_theta_tau1_tau2:  +0.161
+--- Factory                  :          jet1_jvtxf:  +0.076
+--- Factory                  :          jet2_jvtxf:  +0.062
+--- Factory                  :           dEta_jets:  +0.709
+--- Factory                  :   dEta_jets_boosted:  +0.684
+--- Factory                  : ----------------
+--- Factory                  : 
+--- Factory                  : Correlations between input variables and MVA response (background):
+--- Factory                  : ----------------
+--- Factory                  :                          BDT
+--- Factory                  :    tau1_BDTJetScore:  +0.347
+--- Factory                  :    tau2_BDTJetScore:  +0.387
+--- Factory                  :          sphericity:  +0.234
+--- Factory                  :  sphericity_boosted:  +0.256
+--- Factory                  :          aplanarity:  +0.195
+--- Factory                  :  aplanarity_boosted:  +0.199
+--- Factory                  :              tau1_x:  -0.280
+--- Factory                  :              tau2_x:  -0.306
+--- Factory                  : cos_theta_tau1_tau2:  +0.007
+--- Factory                  :          jet1_jvtxf:  +0.137
+--- Factory                  :          jet2_jvtxf:  +0.178
+--- Factory                  :           dEta_jets:  +0.478
+--- Factory                  :   dEta_jets_boosted:  +0.458
+--- Factory                  : ----------------
+--- Factory                  : 
+--- Factory                  : The following "overlap" matrices contain the fraction of events for which 
+--- Factory                  : the MVAs 'i' and 'j' have returned conform answers about "signal-likeness"
+--- Factory                  : An event is signal-like, if its MVA output exceeds the following value:
+--- Factory                  : --------------------
+--- Factory                  :  Method:  Cut value:
+--- Factory                  : --------------------
+--- Factory                  :     BDT:     +0.322
+--- Factory                  : --------------------
+--- Factory                  : which correspond to the working point: eff(signal) = 1 - eff(background)
+--- Factory                  : 
+--- Factory                  : Evaluation results ranked by best signal efficiency and purity (area)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency at bkg eff.(error):       | Sepa-    Signifi- 
+--- Factory                  : Method:          @B=0.01    @B=0.10    @B=0.30    ROC-integ. | ration:  cance:   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDT            : 0.550(14)  0.816(11)  0.924(07)    0.929    | 0.595    1.660
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Testing efficiency compared to training efficiency (overtraining check)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency: from test sample (from training sample) 
+--- Factory                  : Method:          @B=0.01             @B=0.10            @B=0.30   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDT            : 0.550 (0.577)       0.816 (0.819)      0.924 (0.924)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Dataset:Default          : Created tree 'TestTree' with 22662 events
+--- Dataset:Default          : Created tree 'TrainTree' with 22662 events
+--- Factory                  :   
+--- Factory                  : Thank you for using TMVA!
+--- Factory                  : For citation information, please visit: http://tmva.sf.net/citeTMVA.html

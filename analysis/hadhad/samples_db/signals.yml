@@ -1,0 +1,64 @@
+gg:
+    name: gghtautau
+    latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
+    math: 'ggH\rightarrow\tau_{h}\tau_{h}'
+    samples:
+        - 'PowHegPythia_ggH100_tautauhh.mc11c'
+        - 'PowHegPythia_ggH105_tautauhh.mc11c'
+        - 'PowHegPythia_ggH110_tautauhh.mc11c'
+        - 'PowHegPythia_ggH115_tautauhh.mc11c'
+        - 'PowHegPythia_ggH120_tautauhh.mc11c'
+        - 'PowHegPythia_ggH125_tautauhh.mc11c'
+        - 'PowHegPythia_ggH130_tautauhh.mc11c'
+        - 'PowHegPythia_ggH135_tautauhh.mc11c'
+        - 'PowHegPythia_ggH140_tautauhh.mc11c'
+        - 'PowHegPythia_ggH145_tautauhh.mc11c'
+        - 'PowHegPythia_ggH150_tautauhh.mc11c'
+vbf:
+    name: vbfhtautau
+    latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'
+    math: 'VBF H\rightarrow\tau_{h}\tau_{h}'
+    samples:
+        - 'PowHegPythia_VBFH100_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH105_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH110_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH115_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH120_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH125_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH130_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH135_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH140_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH145_tautauhh.mc11c'
+        - 'PowHegPythia_VBFH150_tautauhh.mc11c'
+wh:
+    name: whtautau
+    latex: '$WH\rightarrow\tau_{h}\tau_{h}$'
+    math: 'WH\rightarrow\tau_{h}\tau_{h}'
+    samples:
+        - 'PythiaWH100_tautauhh.mc11c'
+        - 'PythiaWH105_tautauhh.mc11c'
+        - 'PythiaWH110_tautauhh.mc11c'
+        - 'PythiaWH115_tautauhh.mc11c'
+        - 'PythiaWH120_tautauhh.mc11c'
+        - 'PythiaWH125_tautauhh.mc11c'
+        - 'PythiaWH130_tautauhh.mc11c'
+        - 'PythiaWH135_tautauhh.mc11c'
+        - 'PythiaWH140_tautauhh.mc11c'
+        - 'PythiaWH145_tautauhh.mc11c'
+        - 'PythiaWH150_tautauhh.mc11c'
+zh:
+    name: zhtautau
+    latex: '$ZH\rightarrow\tau_{h}\tau_{h}$'
+    math: 'ZH\rightarrow\tau_{h}\tau_{h}'
+    samples:
+        - 'PythiaZH100_tautauhh.mc11c'
+        - 'PythiaZH105_tautauhh.mc11c'
+        - 'PythiaZH110_tautauhh.mc11c'
+        - 'PythiaZH115_tautauhh.mc11c'
+        - 'PythiaZH120_tautauhh.mc11c'
+        - 'PythiaZH125_tautauhh.mc11c'
+        - 'PythiaZH130_tautauhh.mc11c'
+        - 'PythiaZH135_tautauhh.mc11c'
+        - 'PythiaZH140_tautauhh.mc11c'
+        - 'PythiaZH145_tautauhh.mc11c'
+        - 'PythiaZH150_tautauhh.mc11c'

@@ -1,0 +1,133 @@
+ztautau:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$'
+    math: 'Z/\gamma^{*}'
+    samples:
+        - 'AlpgenJimmyZtautauNp0_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp1_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp2_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp3_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp4_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp5_pt20.mc11c'
+
+        - 'AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
+ewk:
+    name: EW
+    latex: EW
+    math: EW
+    samples:
+        - 'AlpgenJimmyZmumuNp0_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp1_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp2_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp3_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp4_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp5_pt20.mc11c'
+
+        - 'AlpgenJimmyZmumuNp0_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp1_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp2_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp3_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp4_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZmumuNp5_Mll10to40_pt20.mc11c'
+
+        - 'AlpgenJimmyZeeNp0_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp1_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp2_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp3_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp4_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp5_pt20.mc11c'
+
+        - 'AlpgenJimmyZeeNp0_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp1_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp2_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp3_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp4_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimmyZeeNp5_Mll10to40_pt20.mc11c'
+
+        - 'AlpgenJimmyWtaunuNp0_pt20.mc11c'
+        - 'AlpgenJimmyWtaunuNp1_pt20.mc11c'
+        - 'AlpgenJimmyWtaunuNp2_pt20.mc11c'
+        - 'AlpgenJimmyWtaunuNp3_pt20.mc11c'
+        - 'AlpgenJimmyWtaunuNp4_pt20.mc11c'
+        - 'AlpgenJimmyWtaunuNp5_pt20.mc11c'
+
+        - 'AlpgenJimmyWmunuNp0_pt20.mc11c'
+        - 'AlpgenJimmyWmunuNp1_pt20.mc11c'
+        - 'AlpgenJimmyWmunuNp2_pt20.mc11c'
+        - 'AlpgenJimmyWmunuNp3_pt20.mc11c'
+        - 'AlpgenJimmyWmunuNp4_pt20.mc11c'
+        - 'AlpgenJimmyWmunuNp5_pt20.mc11c'
+
+        - 'AlpgenJimmyWenuNp0_pt20.mc11c'
+        - 'AlpgenJimmyWenuNp1_pt20.mc11c'
+        - 'AlpgenJimmyWenuNp2_pt20.mc11c'
+        - 'AlpgenJimmyWenuNp3_pt20.mc11c'
+        - 'AlpgenJimmyWenuNp4_pt20.mc11c'
+        - 'AlpgenJimmyWenuNp5_pt20.mc11c'
+top:
+    name: Top
+    latex: Top
+    math: Top
+    samples:
+        - 'st_schan_enu_AcerMC.mc11c'
+        - 'st_schan_munu_AcerMC.mc11c'
+        - 'st_schan_taunu_AcerMC.mc11c'
+        - 'st_tchan_enu_AcerMC.mc11c'
+        - 'st_tchan_munu_AcerMC.mc11c'
+        - 'st_tchan_taunu_AcerMC.mc11c'
+        - 'T1_McAtNlo_Jimmy.mc11c'
+        - 'TTbar_FullHad_McAtNlo_Jimmy.mc11c'
+        - 'AcerMC_Wt.mc11c'
+diboson:
+    name: Diboson
+    latex: Diboson
+    math: Diboson
+    samples:
+        - 'gg2WW0240_JIMMY_WW_enuenu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_enumunu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_enutaunu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_munuenu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_munumunu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_munutaunu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_taunuenu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_taunumunu.mc11c'
+        - 'gg2WW0240_JIMMY_WW_taunutaunu.mc11c'
+        
+        - 'McAtNlo_JIMMY_WmZ_lnull.mc11c'
+        - 'McAtNlo_JIMMY_WmZ_lnuqq.mc11c'
+        - 'McAtNlo_JIMMY_WmZ_lnutautau.mc11c'
+        - 'McAtNlo_JIMMY_WmZ_qqll.mc11c'
+        - 'McAtNlo_JIMMY_WmZ_qqtautau.mc11c'
+        - 'McAtNlo_JIMMY_WmZ_taunull.mc11c'
+        - 'McAtNlo_JIMMY_WmZ_taunutautau.mc11c'
+        
+        - 'McAtNlo_JIMMY_WpWm_enuenu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_enumunu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_enutaunu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_munuenu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_munumunu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_munutaunu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_taunuenu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_taunumunu.mc11c'
+        - 'McAtNlo_JIMMY_WpWm_taunutaunu.mc11c'
+        
+        - 'McAtNlo_JIMMY_WpZ_lnull.mc11c'
+        - 'McAtNlo_JIMMY_WpZ_lnuqq.mc11c'
+        - 'McAtNlo_JIMMY_WpZ_lnutautau.mc11c'
+        - 'McAtNlo_JIMMY_WpZ_qqll.mc11c'
+        - 'McAtNlo_JIMMY_WpZ_qqtautau.mc11c'
+        - 'McAtNlo_JIMMY_WpZ_taunull.mc11c'
+        - 'McAtNlo_JIMMY_WpZ_taunutautau.mc11c'
+        
+        - 'McAtNlo_JIMMY_ZZ_2l2tau.mc11c'
+        - 'McAtNlo_JIMMY_ZZ_4tau.mc11c'
+        - 'McAtNlo_JIMMY_ZZ_llll.mc11c'
+        - 'McAtNlo_JIMMY_ZZ_llnunu.mc11c'
+        - 'McAtNlo_JIMMY_ZZ_llqq.mc11c'
+        - 'McAtNlo_JIMMY_ZZ_tautaununu.mc11c'
+        - 'McAtNlo_JIMMY_ZZ_tautauqq.mc11c'
