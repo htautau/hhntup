@@ -2,7 +2,6 @@
 Adapted from the Example.C in MissingETUtility/macros
 """
 # stdlib Python imports
-import sys
 import math
 from math import sin, sqrt, pow
 
@@ -42,7 +41,7 @@ class Systematics(EventFilter):
     # default
     class Default(object):
 
-        NONE = METUtil.NONE
+        NONE = METUtil.None
 
     # electrons
     class Electrons(object):
@@ -135,7 +134,6 @@ class Systematics(EventFilter):
             datatype,
             year,
             verbose=False,
-            stream=None,
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
@@ -149,10 +147,6 @@ class Systematics(EventFilter):
         self.datatype = datatype
         self.year = year
         self.verbose = verbose
-        if stream is None:
-            self.stream = sys.stdout
-        else:
-            self.stream = stream
 
         self.jesUp = ROOT.vector('float')()
         self.jesDown = ROOT.vector('float')()
@@ -196,7 +190,8 @@ class Systematics(EventFilter):
         # Turn on (off) the relevant MET terms
         # Standard MET_RefFinal has:
         # RefEle, RefGamma, RefTau, RefJet, SoftJets, RefMuon, MuonTotal, (CellOut), CellOut_Eflow
-        self.systUtil.defineMissingET(True, True, True, True, True, True, True, False, True)
+        self.systUtil.defineMissingET(
+                True, True, True, True, True, True, True, True, False)
 
         # SUSY group, MET_Simplified20 has
         # RefEle, (RefGamma), (RefTau), RefJet, (SoftJets), (RefMuon), MuonTotal, CellOut, (CellOut_Eflow)
@@ -209,7 +204,7 @@ class Systematics(EventFilter):
         self.systUtil.setIsMuid(False)
 
         # Whether METUtility should scream at you over every little thing
-        self.systUtil.setVerbosity(False)
+        self.systUtil.setVerbosity(self.verbose)
 
         # Some other options are available, but not recommended/deprecated
 
@@ -250,6 +245,8 @@ class Systematics(EventFilter):
             self.run_systematics = self.muon_systematics
         elif self.systematic_type == Systematics.Taus:
             self.run_systematics = self.tau_systematics
+        elif self.systematic_type == Systematics.Default:
+            self.run_systematics = lambda event: None
         else:
             raise ValueError("%s is not a valid systematic type" %
                              self.systematic_type)
@@ -265,7 +262,6 @@ class Systematics(EventFilter):
         # demonstrate how the uncertainties should be passed
         # to METUtility.  Recommendations on just which ones
         # you are meant to be using come from the CP groups.
-
         if self.systematic_type is None:
             # do not apply any systematics
             return True
@@ -320,9 +316,15 @@ class Systematics(EventFilter):
 
         self.systUtil.setMETTerm(
                 METUtil.RefMuon,
-                event.MET_RefMuon_BDTMedium_etx,
-                event.MET_RefMuon_BDTMedium_ety,
-                event.MET_RefMuon_BDTMedium_sumet)
+                event.MET_RefMuon_Staco_BDTMedium_etx,
+                event.MET_RefMuon_Staco_BDTMedium_ety,
+                event.MET_RefMuon_Staco_BDTMedium_sumet)
+
+        self.systUtil.setMETTerm(
+                METUtil.MuonTotal,
+                event.MET_Muon_Total_Staco_BDTMedium_etx,
+                event.MET_Muon_Total_Staco_BDTMedium_ety,
+                event.MET_Muon_Total_Staco_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.RefTau,
@@ -336,13 +338,19 @@ class Systematics(EventFilter):
                 event.MET_SoftJets_BDTMedium_ety,
                 event.MET_SoftJets_BDTMedium_sumet)
 
-        #self.systUtil.setMETTerm(METUtil.CellOut, MET_CellOut_etx, MET_CellOut_ety, MET_CellOut_sumet)
+        self.systUtil.setMETTerm(
+                METUtil.CellOut,
+                event.MET_CellOut_BDTMedium_etx,
+                event.MET_CellOut_BDTMedium_ety,
+                event.MET_CellOut_BDTMedium_sumet)
+
+        """
         self.systUtil.setMETTerm(
                 METUtil.CellOutEflow,
-                event.MET_CellOut_Eflow_BDTMedium_etx,
-                event.MET_CellOut_Eflow_BDTMedium_ety,
-                event.MET_CellOut_Eflow_BDTMedium_sumet)
-
+                event.MET_CellOut_Eflow_etx,
+                event.MET_CellOut_Eflow_ety,
+                event.MET_CellOut_Eflow_sumet)
+        """
         # These set up the systematic "SoftTerms_ptHard"
         self.systUtil.setNvtx(nvtxsoftmet)
         #if self.datatype != datasets.DATA:
@@ -352,7 +360,8 @@ class Systematics(EventFilter):
         MET = self.systUtil.getMissingET(METUtil.RefFinal, self.systematic_term)
 
         if self.verbose:
-            print "Recalculated MET: %.3f (original: %.3f)" % (MET.et(), event.MET_RefFinal_BDTMedium_et)
+            print "Recalculated MET: %.3f (original: %.3f)" % (
+                    MET.et(), event.MET_RefFinal_BDTMedium_et)
 
         # update the MET with the shifted value
         event.MET_RefFinal_BDTMedium_etx = MET.etx()
