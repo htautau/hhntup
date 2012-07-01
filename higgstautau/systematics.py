@@ -303,10 +303,10 @@ class Systematics(EventFilter):
                 event.jet_eta,
                 event.jet_phi,
                 event.jet_E,
-                event.jet_MET_wet,
-                event.jet_MET_wpx,
-                event.jet_MET_wpy,
-                event.jet_MET_statusWord)
+                event.jet_AntiKt4LCTopo_MET_wet,
+                event.jet_AntiKt4LCTopo_MET_wpx,
+                event.jet_AntiKt4LCTopo_MET_wpy,
+                event.jet_AntiKt4LCTopo_MET_statusWord)
 
         self.systUtil.setOriJetParameters(event.jet_pt)
 
