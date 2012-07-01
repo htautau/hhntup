@@ -39,6 +39,11 @@ from ROOT import TESUncertaintyProvider
 
 class Systematics(EventFilter):
 
+    # default
+    class Default(object):
+
+        NONE = METUtil.NONE
+
     # electrons
     class Electrons(object):
 
@@ -81,14 +86,6 @@ class Systematics(EventFilter):
         MES_UP = METUtil.MESUp
         MES_DOWN = METUtil.MESDown
 
-    # cells ?
-    class Cells(object):
-
-        CES_UP = METUtil.CESUp
-        CES_DOWN = METUtil.CESDown
-        CER_UP = METUtil.CERUp
-        CER_DOWN = METUtil.CERDown
-
     # tracks
     class Tracks(object):
 
@@ -99,6 +96,11 @@ class Systematics(EventFilter):
 
     # clusters
     class Clusters(object):
+
+        CES_UP = METUtil.CESUp
+        CES_DOWN = METUtil.CESDown
+        CER_UP = METUtil.CERUp
+        CER_DOWN = METUtil.CERDown
 
         ALLCLUSTERS_UP = METUtil.AllClustersUp
         ALLCLUSTERS_DOWN = METUtil.AllClustersDown
@@ -278,7 +280,7 @@ class Systematics(EventFilter):
         # This is needed for jet and soft term systematics
         goodPV = False
         nvtxsoftmet = 0
-        nvtxjets = 0
+        self.nvtxjets = 0
 
         if event.vertices:
             # Most D3PDs contain the vx_type branch, but some don't.
@@ -294,77 +296,39 @@ class Systematics(EventFilter):
                     if vertex.nTracks > 2:
                         nvtxsoftmet += 1
                     if vertex.nTracks > 1:
-                        nvtxjets += 1
+                        self.nvtxjets += 1
 
-        # This demonstration is for doing smearing and systematics
         self.systUtil.reset()
-        self.systUtil.setJetParameters(
-                event.jet_pt,
-                event.jet_eta,
-                event.jet_phi,
-                event.jet_E,
-                event.jet_AntiKt4LCTopo_MET_wet,
-                event.jet_AntiKt4LCTopo_MET_wpx,
-                event.jet_AntiKt4LCTopo_MET_wpy,
-                event.jet_AntiKt4LCTopo_MET_statusWord)
-
-        self.systUtil.setOriJetParameters(event.jet_pt)
-
-        # Putting in smeared and/or scaled objects will cause that to be reflected in MET
-        self.systUtil.setElectronParameters(
-                event.el_pt, # or smeared pT
-                event.el_eta,
-                event.el_phi,
-                event.el_MET_wet,
-                event.el_MET_wpx,
-                event.el_MET_wpy,
-                event.el_MET_statusWord)
-
-        self.systUtil.setPhotonParameters(
-                event.ph_pt, # or smeared pT
-                event.ph_eta,
-                event.ph_phi,
-                event.ph_MET_wet,
-                event.ph_MET_wpx,
-                event.ph_MET_wpy,
-                event.ph_MET_statusWord)
-
-        self.systUtil.setTauParameters(
-                event.tau_pt,
-                event.tau_eta,
-                event.tau_phi,
-                event.tau_MET_wet,
-                event.tau_MET_wpx,
-                event.tau_MET_wpy,
-                event.tau_MET_statusWord)
-
-        self.systUtil.setMuonParameters(
-                event.mu_staco_pt, # or smeared pT
-                event.mu_staco_eta,
-                event.mu_staco_phi,
-                event.mu_staco_MET_wet,
-                event.mu_staco_MET_wpx,
-                event.mu_staco_MET_wpy,
-                event.mu_staco_MET_statusWord)
-
-        # In this instance there is an overloaded version of
-        # setExtraMuonParameters that accepts smeared pTs for spectro
-        self.systUtil.setExtraMuonParameters(
-                event.mu_staco_ms_pt, # or smeared pT
-                event.mu_staco_ms_theta,
-                event.mu_staco_ms_phi)
 
         self.systUtil.setMETTerm(
-                METUtil.RefTau,
-                event.MET_RefTau_BDTMedium_etx,
-                event.MET_RefTau_BDTMedium_ety,
-                event.MET_RefTau_BDTMedium_sumet)
+                METUtil.RefJet,
+                event.MET_RefJet_BDTMedium_etx,
+                event.MET_RefJet_BDTMedium_ety,
+                event.MET_RefJet_BDTMedium_sumet)
+
+        self.systUtil.setMETTerm(
+                METUtil.RefEle,
+                event.MET_RefEle_BDTMedium_etx,
+                event.MET_RefEle_BDTMedium_ety,
+                event.MET_RefEle_BDTMedium_sumet)
+
+        self.systUtil.setMETTerm(
+                METUtil.RefGamma,
+                event.MET_RefGamma_BDTMedium_etx,
+                event.MET_RefGamma_BDTMedium_ety,
+                event.MET_RefGamma_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.RefMuon,
                 event.MET_RefMuon_BDTMedium_etx,
                 event.MET_RefMuon_BDTMedium_ety,
                 event.MET_RefMuon_BDTMedium_sumet)
+
+        self.systUtil.setMETTerm(
+                METUtil.RefTau,
+                event.MET_RefTau_BDTMedium_etx,
+                event.MET_RefTau_BDTMedium_ety,
+                event.MET_RefTau_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.SoftJets,
@@ -387,24 +351,23 @@ class Systematics(EventFilter):
         self.run_systematics(event)
         MET = self.systUtil.getMissingET(METUtil.RefFinal, self.systematic_term)
 
+        if self.verbose:
+            print "Recalculated MET: %.3f (original: %.3f)" % (MET.et(), event.MET_RefFinal_BDTMedium_et)
+
         # update the MET with the shifted value
-        event.MET_RefFinal_etx = MET.etx()
-        event.MET_RefFinal_ety = MET.ety()
-        event.MET_RefFinal_et = MET.et()
-        event.MET_RefFinal_sumet = MET.sumet()
-        event.MET_RefFinal_phi = MET.phi()
-
-        self.update_event(event)
+        event.MET_RefFinal_BDTMedium_etx = MET.etx()
+        event.MET_RefFinal_BDTMedium_ety = MET.ety()
+        event.MET_RefFinal_BDTMedium_et = MET.et()
+        event.MET_RefFinal_BDTMedium_sumet = MET.sumet()
+        event.MET_RefFinal_BDTMedium_phi = MET.phi()
         return True
-
-    def update_event(event):
-
-        pass
 
     def jet_systematics(self, event):
         """
         JET SYSTEMATICS
         """
+        self.systUtil.setOriJetParameters(event.jet_pt)
+
         # First, we get the jet energy scale uncertainties and
         # systematic variation in the jet resolutions
         self.jesUp.clear()
@@ -445,10 +408,10 @@ class Systematics(EventFilter):
                 # The bool is the "isPos" argument
                 jesShiftUp = self.jesTool.getRelUncert(jet.pt,
                                  jet.eta,drmin,
-                                 True, nvtxjets, averageIntPerXing)
+                                 True, self.nvtxjets, averageIntPerXing)
                 jesShiftDown = -1*self.jesTool.getRelUncert(jet.pt,
                                   jet.eta,drmin,
-                                  False, nvtxjets, averageIntPerXing)
+                                  False, self.nvtxjets, averageIntPerXing)
 
             self.jesUp.push_back(jesShiftUp)
             self.jesDown.push_back(jesShiftDown)
@@ -511,6 +474,16 @@ class Systematics(EventFilter):
                 self.jerUp,
                 self.jerDown)
 
+        self.systUtil.setJetParameters(
+                event.jet_pt,
+                event.jet_eta,
+                event.jet_phi,
+                event.jet_E,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+
     def electron_systematics(self, event):
         """
         ELECTRON SYSTEMATICS
@@ -571,6 +544,16 @@ class Systematics(EventFilter):
                 METUtil.Electrons,
                 self.eerUp,
                 self.eerDown)
+
+        # Putting in smeared and/or scaled objects will cause that to be reflected in MET
+        self.systUtil.setElectronParameters(
+                event.el_pt, # or smeared pT
+                event.el_eta,
+                event.el_phi,
+                event.el_MET_BDTMedium_wet,
+                event.el_MET_BDTMedium_wpx,
+                event.el_MET_BDTMedium_wpy,
+                event.el_MET_BDTMedium_statusWord)
 
     def photon_systematics(self, event):
         """
@@ -634,6 +617,15 @@ class Systematics(EventFilter):
                 METUtil.Photons,
                 self.perUp,
                 self.perDown)
+
+        self.systUtil.setPhotonParameters(
+                event.ph_pt, # or smeared pT
+                event.ph_eta,
+                event.ph_phi,
+                event.ph_MET_BDTMedium_wet,
+                event.ph_MET_BDTMedium_wpx,
+                event.ph_MET_BDTMedium_wpy,
+                event.ph_MET_BDTMedium_statusWord)
 
     def muon_systematics(self, event):
         """
@@ -726,6 +718,22 @@ class Systematics(EventFilter):
                 self.mesUp,
                 self.mesDown)
 
+        self.systUtil.setMuonParameters(
+                event.mu_staco_pt, # or smeared pT
+                event.mu_staco_eta,
+                event.mu_staco_phi,
+                event.mu_staco_MET_BDTMedium_wet,
+                event.mu_staco_MET_BDTMedium_wpx,
+                event.mu_staco_MET_BDTMedium_wpy,
+                event.mu_staco_MET_BDTMedium_statusWord)
+
+        # In this instance there is an overloaded version of
+        # setExtraMuonParameters that accepts smeared pTs for spectro
+        self.systUtil.setExtraMuonParameters(
+                event.mu_staco_ms_pt, # or smeared pT
+                event.mu_staco_ms_theta,
+                event.mu_staco_ms_phi)
+
     def tau_systematics(self, event):
         """
         TAU SYSTEMATICS
@@ -749,6 +757,15 @@ class Systematics(EventFilter):
                 METUtil.Taus,
                 self.tesUp,
                 self.tesDown)
+
+        self.systUtil.setTauParameters(
+                event.tau_pt,
+                event.tau_eta,
+                event.tau_phi,
+                event.tau_MET_BDTMedium_wet,
+                event.tau_MET_BDTMedium_wpx,
+                event.tau_MET_BDTMedium_wpy,
+                event.tau_MET_BDTMedium_statusWord)
 
 
     def consistency(self, event):
