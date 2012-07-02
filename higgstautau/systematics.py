@@ -134,6 +134,7 @@ class Systematics(EventFilter):
             datatype,
             year,
             verbose=False,
+            very_verbose=False,
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
@@ -147,6 +148,7 @@ class Systematics(EventFilter):
         self.datatype = datatype
         self.year = year
         self.verbose = verbose
+        self.very_verbose = very_verbose
 
         self.jesUp = ROOT.vector('float')()
         self.jesDown = ROOT.vector('float')()
@@ -208,7 +210,7 @@ class Systematics(EventFilter):
         self.systUtil.setIsMuid(False)
 
         # Whether METUtility should scream at you over every little thing
-        self.systUtil.setVerbosity(self.verbose)
+        self.systUtil.setVerbosity(self.very_verbose)
 
         # Some other options are available, but not recommended/deprecated
 
@@ -241,19 +243,29 @@ class Systematics(EventFilter):
 
         if self.systematic_type == Systematics.Jets:
             self.run_systematics = self.jet_systematics
+            self.update_event = self.jet_update
         elif self.systematic_type == Systematics.Electrons:
             self.run_systematics = self.electron_systematics
+            self.update_event = self.electron_update
         elif self.systematic_type == Systematics.Photons:
             self.run_systematics = self.photon_systematics
+            self.update_event = self.photon_update
         elif self.systematic_type == Systematics.Muons:
             self.run_systematics = self.muon_systematics
+            self.update_event = self.muon_update
         elif self.systematic_type == Systematics.Taus:
             self.run_systematics = self.tau_systematics
+            self.update_event = self.tau_update
         elif self.systematic_type == Systematics.Default:
+            # do nothing
             self.run_systematics = lambda event: None
+            self.update_event = lambda event: None
         else:
             raise ValueError("%s is not a valid systematic type" %
                              self.systematic_type)
+
+        if self.systematic_term == Systematics.Default.NONE:
+            self.update_event = lambda event: None
 
     def passes(self, event):
         #######################################
@@ -371,6 +383,9 @@ class Systematics(EventFilter):
         event.MET_RefFinal_BDTMedium_et = MET.et()
         event.MET_RefFinal_BDTMedium_sumet = MET.sumet()
         event.MET_RefFinal_BDTMedium_phi = MET.phi()
+
+        # update the other variables
+        self.update_event(event)
         return True
 
     def jet_systematics(self, event):
@@ -494,6 +509,41 @@ class Systematics(EventFilter):
                 METUtil.Jets,
                 self.jerUp,
                 self.jerDown)
+
+    def jet_update(self, event):
+
+        if self.systematic_term == Systematics.Jets.JES_UP:
+            # shift jet energies up
+            if self.very_verbose:
+                print "BEFORE:"
+                for jet in event.jets:
+                    print jet.pt
+                print "=" * 20
+            for ijet in xrange(event.jet_n):
+                event.jet_pt[ijet] *= 1. + self.jesUp[ijet]
+            if self.very_verbose:
+                print "AFTER:"
+                for jet in event.jets:
+                    print jet.pt
+        elif self.systematic_term == Systematics.Jets.JES_DOWN:
+            # shift jet energies down
+            if self.very_verbose:
+                print "BEFORE:"
+                for jet in event.jets:
+                    print jet.pt
+                print "=" * 20
+            for ijet in xrange(event.jet_n):
+                event.jet_pt[ijet] *= 1. - abs(self.jesDown[ijet])
+            if self.very_verbose:
+                print "AFTER:"
+                for jet in event.jets:
+                    print jet.pt
+        elif self.systematic_term == Systematics.Jets.JER_UP:
+            # smear up
+            pass
+        elif self.systematic_term == Systematics.Jets.JER_DOWN:
+            # smear down
+            pass
 
     def electron_systematics(self, event):
         """
