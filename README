@@ -43,6 +43,13 @@ Now build the C extension module for jet cleaning in the higgstautau package:
     ./setup.py build_ext --inplace 
 
 
+External Tools
+==============
+
+higgspy depends on various external tools to perform systematics etc. See the
+EXTERNALTOOLS_README.txt for further instructions.
+
+
 Skimming on the Grid:
 =====================
 
