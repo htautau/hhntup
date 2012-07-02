@@ -188,6 +188,7 @@ class Systematics(EventFilter):
         # *** All values that are set are the defaults ***
 
         # Turn on (off) the relevant MET terms
+        # These are the terms required for MET_RefFinal(_BDTMedium)
         self.systUtil.defineMissingET(
                 True,  # RefEle
                 True,  # RefGamma
