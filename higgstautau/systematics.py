@@ -188,14 +188,17 @@ class Systematics(EventFilter):
         # *** All values that are set are the defaults ***
 
         # Turn on (off) the relevant MET terms
-        # Standard MET_RefFinal has:
-        # RefEle, RefGamma, RefTau, RefJet, SoftJets, RefMuon, MuonTotal, (CellOut), CellOut_Eflow
         self.systUtil.defineMissingET(
-                True, True, True, True, True, True, True, True, False)
-
-        # SUSY group, MET_Simplified20 has
-        # RefEle, (RefGamma), (RefTau), RefJet, (SoftJets), (RefMuon), MuonTotal, CellOut, (CellOut_Eflow)
-        # self.systUtil.defineMissingET(True, False, True, True, False, False, True, True, False)
+                True,  # RefEle
+                True,  # RefGamma
+                True,  # RefTau
+                True,  # RefJet
+                True,  # SoftJets
+                True,  # RefMuon
+                True,  # MuonTotal
+                False, # CellOut
+                True   # CellOut_Eflow
+            )
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
         self.systUtil.setSoftJetCut(20e3)
@@ -278,21 +281,20 @@ class Systematics(EventFilter):
         nvtxsoftmet = 0
         self.nvtxjets = 0
 
-        if event.vertices:
-            # Most D3PDs contain the vx_type branch, but some don't.
-            # Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
-            # If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
-            # to the first vertex in the collection.
-            # Otherwise, you should ensure that the vx_type branch is available.
+        # Most D3PDs contain the vx_type branch, but some don't.
+        # Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
+        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
+        # to the first vertex in the collection.
+        # Otherwise, you should ensure that the vx_type branch is available.
+        for vertex in event.vertices:
+            if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
+                goodPV = True
+        if goodPV:
             for vertex in event.vertices:
-                if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
-                    goodPV = True
-            if goodPV:
-                for vertex in event.vertices:
-                    if vertex.nTracks > 2:
-                        nvtxsoftmet += 1
-                    if vertex.nTracks > 1:
-                        self.nvtxjets += 1
+                if vertex.nTracks > 2:
+                    nvtxsoftmet += 1
+                if vertex.nTracks > 1:
+                    self.nvtxjets += 1
 
         self.systUtil.reset()
 
@@ -339,7 +341,7 @@ class Systematics(EventFilter):
                 event.MET_SoftJets_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
-                METUtil.CellOut,
+                METUtil.CellOutEflow,
                 event.MET_CellOut_BDTMedium_etx,
                 event.MET_CellOut_BDTMedium_ety,
                 event.MET_CellOut_BDTMedium_sumet)
