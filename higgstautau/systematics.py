@@ -472,8 +472,6 @@ class Systematics(EventFilter):
 
         del jetRandom
 
-        self.systUtil.setOriJetParameters(event.jet_pt)
-
         self.systUtil.setJetParameters(
                 event.jet_pt,
                 event.jet_eta,
@@ -483,6 +481,8 @@ class Systematics(EventFilter):
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+
+        self.systUtil.setOriJetParameters(event.jet_pt)
 
         self.systUtil.setObjectEnergyUncertainties(
                 METUtil.Jets,
