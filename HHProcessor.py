@@ -1,6 +1,8 @@
 import ROOT
 import math
 
+from argparse import ArgumentParser
+
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.tree.cutflow import Cutflow
@@ -43,6 +45,16 @@ class HHProcessor(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
     """
+
+    def __init__(self, options, **kwargs):
+
+        super(HHProcessor, self).__init__(**kwargs)
+        parser = ArgumentParser()
+        parser.add_argument('--syst-type', default='None')
+        parser.add_argument('--syst-term', default='None')
+        self.args = parser.parse_args(options)
+        self.args.syst_type = eval(self.args.syst_type)
+        self.args.syst_term = eval(self.args.syst_term)
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -129,8 +141,8 @@ class HHProcessor(ATLASStudent):
         # set the event filters
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            Systematics(systematic_type=Systematics.Jets,
-                        systematic_term=Systematics.Jets.JES_UP,
+            Systematics(systematic_type=self.args.syst_type,
+                        systematic_term=self.args.syst_term,
                         year=YEAR,
                         datatype=self.metadata.datatype,
                         verbose=True),

@@ -256,7 +256,7 @@ class Systematics(EventFilter):
         elif self.systematic_type == Systematics.Taus:
             self.run_systematics = self.tau_systematics
             self.update_event = self.tau_update
-        elif self.systematic_type == Systematics.Default:
+        elif self.systematic_type in (Systematics.Default, None):
             # do nothing
             self.run_systematics = lambda event: None
             self.update_event = lambda event: None
