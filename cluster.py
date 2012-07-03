@@ -39,7 +39,8 @@ class Host(object):
 
 def get_load(host):
 
-    cmd = 'python -c "import os; print os.getloadavg()[0]"'
+    # normalize by the number of CPUs
+    cmd = 'python -c "import os; print (os.getloadavg()[0] / open(\\"/proc/cpuinfo\\").read().count(\\"processor\\t:\\"))"'
     if not HOSTNAME.startswith(host):
         cmd = "ssh %s '%s'" % (host, cmd)
     load = float(subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].strip())
@@ -114,7 +115,8 @@ if __name__ == "__main__":
     hosts = get_hosts('hosts.sfu.txt')
     hosts = [Host(host) for host in hosts]
 
-    for i in xrange(50):
+    while True:
         hosts.sort()
         hosts[0].njobs += 1
         print ' '.join(map(str, hosts))
+        print '-' * 10
