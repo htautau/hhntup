@@ -833,25 +833,12 @@ class Systematics(EventFilter):
 
         if self.systematic_term == Systematics.Taus.TES_UP:
             # shift tau energies up
-                        for itau in xrange(event.tau_n):
+            for itau in xrange(event.tau_n):
                 event.tau_pt[itau] *= 1. + self.tesUp[itau]
-            if self.very_verbose:
-                print "TAUS AFTER:"
-                for tau in event.taus:
-                    print tau.pt
         elif self.systematic_term == Systematics.Taus.TES_DOWN:
             # shift tau energies down
-            if self.very_verbose:
-                print "BEFORE:"
-                for tau in event.taus:
-                    print tau.pt
-                print "=" * 20
             for itau in xrange(event.tau_n):
                 event.tau_pt[itau] *= 1. - abs(self.tesDown[itau])
-            if self.very_verbose:
-                print "AFTER:"
-                for tau in event.taus:
-                    print tau.pt
         elif self.systematic_term == Systematics.Taus.TER_UP:
             # smear up
             # THIS IS NOT USED
