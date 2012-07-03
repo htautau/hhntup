@@ -515,27 +515,27 @@ class Systematics(EventFilter):
         if self.systematic_term == Systematics.Jets.JES_UP:
             # shift jet energies up
             if self.very_verbose:
-                print "BEFORE:"
+                print "JETS BEFORE:"
                 for jet in event.jets:
                     print jet.pt
                 print "=" * 20
             for ijet in xrange(event.jet_n):
                 event.jet_pt[ijet] *= 1. + self.jesUp[ijet]
             if self.very_verbose:
-                print "AFTER:"
+                print "JETS AFTER:"
                 for jet in event.jets:
                     print jet.pt
         elif self.systematic_term == Systematics.Jets.JES_DOWN:
             # shift jet energies down
             if self.very_verbose:
-                print "BEFORE:"
+                print "JETS BEFORE:"
                 for jet in event.jets:
                     print jet.pt
                 print "=" * 20
             for ijet in xrange(event.jet_n):
                 event.jet_pt[ijet] *= 1. - abs(self.jesDown[ijet])
             if self.very_verbose:
-                print "AFTER:"
+                print "JETS AFTER:"
                 for jet in event.jets:
                     print jet.pt
         elif self.systematic_term == Systematics.Jets.JER_UP:
@@ -835,14 +835,14 @@ class Systematics(EventFilter):
         if self.systematic_term == Systematics.Taus.TES_UP:
             # shift tau energies up
             if self.very_verbose:
-                print "BEFORE:"
+                print "TAUS BEFORE:"
                 for tau in event.taus:
                     print tau.pt
                 print "=" * 20
             for itau in xrange(event.tau_n):
                 event.tau_pt[itau] *= 1. + self.tesUp[itau]
             if self.very_verbose:
-                print "AFTER:"
+                print "TAUS AFTER:"
                 for tau in event.taus:
                     print tau.pt
         elif self.systematic_term == Systematics.Taus.TES_DOWN:
