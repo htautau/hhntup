@@ -143,6 +143,7 @@ class HHProcessor(ATLASStudent):
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
+            # BUT AFTER CALIBRATIONS
             Systematics(systematic_type=self.args.syst_type,
                         systematic_term=self.args.syst_term,
                         year=YEAR,
