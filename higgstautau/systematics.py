@@ -830,6 +830,43 @@ class Systematics(EventFilter):
                 self.tesUp,
                 self.tesDown)
 
+    def tau_update(self, event):
+
+        if self.systematic_term == Systematics.Taus.TES_UP:
+            # shift tau energies up
+            if self.very_verbose:
+                print "BEFORE:"
+                for tau in event.taus:
+                    print tau.pt
+                print "=" * 20
+            for itau in xrange(event.tau_n):
+                event.tau_pt[itau] *= 1. + self.tesUp[itau]
+            if self.very_verbose:
+                print "AFTER:"
+                for tau in event.taus:
+                    print tau.pt
+        elif self.systematic_term == Systematics.Taus.TES_DOWN:
+            # shift tau energies down
+            if self.very_verbose:
+                print "BEFORE:"
+                for tau in event.taus:
+                    print tau.pt
+                print "=" * 20
+            for itau in xrange(event.tau_n):
+                event.tau_pt[itau] *= 1. - abs(self.tesDown[itau])
+            if self.very_verbose:
+                print "AFTER:"
+                for tau in event.taus:
+                    print tau.pt
+        elif self.systematic_term == Systematics.Taus.TER_UP:
+            # smear up
+            # THIS IS NOT USED
+            pass
+        elif self.systematic_term == Systematics.Taus.TER_DOWN:
+            # smear down
+            # THIS IS NOT USED
+            pass
+
     def consistency(self, event):
 
         # Demonstrates how to set up the METUtility with object momenta such that
