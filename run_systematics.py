@@ -33,6 +33,10 @@ def run(channel, *args, **kwargs):
 
     for sys_type, sys_term in SYSTEMATICS[channel.upper()]:
 
+        print
+        print '============== Running %s systematics ==============' % sys_term
+        print
+
         suffix = '--suffix %s' % sys_term
         syst = '--syst-type Systematics.%s --syst-term Systematics.%s.%s' % (
                 sys_type, sys_type, sys_term)

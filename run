@@ -134,8 +134,10 @@ for dataset in _datasets:
         options = user_args)
     
     # skip if output file already exists
-    if os.path.exists(supervisor.outputname + '.root'):
-        print "Skipping dataset %s since the output file already exists..." % dataset.name
+    fulloutputname = supervisor.outputname + '.root'
+    if os.path.exists(fulloutputname):
+        print "Skipping dataset %s since the output file %s already exists..." % (
+                dataset.name, fulloutputname)
         print "Delete or move it if you want to rerun on this dataset."
         continue
     
