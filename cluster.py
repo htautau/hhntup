@@ -89,6 +89,7 @@ def run(student,
     CWD = os.getcwd()
 
     hosts = [Host(host) for host in hosts]
+    datasets = datasets[:]
 
     procs = []
     while len(datasets) > 0:
