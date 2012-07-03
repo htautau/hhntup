@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import cluster
-
+import run_systematics
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
@@ -35,11 +35,23 @@ datasets = [
     "McAtNlo_JIMMY_ZZ_*",
 ]
 
+"""
+# nominal values
 cluster.run('HHProcessor.py',
             db='datasets_hh',
             datasets=datasets,
             hosts=hosts,
             nproc=10,
             nice=10,
-            setup=setup,
-            args=)
+            setup=setup)
+"""
+
+# systematics
+run_systematics.run('HADHAD',
+            'HHProcessor.py',
+            db='datasets_hh',
+            datasets=datasets,
+            hosts=hosts,
+            nproc=10,
+            nice=10,
+            setup=setup)

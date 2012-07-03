@@ -73,9 +73,16 @@ def run(student,
         nproc=1,
         nice=0,
         setup=None,
-        args=None):
+        args=None,
+        student_args=None):
 
-    CMD = "./run -s %s -n %d --db %s --nice %d %%s" % (student, nproc, db, nice)
+    if args is None:
+        args = ' '
+    else:
+        args = ' '.join(args) + ' '
+
+    CMD = "./run -s %s -n %d --db %s --nice %d %s%%s" % (
+            student, nproc, db, nice, args)
     if setup is not None:
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()
@@ -89,8 +96,8 @@ def run(student,
         hosts.sort()
         host = hosts[0]
         cmd = CMD % ds
-        if args is not None:
-            cmd = '%s %s' % (cmd, ' '.join(args))
+        if student_args is not None:
+            cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
         print "%s: %s" % (host.name, cmd)
         proc = mp.Process(target=run_helper, args=(cmd,))
