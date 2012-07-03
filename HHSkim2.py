@@ -112,7 +112,9 @@ class HHSkim2(ATLASStudent):
                           onfilechange=onfilechange)
 
         Model = Skim2Variables
-        if self.metadata.datatype == datasets.DATA:
+        if (self.metadata.datatype == datasets.DATA or
+            (self.metadata.datatype == datasets.MC and
+             self.metadata.year == 2012)):
             Model += TriggerMatching
 
         tree = Tree(name=self.metadata.treename,
