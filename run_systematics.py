@@ -4,6 +4,8 @@ import cluster
 SYSTEMATICS_COMMON = [
     ('Jets', 'JES_UP'),
     ('Jets', 'JES_DOWN'),
+    ('Jets', 'JER_UP'),
+    # ('Jets', 'JER_DOWN'), NOT USED!
     ('Taus', 'TES_UP'),
     ('Taus', 'TES_DOWN'),
 ] # ADD MORE HERE

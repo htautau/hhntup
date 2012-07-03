@@ -410,7 +410,7 @@ class Systematics(EventFilter):
 
             jesShiftUp = 0.0
             jesShiftDown = 0.0
-            jerShift = 1.0
+            jerShift = 0.0 # was 1.0 in original example
             # Safest to assume nothing about the uncertainties on soft jets.
             # These will go into SoftJets anyhow, and so the JES systematics
             # aren't used.
@@ -458,33 +458,32 @@ class Systematics(EventFilter):
                 jerShift = jetRandom.Gaus(0, smearingFactorSyst)
 
             self.jerUp.push_back(jerShift)
-            self.jerDown.push_back(-1 * jerShift); # Usually not used, see below.
+            self.jerDown.push_back(-1 * jerShift) # Usually not used, see below.
 
-            ###################################
-            # Note: The JERDown shift is essentially meaningless.
-            # If one is smearing central values, then there is an alternate
-            # definition, i.e. from r16:
-            #
-            # S = self.jerTool.getRelResolutionData(pt/1e3,eta)
-            # SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-            # U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-            # smearingFactorMC = sqrt( S*S - SMC*SMC )
-            # smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
-            # smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
-            #
-            # float jerShift = jetRandom.Gaus(1,smearingFactorMC)
-            # float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
-            # float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
-            #
-            # jet_smeared_pt = pt*jerShift
-            # jerUp.push_back(jerShiftUp-1)
-            # jerDown.push_back(jerShiftDown-1)
-            #
-            # This means that we smear the MC jets to match the resolution in data
-            # for central values, or the resolution +/- uncertainty.
-            # The standard practice is only to use res + uncertainty.
-            #
-            ###################################
+            """
+            Note: The JERDown shift is essentially meaningless.
+            If one is smearing central values, then there is an alternate
+            definition, i.e. from r16:
+
+            S = self.jerTool.getRelResolutionData(pt/1e3,eta)
+            SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
+            U = self.jerTool.getResolutionUncert(pt/1e3,eta)
+            smearingFactorMC = sqrt( S*S - SMC*SMC )
+            smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
+            smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
+
+            float jerShift = jetRandom.Gaus(1,smearingFactorMC)
+            float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
+            float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
+
+            jet_smeared_pt = pt*jerShift
+            jerUp.push_back(jerShiftUp-1)
+            jerDown.push_back(jerShiftDown-1)
+
+            This means that we smear the MC jets to match the resolution in data
+            for central values, or the resolution +/- uncertainty.
+            The standard practice is only to use res + uncertainty.
+            """
 
         del jetRandom
 
@@ -512,39 +511,33 @@ class Systematics(EventFilter):
 
     def jet_update(self, event):
 
+        if self.very_verbose:
+            print "JETS BEFORE:"
+            for jet in event.jets:
+                print jet.pt
+            print "=" * 20
+
         if self.systematic_term == Systematics.Jets.JES_UP:
             # shift jet energies up
-            if self.very_verbose:
-                print "JETS BEFORE:"
-                for jet in event.jets:
-                    print jet.pt
-                print "=" * 20
             for ijet in xrange(event.jet_n):
                 event.jet_pt[ijet] *= 1. + self.jesUp[ijet]
-            if self.very_verbose:
-                print "JETS AFTER:"
-                for jet in event.jets:
-                    print jet.pt
         elif self.systematic_term == Systematics.Jets.JES_DOWN:
             # shift jet energies down
-            if self.very_verbose:
-                print "JETS BEFORE:"
-                for jet in event.jets:
-                    print jet.pt
-                print "=" * 20
             for ijet in xrange(event.jet_n):
                 event.jet_pt[ijet] *= 1. - abs(self.jesDown[ijet])
-            if self.very_verbose:
-                print "JETS AFTER:"
-                for jet in event.jets:
-                    print jet.pt
         elif self.systematic_term == Systematics.Jets.JER_UP:
             # smear up
-            pass
+            for ijet in xrange(event.jet_n):
+                event.jet_pt[ijet] *= 1. + self.jerUp[ijet]
         elif self.systematic_term == Systematics.Jets.JER_DOWN:
             # smear down
             # THIS IS NOT USED
             pass
+
+        if self.very_verbose:
+            print "JETS AFTER:"
+            for jet in event.jets:
+                print jet.pt
 
     def electron_systematics(self, event):
         """
@@ -832,14 +825,15 @@ class Systematics(EventFilter):
 
     def tau_update(self, event):
 
+        if self.very_verbose:
+            print "TAUS BEFORE:"
+            for tau in event.taus:
+                print tau.pt
+            print "=" * 20
+
         if self.systematic_term == Systematics.Taus.TES_UP:
             # shift tau energies up
-            if self.very_verbose:
-                print "TAUS BEFORE:"
-                for tau in event.taus:
-                    print tau.pt
-                print "=" * 20
-            for itau in xrange(event.tau_n):
+                        for itau in xrange(event.tau_n):
                 event.tau_pt[itau] *= 1. + self.tesUp[itau]
             if self.very_verbose:
                 print "TAUS AFTER:"
@@ -866,6 +860,11 @@ class Systematics(EventFilter):
             # smear down
             # THIS IS NOT USED
             pass
+
+        if self.very_verbose:
+            print "TAUS AFTER:"
+            for tau in event.taus:
+                print tau.pt
 
     def consistency(self, event):
 

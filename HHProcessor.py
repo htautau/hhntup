@@ -141,6 +141,8 @@ class HHProcessor(ATLASStudent):
         # set the event filters
         event_filters = EventFilterList([
             GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            # PUT THE SYSTEMATICS "FILTER" BEFORE
+            # ANY FILTERS THAT REFER TO OBJECTS
             Systematics(systematic_type=self.args.syst_type,
                         systematic_term=self.args.syst_term,
                         year=YEAR,
