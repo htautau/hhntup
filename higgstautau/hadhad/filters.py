@@ -193,6 +193,8 @@ class TauTriggerMatch(EventFilter):
             if year == 11:
                 self.passes = self.passes_mc11
             elif year == 12:
+                from ..trigger import utils as triggerutils
+                self.triggerutils = triggerutils
                 self.passes = self.passes_mc12
             else:
                 raise ValueError("No MC trigger matching defined for year %d" % year)
