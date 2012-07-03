@@ -73,7 +73,7 @@ class Systematics(EventFilter):
         JES_UP = METUtil.JESUp
         JES_DOWN = METUtil.JESDown
         JER_UP = METUtil.JERUp
-        JER_DOWN = METUtil.JERDown
+        JER_DOWN = METUtil.JERDown # NOT USED!
 
     # muons
     class Muons(object):
@@ -543,6 +543,7 @@ class Systematics(EventFilter):
             pass
         elif self.systematic_term == Systematics.Jets.JER_DOWN:
             # smear down
+            # THIS IS NOT USED
             pass
 
     def electron_systematics(self, event):

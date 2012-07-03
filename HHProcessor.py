@@ -225,11 +225,13 @@ class HHProcessor(ATLASStudent):
             tau1, tau2 = event.taus
 
             # Jet selection
-            event.jets.select(lambda jet: jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
+            event.jets.select(lambda jet:
+                    jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
 
             # remove overlap with taus
-            event.jets.select(lambda jet: not any([tau for tau in event.taus if \
-                                                   (utils.dR(jet.eta, jet.phi, tau.eta, tau.phi) < .2)]))
+            event.jets.select(lambda jet:
+                    not any([tau for tau in event.taus if
+                    (utils.dR(jet.eta, jet.phi, tau.eta, tau.phi) < .2)]))
 
             # select VBF jets
             jets = list(event.jets)
