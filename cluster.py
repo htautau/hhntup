@@ -2,7 +2,7 @@ import socket
 import os
 import subprocess
 import multiprocessing as mp
-from higgstautau import datasets
+from higgstautau.datasets import Database
 
 
 HOSTNAME = socket.gethostname()
@@ -83,10 +83,10 @@ def run(student,
     else:
         args = ' '.join(args) + ' '
 
-    datasets = datasets.Database(db)
+    database = Database(db)
 
-    CMD = "./run -s %s -n %d --db %s --nice %d %s%%s" % (
-            student, nproc, db, nice, args)
+    CMD = "./run -s %s -n %%d --db %s --nice %d %s%%s" % (
+            student, db, nice, args)
     if setup is not None:
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()
@@ -97,10 +97,13 @@ def run(student,
     procs = []
     while len(datasets) > 0:
         ds = datasets.pop(0)
+        # determine actual number of required CPU cores
+        files = database[ds].files
+        nproc_actual = min(nproc, len(files))
         # load balancing
         hosts.sort()
         host = hosts[0]
-        cmd = CMD % ds
+        cmd = CMD % (nproc_actual, ds)
         if student_args is not None:
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)

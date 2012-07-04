@@ -2,10 +2,15 @@
 
 import cluster
 import run_systematics
+from higgstautau import samples
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
+
+datasets = samples.SAMPLES['hadhad'].keys()
+
+"""
 datasets = [
     # EW background
     "AlpgenJimmyZtautauNp[0-5]_pt20.mc11c",
@@ -34,6 +39,7 @@ datasets = [
     "PythiaZH*_tautauhh.mc11c",
     "PythiaWH*_tautauhh.mc11c",
 ]
+"""
 
 """
 # nominal values
