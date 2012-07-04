@@ -57,5 +57,5 @@ References
 .. [Combination2011] *Procedure for the LHC Higgs boson search combination in summer 2011*
    `CDS:ATL-PHYS-PUB-2011-011 <http://cdsweb.cern.ch/record/1375842>`_
 
-.. [JetCalibrationToolsWinter2011] *Jet calibration tools for 2011 dataset*
+.. [JetCalibrationWinter2011] *Jet calibration tools for 2011 dataset*
    `JetCalibrationToolsWinter2011 <https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/JetCalibrationToolsWinter2011>`_
