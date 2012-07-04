@@ -31,6 +31,7 @@ from higgstautau import mass
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
 from higgstautau.systematics import Systematics
+from higgstautau.jetcalibration import JetCalibration
 
 from goodruns import GRL
 import subprocess
@@ -149,7 +150,8 @@ class HHProcessor(ATLASStudent):
                 skim=False),
             JetCalibration(
                 year=YEAR,
-                datatype=self.metadata.datatype),
+                datatype=self.metadata.datatype,
+                verbose=True),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
