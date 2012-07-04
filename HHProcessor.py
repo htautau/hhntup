@@ -160,7 +160,7 @@ class HHProcessor(ATLASStudent):
                 systematic_term=self.args.syst_term,
                 year=YEAR,
                 datatype=self.metadata.datatype,
-                verbose=True),
+                verbose=False),
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),

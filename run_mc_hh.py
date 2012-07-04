@@ -48,7 +48,8 @@ cluster.run('HHProcessor.py',
             hosts=hosts,
             nproc=10,
             nice=10,
-            setup=setup)
+            setup=setup,
+            use_qsub=True)
 
 # systematics
 run_systematics.run('HADHAD',
@@ -58,4 +59,5 @@ run_systematics.run('HADHAD',
             hosts=hosts,
             nproc=5,
             nice=10,
-            setup=setup)
+            setup=setup,
+            use_qsub=True)
