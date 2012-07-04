@@ -2,6 +2,7 @@ import socket
 import os
 import subprocess
 import multiprocessing as mp
+from higgstautau import datasets
 
 
 HOSTNAME = socket.gethostname()
@@ -81,6 +82,8 @@ def run(student,
         args = ' '
     else:
         args = ' '.join(args) + ' '
+
+    datasets = datasets.Database(db)
 
     CMD = "./run -s %s -n %d --db %s --nice %d %s%%s" % (
             student, nproc, db, nice, args)
