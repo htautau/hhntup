@@ -41,7 +41,6 @@ datasets = [
 ]
 """
 
-"""
 # nominal values
 cluster.run('HHProcessor.py',
             db='datasets_hh',
@@ -50,7 +49,6 @@ cluster.run('HHProcessor.py',
             nproc=10,
             nice=10,
             setup=setup)
-"""
 
 # systematics
 run_systematics.run('HADHAD',
