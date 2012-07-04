@@ -2,6 +2,7 @@ import socket
 import os
 import subprocess
 import multiprocessing as mp
+from subprocess import call
 from higgstautau.datasets import Database
 
 
@@ -76,7 +77,9 @@ def run(student,
         nice=0,
         setup=None,
         args=None,
-        student_args=None):
+        student_args=None,
+        use_qsub=False,
+        qsub_queue='medium'):
 
     if args is None:
         args = ' '
@@ -100,21 +103,30 @@ def run(student,
         # determine actual number of required CPU cores
         files = database[ds].files
         nproc_actual = min(nproc, len(files))
-        # load balancing
-        hosts.sort()
-        host = hosts[0]
+        if not use_qsub:
+            # load balancing
+            hosts.sort()
+            host = hosts[0]
         cmd = CMD % (nproc_actual, ds)
         if student_args is not None:
             cmd = '%s %s' % (cmd, ' '.join(student_args))
-        cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
-        print "%s: %s" % (host.name, cmd)
-        proc = mp.Process(target=run_helper, args=(cmd,))
-        proc.start()
-        host.njobs += 1
-        procs.append(proc)
+        cmd = "cd %s && %s" % (CWD, cmd)
+        if use_qsub:
+            cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
+                    cmd, qsub_queue, nproc_actual)
+            print cmd
+            call(cmd, shell=True)
+        else: # ssh
+            cmd = "ssh %s '%s'" % (host.name, cmd)
+            print "%s: %s" % (host.name, cmd)
+            proc = mp.Process(target=run_helper, args=(cmd,))
+            proc.start()
+            host.njobs += 1
+            procs.append(proc)
 
-    for proc in procs:
-        proc.join()
+    if not use_qsub:
+        for proc in procs:
+            proc.join()
 
 
 if __name__ == "__main__":
