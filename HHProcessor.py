@@ -151,7 +151,7 @@ class HHProcessor(ATLASStudent):
             JetCalibration(
                 year=YEAR,
                 datatype=self.metadata.datatype,
-                verbose=True),
+                verbose=False),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS

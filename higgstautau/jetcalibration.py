@@ -45,6 +45,10 @@ class JetCalibration(EventFilter):
             if vertex.nTracks >= 2:
                 NPV += 1
 
+        if self.verbose:
+            print "JETS BEFORE RECALIBRATION"
+            self.print_jets(event)
+
         for jet in event.jets:
             Eraw    = jet.constscale_E
             eta_det = jet.constscale_eta
@@ -60,4 +64,19 @@ class JetCalibration(EventFilter):
             jet.eta = calib_jet.Eta()
             jet.phi = calib_jet.Phi()
 
+        if self.verbose:
+            print "JETS AFTER RECALIBRATION"
+            self.print_jets(event)
+
         return True
+
+    def print_jets(self, event):
+
+        for i in xrange(event.jet_n):
+            # use raw access to D3PD branches as an extra check
+            print "E: %.3f pT: %.3f eta: %.5f phi: %.5f M: %.3f" % (
+                    event.jet_E[i],
+                    event.jet_pt[i],
+                    event.jet_eta[i],
+                    event.jet_phi[i],
+                    event.jet_m[i])
