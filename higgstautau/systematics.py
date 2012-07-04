@@ -419,7 +419,6 @@ class Systematics(EventFilter):
 
                 # delta R cut needed to apply close-by jets uncertainty
                 drmin=9999
-                pi = math.pi
                 for jjet, otherjet in enumerate(event.jets):
                     if otherjet.emscale_pt > 7000:
                         if ijet != jjet:

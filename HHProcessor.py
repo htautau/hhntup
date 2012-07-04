@@ -140,18 +140,25 @@ class HHProcessor(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            GRLFilter(
+                self.grl,
+                passthrough=self.metadata.datatype != datasets.DATA),
+            Triggers(
+                datatype=self.metadata.datatype,
+                year=YEAR,
+                skim=False),
+            JetCalibration(
+                year=YEAR,
+                datatype=self.metadata.datatype),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
-            Systematics(systematic_type=self.args.syst_type,
-                        systematic_term=self.args.syst_term,
-                        year=YEAR,
-                        datatype=self.metadata.datatype,
-                        verbose=True),
-            Triggers(datatype=self.metadata.datatype,
-                     year=YEAR,
-                     skim=False),
+            Systematics(
+                systematic_type=self.args.syst_type,
+                systematic_term=self.args.syst_term,
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                verbose=True),
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
@@ -168,13 +175,15 @@ class HHProcessor(ATLASStudent):
             TauCrack(),
             TauLArHole(), # only veto taus, not entire event
             TauIDMedium(),
-            TauTriggerMatch(config=trigger_config,
-                            year=YEAR,
-                            datatype=self.metadata.datatype,
-                            skim=False,
-                            tree=tree),
-            TauLeadSublead(lead=35*GeV,
-                           sublead=25*GeV),
+            TauTriggerMatch(
+                config=trigger_config,
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                skim=False,
+                tree=tree),
+            TauLeadSublead(
+                lead=35*GeV,
+                sublead=25*GeV),
         ])
 
         self.filters['event'] = event_filters
