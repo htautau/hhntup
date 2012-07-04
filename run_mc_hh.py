@@ -7,7 +7,6 @@ from higgstautau import samples
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
-
 datasets = samples.SAMPLES['hadhad'].keys()
 
 """
@@ -46,7 +45,7 @@ cluster.run('HHProcessor.py',
             db='datasets_hh',
             datasets=datasets,
             hosts=hosts,
-            nproc=10,
+            nproc=5,
             nice=10,
             setup=setup,
             use_qsub=True)
