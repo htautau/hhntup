@@ -44,15 +44,15 @@ Now build the C extension module for jet cleaning in the higgstautau package::
 External Tools
 ==============
 
-higgspy depends on various external tools to perform systematics etc. See the
-EXTERNALTOOLS_README.txt for further instructions.
+higgspy depends on various external tools to perform systematics etc. See
+``EXTERNALTOOLS_README.txt`` for further instructions.
 
 
 Skimming on the Grid
 ====================
 
 First add any new dataset containers to datasets.cfg or to the relevant file in
-datasets/*.txt Then run this, for example::
+``datasets/*.txt`` Then run this, for example::
 
 
    grid-submit -s HHSkim.py -u NoelDawe -m datasets.cfg mc11
