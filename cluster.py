@@ -2,6 +2,8 @@ import socket
 import os
 import subprocess
 import multiprocessing as mp
+from subprocess import call
+from higgstautau.datasets import Database
 
 
 HOSTNAME = socket.gethostname()
@@ -39,7 +41,8 @@ class Host(object):
 
 def get_load(host):
 
-    cmd = 'python -c "import os; print os.getloadavg()[0]"'
+    # normalize by the number of CPUs
+    cmd = 'python -c "import os; print (os.getloadavg()[0] / open(\\"/proc/cpuinfo\\").read().count(\\"processor\\t:\\"))"'
     if not HOSTNAME.startswith(host):
         cmd = "ssh %s '%s'" % (host, cmd)
     load = float(subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].strip())
@@ -72,31 +75,58 @@ def run(student,
         hosts,
         nproc=1,
         nice=0,
-        setup=None):
+        setup=None,
+        args=None,
+        student_args=None,
+        use_qsub=False,
+        qsub_queue='medium'):
 
-    CMD = "./run -s %s -n %d --db %s --nice %d %%s" % (student, nproc, db, nice)
+    if args is None:
+        args = ' '
+    else:
+        args = ' '.join(args) + ' '
+
+    database = Database(db)
+
+    CMD = "./run -s %s -n %%d --db %s --nice %d %s%%s" % (
+            student, db, nice, args)
     if setup is not None:
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()
 
     hosts = [Host(host) for host in hosts]
+    datasets = datasets[:]
 
     procs = []
     while len(datasets) > 0:
         ds = datasets.pop(0)
-        # load balancing
-        hosts.sort()
-        host = hosts[0]
-        cmd = CMD % ds
-        cmd = "ssh %s 'cd %s && %s'" % (host.name, CWD, cmd)
-        print "%s: %s" % (host.name, cmd)
-        proc = mp.Process(target=run_helper, args=(cmd,))
-        proc.start()
-        host.njobs += 1
-        procs.append(proc)
+        # determine actual number of required CPU cores
+        files = database[ds].files
+        nproc_actual = min(nproc, len(files))
+        if not use_qsub:
+            # load balancing
+            hosts.sort()
+            host = hosts[0]
+        cmd = CMD % (nproc_actual, ds)
+        if student_args is not None:
+            cmd = '%s %s' % (cmd, ' '.join(student_args))
+        cmd = "cd %s && %s" % (CWD, cmd)
+        if use_qsub:
+            cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
+                    cmd, qsub_queue, nproc_actual)
+            print cmd
+            call(cmd, shell=True)
+        else: # ssh
+            cmd = "ssh %s '%s'" % (host.name, cmd)
+            print "%s: %s" % (host.name, cmd)
+            proc = mp.Process(target=run_helper, args=(cmd,))
+            proc.start()
+            host.njobs += 1
+            procs.append(proc)
 
-    for proc in procs:
-        proc.join()
+    if not use_qsub:
+        for proc in procs:
+            proc.join()
 
 
 if __name__ == "__main__":
@@ -104,7 +134,8 @@ if __name__ == "__main__":
     hosts = get_hosts('hosts.sfu.txt')
     hosts = [Host(host) for host in hosts]
 
-    for i in xrange(50):
+    while True:
         hosts.sort()
         hosts[0].njobs += 1
         print ' '.join(map(str, hosts))
+        print '-' * 10

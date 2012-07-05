@@ -37,7 +37,7 @@ DB = datasets.Database(name='datasets_hh', verbose=VERBOSE)
 
 FILES = {}
 
-PROC = 'ntuples/midpt/HHProcessor'
+PROC = 'ntuples/nominal/HHProcessor'
 
 WORKING_POINT = 'Tight'
 

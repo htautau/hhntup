@@ -13,7 +13,10 @@ MC11:
 
 MC12:
 
-On the way... (waiting for D3PDs)
+(some datasets still missing)
+
+* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*p1011.v1/**
+* Stage II: On the way... 
 
 Data11:
 
@@ -23,7 +26,7 @@ Data11:
 Data12:
 
 * Stage I: **group.phys-higgs.HHSkim.data12_8TeV*p1011_p1015.v1/**
-* Stage II: On the way...
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.data12_8TeV*p1011_p1015.v1.v5/**
 
 Embedding11:
 
@@ -35,7 +38,8 @@ Embedding12:
 On the way...
 
 These skims may still be running on the grid. Check
-`my pandamon page <http://panda.cern.ch/server/pandamon/query?ui=user&name=Edmund%20Dawe%20ptu-382>`_
+`my pandamon page <http://panda.cern.ch/server/pandamon/query?ui=user&name=Edmund%20Dawe%20ptu-382>`_ or 
+`Dugan's page <http://panda.cern.ch/server/pandamon/query?ui=user&name=Dugan%20ONeil%20xba-044>`_
 for jobs still running.
 
 The current skims will always be backed up on SFU-LCG2_LOCALGROUPDISK

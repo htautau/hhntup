@@ -184,7 +184,8 @@ class HHSkim2(ATLASStudent):
             else:
                 validate_log = open('skim2_validate_data_%d.txt' % chain.RunNumber, 'w')
 
-        if self.metadata.datatype == datasets.MC:
+        if self.metadata.datatype == datasets.MC and self.metadata.year == 2011:
+            # don't apply on 2012 yet...
             # Initialize the pileup reweighting tool
             pileup_tool = TPileupReweighting()
             #pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
@@ -203,7 +204,8 @@ class HHSkim2(ATLASStudent):
             assert len(event.taus) == 2
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
-            if self.metadata.datatype == datasets.MC:
+            if self.metadata.datatype == datasets.MC and self.metadata.year == 2011:
+                # don't apply on 2012 yet...
                 # set the event weight
                 tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                                    event.mc_channel_number,

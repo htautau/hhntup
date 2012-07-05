@@ -69,14 +69,18 @@ EMBD_LEPHAD_FILE_PATTERN = '*.root*'
 """
 HadHad constants
 """
-MC_HADHAD_PATH = '/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851'
-MC_HADHAD_PREFIX = 'user.NoelDawe.HHSkim'
+MC_HADHAD_PATH = '/global/endw/mc11_7TeV/hhskim_v1'
+MC_HADHAD_PREFIX = 'group.phys-higgs.HHSkim'
 MC_HADHAD_FILE_PATTERN = '*HHSkim*.root*'
 
 DATA_HADHAD_PATH = '/global/endw/data11_7TeV/higgs_tautau_hh_skim_p851'
 DATA_HADHAD_PREFIX = 'user.NoelDawe.HTauSkim'
 DATA_HADHAD_STREAM = 'JetTauEtmiss'
 DATA_HADHAD_FILE_PATTERN = '*HTauSkim*.root*'
+
+EMBD_HADHAD_PATH = '/global/oneil/hadhad/skims/embedding/'
+EMBD_HADHAD_PREFIX = 'group.phys-higgs.HHSkim'
+EMBD_HADHAD_FILE_PATTERN = '*.root*'
 
 """
 Common constants
@@ -391,7 +395,6 @@ class Database(dict):
                                        grl=GRL,
                                        dirs=embd_dirs,
                                        file_pattern=embd_pattern)
-            # TODO create datasets for each run and each period
             periods = {}
             for dir in embd_dirs:
                 if os.path.isdir(dir):
@@ -409,7 +412,7 @@ class Database(dict):
                         print "this dir does not match valid ds name: %s" % dir
                 else:
                     print "this is not a dir: %s" % dir
-                    
+
             for period, info in periods.items():
                 name = 'embd-%s' % period
                 self[name] = Dataset(name=name,
@@ -420,7 +423,7 @@ class Database(dict):
                                          grl=GRL,
                                          dirs=info['dirs'],
                                          file_pattern=embd_pattern)
-                
+
         #######################################################################
 
         if data_path is not None:
@@ -438,7 +441,6 @@ class Database(dict):
                                        grl=GRL,
                                        dirs=data_dirs,
                                        file_pattern=data_pattern)
-            # TODO create datasets for each run and each period
             runs = {}
             for dir in data_dirs:
                 if os.path.isdir(dir):
@@ -737,6 +739,9 @@ if __name__ == '__main__':
         data_path = DATA_HADHAD_PATH
         data_prefix = DATA_HADHAD_PREFIX
         data_pattern = DATA_HADHAD_FILE_PATTERN
+        embd_path = EMBD_HADHAD_PATH
+        embd_prefix = EMBD_HADHAD_PREFIX
+        embd_pattern = EMBD_HADHAD_FILE_PATTERN
         args.versioned = True
         args.name = 'datasets_hh'
     elif args.analysis == 'mulh':

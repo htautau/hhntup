@@ -1,6 +1,8 @@
 import ROOT
 import math
 
+from argparse import ArgumentParser
+
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.tree.cutflow import Cutflow
@@ -28,6 +30,8 @@ from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
+from higgstautau.systematics import Systematics
+from higgstautau.jetcalibration import JetCalibration
 
 from goodruns import GRL
 import subprocess
@@ -42,6 +46,16 @@ class HHProcessor(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
     """
+
+    def __init__(self, options, **kwargs):
+
+        super(HHProcessor, self).__init__(**kwargs)
+        parser = ArgumentParser()
+        parser.add_argument('--syst-type', default='None')
+        parser.add_argument('--syst-term', default='None')
+        self.args = parser.parse_args(options)
+        self.args.syst_type = eval(self.args.syst_type)
+        self.args.syst_term = eval(self.args.syst_term)
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -127,11 +141,26 @@ class HHProcessor(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            Systematics(),
-            Triggers(datatype=self.metadata.datatype,
-                     year=YEAR,
-                     skim=False),
+            GRLFilter(
+                self.grl,
+                passthrough=self.metadata.datatype != datasets.DATA),
+            Triggers(
+                datatype=self.metadata.datatype,
+                year=YEAR,
+                skim=False),
+            JetCalibration(
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                verbose=False),
+            # PUT THE SYSTEMATICS "FILTER" BEFORE
+            # ANY FILTERS THAT REFER TO OBJECTS
+            # BUT AFTER CALIBRATIONS
+            Systematics(
+                systematic_type=self.args.syst_type,
+                systematic_term=self.args.syst_term,
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                verbose=False),
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
@@ -148,13 +177,15 @@ class HHProcessor(ATLASStudent):
             TauCrack(),
             TauLArHole(), # only veto taus, not entire event
             TauIDMedium(),
-            TauTriggerMatch(config=trigger_config,
-                            year=YEAR,
-                            datatype=self.metadata.datatype,
-                            skim=False,
-                            tree=tree),
-            TauLeadSublead(lead=35*GeV,
-                           sublead=25*GeV),
+            TauTriggerMatch(
+                config=trigger_config,
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                skim=False,
+                tree=tree),
+            TauLeadSublead(
+                lead=35*GeV,
+                sublead=25*GeV),
         ])
 
         self.filters['event'] = event_filters
@@ -208,11 +239,13 @@ class HHProcessor(ATLASStudent):
             tau1, tau2 = event.taus
 
             # Jet selection
-            event.jets.select(lambda jet: jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
+            event.jets.select(lambda jet:
+                    jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
 
             # remove overlap with taus
-            event.jets.select(lambda jet: not any([tau for tau in event.taus if \
-                                                   (utils.dR(jet.eta, jet.phi, tau.eta, tau.phi) < .2)]))
+            event.jets.select(lambda jet:
+                    not any([tau for tau in event.taus if
+                    (utils.dR(jet.eta, jet.phi, tau.eta, tau.phi) < .2)]))
 
             # select VBF jets
             jets = list(event.jets)

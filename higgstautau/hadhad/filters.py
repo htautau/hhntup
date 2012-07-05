@@ -147,9 +147,16 @@ class TauLeadSublead(EventFilter):
 
 class TauTriggerMatch(EventFilter):
 
+    # put triggers in descending order of pT thresholds
+    # put thresholds in descending order
+    triggers_11 = [
+        ('EF_tau29_medium1_tau20_medium1', (29, 20)),
+        ('EF_tau29T_medium1_tau20T_medium1', (29, 20))
+    ]
+
     triggers_12 = [
-        'EF_2tau38T_medium1',
-        'EF_tau29Ti_medium1_tau20Ti_medium1',
+        ('EF_2tau38T_medium1', (38,)),
+        ('EF_tau29Ti_medium1_tau20Ti_medium1', (29, 20))
     ]
 
     def __init__(self,
@@ -181,12 +188,16 @@ class TauTriggerMatch(EventFilter):
             elif year == 12:
                 self.passes = self.passes_data12
             else:
-                raise ValueError("No trigger matching defined for year %d" % year)
+                raise ValueError("No data trigger matching defined for year %d" % year)
         else: # MC
             if year == 11:
                 self.passes = self.passes_mc11
+            elif year == 12:
+                from ..trigger import utils as triggerutils
+                self.triggerutils = triggerutils
+                self.passes = self.passes_mc12
             else:
-                raise ValueError("No trigger matching defined for year %d" % year)
+                raise ValueError("No MC trigger matching defined for year %d" % year)
 
     def passes_mc11(self, event):
 
@@ -194,6 +205,12 @@ class TauTriggerMatch(EventFilter):
         Matching performed during first skim with CoEPPTrigTool
         """
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
+        return len(event.taus) == MIN_TAUS
+
+    def passes_mc12(self, event):
+
+        self.match(event, self.triggers_12)
+        # event passes if at least two taus selected
         return len(event.taus) == MIN_TAUS
 
     def passes_data11(self, event):
@@ -204,25 +221,26 @@ class TauTriggerMatch(EventFilter):
             trigger = 'EF_tau29T_medium1_tau20T_medium1'
         else:
             raise ValueError("No trigger defined for run %i" % event.RunNumber)
-        self.data_match(event, [trigger])
+        # TODO: clean up trigger config (no hardcoded values...)
+        self.match(event, [(trigger, (29, 20))])
         # event passes if at least two taus selected
         return len(event.taus) == MIN_TAUS
 
     def passes_data12(self, event):
 
-        self.data_match(event, self.triggers_12)
+        self.match(event, self.triggers_12)
         # event passes if at least two taus selected
         return len(event.taus) == MIN_TAUS
 
-    def data_match(self, event, triggers):
+    def match(self, event, triggers):
         """
-        triggers: list of triggers that are ORed. Order them by priority i.e.
-        put triggers with higher pT thesholds before triggers with lower
-        thresholds.
+        triggers: list of triggers (and thresholds )that are ORed.
+        Order them by priority i.e. put triggers with higher pT
+        thesholds before triggers with lower thresholds.
         """
         matched_taus = []
         matches = {}
-        for trigger in triggers:
+        for trigger, thresholds in triggers:
             # get indices of trigger taus associated with this trigger
             trigger_idx = self.triggerutils.get_tau_trigger_obj_idx(
                 self.config,
@@ -246,10 +264,10 @@ class TauTriggerMatch(EventFilter):
                         closest_idx = i
                 if closest_tau is not None:
                     if self.skim:
-                        if triggertau.pt > 29 * GeV:
-                            thresh = 29
-                        else:
-                            thresh = 20
+                        for threshold in thresholds:
+                            if triggertau.pt > threshold * GeV:
+                                thresh = threshold
+                                break
                         matches[closest_tau.index] = (triggertau.index, thresh)
                     matched_taus.append(closest_tau)
                     # remove match from consideration by future matches (greedy match)

@@ -11,6 +11,7 @@ cluster.run('HHProcessor.py',
             db='datasets_hh',
             datasets=sys.argv[1:],
             hosts=hosts,
-            nproc=10,
+            nproc=1,
             nice=10,
-            setup=setup)
+            setup=setup,
+            use_qsub=True)
