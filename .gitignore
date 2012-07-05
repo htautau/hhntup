@@ -16,7 +16,7 @@ eventviews
 build
 *.swp
 *.tar.gz
-*setup.sh
+grid-setup.sh
 *.png
 *.eps
 *.pickle
