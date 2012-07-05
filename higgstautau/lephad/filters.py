@@ -182,6 +182,12 @@ class JetCrackVeto(EventFilter):
 # TRIGGERS
 ############################################################
 
+class noTriggers(EventFilter):
+    """ Place holder for no triggers for embedding samples"""
+
+    def passes(self, event):
+        return True
+
 #--------------------------------------------
 # Muon Data Triggers
 #--------------------------------------------
@@ -494,7 +500,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigLoose == 1) : return False
+        #if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True
@@ -585,7 +591,7 @@ def electron_skimselection(el):
     if not (el_cl_Et > 15*GeV) : return False
     if not (abs(el.cl_eta) < 3.0) : return False
     if not (el.author == 1 or el.author == 3) : return False
-    if not (el.mediumPP) : return False
+    if not (el.mediumPP or el.tightPP) : return False
 
     return True
 

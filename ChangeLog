@@ -1,3 +1,7 @@
+2012-06-28 Michel Trottier-McDonald <mtm@cern.ch>
+	* Adding embedding samples to datasets.py
+	* Correcting calculation of aplanarity/sphericity in LHProcessors
+
 2012-06-13 Michel Trottier-McDonald <mtm@cern.ch>
 	* Adding MMC kinematics, Resonance Pt and MET for both lephad processors
 	* Adding lists of samples for 2012 lephad skimming

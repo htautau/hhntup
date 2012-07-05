@@ -41,7 +41,7 @@ import fnmatch
 from decorators import cached_property
 import yaml
 
-from atlastools.datasets import DATA, MC
+from atlastools.datasets import DATA, MC, EMBED
 
 YEAR = 11
 GRL = 'grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml'
@@ -383,7 +383,7 @@ class Database(dict):
                 embd_dirs = glob.glob(os.path.join(embd_path, '*'))
 
             self['embd'] = Dataset(name='embd',
-                                       datatype=DATA,
+                                       datatype=EMBED,
                                        treename=EMBD_TREENAME,
                                        ds='embd',
                                        id=1,
@@ -413,7 +413,7 @@ class Database(dict):
             for period, info in periods.items():
                 name = 'embd-%s' % period
                 self[name] = Dataset(name=name,
-                                         datatype=DATA,
+                                         datatype=EMBED,
                                          treename=EMBD_TREENAME,
                                          ds=name,
                                          id=1,

@@ -164,13 +164,13 @@ def TauEfficiencySF(event, datatype):
                 if abs(event.mc_pdgId[i]) == 11 and event.mc_pt[i] > 8*GeV:
                     if utils.dR(event.mc_eta[i], event.mc_phi[i], tau.eta, tau.phi) > 0.2: continue
                     if tau.eta < 1.37:
-                        return 1.64
+                        return 1/1.64
                     elif tau.eta < 1.52:
                         return 1.0
                     elif tau.eta < 2.0:
-                        return 0.71
+                        return 1/0.71
                     else:
-                        return 2.9
+                        return 1/2.9
 
     return 1.0
 

@@ -26,7 +26,7 @@ from higgstautau.lephad.filters import *
 from higgstautau.lephad.correctiontools import *
 #from higgstautau.filters import PriVertex, JetCleaning, LArError, LArHole
 from higgstautau import mass
-from higgstautau.trigger import update_trigger_config, get_trigger_config
+#from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger import utils as triggerutils
 from higgstautau.pileup import TPileupReweighting
 
@@ -60,7 +60,7 @@ class eLHProcessor(ATLASStudent):
         """
 
         # trigger config tool to read trigger info in the ntuples
-        trigger_config = get_trigger_config()
+        #trigger_config = get_trigger_config()
 
         OutputModel = RecoTauElectronBlock + TauElectronEventVariables + RecoMET
 
@@ -74,7 +74,7 @@ class eLHProcessor(ATLASStudent):
             onfilechange.append((update_grl, (self, merged_grl,)))
 
         # update the trigger config maps on every file change
-        onfilechange.append((update_trigger_config, (trigger_config,)))
+        #onfilechange.append((update_trigger_config, (trigger_config,)))
 
         merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
 
@@ -116,6 +116,8 @@ class eLHProcessor(ATLASStudent):
         Trigger = eMCSLTriggers
         if ( self.metadata.datatype == datasets.DATA ):
             Trigger = eSLTriggers
+        if ( self.metadata.datatype == datasets.EMBED ):
+            Trigger = noTriggers
 
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
@@ -289,7 +291,7 @@ class eLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_electron = collin_mass
             tree.tau_x = tau_x
             tree.electron_x = electron_x
-            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
+            mmc_mass, mmc_pt, mmc_met = 0,0,0#mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
             tree.mass_mmc_tau_electron = mmc_mass
             tree.pt_mmc_tau_electron = mmc_pt
             tree.met_mmc_tau_electron = mmc_met
@@ -318,11 +320,13 @@ class eLHProcessor(ATLASStudent):
             PtSum2 = 0
 
             allJets = LorentzVector()
+            allJetList = []
 
             for jet in event.jets:
                 PtSum  += jet.fourvect.Pt()
                 PtSum2 += (jet.fourvect.Pt())**2
                 allJets += jet.fourvect
+                allJetList.append(jet.fourvect)
 
             leadJetPt = 0.0
             if len(event.jets) > 0:
@@ -352,11 +356,7 @@ class eLHProcessor(ATLASStudent):
                 tau_centrality_j1_j2 = eventshapes.eta_centrality(Tau.fourvect.Eta(), jet1.Eta(), jet2.Eta())
                 electron_centrality_j1_j2 = eventshapes.eta_centrality(Electron.fourvect.Eta(), jet1.Eta(), jet2.Eta())
 
-                sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect,
-                                                                            Electron.fourvect,
-                                                                            jet1,
-                                                                            jet2])
-
+            sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect, Electron.fourvect] + allJetList)
 
             tree.mass_j1_j2 = mass_j1_j2
             tree.eta_product_j1_j2 = eta_product_j1_j2

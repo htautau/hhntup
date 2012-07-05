@@ -26,7 +26,7 @@ from higgstautau.lephad.filters import *
 from higgstautau.lephad.correctiontools import *
 from higgstautau.filters import PriVertex, JetCleaning, LArError, LArHole
 from higgstautau import mass
-from higgstautau.trigger import update_trigger_config, get_trigger_config
+#from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger import utils as triggerutils
 from higgstautau.pileup import TPileupReweighting
 
@@ -60,7 +60,7 @@ class muLHProcessor(ATLASStudent):
         """
 
         # trigger config tool to read trigger info in the ntuples
-        trigger_config = get_trigger_config()
+        #trigger_config = get_trigger_config()
 
         OutputModel = RecoTauMuBlock + EventVariables + RecoMET
 
@@ -74,7 +74,7 @@ class muLHProcessor(ATLASStudent):
             onfilechange.append((update_grl, (self, merged_grl,)))
 
         # update the trigger config maps on every file change
-        onfilechange.append((update_trigger_config, (trigger_config,)))
+        # onfilechange.append((update_trigger_config, (trigger_config,)))
 
         merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
 
@@ -114,6 +114,8 @@ class muLHProcessor(ATLASStudent):
         Trigger = muMCSLTriggers
         if self.metadata.datatype == datasets.DATA:
             Trigger = muSLTriggers
+        if self.metadata.datatype == datasets.EMBED:
+            Trigger = noTriggers
 
         
 
@@ -301,11 +303,13 @@ class muLHProcessor(ATLASStudent):
             PtSum2 = 0
 
             allJets = LorentzVector()
+            allJetList = []
 
             for jet in event.jets:
                 PtSum  += jet.fourvect.Pt()
                 PtSum2 += (jet.fourvect.Pt())**2
                 allJets += jet.fourvect
+                allJetList.append(jet.fourvect)
 
             leadJetPt = 0.0
             if len(event.jets) > 0:
@@ -335,10 +339,7 @@ class muLHProcessor(ATLASStudent):
                 tau_centrality_j1_j2 = eventshapes.eta_centrality(Tau.fourvect.Eta(), jet1.Eta(), jet2.Eta())
                 muon_centrality_j1_j2 = eventshapes.eta_centrality(Muon.fourvect.Eta(), jet1.Eta(), jet2.Eta())
 
-                sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect,
-                                                                            Muon.fourvect,
-                                                                            jet1,
-                                                                            jet2])
+            sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect, Muon.fourvect] + allJetList)
 
 
             tree.mass_j1_j2 = mass_j1_j2
