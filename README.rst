@@ -4,9 +4,9 @@ Installation
 
 You need to install these packages:
 
-* rootpy  (https://github.com/rootpy/rootpy)
-* atlastools (https://github.com/ndawe/atlastools)
-* goodruns (http://pypi.python.org/pypi/goodruns/2.0)
+* `rootpy <https://github.com/rootpy/rootpy>`_
+* `atlastools <https://github.com/ndawe/atlastools>`_
+* `goodruns <http://pypi.python.org/pypi/goodruns/2.0>`_
 
 Download each package with::
 
