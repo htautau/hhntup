@@ -1,46 +1,44 @@
 
-Installation:
-=============
+Installation
+============
 
 You need to install these packages:
 
-    * rootpy  (https://github.com/rootpy/rootpy)
-    * atlastools (https://github.com/ndawe/atlastools)
-    * goodruns (http://pypi.python.org/pypi/goodruns/2.0)
+* rootpy  (https://github.com/rootpy/rootpy)
+* atlastools (https://github.com/ndawe/atlastools)
+* goodruns (http://pypi.python.org/pypi/goodruns/2.0)
 
-Download each package with:
+Download each package with::
 
-    git clone git://github.com/ndawe/${packagename}.git
+   git clone git://github.com/ndawe/${packagename}.git
 
---OR--
+or::
 
-    svn checkout http://svn.github.com/ndawe/${packagename}.git ${packagename}
+   svn checkout http://svn.github.com/ndawe/${packagename}.git ${packagename}
 
 then follow the README in each package to install them
-(use the --user option after setup.py)
+(use the --user option after setup.py)::
 
-i.e.
+   cd rootpy
+   python setup.py install --user
+   cd ..
 
-    cd rootpy
-    python setup.py install --user
-    cd ..
+   cd atlastools
+   python setup.py install --user
+   cd ..
 
-    cd atlastools
-    python setup.py install --user
-    cd ..
-
-    cd goodruns
-    python setup.py install --user
-    cd ..
+   cd goodruns
+   python setup.py install --user
+   cd ..
 
 and be sure to use at least Python version 2.6 (2.7 is preferred).
 DO NOT PLACE THESE PACKAGES IN THIS DIRECTORY! Put them somewhere else,
 such as ~/python-modules or where you keep your python package sources.
 
-Now build the C extension module for jet cleaning in the higgstautau package:
+Now build the C extension module for jet cleaning in the higgstautau package::
 
-    cd higgstautau/jetcleaning
-    ./setup.py build_ext --inplace 
+   cd higgstautau/jetcleaning
+   ./setup.py build_ext --inplace 
 
 
 External Tools
@@ -50,14 +48,14 @@ higgspy depends on various external tools to perform systematics etc. See the
 EXTERNALTOOLS_README.txt for further instructions.
 
 
-Skimming on the Grid:
-=====================
+Skimming on the Grid
+====================
 
 First add any new dataset containers to datasets.cfg or to the relevant file in
-datasets/*.txt Then run this, for example:
+datasets/*.txt Then run this, for example::
 
 
-    grid-submit -s HHSkim.py -u NoelDawe -m datasets.cfg mc11
+   grid-submit -s HHSkim.py -u NoelDawe -m datasets.cfg mc11
 
 Which will submit skimming jobs on all input containers not yet skimmed under
 the section mc11 in datasets.cfg. To create a new production use the option -v 2 etc.
