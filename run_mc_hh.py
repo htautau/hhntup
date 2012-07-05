@@ -9,7 +9,7 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = samples.SAMPLES['hadhad'].keys()
 
-"""
+"""  or you can list datasets like:
 datasets = [
     # EW background
     "AlpgenJimmyZtautauNp[0-5]_pt20.mc11c",
