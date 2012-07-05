@@ -47,17 +47,3 @@ External Tools
 
 higgspy depends on various external tools to perform systematics etc. See
 ``EXTERNALTOOLS_README.txt`` for further instructions.
-
-
-Skimming on the Grid
-====================
-
-First add any new dataset containers to datasets.cfg or to the relevant file in
-``datasets/*.txt`` Then run this, for example::
-
-
-   grid-submit -s HHSkim.py -u NoelDawe -m datasets.cfg mc11
-
-Which will submit skimming jobs on all input containers not yet skimmed under
-the section mc11 in datasets.cfg. To create a new production use the option -v 2 etc.
-and output dataset names will end with .v2
