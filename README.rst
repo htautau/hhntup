@@ -1,3 +1,4 @@
+.. -*- mode: rst -*-
 
 Installation
 ============
@@ -17,7 +18,7 @@ or::
    svn checkout http://svn.github.com/ndawe/${packagename}.git ${packagename}
 
 then follow the README in each package to install them
-(use the --user option after setup.py)::
+(use the ``--user`` option after ``setup.py``)::
 
    cd rootpy
    python setup.py install --user
@@ -33,7 +34,7 @@ then follow the README in each package to install them
 
 and be sure to use at least Python version 2.6 (2.7 is preferred).
 DO NOT PLACE THESE PACKAGES IN THIS DIRECTORY! Put them somewhere else,
-such as ~/python-modules or where you keep your python package sources.
+such as ``~/python-modules`` or where you keep your python package sources.
 
 Now build the C extension module for jet cleaning in the higgstautau package::
 
