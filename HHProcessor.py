@@ -136,7 +136,11 @@ class HHProcessor(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
-        tree.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        tree.set_buffer(
+                chain.buffer,
+                branches=copied_variables,
+                create_branches=True,
+                visible=False)
         chain.always_read(copied_variables)
 
         # set the event filters
