@@ -165,6 +165,8 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 verbose=False),
+            # since the jet recalibration is applied the MET must be
+            # recalculated even if no other systematics are applied.
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
