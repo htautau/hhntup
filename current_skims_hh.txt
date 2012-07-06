@@ -20,6 +20,7 @@ MC12
 ====
 
 group.phys-higgs.HHSkim.mc12_8TeV*p1011.v1/
+skim2 all done except one recovery needed
 
 Embedding11
 ===========
