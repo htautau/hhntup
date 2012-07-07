@@ -1,3 +1,9 @@
+import os
+import sys
+import atexit
+from operator import add
+import math
+
 import numpy as np
 from numpy.lib import recfunctions
 
@@ -7,10 +13,11 @@ np.random.seed(1987) # my birth year ;)
 from higgstautau.hadhad.periods import total_lumi
 from higgstautau import datasets
 from higgstautau.decorators import cached_property, memoize_method
+from higgstautau import samples as samples_db
+from higgstautau import xsec
 
-# cross sections
+# Higgs cross sections
 import yellowhiggs
-import xsec
 
 from rootpy.plotting import Hist, Canvas, HistStack
 from rootpy.io import open as ropen
@@ -19,39 +26,28 @@ from rootpy.utils import asrootpy
 from rootpy import root2array as r2a
 from rootpy.math.stats.correlation import correlation_plot
 
-import os
-import atexit
-from operator import add
-import math
-
 import categories
 import features
-import samples_db
 
+NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
+if not NTUPLE_PATH:
+    sys.exit("You did not source setup.sh")
+NTUPLE_PATH = os.path.join(NTUPLE_PATH, 'hadhad')
+PROCESSOR = 'HHProcessor'
 TOTAL_LUMI = total_lumi()
 TAUTAUHADHADBR = 0.412997
-
 VERBOSE = False
-
 DB = datasets.Database(name='datasets_hh', verbose=VERBOSE)
-
 FILES = {}
-
-PROC = 'ntuples/nominal/HHProcessor'
-
 WORKING_POINT = 'Tight'
-
 ID = Cut('tau1_JetBDTSig%s==1 && tau2_JetBDTSig%s==1' %
          (WORKING_POINT, WORKING_POINT))
 NOID = Cut('tau1_JetBDTSig%s!=1 && tau2_JetBDTSig%s!=1' %
            (WORKING_POINT, WORKING_POINT))
-
 OS = Cut('tau1_charge * tau2_charge == -1')
 NOT_OS = Cut('tau1_charge * tau2_charge != -1')
 SS = Cut('tau1_charge * tau2_charge == 1')
-
 # mass_jet1_jet2 > 100000
-
 TEMPFILE = ropen('tempfile.root', 'recreate')
 
 
@@ -391,7 +387,8 @@ class Sample(object):
 
 class Data(Sample):
 
-    DATA_FILE = ropen('.'.join([PROC, 'data.root']))
+    DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, PROCESSOR),
+                                'data.root']))
 
     def __init__(self, cuts=None):
 
@@ -418,22 +415,34 @@ class Data(Sample):
 
 class MC(Sample):
 
-    def __init__(self, scale=1., cuts=None):
+    def __init__(self, scale=1., cuts=None,
+                 systematic=None):
 
         super(MC, self).__init__(scale=scale, cuts=cuts)
+        self.systematic = systematic
         self.datasets = []
         for i, name in enumerate(self.samples):
             ds = DB[name]
-            if ds.name in FILES:
-                rfile = FILES[ds.name]
+            if ds.name in FILES and systematic in FILES[ds.name]:
+                rfile = FILES[ds.name][systematic]
             else:
-                rfile = ropen('.'.join([PROC, ds.name, 'root']))
-                FILES[ds.name] = rfile
+                if systematic is None:
+                    rfile = ropen('.'.join([
+                        os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                else:
+                    rfile = ropen('.'.join([
+                        os.path.join(NTUPLE_PATH, PROCESSOR),
+                        '_'.join([ds.name, systematic]), 'root']))
+                if ds.name not in FILES:
+                    FILES[ds.name] = {}
+                FILES[ds.name][systematic] = rfile
             tree = rfile.Get('higgstautauhh')
             weighted_events = rfile.cutflow[1]
             if isinstance(self, MC_Higgs):
                 # use yellowhiggs for cross sections
-                xs = yellowhiggs.xsbr(7, self.mass[i], self.mode, 'tautau')[0] * TAUTAUHADHADBR
+                xs = yellowhiggs.xsbr(
+                        7, self.mass[i],
+                        self.mode, 'tautau')[0] * TAUTAUHADHADBR
                 kfact = 1.
                 effic = 1.
             else:
@@ -495,7 +504,7 @@ class MC_Ztautau(MC):
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['ztautau']
+        yml = samples_db.BACKGROUNDS['hadhad']['ztautau']
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
@@ -507,7 +516,7 @@ class MC_EWK(MC):
 
     def __init__(self, scale=1., cuts=None):
 
-        yml = samples_db.BACKGROUNDS['ewk']
+        yml = samples_db.BACKGROUNDS['hadhad']['ewk']
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
@@ -519,7 +528,7 @@ class MC_Top(MC):
 
     def __init__(self, scale=1., cuts=None):
 
-        yml = samples_db.BACKGROUNDS['top']
+        yml = samples_db.BACKGROUNDS['hadhad']['top']
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
@@ -531,7 +540,7 @@ class MC_Diboson(MC):
 
     def __init__(self, scale=1., cuts=None):
 
-        yml = samples_db.BACKGROUNDS['diboson']
+        yml = samples_db.BACKGROUNDS['hadhad']['diboson']
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
