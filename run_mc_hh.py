@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import cluster
-import run_systematics
 from higgstautau import samples
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
@@ -52,7 +51,7 @@ cluster.run('HHProcessor.py',
 
 """
 # systematics
-run_systematics.run('HADHAD',
+cluster.run_systematics('HADHAD',
             'HHProcessor.py',
             db='datasets_hh',
             datasets=datasets,
