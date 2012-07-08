@@ -314,6 +314,13 @@ class Systematics(EventFilter):
         # These set up the systematic "SoftTerms_ptHard"
         self.systUtil.setNvtx(nvtxsoftmet)
 
+        # ResoSoftTerms uses gRandom for smearing.
+        # Set the seed here however you like.
+        if self.datatype in (datasets.DATA, datasets.EMBED):
+            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
+        else:
+            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
+
         if self.systematic_type == Systematics.Nominal:
             # do not apply any systematics
             # but... the MET still needs to be recalculated since the jets have
@@ -330,13 +337,6 @@ class Systematics(EventFilter):
 
             self.systUtil.setOriJetParameters(event.jet_pt)
         else:
-            # ResoSoftTerms uses gRandom for smearing.
-            # Set the seed here however you like.
-            if self.datatype in (datasets.DATA, datasets.EMBED):
-                ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
-            else:
-                ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
-
             self.run_systematics(event)
 
             if self.systematic_type != Systematics.Jets:
