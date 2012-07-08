@@ -1,9 +1,10 @@
 import socket
 import os
 import subprocess
-import multiprocessing as mp
 from subprocess import call
+import multiprocessing as mp
 from higgstautau.datasets import Database
+from systematics import SYSTEMATICS
 
 
 HOSTNAME = socket.gethostname()
@@ -69,12 +70,13 @@ def run_helper(cmd):
         subprocess.call(cmd, shell=True)
 
 
-def qsub(cmd, queue='medium', ncpus=1):
+def qsub(cmd, queue='medium', ncpus=1, dry=False):
 
     cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
            cmd, queue, ncpus)
     print cmd
-    call(cmd, shell=True)
+    if not dry:
+        call(cmd, shell=True)
 
 
 def run(student,
@@ -132,6 +134,24 @@ def run(student,
     if not use_qsub:
         for proc in procs:
             proc.join()
+
+
+def run_systematics(channel, *args, **kwargs):
+
+    for sys_type, sys_term in SYSTEMATICS[channel.upper()]:
+
+        print
+        print '============== Running %s systematics ==============' % sys_term
+        print
+
+        suffix = '--suffix %s' % sys_term
+        syst = '--syst-type Systematics.%s --syst-term Systematics.%s.%s' % (
+                sys_type, sys_type, sys_term)
+
+        run(*args,
+            args=suffix.split(),
+            student_args=syst.split(),
+            **kwargs)
 
 
 if __name__ == "__main__":
