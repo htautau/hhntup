@@ -275,17 +275,17 @@ class Systematics(EventFilter):
             self.update_event = lambda event: None
 
     def passes(self, event):
-        #######################################
-        # Demonstrates how to set up the METUtility with object momenta
-        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
-        #
-        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
-        #
-        # These examples of uncertainty-setting are meant to
-        # demonstrate how the uncertainties should be passed
-        # to METUtility.  Recommendations on just which ones
-        # you are meant to be using come from the CP groups.
+        """
+        Demonstrates how to set up the METUtility with object momenta
+        such that MET_RefFinal can be rebuilt matching the values in D3PD.
 
+        *** *** *** *** *** DISCLAIMER *** *** *** *** ***
+
+        These examples of uncertainty-setting are meant to
+        demonstrate how the uncertainties should be passed
+        to METUtility.  Recommendations on just which ones
+        you are meant to be using come from the CP groups.
+        """
         # reset the METUtility
         self.systUtil.reset()
 
