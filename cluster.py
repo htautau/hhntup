@@ -69,6 +69,14 @@ def run_helper(cmd):
         subprocess.call(cmd, shell=True)
 
 
+def qsub(cmd, queue='medium', ncpus=1):
+
+    cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
+           cmd, queue, ncpus)
+    print cmd
+    call(cmd, shell=True)
+
+
 def run(student,
         db,
         datasets,
@@ -112,10 +120,7 @@ def run(student,
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "cd %s && %s" % (CWD, cmd)
         if use_qsub:
-            cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
-                    cmd, qsub_queue, nproc_actual)
-            print cmd
-            call(cmd, shell=True)
+            qsub(cmd, queue=qsub_queue, ncpus=nproc_actual)
         else: # ssh
             cmd = "ssh %s '%s'" % (host.name, cmd)
             print "%s: %s" % (host.name, cmd)
