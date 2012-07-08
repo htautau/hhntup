@@ -141,20 +141,21 @@ def run(student,
 
 def run_systematics(channel, *args, **kwargs):
 
-    for sys_type, sys_term in SYSTEMATICS[channel.upper()]:
-
-        print
-        print '============== Running %s systematics ==============' % sys_term
-        print
-
-        suffix = '--suffix %s' % sys_term
-        syst = '--syst-type Systematics.%s --syst-term Systematics.%s.%s' % (
-                sys_type, sys_type, sys_term)
-
-        run(*args,
-            args=suffix.split(),
-            student_args=syst.split(),
-            **kwargs)
+    channel_systematics = SYSTEMATICS[channel.upper()]
+    for sys_object, sys_sources in channel_systematics.items():
+        for sys_type, sys_variations in sys_sources.items():
+            for variation in sys_variations:
+                sys_term = sys_type + '_' + variation
+                print
+                print '======== Running %s systematics ========' % sys_term
+                print
+                suffix = '--suffix %s' % sys_term
+                syst = '--syst-type Systematics.%s --syst-term Systematics.%s.%s' % (
+                        sys_object, sys_object, sys_term)
+                run(*args,
+                    args=suffix.split(),
+                    student_args=syst.split(),
+                    **kwargs)
 
 
 if __name__ == "__main__":
