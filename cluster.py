@@ -70,12 +70,12 @@ def run_helper(cmd):
         subprocess.call(cmd, shell=True)
 
 
-def qsub(cmd, queue='medium', ncpus=1, dry=False):
+def qsub(cmd, queue='medium', ncpus=1, dry_run=False):
 
     cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
            cmd, queue, ncpus)
     print cmd
-    if not dry:
+    if not dry_run:
         call(cmd, shell=True)
 
 
@@ -89,7 +89,8 @@ def run(student,
         args=None,
         student_args=None,
         use_qsub=False,
-        qsub_queue='medium'):
+        qsub_queue='medium',
+        dry_run=False):
 
     if args is None:
         args = ' '
@@ -122,16 +123,18 @@ def run(student,
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "cd %s && %s" % (CWD, cmd)
         if use_qsub:
-            qsub(cmd, queue=qsub_queue, ncpus=nproc_actual)
+            qsub(cmd, queue=qsub_queue, ncpus=nproc_actual,
+                 dry_run=dry_run)
         else: # ssh
             cmd = "ssh %s '%s'" % (host.name, cmd)
             print "%s: %s" % (host.name, cmd)
-            proc = mp.Process(target=run_helper, args=(cmd,))
-            proc.start()
+            if not dry_run:
+                proc = mp.Process(target=run_helper, args=(cmd,))
+                proc.start()
+                procs.append(proc)
             host.njobs += 1
-            procs.append(proc)
 
-    if not use_qsub:
+    if not use_qsub and not dry_run:
         for proc in procs:
             proc.join()
 

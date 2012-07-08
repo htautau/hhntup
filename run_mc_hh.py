@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import cluster
 from higgstautau import samples
 
@@ -47,9 +48,9 @@ cluster.run('HHProcessor.py',
             nproc=5,
             nice=10,
             setup=setup,
-            use_qsub=True)
+            use_qsub=True,
+            dry_run='dry' in sys.argv)
 
-"""
 # systematics
 cluster.run_systematics('HADHAD',
             'HHProcessor.py',
@@ -59,5 +60,5 @@ cluster.run_systematics('HADHAD',
             nproc=5,
             nice=10,
             setup=setup,
-            use_qsub=True)
-"""
+            use_qsub=True,
+            dry_run='dry' in sys.argv)
