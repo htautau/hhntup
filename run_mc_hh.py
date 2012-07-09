@@ -50,6 +50,7 @@ cluster.run('HHProcessor.py',
             setup=setup,
             output_path='ntuples/hadhad',
             use_qsub=True,
+            qsub_queue='short',
             dry_run='dry' in sys.argv)
 
 # systematics
@@ -63,4 +64,5 @@ cluster.run_systematics('HADHAD',
             setup=setup,
             output_path='ntuples/hadhad',
             use_qsub=True,
+            qsub_queue='short',
             dry_run='dry' in sys.argv)
