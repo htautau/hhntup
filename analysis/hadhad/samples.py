@@ -28,6 +28,8 @@ from rootpy.math.stats.correlation import correlation_plot
 
 import categories
 import features
+from systematics import SYSTEMATICS
+
 
 NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
 if not NTUPLE_PATH:
@@ -415,43 +417,43 @@ class Data(Sample):
 
 class MC(Sample):
 
-    def __init__(self, scale=1., cuts=None,
-                 systematic=None):
+    def __init__(self, scale=1., cuts=None):
 
         super(MC, self).__init__(scale=scale, cuts=cuts)
-        self.systematic = systematic
         self.datasets = []
         for i, name in enumerate(self.samples):
             ds = DB[name]
-            if ds.name in FILES and systematic in FILES[ds.name]:
-                rfile = FILES[ds.name][systematic]
-            else:
-                if systematic is None:
-                    rfile = ropen('.'.join([
-                        os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+            trees = {}
+            for
+                if ds.name in FILES and systematic in FILES[ds.name]:
+                    rfile = FILES[ds.name][systematic]
                 else:
-                    rfile = ropen('.'.join([
-                        os.path.join(NTUPLE_PATH, PROCESSOR),
-                        '_'.join([ds.name, systematic]), 'root']))
-                if ds.name not in FILES:
-                    FILES[ds.name] = {}
-                FILES[ds.name][systematic] = rfile
-            tree = rfile.Get('higgstautauhh')
-            weighted_events = rfile.cutflow[1]
-            if isinstance(self, MC_Higgs):
-                # use yellowhiggs for cross sections
-                xs = yellowhiggs.xsbr(
-                        7, self.mass[i],
-                        self.mode, 'tautau')[0] * TAUTAUHADHADBR
-                kfact = 1.
-                effic = 1.
-            else:
-                # use xsec for cross sections
-                xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
-            if VERBOSE:
-                print ds.name, xs, kfact, effic
-                print tree.GetEntries(), weighted_events
-            self.datasets.append((ds, tree, weighted_events, xs, kfact, effic))
+                    if systematic is None:
+                        rfile = ropen('.'.join([
+                            os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                    else:
+                        rfile = ropen('.'.join([
+                            os.path.join(NTUPLE_PATH, PROCESSOR),
+                            '_'.join([ds.name, systematic]), 'root']))
+                    if ds.name not in FILES:
+                        FILES[ds.name] = {}
+                    FILES[ds.name][systematic] = rfile
+                tree = rfile.Get('higgstautauhh')
+                weighted_events = rfile.cutflow[1]
+                if isinstance(self, MC_Higgs):
+                    # use yellowhiggs for cross sections
+                    xs = yellowhiggs.xsbr(
+                            7, self.mass[i],
+                            self.mode, 'tautau')[0] * TAUTAUHADHADBR
+                    kfact = 1.
+                    effic = 1.
+                else:
+                    # use xsec for cross sections
+                    xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
+                if VERBOSE:
+                    print ds.name, xs, kfact, effic
+                    print tree.GetEntries(), weighted_events
+            self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property
     def label(self):

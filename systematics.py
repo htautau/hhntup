@@ -33,3 +33,13 @@ SYSTEMATICS = {
     'EHAD': SYSTEMATICS_EHAD,
     'MUHAD': SYSTEMATICS_MUHAD,
 }
+
+
+def iter_systematics(channel):
+
+    channel_systematics = SYSTEMATICS[channel.upper()]
+    for sys_object, sys_sources in channel_systematics.items():
+        for sys_type, sys_variations in sys_sources.items():
+            for variation in sys_variations:
+                sys_term = sys_type + '_' + variation
+                yield sys_object, sys_type, variation, sys_term
