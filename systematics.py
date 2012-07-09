@@ -47,7 +47,9 @@ def iter_systematics(channel, include_nominal=False):
 
 def iter_systematic_variations(channel, include_nominal=False):
 
+    if include_nominal:
+        yield None, None
     for sys_object, sys_type, sys_variations in iter_systematics(channel,
-            include_nominal=include_nominal):
+            include_nominal=False):
         for variation in sys_variations:
             yield sys_object, sys_type + '_' + variation

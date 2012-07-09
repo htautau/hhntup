@@ -126,62 +126,73 @@ def apply_clf(clf,
               region,
               branches,
               cuts=None,
-              train_fraction=args.train_frac):
+              train_fraction=args.train_frac,
+              systematic=None):
 
     if isinstance(sample, QCD):
-        scores, weight = sample.scores(clf,
-            category=category,
-            region=region,
-            branches=branches,
-            train_fraction=train_fraction,
-            cuts=cuts)
+        scores, weight = sample.scores(
+                clf,
+                category=category,
+                region=region,
+                branches=branches,
+                train_fraction=train_fraction,
+                cuts=cuts,
+                systematic=systematic)
     elif isinstance(sample, Data):
-        data_sample = data.ndarray(category=category,
-                                   region=region,
-                                   branches=branches,
-                                   include_weight=False,
-                                   cuts=cuts)
+        data_sample = data.ndarray(
+                category=category,
+                region=region,
+                branches=branches,
+                include_weight=False,
+                cuts=cuts)
         scores = clf.predict_proba(data_sample)[:,-1]
         weight = np.ones(len(scores))
-    else:
-        train, test = sample.train_test(category=category,
-                                     region=region,
-                                     branches=branches,
-                                     train_fraction=train_fraction,
-                                     cuts=cuts)
+    else: # MC
+        train, test = sample.train_test(
+                category=category,
+                region=region,
+                branches=branches,
+                train_fraction=train_fraction,
+                cuts=cuts,
+                systematic=systematic)
         weight = test['weight']
         input = np.vstack(test[branch] for branch in branches).T
         scores = clf.predict_proba(input)[:,-1]
     return scores, weight
 
 
-def plot_clf(clf,
-             backgrounds,
-             category,
-             region,
-             branches,
-             signals=None,
-             signal_scale=1.,
-             data=None,
-             cuts=None,
-             train_fraction=args.train_frac,
-             name=None,
-             draw_histograms=True,
-             draw_data=args.unblind,
-             save_histograms=False,
-             bins=10):
+def plot_clf(
+        clf,
+        backgrounds,
+        category,
+        region,
+        branches,
+        signals=None,
+        signal_scale=1.,
+        data=None,
+        cuts=None,
+        train_fraction=args.train_frac,
+        name=None,
+        draw_histograms=True,
+        draw_data=args.unblind,
+        save_histograms=False,
+        bins=10,
+        systematic=None):
 
     max_score = 0.
     min_score = 1.
 
     bkg_scores = []
     for bkg in backgrounds:
-        scores, weight = apply_clf(clf, bkg,
-                         category=category,
-                         region=region,
-                         branches=branches,
-                         cuts=cuts,
-                         train_fraction=train_fraction)
+        scores, weight = apply_clf(
+            clf,
+            bkg,
+            category=category,
+            region=region,
+            branches=branches,
+            cuts=cuts,
+            train_fraction=train_fraction,
+            systematic=systematic)
         _min = scores.min()
         _max = scores.max()
         if _min < min_score:
@@ -193,12 +204,15 @@ def plot_clf(clf,
     if signals is not None:
         sig_scores = []
         for sig in signals:
-            scores, weight = apply_clf(clf, sig,
-                         category=category,
-                         region=region,
-                         branches=branches,
-                         cuts=cuts,
-                         train_fraction=train_fraction)
+            scores, weight = apply_clf(
+                clf,
+                sig,
+                category=category,
+                region=region,
+                branches=branches,
+                cuts=cuts,
+                train_fraction=train_fraction,
+                systematic=systematic)
             _min = scores.min()
             _max = scores.max()
             if _min < min_score:
@@ -210,12 +224,14 @@ def plot_clf(clf,
         sig_scores = None
 
     if data is not None and draw_data:
-        data_scores, _ = apply_clf(clf, data,
-                              category=category,
-                              region=region,
-                              branches=branches,
-                              cuts=cuts,
-                              train_fraction=train_fraction)
+        data_scores, _ = apply_clf(
+            clf,
+            data,
+            category=category,
+            region=region,
+            branches=branches,
+            cuts=cuts,
+            train_fraction=train_fraction)
         _min = data_scores.min()
         _max = data_scores.max()
         if _min < min_score:
@@ -253,7 +269,7 @@ def plot_clf(clf,
         print "Data events: %d" % sum(data_hist)
         print "Model events: %f" % sum(sum(bkg_hists))
         for hist in bkg_hists:
-                print hist.GetTitle(), sum(hist)
+            print hist.GetTitle(), sum(hist)
         print "Data / Model: %f" % (sum(data_hist) / sum(sum(bkg_hists)))
     else:
         data_hist = None
@@ -492,6 +508,7 @@ if __name__ == '__main__':
                  name='ROI')
 
         # Create histograms for the limit setting with HistFactory
+        # Include all systematic variations
         with ropen('limits/data/%s.root' % category, 'recreate') as f:
 
             min_score = 1.
