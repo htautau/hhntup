@@ -445,10 +445,11 @@ class MC(Sample):
                         weighted_events[sys_type][v] = None
 
                 for sys_term in sys_terms:
+                    sys_type, variation = sys_term.split('_')
                     if ds.name in FILES and sys_term in FILES[ds.name]:
                         rfile = FILES[ds.name][sys_term]
                     else:
-                        if sys_term is 'NOMINAL':
+                        if sys_term == 'NOMINAL':
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
                         else:
@@ -457,9 +458,9 @@ class MC(Sample):
                                 '_'.join([ds.name, systematic]), 'root']))
                         if ds.name not in FILES:
                             FILES[ds.name] = {}
-                        FILES[ds.name][systematic] = rfile
-                    tree = rfile.Get('higgstautauhh')
-                    weighted_events = rfile.cutflow[1]
+                        FILES[ds.name][sys_term] = rfile
+                    trees[sys_type][variation] = rfile.Get('higgstautauhh')
+                    weighted_events[sys_type][variation] = rfile.cutflow[1]
 
                 if isinstance(self, MC_Higgs):
                     # use yellowhiggs for cross sections
@@ -473,7 +474,7 @@ class MC(Sample):
                     xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
                 if VERBOSE:
                     print ds.name, xs, kfact, effic
-                    print tree.GetEntries(), weighted_events
+                    #print tree.GetEntries(), weighted_events
             self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property
@@ -497,22 +498,44 @@ class MC(Sample):
             exprs = expr
         else:
             exprs = (expr,)
-        for ds, tree, events, xs, kfact, effic in self.datasets:
+
+        sys_hists = {}
+        sys_hist = hist.Clone()
+        sys_hist.Reset()
+
+        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
             weighted_selection = ('%.5f * mc_weight * pileup_weight * '
                                   'tau1_weight * tau2_weight * (%s)' %
                                   (weight, selection))
             if VERBOSE:
                 print weighted_selection
+
+            for sys_type, variations in sys_trees.items():
+
+
+
             for expr in exprs:
                 tree.Draw(expr, weighted_selection, hist=hist)
 
-    def trees(self, category, region, cuts=None):
+        # set the systematics
+        hist.systematics = sys_hists
+
+    def trees(self, category, region, cuts=None,
+              systematic=None):
 
         TEMPFILE.cd()
         selection = self.cuts(category, region) & cuts
         trees = []
-        for ds, tree, events, xs, kfact, effic in self.datasets:
+        if systematic is not None:
+            sys_type, sys_var = systematic.split('_')
+        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+            if systematic is None:
+                tree = sys_trees['NOMINAL']
+                events = sys_events['NOMINAL']
+            else:
+                tree = sys_trees[sys_type][sys_var]
+                events = sys_events[sys_type][sys_var]
             weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
@@ -725,16 +748,19 @@ class QCD(Sample):
         weight *= self.scale
         return scores, weight
 
-    def trees(self, category, region, cuts=None):
+    def trees(self, category, region, cuts=None,
+              systematic=None):
 
         TEMPFILE.cd()
         trees = [asrootpy(self.data.data.CopyTree(
                     self.data.cuts(category,
                                    region=self.sample_region) & cuts))]
         for mc in self.mc:
-            _trees = mc.trees(category,
-                              region=self.sample_region,
-                              cuts=cuts)
+            _trees = mc.trees(
+                    category,
+                    region=self.sample_region,
+                    cuts=cuts,
+                    systematic=systematic)
             for tree in _trees:
                 tree.Scale(-1)
             trees += _trees

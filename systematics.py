@@ -43,3 +43,11 @@ def iter_systematics(channel, include_nominal=False):
     for sys_object, sys_sources in channel_systematics.items():
         for sys_type, sys_variations in sys_sources.items():
             yield sys_object, sys_type, sys_variations
+
+
+def iter_systematic_variations(channel, include_nominal=False):
+
+    for sys_object, sys_type, sys_variations in iter_systematics(channel,
+            include_nominal=include_nominal):
+        for variation in sys_variations:
+            yield sys_object, sys_type + '_' + variation
