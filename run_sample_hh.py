@@ -14,4 +14,5 @@ cluster.run('HHProcessor.py',
             nproc=1,
             nice=10,
             setup=setup,
+            output_path='ntuples/hadhad',
             use_qsub=False)

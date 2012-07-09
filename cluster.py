@@ -85,6 +85,7 @@ def run(student,
         hosts,
         nproc=1,
         nice=0,
+        output_path='.',
         setup=None,
         args=None,
         student_args=None,
@@ -99,8 +100,8 @@ def run(student,
 
     database = Database(db)
 
-    CMD = "./run -s %s -n %%d --db %s --nice %d %s%%s" % (
-            student, db, nice, args)
+    CMD = "./run --output-path %s -s %s -n %%d --db %s --nice %d %s%%s" % (
+            output_path, student, db, nice, args)
     if setup is not None:
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()

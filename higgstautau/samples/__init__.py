@@ -76,6 +76,7 @@ for channel in [o for o in os.listdir(__HERE) if
 
 def iter_samples(channel):
 
+    channel = channel.lower()
     for sample_class in (SIGNALS[channel], BACKGROUNDS[channel]):
         for sample_type, sample_info in sample_class.items():
             for sample_name in sample_info['samples']:

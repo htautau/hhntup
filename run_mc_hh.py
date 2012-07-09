@@ -7,7 +7,7 @@ from higgstautau import samples
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
-datasets = samples.SAMPLES['hadhad'].keys()
+datasets = samples.samples('hadhad')
 
 """  or you can list datasets like:
 datasets = [
@@ -48,6 +48,7 @@ cluster.run('HHProcessor.py',
             nproc=5,
             nice=10,
             setup=setup,
+            output_path='ntuples/hadhad',
             use_qsub=True,
             dry_run='dry' in sys.argv)
 
@@ -60,5 +61,6 @@ cluster.run_systematics('HADHAD',
             nproc=5,
             nice=10,
             setup=setup,
+            output_path='ntuples/hadhad',
             use_qsub=True,
             dry_run='dry' in sys.argv)
