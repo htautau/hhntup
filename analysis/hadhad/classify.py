@@ -24,6 +24,7 @@ import samples
 from samples import *
 from categories import CATEGORIES
 import bkg_scales_cache
+from systematics import iter_systematic_variations
 
 import numpy as np
 
@@ -496,16 +497,17 @@ if __name__ == '__main__':
             MC_WH(mass=125),
             MC_ZH(mass=125),
         ]
-        plot_clf(clf,
-                 backgrounds,
-                 category,
-                 target_region,
-                 branches,
-                 signals=signals,
-                 signal_scale=20,
-                 cuts=cuts,
-                 train_fraction=train_fraction,
-                 name='ROI')
+        plot_clf(
+            clf,
+            backgrounds,
+            category,
+            target_region,
+            branches,
+            signals=signals,
+            signal_scale=20,
+            cuts=cuts,
+            train_fraction=train_fraction,
+            name='ROI')
 
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
@@ -515,7 +517,8 @@ if __name__ == '__main__':
             max_score = 0.
 
             # apply on data
-            data_scores, _ = apply_clf(clf,
+            data_scores, _ = apply_clf(
+                clf,
                 data,
                 category=category,
                 region=target_region,
@@ -528,42 +531,52 @@ if __name__ == '__main__':
             if _max > max_score:
                 max_score = _max
 
-            # apply on all backgrounds
-            bkg_scores = []
-            for bkg in backgrounds:
-                scores, weight = apply_clf(clf,
-                    bkg,
-                    category=category,
-                    region=target_region,
-                    branches=branches,
-                    cuts=cuts)
-                bkg_scores.append((bkg.name, scores, weight))
-                _min = scores.min()
-                _max = scores.max()
-                if _min < min_score:
-                    min_score = _min
-                if _max > max_score:
-                    max_score = _max
+            bkg_scores = {}
+            sig_scores = {}
 
-            # apply on all signal masses
-            sig_scores = []
-            for mass in MC_Higgs.MASS_POINTS:
-                for mode in (MC_VBF, MC_ggF, MC_WH, MC_ZH):
-                    signal = mode(mass=mass)
-                    scores, weight = apply_clf(clf,
-                        signal,
+            for sys_object, sys_term in iter_systematic_variations(
+                    channel='hadhad',
+                    include_nominal=True):
+
+                # apply on all backgrounds
+                bkg_scores[sys_term] = []
+                for bkg in backgrounds:
+                    scores, weight = apply_clf(
+                        clf,
+                        bkg,
                         category=category,
                         region=target_region,
                         branches=branches,
-                        cuts=cuts)
+                        cuts=cuts,
+                        systematic=sys_term)
+                    bkg_scores[sys_term].append((bkg.name, scores, weight))
                     _min = scores.min()
                     _max = scores.max()
                     if _min < min_score:
                         min_score = _min
                     if _max > max_score:
                         max_score = _max
-                    sig_scores.append(('Signal_%d_%s' %
-                                       (mass, signal.mode), scores, weight))
+
+                # apply on all signal masses
+                sig_scores[sys_term] = []
+                for mass in MC_Higgs.MASS_POINTS:
+                    for mode in (MC_VBF, MC_ggF, MC_WH, MC_ZH):
+                        signal = mode(mass=mass)
+                        scores, weight = apply_clf(clf,
+                            signal,
+                            category=category,
+                            region=target_region,
+                            branches=branches,
+                            cuts=cuts)
+                        _min = scores.min()
+                        _max = scores.max()
+                        if _min < min_score:
+                            min_score = _min
+                        if _max > max_score:
+                            max_score = _max
+                        sig_scores[sys_term].append(
+                            ('Signal_%d_%s' %
+                                (mass, signal.mode), scores, weight))
 
             padding = (max_score - min_score) / (2 * bins)
             min_score -= padding
@@ -572,27 +585,38 @@ if __name__ == '__main__':
 
             data_hist = hist_template.Clone(name=data.name)
             map(data_hist.Fill, data_scores)
-
-            bkg_hists = []
-            for bkg_name, scores, weight in bkg_scores:
-                hist = hist_template.Clone(name=bkg_name)
-                for score, w in zip(scores, weight):
-                    hist.Fill(score, w)
-                bkg_hists.append(hist)
-
-            sig_hists = []
-            for sig_name, scores, weight in sig_scores:
-                hist = hist_template.Clone(name=sig_name)
-                for score, w in zip(scores, weight):
-                    hist.Fill(score, w)
-                sig_hists.append(hist)
-
             f.cd()
             data_hist.Write()
             total_data = sum(data_hist)
-            total_model = sum(sum(bkg_hists))
-            print "Data / Model: %.5f" % (total_data / total_model)
-            for bkg in bkg_hists:
-                bkg.Write()
-            for sig in sig_hists:
-                sig.Write()
+
+            for sys_object, sys_term in iter_systematic_variations(
+                    channel='hadhad',
+                    include_nominal=True):
+
+                if sys_term is None:
+                    suffix = ''
+                else:
+                    suffix = '_' + sys_term
+
+                bkg_hists = []
+                for bkg_name, scores, weight in bkg_scores[sys_term]:
+                    hist = hist_template.Clone(name=bkg_name + suffix)
+                    for score, w in zip(scores, weight):
+                        hist.Fill(score, w)
+                    bkg_hists.append(hist)
+
+                sig_hists = []
+                for sig_name, scores, weight in sig_scores[sys_term]:
+                    hist = hist_template.Clone(name=sig_name + suffix)
+                    for score, w in zip(scores, weight):
+                        hist.Fill(score, w)
+                    sig_hists.append(hist)
+
+                total_model = sum(sum(bkg_hists))
+                print "Systematic: %s  Data / Model: %.5f" % (
+                    sys_term, total_data / total_model)
+                f.cd()
+                for bkg in bkg_hists:
+                    bkg.Write()
+                for sig in sig_hists:
+                    sig.Write()
