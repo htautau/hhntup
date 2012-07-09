@@ -35,8 +35,10 @@ SYSTEMATICS = {
 }
 
 
-def iter_systematics(channel):
+def iter_systematics(channel, include_nominal=False):
 
+    if include_nominal:
+        yield None, None, ()
     channel_systematics = SYSTEMATICS[channel.upper()]
     for sys_object, sys_sources in channel_systematics.items():
         for sys_type, sys_variations in sys_sources.items():

@@ -28,7 +28,7 @@ from rootpy.math.stats.correlation import correlation_plot
 
 import categories
 import features
-from systematics import SYSTEMATICS
+from systematics import iter_systematics
 
 
 NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
@@ -421,25 +421,46 @@ class MC(Sample):
 
         super(MC, self).__init__(scale=scale, cuts=cuts)
         self.datasets = []
+
         for i, name in enumerate(self.samples):
+
             ds = DB[name]
             trees = {}
-            for
-                if ds.name in FILES and systematic in FILES[ds.name]:
-                    rfile = FILES[ds.name][systematic]
+            weighted_events = {}
+
+            for sys_object, sys_type, sys_variations in \
+                iter_systematics(include_nominal=True):
+
+                if sys_object is None:
+                    # nominal
+                    sys_terms = ('NOMINAL',)
+                    trees['NOMINAL'] = None
+                    weighted_events['NOMINAL'] = None
                 else:
-                    if systematic is None:
-                        rfile = ropen('.'.join([
-                            os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                    sys_terms = [sys_type + '_' + v for v in sys_variations]
+                    trees[sys_type] = {}
+                    weighted_events[sys_type] = {}
+                    for v in sys_variations:
+                        trees[sys_type][v] = None
+                        weighted_events[sys_type][v] = None
+
+                for sys_term in sys_terms:
+                    if ds.name in FILES and sys_term in FILES[ds.name]:
+                        rfile = FILES[ds.name][sys_term]
                     else:
-                        rfile = ropen('.'.join([
-                            os.path.join(NTUPLE_PATH, PROCESSOR),
-                            '_'.join([ds.name, systematic]), 'root']))
-                    if ds.name not in FILES:
-                        FILES[ds.name] = {}
-                    FILES[ds.name][systematic] = rfile
-                tree = rfile.Get('higgstautauhh')
-                weighted_events = rfile.cutflow[1]
+                        if sys_term is 'NOMINAL':
+                            rfile = ropen('.'.join([
+                                os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                        else:
+                            rfile = ropen('.'.join([
+                                os.path.join(NTUPLE_PATH, PROCESSOR),
+                                '_'.join([ds.name, systematic]), 'root']))
+                        if ds.name not in FILES:
+                            FILES[ds.name] = {}
+                        FILES[ds.name][systematic] = rfile
+                    tree = rfile.Get('higgstautauhh')
+                    weighted_events = rfile.cutflow[1]
+
                 if isinstance(self, MC_Higgs):
                     # use yellowhiggs for cross sections
                     xs = yellowhiggs.xsbr(
