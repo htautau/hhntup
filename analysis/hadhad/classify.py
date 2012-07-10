@@ -54,6 +54,10 @@ else:
     MIN_SAMPLES_LEAF = range(10, 100, 10) + range(100, 2050, 50)
     N_ESTIMATORS = range(20, 1001, 20)
 
+HIGGSTAUTAU_LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
+if not HIGGSTAUTAU_LIMITS_DIR:
+    sys.exit('You did not source setup.sh!')
+
 
 def plot_grid_scores(grid_scores, best_point, params, name,
                      label_all_bins=False,

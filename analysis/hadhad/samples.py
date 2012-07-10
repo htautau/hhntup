@@ -495,6 +495,13 @@ class MC(Sample):
                 for sys_term in sys_terms:
                     if ds.name in FILES and sys_term in FILES[ds.name]:
                         rfile = FILES[ds.name][sys_term]
+                        if sys_term == 'NOMINAL':
+                            trees[sys_term] = rfile.Get('higgstautauhh')
+                            weighted_events[sys_term] = rfile.cutflow[1]
+                        else:
+                            sys_type, variation = sys_term.split('_')
+                            trees[sys_type][variation] = rfile.Get('higgstautauhh')
+                            weighted_events[sys_type][variation] = rfile.cutflow[1]
                     else:
                         if sys_term == 'NOMINAL':
                             rfile = ropen('.'.join([
