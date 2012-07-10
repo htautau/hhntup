@@ -57,7 +57,7 @@ else:
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
 if not LIMITS_DIR:
     sys.exit('You did not source setup.sh!')
-LIMITS_DIR = os.path.join(LIMITS_DIR, 'hadhad')
+LIMITS_DIR = os.path.join(LIMITS_DIR, 'hadhad', 'data')
 
 
 def plot_grid_scores(grid_scores, best_point, params, name,
@@ -529,79 +529,79 @@ if __name__ == '__main__':
 
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
-        with ropen(
-                os.path.join(LIMITS_DIR, '%s.root' % category),
-                'recreate') as f:
+        min_score = 1.
+        max_score = 0.
 
-            min_score = 1.
-            max_score = 0.
+        # apply on data
+        data_scores, _ = apply_clf(
+            clf,
+            data,
+            category=category,
+            region=target_region,
+            branches=branches,
+            cuts=cuts)
+        _min = data_scores.min()
+        _max = data_scores.max()
+        if _min < min_score:
+            min_score = _min
+        if _max > max_score:
+            max_score = _max
 
-            # apply on data
-            data_scores, _ = apply_clf(
-                clf,
-                data,
-                category=category,
-                region=target_region,
-                branches=branches,
-                cuts=cuts)
-            _min = data_scores.min()
-            _max = data_scores.max()
-            if _min < min_score:
-                min_score = _min
-            if _max > max_score:
-                max_score = _max
+        bkg_scores = {}
+        sig_scores = {}
 
-            bkg_scores = {}
-            sig_scores = {}
+        for sys_object, sys_term in iter_systematic_variations(
+                channel='hadhad',
+                include_nominal=True):
 
-            for sys_object, sys_term in iter_systematic_variations(
-                    channel='hadhad',
-                    include_nominal=True):
+            # apply on all backgrounds
+            bkg_scores[sys_term] = []
+            for bkg in backgrounds:
+                scores, weight = apply_clf(
+                    clf,
+                    bkg,
+                    category=category,
+                    region=target_region,
+                    branches=branches,
+                    cuts=cuts,
+                    systematic=sys_term)
+                bkg_scores[sys_term].append((bkg.name, scores, weight))
+                _min = scores.min()
+                _max = scores.max()
+                if _min < min_score:
+                    min_score = _min
+                if _max > max_score:
+                    max_score = _max
 
-                # apply on all backgrounds
-                bkg_scores[sys_term] = []
-                for bkg in backgrounds:
-                    scores, weight = apply_clf(
-                        clf,
-                        bkg,
+            # apply on all signal masses
+            sig_scores[sys_term] = []
+            for mass in MC_Higgs.MASS_POINTS:
+                for mode in (MC_VBF, MC_ggF, MC_WH, MC_ZH):
+                    signal = mode(mass=mass)
+                    scores, weight = apply_clf(clf,
+                        signal,
                         category=category,
                         region=target_region,
                         branches=branches,
-                        cuts=cuts,
-                        systematic=sys_term)
-                    bkg_scores[sys_term].append((bkg.name, scores, weight))
+                        cuts=cuts)
                     _min = scores.min()
                     _max = scores.max()
                     if _min < min_score:
                         min_score = _min
                     if _max > max_score:
                         max_score = _max
+                    sig_scores[sys_term].append(
+                        ('Signal_%d_%s' %
+                            (mass, signal.mode), scores, weight))
 
-                # apply on all signal masses
-                sig_scores[sys_term] = []
-                for mass in MC_Higgs.MASS_POINTS:
-                    for mode in (MC_VBF, MC_ggF, MC_WH, MC_ZH):
-                        signal = mode(mass=mass)
-                        scores, weight = apply_clf(clf,
-                            signal,
-                            category=category,
-                            region=target_region,
-                            branches=branches,
-                            cuts=cuts)
-                        _min = scores.min()
-                        _max = scores.max()
-                        if _min < min_score:
-                            min_score = _min
-                        if _max > max_score:
-                            max_score = _max
-                        sig_scores[sys_term].append(
-                            ('Signal_%d_%s' %
-                                (mass, signal.mode), scores, weight))
+        padding = (max_score - min_score) / (2 * bins)
+        min_score -= padding
+        max_score += padding
+        hist_template = Hist(bins, min_score, max_score)
 
-            padding = (max_score - min_score) / (2 * bins)
-            min_score -= padding
-            max_score += padding
-            hist_template = Hist(bins, min_score, max_score)
+        with ropen(
+                os.path.join(LIMITS_DIR, '%s.root' % category),
+                'recreate') as f:
 
             data_hist = hist_template.Clone(name=data.name)
             map(data_hist.Fill, data_scores)
