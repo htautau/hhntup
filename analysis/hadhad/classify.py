@@ -42,6 +42,19 @@ from tabulartext import PrettyTable
 from utils import *
 
 
+QUICK = True
+
+# grid search params
+if QUICK:
+    # quick search for testing
+    MIN_SAMPLES_LEAF = range(100, 120, 10)
+    N_ESTIMATORS = range(10, 15, 2)
+else:
+    # full search
+    MIN_SAMPLES_LEAF = range(10, 100, 10) + range(100, 2050, 50)
+    N_ESTIMATORS = range(20, 1001, 20)
+
+
 def plot_grid_scores(grid_scores, best_point, params, name,
                      label_all_bins=False,
                      label_all_ticks=False,
@@ -399,10 +412,10 @@ if __name__ == '__main__':
             clf = AdaBoostClassifier(DecisionTreeClassifier(),
                     beta=.5,
                     compute_importances=True)
+            # see top of file for grid search param constants
             grid_params = {
-                'base_estimator__min_samples_leaf': range(10, 100, 10) +
-                                                    range(100, 2050, 50),
-                'n_estimators': range(20, 1001, 20)
+                'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
+                'n_estimators': N_ESTIMATORS
             }
             #clf = SVC(probability=True, scale_C=True)
             # first grid search min_samples_leaf for the maximum n_estimators

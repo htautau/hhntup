@@ -370,12 +370,12 @@ class Sample(object):
         return arr_train, arr_test
 
     def recarray(self,
-            category,
-            region,
-            branches,
-            include_weight=True,
-            cuts=None,
-            systematic=None):
+                 category,
+                 region,
+                 branches,
+                 include_weight=True,
+                 cuts=None,
+                 systematic=None):
 
         if include_weight and isinstance(self, MC):
             branches = branches + [
@@ -411,12 +411,12 @@ class Sample(object):
         return arr
 
     def ndarray(self,
-            category,
-            region,
-            branches,
-            include_weight=True,
-            cuts=None,
-            systematic=None):
+                category,
+                region,
+                branches,
+                include_weight=True,
+                cuts=None,
+                systematic=None):
 
         return r2a.recarray_to_ndarray(
                    self.recarray(
@@ -451,10 +451,10 @@ class Data(Sample):
         self.data.draw(expr, self.cuts(category, region) & cuts, hist=hist)
 
     def trees(self,
-            category,
-            region,
-            cuts=None,
-            systematic=None):
+              category,
+              region,
+              cuts=None,
+              systematic=None):
         """
         systematics do not apply to data but the argument is present for
         coherence with the other samples
@@ -525,6 +525,8 @@ class MC(Sample):
                 if VERBOSE:
                     print ds.name, xs, kfact, effic
                     #print tree.GetEntries(), weighted_events
+            print trees
+            print weighted_events
             self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property
