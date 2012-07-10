@@ -499,6 +499,8 @@ class MC(Sample):
                         if sys_term == 'NOMINAL':
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                            trees[sys_term] = rfile.Get('higgstautauhh')
+                            weighted_events[sys_term] = rfile.cutflow[1]
                         else:
                             sys_type, variation = sys_term.split('_')
                             rfile = ropen('.'.join([
