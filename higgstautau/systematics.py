@@ -321,10 +321,11 @@ class Systematics(EventFilter):
         else:
             ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
 
-        if self.systematic_type == Systematics.Nominal:
-            # do not apply any systematics
-            # but... the MET still needs to be recalculated since the jets have
-            # been recalibrated.
+        if self.systematic_type != Systematics.Jets:
+            # the jet term should always be recalculated since the jets have
+            # been recalibrated. This is already called below in jet_systematics
+            # so I am only setting it here if we are not doing jet systematics
+            # in this job.
             self.systUtil.setJetParameters(
                 event.jet_pt,
                 event.jet_eta,
@@ -336,15 +337,17 @@ class Systematics(EventFilter):
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
             self.systUtil.setOriJetParameters(event.jet_pt)
-        else:
-            self.run_systematics(event)
 
-            if self.systematic_type != Systematics.Jets:
-                self.systUtil.setMETTerm(
-                        METUtil.RefJet,
-                        event.MET_RefJet_BDTMedium_etx,
-                        event.MET_RefJet_BDTMedium_ety,
-                        event.MET_RefJet_BDTMedium_sumet)
+        self.run_systematics(event)
+
+        """
+        if self.systematic_type != Systematics.Jets:
+            self.systUtil.setMETTerm(
+                METUtil.RefJet,
+                event.MET_RefJet_BDTMedium_etx,
+                event.MET_RefJet_BDTMedium_ety,
+                event.MET_RefJet_BDTMedium_sumet)
+        """
 
         """
         if self.datatype != datasets.DATA:
@@ -364,30 +367,30 @@ class Systematics(EventFilter):
 
         if self.systematic_type != Systematics.Photons:
             self.systUtil.setMETTerm(
-                    METUtil.RefGamma,
-                    event.MET_RefGamma_BDTMedium_etx,
-                    event.MET_RefGamma_BDTMedium_ety,
-                    event.MET_RefGamma_BDTMedium_sumet)
+                METUtil.RefGamma,
+                event.MET_RefGamma_BDTMedium_etx,
+                event.MET_RefGamma_BDTMedium_ety,
+                event.MET_RefGamma_BDTMedium_sumet)
 
         if self.systematic_type != Systematics.Muons:
             self.systUtil.setMETTerm(
-                    METUtil.RefMuon,
-                    event.MET_RefMuon_Staco_BDTMedium_etx,
-                    event.MET_RefMuon_Staco_BDTMedium_ety,
-                    event.MET_RefMuon_Staco_BDTMedium_sumet)
+                METUtil.RefMuon,
+                event.MET_RefMuon_Staco_BDTMedium_etx,
+                event.MET_RefMuon_Staco_BDTMedium_ety,
+                event.MET_RefMuon_Staco_BDTMedium_sumet)
 
             self.systUtil.setMETTerm(
-                    METUtil.MuonTotal,
-                    event.MET_Muon_Total_Staco_BDTMedium_etx,
-                    event.MET_Muon_Total_Staco_BDTMedium_ety,
-                    event.MET_Muon_Total_Staco_BDTMedium_sumet)
+                METUtil.MuonTotal,
+                event.MET_Muon_Total_Staco_BDTMedium_etx,
+                event.MET_Muon_Total_Staco_BDTMedium_ety,
+                event.MET_Muon_Total_Staco_BDTMedium_sumet)
 
         if self.systematic_type != Systematics.Taus:
             self.systUtil.setMETTerm(
-                    METUtil.RefTau,
-                    event.MET_RefTau_BDTMedium_etx,
-                    event.MET_RefTau_BDTMedium_ety,
-                    event.MET_RefTau_BDTMedium_sumet)
+                METUtil.RefTau,
+                event.MET_RefTau_BDTMedium_etx,
+                event.MET_RefTau_BDTMedium_ety,
+                event.MET_RefTau_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.SoftJets,
