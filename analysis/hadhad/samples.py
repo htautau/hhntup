@@ -477,7 +477,7 @@ class MC(Sample):
             weighted_events = {}
 
             for sys_object, sys_type, sys_variations in \
-                iter_systematics(include_nominal=True):
+                iter_systematics('hadhad', include_nominal=True):
 
                 if sys_object is None:
                     # nominal
@@ -493,7 +493,6 @@ class MC(Sample):
                         weighted_events[sys_type][v] = None
 
                 for sys_term in sys_terms:
-                    sys_type, variation = sys_term.split('_')
                     if ds.name in FILES and sys_term in FILES[ds.name]:
                         rfile = FILES[ds.name][sys_term]
                     else:
@@ -501,14 +500,15 @@ class MC(Sample):
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
                         else:
+                            sys_type, variation = sys_term.split('_')
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, PROCESSOR),
-                                '_'.join([ds.name, systematic]), 'root']))
+                                '_'.join([ds.name, sys_term]), 'root']))
+                            trees[sys_type][variation] = rfile.Get('higgstautauhh')
+                            weighted_events[sys_type][variation] = rfile.cutflow[1]
                         if ds.name not in FILES:
                             FILES[ds.name] = {}
                         FILES[ds.name][sys_term] = rfile
-                    trees[sys_type][variation] = rfile.Get('higgstautauhh')
-                    weighted_events[sys_type][variation] = rfile.cutflow[1]
 
                 if isinstance(self, MC_Higgs):
                     # use yellowhiggs for cross sections
@@ -560,7 +560,7 @@ class MC(Sample):
                 print weighted_selection
 
             for sys_type, variations in sys_trees.items():
-
+                pass
 
 
             for expr in exprs:
