@@ -165,16 +165,22 @@ def run(student,
             proc.join()
 
 
-def run_systematics(channel, *args, **kwargs):
+def run_systematics(channel, student, systematics=None, **kwargs):
 
+    if systematics is not None:
+        systematics = [s.upper() for s in systematics]
+    else:
+        systematics = []
     for sys_object, sys_variation in iter_systematic_variations(channel):
+        if sys_object.upper() not in systematics:
+            continue
         print
         print '======== Running %s systematics ========' % sys_variation
         print
         suffix = '--suffix %s' % sys_variation
         syst = '--syst-type Systematics.%s --syst-term Systematics.%s.%s' % (
                 sys_object, sys_object, sys_variation)
-        run(*args,
+        run(student,
             args=suffix.split(),
             student_args=syst.split(),
             qsub_name_suffix=sys_variation,

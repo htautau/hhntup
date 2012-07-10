@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('--systematics', default=None)
+parser.add_argument('--nproc', default=5)
+parser.add_argument('--queue', default='short')
+parser.add_argument('--nice', default=10)
+parser.add_argument('--nominal-only', action='store_true', default=False)
+parser.add_argument('--systematics-only', action='store_true', default=False)
+parser.add_argument('--dry', action='store_true', default=False)
+
+args = parser.parse_args()
+
 import sys
 import cluster
 from higgstautau import samples
@@ -9,29 +22,34 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = samples.samples('hadhad')
 
-# nominal values
-cluster.run('HHProcessor.py',
-            db='datasets_hh',
-            datasets=datasets,
-            hosts=hosts,
-            nproc=2,
-            nice=10,
-            setup=setup,
-            output_path='ntuples/hadhad',
-            use_qsub=True,
-            qsub_queue='short',
-            dry_run='dry' in sys.argv)
+if not args.systematics_only:
+    # nominal values
+    cluster.run('HHProcessor.py',
+                db='datasets_hh',
+                datasets=datasets,
+                hosts=hosts,
+                nproc=args.nproc,
+                nice=args.nice,
+                setup=setup,
+                output_path='ntuples/hadhad',
+                use_qsub=True,
+                qsub_queue=args.queue,
+                dry_run=args.dry)
 
-# systematics
-cluster.run_systematics('HADHAD',
-            'HHProcessor.py',
-            db='datasets_hh',
-            datasets=datasets,
-            hosts=hosts,
-            nproc=2,
-            nice=10,
-            setup=setup,
-            output_path='ntuples/hadhad',
-            use_qsub=True,
-            qsub_queue='short',
-            dry_run='dry' in sys.argv)
+if not args.nominal_only:
+    if args.systematics is not None:
+        args.systematics = args.systematics.split(',')
+    # systematics
+    cluster.run_systematics('HADHAD',
+                'HHProcessor.py',
+                db='datasets_hh',
+                systematics=args.systematics,
+                datasets=datasets,
+                hosts=hosts,
+                nproc=args.nproc,
+                nice=args.nice,
+                setup=setup,
+                output_path='ntuples/hadhad',
+                use_qsub=True,
+                qsub_queue=args.queue,
+                dry_run=args.dry)

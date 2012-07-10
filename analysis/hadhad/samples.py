@@ -532,8 +532,6 @@ class MC(Sample):
                 if VERBOSE:
                     print ds.name, xs, kfact, effic
                     #print tree.GetEntries(), weighted_events
-            print trees
-            print weighted_events
             self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property
