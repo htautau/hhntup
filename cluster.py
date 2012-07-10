@@ -70,10 +70,24 @@ def run_helper(cmd):
         subprocess.call(cmd, shell=True)
 
 
-def qsub(cmd, queue='medium', ncpus=1, dry_run=False):
+def qsub(cmd,
+         queue='medium',
+         ncpus=1,
+         stderr_path=None,
+         stdout_path=None,
+         name=None,
+         dry_run=False):
 
-    cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
-           cmd, queue, ncpus)
+    kwargs = {}
+    if name is not None:
+        kwargs['-N'] = name
+    if stderr_path is not None:
+        kwargs['-e'] = stderr_path
+    if stdout_path is not None:
+        kwargs['-o'] = stdout_path
+    args = ' '.join(['%s %s' % arg for arg in kwargs.items()])
+    cmd = "echo '%s' | qsub -q %s %s -l ncpus=%d" % (
+           cmd, queue, args, ncpus)
     print cmd
     if not dry_run:
         call(cmd, shell=True)
@@ -91,12 +105,18 @@ def run(student,
         student_args=None,
         use_qsub=False,
         qsub_queue='medium',
+        qsub_name_suffix=None,
         dry_run=False):
 
     if args is None:
         args = ' '
     else:
         args = ' '.join(args) + ' '
+
+    if qsub_name_suffix is None:
+        qsub_name_suffix = ''
+    elif not qsub_name_suffix.startswith('_'):
+        qsub_name_suffix = '_' + qsub_name_suffix
 
     database = Database(db)
 
@@ -124,7 +144,12 @@ def run(student,
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "cd %s && %s" % (CWD, cmd)
         if use_qsub:
-            qsub(cmd, queue=qsub_queue, ncpus=nproc_actual,
+            qsub(cmd,
+                 queue=qsub_queue,
+                 ncpus=nproc_actual,
+                 name=student.strip('.py') + '.' + ds + qsub_name_suffix,
+                 stderr_path=output_path,
+                 stdout_path=output_path,
                  dry_run=dry_run)
         else: # ssh
             cmd = "ssh %s '%s'" % (host.name, cmd)
@@ -152,6 +177,7 @@ def run_systematics(channel, *args, **kwargs):
         run(*args,
             args=suffix.split(),
             student_args=syst.split(),
+            qsub_name_suffix=sys_variation,
             **kwargs)
 
 
