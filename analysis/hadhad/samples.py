@@ -766,12 +766,14 @@ class QCD(Sample):
         hist *= self.scale
         hist.SetTitle(self.label)
 
-    def scores(self, clf,
-                     category,
-                     region,
-                     branches,
-                     train_fraction,
-                     cuts=None):
+    def scores(self,
+               clf,
+               category,
+               region,
+               branches,
+               train_fraction,
+               cuts=None,
+               systematic=None):
 
         # SS data
         train, test = self.data.train_test(category=category,
@@ -790,7 +792,8 @@ class QCD(Sample):
                                         region=self.sample_region,
                                         branches=branches,
                                         train_fraction=train_fraction,
-                                        cuts=cuts)
+                                        cuts=cuts,
+                                        systematic=systematic)
             sample = np.vstack(test[branch] for branch in branches).T
             scores = np.concatenate((scores, clf.predict_proba(sample)[:,-1]))
             weight = np.concatenate((weight, test['weight'] * -1))
