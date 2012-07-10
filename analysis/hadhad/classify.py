@@ -54,9 +54,10 @@ else:
     MIN_SAMPLES_LEAF = range(10, 100, 10) + range(100, 2050, 50)
     N_ESTIMATORS = range(20, 1001, 20)
 
-HIGGSTAUTAU_LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
-if not HIGGSTAUTAU_LIMITS_DIR:
+LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
+if not LIMITS_DIR:
     sys.exit('You did not source setup.sh!')
+LIMITS_DIR = os.path.join(LIMITS_DIR, 'hadhad')
 
 
 def plot_grid_scores(grid_scores, best_point, params, name,
@@ -528,7 +529,9 @@ if __name__ == '__main__':
 
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
-        with ropen('limits/data/%s.root' % category, 'recreate') as f:
+        with ropen(
+                os.path.join(LIMITS_DIR, '%s.root' % category),
+                'recreate') as f:
 
             min_score = 1.
             max_score = 0.
