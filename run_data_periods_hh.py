@@ -26,4 +26,5 @@ cluster.run('HHProcessor.py',
             hosts=hosts,
             nproc=10,
             nice=10,
-            setup=setup)
+            setup=setup,
+            use_qsub=True)

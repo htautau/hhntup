@@ -1,9 +1,10 @@
 import socket
 import os
 import subprocess
-import multiprocessing as mp
 from subprocess import call
+import multiprocessing as mp
 from higgstautau.datasets import Database
+from systematics import iter_systematic_variations
 
 
 HOSTNAME = socket.gethostname()
@@ -69,27 +70,58 @@ def run_helper(cmd):
         subprocess.call(cmd, shell=True)
 
 
+def qsub(cmd,
+         queue='medium',
+         ncpus=1,
+         stderr_path=None,
+         stdout_path=None,
+         name=None,
+         dry_run=False):
+
+    kwargs = {}
+    if name is not None:
+        kwargs['-N'] = name
+    if stderr_path is not None:
+        kwargs['-e'] = stderr_path
+    if stdout_path is not None:
+        kwargs['-o'] = stdout_path
+    args = ' '.join(['%s %s' % arg for arg in kwargs.items()])
+    cmd = "echo '%s' | qsub -q %s %s -l ncpus=%d" % (
+           cmd, queue, args, ncpus)
+    print cmd
+    if not dry_run:
+        call(cmd, shell=True)
+
+
 def run(student,
         db,
         datasets,
         hosts,
         nproc=1,
         nice=0,
+        output_path='.',
         setup=None,
         args=None,
         student_args=None,
         use_qsub=False,
-        qsub_queue='medium'):
+        qsub_queue='medium',
+        qsub_name_suffix=None,
+        dry_run=False):
 
     if args is None:
         args = ' '
     else:
         args = ' '.join(args) + ' '
 
+    if qsub_name_suffix is None:
+        qsub_name_suffix = ''
+    elif not qsub_name_suffix.startswith('_'):
+        qsub_name_suffix = '_' + qsub_name_suffix
+
     database = Database(db)
 
-    CMD = "./run -s %s -n %%d --db %s --nice %d %s%%s" % (
-            student, db, nice, args)
+    CMD = "./run --output-path %s -s %s -n %%d --db %s --nice %d %s%%s" % (
+            output_path, student, db, nice, args)
     if setup is not None:
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()
@@ -112,21 +144,47 @@ def run(student,
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "cd %s && %s" % (CWD, cmd)
         if use_qsub:
-            cmd = "echo '%s' | qsub -q %s -l ncpus=%d" % (
-                    cmd, qsub_queue, nproc_actual)
-            print cmd
-            call(cmd, shell=True)
+            qsub(cmd,
+                 queue=qsub_queue,
+                 ncpus=nproc_actual,
+                 name=student.strip('.py') + '.' + ds + qsub_name_suffix,
+                 stderr_path=output_path,
+                 stdout_path=output_path,
+                 dry_run=dry_run)
         else: # ssh
             cmd = "ssh %s '%s'" % (host.name, cmd)
             print "%s: %s" % (host.name, cmd)
-            proc = mp.Process(target=run_helper, args=(cmd,))
-            proc.start()
+            if not dry_run:
+                proc = mp.Process(target=run_helper, args=(cmd,))
+                proc.start()
+                procs.append(proc)
             host.njobs += 1
-            procs.append(proc)
 
-    if not use_qsub:
+    if not use_qsub and not dry_run:
         for proc in procs:
             proc.join()
+
+
+def run_systematics(channel, student, systematics=None, **kwargs):
+
+    if systematics is not None:
+        systematics = [s.upper() for s in systematics]
+    else:
+        systematics = []
+    for sys_object, sys_variation in iter_systematic_variations(channel):
+        if sys_object.upper() not in systematics:
+            continue
+        print
+        print '======== Running %s systematics ========' % sys_variation
+        print
+        suffix = '--suffix %s' % sys_variation
+        syst = '--syst-type Systematics.%s --syst-term Systematics.%s.%s' % (
+                sys_object, sys_object, sys_variation)
+        run(student,
+            args=suffix.split(),
+            student_args=syst.split(),
+            qsub_name_suffix=sys_variation,
+            **kwargs)
 
 
 if __name__ == "__main__":

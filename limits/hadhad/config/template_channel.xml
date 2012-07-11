@@ -11,12 +11,17 @@
         HistoName="Signal_%(mass)d_ggf" NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
         <StatError Activate="False" />
-        <HistoSys Name="JES" HistoNameHigh="syst_TESup_massSR_ggH115" HistoNameLow="syst_TESdown_massSR_ggH115" />
-        <HistoSys Name="MET" HistoNameHigh="syst_METup_massSR_ggH115" HistoNameLow="syst_METdown_massSR_ggH115" />
-        <OverallSys Name="JES" High="1.109" Low="0.931" />
-        <OverallSys Name="MET" High="1.035" Low="0.946" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.038" Low="0.958"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Signal_%(mass)d_ggf_JES_UP"
+            HistoNameLow="Signal_%(mass)d_ggf_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Signal_%(mass)d_ggf_JER_UP"
+            HistoNameLow="Signal_%(mass)d_ggf" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Signal_%(mass)d_ggf_TES_UP"
+            HistoNameLow="Signal_%(mass)d_ggf_TES_DOWN" />
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.038" Low="0.958"/>-->
         <OverallSys Name="pdf_gg" High="1.079" Low="0.923"/>
         <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>
     </Sample>
@@ -26,12 +31,17 @@
         HistoName="Signal_%(mass)d_vbf" NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
         <StatError Activate="False" />
-        <HistoSys Name="JES" HistoNameHigh="syst_TESup_massSR_VBFH115" HistoNameLow="syst_TESdown_massSR_VBFH115" />
-        <HistoSys Name="MET" HistoNameHigh="syst_METup_massSR_VBFH115" HistoNameLow="syst_METdown_massSR_VBFH115" />
-        <OverallSys Name="JES" High="1.059" Low="0.915" />
-        <OverallSys Name="MET" High="1.007" Low="0.993" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.034" Low="0.958"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Signal_%(mass)d_vbf_JES_UP"
+            HistoNameLow="Signal_%(mass)d_vbf_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Signal_%(mass)d_vbf_JER_UP"
+            HistoNameLow="Signal_%(mass)d_vbf" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Signal_%(mass)d_vbf_TES_UP"
+            HistoNameLow="Signal_%(mass)d_vbf_TES_DOWN" />
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.034" Low="0.958"/>-->
         <OverallSys Name="pdf_qqbar" High="1.027" Low="0.979"/>
         <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>
     </Sample>
@@ -41,12 +51,17 @@
         HistoName="Signal_%(mass)d_zh" NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
         <StatError Activate="False" />
-        <HistoSys Name="JES" HistoNameHigh="syst_TESup_massSR_VH115" HistoNameLow="syst_TESdown_massSR_VH115" />
-        <HistoSys Name="MET" HistoNameHigh="syst_METup_massSR_VH115" HistoNameLow="syst_METdown_massSR_VH115" />
-        <OverallSys Name="JES" High="1.118" Low="0.883" />
-        <OverallSys Name="MET" High="1.001" Low="0.961" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Signal_%(mass)d_zh_JES_UP"
+            HistoNameLow="Signal_%(mass)d_zh_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Signal_%(mass)d_zh_JER_UP"
+            HistoNameLow="Signal_%(mass)d_zh" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Signal_%(mass)d_zh_TES_UP"
+            HistoNameLow="Signal_%(mass)d_zh_TES_DOWN" />
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>-->
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
@@ -56,12 +71,17 @@
         HistoName="Signal_%(mass)d_wh" NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
         <StatError Activate="False" />
-        <HistoSys Name="JES" HistoNameHigh="syst_TESup_massSR_VH115" HistoNameLow="syst_TESdown_massSR_VH115" />
-        <HistoSys Name="MET" HistoNameHigh="syst_METup_massSR_VH115" HistoNameLow="syst_METdown_massSR_VH115" />
-        <OverallSys Name="JES" High="1.118" Low="0.883" />
-        <OverallSys Name="MET" High="1.001" Low="0.961" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Signal_%(mass)d_wh_JES_UP"
+            HistoNameLow="Signal_%(mass)d_wh_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Signal_%(mass)d_wh_JER_UP"
+            HistoNameLow="Signal_%(mass)d_wh" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Signal_%(mass)d_wh_TES_UP"
+            HistoNameLow="Signal_%(mass)d_wh_TES_DOWN" />
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>-->
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
@@ -69,31 +89,76 @@
     <Sample Name="Ztautau" InputFile="./data/%(category)s.root"
         HistoName="Ztautau" NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <OverallSys Name="Fit" High="1.092" Low="0.908"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Ztautau_JES_UP"
+            HistoNameLow="Ztautau_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Ztautau_JER_UP"
+            HistoNameLow="Ztautau" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Ztautau_TES_UP"
+            HistoNameLow="Ztautau_TES_DOWN" />
+        <!--<OverallSys Name="Fit" High="1.092" Low="0.908"/>-->
     </Sample>
 
     <Sample Name="QCD" InputFile="./data/%(category)s.root"
         HistoName="QCD" NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <OverallSys Name="Fit" High="1.39" Low="0.61" />
+        <HistoSys Name="JES"
+            HistoNameHigh="QCD_JES_UP"
+            HistoNameLow="QCD_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="QCD_JER_UP"
+            HistoNameLow="QCD" />
+        <HistoSys Name="TES"
+            HistoNameHigh="QCD_TES_UP"
+            HistoNameLow="QCD_TES_DOWN" />
+        <!--<OverallSys Name="Fit" High="1.39" Low="0.61" />-->
     </Sample>
 
     <Sample Name="EWK" InputFile="./data/%(category)s.root"
         HistoName="EWK" NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <OverallSys Name="F_EFF" High="1.20" Low="0.80"/> 
+        <HistoSys Name="JES"
+            HistoNameHigh="EWK_JES_UP"
+            HistoNameLow="EWK_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="EWK_JER_UP"
+            HistoNameLow="EWK" />
+        <HistoSys Name="TES"
+            HistoNameHigh="EWK_TES_UP"
+            HistoNameLow="EWK_TES_DOWN" />
+        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
     </Sample>
     
     <Sample Name="Top" InputFile="./data/%(category)s.root"
         HistoName="Top" NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <OverallSys Name="F_EFF" High="1.20" Low="0.80"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Top_JES_UP"
+            HistoNameLow="Top_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Top_JER_UP"
+            HistoNameLow="Top" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Top_TES_UP"
+            HistoNameLow="Top_TES_DOWN" />
+        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
     </Sample>
     
     <Sample Name="Diboson" InputFile="./data/%(category)s.root"
         HistoName="Diboson" NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <OverallSys Name="F_EFF" High="1.20" Low="0.80"/>
+        <HistoSys Name="JES"
+            HistoNameHigh="Diboson_JES_UP"
+            HistoNameLow="Diboson_JES_DOWN" />
+        <HistoSys Name="JER"
+            HistoNameHigh="Diboson_JER_UP"
+            HistoNameLow="Diboson" />
+        <HistoSys Name="TES"
+            HistoNameHigh="Diboson_TES_UP"
+            HistoNameLow="Diboson_TES_DOWN" />
+        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
     </Sample>
     
 </Channel>

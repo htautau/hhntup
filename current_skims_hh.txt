@@ -2,7 +2,7 @@ Data11
 ======
 
 user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/
-group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v3/
+group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v3/ (missing files reported)
 
 Data12
 ======
@@ -20,6 +20,7 @@ MC12
 ====
 
 group.phys-higgs.HHSkim.mc12_8TeV*p1011.v1/
+skim2 all done except one recovery needed
 
 Embedding11
 ===========

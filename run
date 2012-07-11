@@ -12,24 +12,35 @@ parser.add_argument("--events", type=int,
 parser.add_argument("--queue", action='store_true',
                   help="use queue to feed files to students", default=False)
 parser.add_argument("--profile", action='store_true',
-                  help="profile execution time of each student's work method", default=False)
+                  help="profile execution time of each student's work method",
+                  default=False)
 parser.add_argument("--random-sample", type=int,
-                  help="specify length of a random sampling of input files to process", default=None)
+                  help=("specify length of a random sampling of "
+                  "input files to process"), default=None)
 parser.add_argument("--nice", type=int, dest="nice",
                   help="nice students", default=0)
 parser.add_argument('-p',"--periods",
-                  help="data periods separated by commas or all period by default if not specified", default=None)
+                  help=("data periods separated by commas or all period by "
+                  "default if not specified"), default=None)
 parser.add_argument('-r',"--runs",
-                  help="data runs separated by commas (must not also specify periods)", default=None)
+                  help=("data runs separated by commas "
+                  "(must not also specify periods)"), default=None)
 parser.add_argument("--suffix",
                   help="suffix appended to sample name", default=None)
+parser.add_argument("--output-path",
+                  help="directory in which to write the output",
+                  default='.',
+                  dest='outputpath')
 parser.add_argument("--split",
-                    help="n:k split files into n equal subsets and run on kth subset", default=None)
+                    help=("n:k split files into n equal subsets and run on "
+                    "kth subset"), default=None)
 parser.add_argument('-s',"--student",
                   help="the file (excluding .py extension) containing a "
-                       "class of the same name inheriting from rootpy.batch.Student", required=True)
+                       "class of the same name inheriting from "
+                       "rootpy.batch.Student", required=True)
 parser.add_argument("--db",
-                  help="name of the datasets database file (excluding the .yml extension)", default='datasets')
+                  help="name of the datasets database file (excluding the "
+                       ".yml extension)", default='datasets')
 parser.add_argument('datasets', nargs='+')
 args, user_args = parser.parse_known_args()
 
@@ -63,7 +74,8 @@ if len(args.datasets) == 1:
                 args.append(os.path.basename(dir))
 
 if args.runs != None and args.periods != None:
-    print "Warning: you specified both runs and data periods. Your run selection will override the periods selection"
+    print "Warning: you specified both runs and data periods."
+    print "Your run selection will override the periods selection"
     args.periods = None
 
 if args.periods is not None:
@@ -107,7 +119,8 @@ def get_chunk(l, n, k):
 supervisors = {}
 for dataset in _datasets:
     parent_connection, child_connection = multiprocessing.Pipe()
-    outputname = '_'.join([dataset.name, args.suffix]) if args.suffix else dataset.name
+    outputname = '_'.join(
+        [dataset.name, args.suffix]) if args.suffix else dataset.name
     files = dataset.files
     
     if args.random_sample is not None:
@@ -122,6 +135,7 @@ for dataset in _datasets:
     supervisor = ATLASSupervisor(
         student = args.student,
         outputname = outputname,
+        outputpath = args.outputpath,
         files = files,
         metadata = dataset,
         nstudents = args.nproc,
@@ -134,9 +148,11 @@ for dataset in _datasets:
         options = user_args)
     
     # skip if output file already exists
-    fulloutputname = supervisor.outputname + '.root'
+    fulloutputname = os.path.join(
+        args.outputpath, supervisor.outputname + '.root')
     if os.path.exists(fulloutputname):
-        print "Skipping dataset %s since the output file %s already exists..." % (
+        print ("Skipping dataset %s since the output file "
+               "%s already exists...") % (
                 dataset.name, fulloutputname)
         print "Delete or move it if you want to rerun on this dataset."
         continue

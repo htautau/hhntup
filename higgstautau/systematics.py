@@ -39,7 +39,7 @@ from ROOT import TESUncertaintyProvider
 class Systematics(EventFilter):
 
     # default
-    class Default(object):
+    class Nominal(object):
 
         NONE = METUtil.None
 
@@ -141,10 +141,17 @@ class Systematics(EventFilter):
 
         # systematic_type must equal one of the classes above or None
         # to disable systematics
-        self.systematic_type = systematic_type
+        if systematic_type is None:
+            self.systematic_type = Systematics.Nominal
+        else:
+            self.systematic_type = systematic_type
         # systematic_term must equal one of the associated terms for
         # sytematic_type
-        self.systematic_term = systematic_term
+        if systematic_term is None:
+            self.systematic_term = Systematics.Nominal.NONE
+        else:
+            self.systematic_term = systematic_term
+
         self.datatype = datatype
         self.year = year
         self.verbose = verbose
@@ -256,7 +263,7 @@ class Systematics(EventFilter):
         elif self.systematic_type == Systematics.Taus:
             self.run_systematics = self.tau_systematics
             self.update_event = self.tau_update
-        elif self.systematic_type in (Systematics.Default, None):
+        elif self.systematic_type == Systematics.Nominal:
             # do nothing
             self.run_systematics = lambda event: None
             self.update_event = lambda event: None
@@ -264,29 +271,23 @@ class Systematics(EventFilter):
             raise ValueError("%s is not a valid systematic type" %
                              self.systematic_type)
 
-        if self.systematic_term == Systematics.Default.NONE:
+        if self.systematic_term == Systematics.Nominal.NONE:
             self.update_event = lambda event: None
 
     def passes(self, event):
-        #######################################
-        # Demonstrates how to set up the METUtility with object momenta
-        # such that MET_RefFinal can be rebuilt matching the values in D3PD.
-        #
-        # *** *** *** *** *** DISCLAIMER *** *** *** *** ***
-        #
-        # These examples of uncertainty-setting are meant to
-        # demonstrate how the uncertainties should be passed
-        # to METUtility.  Recommendations on just which ones
-        # you are meant to be using come from the CP groups.
-        if self.systematic_type is None:
-            # do not apply any systematics
-            return True
+        """
+        Demonstrates how to set up the METUtility with object momenta
+        such that MET_RefFinal can be rebuilt matching the values in D3PD.
 
-        # ResoSoftTerms uses gRandom for smearing. Set the seed here however you like.
-        if self.datatype in (datasets.DATA, datasets.EMBED):
-            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
-        else:
-            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
+        *** *** *** *** *** DISCLAIMER *** *** *** *** ***
+
+        These examples of uncertainty-setting are meant to
+        demonstrate how the uncertainties should be passed
+        to METUtility.  Recommendations on just which ones
+        you are meant to be using come from the CP groups.
+        """
+        # reset the METUtility
+        self.systUtil.reset()
 
         # Check for a good primary vertex
         # This is needed for jet and soft term systematics
@@ -295,9 +296,10 @@ class Systematics(EventFilter):
         self.nvtxjets = 0
 
         # Most D3PDs contain the vx_type branch, but some don't.
-        # Those which don't are most likely skimmed, and require at least 1 primary vertex for all events.
-        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z) check should be applied
-        # to the first vertex in the collection.
+        # Those which don't are most likely skimmed, and require at least 1
+        # primary vertex for all events.
+        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z)
+        # check should be applied to the first vertex in the collection.
         # Otherwise, you should ensure that the vx_type branch is available.
         for vertex in event.vertices:
             if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
@@ -309,21 +311,52 @@ class Systematics(EventFilter):
                 if vertex.nTracks > 1:
                     self.nvtxjets += 1
 
-        self.systUtil.reset()
-
         # These set up the systematic "SoftTerms_ptHard"
         self.systUtil.setNvtx(nvtxsoftmet)
-        #if self.datatype != datasets.DATA:
-        #    self.systUtil.setMETTerm(METUtil.Truth, MET_Truth_NonInt_etx, MET_Truth_NonInt_ety, MET_Truth_NonInt_sumet)
+
+        # ResoSoftTerms uses gRandom for smearing.
+        # Set the seed here however you like.
+        if self.datatype in (datasets.DATA, datasets.EMBED):
+            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
+        else:
+            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
+
+        if self.systematic_type != Systematics.Jets:
+            # the jet term should always be recalculated since the jets have
+            # been recalibrated. This is already called below in jet_systematics
+            # so I am only setting it here if we are not doing jet systematics
+            # in this job.
+            self.systUtil.setJetParameters(
+                event.jet_pt,
+                event.jet_eta,
+                event.jet_phi,
+                event.jet_E,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+
+            self.systUtil.setOriJetParameters(event.jet_pt)
 
         self.run_systematics(event)
 
+        """
         if self.systematic_type != Systematics.Jets:
             self.systUtil.setMETTerm(
-                    METUtil.RefJet,
-                    event.MET_RefJet_BDTMedium_etx,
-                    event.MET_RefJet_BDTMedium_ety,
-                    event.MET_RefJet_BDTMedium_sumet)
+                METUtil.RefJet,
+                event.MET_RefJet_BDTMedium_etx,
+                event.MET_RefJet_BDTMedium_ety,
+                event.MET_RefJet_BDTMedium_sumet)
+        """
+
+        """
+        if self.datatype != datasets.DATA:
+            self.systUtil.setMETTerm(
+                METUtil.Truth,
+                MET_Truth_NonInt_etx,
+                MET_Truth_NonInt_ety,
+                MET_Truth_NonInt_sumet)
+        """
 
         if self.systematic_type != Systematics.Electrons:
             self.systUtil.setMETTerm(
@@ -334,30 +367,30 @@ class Systematics(EventFilter):
 
         if self.systematic_type != Systematics.Photons:
             self.systUtil.setMETTerm(
-                    METUtil.RefGamma,
-                    event.MET_RefGamma_BDTMedium_etx,
-                    event.MET_RefGamma_BDTMedium_ety,
-                    event.MET_RefGamma_BDTMedium_sumet)
+                METUtil.RefGamma,
+                event.MET_RefGamma_BDTMedium_etx,
+                event.MET_RefGamma_BDTMedium_ety,
+                event.MET_RefGamma_BDTMedium_sumet)
 
         if self.systematic_type != Systematics.Muons:
             self.systUtil.setMETTerm(
-                    METUtil.RefMuon,
-                    event.MET_RefMuon_Staco_BDTMedium_etx,
-                    event.MET_RefMuon_Staco_BDTMedium_ety,
-                    event.MET_RefMuon_Staco_BDTMedium_sumet)
+                METUtil.RefMuon,
+                event.MET_RefMuon_Staco_BDTMedium_etx,
+                event.MET_RefMuon_Staco_BDTMedium_ety,
+                event.MET_RefMuon_Staco_BDTMedium_sumet)
 
             self.systUtil.setMETTerm(
-                    METUtil.MuonTotal,
-                    event.MET_Muon_Total_Staco_BDTMedium_etx,
-                    event.MET_Muon_Total_Staco_BDTMedium_ety,
-                    event.MET_Muon_Total_Staco_BDTMedium_sumet)
+                METUtil.MuonTotal,
+                event.MET_Muon_Total_Staco_BDTMedium_etx,
+                event.MET_Muon_Total_Staco_BDTMedium_ety,
+                event.MET_Muon_Total_Staco_BDTMedium_sumet)
 
         if self.systematic_type != Systematics.Taus:
             self.systUtil.setMETTerm(
-                    METUtil.RefTau,
-                    event.MET_RefTau_BDTMedium_etx,
-                    event.MET_RefTau_BDTMedium_ety,
-                    event.MET_RefTau_BDTMedium_sumet)
+                METUtil.RefTau,
+                event.MET_RefTau_BDTMedium_etx,
+                event.MET_RefTau_BDTMedium_ety,
+                event.MET_RefTau_BDTMedium_sumet)
 
         self.systUtil.setMETTerm(
                 METUtil.SoftJets,

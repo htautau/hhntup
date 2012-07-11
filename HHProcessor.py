@@ -41,6 +41,7 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
+VERBOSE = False
 
 class HHProcessor(ATLASStudent):
     """
@@ -136,7 +137,11 @@ class HHProcessor(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
-        tree.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        tree.set_buffer(
+                chain.buffer,
+                branches=copied_variables,
+                create_branches=True,
+                visible=False)
         chain.always_read(copied_variables)
 
         # set the event filters
@@ -151,7 +156,7 @@ class HHProcessor(ATLASStudent):
             JetCalibration(
                 year=YEAR,
                 datatype=self.metadata.datatype,
-                verbose=False),
+                verbose=VERBOSE),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
@@ -160,7 +165,9 @@ class HHProcessor(ATLASStudent):
                 systematic_term=self.args.syst_term,
                 year=YEAR,
                 datatype=self.metadata.datatype,
-                verbose=False),
+                verbose=VERBOSE),
+            # since the jet recalibration is applied the MET must be
+            # recalculated even if no other systematics are applied.
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
