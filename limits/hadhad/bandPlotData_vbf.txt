@@ -1,0 +1,88 @@
+100
+Correct bands
++2sigma:  60.8941
++1sigma:  42.9437
+-1sigma:  21.9339
+-2sigma:  16.3381
+Median:   30.4403
+Observed: 30.458
+105
+Correct bands
++2sigma:  29.7169
++1sigma:  20.2688
+-1sigma:  10.2833
+-2sigma:  7.65977
+Median:   14.2713
+Observed: 14.2837
+110
+Correct bands
++2sigma:  18.4557
++1sigma:  12.4991
+-1sigma:  6.31701
+-2sigma:  4.7054
+Median:   8.76686
+Observed: 8.77212
+115
+Correct bands
++2sigma:  10.4647
++1sigma:  6.67186
+-1sigma:  3.27291
+-2sigma:  2.43792
+Median:   4.54221
+Observed: 4.54409
+120
+Correct bands
++2sigma:  13.4412
++1sigma:  8.91335
+-1sigma:  4.45699
+-2sigma:  3.31991
+Median:   6.18549
+Observed: 6.19537
+125
+Correct bands
++2sigma:  8.46258
++1sigma:  5.61176
+-1sigma:  2.80949
+-2sigma:  2.09273
+Median:   3.89907
+Observed: 3.90284
+130
+Correct bands
++2sigma:  10.5881
++1sigma:  7.11218
+-1sigma:  3.58684
+-2sigma:  2.67175
+Median:   4.97788
+Observed: 4.98138
+135
+Correct bands
++2sigma:  12.0306
++1sigma:  8.06916
+-1sigma:  4.06687
+-2sigma:  3.02932
+Median:   5.64408
+Observed: 5.65031
+140
+Correct bands
++2sigma:  14.6883
++1sigma:  9.88904
+-1sigma:  4.99577
+-2sigma:  3.72124
+Median:   6.93323
+Observed: 6.93448
+145
+Correct bands
++2sigma:  17.7286
++1sigma:  11.6895
+-1sigma:  5.83477
+-2sigma:  4.34619
+Median:   8.0976
+Observed: 8.10445
+150
+Correct bands
++2sigma:  28.8154
++1sigma:  19.3996
+-1sigma:  9.78096
+-2sigma:  7.28562
+Median:   13.5742
+Observed: 13.5967
