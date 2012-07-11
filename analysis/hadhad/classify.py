@@ -52,7 +52,7 @@ if QUICK:
 else:
     # full search
     MIN_SAMPLES_LEAF = range(10, 100, 10) + range(100, 2050, 50)
-    N_ESTIMATORS = range(20, 2001, 20)
+    N_ESTIMATORS = range(20, 1001, 20)
 
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
 if not LIMITS_DIR:
