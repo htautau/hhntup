@@ -164,22 +164,22 @@ datasets = [
 """
 
 # nominal values
-cluster.run('muLHProcessor.py',
-            db='datasets_mulh',
-            datasets=datasets,
+cluster.run('eLHProcessor.py',
+            db='datasets_elh',
+            datasets=datasets + ['data', 'embd'],
             hosts=hosts,
-            nproc=5,
+            nproc=12,
             nice=10,
             setup=setup,
             use_qsub=True)
 
 # systematics
-# run_systematics.run('HADHAD',
-#             'HHProcessor.py',
-#             db='datasets_hh',
-#             datasets=datasets,
-#             hosts=hosts,
-#             nproc=5,
-#             nice=10,
-#             setup=setup,
-#             use_qsub=True)
+run_systematics.run('EHAD',
+            'eLHProcessor.py',
+            db='datasets_elh',
+            datasets=datasets,
+            hosts=hosts,
+            nproc=12,
+            nice=10,
+            setup=setup,
+            use_qsub=True)

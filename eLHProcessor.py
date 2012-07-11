@@ -30,6 +30,7 @@ from higgstautau import mass
 from higgstautau.trigger import utils as triggerutils
 from higgstautau.pileup import TPileupReweighting
 from higgstautau.systematics import Systematics
+from higgstautau.jetcalibration import JetCalibration
 
 from goodruns import GRL
 import subprocess

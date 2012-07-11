@@ -13,7 +13,7 @@ setup = cluster.get_setup('setup.michel.sfu.txt')
 HOSTNAME = socket.gethostname()
 CWD = os.getcwd()
 
-NPROC = 16
+NPROC = 12
 CMD = "%s && ./run -s muLHProcessor.py -n %d --db datasets_mulh --nice 10 --split %d:%%d data" % (setup, NPROC, len(hosts))
 
 proc_cmds = []
