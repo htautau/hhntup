@@ -20,8 +20,8 @@
         <HistoSys Name="TES"
             HistoNameHigh="Signal_%(mass)d_ggf_TES_UP"
             HistoNameLow="Signal_%(mass)d_ggf_TES_DOWN" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.038" Low="0.958"/>
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.038" Low="0.958"/>-->
         <OverallSys Name="pdf_gg" High="1.079" Low="0.923"/>
         <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>
     </Sample>
@@ -40,8 +40,8 @@
         <HistoSys Name="TES"
             HistoNameHigh="Signal_%(mass)d_vbf_TES_UP"
             HistoNameLow="Signal_%(mass)d_vbf_TES_DOWN" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.034" Low="0.958"/>
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.034" Low="0.958"/>-->
         <OverallSys Name="pdf_qqbar" High="1.027" Low="0.979"/>
         <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>
     </Sample>
@@ -60,8 +60,8 @@
         <HistoSys Name="TES"
             HistoNameHigh="Signal_%(mass)d_zh_TES_UP"
             HistoNameLow="Signal_%(mass)d_zh_TES_DOWN" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>-->
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
@@ -80,8 +80,8 @@
         <HistoSys Name="TES"
             HistoNameHigh="Signal_%(mass)d_wh_TES_UP"
             HistoNameLow="Signal_%(mass)d_wh_TES_DOWN" />
-        <OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>
+        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
+        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>-->
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
@@ -98,7 +98,7 @@
         <HistoSys Name="TES"
             HistoNameHigh="Ztautau_TES_UP"
             HistoNameLow="Ztautau_TES_DOWN" />
-        <OverallSys Name="Fit" High="1.092" Low="0.908"/>
+        <!--<OverallSys Name="Fit" High="1.092" Low="0.908"/>-->
     </Sample>
 
     <Sample Name="QCD" InputFile="./data/%(category)s.root"
@@ -113,7 +113,7 @@
         <HistoSys Name="TES"
             HistoNameHigh="QCD_TES_UP"
             HistoNameLow="QCD_TES_DOWN" />
-        <OverallSys Name="Fit" High="1.39" Low="0.61" />
+        <!--<OverallSys Name="Fit" High="1.39" Low="0.61" />-->
     </Sample>
 
     <Sample Name="EWK" InputFile="./data/%(category)s.root"
@@ -128,7 +128,7 @@
         <HistoSys Name="TES"
             HistoNameHigh="EWK_TES_UP"
             HistoNameLow="EWK_TES_DOWN" />
-        <OverallSys Name="F_EFF" High="1.20" Low="0.80"/> 
+        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
     </Sample>
     
     <Sample Name="Top" InputFile="./data/%(category)s.root"
@@ -143,7 +143,7 @@
         <HistoSys Name="TES"
             HistoNameHigh="Top_TES_UP"
             HistoNameLow="Top_TES_DOWN" />
-        <OverallSys Name="F_EFF" High="1.20" Low="0.80"/>
+        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
     </Sample>
     
     <Sample Name="Diboson" InputFile="./data/%(category)s.root"
@@ -158,7 +158,7 @@
         <HistoSys Name="TES"
             HistoNameHigh="Diboson_TES_UP"
             HistoNameLow="Diboson_TES_DOWN" />
-        <OverallSys Name="F_EFF" High="1.20" Low="0.80"/>
+        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
     </Sample>
     
 </Channel>
