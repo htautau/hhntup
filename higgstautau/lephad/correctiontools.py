@@ -4,16 +4,30 @@ from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
-from external.Muons     import muonSmear, getMuonSF, muonTriggerSF, leptonTriggerSF
-from external.Electrons import egammaER, egammaSF
-from external.ggF       import getggFTool
-from ROOT import *
+
+from externaltools import MuonMomentumCorrections
+from externaltools import MuonEfficiencyCorrections
+from externaltools import TrigMuonEfficiency
+
+from externaltools import egammaAnalysisUtils
+
+from externaltools import ggFReweighting
+
+ggFResources = ggFReweighting.RESOURCE_PATH
+
+from ROOT import std, TLorentzVector
 from higgstautau.mixins import *
 
 
 #################################################
 # Muon Pt Smearing
 #################################################
+
+from ROOT import MuonSmear
+
+muonSmear = MuonSmear.SmearingClass(
+    "Data11","staco","pT","Rel17",
+    MuonMomentumCorrections.RESOURCE_PATH)
 
 muonSmear.UseScale(1)
 muonSmear.UseImprovedCombine()
@@ -75,6 +89,11 @@ class MuonPtSmearing(EventFilter):
 #################################################
 # Electron Energy Rescaling
 #################################################
+
+from ROOT import eg2011
+
+egammaER = eg2011.EnergyRescaler()
+egammaER.useDefaultCalibConstants("2011")
 
 class EgammaERescaling(EventFilter):
     """
@@ -179,6 +198,20 @@ def TauEfficiencySF(event, datatype):
 # Muon Efficiency corrections
 #################################################
 
+from ROOT import Analysis
+from ROOT import LeptonTriggerSF
+
+leptonTriggerSF = LeptonTriggerSF(TrigMuonEfficiency.RESOURCE_PATH)
+
+__cached__ = False
+
+def getMuonSF(pileup):
+    global __cached__
+    if not __cached__:
+        int_lum = pileup.getIntegratedLumiVector()
+        __cached__ = Analysis.AnalysisMuonEfficiencyScaleFactors("STACO_CB", int_lum, "MeV", MuonEfficiencyCorrections.RESOURCE_PATH)
+    return __cached__
+
 def MuonSF(event, datatype, pileup_tool):
     """
     Apply Muon Efficiency correction for trigger and others
@@ -189,7 +222,7 @@ def MuonSF(event, datatype, pileup_tool):
     # Weight
     w = 1.0
 
-    # Load muonSF tool
+    #Get SF tool
     muonSF = getMuonSF(pileup_tool)
 
     #Store electrons and muons for the trigger efficiency tool
@@ -210,7 +243,7 @@ def MuonSF(event, datatype, pileup_tool):
         electron.SetPtEtaPhiM(cl_Et, cl_eta, e.cl_phi, e.m)
         std_electrons.push_back(electron)
 
-    trigSF = muonTriggerSF.GetTriggerSF(event.RunNumber, false, std_muons, 1, std_electrons, 2)
+    trigSF = leptonTriggerSF.GetTriggerSF(event.RunNumber, False, std_muons, 1, std_electrons, 2)
     w *= trigSF.first
 
     return w
@@ -219,6 +252,10 @@ def MuonSF(event, datatype, pileup_tool):
 #################################################
 # Electron Efficiency corrections
 #################################################
+
+from ROOT import egammaSFclass
+
+egammaSF = egammaSFclass()
 
 def ElectronSF(event, datatype, pileupTool):
 
@@ -299,6 +336,30 @@ def ElectronSF(event, datatype, pileupTool):
 #################################################
 #ggF reweighting
 #################################################
+
+from ROOT import ggFReweighting
+
+ggF_tool = {}
+ggF_tool[100] = ggFReweighting("PowHeg", 100, "Mean", ggFResources, "mc11")
+ggF_tool[105] = ggFReweighting("PowHeg", 105, "Mean", ggFResources, "mc11")
+ggF_tool[110] = ggFReweighting("PowHeg", 110, "Mean", ggFResources, "mc11")
+ggF_tool[115] = ggFReweighting("PowHeg", 115, "Mean", ggFResources, "mc11")
+ggF_tool[120] = ggFReweighting("PowHeg", 120, "Mean", ggFResources, "mc11")
+ggF_tool[125] = ggFReweighting("PowHeg", 125, "Mean", ggFResources, "mc11")
+ggF_tool[130] = ggFReweighting("PowHeg", 130, "Mean", ggFResources, "mc11")
+ggF_tool[135] = ggFReweighting("PowHeg", 135, "Mean", ggFResources, "mc11")
+ggF_tool[140] = ggFReweighting("PowHeg", 140, "Mean", ggFResources, "mc11")
+ggF_tool[145] = ggFReweighting("PowHeg", 145, "Mean", ggFResources, "mc11")
+ggF_tool[150] = ggFReweighting("PowHeg", 150, "Mean", ggFResources, "mc11")
+
+def getggFTool(higgsMass):
+    if higgsMass in ggF_tool:
+        return ggF_tool[higgsMass]
+    else:
+        print "@@@@@ Higgs mass cannot be determined for ggF tool...using 100 GeV for now"
+        print "      This message is normal for non-Higgs samples."
+        return ggF_tool[100]
+
 
 def ggFreweighting(event, dataname):
     """

@@ -1,5 +1,3 @@
-export SW_EDGE=/atlas/software/bleedingedge
-export PATH=${SW_EDGE}/python-2.7.2-64/bin${PATH:+:$PATH}
-export LD_LIBRARY_PATH=${SW_EDGE}/python-2.7.2-64/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-export DATAROOT=/global/mtm/data/SKIMS
-source ${SW_EDGE}/root-5.32-64/bin/thisroot.sh
+export ROOT_VERSION=5.32.02
+source /atlas/software/bleedingedge/setup.sh
+source /cluster/data05/michel/externaltools/externaltools/setup.sh

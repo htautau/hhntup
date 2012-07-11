@@ -1,6 +1,8 @@
 import ROOT
 import math
 
+from argparse import ArgumentParser
+
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.tree.cutflow import Cutflow
@@ -24,21 +26,33 @@ from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.lephad.filters import *
 from higgstautau.lephad.correctiontools import *
-#from higgstautau.filters import PriVertex, JetCleaning, LArError, LArHole
 from higgstautau import mass
-#from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger import utils as triggerutils
 from higgstautau.pileup import TPileupReweighting
+from higgstautau.systematics import Systematics
 
 from goodruns import GRL
 import subprocess
 
 import random
 
+YEAR = 2011
+
 class eLHProcessor(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
     """
+
+    def __init__(self, options, **kwargs):
+
+        super(eLHProcessor, self).__init__(**kwargs)
+        parser = ArgumentParser()
+        parser.add_argument('--syst-type', default='None')
+        parser.add_argument('--syst-term', default='None')
+        self.args = parser.parse_args(options)
+        self.args.syst_type = eval(self.args.syst_type)
+        self.args.syst_term = eval(self.args.syst_term)
+        
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -62,7 +76,7 @@ class eLHProcessor(ATLASStudent):
         # trigger config tool to read trigger info in the ntuples
         #trigger_config = get_trigger_config()
 
-        OutputModel = RecoTauElectronBlock + TauElectronEventVariables + RecoMET
+        OutputModel = RecoTauLepBlock + EventVariables + RecoMET
 
         onfilechange = []
         if self.metadata.datatype == datasets.DATA:
@@ -94,8 +108,8 @@ class eLHProcessor(ATLASStudent):
 
         # create output tree
         self.output.cd()
-        tree_train = Tree(name=self.metadata.name + '_elh_train', model=OutputModel)
-        tree_test = Tree(name=self.metadata.name + '_elh_test', model=OutputModel)
+        tree_train = Tree(name='lh_train', model=OutputModel)
+        tree_test = Tree(name='lh_test', model=OutputModel)
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
@@ -125,10 +139,21 @@ class eLHProcessor(ATLASStudent):
                 # Require the event to fire a single-lepton trigger.
                 Trigger(),
                 GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+                JetCalibration(
+                    year=YEAR,
+                    datatype=self.metadata.datatype,
+                    verbose=False),
                 # At least 1 PV (not pile-up vertex) with Ntracks > 3.
                 PriVertex(),
                 MuonPtSmearing(datatype=self.metadata.datatype),
                 EgammaERescaling(datatype=self.metadata.datatype),
+                # Systematics
+                Systematics(
+                    systematic_type=self.args.syst_type,
+                    systematic_term=self.args.syst_term,
+                    year=YEAR,
+                    datatype=self.metadata.datatype,
+                    verbose=False),
                 # Keep only jets with pt > 20 GeV. Keep event.
                 JetPreSelection(),
                 # Keep only muons with pt > 10 GeV, |eta| < 2.5, loose ID, has_good_track. Keep event.
@@ -174,14 +199,15 @@ class eLHProcessor(ATLASStudent):
         chain.define_collection(name="electrons", prefix="el_", size="el_n", mix=ElFourMomentum)
         chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
         chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
+        chain.define_collection(name="truthjets", prefix="jet_antikt4truth_", size="jet_antikt4truth_n", mix=FourMomentum)
         chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
 
         # define tree objects
         tree_train.define_object(name='tau', prefix='tau_')
-        tree_train.define_object(name='electron', prefix='el_')
+        tree_train.define_object(name='lep', prefix='lep_')
         tree_test.define_object(name='tau', prefix='tau_')
-        tree_test.define_object(name='electron', prefix='el_')
+        tree_test.define_object(name='lep', prefix='lep_')
 
         if self.metadata.datatype == datasets.MC:
             # Initialize the pileup reweighting tool
@@ -216,9 +242,9 @@ class eLHProcessor(ATLASStudent):
             Electron = event.electrons[0]
 
             """
-            RecoTauElectronBlock filling
+            RecoTauLepBlock filling
             """
-            RecoTauElectronBlock.set(event, tree, Tau, Electron)
+            RecoTauLepBlock.set(event, tree, Tau, Electron, 1, ( self.metadata.datatype == datasets.MC ))
 
             """
             Jets
@@ -226,20 +252,29 @@ class eLHProcessor(ATLASStudent):
             numJets = len(event.jets)
             tree.numJets = numJets
 
-            numJets30 = 0
+            numJets50 = 0
             numJets35 = 0
 
             for jet in event.jets:
                 tree.jet_fourvect.push_back(jet.fourvect)
                 tree.jet_jvtxf.push_back(jet.jvtxf)
                 tree.jet_btag.push_back(jet.flavor_weight_JetFitterCOMBNN)
-                if jet.fourvect.Pt() > 30*GeV:
-                    numJets30 += 1
-                    if jet.fourvect.Pt() > 30*GeV:
-                        numJets35 += 1
+                if jet.fourvect.Pt() > 35*GeV:
+                    numJets35 += 1
+                    if jet.fourvect.Pt() > 50*GeV:
+                        numJets50 += 1
 
-            tree.numJets30 = numJets30
+            tree.numJets50 = numJets50
             tree.numJets35 = numJets35
+
+
+            """
+            Truth jets
+            """
+            
+            if ( self.metadata.datatype == datasets.MC ):
+                for truthjet in event.truthjets:
+                    tree.truthjet_fourvect.push_back(truthjet.fourvect)
 
 
             """
@@ -249,13 +284,13 @@ class eLHProcessor(ATLASStudent):
                                          (vtx.type == 3 and vtx.nTracks >= 2)])
 
 
-            # HT
-            HT = 0
-            HT += Tau.fourvect.Pt()
-            HT += Electron.fourvect.Pt()
+            # sumPt
+            sumPt = 0
+            sumPt += Tau.fourvect.Pt()
+            sumPt += Electron.fourvect.Pt()
             for jet in event.jets:
-                HT += jet.fourvect.Pt()
-            tree.HT = HT
+                sumPt += jet.fourvect.Pt()
+            tree.sumPt = sumPt
 
 
             # missing ET
@@ -277,24 +312,24 @@ class eLHProcessor(ATLASStudent):
             dPhi_MET_tau  = tauPhiVector.DeltaPhi(MET_vect)
             mT = sqrt(2*MET*elET*(1 - cos(dPhi_MET_electron)))
             mTtau = sqrt(2*MET*tauET*(1 - cos(dPhi_MET_tau)))
-            tree.mass_transverse_met_electron = mT
+            tree.mass_transverse_met_lep = mT
             tree.mass_transverse_met_tau = mTtau
-            tree.dphi_met_electron = dPhi_MET_electron
+            tree.dphi_met_lep = dPhi_MET_electron
 
             # ddR
-            tree.ddr_tau_electron, tree.dr_tau_electron, tree.higgs_pt = eventshapes.DeltaDeltaR(Tau.fourvect, Electron.fourvect, MET_vect)
+            tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau.fourvect, Electron.fourvect, MET_vect)
  
             """
             Higgs fancier mass calculation
             """
             collin_mass, tau_x, electron_x = mass.collinearmass(Tau, Electron, METx, METy)
-            tree.mass_collinear_tau_electron = collin_mass
+            tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x = tau_x
-            tree.electron_x = electron_x
-            mmc_mass, mmc_pt, mmc_met = 0,0,0#mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
-            tree.mass_mmc_tau_electron = mmc_mass
-            tree.pt_mmc_tau_electron = mmc_pt
-            tree.met_mmc_tau_electron = mmc_met
+            tree.lep_x = electron_x
+            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
+            tree.mass_mmc_tau_lep = mmc_mass
+            tree.pt_mmc_tau_lep = mmc_pt
+            tree.met_mmc_tau_lep = mmc_met
 
 
             """
@@ -315,29 +350,16 @@ class eLHProcessor(ATLASStudent):
             sphericity = -1111
             aplanarity = -1111
 
-            #Calculate effective number of objects and mass of jets
-            PtSum = 0
-            PtSum2 = 0
-
-            allJets = LorentzVector()
+            #Calculate other jet stuff
             allJetList = []
 
             for jet in event.jets:
-                PtSum  += jet.fourvect.Pt()
-                PtSum2 += (jet.fourvect.Pt())**2
-                allJets += jet.fourvect
                 allJetList.append(jet.fourvect)
 
             leadJetPt = 0.0
             if len(event.jets) > 0:
                 leadJetPt = event.jets[0].fourvect.Pt()
             tree.leadJetPt = leadJetPt
-
-            PtSum  += (Tau.fourvect.Pt() + Electron.fourvect.Pt())
-            PtSum2 += (Tau.fourvect.Pt()**2 + Electron.fourvect.Pt()**2)
-
-            tree.neff_pt = PtSum2/(PtSum**2)
-            tree.mass_all_jets = allJets.M()
 
             if len(event.jets) >= 2:
                 event.jets.sort(key=lambda jet: jet.pt, reverse=True)
@@ -362,7 +384,7 @@ class eLHProcessor(ATLASStudent):
             tree.eta_product_j1_j2 = eta_product_j1_j2
             tree.eta_delta_j1_j2 = eta_delta_j1_j2
             tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
-            tree.electron_centrality_j1_j2 = electron_centrality_j1_j2
+            tree.lep_centrality_j1_j2 = electron_centrality_j1_j2
             tree.tau_j1_j2_phi_centrality = tau_j1_j2_phi_centrality
 
             tree.sphericity = sphericity
