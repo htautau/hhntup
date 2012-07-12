@@ -37,6 +37,7 @@ Outstanding Problems:
 * Develop method of estimating systematics on the BDT score
 * Treat JES and TES as correlated
 * New JES in skim 2
+* Make plot scripts easy to run
 
 
 Ideas
