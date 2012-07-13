@@ -9,7 +9,6 @@ Plans:
 * Determine normalization of QCD and Ztautau from simultaneous fit with
   BDT distribution in low MMC mass region (80 - 110 GeV)
 
-
 Status:
 
 * Pileup reweighting *DONE*
@@ -25,7 +24,6 @@ Status:
 * Determine limits on Higgs cross sections *TODO*
 * Document analysis here! *WORK IN PROGRESS*
 
-
 Outstanding Problems:
 
 * What is the excess in data at pi/2 in alpha (3D angle) between the two taus?
@@ -37,6 +35,10 @@ Outstanding Problems:
   QCD distributions with more stats. Possible bias in QCD background model since
   this will be the only sample with 2-track, 4-track etc taus.
 * Develop method of estimating systematics on the BDT score
+* Treat JES and TES as correlated
+* New JES in skim 2
+* Make plot scripts easy to run
+
 
 Ideas
 =====
