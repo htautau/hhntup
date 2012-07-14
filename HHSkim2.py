@@ -17,6 +17,7 @@ from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
+from higgstautau.jetcalibration import JetCalibration
 
 import goodruns
 
@@ -133,6 +134,11 @@ class HHSkim2(ATLASStudent):
                      passthrough=self.metadata.datatype == datasets.EMBED),
             PriVertex(),
             LArError(),
+            # no need to recalibrate jets in 2012 (yet...)
+            JetCalibration(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                passthrough=self.metadata.year == 2012),
             LArHole(datatype=self.metadata.datatype),
             JetCleaning(),
             ElectronVeto(),
