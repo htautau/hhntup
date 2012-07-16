@@ -561,6 +561,10 @@ class MC(Sample):
         sys_hist.Reset()
 
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+
+            tree = sys_trees['NOMINAL']
+            events = sys_events['NOMINAL']
+
             weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
             weighted_selection = ('%.5f * mc_weight * pileup_weight * '
                                   'tau1_weight * tau2_weight * (%s)' %
@@ -570,7 +574,6 @@ class MC(Sample):
 
             for sys_type, variations in sys_trees.items():
                 pass
-
 
             for expr in exprs:
                 tree.Draw(expr, weighted_selection, hist=hist)
