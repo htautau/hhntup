@@ -6,6 +6,7 @@ import matplotlib.font_manager as fm
 from matplotlib import rc
 plt.rcParams['ps.useafm'] = True
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+rc('text', usetex=True)
 plt.rcParams['pdf.fonttype'] = 42
 from matplotlib.ticker import AutoMinorLocator, NullFormatter
 from matplotlib.lines import Line2D
@@ -55,8 +56,11 @@ def draw(model,
          model_colour_map=cm.winter,
          signal_colour_map=cm.autumn,
          show_ratio=False,
-         show_qq=False):
+         show_qq=False,
+         output_formats=None):
 
+    if output_formats is None:
+        output_formats = ('png', 'eps', 'pdf')
     if data is None:
         show_ratio=False
         show_qq=False
@@ -208,8 +212,11 @@ def draw(model,
         if show_ratio:
             ratio_ax.set_xlim(range)
 
-    plt.savefig('var_%s_%s.png' %
-                (category, output_name.lower().replace(' ', '_')))
+    for format in output_formats:
+        plt.savefig('var_%s_%s.%s' %
+                    (category,
+                     output_name.lower().replace(' ', '_'),
+                     format))
     plt.close(fig)
     return fig
 
