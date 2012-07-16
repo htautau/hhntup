@@ -557,10 +557,28 @@ class MC(Sample):
             exprs = (expr,)
 
         sys_hists = {}
-        sys_hist = hist.Clone()
-        sys_hist.Reset()
 
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+
+            for sys_object, sys_type, sys_variations in \
+                iter_systematics('hadhad'):
+                for variation in sys_variations:
+                    sys_hist = hist.Clone()
+                    sys_hist.Reset()
+                    sys_tree = sys_trees[sys_type][variation]
+                    sys_event = sys_events[sys_type][variation]
+                    weight = TOTAL_LUMI * self.scale * xs * kfact * effic / sys_event
+                    weighted_selection = ('%.5f * mc_weight * pileup_weight * '
+                                          'tau1_weight * tau2_weight * (%s)' %
+                                          (weight, selection))
+                    for expr in exprs:
+                        sys_tree.Draw(expr, weighted_selection, hist=sys_hist)
+                    if sys_type not in sys_hists:
+                        sys_hists[sys_type] = {}
+                    if variation not in sys_hists[sys_type]:
+                        sys_hists[sys_type][variation] = sys_hist
+                    else:
+                        sys_hists[sys_type][variation] += sys_hist
 
             tree = sys_trees['NOMINAL']
             events = sys_events['NOMINAL']
@@ -571,9 +589,6 @@ class MC(Sample):
                                   (weight, selection))
             if VERBOSE:
                 print weighted_selection
-
-            for sys_type, variations in sys_trees.items():
-                pass
 
             for expr in exprs:
                 tree.Draw(expr, weighted_selection, hist=hist)
