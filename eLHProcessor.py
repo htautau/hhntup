@@ -36,6 +36,7 @@ from goodruns import GRL
 import subprocess
 
 import random
+random.seed(math.pi)
 
 YEAR = 2011
 
@@ -233,7 +234,7 @@ class eLHProcessor(ATLASStudent):
             #    tree = tree_train
             #else:
             #    tree = tree_test
-            if random.random() < 0.5:
+            if event.EventNumber % 2:
                 tree = tree_train
             else:
                 tree = tree_test

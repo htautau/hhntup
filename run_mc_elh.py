@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import cluster
-#import run_systematics
+import run_systematics
 #from higgstautau import samples
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
@@ -164,14 +164,14 @@ datasets = [
 """
 
 # nominal values
-cluster.run('eLHProcessor.py',
-            db='datasets_elh',
-            datasets=datasets + ['data', 'embd'],
-            hosts=hosts,
-            nproc=12,
-            nice=10,
-            setup=setup,
-            use_qsub=True)
+# cluster.run('eLHProcessor.py',
+#             db='datasets_elh',
+#             datasets=datasets,
+#             hosts=hosts,
+#             nproc=5,
+#             nice=10,
+#             setup=setup,
+#             use_qsub=True)
 
 # systematics
 run_systematics.run('EHAD',
@@ -179,7 +179,7 @@ run_systematics.run('EHAD',
             db='datasets_elh',
             datasets=datasets,
             hosts=hosts,
-            nproc=12,
+            nproc=5,
             nice=10,
             setup=setup,
             use_qsub=True)

@@ -36,6 +36,7 @@ from goodruns import GRL
 import subprocess
 
 import random
+random.seed(math.pi)
 
 YEAR = 2011
 
@@ -211,8 +212,10 @@ class muLHProcessor(ATLASStudent):
             cutflow.reset()
 
             #Select if the event goes into the training or the testing tree
+            
+            
             tree = None
-            if random.random() < 0.5:
+            if event.EventNumber % 2:
                 tree = tree_train
             else:
                 tree = tree_test
