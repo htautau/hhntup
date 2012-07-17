@@ -336,10 +336,10 @@ if __name__ == '__main__':
     mc_top       = MC_Top()
     mc_diboson   = MC_Diboson()
 
-    vbf_all = MC_VBF(mass=125)
-    ggf_all = MC_ggF(mass=125)
-    wh_all  =  MC_WH(mass=125)
-    zh_all  =  MC_ZH(mass=125)
+    vbf_125 = MC_VBF(mass=125)
+    ggf_125 = MC_ggF(mass=125)
+    wh_125  =  MC_WH(mass=125)
+    zh_125  =  MC_ZH(mass=125)
 
     backgrounds = [
         mc_top,
@@ -353,10 +353,10 @@ if __name__ == '__main__':
               sample_region=control_region)
 
     signals = [
-        vbf_all,
-        ggf_all,
-        wh_all,
-        zh_all
+        vbf_125,
+        ggf_125,
+        wh_125,
+        zh_125
     ]
 
     figures = {}
@@ -464,7 +464,7 @@ if __name__ == '__main__':
 
     import datetime
     now = datetime.datetime.today()
-
+    # put all plots in a multipage pdf
     for category, exprs in figures.items():
         pdf = PdfPages('features_%s.pdf' % category)
         for expr, fig in sorted(exprs.items(), key=lambda x: x[0]):

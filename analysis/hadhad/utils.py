@@ -76,7 +76,7 @@ def draw(model,
     figheight = baseheight = 6.
     figwidth = basewidth = 8.
 
-    ratio_abs_height = 2.
+    ratio_abs_height = 1.5
     qq_abs_height = 6.
     hist_abs_height = 6.
 
@@ -128,7 +128,7 @@ def draw(model,
         rect_hist = [left_margin, bottom_margin, width, height]
 
     fig = plt.figure(figsize=(figwidth, figheight), dpi=100)
-    prop = fm.FontProperties(size=12)
+    prop = fm.FontProperties(size=14)
 
     hist_ax = plt.axes(rect_hist)
 
@@ -136,22 +136,24 @@ def draw(model,
     if signal is not None:
         set_colours(signal, signal_colour_map)
 
-    rplt.bar(model, linewidth=0, stacked=True, yerr='quadratic', axes=hist_ax)
+    rplt.bar(model, linewidth=0, stacked=True, yerr='quadratic', axes=hist_ax,
+             ypadding=(.5, .1))
     if signal is not None:
         if signal_scale != 1.:
             for sig in signal:
                 sig *= signal_scale
                 sig.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(), signal_scale))
         rplt.bar(signal, linewidth=0, stacked=True, yerr='quadratic',
-                 axes=hist_ax, alpha=.8)
+                 axes=hist_ax, alpha=.8, ypadding=(.5, .1))
     if data is not None:
-        rplt.errorbar(data, fmt='o', axes=hist_ax)
+        rplt.errorbar(data, fmt='o', axes=hist_ax, ypadding=(.5, .1))
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
         ratio_ax.axhline(y=1)
         rplt.errorbar(Hist.divide(data, sum(model), option='B'), fmt='o', axes=ratio_ax)
-        ratio_ax.set_ylim((0., 2.))
+        ratio_ax.set_ylim((0, 2.))
+        ratio_ax.yaxis.tick_right()
 
     if show_qq:
         qq_ax = plt.axes(rect_qq)
@@ -184,9 +186,11 @@ def draw(model,
         qq_ax.set_xlim((gg_graph.xedgesl(0), gg_graph.xedgesh(-1)))
         qq_ax.set_ylim((min(y_low), max(y_up)))
 
-    l = hist_ax.legend(prop=prop, title=category_name)
+    l = hist_ax.legend(prop=prop, title=category_name,
+            loc='upper left')
     frame = l.get_frame()
-    frame.set_alpha(.8)
+    #frame.set_alpha(.8)
+    frame.set_fill(False) # eps does not support alpha values
     frame.set_linewidth(0)
 
     hist_ax.set_ylabel('Events', fontsize=20, position=(0., 1.), va='top')
@@ -203,7 +207,7 @@ def draw(model,
 
     root_axes(hist_ax, no_xlabels=show_ratio)
     if show_ratio:
-        root_axes(ratio_ax, vscale=1 if show_qq else vscale)
+        root_axes(ratio_ax, vscale=1 if show_qq else vscale * .5)
     if show_qq:
         root_axes(qq_ax, vscale=vscale)
 
