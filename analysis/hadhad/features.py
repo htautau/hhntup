@@ -133,14 +133,14 @@ VARIABLES = {
         'title': r'$\tau_{1}$ Number of Tracks',
         'filename': 'tau1_numTrack',
         'bins': 6,
-        'range': (-.5, 5.5),
+        'range': (-.5, 4.5),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'tau2_numTrack': {
         'title': r'$\tau_{2}$ Number of Tracks',
         'filename': 'tau2_numTrack',
         'bins': 6,
-        'range': (-.5, 5.5),
+        'range': (-.5, 4.5),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'tau1_x': {
