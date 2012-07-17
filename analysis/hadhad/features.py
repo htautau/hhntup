@@ -122,7 +122,7 @@ VARIABLES = {
         'range': (20, 100),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'tau1_fourvect.Pt()/1000': {
+    'tau2_fourvect.Pt()/1000': {
         'title': r'$p_{T_{\tau_{2}}}$ [GeV]',
         'filename': 'tau2_pt',
         'bins': 20,
