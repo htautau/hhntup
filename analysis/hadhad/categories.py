@@ -8,7 +8,7 @@ COMMON_CUTS = Cut('MET > 20000') & ID_MEDIUM & DR_FIX
 
 CATEGORIES = {
     'vbf': {
-        'name': 'VBF Category',
+        'name': r'$\tau_{had}\tau_{had}$: VBF Category',
         'code': categories.CATEGORY_VBF,
         'cuts': COMMON_CUTS, #& Cut('mass_jet1_jet2 > 100000'),
         'fitbins': 5,
@@ -38,7 +38,7 @@ CATEGORIES = {
         ]
     },
     'boosted': {
-        'name': 'Boosted Category',
+        'name': r'$\tau_{had}\tau_{had}$: Boosted Category',
         'code': categories.CATEGORY_BOOSTED,
         'cuts': COMMON_CUTS,
         'fitbins': 8,
@@ -57,7 +57,7 @@ CATEGORIES = {
         ]
     },
     'ggf': {
-        'name': 'Non-Boosted Category',
+            'name': r'$\tau_{had}\tau_{had}$: Non-Boosted Category',
         'code': categories.CATEGORY_GGF,
         'cuts': COMMON_CUTS,
         'fitbins': 10,
@@ -71,7 +71,7 @@ CATEGORIES = {
         ]
     },
     'preselection': {
-        'name': 'At Preselection',
+        'name': r'$\tau_{had}\tau_{had}$: At Preselection',
         'code': None,
         'cuts': COMMON_CUTS,
         'fitbins': 10,
