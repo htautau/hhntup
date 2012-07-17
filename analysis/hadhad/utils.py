@@ -14,13 +14,27 @@ from rootpy.plotting import Hist
 import rootpy.root2matplotlib as rplt
 from rootpy.math.stats.qqplot import qqplot
 
+
+def package_path(name):
+
+    return os.path.splitext(os.path.abspath('latex/%s.sty' % name))[0]
+
+
+LATEX_PREAMBLE = '''
+\usepackage{%s}
+\sansmath
+''' % package_path('sansmath')
+
+"""
+LATEX_PREAMBLE = '''
+\usepackage[math-style=upright]{%s}
+''' % package_path('unicode-math')
+"""
+
 plt.rcParams['ps.useafm'] = True
-#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex=True)
 rc('font', family='sans-serif')
-rc('text.latex',
-   preamble=r'\usepackage{%s}\sansmath' %
-   os.path.splitext(os.path.abspath('sansmath.sty'))[0])
+rc('text.latex', preamble=LATEX_PREAMBLE)
 plt.rcParams['pdf.fonttype'] = 42
 
 
