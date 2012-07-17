@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import ROOT
+ROOT.gROOT.SetBatch(True)
 from ROOT import *
 from tools.plotting.Graph1D import Graph1D
 from tools.plotting import palette

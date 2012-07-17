@@ -459,7 +459,7 @@ if __name__ == '__main__':
                        units=var_info.get('units', None),
                        range=var_info['range'],
                        show_ratio=True,
-                       show_qq=True)
+                       show_qq=False)
             figures[category][expr] = fig
 
     import datetime
