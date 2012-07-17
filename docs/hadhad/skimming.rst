@@ -26,7 +26,7 @@ Data11:
 Data12:
 
 * Stage I: **group.phys-higgs.HHSkim.data12_8TeV.*NTUP_TAU*p1130.v1/**
-* Stage II: On the way...
+* Stage II:** group.phys-higgs.HHSkim2.HHSkim.data12_8TeV*NTUP_TAU*p1130.v1.v1/**
 
 Embedding11:
 
