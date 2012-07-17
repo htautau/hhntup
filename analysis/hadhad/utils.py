@@ -207,7 +207,7 @@ def draw(model,
 
     root_axes(hist_ax, no_xlabels=show_ratio)
     if show_ratio:
-        root_axes(ratio_ax, vscale=1 if show_qq else vscale * .5)
+        root_axes(ratio_ax, vscale=1 if show_qq else vscale * .4)
     if show_qq:
         root_axes(qq_ax, vscale=vscale)
 
