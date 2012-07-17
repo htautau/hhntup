@@ -1,13 +1,11 @@
+import os
+
 import numpy as np
 
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import matplotlib.font_manager as fm
 from matplotlib import rc
-plt.rcParams['ps.useafm'] = True
-rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
-rc('text', usetex=True)
-plt.rcParams['pdf.fonttype'] = 42
 from matplotlib.ticker import AutoMinorLocator, NullFormatter
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
@@ -15,6 +13,29 @@ from matplotlib.patches import Patch
 from rootpy.plotting import Hist
 import rootpy.root2matplotlib as rplt
 from rootpy.math.stats.qqplot import qqplot
+
+
+def package_path(name):
+
+    return os.path.splitext(os.path.abspath('latex/%s.sty' % name))[0]
+
+
+LATEX_PREAMBLE = '''
+\usepackage[EULERGREEK]{%s}
+\sansmath
+''' % package_path('sansmath')
+
+"""
+LATEX_PREAMBLE = '''
+\usepackage[math-style=upright]{%s}
+''' % package_path('unicode-math')
+"""
+
+plt.rcParams['ps.useafm'] = True
+rc('text', usetex=True)
+rc('font', family='sans-serif')
+rc('text.latex', preamble=LATEX_PREAMBLE)
+plt.rcParams['pdf.fonttype'] = 42
 
 
 def set_colours(hists, colour_map=cm.jet):
@@ -187,7 +208,8 @@ def draw(model,
         qq_ax.set_ylim((min(y_low), max(y_up)))
 
     l = hist_ax.legend(prop=prop, title=category_name,
-            loc='upper left')
+            loc='upper left',
+            numpoints=1)
     frame = l.get_frame()
     #frame.set_alpha(.8)
     frame.set_fill(False) # eps does not support alpha values
