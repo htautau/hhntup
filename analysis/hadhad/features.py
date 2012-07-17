@@ -277,7 +277,7 @@ VARIABLES = {
         'cats': ['VBF']
     },
     ('jet1_fourvect_boosted.Eta()', 'jet2_fourvect_boosted.Eta()'): {
-        'title': r'$boosted \eta_{jet_{1,\/2}}$',
+        'title': r'boosted $\eta_{jet_{1,\/2}}$',
         'filename': 'jet_eta_boosted',
         'bins': 20,
         'range': (-5, 5),
