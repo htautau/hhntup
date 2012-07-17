@@ -21,7 +21,7 @@ def package_path(name):
 
 
 LATEX_PREAMBLE = '''
-\usepackage{%s}
+\usepackage[EULERGREEK]{%s}
 \sansmath
 ''' % package_path('sansmath')
 
