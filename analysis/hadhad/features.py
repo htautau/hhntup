@@ -39,7 +39,7 @@ VARIABLES = {
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'numJets': {
-        'title': r'Number of Jets $>25$ GeV',
+        'title': r'Number of Jets with $p_T>25$ GeV',
         'filename': 'numjets',
         'bins': 7,
         'range': (-.5, 6.5),
