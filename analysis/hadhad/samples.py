@@ -546,6 +546,7 @@ class MC(Sample):
 
         hist = Hist(bins, min, max, title=self.label, name=self.name)
         self.draw_into(hist, expr, category, region, cuts=cuts)
+        hist.SetFillColor(self.colour)
         return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
@@ -629,6 +630,7 @@ class MC_Ztautau(MC):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
+        self.colour = '#00a4ff'
         super(MC_Ztautau, self).__init__(scale=scale,
                                          cuts=cuts)
 
@@ -641,6 +643,7 @@ class MC_EWK(MC):
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
+        self.colour = '#ff9f71'
         super(MC_EWK, self).__init__(scale=scale,
                                      cuts=cuts)
 
@@ -653,6 +656,7 @@ class MC_Top(MC):
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
+        self.colour = '#0000ff'
         super(MC_Top, self).__init__(scale=scale,
                                            cuts=cuts)
 
@@ -665,8 +669,26 @@ class MC_Diboson(MC):
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
+        self.colour = '#ffd075'
         super(MC_Diboson, self).__init__(scale=scale,
                                          cuts=cuts)
+
+
+class MC_Others(MC):
+
+    def __init__(self, scale=1., cuts=None):
+
+        yml_diboson = samples_db.BACKGROUNDS['hadhad']['diboson']
+        yml_top = samples_db.BACKGROUNDS['hadhad']['top']
+        yml_ewk = samples_db.BACKGROUNDS['hadhad']['ewk']
+        self.samples = (yml_diboson['samples'] +
+                        yml_top['samples'] +
+                        yml_ewk['samples'])
+        self._label = 'Others'
+        self.name = 'Others'
+        self.colour = '#ff7700'
+        super(MC_Others, self).__init__(scale=scale,
+                                        cuts=cuts)
 
 
 class MC_Higgs(MC):
@@ -759,9 +781,10 @@ class QCD(Sample):
         self.data = data
         self.mc = mc
         self.name = 'QCD'
-        self.label = 'QCD'
+        self.label = 'QCD Multi-jet'
         self.scale = 1.
         self.sample_region = sample_region
+        self.colour = '#59d454'
 
     def draw(self, expr, category, region, bins, min, max, cuts=None,
              sample_region=None):
@@ -772,6 +795,7 @@ class QCD(Sample):
         hist = Hist(bins, min, max, title=self.label, name=self.name)
         self.draw_into(hist, expr, category, region, cuts=cuts,
                        sample_region=sample_region)
+        hist.SetFillColor(self.colour)
         return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None,

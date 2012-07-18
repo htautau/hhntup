@@ -335,25 +335,16 @@ if __name__ == '__main__':
     target_region = 'OS'
 
     mc_ztautau   = MC_Ztautau()
-
-    mc_ewk       = MC_EWK()
-    mc_top       = MC_Top()
-    mc_diboson   = MC_Diboson()
+    mc_others = MC_Others()
 
     vbf_125 = MC_VBF(mass=125)
     ggf_125 = MC_ggF(mass=125)
     wh_125  =  MC_WH(mass=125)
     zh_125  =  MC_ZH(mass=125)
 
-    backgrounds = [
-        mc_top,
-        mc_diboson,
-        mc_ewk,
-    ]
-
     data = Data()
 
-    qcd = QCD(data=data, mc=backgrounds[:] + [mc_ztautau],
+    qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
               sample_region=control_region)
 
     signals = [
@@ -381,7 +372,7 @@ if __name__ == '__main__':
         qcd_scale, ztautau_scale = qcd_ztautau_norm(
             qcd=qcd,
             ztautau=mc_ztautau,
-            backgrounds=backgrounds,
+            backgrounds=[mc_others],
             data=data,
             category=category,
             target_region=target_region,
@@ -425,24 +416,22 @@ if __name__ == '__main__':
             if 'scale' in var_info:
                 expr = "%s * %f" % (expr, var_info['scale'])
 
-            bkg_hists = [bkg.draw(expr,
+            other_hist = mc_others.draw(expr,
                                   category, target_region,
                                   bins, min, max,
                                   cuts=cuts)
-                         for bkg in backgrounds]
 
             qcd_hist = qcd.draw(expr,
                                 category, target_region,
                                 bins, min, max,
                                 sample_region=shape_region,
                                 cuts=cuts)
-            bkg_hists.insert(0, qcd_hist)
 
             ztautau_hist = mc_ztautau.draw(expr,
                                            category, target_region,
                                            bins, min, max,
                                            cuts=cuts)
-            bkg_hists.append(ztautau_hist)
+            bkg_hists = [qcd_hist, other_hist, ztautau_hist]
 
             data_hist = data.draw(expr,
                                   category, target_region,
@@ -464,6 +453,7 @@ if __name__ == '__main__':
                        range=var_info['range'],
                        show_ratio=True,
                        show_qq=False,
+                       model_colour_map=None,
                        dir=PLOTS_DIR)
             figures[category][expr] = fig
 

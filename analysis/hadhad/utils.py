@@ -154,8 +154,9 @@ def draw(model,
 
     hist_ax = plt.axes(rect_hist)
 
-    set_colours(model, model_colour_map)
-    if signal is not None:
+    if model_colour_map is not None:
+        set_colours(model, model_colour_map)
+    if signal is not None and signal_colour_map is not None:
         set_colours(signal, signal_colour_map)
 
     rplt.bar(model, linewidth=0, stacked=True, yerr='quadratic', axes=hist_ax,
