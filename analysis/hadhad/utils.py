@@ -78,7 +78,8 @@ def draw(model,
          signal_colour_map=cm.autumn,
          show_ratio=False,
          show_qq=False,
-         output_formats=None):
+         output_formats=None,
+         dir='.'):
 
     if output_formats is None:
         output_formats = ('png', 'eps', 'pdf')
@@ -239,10 +240,12 @@ def draw(model,
             ratio_ax.set_xlim(range)
 
     for format in output_formats:
-        plt.savefig('var_%s_%s.%s' %
-                    (category,
-                     output_name.lower().replace(' ', '_'),
-                     format))
+        plt.savefig(
+            os.path.join(dir,
+            'var_%s_%s.%s' %
+            (category,
+             output_name.lower().replace(' ', '_'),
+             format)))
     plt.close(fig)
     return fig
 
