@@ -122,7 +122,7 @@ VARIABLES = {
         'range': (20, 100),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'tau1_fourvect.Pt()/1000': {
+    'tau2_fourvect.Pt()/1000': {
         'title': r'$p_{T_{\tau_{2}}}$ [GeV]',
         'filename': 'tau2_pt',
         'bins': 20,
@@ -324,6 +324,10 @@ if __name__ == '__main__':
     from samples import *
     from matplotlib.backends.backend_pdf import PdfPages
     from background_estimation import qcd_ztautau_norm
+    from config import plots_dir
+    import os
+
+    PLOTS_DIR = plots_dir(__file__)
 
     # QCD shape region SS or !OS
     shape_region = 'SS'
@@ -459,14 +463,15 @@ if __name__ == '__main__':
                        units=var_info.get('units', None),
                        range=var_info['range'],
                        show_ratio=True,
-                       show_qq=False)
+                       show_qq=False,
+                       dir=PLOTS_DIR)
             figures[category][expr] = fig
 
     import datetime
     now = datetime.datetime.today()
     # put all plots in a multipage pdf
     for category, exprs in figures.items():
-        pdf = PdfPages('features_%s.pdf' % category)
+        pdf = PdfPages(os.path.join(PLOTS_DIR, 'features_%s.pdf' % category))
         for expr, fig in sorted(exprs.items(), key=lambda x: x[0]):
             pdf.savefig(fig)
         d = pdf.infodict()
