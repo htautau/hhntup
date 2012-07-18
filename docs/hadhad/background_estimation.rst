@@ -17,45 +17,32 @@ performed in a low MMC mass bin :math:`80 < MMC < 110` GeV.
 * Most success on 2D BDT distributions. Convergence in both
   categories and reasonable scale factors.
 
-Fitting the Track Distribution
-------------------------------
-
-In the 0/1-jet category before (left) and after (right) the fit:
-
-.. image:: images/bg_est/2d_track_fit_01jet.png
-	:width: 450px
-
-.. image:: images/bg_est/2d_track_fit_01jet_after.png
-	:width: 450px
-
-
-In the 2+ jet category before (left) and after (right) the fit:
-
-.. image:: images/bg_est/2d_track_fit_2jet.png
-	:width: 450px
-
-.. image:: images/bg_est/2d_track_fit_2jet_after.png
-	:width: 450px
-
 
 Fitting the Tau BDT Distribution
 --------------------------------
 
-In the 0/1-jet category before (left) and after (right) the fit:
+In the VBF category before (left) and after (right) the fit:
 
-.. image:: images/bg_est/2d_bdt_fit_01jet.png
+.. image:: plots/background_estimation/2d_bdt_fit_vbf.png
 	:width: 450px
 
-.. image:: images/bg_est/2d_bdt_fit_01jet_after.png
+.. image:: plots/background_estimation/2d_bdt_fit_vbf_after.png
 	:width: 450px
 
 
-In the 2+ jet category before (left) and after (right) the fit:
+In the boosted category before (left) and after (right) the fit:
 
-.. image:: images/bg_est/2d_bdt_fit_2jet.png
+.. image:: plots/background_estimation/2d_bdt_fit_boosted.png
 	:width: 450px
 
-.. image:: images/bg_est/2d_bdt_fit_2jet_after.png
+.. image:: plots/background_estimation/2d_bdt_fit_boosted_after.png
 	:width: 450px
 
+In the non-boosted category before (left) and after (right) the fit:
+
+.. image:: plots/background_estimation/2d_bdt_fit_ggf.png
+	:width: 450px
+
+.. image:: plots/background_estimation/2d_bdt_fit_ggf_after.png
+	:width: 450px
 

@@ -29,10 +29,13 @@ Output Distributions
 The output distributions of the BDT in each category is only shown in a low MMC
 mass control region: :math:`80 < MMC < 110` GeV.
 
-.. image:: images/variables/01jet/var_event_bdt_score_01jet.png
+
+.. image:: plots/classify/var_event_bdt_score_control_vbf.png
 	:width: 450px
 
-.. image:: images/variables/2jet/var_event_bdt_score_2jet.png
+.. image:: plots/classify/var_event_bdt_score_control_boosted.png
 	:width: 450px
 
+.. image:: plots/classify/var_event_bdt_score_control_ggf.png
+	:width: 450px
 
