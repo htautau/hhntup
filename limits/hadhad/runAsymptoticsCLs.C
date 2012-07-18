@@ -1,1 +1,1 @@
-runAsymptoticsCLs-00-01-02/runAsymptoticsCLs.C
+../common/runAsymptoticsCLs-00-01-02/runAsymptoticsCLs.C
