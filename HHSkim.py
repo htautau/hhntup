@@ -343,13 +343,12 @@ class HHSkim(ATLASStudent):
         nevents_mc_weight = 0
         emulated_trigger_passed = False
 
-# Dugan - open TGraph to hack BDT condition
-        bdtcutsFile = TFile("ParametrizedBDTSelection.root")
-# end Dugan
+        if self.metadata.year == 2012:
+            bdtcutsFile = TFile("ParametrizedBDTSelection.root")
 
         # entering the main event loop...
         for event in intree:
-            
+
             nevents += 1
 
             if self.metadata.datatype == datasets.EMBED:
@@ -426,10 +425,10 @@ class HHSkim(ATLASStudent):
                         outtree.tau_trigger_match_index.push_back(idx)
                         outtree.tau_trigger_match_thresh.push_back(thresh)
 
-# Dugan
-# the BDT bits are broken in the p1130 production, correct them
-                correctBDT = True
-                if correctBDT:
+                if self.metadata.year == 2012:
+                    # the BDT bits are broken in the p1130 production, correct them
+                    # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
+                    # PRODUCTION TAG!!!
                     for thisTau in event.taus:
 
                         thisTau.JetBDTSigLoose=0
@@ -441,9 +440,9 @@ class HHSkim(ATLASStudent):
                             myGraphMedium = bdtcutsFile.Get("medium_1p")
                             myGraphTight = bdtcutsFile.Get("tight_1p")
                         else:
-                            myGraphLoose = bdtcutsFile.Get("loose_3p")    
-                            myGraphMedium = bdtcutsFile.Get("medium_3p")    
-                            myGraphTight = bdtcutsFile.Get("tight_3p")    
+                            myGraphLoose = bdtcutsFile.Get("loose_3p")
+                            myGraphMedium = bdtcutsFile.Get("medium_3p")
+                            myGraphTight = bdtcutsFile.Get("tight_3p")
 
                         looseCut = myGraphLoose.Eval(thisTau.pt)
                         mediumCut = myGraphMedium.Eval(thisTau.pt)
@@ -459,7 +458,6 @@ class HHSkim(ATLASStudent):
                         elif thisTau.BDTJetScore > looseCut:
                             thisTau.JetBDTSigLoose=1
 
-## end Dugan
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
                 event.taus.select(lambda tau: tau.author != 2 and tau.numTrack > 0 and
