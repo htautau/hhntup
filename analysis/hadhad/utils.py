@@ -2,6 +2,8 @@ import os
 
 import numpy as np
 
+import matplotlib
+#matplotlib.use('cairo')
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import matplotlib.font_manager as fm
