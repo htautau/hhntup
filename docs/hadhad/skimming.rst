@@ -13,9 +13,7 @@ MC11:
 
 MC12:
 
-(some datasets still missing)
-
-* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v1/**
+* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v2/**
 * Stage II: On the way... 
 
 Data11:
@@ -25,7 +23,7 @@ Data11:
 
 Data12:
 
-* Stage I: **group.phys-higgs.HHSkim.data12_8TeV.*NTUP_TAU*p1130.v1/**
+* Stage I: **group.phys-higgs.HHSkim.data12_8TeV.*NTUP_TAU*p1130.v2/**
 * Stage II: On the way...
 
 Embedding11:
