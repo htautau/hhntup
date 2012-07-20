@@ -246,15 +246,29 @@ VARIABLES = {
         'filename': 'jet1_eta',
         'bins': 20,
         'range': (-5, 5),
-        'cats': ['VBF']
+        'cats': ['VBF', 'BOOSTED']
     },
     'jet2_fourvect.Eta()': {
         'title': r'$\eta_{jet_{2}}$',
         'filename': 'jet2_eta',
         'bins': 20,
         'range': (-5, 5),
-        'cats': ['VBF']
+        'cats': ['VBF','BOOSTED']
     },
+    'jet1_fourvect.Pt()/1000': {
+        'title': r'$p_{T_{jet_{1}}}$ [GeV]',
+        'filename': 'jet1_pt',
+        'bins': 20,
+        'range': (20, 160),
+        'cats': ['VBF','BOOSTED']
+    },
+    'jet2_fourvect.Pt()/1000': {
+        'title': r'$p_{T_{jet_{2}}}$ [GeV]',
+        'filename': 'jet2_pt',
+        'bins': 20,
+        'range': (20, 160),
+        'cats': ['VBF','BOOSTED']
+    }
     'jet1_fourvect_boosted.Eta()': {
         'title': r'boosted $\eta_{jet_{1}}$',
         'filename': 'jet1_eta_boosted',
