@@ -192,6 +192,13 @@ VARIABLES = {
         'range': (0.7, 3.5),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
+    'dPhi_tau1_tau2': {
+        'title': r'$\Delta \phi_{\tau_{1},\/\tau_{2}}$',
+        'filename': 'dphi_tau1_tau2',
+        'bins': 20,
+        'range': (0., math.pi),
+        'cats': ['VBF', 'GGF', 'BOOSTED']
+    },
     ('tau1_fourvect.Eta()', 'tau2_fourvect.Eta()'): {
         'title': r'$\eta_{\tau_{1,\/2}}$',
         'filename': 'tau_eta',
