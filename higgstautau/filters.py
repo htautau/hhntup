@@ -21,12 +21,17 @@ class PriVertex(EventFilter):
 
 class JetCleaning(EventFilter):
 
-    def __init__(self, level=jetcleaning.LOOSER,
+    def __init__(self,
+                 datatype,
+                 year,
+                 level=jetcleaning.LOOSER,
                  pt_thresh=20*GeV,
                  eta_max=4.5,
                  **kwargs):
 
         super(JetCleaning, self).__init__(**kwargs)
+        self.year = year
+        self.datatype = datatype
         self.level = level
         self.pt_thresh = pt_thresh
         self.eta_max = eta_max
@@ -50,6 +55,15 @@ class JetCleaning(EventFilter):
                                   HecQ=jet.HECQuality,
                                   LArQmean=LArQmean
                                  ): return False
+
+        if self.datatype == datasets.DATA and self.year == 2012:
+            if 202660 <= event.RunNumber <= 203027:
+                for jet in event.jets:
+                    _etaphi28 = (
+                        -0.2 < jet.eta < -0.1 and
+                        2.65 < jet.phi < 2.75)
+                    if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
+                        return False
         return True
 
 

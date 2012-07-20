@@ -142,7 +142,9 @@ class HHSkim2(ATLASStudent):
                 verbose=VERBOSE,
                 passthrough=self.metadata.year == 2012),
             LArHole(datatype=self.metadata.datatype),
-            JetCleaning(),
+            JetCleaning(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year),
             ElectronVeto(),
             MuonVeto(),
             TauAuthor(),
