@@ -469,9 +469,10 @@ class ElectronVeto(EventFilter):
 
         if self.year == 2012:
             # recalc mediumPP with egammaAnalysisUtils
-            for el in event.electrons:
-                el.mediumPP = False
-
+            # use implementation from lephad group
+            from higgstautau.lephad.correctiontools import ElectronIDpatch
+            ElectronIDpatch()
+ 
         for el in event.electrons:
             pt = el.cl_E / cosh(el.tracketa)
             if pt <= 15 * GeV: continue
