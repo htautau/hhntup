@@ -20,6 +20,7 @@ from rootpy.registry import lookup_demotion
 from higgstautau.mixins import TauFourMomentum, ElFourMomentum
 from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
                                        OverlapCheck, SetElectronsFourVector #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
+from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
 
 import goodruns
 
@@ -67,7 +68,8 @@ class LHSkim(ATLASStudent):
                               'jet_AntiKt4TopoEM_phi',
                               'jet_AntiKt4TopoEM_flavor_weight_JetFitterCOMBNN',
                               'jet_AntiKt4TopoEM_flavor_weight_SV1',
-                              'jet_AntiKt4TopoEM_flavor_weight_IP3D']
+                              'jet_AntiKt4TopoEM_flavor_weight_IP3D',
+                              'jet_AntiKt4TopoEM_flavor_truth_label']
         
         outtree.activate(variables_to_keep, exclusive=True)
 
@@ -95,28 +97,21 @@ class LHSkim(ATLASStudent):
             self.output.cd()
 
 
-        # set the event filters
-        # trigger_filter = None
-        # if self.metadata.datatype == datasets.DATA:
-        #     if self.metadata.title == datasets.MUON:
-        #         trigger_filter = AnyMuTriggers()
-        #     if self.metadata.title == datasets.ELEC:
-        #         trigger_filter = AnyETriggers()
-        # else:
-        #     trigger_filter = AnyMCTriggers()
-
-        event_filters = EventFilterList([
-            SetElectronsFourVector()
-        ])
-
-        self.filters['event'] = event_filters
-        intree.filters += event_filters
-
-
         # Define collections for preselection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
         intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
+
+
+        # set the event filters
+        event_filters = EventFilterList([
+            SetElectronsFourVector(),
+            ElectronIDpatch(),
+            TauIDpatch('ParametrizedBDTSelection.root')
+        ])
+
+        self.filters['event'] = event_filters
+        intree.filters += event_filters
 
 
         # Cut Flow counters

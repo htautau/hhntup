@@ -500,7 +500,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-        #if not (tau.JetBDTSigLoose == 1) : return False
+    if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True
