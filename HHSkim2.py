@@ -145,7 +145,8 @@ class HHSkim2(ATLASStudent):
             JetCleaning(
                 datatype=self.metadata.datatype,
                 year=self.metadata.year),
-            ElectronVeto(),
+            ElectronVeto(
+                year=self.metadata.year),
             MuonVeto(),
             TauAuthor(),
             TauHasTrack(),

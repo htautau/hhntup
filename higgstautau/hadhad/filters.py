@@ -457,39 +457,68 @@ class JetCrackVeto(EventFilter):
 
 class ElectronVeto(EventFilter):
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        if self.year == 2012:
+            from externaltools import egammaAnalysisUtils
+            from ROOT import __
+        super(ElectronVeto, self).__init__(**kwargs)
+
     def passes(self, event):
 
-       for el in event.electrons:
-           pt = el.cl_E / cosh(el.tracketa)
-           if pt <= 15 * GeV: continue
-           if not ((abs(el.tracketa) < 1.37) or (1.52 < abs(el.tracketa) < 2.47)): continue
-           if el.author not in (1, 3): continue
-           if not abs(el.charge) == 1: continue
-           if el.mediumPP != 1: continue
-           if (el.OQ & 1446) != 0: continue
-           return False
-       return True
+        if self.year == 2012:
+            # recalc mediumPP with egammaAnalysisUtils
+            for el in event.electrons:
+                el.mediumPP = False
+
+        for el in event.electrons:
+            pt = el.cl_E / cosh(el.tracketa)
+            if pt <= 15 * GeV: continue
+            if not ((abs(el.tracketa) < 1.37) or (1.52 < abs(el.tracketa) < 2.47)): continue
+            if el.author not in (1, 3): continue
+            if not abs(el.charge) == 1: continue
+            if el.mediumPP != 1: continue
+            if (el.OQ & 1446) != 0: continue
+            return False
+        return True
 
 
-def muon_has_good_track(muon):
+def muon_has_good_track(muon, pix_min=2, sct_min=6, abs_eta_min=-0.1):
 
     blayer = (muon.expectBLayerHit == 0) or (muon.nBLHits > 0)
-    pix = muon.nPixHits + muon.nPixelDeadSensors > 1
-    sct = muon.nSCTHits + muon.nSCTDeadSensors >= 6
+    pix = muon.nPixHits + muon.nPixelDeadSensors >= pix_min
+    sct = muon.nSCTHits + muon.nSCTDeadSensors >= sct_min
     holes = muon.nPixHoles + muon.nSCTHoles < 3
-    trt = False
+    n_trt_hits_outliers = muon.nTRTHits + muon.nTRTOutliers
 
-    if abs(muon.eta) < 1.9:
-        trt = (muon.nTRTHits + muon.nTRTOutliers > 5) and \
-              (muon.nTRTOutliers < 0.9 * (muon.nTRTHits + muon.nTRTOutliers))
+    if abs_eta_min < abs(muon.eta) < 1.9:
+        trt = ((n_trt_hits_outliers > 5) and
+              (muon.nTRTOutliers < 0.9 * n_trt_hits_outliers))
     else:
-        trt = (muon.nTRTHits + muon.nTRTOutliers <= 5) or \
-              (muon.nTRTOutliers < 0.9 * (muon.nTRTHits + muon.nTRTOutliers))
+        trt = False
+        if n_trt_hits_outliers > 5:
+            trt = muon.nTRTOutliers < 0.9 * n_trt_hits_outliers
 
     return blayer and pix and sct and holes and trt
 
 
 class MuonVeto(EventFilter):
+
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        if year == 2011:
+            self.pix_min = 2
+            self.sct_min = 6
+            self.abs_eta_min = -0.1
+        elif year == 2012:
+            self.pix_min = 1
+            self.sct_min = 5
+            self.abs_eta_min = 0.1
+        else:
+            raise ValueError("No muon veto defined for year %d" % year)
+        super(MuonVeto, self).__init__(**kwargs)
 
     def passes(self, event):
 
@@ -497,7 +526,10 @@ class MuonVeto(EventFilter):
            if muon.pt <= 10 * GeV: continue
            if abs(muon.eta) >= 2.5: continue
            if muon.loose != 1: continue
-           if not muon_has_good_track(muon): continue
+           if not muon_has_good_track(muon,
+                   pix_min=self.pix_min,
+                   sct_min=self.sct_min,
+                   abs_eta_min=self.abs_eta_min): continue
            return False
 
        return True
