@@ -470,6 +470,8 @@ class ElectronVeto(EventFilter):
         if self.year == 2012:
             # recalc mediumPP with egammaAnalysisUtils
             # use implementation from lephad group
+            # this is a filter which always returns true...but also updates the
+            # mediumPP flag for each electron.
             from higgstautau.lephad.correctiontools import ElectronIDpatch
             ElectronIDpatch()
  
