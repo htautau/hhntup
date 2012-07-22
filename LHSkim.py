@@ -19,8 +19,7 @@ from rootpy.registry import lookup_demotion
 
 from higgstautau.mixins import TauFourMomentum, ElFourMomentum
 from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
-                                       OverlapCheck, SetElectronsFourVector #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
-from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
+                                       OverlapCheck, SetElectronsFourVector, ElectronIDpatch, TauIDpatch #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
 
 import goodruns
 
@@ -103,11 +102,13 @@ class LHSkim(ATLASStudent):
         intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
 
 
+        BDTcorrection = ROOT.TFile('ParametrizedBDTSelection.root')
+
         # set the event filters
         event_filters = EventFilterList([
             SetElectronsFourVector(),
             ElectronIDpatch(),
-            TauIDpatch('ParametrizedBDTSelection.root')
+            TauIDpatch(BDTcorrection)
         ])
 
         self.filters['event'] = event_filters
