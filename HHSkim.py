@@ -367,6 +367,7 @@ class HHSkim(ATLASStudent):
 
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
+        intree.define_collection(name="electrons", prefix="el_", size="el_n")
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
         intree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
 

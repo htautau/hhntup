@@ -138,11 +138,11 @@ class EgammaERescaling(EventFilter):
                 corrected_e  *= scaleFactor
                 corrected_et *= scaleFactor
 
- 
+
             # Modify E and Et in transient D3PD
             el.cl_E  = corrected_e
             el.cl_et = corrected_et
-            
+
             # Adjust MET accordingly
             if ((el.nSCTHits + el.nPixHits) < 4):
                 px = raw_et * cos(el.cl_phi)
@@ -158,7 +158,7 @@ class EgammaERescaling(EventFilter):
             event.MET_RefFinal_BDTMedium_etx += ( px - corrected_px ) * el.MET_BDTMedium_wpx[0]
             event.MET_RefFinal_BDTMedium_ety += ( py - corrected_py ) * el.MET_BDTMedium_wpy[0]
             event.MET_RefFinal_BDTMedium_sumet -= ( raw_et - corrected_et ) * el.MET_BDTMedium_wet[0]
-            
+
         return True
 
 
@@ -247,7 +247,7 @@ def MuonSF(event, datatype, pileup_tool):
     w *= trigSF.first
 
     return w
-    
+
 
 #################################################
 # Electron Efficiency corrections
@@ -306,24 +306,24 @@ def ElectronSF(event, datatype, pileupTool):
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool
     """
     if v_muTLVs.size() > 0: print 'WARNING in ElectronSF(): vector of muons is NOT empty'
-    ## From the 
-    ## https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool 
-    ## Twiki: 
-    ## * The RunNumber should be ideally randomly generated using the recommended pileup reweighting tool 
+    ## From the
+    ## https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool
+    ## Twiki:
+    ## * The RunNumber should be ideally randomly generated using the recommended pileup reweighting tool
     ##   to assure close correspondance to actual data run numbers.
-    ## * The vector of muons and electrons should be filled for muons and electrons separately 
-    ##   using ALL good leptons that passed the object selection, not just the trigger matched ones. 
-    ##   Independently of this, the analysis should require that at least one lepton be trigger matched 
-    ##   or else a bias can be introduced (especially for single lepton analyses; the bias decreases 
+    ## * The vector of muons and electrons should be filled for muons and electrons separately
+    ##   using ALL good leptons that passed the object selection, not just the trigger matched ones.
+    ##   Independently of this, the analysis should require that at least one lepton be trigger matched
+    ##   or else a bias can be introduced (especially for single lepton analyses; the bias decreases
     ##   with the number of leptons).
     ## From the
     ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
     ## Twiki:
     ## * The trigger matching is not applied for this analysis because of missing information in D3PDs.
-    ## From the 
-    ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons 
+    ## From the
+    ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
     ## Twiki:
-    ## * The trigger matching is not applied for this analysis because of missing information in D3PDs, 
+    ## * The trigger matching is not applied for this analysis because of missing information in D3PDs,
     ##   but this is a small effect.
     pileupTool.SetRandomSeed(314159 + event.mc_channel_number*2718 + event.EventNumber)
     randomRunNumber = pileupTool.GetRandomRunNumber(event.RunNumber)
@@ -442,9 +442,9 @@ class ElectronIDpatch(EventFilter):
             #Correct the tightPP flag
             e.tightPP = isTightPlusPlus(eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, d0, TRratio, nTRT, nTRTOutliers,
                                         nSi, nSiOutliers, nPix, nPixOutliers, nBlayer, nBlayerOutliers, expectBlayer, eOverp, deltaPhi, ConvBit)
-            
+
         return True
-    
+
 
 
 #################################################
@@ -480,7 +480,7 @@ class TauIDpatch(EventFilter):
             cut_loose  = 0
             cut_medium = 0
             cut_tight  = 0
-            
+
             if tau.numTrack <= 1:
                 cut_loose  = self.loose_1p.Eval(pt)
                 cut_medium = self.medium_1p.Eval(pt)
@@ -493,6 +493,6 @@ class TauIDpatch(EventFilter):
             tau.JetBDTSigLoose  = (tau.BDTJetScore > cut_loose)
             tau.JetBDTSigMedium = (tau.BDTJetScore > cut_medium)
             tau.JetBDTSigTight  = (tau.BDTJetScore > cut_tight)
-        
+
         return True
 
