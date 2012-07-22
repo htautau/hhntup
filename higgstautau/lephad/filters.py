@@ -826,7 +826,7 @@ class ElectronIDpatch(EventFilter):
         for e in event.electrons:
 
             #Retrieve relevant branches
-            eta          = e.etas2
+            eta          = float(e.etas2)
             eT           = e.cl_E/cosh(eta)
             rHad         = e.Ethad/eT
             rHad1        = e.Ethad1/eT
