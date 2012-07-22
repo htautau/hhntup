@@ -21,7 +21,7 @@ export HIGGSTAUTAU_NTUPLE_DIR=${DIR_HIGGSTAUTAU_SETUP}/ntuples
 export HIGGSTAUTAU_LIMITS_DIR=${DIR_HIGGSTAUTAU_SETUP}/limits
 export HIGGSTAUTAU_PLOTS_DIR=${DIR_HIGGSTAUTAU_SETUP}/plots
 
-if [ -f externaltools/setup.sh ]
+if [ -f ${DIR_HIGGSTAUTAU_SETUP}/externaltools/setup.sh ]
 then
-    source externaltools/setup.sh
+    source ${DIR_HIGGSTAUTAU_SETUP}/externaltools/setup.sh
 fi
