@@ -38,7 +38,8 @@ class JetCleaning(EventFilter):
 
     def passes(self, event):
 
-        for jet in event.jets_EM:
+        # using LC jets
+        for jet in event.jets:
 
             if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max: continue
             LArQmean = jet.AverageLArQF / 65535.0
@@ -58,6 +59,7 @@ class JetCleaning(EventFilter):
 
         if self.datatype == datasets.DATA and self.year == 2012:
             if 202660 <= event.RunNumber <= 203027:
+                # recommendation is to use EM jets
                 for jet in event.jets_EM:
                     _etaphi28 = (
                         -0.2 < jet.eta < -0.1 and
