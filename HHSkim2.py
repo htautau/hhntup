@@ -184,6 +184,8 @@ class HHSkim2(ATLASStudent):
 
         # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
         chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
+        chain.define_collection(name="jets_EM", prefix="jet_AntiKt4TopoEM_",
+                size="jet_AntiKt4TopoEM_n", mix=FourMomentum)
         chain.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n", mix=MCTauFourMomentum)
         chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
@@ -209,6 +211,7 @@ class HHSkim2(ATLASStudent):
             pileup_tool = TPileupReweighting()
             #pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
             pileup_tool.AddConfigFile('higgstautau/pileup/mc11c_defaults.prw.root')
+            #pileup_tool.SetDataScaleFactors(1./1.11) 2012???
             pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(2)
