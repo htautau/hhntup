@@ -147,8 +147,9 @@ class HHSkim2(ATLASStudent):
             JetCleaning(
                 datatype=self.metadata.datatype,
                 year=self.metadata.year),
-            ElectronIDpatch(
-                passthrough=self.metadata.year != 2012),
+            # electron ID patch is applied in skim1
+            #ElectronIDpatch(
+            #    passthrough=self.metadata.year != 2012),
             ElectronVeto(),
             MuonVeto(
                 year=self.metadata.year),

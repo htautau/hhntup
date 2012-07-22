@@ -155,6 +155,35 @@ branches_keep = [
     "el_mediumPP",
     "el_tightPP",
     "el_OQ",
+    # required for electron ID recalc
+    "el_cl_eta",
+    "el_cl_phi",
+    "el_m",
+    "el_deltaeta1",
+    "el_deltaphi2",
+    "el_Emax2",
+    "el_emaxs1",
+    "el_etas2",
+    "el_Ethad",
+    "el_Ethad1",
+    "el_expectHitInBLayer",
+    "el_f1",
+    "el_f3",
+    "el_isEM",
+    "el_nBLayerOutliers",
+    "el_nBLHits",
+    "el_nPixelOutliers",
+    "el_nPixHits",
+    "el_nSCTOutliers",
+    "el_nSiHits",
+    "el_nTRTHits",
+    "el_nTRTOutliers",
+    "el_reta",
+    "el_trackd0_physics",
+    "el_trackqoverp",
+    "el_TRTHighTOutliersRatio",
+    "el_weta2",
+    "el_wstot",
 
     "mu_staco_n",
     "mu_staco_E",
@@ -347,6 +376,7 @@ class HHSkim(ATLASStudent):
 
         if self.metadata.year == 2012:
             tauidpatch = TauIDpatch('ParametrizedBDTSelection.root')
+            electronidpatch = ElectronIDpatch()
 
         # entering the main event loop...
         for event in intree:
@@ -432,6 +462,8 @@ class HHSkim(ATLASStudent):
                     # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
                     # PRODUCTION TAG!!!
                     tauidpatch(event)
+                    # patch electron ID for 2012
+                    electronidpatch(event)
 
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
