@@ -41,6 +41,16 @@ Now build the C extension module for jet cleaning in the higgstautau package::
    cd higgstautau/jetcleaning
    ./setup.py build_ext --inplace 
 
+Before submitting grid jobs be sure to create a panda.[user].cfg and then::
+
+   ln -s panda.[user].cfg panda.cfg
+
+or use an existing panda.[user].cfg.
+
+Before running tests locally remember to::
+
+   source setup.sh
+
 
 External Tools
 ==============
