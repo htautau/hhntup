@@ -1,4 +1,5 @@
 from rootpy.tree.filtering import *
+from rootpy.io import open as ropen
 from math import *
 import ROOT
 
@@ -57,9 +58,9 @@ class ElectronIDpatch(EventFilter):
             #Correct the tightPP flag
             e.tightPP = isTightPlusPlus(eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, d0, TRratio, nTRT, nTRTOutliers,
                                         nSi, nSiOutliers, nPix, nPixOutliers, nBlayer, nBlayerOutliers, expectBlayer, eOverp, deltaPhi, ConvBit)
-            
+
         return True
-    
+
 
 
 #################################################
@@ -77,7 +78,8 @@ class TauIDpatch(EventFilter):
 
         #Load TGraphs
 
-        f = ROOT.TFile(graph)
+        f = ropen(graph)
+        # rootpy.io.open raises exception if file is not found.
 
         self.loose_1p   = f.Get('loose_1p')
         self.medium_1p  = f.Get('medium_1p')
@@ -95,7 +97,7 @@ class TauIDpatch(EventFilter):
             cut_loose  = 0
             cut_medium = 0
             cut_tight  = 0
-            
+
             if tau.numTrack <= 1:
                 cut_loose  = self.loose_1p.Eval(pt)
                 cut_medium = self.medium_1p.Eval(pt)
@@ -108,5 +110,5 @@ class TauIDpatch(EventFilter):
             tau.JetBDTSigLoose  = (tau.BDTJetScore > cut_loose)
             tau.JetBDTSigMedium = (tau.BDTJetScore > cut_medium)
             tau.JetBDTSigTight  = (tau.BDTJetScore > cut_tight)
-        
+
         return True

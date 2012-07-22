@@ -91,7 +91,7 @@ from rootpy.plotting import Hist
 
 from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
-from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
+from higgstautau.patches import ElectronIDpatch, TauIDpatch
 
 import goodruns
 
