@@ -209,6 +209,7 @@ class HHSkim2(ATLASStudent):
             pileup_tool = TPileupReweighting()
             #pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
             pileup_tool.AddConfigFile('higgstautau/pileup/mc11c_defaults.prw.root')
+            #pileup_tool.SetDataScaleFactors(1./1.11) 2012???
             pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(2)
