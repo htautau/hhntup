@@ -1,13 +1,9 @@
 import os
 import ROOT
 
-try:
-    from externaltools import TrigRootAnalysis
-except ImportError:
-    ROOT.gSystem.Load(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                  'libTrigRootAnalysis.so'))
-
+from externaltools import TrigRootAnalysis
 from ROOT import D3PD
+
 
 __all__ = [
     'get_trigger_config',
