@@ -7,3 +7,4 @@ ParametrizedBDTSelection.root
 deps/*
 higgstautau/pileup/*
 grl/2011/lumicalc/hadhad/*
+externaltools/*/share/*.root

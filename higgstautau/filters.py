@@ -38,6 +38,7 @@ class JetCleaning(EventFilter):
 
     def passes(self, event):
 
+        # using LC jets
         for jet in event.jets:
 
             if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max: continue
@@ -58,7 +59,8 @@ class JetCleaning(EventFilter):
 
         if self.datatype == datasets.DATA and self.year == 2012:
             if 202660 <= event.RunNumber <= 203027:
-                for jet in event.jets:
+                # recommendation is to use EM jets
+                for jet in event.jets_EM:
                     _etaphi28 = (
                         -0.2 < jet.eta < -0.1 and
                         2.65 < jet.phi < 2.75)

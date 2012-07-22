@@ -91,6 +91,8 @@ from rootpy.plotting import Hist
 
 from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
+from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
+
 import goodruns
 
 
@@ -108,7 +110,7 @@ branches_remove = [
     "mc_children",
     "mc_parents",
 
-    "jet_AntiKt4TopoEM_*",
+    #"jet_AntiKt4TopoEM_*", <== jet cleaning recommendation is with TopoEM jets
     #"jet_AntiKt4LCTopo_*",  <== need these for MET systematics
     "jet_AntiKt6*",
     #"jet_flavor_*",  <== need these for systematics...
@@ -153,6 +155,35 @@ branches_keep = [
     "el_mediumPP",
     "el_tightPP",
     "el_OQ",
+    # required for electron ID recalc
+    "el_cl_eta",
+    "el_cl_phi",
+    "el_m",
+    "el_deltaeta1",
+    "el_deltaphi2",
+    "el_Emax2",
+    "el_emaxs1",
+    "el_etas2",
+    "el_Ethad",
+    "el_Ethad1",
+    "el_expectHitInBLayer",
+    "el_f1",
+    "el_f3",
+    "el_isEM",
+    "el_nBLayerOutliers",
+    "el_nBLHits",
+    "el_nPixelOutliers",
+    "el_nPixHits",
+    "el_nSCTOutliers",
+    "el_nSiHits",
+    "el_nTRTHits",
+    "el_nTRTOutliers",
+    "el_reta",
+    "el_trackd0_physics",
+    "el_trackqoverp",
+    "el_TRTHighTOutliersRatio",
+    "el_weta2",
+    "el_wstot",
 
     "mu_staco_n",
     "mu_staco_E",
@@ -336,6 +367,7 @@ class HHSkim(ATLASStudent):
 
         # define tau collection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
+        intree.define_collection(name="electrons", prefix="el_", size="el_n")
         intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
         intree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
 
@@ -344,7 +376,10 @@ class HHSkim(ATLASStudent):
         emulated_trigger_passed = False
 
         if self.metadata.year == 2012:
-            bdtcutsFile = TFile("ParametrizedBDTSelection.root")
+            print "Patching Tau ID"
+            tauidpatch = TauIDpatch('ParametrizedBDTSelection.root')
+            print "Patching Electron ID"
+            electronidpatch = ElectronIDpatch()
 
         # entering the main event loop...
         for event in intree:
@@ -429,34 +464,9 @@ class HHSkim(ATLASStudent):
                     # the BDT bits are broken in the p1130 production, correct them
                     # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
                     # PRODUCTION TAG!!!
-                    for thisTau in event.taus:
-
-                        thisTau.JetBDTSigLoose=0
-                        thisTau.JetBDTSigMedium=0
-                        thisTau.JetBDTSigTight=0
-
-                        if thisTau.numTrack <= 1:
-                            myGraphLoose = bdtcutsFile.Get("loose_1p")
-                            myGraphMedium = bdtcutsFile.Get("medium_1p")
-                            myGraphTight = bdtcutsFile.Get("tight_1p")
-                        else:
-                            myGraphLoose = bdtcutsFile.Get("loose_3p")
-                            myGraphMedium = bdtcutsFile.Get("medium_3p")
-                            myGraphTight = bdtcutsFile.Get("tight_3p")
-
-                        looseCut = myGraphLoose.Eval(thisTau.pt)
-                        mediumCut = myGraphMedium.Eval(thisTau.pt)
-                        tightCut = myGraphTight.Eval(thisTau.pt)
-
-                        if thisTau.BDTJetScore > tightCut:
-                            thisTau.JetBDTSigLoose=1
-                            thisTau.JetBDTSigMedium=1
-                            thisTau.JetBDTSigTight=1
-                        elif thisTau.BDTJetScore > mediumCut:
-                            thisTau.JetBDTSigLoose=1
-                            thisTau.JetBDTSigMedium=1
-                        elif thisTau.BDTJetScore > looseCut:
-                            thisTau.JetBDTSigLoose=1
+                    tauidpatch(event)
+                    # patch electron ID for 2012
+                    electronidpatch(event)
 
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)
