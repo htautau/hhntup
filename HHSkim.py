@@ -110,7 +110,7 @@ branches_remove = [
     "mc_children",
     "mc_parents",
 
-    "jet_AntiKt4TopoEM_*",
+    #"jet_AntiKt4TopoEM_*", <== jet cleaning recommendation is with TopoEM jets
     #"jet_AntiKt4LCTopo_*",  <== need these for MET systematics
     "jet_AntiKt6*",
     #"jet_flavor_*",  <== need these for systematics...
@@ -376,7 +376,9 @@ class HHSkim(ATLASStudent):
         emulated_trigger_passed = False
 
         if self.metadata.year == 2012:
+            print "Patching Tau ID"
             tauidpatch = TauIDpatch('ParametrizedBDTSelection.root')
+            print "Patching Electron ID"
             electronidpatch = ElectronIDpatch()
 
         # entering the main event loop...

@@ -407,6 +407,9 @@ class ElectronIDpatch(EventFilter):
 
             #Retrieve relevant branches
             eta          = e.etas2
+            if eta == -999: # observed default value
+                # ignore this electron...
+                continue
             eT           = e.cl_E/cosh(eta)
             rHad         = e.Ethad/eT
             rHad1        = e.Ethad1/eT
