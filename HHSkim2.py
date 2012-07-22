@@ -150,7 +150,8 @@ class HHSkim2(ATLASStudent):
             ElectronIDpatch(
                 passthrough=self.metadata.year != 2012),
             ElectronVeto(),
-            MuonVeto(),
+            MuonVeto(
+                year=self.metadata.year),
             TauAuthor(),
             TauHasTrack(),
             TauMuonVeto(),
