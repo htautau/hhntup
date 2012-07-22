@@ -91,6 +91,8 @@ from rootpy.plotting import Hist
 
 from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
+from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
+
 import goodruns
 
 
@@ -344,7 +346,7 @@ class HHSkim(ATLASStudent):
         emulated_trigger_passed = False
 
         if self.metadata.year == 2012:
-            bdtcutsFile = TFile("ParametrizedBDTSelection.root")
+            tauidpatch = TauIDpatch('ParametrizedBDTSelection.root')
 
         # entering the main event loop...
         for event in intree:
@@ -429,34 +431,7 @@ class HHSkim(ATLASStudent):
                     # the BDT bits are broken in the p1130 production, correct them
                     # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
                     # PRODUCTION TAG!!!
-                    for thisTau in event.taus:
-
-                        thisTau.JetBDTSigLoose=0
-                        thisTau.JetBDTSigMedium=0
-                        thisTau.JetBDTSigTight=0
-
-                        if thisTau.numTrack <= 1:
-                            myGraphLoose = bdtcutsFile.Get("loose_1p")
-                            myGraphMedium = bdtcutsFile.Get("medium_1p")
-                            myGraphTight = bdtcutsFile.Get("tight_1p")
-                        else:
-                            myGraphLoose = bdtcutsFile.Get("loose_3p")
-                            myGraphMedium = bdtcutsFile.Get("medium_3p")
-                            myGraphTight = bdtcutsFile.Get("tight_3p")
-
-                        looseCut = myGraphLoose.Eval(thisTau.pt)
-                        mediumCut = myGraphMedium.Eval(thisTau.pt)
-                        tightCut = myGraphTight.Eval(thisTau.pt)
-
-                        if thisTau.BDTJetScore > tightCut:
-                            thisTau.JetBDTSigLoose=1
-                            thisTau.JetBDTSigMedium=1
-                            thisTau.JetBDTSigTight=1
-                        elif thisTau.BDTJetScore > mediumCut:
-                            thisTau.JetBDTSigLoose=1
-                            thisTau.JetBDTSigMedium=1
-                        elif thisTau.BDTJetScore > looseCut:
-                            thisTau.JetBDTSigLoose=1
+                    tauidpatch(event)
 
                 event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
                 number_of_good_vertices = len(event.vertices)

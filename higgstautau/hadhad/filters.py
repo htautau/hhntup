@@ -457,24 +457,8 @@ class JetCrackVeto(EventFilter):
 
 class ElectronVeto(EventFilter):
 
-    def __init__(self, year, **kwargs):
-
-        self.year = year
-        if self.year == 2012:
-            from externaltools import egammaAnalysisUtils
-            from ROOT import __
-        super(ElectronVeto, self).__init__(**kwargs)
-
     def passes(self, event):
 
-        if self.year == 2012:
-            # recalc mediumPP with egammaAnalysisUtils
-            # use implementation from lephad group
-            # this is a filter which always returns true...but also updates the
-            # mediumPP flag for each electron.
-            from higgstautau.lephad.correctiontools import ElectronIDpatch
-            ElectronIDpatch()
- 
         for el in event.electrons:
             pt = el.cl_E / cosh(el.tracketa)
             if pt <= 15 * GeV: continue
@@ -499,9 +483,8 @@ def muon_has_good_track(muon, pix_min=2, sct_min=6, abs_eta_min=-0.1):
         trt = ((n_trt_hits_outliers > 5) and
               (muon.nTRTOutliers < 0.9 * n_trt_hits_outliers))
     else:
-        trt = False
-        if n_trt_hits_outliers > 5:
-            trt = muon.nTRTOutliers < 0.9 * n_trt_hits_outliers
+        trt = (n_trt_hits_outliers <= 5 or
+               muon.nTRTOutliers < 0.9 * n_trt_hits_outliers)
 
     return blayer and pix and sct and holes and trt
 

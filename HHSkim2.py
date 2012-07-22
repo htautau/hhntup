@@ -18,7 +18,8 @@ from higgstautau.hadhad.filters import *
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
 from higgstautau.jetcalibration import JetCalibration
-from higgstautau.lephad.correctiontools import ElectronIDpatch
+
+from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
 
 import goodruns
 
@@ -146,8 +147,9 @@ class HHSkim2(ATLASStudent):
             JetCleaning(
                 datatype=self.metadata.datatype,
                 year=self.metadata.year),
-            ElectronVeto(
-                year=self.metadata.year),
+            ElectronIDpatch(
+                passthrough=self.metadata.year != 2012),
+            ElectronVeto(),
             MuonVeto(),
             TauAuthor(),
             TauHasTrack(),
@@ -157,6 +159,9 @@ class HHSkim2(ATLASStudent):
             TauEta(),
             TauCrack(),
             TauLArHole(),
+            # only for p1130 samples (applied in skim1)
+            #TauIDpatch('ParametrizedBDTSelection.root',
+            #    passthrough=self.metadata.year != 2012),
             TauIDMedium(),
             TauTriggerMatch(config=trigger_config,
                             year=self.metadata.year,
