@@ -184,6 +184,8 @@ class HHSkim2(ATLASStudent):
 
         # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
         chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
+        chain.define_collection(name="jets_EM", prefix="jet_AntiKt4TopoEM_",
+                size="jet_AntiKt4TopoEM_n", mix=FourMomentum)
         chain.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n", mix=MCTauFourMomentum)
         chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
