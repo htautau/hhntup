@@ -26,7 +26,7 @@ def get_scales(category):
 
     if category in SCALES:
         qcd_scale, ztautau_scale = SCALES[category]
-        print "scale factors for category %s" % category
+        print "scale factors for %s category" % category
         print "    qcd scale: %.3f" % qcd_scale
         print "    ztautau scale: %.3f" % ztautau_scale
         print
@@ -43,7 +43,7 @@ def has_category(category):
 def set_scales(category, qcd_scale, ztautau_scale):
 
     global MODIFIED
-    print "setting scale factors for category %s" % category
+    print "setting scale factors for %s category" % category
     print "    qcd scale: %.3f" % qcd_scale
     print "    ztautau scale: %.3f" % ztautau_scale
     print
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     else:
         read_scales()
     for category, (qcd_scale, ztautau_scale) in SCALES.items():
-        print "scale factors for category %s" % category
+        print "scale factors for %s category" % category
         print "    qcd scale: %.5f" % qcd_scale
         print "    ztautau scale: %.5f" % ztautau_scale
         print

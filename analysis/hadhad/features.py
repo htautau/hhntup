@@ -269,7 +269,7 @@ VARIABLES = {
         'filename': 'jet2_eta',
         'bins': 20,
         'range': (-5, 5),
-        'cats': ['VBF','BOOSTED']
+        'cats': ['VBF']
     },
     'jet1_fourvect.Pt()': {
         'title': r'$p_{T_{jet_{1}}}$',
@@ -287,7 +287,7 @@ VARIABLES = {
         'range': (20, 160),
         'scale': 0.001,
         'units': 'GeV',
-        'cats': ['VBF','BOOSTED']
+        'cats': ['VBF']
     },
     'jet1_fourvect_boosted.Eta()': {
         'title': r'boosted $\eta_{jet_{1}}$',
@@ -453,7 +453,10 @@ if __name__ == '__main__':
         for expr, var_info in VARIABLES.items():
             if category.upper() not in var_info['cats']:
                 continue
-            print expr
+
+            print
+            print "plotting %s in %s category" % (expr, category)
+
             bins = var_info['bins']
             min, max = var_info['range']
 
