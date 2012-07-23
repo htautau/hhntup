@@ -120,18 +120,22 @@ VARIABLES = {
         'scale': 0.001,
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'tau1_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{\tau_{1}}}$ [GeV]',
+    'tau1_fourvect.Pt()': {
+        'title': r'$p_{T_{\tau_{1}}}$',
         'filename': 'tau1_pt',
         'bins': 20,
         'range': (20, 100),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'tau2_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{\tau_{2}}}$ [GeV]',
+    'tau2_fourvect.Pt()': {
+        'title': r'$p_{T_{\tau_{2}}}$',
         'filename': 'tau2_pt',
         'bins': 20,
         'range': (20, 100),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'tau1_numTrack': {
@@ -267,18 +271,22 @@ VARIABLES = {
         'range': (-5, 5),
         'cats': ['VBF','BOOSTED']
     },
-    'jet1_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{jet_{1}}}$ [GeV]',
+    'jet1_fourvect.Pt()': {
+        'title': r'$p_{T_{jet_{1}}}$',
         'filename': 'jet1_pt',
         'bins': 20,
         'range': (20, 160),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF','BOOSTED']
     },
-    'jet2_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{jet_{2}}}$ [GeV]',
+    'jet2_fourvect.Pt()': {
+        'title': r'$p_{T_{jet_{2}}}$',
         'filename': 'jet2_pt',
         'bins': 20,
         'range': (20, 160),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF','BOOSTED']
     },
     'jet1_fourvect_boosted.Eta()': {
