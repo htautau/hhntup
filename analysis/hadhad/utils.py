@@ -93,6 +93,7 @@ def draw(model,
     bottom_margin = 0.16
     top_margin = 0.05
     right_margin = 0.05
+    ratio_sep_margin = 0.025
 
     width = 1. - right_margin - left_margin
     height = 1. - top_margin - bottom_margin
@@ -100,21 +101,24 @@ def draw(model,
     figheight = baseheight = 6.
     figwidth = basewidth = 8.
 
-    ratio_abs_height = 1.5
+    ratio_abs_height = 1.8
     qq_abs_height = 6.
     hist_abs_height = 6.
 
     if show_ratio and not show_qq:
-        figheight += ratio_abs_height
+        figheight += ratio_abs_height + ratio_sep_margin
 
         vscale = figheight / baseheight
         bottom_margin /= vscale
         top_margin /= vscale
 
         ratio_height = ratio_abs_height / figheight
-        hist_height = hist_abs_height / figheight - top_margin - bottom_margin
+        hist_height = (hist_abs_height / figheight
+                       - top_margin - bottom_margin)
 
-        rect_hist = [left_margin, bottom_margin + ratio_height, width, hist_height]
+        rect_hist = [left_margin,
+                     bottom_margin + ratio_height + ratio_sep_margin,
+                     width, hist_height]
         rect_ratio = [left_margin, bottom_margin, width, ratio_height]
 
     elif show_qq and not show_ratio:
@@ -176,9 +180,14 @@ def draw(model,
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
         ratio_ax.axhline(y=1)
-        rplt.errorbar(Hist.divide(data, sum(model), option='B'), fmt='o', axes=ratio_ax)
-        ratio_ax.set_ylim((0, 2.))
-        ratio_ax.yaxis.tick_right()
+        total_model = sum(model)
+        rplt.errorbar(
+                Hist.divide(data - total_model, total_model, option='B') * 100,
+                fmt='o', axes=ratio_ax)
+        ratio_ax.set_ylim((-100., 100.))
+        #ratio_ax.yaxis.tick_right()
+        ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
+                fontsize=20, position=(0., 1.), va='top')
 
     if show_qq:
         qq_ax = plt.axes(rect_qq)
@@ -219,15 +228,21 @@ def draw(model,
     frame.set_fill(False) # eps does not support alpha values
     frame.set_linewidth(0)
 
-    hist_ax.set_ylabel('Events', fontsize=20, position=(0., 1.), va='top')
-
-    label = name
     if units is not None:
         label = '%s [%s]' % (label, units)
+        binwidths = set(list(model[0].xwidth()))
+        if len(binwidths) == 1:
+            # constant width bins
+            ylabel = 'Events / %.3g [%s]' % (binwidth[0], units)
+        else:
+            ylabel = 'Events'
+    else:
+        label = name
+        ylabel = 'Events'
+    hist_ax.set_ylabel('Events', fontsize=20, position=(0., 1.), va='top')
 
     base_ax = hist_ax
     if show_ratio:
-        ratio_ax.set_ylabel('Data / Model', fontsize=20, position=(0., 1.), va='top')
         base_ax = ratio_ax
     base_ax.set_xlabel(label, fontsize=20, position=(1., 0.), ha='right')
 
