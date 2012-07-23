@@ -233,7 +233,7 @@ def draw(model,
         binwidths = set(list(model[0].xwidth()))
         if len(binwidths) == 1:
             # constant width bins
-            ylabel = 'Events / %.3g [%s]' % (binwidth[0], units)
+            ylabel = 'Events / %.3g [%s]' % (binwidths[0], units)
         else:
             ylabel = 'Events'
     else:
