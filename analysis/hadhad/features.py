@@ -448,8 +448,6 @@ if __name__ == '__main__':
             qcd_scale *= tmp1.Integral() / tmp2.Integral()
             qcd.scale = qcd_scale
 
-        print qcd_scale, ztautau_scale
-
         for expr, var_info in VARIABLES.items():
             if category.upper() not in var_info['cats']:
                 continue
