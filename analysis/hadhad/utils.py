@@ -191,7 +191,9 @@ def draw(model,
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
-        ratio_ax.axhline(y=1)
+        ratio_ax.axhline(y=0, color='black')
+        ratio_ax.axhline(y=50, color='black', linestyle='--')
+        ratio_ax.axhline(y=-50, color='black', linestyle='--')
         total_model = sum(model)
         rplt.errorbar(
                 Hist.divide(data - total_model, total_model, option='B') * 100,
