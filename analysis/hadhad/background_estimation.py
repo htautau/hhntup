@@ -158,7 +158,7 @@ def qcd_ztautau_norm(qcd,
     print "performing %d-dimensional fit using %s" % (ndim, expr)
 
     assert(ndim in (1, 2))
-    control = Cut('mass_mmc_tau1_tau2 < 100')
+    control = Cut('mass_mmc_tau1_tau2 < 110')
     control &= cuts
 
     print "fitting scale factors in control region: %s" % control
