@@ -13,8 +13,8 @@ MC11:
 
 MC12:
 
-* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v2/**
-* Stage II: On the way... 
+* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3.v3/**
 
 Data11:
 
@@ -23,8 +23,8 @@ Data11:
 
 Data12:
 
-* Stage I: **group.phys-higgs.HHSkim.data12_8TeV.*NTUP_TAU*p1130.v2/**
-* Stage II: On the way...
+* Stage I: **group.phys-higgs.HHSkim.data12_8TeV*NTUP_TAU*p1130.v3/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.data12_8TeV*NTUP_TAU*p1130.v3.v3/**
 
 Embedding11:
 
