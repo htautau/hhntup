@@ -437,7 +437,8 @@ class Data(Sample):
 
         super(Data, self).__init__(scale=1., cuts=cuts)
         self.data = self.DATA_FILE.Get('higgstautauhh')
-        self.label = '2011 Data $\sqrt{s} = 7$ TeV\n$\int L dt = 4.7$ fb$^{-1}$'
+        self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
+                      '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
         self.name = 'Data'
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):

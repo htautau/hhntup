@@ -806,4 +806,3 @@ class HasTau(EventFilter):
 
     def passes(self, event):
         return len(event.taus) > 0
-        

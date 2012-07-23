@@ -21,14 +21,18 @@ VARIABLES = {
         'title': r'$\sum p_T$',
         'filename': 'sum_pt',
         'bins': 20,
-        'range': (50000, 450000),
+        'range': (50, 450),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'sum_pt_full': {
         'title': r'$\sum p_T$ (all)',
         'filename': 'sum_pt_full',
         'bins': 20,
-        'range': (50000, 450000),
+        'range': (50, 450),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'higgs_pt': {
@@ -36,6 +40,7 @@ VARIABLES = {
         'filename': 'higgs_pt',
         'bins': 20,
         'range': (0, 200),
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'numJets': {
@@ -132,14 +137,14 @@ VARIABLES = {
     'tau1_numTrack': {
         'title': r'$\tau_{1}$ Number of Tracks',
         'filename': 'tau1_numTrack',
-        'bins': 6,
+        'bins': 5,
         'range': (-.5, 4.5),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'tau2_numTrack': {
         'title': r'$\tau_{2}$ Number of Tracks',
         'filename': 'tau2_numTrack',
-        'bins': 6,
+        'bins': 5,
         'range': (-.5, 4.5),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
@@ -275,7 +280,7 @@ VARIABLES = {
         'bins': 20,
         'range': (20, 160),
         'cats': ['VBF','BOOSTED']
-    }
+    },
     'jet1_fourvect_boosted.Eta()': {
         'title': r'boosted $\eta_{jet_{1}}$',
         'filename': 'jet1_eta_boosted',

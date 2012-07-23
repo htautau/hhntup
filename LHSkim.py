@@ -20,8 +20,8 @@ from rootpy.registry import lookup_demotion
 from higgstautau.mixins import TauFourMomentum, ElFourMomentum
 from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
                                        OverlapCheck, SetElectronsFourVector #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
-from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
 
+from higgstautau.patches import ElectronIDpatch, TauIDpatch
 import goodruns
 
 
@@ -101,7 +101,6 @@ class LHSkim(ATLASStudent):
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
         intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
-
 
         # set the event filters
         event_filters = EventFilterList([

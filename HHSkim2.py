@@ -18,8 +18,7 @@ from higgstautau.hadhad.filters import *
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
 from higgstautau.jetcalibration import JetCalibration
-
-from higgstautau.lephad.correctiontools import ElectronIDpatch, TauIDpatch
+from higgstautau.patches import ElectronIDpatch, TauIDpatch
 
 import goodruns
 
