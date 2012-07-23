@@ -21,14 +21,18 @@ VARIABLES = {
         'title': r'$\sum p_T$',
         'filename': 'sum_pt',
         'bins': 20,
-        'range': (50000, 450000),
+        'range': (50, 450),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'sum_pt_full': {
         'title': r'$\sum p_T$ (all)',
         'filename': 'sum_pt_full',
         'bins': 20,
-        'range': (50000, 450000),
+        'range': (50, 450),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'higgs_pt': {
@@ -36,6 +40,7 @@ VARIABLES = {
         'filename': 'higgs_pt',
         'bins': 20,
         'range': (0, 200),
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'numJets': {

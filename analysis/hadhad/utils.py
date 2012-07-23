@@ -230,16 +230,17 @@ def draw(model,
 
     if units is not None:
         label = '%s [%s]' % (name, units)
-        binwidths = list(set(list(model[0].xwidth())))
+        binwidths = list(set(['%.3g' % w for w in list(model[0].xwidth())]))
+        print binwidths
         if len(binwidths) == 1:
             # constant width bins
-            ylabel = 'Events / %.3g [%s]' % (binwidths[0], units)
+            ylabel = 'Events / %s [%s]' % (binwidths[0], units)
         else:
             ylabel = 'Events'
     else:
         label = name
         ylabel = 'Events'
-    hist_ax.set_ylabel('Events', fontsize=20, position=(0., 1.), va='top')
+    hist_ax.set_ylabel(ylabel, fontsize=20, position=(0., 1.), va='top')
 
     base_ax = hist_ax
     if show_ratio:
