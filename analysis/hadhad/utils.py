@@ -250,7 +250,6 @@ def draw(model,
     if units is not None:
         label = '%s [%s]' % (name, units)
         binwidths = list(set(['%.3g' % w for w in list(model[0].xwidth())]))
-        print binwidths
         if len(binwidths) == 1:
             # constant width bins
             ylabel = 'Events / %s [%s]' % (binwidths[0], units)
