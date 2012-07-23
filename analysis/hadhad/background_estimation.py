@@ -128,9 +128,10 @@ def qcd_ztautau_norm(qcd,
                      category='preselection',
                      target_region='OS',
                      control_region='SS',
-                     cuts=None):
+                     cuts=None,
+                     use_cache=True):
 
-    if bkg_scales_cache.has_category(category):
+    if use_cache and bkg_scales_cache.has_category(category):
         return bkg_scales_cache.get_scales(category)
 
     min, max = .55, 1

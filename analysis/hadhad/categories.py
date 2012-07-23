@@ -4,7 +4,8 @@ from higgstautau.hadhad import categories
 ID_MEDIUM = Cut('tau1_JetBDTSigMedium==1 && tau2_JetBDTSigMedium==1')
 # low cut fixes mass, high cut removes QCD
 DR_FIX = Cut('1.0 < dR_tau1_tau2 < 3.2')
-COMMON_CUTS = Cut('MET > 20000') & ID_MEDIUM & DR_FIX
+MAX_NJET = Cut('numJets <= 3')
+COMMON_CUTS = Cut('MET > 20000') & ID_MEDIUM & DR_FIX & MAX_NJET
 
 CATEGORIES = {
     'vbf': {

@@ -352,6 +352,15 @@ VARIABLES = {
 
 if __name__ == '__main__':
 
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('--no-cache', action='store_false', dest='use_cache',
+            help="do not use cached background scale factors "
+            "and instead recalculate them",
+            default=True)
+    args = parser.parse_args()
+
     import ROOT
     ROOT.gROOT.SetBatch(True)
     from utils import *
@@ -412,7 +421,8 @@ if __name__ == '__main__':
             data=data,
             category=category,
             target_region=target_region,
-            control_region=control_region)
+            control_region=control_region,
+            use_cache=args.use_cache)
 
         print qcd_scale, ztautau_scale
 
