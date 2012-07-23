@@ -229,7 +229,7 @@ def draw(model,
     frame.set_linewidth(0)
 
     if units is not None:
-        label = '%s [%s]' % (label, units)
+        label = '%s [%s]' % (name, units)
         binwidths = set(list(model[0].xwidth()))
         if len(binwidths) == 1:
             # constant width bins
