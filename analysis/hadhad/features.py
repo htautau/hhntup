@@ -344,6 +344,8 @@ VARIABLES = {
 
 if __name__ == '__main__':
 
+    import ROOT
+    ROOT.gROOT.SetBatch(True)
     from utils import *
     from matplotlib import cm
     from categories import CATEGORIES

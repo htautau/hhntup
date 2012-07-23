@@ -47,6 +47,14 @@ def set_colours(hists, colour_map=cm.jet):
         h.SetColor(colour)
 
 
+def format_legend(l):
+
+    frame = l.get_frame()
+    #frame.set_alpha(.8)
+    frame.set_fill(False) # eps does not support alpha values
+    frame.set_linewidth(0)
+
+
 def root_axes(ax, no_xlabels=False, vscale=1.):
 
     ax.get_frame().set_linewidth(2)
@@ -165,17 +173,21 @@ def draw(model,
     if signal is not None and signal_colour_map is not None:
         set_colours(signal, signal_colour_map)
 
-    rplt.bar(model, linewidth=0, stacked=True, yerr='quadratic', axes=hist_ax,
-             ypadding=(.5, .1))
+    model_bars = rplt.bar(model, linewidth=0,
+            stacked=True, yerr='quadratic', axes=hist_ax,
+            ypadding=(.5, .1))
+
     if signal is not None:
         if signal_scale != 1.:
             for sig in signal:
                 sig *= signal_scale
                 sig.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(), signal_scale))
-        rplt.bar(signal, linewidth=0, stacked=True, yerr='quadratic',
-                 axes=hist_ax, alpha=.8, ypadding=(.5, .1))
+        signal_bars = rplt.bar(signal, linewidth=0,
+                stacked=True, yerr='quadratic',
+                axes=hist_ax, alpha=.8, ypadding=(.5, .1))
+
     if data is not None:
-        rplt.errorbar(data, fmt='o', axes=hist_ax, ypadding=(.5, .1))
+        data_bars = rplt.errorbar(data, fmt='o', axes=hist_ax, ypadding=(.5, .1))
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
@@ -220,13 +232,20 @@ def draw(model,
         qq_ax.set_xlim((gg_graph.xedgesl(0), gg_graph.xedgesh(-1)))
         qq_ax.set_ylim((min(y_low), max(y_up)))
 
-    l = hist_ax.legend(prop=prop, title=category_name,
+    model_legend = hist_ax.legend(
+            reversed(model_bars), [h.title for h in reversed(model)],
+            prop=prop, title=category_name,
             loc='upper left',
             numpoints=1)
-    frame = l.get_frame()
-    #frame.set_alpha(.8)
-    frame.set_fill(False) # eps does not support alpha values
-    frame.set_linewidth(0)
+    format_legend(model_legend)
+
+    if data is not None:
+        data_legend = hist_ax.legend([data_bars], [data.title],
+                prop=prop,
+                loc='upper right',
+                numpoints=1)
+        format_legend(data_legend)
+        hist_ax.add_artist(model_legend)
 
     if units is not None:
         label = '%s [%s]' % (name, units)
