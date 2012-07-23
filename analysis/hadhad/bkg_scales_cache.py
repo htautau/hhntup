@@ -25,7 +25,12 @@ def read_scales(name='background_scales.cache'):
 def get_scales(category):
 
     if category in SCALES:
-        return SCALES[category]
+        qcd_scale, ztautau_scale = SCALES[category]
+        print "scale factors for category %s" % category
+        print "    qcd scale: %.3f" % qcd_scale
+        print "    ztautau scale: %.3f" % ztautau_scale
+        print
+        return qcd_scale, ztautau_scale
     else:
         return None
 
@@ -38,6 +43,10 @@ def has_category(category):
 def set_scales(category, qcd_scale, ztautau_scale):
 
     global MODIFIED
+    print "setting scale factors for category %s" % category
+    print "    qcd scale: %.3f" % qcd_scale
+    print "    ztautau scale: %.3f" % ztautau_scale
+    print
     SCALES[category] = (qcd_scale, ztautau_scale)
     MODIFIED = True
 
@@ -50,9 +59,9 @@ if __name__ == '__main__':
     else:
         read_scales()
     for category, (qcd_scale, ztautau_scale) in SCALES.items():
-        print category
-        print "qcd scale: %.5f" % qcd_scale
-        print "ztautau scale: %.5f" % ztautau_scale
+        print "scale factors for category %s" % category
+        print "    qcd scale: %.5f" % qcd_scale
+        print "    ztautau scale: %.5f" % ztautau_scale
         print
 else:
     import atexit

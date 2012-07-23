@@ -134,6 +134,7 @@ def qcd_ztautau_norm(qcd,
     if use_cache and bkg_scales_cache.has_category(category):
         return bkg_scales_cache.get_scales(category)
 
+    print "fitting scale factors for category %s" % category
     min, max = .55, 1
     bins = categories.CATEGORIES[category]['fitbins']
     expr = 'tau2_BDTJetScore:tau1_BDTJetScore'

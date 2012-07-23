@@ -424,8 +424,6 @@ if __name__ == '__main__':
             control_region=control_region,
             use_cache=args.use_cache)
 
-        print qcd_scale, ztautau_scale
-
         qcd.scale = qcd_scale
         mc_ztautau.scale = ztautau_scale
 
