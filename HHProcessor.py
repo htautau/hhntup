@@ -249,6 +249,14 @@ class HHProcessor(ATLASStudent):
             event.jets.select(lambda jet:
                     jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
 
+            # correct for "bunny ears" in data
+            if self.metadata.datatype == datasets.DATA:
+                # cut away jets below 30GeV in 2.5 < |eta| < 3.5
+                event.jets.select(lambda jet:
+                        jet.pt > 30 * GeV or
+                        abs(jet.eta) < 2.5 or
+                        abs(jet.eta) > 3.5)
+
             # remove overlap with taus
             event.jets.select(lambda jet:
                     not any([tau for tau in event.taus if
