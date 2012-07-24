@@ -1,16 +1,16 @@
+import os
+import ROOT
+ROOT.gROOT.SetBatch(True)
 from rootpy.tree import Cut
 from rootpy.plotting import Hist, Hist2D, HistStack, Legend, Canvas
 import numpy as np
 from scipy.optimize import fmin_l_bfgs_b
 from utils import set_colours
 import categories
-import ROOT
-ROOT.gROOT.SetBatch(True)
-#ROOT.gStyle.SetOptFit(1111)
-
 from ROOT import TF1, TF2, TLatex
 from array import array
 import bkg_scales_cache
+from config import plots_dir
 
 
 class FitError(Exception):
@@ -27,12 +27,14 @@ def draw_fit(
         category,
         name,
         ndim=1,
-        format='png',
+        formats=('png', 'eps', 'pdf'),
         xlabel=None,
         ylabel=None,
         model_func=None,
         qcd_scale=1,
         ztautau_scale=1):
+
+    PLOTS_DIR = plots_dir(__file__)
 
     ztautau_hist = ztautau_hist.Clone()
     ztautau_hist *= ztautau_scale
@@ -118,7 +120,8 @@ def draw_fit(
     c.Update()
     c.OwnMembers()
     c.Draw()
-    c.SaveAs("%s.%s" % (name, format))
+    for format in formats:
+        c.SaveAs(os.path.join(PLOTS_DIR, "%s.%s" % (name, format)))
 
 
 def qcd_ztautau_norm(qcd,
@@ -128,11 +131,13 @@ def qcd_ztautau_norm(qcd,
                      category='preselection',
                      target_region='OS',
                      control_region='SS',
-                     cuts=None):
+                     cuts=None,
+                     use_cache=True):
 
-    if bkg_scales_cache.has_category(category):
+    if use_cache and bkg_scales_cache.has_category(category):
         return bkg_scales_cache.get_scales(category)
 
+    print "fitting scale factors for %s category" % category
     min, max = .55, 1
     bins = categories.CATEGORIES[category]['fitbins']
     expr = 'tau2_BDTJetScore:tau1_BDTJetScore'
@@ -150,9 +155,13 @@ def qcd_ztautau_norm(qcd,
 
     name = "%dd_%s_fit_%s" % (ndim, fit_name, category)
 
+    print "performing %d-dimensional fit using %s" % (ndim, expr)
+
     assert(ndim in (1, 2))
-    control = Cut('mass_mmc_tau1_tau2 < 100')
+    control = Cut('mass_mmc_tau1_tau2 < 110')
     control &= cuts
+
+    print "fitting scale factors in control region: %s" % control
 
     if ndim == 1:
         hist = Hist(bins, min, max, name='fit_%s' % category)
@@ -256,8 +265,13 @@ def qcd_ztautau_norm(qcd,
 
     factor = data_hist.Integral() / (qcd_hist + ztautau_hist * ztautau_scale +
             bkg_hist).Integral()
-    print factor
-    print qcd_scale, ztautau_scale
+
+    print "fitted scale factors for %s category" % category
+    print "    qcd scale: %.3f" % qcd_scale
+    print "    ztautau scale: %.3f" % ztautau_scale
+    print "data / model in this control region: %.3f" % factor
+    print
+
     qcd_scale *= factor
     ztautau_scale *= factor
 

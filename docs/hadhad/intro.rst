@@ -18,11 +18,9 @@ Status:
 * Fake rate scale factor correction (will have updated factors from Marcus) *DONE*
 * Trigger efficiency scale factor correction *TODO*
 * Background estimation: determine QCD and Ztautau normalizations *WORK IN PROGRESS*
-* !! Apply New jet calibration (ApplyJetCalibration-00-01-06?)
-* Final BDT training and show output in low mass region (and sideband?) *TODO*
-* Systematics *TODO*
-* Determine limits on Higgs cross sections *TODO*
-* Document analysis here! *WORK IN PROGRESS*
+* Final BDT training and show output in low mass region (and sideband?) *WORK IN PROGRESS*
+* Systematics *WORK IN PROGRESS*
+* Determine limits on Higgs cross sections *WORK IN PROGRESS*
 
 Outstanding Problems:
 
@@ -35,9 +33,7 @@ Outstanding Problems:
   QCD distributions with more stats. Possible bias in QCD background model since
   this will be the only sample with 2-track, 4-track etc taus.
 * Develop method of estimating systematics on the BDT score
-* Treat JES and TES as correlated
-* New JES in skim 2
-* Make plot scripts easy to run
+* Treat JES and TES as correlated (separately in signal and background)
 
 
 Ideas

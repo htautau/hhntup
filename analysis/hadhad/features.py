@@ -120,18 +120,22 @@ VARIABLES = {
         'scale': 0.001,
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'tau1_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{\tau_{1}}}$ [GeV]',
+    'tau1_fourvect.Pt()': {
+        'title': r'$p_{T_{\tau_{1}}}$',
         'filename': 'tau1_pt',
         'bins': 20,
         'range': (20, 100),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'tau2_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{\tau_{2}}}$ [GeV]',
+    'tau2_fourvect.Pt()': {
+        'title': r'$p_{T_{\tau_{2}}}$',
         'filename': 'tau2_pt',
         'bins': 20,
         'range': (20, 100),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'tau1_numTrack': {
@@ -265,21 +269,25 @@ VARIABLES = {
         'filename': 'jet2_eta',
         'bins': 20,
         'range': (-5, 5),
-        'cats': ['VBF','BOOSTED']
+        'cats': ['VBF']
     },
-    'jet1_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{jet_{1}}}$ [GeV]',
+    'jet1_fourvect.Pt()': {
+        'title': r'$p_{T_{jet_{1}}}$',
         'filename': 'jet1_pt',
         'bins': 20,
         'range': (20, 160),
+        'scale': 0.001,
+        'units': 'GeV',
         'cats': ['VBF','BOOSTED']
     },
-    'jet2_fourvect.Pt()/1000': {
-        'title': r'$p_{T_{jet_{2}}}$ [GeV]',
+    'jet2_fourvect.Pt()': {
+        'title': r'$p_{T_{jet_{2}}}$',
         'filename': 'jet2_pt',
         'bins': 20,
         'range': (20, 160),
-        'cats': ['VBF','BOOSTED']
+        'scale': 0.001,
+        'units': 'GeV',
+        'cats': ['VBF']
     },
     'jet1_fourvect_boosted.Eta()': {
         'title': r'boosted $\eta_{jet_{1}}$',
@@ -344,6 +352,17 @@ VARIABLES = {
 
 if __name__ == '__main__':
 
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('--no-cache', action='store_false', dest='use_cache',
+            help="do not use cached background scale factors "
+            "and instead recalculate them",
+            default=True)
+    args = parser.parse_args()
+
+    import ROOT
+    ROOT.gROOT.SetBatch(True)
     from utils import *
     from matplotlib import cm
     from categories import CATEGORIES
@@ -402,9 +421,8 @@ if __name__ == '__main__':
             data=data,
             category=category,
             target_region=target_region,
-            control_region=control_region)
-
-        print qcd_scale, ztautau_scale
+            control_region=control_region,
+            use_cache=args.use_cache)
 
         qcd.scale = qcd_scale
         mc_ztautau.scale = ztautau_scale
@@ -430,12 +448,13 @@ if __name__ == '__main__':
             qcd_scale *= tmp1.Integral() / tmp2.Integral()
             qcd.scale = qcd_scale
 
-        print qcd_scale, ztautau_scale
-
         for expr, var_info in VARIABLES.items():
             if category.upper() not in var_info['cats']:
                 continue
-            print expr
+
+            print
+            print "plotting %s in %s category" % (expr, category)
+
             bins = var_info['bins']
             min, max = var_info['range']
 
