@@ -9,7 +9,7 @@ The latest versions of the skims are:
 MC11:
 
 * Stage I: **group.phys-higgs.HHSkim.mc11_7TeV*p851.v1/**
-* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v1/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v2/**
 
 MC12:
 
@@ -19,7 +19,7 @@ MC12:
 Data11:
 
 * Stage I: **user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/**
-* Stage II: **group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v3/**
+* Stage II: **group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v5/**
 
 Data12:
 
