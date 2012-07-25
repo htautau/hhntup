@@ -19,14 +19,14 @@ import os
 
 
 TEST_CMD = """\
-grid-batch --dataset %(dataset) --metadata datasets.cfg 
---student %(student) %(testinput)
+grid-batch --dataset %(dataset)s --metadata datasets.cfg 
+--student %(student)s %(testinput)s
 """
 
 SUBMIT_CMD = """\
-grid-submit -u group.phys-higgs -m datasets.cfg -s %(student) -v %(version)
-%(dataset)
---official --voms=atlas:/atlas/phys-higgs/Role=production %(options)
+grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
+%(dataset)s
+--official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
 """
 
 configspec = 'skims.spec'
@@ -62,6 +62,15 @@ version = skim['version']
 options = skim['options']
 
 if args.test:
-    call(TEST_CMD.format(**locals()), shell=True)
+    cmd = TEST_CMD % locals()
 else:
-    call(SUBMIT_CMD.format(**locals()), shell=True)
+    cmd = SUBMIT_CMD % locals()
+
+cmd = cmd.replace('\n', ' ')
+
+print "executing:"
+print
+print cmd
+print
+if raw_input("Is this OK? Y/[n] ") == 'Y':
+    call(cmd, shell=True)
