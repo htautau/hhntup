@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Controls submission of the skims.
+The master skim launcher and tester
 """
 
 from argparse import ArgumentParser
