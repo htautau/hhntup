@@ -110,3 +110,206 @@ class LArHole(EventFilter):
             if not jet.pt > 20 * GeV: continue
             if in_lar_hole(jet.eta, jet.phi): return False
         return True
+
+
+class JetCrackVeto(EventFilter):
+
+    def passes(self, event):
+
+        for jet in event.jets:
+            if jet.pt <= 20 * GeV: continue
+            if 1.3 < abs(jet.eta) < 1.7: return False
+        return True
+
+
+def muon_has_good_track(muon, pix_min=2, sct_min=6, abs_eta_min=-0.1):
+
+    blayer = (muon.expectBLayerHit == 0) or (muon.nBLHits > 0)
+    pix = muon.nPixHits + muon.nPixelDeadSensors >= pix_min
+    sct = muon.nSCTHits + muon.nSCTDeadSensors >= sct_min
+    holes = muon.nPixHoles + muon.nSCTHoles < 3
+    n_trt_hits_outliers = muon.nTRTHits + muon.nTRTOutliers
+
+    if abs_eta_min < abs(muon.eta) < 1.9:
+        trt = ((n_trt_hits_outliers > 5) and
+              (muon.nTRTOutliers < 0.9 * n_trt_hits_outliers))
+    else:
+        trt = (n_trt_hits_outliers <= 5 or
+               muon.nTRTOutliers < 0.9 * n_trt_hits_outliers)
+
+    return blayer and pix and sct and holes and trt
+
+
+class TauElectronVeto(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        super(TauElectronVeto, self).__init__(**kwargs)
+        self.min_taus = min_taus
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.EleBDTLoose == 0)
+        return len(event.taus) >= self.min_taus
+
+
+class TauMuonVeto(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        super(TauMuonVeto, self).__init__(**kwargs)
+        self.min_taus = min_taus
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.muonVeto == 0)
+        return len(event.taus) >= self.min_taus
+
+
+class TauHasTrack(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        super(TauHasTrack, self).__init__(**kwargs)
+        self.min_taus = min_taus
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.numTrack > 0)
+        return len(event.taus) >= self.min_taus
+
+
+class TauAuthor(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        super(TauAuthor, self).__init__(**kwargs)
+        self.min_taus = min_taus
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.author != 2)
+        return len(event.taus) >= self.min_taus
+
+
+class TauPT(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauPT, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.pt > 20 * GeV)
+        return len(event.taus) >= self.min_taus
+
+
+class TauEta(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauEta, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: abs(tau.eta) < 2.5) # was 2.1
+        return len(event.taus) >= self.min_taus
+
+
+class TauJVF(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauJVF, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: True if
+                abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
+        return len(event.taus) >= self.min_taus
+
+
+class Tau1Track3Track(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(Tau1Track3Track, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.numTrack in (1, 3))
+        return len(event.taus) >= self.min_taus
+
+
+class TauCharge(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauCharge, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: abs(tau.charge) == 1)
+        return len(event.taus) >= self.min_taus
+
+
+class TauIDLoose(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauIDLoose, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.JetBDTSigLoose)
+        return len(event.taus) >= self.min_taus
+
+
+class TauIDMedium(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauIDMedium, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.JetBDTSigMedium)
+        return len(event.taus) >= self.min_taus
+
+
+class TauCrack(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauCrack, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: not (1.37 < abs(tau.track_eta[tau.leadtrack_idx]) < 1.52))
+        return len(event.taus) >= self.min_taus
+
+
+class TauLArHole(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauLArHole, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        if not 180614 <= event.RunNumber <= 184169:
+            return True
+
+        event.taus.select(lambda tau:
+                not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
+                 and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
+        return len(event.taus) >= self.min_taus
