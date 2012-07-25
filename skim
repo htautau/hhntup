@@ -50,8 +50,8 @@ if result != True:
     sys.exit(1)
 
 if args.skim is None:
-    for skim in metadata.keys():
-        print skim
+    for skim, info in metadata.items():
+        print "%s (version %d)" % (skim, info['version'])
     sys.exit(0)
 
 skim = metadata[args.skim]
