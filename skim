@@ -62,6 +62,6 @@ version = skim['version']
 options = skim['options']
 
 if args.test:
-    call(TEST_CMD.format(**locals()))
+    call(TEST_CMD.format(**locals()), shell=True)
 else:
-    call(SUBMIT_CMD.format(**locals()))
+    call(SUBMIT_CMD.format(**locals()), shell=True)
