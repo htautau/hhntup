@@ -92,6 +92,7 @@ from rootpy.plotting import Hist
 from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
+from higgstautau.filters import vertex_selection
 
 import goodruns
 
@@ -468,7 +469,7 @@ class HHSkim(ATLASStudent):
                     # patch electron ID for 2012
                     electronidpatch(event)
 
-                event.vertices.select(lambda vxp: (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2))
+                event.vertices.select(vertex_selection)
                 number_of_good_vertices = len(event.vertices)
                 event.taus.select(lambda tau: tau.author != 2 and tau.numTrack > 0 and
                                               tau.pt > 18*GeV and

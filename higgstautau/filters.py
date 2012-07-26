@@ -19,6 +19,12 @@ class PriVertex(EventFilter):
         return any(ifilter(lambda vxp: vxp.type == 1 and vxp.nTracks >= 4, event.vertices))
 
 
+def vertex_selection(vxp):
+    """ Does the full primary and pileup vertex selection """
+
+    return (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2)
+
+
 class JetCleaning(EventFilter):
 
     def __init__(self,

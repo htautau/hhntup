@@ -636,17 +636,6 @@ def jet_selection(jet):
 
 
 ############################################################
-# VERTEX SELECTION
-############################################################
-
-def vertex_selection(vxp):
-    """ Does the full primary and pileup vertex selection """
-
-    return (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2)
-
-
-
-############################################################
 # OBJECT ANALYSIS FILTERS
 ############################################################
 
