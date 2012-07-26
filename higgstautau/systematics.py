@@ -36,6 +36,228 @@ from ROOT import MuonSmear
 from ROOT import TESUncertaintyProvider
 
 
+class ObjectSystematic(object):
+
+    def __init__(self, verbose=False):
+
+        self.verbose = verbose
+
+
+class JetSystematic(ObjectSystematic):
+
+    def __init__(self, is_up, **kwargs):
+
+        self.is_up = is_up # up or down variation
+        super(JetSystematic, self).__init__(**kwargs)
+
+    @staticmethod
+    def set(f):
+
+        def wrapper(self, event):
+
+            if self.verbose:
+                print "JETS BEFORE:"
+                for jet in event.jets:
+                    print jet.pt
+                print "=" * 20
+
+            shifts = f(self, event)
+            for ijet in xrange(event.jet_n):
+                event.jet_pt[ijet] *= 1. + shifts[ijet]
+
+            if self.verbose:
+                print "JETS AFTER:"
+                for jet in event.jets:
+                    print jet.pt
+
+        return wrapper
+
+
+class JES(JetSystematic):
+
+    def __init__(self, **kwargs):
+
+        # *** Set up the uncertainty tools ***
+        # Tag assumed: JetUncertainties-00-05-09-02
+        self.jesTool = MultijetJESUncertaintyProvider(
+            JetUncertainties.get_resource("MultijetJES_Preliminary.config"),
+            JetUncertainties.get_resource("InsituJES2011_AllNuisanceParameters.config"),
+            "AntiKt4LCTopoJets","MC11c")
+        super(JES, self).__init__(**kwargs)
+
+    @JetSystematic.set
+    def run(self, event):
+
+        shifts = []
+        # jet_ is jet_AntiKt4LCTopo in tau D3PDs
+        for ijet, jet in enumerate(event.jets):
+
+            # Safest to assume nothing about the uncertainties on soft jets.
+            # These will go into SoftJets anyhow, and so the JES systematics
+            # aren't used.
+            shift = 0.
+
+            if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
+
+                # delta R cut needed to apply close-by jets uncertainty
+                drmin=9999
+                for jjet, otherjet in enumerate(event.jets):
+                    if otherjet.emscale_pt > 7000:
+                        if ijet != jjet:
+                            dr = utils.dR(jet.eta, jet.phi,
+                                          otherjet.eta,
+                                          otherjet.phi)
+                            if dr < drmin:
+                                drmin = dr
+
+                # The bool is the "isPos" argumenti
+                if self.is_up:
+                    shift = self.jesTool.getRelUncert(jet.pt,
+                                 jet.eta,drmin,
+                                 True, self.nvtxjets, event.averageIntPerXing)
+                else:
+                    shift = -1 * self.jesTool.getRelUncert(jet.pt,
+                                  jet.eta,drmin,
+                                  False, self.nvtxjets, event.averageIntPerXing)
+
+            shifts.append(shift)
+        return shifts
+
+
+class JER(JetSystematic)
+
+    def __init__(self, **kwargs):
+
+        # Tag assumed: JetResolution-01-00-00
+        self.jerTool = JERProvider(
+            "AntiKt4LCTopoJES", "Truth",
+            JetResolution.get_resource('JERProviderPlots.root'))
+        self.jerTool.init()
+        super(JER, self).__init__(**kwargs)
+
+    @JetSystematic.set
+    def run(self, event):
+        """
+        JET SYSTEMATICS
+        """
+        # Note on use of ROOT random number generators:
+        # TRandom and TRandom2 have many documented deficiencies.
+        # TRandom3 is generally considered safely usable.
+        # Also note that ROOT's gRandom calls TRandom3.
+        jetRandom = ROOT.TRandom3()
+        shifts = []
+
+        # jet_ is jet_AntiKt4LCTopo in tau D3PDs
+        for ijet, jet in enumerate(event.jets):
+            shift = 0.
+            # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
+            if jet.pt > 20e3 and jet.pt < 5000e3:
+                pt = jet.pt
+                eta = jet.eta
+                if abs(eta) > 4.5:
+                    eta = 4.49 if eta > 0 else -4.49
+
+                S = self.jerTool.getRelResolutionMC(pt/1e3,eta)
+                U = self.jerTool.getResolutionUncert(pt/1e3,eta)
+                smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
+
+                # You can set the seed however you like, but if reproducibility
+                # is required, setting it to something like object phi ensures
+                # a good mix of randomness and reproducibility.
+                jetRandom.SetSeed(int(1.e5 * abs(jet.phi)))
+                jerShift = jetRandom.Gaus(0, smearingFactorSyst)
+
+            if self.is_up:
+                shift = jerShift
+            else:
+                shift = -1 * jerShift # Usually not used, see below.
+
+            """
+            Note: The JERDown shift is essentially meaningless.
+            If one is smearing central values, then there is an alternate
+            definition, i.e. from r16:
+
+            S = self.jerTool.getRelResolutionData(pt/1e3,eta)
+            SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
+            U = self.jerTool.getResolutionUncert(pt/1e3,eta)
+            smearingFactorMC = sqrt( S*S - SMC*SMC )
+            smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
+            smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
+
+            float jerShift = jetRandom.Gaus(1,smearingFactorMC)
+            float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
+            float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
+
+            jet_smeared_pt = pt*jerShift
+            jerUp.push_back(jerShiftUp-1)
+            jerDown.push_back(jerShiftDown-1)
+
+            This means that we smear the MC jets to match the resolution in data
+            for central values, or the resolution +/- uncertainty.
+            The standard practice is only to use res + uncertainty.
+            """
+            shifts.append(shift)
+        return shifts
+
+
+class TauSystematic(ObjectSystematic):
+
+    def __init__(self, is_up, **kwargs):
+
+        self.is_up = is_up # up or down variation
+        super(TauSystematic, self).__init__(**kwargs)
+
+    @staticmethod
+    def set(f):
+
+        def wrapper(self, event):
+
+            if self.verbose:
+                print "TAUS BEFORE:"
+                for tau in event.taus:
+                    print tau.pt
+                print "=" * 20
+
+            shifts = f(self, event)
+            for itau in xrange(event.tau_n):
+                event.tau_pt[itau] *= 1. + shifts[itau]
+
+            if self.verbose:
+                print "TAUS AFTER:"
+                for tau in event.taus:
+                    print tau.pt
+
+        return wrapper
+
+
+class TES(TauSystematic):
+
+    def __init__(self, **kwargs):
+
+        # No tag yet, testing code
+        self.tesTool = TESUncertaintyProvider()
+        super(TES, self).__init__(**kwargs)
+
+    @TauSystematic.set
+    def run(self, event):
+
+        shifts = []
+
+        for tau in event.taus:
+            pt = tau.pt
+            eta = tau.eta
+            nProng = tau.nProng
+            uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
+            if uncert < 0:
+                uncert = 0
+            if self.is_up:
+                shifts.append(uncert)
+            else:
+                shifts.append(-1 * uncert)
+
+        return shifts
+
+
 class Systematics(EventFilter):
 
     # default
@@ -129,8 +351,7 @@ class Systematics(EventFilter):
         PILEUP_DOWN = METUtil.PileupDown
 
     def __init__(self,
-            systematic_type,
-            systematic_term,
+            terms,
             datatype,
             year,
             verbose=False,
@@ -139,66 +360,36 @@ class Systematics(EventFilter):
 
         super(Systematics, self).__init__(**kwargs)
 
-        # systematic_type must equal one of the classes above or None
-        # to disable systematics
-        if systematic_type is None:
-            self.systematic_type = Systematics.Nominal
-        else:
-            self.systematic_type = systematic_type
-        # systematic_term must equal one of the associated terms for
-        # sytematic_type
-        if systematic_term is None:
-            self.systematic_term = Systematics.Nominal.NONE
-        else:
-            self.systematic_term = systematic_term
+        self.systematics = []
+        for term in terms:
+            if term == Systematics.Jets.JES_UP:
+                systematic = JES(True, verbose=very_verbose)
+            elif term == Systematics.Jets.JES_DOWN:
+                systematic = JES(False, verbose=very_verbose)
+            elif term == Systematics.Jets.JER_UP:
+                systematic = JER(True, verbose=very_verbose)
+            elif term == Systematics.Taus.TES_UP:
+                systematic = TES(True, verbose=very_verbose)
+            elif term == Systematics.Taus.TES_DOWN:
+                systematic = TES(False, verbose=very_verbose)
+            else:
+                raise ValueError("systematic not supported")
+            self.systematics.append(systematic)
 
         self.datatype = datatype
         self.year = year
         self.verbose = verbose
         self.very_verbose = very_verbose
 
-        self.jesUp = ROOT.vector('float')()
-        self.jesDown = ROOT.vector('float')()
-        self.jerUp = ROOT.vector('float')()
-        self.jerDown = ROOT.vector('float')()
-
-        self.eesUp = ROOT.vector('float')()
-        self.eesDown = ROOT.vector('float')()
-        self.eerUp = ROOT.vector('float')()
-        self.eerDown = ROOT.vector('float')()
-        self.el_smeared_pt = ROOT.vector('float')()
-
-        self.pesUp = ROOT.vector('float')()
-        self.pesDown = ROOT.vector('float')()
-        self.perUp = ROOT.vector('float')()
-        self.perDown = ROOT.vector('float')()
-        self.ph_smeared_pt = ROOT.vector('float')()
-
-        self.mu_smeared_pt = ROOT.vector('float')()
-        self.mu_smeared_ms_pt = ROOT.vector('float')()
-
-        self.cb_meridUp = ROOT.vector('float')()
-        self.cb_meridDown = ROOT.vector('float')()
-        self.cb_mermsUp = ROOT.vector('float')()
-        self.cb_mermsDown = ROOT.vector('float')()
-        self.mermsUp = ROOT.vector('float')()
-        self.mermsDown = ROOT.vector('float')()
-
-        self.mesUp = ROOT.vector('float')()
-        self.mesDown = ROOT.vector('float')()
-
-        self.tesUp = ROOT.vector('float')()
-        self.tesDown = ROOT.vector('float')()
-
         # Initialise your METUtility object
-        self.systUtil = METUtility()
+        self.met_utility = METUtility()
 
         # *** Demonstration of the configuration here  ***
         # *** All values that are set are the defaults ***
 
         # Turn on (off) the relevant MET terms
         # These are the terms required for MET_RefFinal(_BDTMedium)
-        self.systUtil.defineMissingET(
+        self.met_utility.defineMissingET(
                 True,  # RefEle
                 True,  # RefGamma
                 True,  # RefTau
@@ -211,28 +402,13 @@ class Systematics(EventFilter):
             )
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
-        self.systUtil.setSoftJetCut(20e3)
+        self.met_utility.setSoftJetCut(20e3)
 
         # Whether to use MUID muons (otherwise STACO).
-        self.systUtil.setIsMuid(False)
+        self.met_utility.setIsMuid(False)
 
         # Whether METUtility should scream at you over every little thing
-        self.systUtil.setVerbosity(self.very_verbose)
-
-        # Some other options are available, but not recommended/deprecated
-
-        # *** Set up the uncertainty tools ***
-        # Tag assumed: JetUncertainties-00-05-09-02
-        self.jesTool = MultijetJESUncertaintyProvider(
-            JetUncertainties.get_resource("MultijetJES_Preliminary.config"),
-            JetUncertainties.get_resource("InsituJES2011_AllNuisanceParameters.config"),
-            "AntiKt4LCTopoJets","MC11c")
-
-        # Tag assumed: JetResolution-01-00-00
-        self.jerTool = JERProvider(
-            "AntiKt4LCTopoJES", "Truth",
-            JetResolution.get_resource('JERProviderPlots.root'))
-        self.jerTool.init()
+        self.met_utility.setVerbosity(self.very_verbose)
 
         # Tag assumed: egammaAnalysisUtils-00-02-76
         self.egammaTool = eg2011.EnergyRescaler()
@@ -244,35 +420,6 @@ class Systematics(EventFilter):
                 MuonMomentumCorrections.RESOURCE_PATH)
         self.muonTool.UseScale(1)
         self.muonTool.UseImprovedCombine()
-
-        # No tag yet, testing code
-        self.tesTool = TESUncertaintyProvider()
-
-        if self.systematic_type == Systematics.Jets:
-            self.run_systematics = self.jet_systematics
-            self.update_event = self.jet_update
-        elif self.systematic_type == Systematics.Electrons:
-            self.run_systematics = self.electron_systematics
-            self.update_event = self.electron_update
-        elif self.systematic_type == Systematics.Photons:
-            self.run_systematics = self.photon_systematics
-            self.update_event = self.photon_update
-        elif self.systematic_type == Systematics.Muons:
-            self.run_systematics = self.muon_systematics
-            self.update_event = self.muon_update
-        elif self.systematic_type == Systematics.Taus:
-            self.run_systematics = self.tau_systematics
-            self.update_event = self.tau_update
-        elif self.systematic_type == Systematics.Nominal:
-            # do nothing
-            self.run_systematics = lambda event: None
-            self.update_event = lambda event: None
-        else:
-            raise ValueError("%s is not a valid systematic type" %
-                             self.systematic_type)
-
-        if self.systematic_term == Systematics.Nominal.NONE:
-            self.update_event = lambda event: None
 
     def passes(self, event):
         """
@@ -287,7 +434,7 @@ class Systematics(EventFilter):
         you are meant to be using come from the CP groups.
         """
         # reset the METUtility
-        self.systUtil.reset()
+        self.met_utility.reset()
 
         # Check for a good primary vertex
         # This is needed for jet and soft term systematics
@@ -312,7 +459,7 @@ class Systematics(EventFilter):
                     self.nvtxjets += 1
 
         # These set up the systematic "SoftTerms_ptHard"
-        self.systUtil.setNvtx(nvtxsoftmet)
+        self.met_utility.setNvtx(nvtxsoftmet)
 
         # ResoSoftTerms uses gRandom for smearing.
         # Set the seed here however you like.
@@ -321,90 +468,123 @@ class Systematics(EventFilter):
         else:
             ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
 
-        if self.systematic_type != Systematics.Jets:
-            # the jet term should always be recalculated since the jets have
-            # been recalibrated. This is already called below in jet_systematics
-            # so I am only setting it here if we are not doing jet systematics
-            # in this job.
-            self.systUtil.setJetParameters(
-                event.jet_pt,
-                event.jet_eta,
-                event.jet_phi,
-                event.jet_E,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+        for systematic in self.systematics:
+            systematic.run(event)
 
-            self.systUtil.setOriJetParameters(event.jet_pt)
+        self.met_utility.setJetParameters(
+            event.jet_pt,
+            event.jet_eta,
+            event.jet_phi,
+            event.jet_E,
+            event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
+            event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
+            event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
+            event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-        self.run_systematics(event)
+        self.met_utility.setElectronParameters(
+            event.el_pt, # or smeared pT
+            event.el_eta,
+            event.el_phi,
+            event.el_MET_BDTMedium_wet,
+            event.el_MET_BDTMedium_wpx,
+            event.el_MET_BDTMedium_wpy,
+            event.el_MET_BDTMedium_statusWord)
+
+        """ We don't use photons in this analysis...
+        self.met_utility.setPhotonParameters(
+            event.ph_pt, # or smeared pT
+            event.ph_eta,
+            event.ph_phi,
+            event.ph_MET_BDTMedium_wet,
+            event.ph_MET_BDTMedium_wpx,
+            event.ph_MET_BDTMedium_wpy,
+            event.ph_MET_BDTMedium_statusWord)
+        """
+        # take the MET terms directly for photons
+        self.met_utility.setMETTerm(
+            METUtil.RefGamma,
+            event.MET_RefGamma_BDTMedium_etx,
+            event.MET_RefGamma_BDTMedium_ety,
+            event.MET_RefGamma_BDTMedium_sumet)
+
+        self.met_utility.setMuonParameters(
+            event.mu_staco_pt, # or smeared pT
+            event.mu_staco_eta,
+            event.mu_staco_phi,
+            event.mu_staco_MET_BDTMedium_wet,
+            event.mu_staco_MET_BDTMedium_wpx,
+            event.mu_staco_MET_BDTMedium_wpy,
+            event.mu_staco_MET_BDTMedium_statusWord)
+
+        # In this instance there is an overloaded version of
+        # setExtraMuonParameters that accepts smeared pTs for spectro
+        self.met_utility.setExtraMuonParameters(
+            event.mu_staco_ms_pt, # or smeared pT
+            event.mu_staco_ms_theta,
+            event.mu_staco_ms_phi)
+
+        self.met_utility.setTauParameters(
+            event.tau_pt,
+            event.tau_eta,
+            event.tau_phi,
+            event.tau_MET_BDTMedium_wet,
+            event.tau_MET_BDTMedium_wpx,
+            event.tau_MET_BDTMedium_wpy,
+            event.tau_MET_BDTMedium_statusWord)
 
         """
-        if self.systematic_type != Systematics.Jets:
-            self.systUtil.setMETTerm(
-                METUtil.RefJet,
-                event.MET_RefJet_BDTMedium_etx,
-                event.MET_RefJet_BDTMedium_ety,
-                event.MET_RefJet_BDTMedium_sumet)
+        self.met_utility.setMETTerm(
+            METUtil.RefJet,
+            event.MET_RefJet_BDTMedium_etx,
+            event.MET_RefJet_BDTMedium_ety,
+            event.MET_RefJet_BDTMedium_sumet)
+
+        self.met_utility.setMETTerm(
+            METUtil.Truth,
+            MET_Truth_NonInt_etx,
+            MET_Truth_NonInt_ety,
+            MET_Truth_NonInt_sumet)
+
+        self.met_utility.setMETTerm(
+            METUtil.RefEle,
+            event.MET_RefEle_BDTMedium_etx,
+            event.MET_RefEle_BDTMedium_ety,
+            event.MET_RefEle_BDTMedium_sumet)
+
+        self.met_utility.setMETTerm(
+            METUtil.MuonTotal,
+            event.MET_Muon_Total_Staco_BDTMedium_etx,
+            event.MET_Muon_Total_Staco_BDTMedium_ety,
+            event.MET_Muon_Total_Staco_BDTMedium_sumet)
+
+        self.met_utility.setMETTerm(
+            METUtil.RefTau,
+            event.MET_RefTau_BDTMedium_etx,
+            event.MET_RefTau_BDTMedium_ety,
+            event.MET_RefTau_BDTMedium_sumet)
         """
 
-        """
-        if self.datatype != datasets.DATA:
-            self.systUtil.setMETTerm(
-                METUtil.Truth,
-                MET_Truth_NonInt_etx,
-                MET_Truth_NonInt_ety,
-                MET_Truth_NonInt_sumet)
-        """
+        # Note that RefMuon is not rebuilt from muons
+        # -- it is a calorimeter term.
+        self.met_utility.setMETTerm(
+            METUtil.RefMuon,
+            event.MET_RefMuon_Staco_BDTMedium_etx,
+            event.MET_RefMuon_Staco_BDTMedium_ety,
+            event.MET_RefMuon_Staco_BDTMedium_sumet)
 
-        if self.systematic_type != Systematics.Electrons:
-            self.systUtil.setMETTerm(
-                METUtil.RefEle,
-                event.MET_RefEle_BDTMedium_etx,
-                event.MET_RefEle_BDTMedium_ety,
-                event.MET_RefEle_BDTMedium_sumet)
+        self.met_utility.setMETTerm(
+            METUtil.SoftJets,
+            event.MET_SoftJets_BDTMedium_etx,
+            event.MET_SoftJets_BDTMedium_ety,
+            event.MET_SoftJets_BDTMedium_sumet)
 
-        if self.systematic_type != Systematics.Photons:
-            self.systUtil.setMETTerm(
-                METUtil.RefGamma,
-                event.MET_RefGamma_BDTMedium_etx,
-                event.MET_RefGamma_BDTMedium_ety,
-                event.MET_RefGamma_BDTMedium_sumet)
+        self.met_utility.setMETTerm(
+            METUtil.CellOutEflow,
+            event.MET_CellOut_BDTMedium_etx,
+            event.MET_CellOut_BDTMedium_ety,
+            event.MET_CellOut_BDTMedium_sumet)
 
-        if self.systematic_type != Systematics.Muons:
-            self.systUtil.setMETTerm(
-                METUtil.RefMuon,
-                event.MET_RefMuon_Staco_BDTMedium_etx,
-                event.MET_RefMuon_Staco_BDTMedium_ety,
-                event.MET_RefMuon_Staco_BDTMedium_sumet)
-
-            self.systUtil.setMETTerm(
-                METUtil.MuonTotal,
-                event.MET_Muon_Total_Staco_BDTMedium_etx,
-                event.MET_Muon_Total_Staco_BDTMedium_ety,
-                event.MET_Muon_Total_Staco_BDTMedium_sumet)
-
-        if self.systematic_type != Systematics.Taus:
-            self.systUtil.setMETTerm(
-                METUtil.RefTau,
-                event.MET_RefTau_BDTMedium_etx,
-                event.MET_RefTau_BDTMedium_ety,
-                event.MET_RefTau_BDTMedium_sumet)
-
-        self.systUtil.setMETTerm(
-                METUtil.SoftJets,
-                event.MET_SoftJets_BDTMedium_etx,
-                event.MET_SoftJets_BDTMedium_ety,
-                event.MET_SoftJets_BDTMedium_sumet)
-
-        self.systUtil.setMETTerm(
-                METUtil.CellOutEflow,
-                event.MET_CellOut_BDTMedium_etx,
-                event.MET_CellOut_BDTMedium_ety,
-                event.MET_CellOut_BDTMedium_sumet)
-
-        MET = self.systUtil.getMissingET(METUtil.RefFinal, self.systematic_term)
+        MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
             print "Recalculated MET: %.3f (original: %.3f)" % (
@@ -417,159 +597,12 @@ class Systematics(EventFilter):
         event.MET_RefFinal_BDTMedium_sumet = MET.sumet()
         event.MET_RefFinal_BDTMedium_phi = MET.phi()
 
-        # update the other variables
-        self.update_event(event)
         return True
 
-    def jet_systematics(self, event):
-        """
-        JET SYSTEMATICS
-        """
-        # First, we get the jet energy scale uncertainties and
-        # systematic variation in the jet resolutions
-        self.jesUp.clear()
-        self.jesDown.clear()
-        self.jerUp.clear()
-        self.jerDown.clear()
-
-        # Note on use of ROOT random number generators:
-        # TRandom and TRandom2 have many documented deficiencies.
-        # TRandom3 is generally considered safely usable.
-        # Also note that ROOT's gRandom calls TRandom3.
-        jetRandom = ROOT.TRandom3()
-
-        # jet_ is jet_AntiKt4LCTopo in tau D3PDs
-        for ijet, jet in enumerate(event.jets):
-
-            jesShiftUp = 0.0
-            jesShiftDown = 0.0
-            jerShift = 0.0 # was 1.0 in original example
-            # Safest to assume nothing about the uncertainties on soft jets.
-            # These will go into SoftJets anyhow, and so the JES systematics
-            # aren't used.
-
-            if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
-
-                # delta R cut needed to apply close-by jets uncertainty
-                drmin=9999
-                for jjet, otherjet in enumerate(event.jets):
-                    if otherjet.emscale_pt > 7000:
-                        if ijet != jjet:
-                            dr = utils.dR(jet.eta, jet.phi,
-                                          otherjet.eta,
-                                          otherjet.phi)
-                            if dr < drmin:
-                                drmin = dr
-
-                # The bool is the "isPos" argument
-                jesShiftUp = self.jesTool.getRelUncert(jet.pt,
-                                 jet.eta,drmin,
-                                 True, self.nvtxjets, event.averageIntPerXing)
-                jesShiftDown = -1*self.jesTool.getRelUncert(jet.pt,
-                                  jet.eta,drmin,
-                                  False, self.nvtxjets, event.averageIntPerXing)
-
-            self.jesUp.push_back(jesShiftUp)
-            self.jesDown.push_back(jesShiftDown)
-
-            # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
-            if jet.pt > 20e3 and jet.pt < 5000e3:
-                pt = jet.pt
-                eta = jet.eta
-                if abs(eta) > 4.5:
-                    eta = 4.49 if eta > 0 else -4.49
-
-                S = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-                U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-                smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
-
-                # You can set the seed however you like, but if reproducibility
-                # is required, setting it to something like object phi ensures
-                # a good mix of randomness and reproducibility.
-                jetRandom.SetSeed(int(1.e5 * abs(jet.phi)))
-                jerShift = jetRandom.Gaus(0, smearingFactorSyst)
-
-            self.jerUp.push_back(jerShift)
-            self.jerDown.push_back(-1 * jerShift) # Usually not used, see below.
-
-            """
-            Note: The JERDown shift is essentially meaningless.
-            If one is smearing central values, then there is an alternate
-            definition, i.e. from r16:
-
-            S = self.jerTool.getRelResolutionData(pt/1e3,eta)
-            SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-            U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-            smearingFactorMC = sqrt( S*S - SMC*SMC )
-            smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
-            smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
-
-            float jerShift = jetRandom.Gaus(1,smearingFactorMC)
-            float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
-            float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
-
-            jet_smeared_pt = pt*jerShift
-            jerUp.push_back(jerShiftUp-1)
-            jerDown.push_back(jerShiftDown-1)
-
-            This means that we smear the MC jets to match the resolution in data
-            for central values, or the resolution +/- uncertainty.
-            The standard practice is only to use res + uncertainty.
-            """
-
-        del jetRandom
-
-        self.systUtil.setJetParameters(
-                event.jet_pt,
-                event.jet_eta,
-                event.jet_phi,
-                event.jet_E,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
-                event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
-
-        self.systUtil.setOriJetParameters(event.jet_pt)
-
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Jets,
-                self.jesUp,
-                self.jesDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.Jets,
-                self.jerUp,
-                self.jerDown)
-
-    def jet_update(self, event):
-
-        if self.very_verbose:
-            print "JETS BEFORE:"
-            for jet in event.jets:
-                print jet.pt
-            print "=" * 20
-
-        if self.systematic_term == Systematics.Jets.JES_UP:
-            # shift jet energies up
-            for ijet in xrange(event.jet_n):
-                event.jet_pt[ijet] *= 1. + self.jesUp[ijet]
-        elif self.systematic_term == Systematics.Jets.JES_DOWN:
-            # shift jet energies down
-            for ijet in xrange(event.jet_n):
-                event.jet_pt[ijet] *= 1. - abs(self.jesDown[ijet])
-        elif self.systematic_term == Systematics.Jets.JER_UP:
-            # smear up
-            for ijet in xrange(event.jet_n):
-                event.jet_pt[ijet] *= 1. + self.jerUp[ijet]
-        elif self.systematic_term == Systematics.Jets.JER_DOWN:
-            # smear down
-            # THIS IS NOT USED
-            pass
-
-        if self.very_verbose:
-            print "JETS AFTER:"
-            for jet in event.jets:
-                print jet.pt
+    """
+    Electron, muon and photon systematics need to become their own classes like
+    JES, TES above
+    """
 
     def electron_systematics(self, event):
         """
@@ -621,27 +654,6 @@ class Systematics(EventFilter):
 
             self.eesUp.push_back(energyUp)
             self.eesDown.push_back(energyDown)
-
-        # Putting in smeared and/or scaled objects will cause that to be reflected in MET
-
-        self.systUtil.setElectronParameters(
-                event.el_pt, # or smeared pT
-                event.el_eta,
-                event.el_phi,
-                event.el_MET_BDTMedium_wet,
-                event.el_MET_BDTMedium_wpx,
-                event.el_MET_BDTMedium_wpy,
-                event.el_MET_BDTMedium_statusWord)
-
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Electrons,
-                self.eesUp,
-                self.eesDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.Electrons,
-                self.eerUp,
-                self.eerDown)
 
     def photon_systematics(self, event):
         """
@@ -696,24 +708,6 @@ class Systematics(EventFilter):
             self.pesUp.push_back(energyUp)
             self.pesDown.push_back(energyDown)
 
-        self.systUtil.setPhotonParameters(
-                event.ph_pt, # or smeared pT
-                event.ph_eta,
-                event.ph_phi,
-                event.ph_MET_BDTMedium_wet,
-                event.ph_MET_BDTMedium_wpx,
-                event.ph_MET_BDTMedium_wpy,
-                event.ph_MET_BDTMedium_statusWord)
-
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Photons,
-                self.pesUp,
-                self.pesDown)
-
-        self.systUtil.setObjectResolutionShift(
-                METUtil.Photons,
-                self.perUp,
-                self.perDown)
 
     def muon_systematics(self, event):
         """
@@ -781,109 +775,31 @@ class Systematics(EventFilter):
             self.mesUp.push_back(scalesyst)
             self.mesDown.push_back(-scalesyst)
 
-        self.systUtil.setMuonParameters(
-                event.mu_staco_pt, # or smeared pT
-                event.mu_staco_eta,
-                event.mu_staco_phi,
-                event.mu_staco_MET_BDTMedium_wet,
-                event.mu_staco_MET_BDTMedium_wpx,
-                event.mu_staco_MET_BDTMedium_wpy,
-                event.mu_staco_MET_BDTMedium_statusWord)
-
-        # In this instance there is an overloaded version of
-        # setExtraMuonParameters that accepts smeared pTs for spectro
-        self.systUtil.setExtraMuonParameters(
-                event.mu_staco_ms_pt, # or smeared pT
-                event.mu_staco_ms_theta,
-                event.mu_staco_ms_phi)
-
         # Muons are complicated, and MET makes use of track, spectro, and combined quantites,
         # so we need all of their resolutions.
         # comboms reflects that it is the combined muon res affected by shifting ms res up and down.
         # comboid is for shifting the id res up and down
-        self.systUtil.setObjectResolutionShift(
+        self.met_utility.setObjectResolutionShift(
                 METUtil.MuonsComboMS,
                 self.cb_mermsUp,
                 self.cb_mermsDown)
 
-        self.systUtil.setObjectResolutionShift(
+        self.met_utility.setObjectResolutionShift(
                 METUtil.MuonsComboID,
                 self.cb_meridUp,
                 self.cb_meridDown)
 
-        self.systUtil.setObjectResolutionShift(
+        self.met_utility.setObjectResolutionShift(
                 METUtil.SpectroMuons,
                 self.mermsUp,
                 self.mermsDown)
 
         # For now the mes only affects combined
-        self.systUtil.setObjectEnergyUncertainties(
+        self.met_utility.setObjectEnergyUncertainties(
                 METUtil.Muons,
                 self.mesUp,
                 self.mesDown)
 
-    def tau_systematics(self, event):
-        """
-        TAU SYSTEMATICS
-        """
-        self.tesUp.clear()
-        self.tesDown.clear()
-
-        # And for taus (this is test code, do not use without tau group approval)
-        for tau in event.taus:
-            pt = tau.pt
-            eta = tau.eta
-            nProng = tau.nProng
-            uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
-            if uncert < 0:
-                uncert = 0
-            self.tesUp.push_back(uncert)
-            self.tesDown.push_back(-1 * uncert)
-
-        self.systUtil.setTauParameters(
-                event.tau_pt,
-                event.tau_eta,
-                event.tau_phi,
-                event.tau_MET_BDTMedium_wet,
-                event.tau_MET_BDTMedium_wpx,
-                event.tau_MET_BDTMedium_wpy,
-                event.tau_MET_BDTMedium_statusWord)
-
-        # Taus are just in as an example
-        self.systUtil.setObjectEnergyUncertainties(
-                METUtil.Taus,
-                self.tesUp,
-                self.tesDown)
-
-    def tau_update(self, event):
-
-        if self.very_verbose:
-            print "TAUS BEFORE:"
-            for tau in event.taus:
-                print tau.pt
-            print "=" * 20
-
-        if self.systematic_term == Systematics.Taus.TES_UP:
-            # shift tau energies up
-            for itau in xrange(event.tau_n):
-                event.tau_pt[itau] *= 1. + self.tesUp[itau]
-        elif self.systematic_term == Systematics.Taus.TES_DOWN:
-            # shift tau energies down
-            for itau in xrange(event.tau_n):
-                event.tau_pt[itau] *= 1. - abs(self.tesDown[itau])
-        elif self.systematic_term == Systematics.Taus.TER_UP:
-            # smear up
-            # THIS IS NOT USED
-            pass
-        elif self.systematic_term == Systematics.Taus.TER_DOWN:
-            # smear down
-            # THIS IS NOT USED
-            pass
-
-        if self.very_verbose:
-            print "TAUS AFTER:"
-            for tau in event.taus:
-                print tau.pt
 
     def consistency(self, event):
 
