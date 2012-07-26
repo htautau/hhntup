@@ -330,3 +330,19 @@ class TauLArHole(EventFilter):
                 not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
                  and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
         return len(event.taus) >= self.min_taus
+
+
+def jet_selection(jet):
+    """ Finalizes the jet selection """
+
+    if not (jet.pt > 25*GeV) : return False
+
+    #Protection against bunny ear jets
+    if (2.5 < abs(jet.eta) < 3.5):
+        if not (jet.pt > 30*GeV) : return False
+
+    if not (abs(jet.eta) < 4.5) : return False
+    if (abs(jet.eta) < 2.4):
+        if not (jet.jvtxf > 0.75) : return False
+
+    return True

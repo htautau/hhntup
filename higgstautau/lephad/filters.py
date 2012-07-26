@@ -41,6 +41,12 @@ class SetElectronsFourVector(EventFilter):
 
         return True
 
+###############################################################
+#
+# SOME OF THESE FILTERS ARE ALREADY IN ../filters.py
+# USE THEM INSTEAD AND REMOVE THESE BELOW!!!
+#
+###############################################################
 
 class TauElectronVeto(EventFilter):
 
@@ -618,22 +624,8 @@ def jet_preselection(jet):
 
     return True
 
-
-def jet_selection(jet):
-    """ Finalizes the jet selection """
-
-    if not (jet.pt > 25*GeV) : return False
-
-    #Protection against bunny ear jets
-    if (2.5 < abs(jet.eta) < 3.5):
-        if not (jet.pt > 30*GeV) : return False
-
-    if not (abs(jet.eta) < 4.5) : return False
-    if (abs(jet.eta) < 2.4):
-        if not (jet.jvtxf > 0.75) : return False
-
-    return True
-
+# use same jet selection for lephad and hadhad
+from ..filters import jet_selection
 
 ############################################################
 # OBJECT ANALYSIS FILTERS
