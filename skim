@@ -19,7 +19,7 @@ import os
 
 
 TEST_CMD = """\
-grid-batch --dataset %(dataset)s --metadata datasets.cfg 
+source setup.sh && grid-batch --dataset %(dataset)s --metadata datasets.cfg 
 --student %(student)s %(testinput)s
 """
 
