@@ -351,9 +351,9 @@ class Systematics(EventFilter):
         PILEUP_DOWN = METUtil.PileupDown
 
     def __init__(self,
-            terms,
             datatype,
             year,
+            terms=None,
             verbose=False,
             very_verbose=False,
             **kwargs):
@@ -361,20 +361,21 @@ class Systematics(EventFilter):
         super(Systematics, self).__init__(**kwargs)
 
         self.systematics = []
-        for term in terms:
-            if term == Systematics.Jets.JES_UP:
-                systematic = JES(True, verbose=very_verbose)
-            elif term == Systematics.Jets.JES_DOWN:
-                systematic = JES(False, verbose=very_verbose)
-            elif term == Systematics.Jets.JER_UP:
-                systematic = JER(True, verbose=very_verbose)
-            elif term == Systematics.Taus.TES_UP:
-                systematic = TES(True, verbose=very_verbose)
-            elif term == Systematics.Taus.TES_DOWN:
-                systematic = TES(False, verbose=very_verbose)
-            else:
-                raise ValueError("systematic not supported")
-            self.systematics.append(systematic)
+        if terms is not None:
+            for term in terms:
+                if term == Systematics.Jets.JES_UP:
+                    systematic = JES(True, verbose=very_verbose)
+                elif term == Systematics.Jets.JES_DOWN:
+                    systematic = JES(False, verbose=very_verbose)
+                elif term == Systematics.Jets.JER_UP:
+                    systematic = JER(True, verbose=very_verbose)
+                elif term == Systematics.Taus.TES_UP:
+                    systematic = TES(True, verbose=very_verbose)
+                elif term == Systematics.Taus.TES_DOWN:
+                    systematic = TES(False, verbose=very_verbose)
+                else:
+                    raise ValueError("systematic not supported")
+                self.systematics.append(systematic)
 
         self.datatype = datatype
         self.year = year

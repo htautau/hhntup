@@ -53,11 +53,12 @@ class HHProcessor(ATLASStudent):
 
         super(HHProcessor, self).__init__(**kwargs)
         parser = ArgumentParser()
-        parser.add_argument('--syst-type', default='None')
-        parser.add_argument('--syst-term', default='None')
+        parser.add_argument('--syst-terms', default=None)
         self.args = parser.parse_args(options)
-        self.args.syst_type = eval(self.args.syst_type)
-        self.args.syst_term = eval(self.args.syst_term)
+        if self.args.syst_terms is not None:
+            self.args.syst_terms = [
+                eval(term) for term in
+                self.args.syst_terms.split(',')]
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -162,8 +163,7 @@ class HHProcessor(ATLASStudent):
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
             Systematics(
-                systematic_type=self.args.syst_type,
-                systematic_term=self.args.syst_term,
+                terms=self.args.syst_terms,
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 verbose=VERBOSE),
