@@ -122,7 +122,18 @@ class JetCrackVeto(EventFilter):
         return True
 
 
-def muon_has_good_track(muon, pix_min=2, sct_min=6, abs_eta_min=-0.1):
+def muon_has_good_track(muon, year):
+
+    if year == 2011:
+        pix_min = 2
+        sct_min = 6
+        abs_eta_min = -0.1
+    elif year == 2012:
+        pix_min = 1
+        sct_min = 5
+        abs_eta_min = 0.1
+    else:
+        raise ValueError("No muon veto defined for year %d" % year)
 
     blayer = (muon.expectBLayerHit == 0) or (muon.nBLHits > 0)
     pix = muon.nPixHits + muon.nPixelDeadSensors >= pix_min

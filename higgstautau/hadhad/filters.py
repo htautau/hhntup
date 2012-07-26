@@ -358,28 +358,19 @@ class MuonVeto(EventFilter):
     def __init__(self, year, **kwargs):
 
         self.year = year
-        if year == 2011:
-            self.pix_min = 2
-            self.sct_min = 6
-            self.abs_eta_min = -0.1
-        elif year == 2012:
-            self.pix_min = 1
-            self.sct_min = 5
-            self.abs_eta_min = 0.1
-        else:
-            raise ValueError("No muon veto defined for year %d" % year)
         super(MuonVeto, self).__init__(**kwargs)
 
     def passes(self, event):
 
        for muon in event.muons:
-           if muon.pt <= 10 * GeV: continue
-           if abs(muon.eta) >= 2.5: continue
-           if muon.loose != 1: continue
-           if not muon_has_good_track(muon,
-                   pix_min=self.pix_min,
-                   sct_min=self.sct_min,
-                   abs_eta_min=self.abs_eta_min): continue
+           if muon.pt <= 10 * GeV:
+               continue
+           if abs(muon.eta) >= 2.5:
+               continue
+           if muon.loose != 1:
+               continue
+           if not muon_has_good_track(muon, self.year):
+               continue
            return False
 
        return True
