@@ -73,4 +73,7 @@ print
 print cmd
 print
 if raw_input("Is this OK? Y/[n] ") == 'Y':
-    call(cmd, shell=True)
+    try:
+        call(cmd, shell=True)
+    except KeyboardInterrupt:
+        pass
