@@ -346,3 +346,12 @@ def jet_selection(jet):
         if not (jet.jvtxf > 0.75) : return False
 
     return True
+
+
+class JetSelection(EventFilter):
+    """Selects jets of good quality, keep event in any case"""
+
+    def passes(self, event):
+
+        event.jets.select(jet_selection)
+        return True

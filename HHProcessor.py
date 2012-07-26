@@ -193,6 +193,8 @@ class HHProcessor(ATLASStudent):
             TauLeadSublead(
                 lead=35*GeV,
                 sublead=25*GeV),
+            JetSelection(),
+            TauJetOverlapRemoval(),
         ])
 
         self.filters['event'] = event_filters
@@ -256,11 +258,6 @@ class HHProcessor(ATLASStudent):
                         jet.pt > 30 * GeV or
                         abs(jet.eta) < 2.5 or
                         abs(jet.eta) > 3.5)
-
-            # remove overlap with taus
-            event.jets.select(lambda jet:
-                    not any([tau for tau in event.taus if
-                    (utils.dR(jet.eta, jet.phi, tau.eta, tau.phi) < .2)]))
 
             # select VBF jets
             jets = list(event.jets)

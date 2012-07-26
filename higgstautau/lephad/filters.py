@@ -631,6 +631,12 @@ from ..filters import jet_selection
 # OBJECT ANALYSIS FILTERS
 ############################################################
 
+"""
+NOTE: no need for lambda functions below, just pass the selection function
+directly. Right now you pass a function that calls a function...
+"""
+
+
 class MuonPreSelection(EventFilter):
     """Selects muons of good quality"""
 
@@ -694,13 +700,9 @@ class JetPreSelection(EventFilter):
         return True
 
 
-class JetSelection(EventFilter):
-    """Selects jets of good quality, keep event in any case"""
-
-    def passes(self, event):
-
-        event.jets.select(lambda jet : jet_selection(jet))
-        return True
+# JetSelection is in the common filters
+# putting import here so I don't break lephad code for now...
+from ..filters import JetSelection
 
 
 ############################################################
