@@ -122,7 +122,7 @@ class JetCrackVeto(EventFilter):
         return True
 
 
-def muon_has_good_track(muon, year):
+def muon_has_good_track(muon, year=2011):
 
     if year == 2011:
         pix_min = 2
