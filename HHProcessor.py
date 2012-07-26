@@ -32,6 +32,7 @@ from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.pileup import PileupReweighting, TPileupReweighting
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
+from higgstautau.overlap import TauJetOverlapRemoval
 
 from goodruns import GRL
 import subprocess
@@ -241,25 +242,10 @@ class HHProcessor(ATLASStudent):
         for event in chain:
             tree.reset()
             cutflow.reset()
-            # remove pileup and UE
-            # event.jets.select(lambda jet: True if abs(jet.eta) > 2.1 else jet.jvtxf > .5)
 
             # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
 
-            # Jet selection
-            event.jets.select(lambda jet:
-                    jet.pt > 25 * GeV and abs(jet.eta) < 4.5)
-
-            # correct for "bunny ears" in data
-            if self.metadata.datatype == datasets.DATA:
-                # cut away jets below 30GeV in 2.5 < |eta| < 3.5
-                event.jets.select(lambda jet:
-                        jet.pt > 30 * GeV or
-                        abs(jet.eta) < 2.5 or
-                        abs(jet.eta) > 3.5)
-
-            # select VBF jets
             jets = list(event.jets)
             # sort by decreasing pT
             jets.sort(key=lambda jet: jet.pt, reverse=True)
