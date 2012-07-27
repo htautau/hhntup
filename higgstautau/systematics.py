@@ -38,9 +38,9 @@ from ROOT import TESUncertaintyProvider
 
 class ObjectSystematic(object):
 
-    def __init__(self, met_util, verbose=False):
+    def __init__(self, sys_util, verbose=False):
 
-        self.met_util = met_util
+        self.sys_util = met_util
         self.verbose = verbose
 
 
@@ -63,9 +63,8 @@ class JetSystematic(ObjectSystematic):
                     print jet.pt
                 print "-" * 20
 
-            shifts = f(self, event)
-            for ijet in xrange(event.jet_n):
-                event.jet_pt[ijet] *= 1. + shifts[ijet]
+            for jet in event.jets:
+                f(self, jet, event)
 
             if self.verbose:
                 print "JETS AFTER:"
@@ -81,49 +80,42 @@ class JES(JetSystematic):
 
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
-        self.jesTool = MultijetJESUncertaintyProvider(
+        self.jes_tool = MultijetJESUncertaintyProvider(
             JetUncertainties.get_resource("MultijetJES_Preliminary.config"),
             JetUncertainties.get_resource("InsituJES2011_AllNuisanceParameters.config"),
             "AntiKt4LCTopoJets","MC11c")
         super(JES, self).__init__(is_up, **kwargs)
 
     @JetSystematic.set
-    def run(self, event):
+    def run(self, jet, event):
 
-        shifts = []
-        # jet_ is jet_AntiKt4LCTopo in tau D3PDs
-        for ijet, jet in enumerate(event.jets):
+        # Safest to assume nothing about the uncertainties on soft jets.
+        # These will go into SoftJets anyhow, and so the JES systematics
+        # aren't used.
+        shift = 0.
+        if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
-            # Safest to assume nothing about the uncertainties on soft jets.
-            # These will go into SoftJets anyhow, and so the JES systematics
-            # aren't used.
-            shift = 0.
+            # delta R cut needed to apply close-by jets uncertainty
+            drmin=9999
+            for otherjet in event.jets:
+                if otherjet.emscale_pt > 7000:
+                    if jet.index != otherjet.index:
+                        dr = utils.dR(jet.eta, jet.phi,
+                                      otherjet.eta,
+                                      otherjet.phi)
+                        if dr < drmin:
+                            drmin = dr
 
-            if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
-
-                # delta R cut needed to apply close-by jets uncertainty
-                drmin=9999
-                for jjet, otherjet in enumerate(event.jets):
-                    if otherjet.emscale_pt > 7000:
-                        if ijet != jjet:
-                            dr = utils.dR(jet.eta, jet.phi,
-                                          otherjet.eta,
-                                          otherjet.phi)
-                            if dr < drmin:
-                                drmin = dr
-
-                # The bool is the "isPos" argument
-                if self.is_up:
-                    shift = self.jesTool.getRelUncert(jet.pt,
-                                 jet.eta,drmin,
-                                 True, self.met_util.nvtxjets, event.averageIntPerXing)
-                else:
-                    shift = -1 * self.jesTool.getRelUncert(jet.pt,
-                                  jet.eta,drmin,
-                                  False, self.met_util.nvtxjets, event.averageIntPerXing)
-
-            shifts.append(shift)
-        return shifts
+            # The bool is the "isPos" argument
+            if self.is_up:
+                shift = self.jes_tool.getRelUncert(jet.pt,
+                             jet.eta, drmin,
+                             True, self.sys_util.nvtxjets, event.averageIntPerXing)
+            else:
+                shift = -1 * self.jes_tool.getRelUncert(jet.pt,
+                              jet.eta, drmin,
+                              False, self.sys_util.nvtxjets, event.averageIntPerXing)
+        jet.pt *= 1. + shift
 
 
 class JER(JetSystematic):
@@ -131,75 +123,68 @@ class JER(JetSystematic):
     def __init__(self, is_up, **kwargs):
 
         # Tag assumed: JetResolution-01-00-00
-        self.jerTool = JERProvider(
+        self.jer_tool = JERProvider(
             "AntiKt4LCTopoJES", "Truth",
             JetResolution.get_resource('JERProviderPlots.root'))
-        self.jerTool.init()
-        super(JER, self).__init__(is_up, **kwargs)
-
-    @JetSystematic.set
-    def run(self, event):
-        """
-        JET SYSTEMATICS
-        """
+        self.jer_tool.init()
         # Note on use of ROOT random number generators:
         # TRandom and TRandom2 have many documented deficiencies.
         # TRandom3 is generally considered safely usable.
         # Also note that ROOT's gRandom calls TRandom3.
-        jetRandom = ROOT.TRandom3()
-        shifts = []
+        self.jetrandom = ROOT.TRandom3()
+        super(JER, self).__init__(is_up, **kwargs)
 
-        # jet_ is jet_AntiKt4LCTopo in tau D3PDs
-        for ijet, jet in enumerate(event.jets):
-            shift = 0.
-            # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
-            if jet.pt > 20e3 and jet.pt < 5000e3:
-                pt = jet.pt
-                eta = jet.eta
-                if abs(eta) > 4.5:
-                    eta = 4.49 if eta > 0 else -4.49
+    @JetSystematic.set
+    def run(self, jet, event):
 
-                S = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-                U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-                smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
+        shift = 0.
+        # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
+        if jet.pt > 20e3 and jet.pt < 5000e3:
+            pt = jet.pt
+            eta = jet.eta
+            if abs(eta) > 4.5:
+                eta = 4.49 if eta > 0 else -4.49
 
-                # You can set the seed however you like, but if reproducibility
-                # is required, setting it to something like object phi ensures
-                # a good mix of randomness and reproducibility.
-                jetRandom.SetSeed(int(1.e5 * abs(jet.phi)))
-                jerShift = jetRandom.Gaus(0, smearingFactorSyst)
+            S = self.jer_tool.getRelResolutionMC(pt/1e3,eta)
+            U = self.jer_tool.getResolutionUncert(pt/1e3,eta)
+            smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
 
-            if self.is_up:
-                shift = jerShift
-            else:
-                shift = -1 * jerShift # Usually not used, see below.
+            # You can set the seed however you like, but if reproducibility
+            # is required, setting it to something like object phi ensures
+            # a good mix of randomness and reproducibility.
+            self.jetrandom.SetSeed(int(1.e5 * abs(jet.phi)))
+            jerShift = self.jetrandom.Gaus(0, smearingFactorSyst)
 
-            """
-            Note: The JERDown shift is essentially meaningless.
-            If one is smearing central values, then there is an alternate
-            definition, i.e. from r16:
+        if self.is_up:
+            shift = jerShift
+        else:
+            shift = -1 * jerShift # Usually not used, see below.
+        jet.pt *= 1. + shift
 
-            S = self.jerTool.getRelResolutionData(pt/1e3,eta)
-            SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-            U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-            smearingFactorMC = sqrt( S*S - SMC*SMC )
-            smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
-            smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
+        """
+        Note: The JERDown shift is essentially meaningless.
+        If one is smearing central values, then there is an alternate
+        definition, i.e. from r16:
 
-            float jerShift = jetRandom.Gaus(1,smearingFactorMC)
-            float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
-            float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
+        S = self.jerTool.getRelResolutionData(pt/1e3,eta)
+        SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
+        U = self.jerTool.getResolutionUncert(pt/1e3,eta)
+        smearingFactorMC = sqrt( S*S - SMC*SMC )
+        smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
+        smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
 
-            jet_smeared_pt = pt*jerShift
-            jerUp.push_back(jerShiftUp-1)
-            jerDown.push_back(jerShiftDown-1)
+        float jerShift = jetRandom.Gaus(1,smearingFactorMC)
+        float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
+        float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
 
-            This means that we smear the MC jets to match the resolution in data
-            for central values, or the resolution +/- uncertainty.
-            The standard practice is only to use res + uncertainty.
-            """
-            shifts.append(shift)
-        return shifts
+        jet_smeared_pt = pt*jerShift
+        jerUp.push_back(jerShiftUp-1)
+        jerDown.push_back(jerShiftDown-1)
+
+        This means that we smear the MC jets to match the resolution in data
+        for central values, or the resolution +/- uncertainty.
+        The standard practice is only to use res + uncertainty.
+        """
 
 
 class TauSystematic(ObjectSystematic):
@@ -221,9 +206,8 @@ class TauSystematic(ObjectSystematic):
                     print tau.pt
                 print "-" * 20
 
-            shifts = f(self, event)
-            for itau in xrange(event.tau_n):
-                event.tau_pt[itau] *= 1. + shifts[itau]
+            for tau in event.taus:
+                f(self, tau, event)
 
             if self.verbose:
                 print "TAUS AFTER:"
@@ -238,27 +222,112 @@ class TES(TauSystematic):
     def __init__(self, is_up, **kwargs):
 
         # No tag yet, testing code
-        self.tesTool = TESUncertaintyProvider()
+        self.tes_tool = TESUncertaintyProvider()
         super(TES, self).__init__(is_up, **kwargs)
 
     @TauSystematic.set
-    def run(self, event):
+    def run(self, tau, event):
 
-        shifts = []
+        pt = tau.pt
+        eta = tau.eta
+        nProng = tau.nProng
+        shift = self.tes_tool.GetTESUncertainty(pt / 1e3, eta, nProng)
+        if shift < 0:
+            shift = 0
+        if not self.is_up:
+            shift *= -1
+        tau.pt *= 1. + shift
 
-        for tau in event.taus:
-            pt = tau.pt
-            eta = tau.eta
-            nProng = tau.nProng
-            uncert = self.tesTool.GetTESUncertainty(pt / 1e3, eta, nProng)
-            if uncert < 0:
-                uncert = 0
-            if self.is_up:
-                shifts.append(uncert)
-            else:
-                shifts.append(-1 * uncert)
 
-        return shifts
+class ElectronSystematic(ObjectSystematic):
+
+    def __init__(self, is_up, **kwargs):
+
+        self.is_up = is_up # up or down variation
+        super(ElectronSystematic, self).__init__(**kwargs)
+
+    @staticmethod
+    def set(f):
+
+        def wrapper(self, event):
+
+            if self.verbose:
+                print "=" * 20
+                print "ELECTRONS BEFORE:"
+                for el in event.electrons:
+                    print el.pt
+                print "-" * 20
+
+            for el in event.electrons:
+                f(self, el, event)
+
+            if self.verbose:
+                print "ELECTRONS AFTER:"
+                for el in event.electrons:
+                    print el.pt
+
+        return wrapper
+
+
+class EES(ElectronSystematic):
+
+    def __init__(self, is_up, datatype, **kwargs):
+
+        # Tag assumed: egammaAnalysisUtils-00-02-76
+        self.egamma_tool = eg2011.EnergyRescaler()
+        self.egamma_tool.useDefaultCalibConstants("2011")
+        self.datatype = datatype
+        super(EES, self).__init__(is_up, **kwargs)
+
+    @ElectronSystematic.set
+    def run(self, el, event):
+
+        # Correct the measured energies in data, and scale by systematic variations
+        correction = 1.
+        if self.datatype == datasets.DATA:
+            correction = self.egammaTool.applyEnergyCorrectionMeV(
+                    el.cl_eta,
+                    el.cl_phi,
+                    el.E,
+                    el.cl_pt,
+                    0,"ELECTRON") / el.E
+        if self.is_up:
+            shift = self.egammaTool.applyEnergyCorrectionMeV(
+                el.cl_eta,
+                el.cl_phi,
+                el.E,
+                el.cl_pt,
+                2,"ELECTRON") / (correction * el.E) - 1
+        else:
+            shift = self.egammaTool.applyEnergyCorrectionMeV(
+                el.cl_eta,
+                el.cl_phi,
+                el.E,
+                el.cl_pt,
+                1,"ELECTRON") / (correction * el.E) - 1
+        el.pt *= 1. + shift
+
+
+class EER(ElectronSystematic):
+
+    def __init__(self, is_up, **kwargs):
+
+        # Tag assumed: egammaAnalysisUtils-00-02-76
+        self.egamma_tool = eg2011.EnergyRescaler()
+        self.egamma_tool.useDefaultCalibConstants("2011")
+        super(EER, self).__init__(is_up, **kwargs)
+
+    @ElectronSystematic.set
+    def run(self, el, event):
+
+        self.egamma_tool.SetRandomSeed(int(1e5*abs(el.phi)))
+        # Smear to match the data resolution, or by systematic variations
+        smear_nominal = self.egamma_tool.getSmearingCorrectionMeV(el.cl_eta, el.E, 0, True)
+        if self.is_up:
+            smear = self.egamma_tool.getSmearingCorrectionMeV(el.cl_eta, el.E, 2, True)
+        else:
+            smear = self.egamma_tool.getSmearingCorrectionMeV(el.cl_eta, el.E, 1, True)
+        el.pt *= 1. + ((smear - smear_nominal) / smear_nominal)
 
 
 class Systematics(EventFilter):
@@ -356,15 +425,25 @@ class Systematics(EventFilter):
             self.terms = terms
             for term in terms:
                 if term == Systematics.JES_UP:
-                    systematic = JES(True, met_util=self, verbose=very_verbose)
+                    systematic = JES(True, sys_util=self, verbose=very_verbose)
                 elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, met_util=self, verbose=very_verbose)
+                    systematic = JES(False, sys_util=self, verbose=very_verbose)
                 elif term == Systematics.JER_UP:
-                    systematic = JER(True, met_util=self, verbose=very_verbose)
+                    systematic = JER(True, sys_util=self, verbose=very_verbose)
                 elif term == Systematics.TES_UP:
-                    systematic = TES(True, met_util=self, verbose=very_verbose)
+                    systematic = TES(True, sys_util=self, verbose=very_verbose)
                 elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, met_util=self, verbose=very_verbose)
+                    systematic = TES(False, sys_util=self, verbose=very_verbose)
+                elif term == Systematics.EES_UP:
+                    systematic = EES(True, datatype=datatype, sys_util=self,
+                            verbose=very_verbose)
+                elif term == Systematics.EES_DOWN:
+                    systematic = EES(False, datatype=datatype, sys_util=self,
+                            verbose=very_verbose)
+                elif term == Systematics.EER_UP:
+                    systematic = EER(True, sys_util=self, verbose=very_verbose)
+                elif term == Systematics.EER_DOWN:
+                    systematic = EER(False, sys_util=self, verbose=very_verbose)
                 else:
                     raise ValueError("systematic not supported")
                 self.systematics.append(systematic)
@@ -402,10 +481,6 @@ class Systematics(EventFilter):
 
         # Whether METUtility should scream at you over every little thing
         self.met_utility.setVerbosity(self.very_verbose)
-
-        # Tag assumed: egammaAnalysisUtils-00-02-76
-        self.egammaTool = eg2011.EnergyRescaler()
-        self.egammaTool.useDefaultCalibConstants("2011")
 
         # Tag assumed: MuonMomentumCorrections-00-05-03
         self.muonTool = MuonSmear.SmearingClass(
@@ -606,60 +681,9 @@ class Systematics(EventFilter):
         return True
 
     """
-    Electron, muon and photon systematics need to become their own classes like
+    Muon and photon systematics need to become their own classes like
     JES, TES above
     """
-
-    def electron_systematics(self, event):
-        """
-        ELECTRON SYSTEMATICS
-        """
-        # Here we get the electron energy scale and resolution systematics
-        self.eesUp.clear()
-        self.eesDown.clear()
-        self.eerUp.clear()
-        self.eerDown.clear()
-        self.el_smeared_pt.clear()
-
-        for iel, el in enumerate(event.electrons):
-
-            self.egammaTool.SetRandomSeed(int(1e5*abs(el.phi)))
-
-            # Smear to match the data resolution, or by systematic variations
-            smear = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 0, True)
-            smearUp = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 2, True)
-            smearDown = self.egammaTool.getSmearingCorrectionMeV(el.cl_eta, el.E, 1, True)
-
-            self.el_smeared_pt.push_back(smear * el.pt)
-            self.eerUp.push_back((smearUp - smear) / smear)
-            self.eerDown.push_back((smearDown - smear) / smear)
-
-            # Correct the measured energies in data, and scale by systematic variations
-            correction = 1.
-            if self.datatype == datasets.DATA:
-                correction = self.egammaTool.applyEnergyCorrectionMeV(
-                        el.cl_eta,
-                        el.cl_phi,
-                        el.E,
-                        el.cl_pt,
-                        0,"ELECTRON") / el.E
-
-            el_smeared_pt[iel] *= correction
-            energyUp = self.egammaTool.applyEnergyCorrectionMeV(
-                    el.cl_eta,
-                    el.cl_phi,
-                    el.E,
-                    el.cl_pt,
-                    2,"ELECTRON") / (correction * el.E) - 1
-            energyDown = self.egammaTool.applyEnergyCorrectionMeV(
-                    el.cl_eta,
-                    el.cl_phi,
-                    el.E,
-                    el.cl_pt,
-                    1,"ELECTRON") / (correction * el.E) - 1
-
-            self.eesUp.push_back(energyUp)
-            self.eesDown.push_back(energyDown)
 
     def photon_systematics(self, event):
         """
