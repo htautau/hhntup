@@ -57,8 +57,8 @@ class HHProcessor(ATLASStudent):
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = [
-                eval(term) for term in
-                self.args.syst_terms.split(',')]
+                eval('Systematics.%s' % term) for term in
+                set(self.args.syst_terms.split(','))]
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -172,10 +172,13 @@ class HHProcessor(ATLASStudent):
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
-            JetCleaning(),
+            JetCleaning(
+                datatype=self.metadata.datatype,
+                year=YEAR),
             #JetCrackVeto(),
             ElectronVeto(),
-            MuonVeto(),
+            MuonVeto(
+                year=YEAR),
             TauAuthor(2),
             TauHasTrack(2),
             TauMuonVeto(2),

@@ -75,7 +75,7 @@ class JetSystematic(ObjectSystematic):
 
 class JES(JetSystematic):
 
-    def __init__(self, **kwargs):
+    def __init__(self, is_up, **kwargs):
 
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
@@ -83,7 +83,7 @@ class JES(JetSystematic):
             JetUncertainties.get_resource("MultijetJES_Preliminary.config"),
             JetUncertainties.get_resource("InsituJES2011_AllNuisanceParameters.config"),
             "AntiKt4LCTopoJets","MC11c")
-        super(JES, self).__init__(**kwargs)
+        super(JES, self).__init__(is_up, **kwargs)
 
     @JetSystematic.set
     def run(self, event):
@@ -124,16 +124,16 @@ class JES(JetSystematic):
         return shifts
 
 
-class JER(JetSystematic)
+class JER(JetSystematic):
 
-    def __init__(self, **kwargs):
+    def __init__(self, is_up, **kwargs):
 
         # Tag assumed: JetResolution-01-00-00
         self.jerTool = JERProvider(
             "AntiKt4LCTopoJES", "Truth",
             JetResolution.get_resource('JERProviderPlots.root'))
         self.jerTool.init()
-        super(JER, self).__init__(**kwargs)
+        super(JER, self).__init__(is_up, **kwargs)
 
     @JetSystematic.set
     def run(self, event):
@@ -232,11 +232,11 @@ class TauSystematic(ObjectSystematic):
 
 class TES(TauSystematic):
 
-    def __init__(self, **kwargs):
+    def __init__(self, is_up, **kwargs):
 
         # No tag yet, testing code
         self.tesTool = TESUncertaintyProvider()
-        super(TES, self).__init__(**kwargs)
+        super(TES, self).__init__(is_up, **kwargs)
 
     @TauSystematic.set
     def run(self, event):
@@ -261,94 +261,74 @@ class TES(TauSystematic):
 class Systematics(EventFilter):
 
     # default
-    class Nominal(object):
-
-        NONE = METUtil.None
+    NONE = METUtil.None
 
     # electrons
-    class Electrons(object):
-
-        EES_UP = METUtil.EESUp
-        EES_DOWN = METUtil.EESDown
-        EER_UP = METUtil.EERUp
-        EER_DOWN = METUtil.EERDown
+    EES_UP = METUtil.EESUp
+    EES_DOWN = METUtil.EESDown
+    EER_UP = METUtil.EERUp
+    EER_DOWN = METUtil.EERDown
 
     # photons
-    class Photons(object):
-
-        PES_UP = METUtil.PESUp
-        PES_DOWN = METUtil.PESDown
-        PER_UP = METUtil.PERUp
-        PER_DOWN = METUtil.PERDown
+    PES_UP = METUtil.PESUp
+    PES_DOWN = METUtil.PESDown
+    PER_UP = METUtil.PERUp
+    PER_DOWN = METUtil.PERDown
 
     # taus
-    class Taus(object):
-
-        TES_UP = METUtil.TESUp
-        TES_DOWN = METUtil.TESDown
-        TER_UP = METUtil.TERUp
-        TER_DOWN = METUtil.TERDown
+    TES_UP = METUtil.TESUp
+    TES_DOWN = METUtil.TESDown
+    TER_UP = METUtil.TERUp
+    TER_DOWN = METUtil.TERDown
 
     # jets
-    class Jets(object):
-
-        JES_UP = METUtil.JESUp
-        JES_DOWN = METUtil.JESDown
-        JER_UP = METUtil.JERUp
-        JER_DOWN = METUtil.JERDown # NOT USED!
+    JES_UP = METUtil.JESUp
+    JES_DOWN = METUtil.JESDown
+    JER_UP = METUtil.JERUp
+    JER_DOWN = METUtil.JERDown # NOT USED!
 
     # muons
-    class Muons(object):
-
-        MERID_UP = METUtil.MERIDUp
-        MERID_DOWN = METUtil.MERIDDown
-        MERMS_UP = METUtil.MERMSUp
-        MERMS_DOWN = METUtil.MERMSDown
-        MES_UP = METUtil.MESUp
-        MES_DOWN = METUtil.MESDown
+    MERID_UP = METUtil.MERIDUp
+    MERID_DOWN = METUtil.MERIDDown
+    MERMS_UP = METUtil.MERMSUp
+    MERMS_DOWN = METUtil.MERMSDown
+    MES_UP = METUtil.MESUp
+    MES_DOWN = METUtil.MESDown
 
     # tracks
-    class Tracks(object):
-
-        TRKES_UP = METUtil.TrkESUp
-        TRKES_DOWN = METUtil.TrkESDown
-        TRKER_UP = METUtil.TrkERUp
-        TRKER_DOWN = METUtil.TrkERDown
+    TRKES_UP = METUtil.TrkESUp
+    TRKES_DOWN = METUtil.TrkESDown
+    TRKER_UP = METUtil.TrkERUp
+    TRKER_DOWN = METUtil.TrkERDown
 
     # clusters
-    class Clusters(object):
+    CES_UP = METUtil.CESUp
+    CES_DOWN = METUtil.CESDown
+    CER_UP = METUtil.CERUp
+    CER_DOWN = METUtil.CERDown
 
-        CES_UP = METUtil.CESUp
-        CES_DOWN = METUtil.CESDown
-        CER_UP = METUtil.CERUp
-        CER_DOWN = METUtil.CERDown
-
-        ALLCLUSTERS_UP = METUtil.AllClustersUp
-        ALLCLUSTERS_DOWN = METUtil.AllClustersDown
+    ALLCLUSTERS_UP = METUtil.AllClustersUp
+    ALLCLUSTERS_DOWN = METUtil.AllClustersDown
 
     # soft terms
-    class Soft(object):
+    RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
+    RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
 
-        RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
-        RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
+    RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
+    RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
 
-        RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
-        RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
+    SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
+    SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
 
-        SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
-        SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
+    RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
+    RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
 
-        RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
-        RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
-
-        SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
-        SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
+    SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
+    SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
 
     # pileup
-    class Pileup(object):
-
-        PILEUP_UP = METUtil.PileupUp
-        PILEUP_DOWN = METUtil.PileupDown
+    PILEUP_UP = METUtil.PileupUp
+    PILEUP_DOWN = METUtil.PileupDown
 
     def __init__(self,
             datatype,
@@ -363,15 +343,15 @@ class Systematics(EventFilter):
         self.systematics = []
         if terms is not None:
             for term in terms:
-                if term == Systematics.Jets.JES_UP:
+                if term == Systematics.JES_UP:
                     systematic = JES(True, verbose=very_verbose)
-                elif term == Systematics.Jets.JES_DOWN:
+                elif term == Systematics.JES_DOWN:
                     systematic = JES(False, verbose=very_verbose)
-                elif term == Systematics.Jets.JER_UP:
+                elif term == Systematics.JER_UP:
                     systematic = JER(True, verbose=very_verbose)
-                elif term == Systematics.Taus.TES_UP:
+                elif term == Systematics.TES_UP:
                     systematic = TES(True, verbose=very_verbose)
-                elif term == Systematics.Taus.TES_DOWN:
+                elif term == Systematics.TES_DOWN:
                     systematic = TES(False, verbose=very_verbose)
                 else:
                     raise ValueError("systematic not supported")

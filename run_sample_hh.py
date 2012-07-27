@@ -9,10 +9,11 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 
 cluster.run('HHProcessor.py',
             db='datasets_hh',
-            datasets=sys.argv[1:],
+            datasets=[sys.argv[1]],
             hosts=hosts,
             nproc=1,
             nice=10,
             setup=setup,
-            output_path='ntuples/hadhad',
+            output_path='.',
+            student_args=sys.argv[2:],
             use_qsub=False)
