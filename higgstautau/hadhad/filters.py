@@ -14,116 +14,6 @@ See main documentation here:
 MIN_TAUS = 2
 
 
-class TauElectronVeto(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.EleBDTLoose == 0)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauMuonVeto(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.muonVeto == 0)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauHasTrack(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.numTrack > 0)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauAuthor(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.author != 2)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauPT(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.pt > 20 * GeV)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauEta(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: abs(tau.eta) < 2.5) # was 2.1
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauJVF(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: True if
-                abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
-        return len(event.taus) >= MIN_TAUS
-
-
-class Tau1Track3Track(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.numTrack in (1, 3))
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauCharge(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: abs(tau.charge) == 1)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauIDLoose(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.JetBDTSigLoose)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauIDMedium(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.JetBDTSigMedium)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauCrack(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: not (1.37 < abs(tau.track_eta[tau.leadtrack_idx]) < 1.52))
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauLArHole(EventFilter):
-
-    def passes(self, event):
-
-        if not 180614 <= event.RunNumber <= 184169:
-            return True
-
-        event.taus.select(lambda tau:
-                not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
-                 and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
-        return len(event.taus) >= MIN_TAUS
-
-
 class TauLeadSublead(EventFilter):
 
     def __init__(self, lead = 25*GeV, sublead = 35*GeV, **kwargs):
@@ -445,16 +335,6 @@ class SkimmingMCTriggers(EventFilter):
                event.EF_xe60_tight_noMu or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
 
 
-class JetCrackVeto(EventFilter):
-
-    def passes(self, event):
-
-        for jet in event.jets:
-            if jet.pt <= 20 * GeV: continue
-            if 1.3 < abs(jet.eta) < 1.7: return False
-        return True
-
-
 class ElectronVeto(EventFilter):
 
     def passes(self, event):
@@ -471,51 +351,26 @@ class ElectronVeto(EventFilter):
         return True
 
 
-def muon_has_good_track(muon, pix_min=2, sct_min=6, abs_eta_min=-0.1):
-
-    blayer = (muon.expectBLayerHit == 0) or (muon.nBLHits > 0)
-    pix = muon.nPixHits + muon.nPixelDeadSensors >= pix_min
-    sct = muon.nSCTHits + muon.nSCTDeadSensors >= sct_min
-    holes = muon.nPixHoles + muon.nSCTHoles < 3
-    n_trt_hits_outliers = muon.nTRTHits + muon.nTRTOutliers
-
-    if abs_eta_min < abs(muon.eta) < 1.9:
-        trt = ((n_trt_hits_outliers > 5) and
-              (muon.nTRTOutliers < 0.9 * n_trt_hits_outliers))
-    else:
-        trt = (n_trt_hits_outliers <= 5 or
-               muon.nTRTOutliers < 0.9 * n_trt_hits_outliers)
-
-    return blayer and pix and sct and holes and trt
-
+from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
 
     def __init__(self, year, **kwargs):
 
         self.year = year
-        if year == 2011:
-            self.pix_min = 2
-            self.sct_min = 6
-            self.abs_eta_min = -0.1
-        elif year == 2012:
-            self.pix_min = 1
-            self.sct_min = 5
-            self.abs_eta_min = 0.1
-        else:
-            raise ValueError("No muon veto defined for year %d" % year)
         super(MuonVeto, self).__init__(**kwargs)
 
     def passes(self, event):
 
        for muon in event.muons:
-           if muon.pt <= 10 * GeV: continue
-           if abs(muon.eta) >= 2.5: continue
-           if muon.loose != 1: continue
-           if not muon_has_good_track(muon,
-                   pix_min=self.pix_min,
-                   sct_min=self.sct_min,
-                   abs_eta_min=self.abs_eta_min): continue
+           if muon.pt <= 10 * GeV:
+               continue
+           if abs(muon.eta) >= 2.5:
+               continue
+           if muon.loose != 1:
+               continue
+           if not muon_has_good_track(muon, self.year):
+               continue
            return False
 
        return True

@@ -25,7 +25,7 @@ MIN_TAUS = 1
 class SetElectronsFourVector(EventFilter):
 
     def passes(self, event):
-        
+
         for el in event.electrons:
             if ((el.nSCTHits + el.nPixHits) < 4):
                 eta = el.cl_eta
@@ -41,6 +41,12 @@ class SetElectronsFourVector(EventFilter):
 
         return True
 
+###############################################################
+#
+# SOME OF THESE FILTERS ARE ALREADY IN ../filters.py
+# USE THEM INSTEAD AND REMOVE THESE BELOW!!!
+#
+###############################################################
 
 class TauElectronVeto(EventFilter):
 
@@ -259,7 +265,7 @@ class AnyMuTriggers(EventFilter):
                 TriggersToOR += getattr(event, trig)
             except AttributeError:
                 pass
-                
+
         if TriggersToOR > 0: return True
         else: return False
 
@@ -352,7 +358,7 @@ class AnyETriggers(EventFilter):
                 TriggersToOR += getattr(event, trig)
             except AttributeError:
                 pass
-                
+
         if TriggersToOR: return True
         else: return False
 
@@ -371,7 +377,7 @@ class AllETriggers(EventFilter):
 # Muon MC Triggers
 #--------------------------------------------
 
-            
+
 # Muon single lepton triggers
 class muMCSLTriggers(EventFilter):
 
@@ -476,7 +482,7 @@ class AllMCTriggers(EventFilter):
         elecSLT = eMCSLTriggers()
         muonLTT = muMCLTTriggers()
         elecLTT = eMCLTTriggers()
-        
+
         return muonSLT.passes(event) or elecSLT.passes(event) or muonLTT.passes(event) or elecLTT.passes(event)
 
 
@@ -486,7 +492,7 @@ class AnyMCTriggers(EventFilter):
     def passes(self, event):
         muonTrig = AnyMuTriggers()
         elecTrig = AnyETriggers()
-        
+
         return muonTrig.passes(event) or elecTrig.passes(event)
 
 
@@ -531,22 +537,8 @@ def tau_selection(tau):
 # MUON SELECTION
 ############################################################
 
-def muon_has_good_track(muon):
-
-    blayer = (muon.expectBLayerHit == 0.0) or (muon.nBLHits > 0)
-    pix = (muon.nPixHits + muon.nPixelDeadSensors) > 1
-    sct = (muon.nSCTHits + muon.nSCTDeadSensors) > 5
-    holes = (muon.nPixHoles + muon.nSCTHoles) < 3
-    trt = False
-
-    if abs(muon.eta) < 1.9:
-        trt = (muon.nTRTHits + muon.nTRTOutliers) > 5 and \
-              muon.nTRTOutliers < 0.9*(muon.nTRTHits + muon.nTRTOutliers)
-    else:
-        trt = (muon.nTRTHits + muon.nTRTOutliers) <= 5 or \
-              (muon.nTRTOutliers) < 0.9 * ((muon.nTRTHits) + (muon.nTRTOutliers))
-
-    return blayer and pix and sct and holes and trt
+# use common method:
+from ..filters import muon_has_good_track
 
 
 def muon_skimselection(mu):
@@ -632,37 +624,18 @@ def jet_preselection(jet):
 
     return True
 
-
-def jet_selection(jet):
-    """ Finalizes the jet selection """
-
-    if not (jet.pt > 25*GeV) : return False
-        
-    #Protection against bunny ear jets
-    if (2.5 < abs(jet.eta) < 3.5):
-        if not (jet.pt > 30*GeV) : return False
-
-    if not (abs(jet.eta) < 4.5) : return False
-    if (abs(jet.eta) < 2.4):
-        if not (jet.jvtxf > 0.75) : return False
-
-    return True
-
-
-############################################################
-# VERTEX SELECTION
-############################################################
-
-def vertex_selection(vxp):
-    """ Does the full primary and pileup vertex selection """
-
-    return (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2)
-
-
+# use same jet selection for lephad and hadhad
+from ..filters import jet_selection
 
 ############################################################
 # OBJECT ANALYSIS FILTERS
 ############################################################
+
+"""
+NOTE: no need for lambda functions below, just pass the selection function
+directly. Right now you pass a function that calls a function...
+"""
+
 
 class MuonPreSelection(EventFilter):
     """Selects muons of good quality"""
@@ -702,7 +675,7 @@ class ElectronSelection(EventFilter):
 
 class TauPreSelection(EventFilter):
     """Selects taus of good quality"""
-    
+
     def passes(self, event):
 
         event.taus.select(lambda tau : tau_preselection(tau))
@@ -711,7 +684,7 @@ class TauPreSelection(EventFilter):
 
 class TauSelection(EventFilter):
     """Selects taus of good quality"""
-    
+
     def passes(self, event):
 
         event.taus.select(lambda tau : tau_selection(tau))
@@ -727,13 +700,9 @@ class JetPreSelection(EventFilter):
         return True
 
 
-class JetSelection(EventFilter):
-    """Selects jets of good quality, keep event in any case"""
-
-    def passes(self, event):
-
-        event.jets.select(lambda jet : jet_selection(jet))
-        return True
+# JetSelection is in the common filters
+# putting import here so I don't break lephad code for now...
+from ..filters import JetSelection
 
 
 ############################################################
@@ -750,7 +719,7 @@ def OverlapCheck(event, DoMuonCheck = False, DoElectronCheck = False):
             for tau in event.taus:
                 if utils.dR(getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi(), tau.eta, tau.phi) > 0.2:
                     return True
-                
+
     if DoMuonCheck:
         for mu in event.muons:
             for tau in event.taus:
@@ -759,7 +728,7 @@ def OverlapCheck(event, DoMuonCheck = False, DoElectronCheck = False):
 
     return False
 
-    
+
 class JetOverlapRemoval(EventFilter):
     """Muons > Electrons > Taus > Jets"""
 
@@ -791,7 +760,7 @@ class FinalOverlapRemoval(EventFilter):
         event.jets.select(lambda jet: not any([tau for tau in event.taus if (utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.2)]))
 
         return len(event.taus) == 1
-            
+
 
 
 class DileptonVeto(EventFilter):

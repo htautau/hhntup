@@ -69,16 +69,16 @@ EMBD_LEPHAD_FILE_PATTERN = '*.root*'
 """
 HadHad constants
 """
-MC_HADHAD_PATH = '/global/endw/mc11_7TeV/hhskim_v1'
+MC_HADHAD_PATH = '/global/common/higgstautau/skims/hadhad/mc11_7TeV/p851/skim1'
 MC_HADHAD_PREFIX = 'group.phys-higgs.HHSkim'
 MC_HADHAD_FILE_PATTERN = '*HHSkim*.root*'
 
-DATA_HADHAD_PATH = '/global/endw/data11_7TeV/higgs_tautau_hh_skim_p851'
+DATA_HADHAD_PATH = '/global/common/higgstautau/skims/hadhad/data11_7TeV/p851/skim1'
 DATA_HADHAD_PREFIX = 'user.NoelDawe.HTauSkim'
 DATA_HADHAD_STREAM = 'JetTauEtmiss'
 DATA_HADHAD_FILE_PATTERN = '*HTauSkim*.root*'
 
-EMBD_HADHAD_PATH = '/global/oneil/hadhad/skims/embedding/'
+EMBD_HADHAD_PATH = '/global/common/higgstautau/skims/hadhad/embedding11_7TeV/p851-2.41/skim1'
 EMBD_HADHAD_PREFIX = 'group.phys-higgs.HHSkim'
 EMBD_HADHAD_FILE_PATTERN = '*.root*'
 
