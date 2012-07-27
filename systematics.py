@@ -2,15 +2,11 @@ import copy
 
 
 # common systematics
-SYSTEMATICS_COMMON = {
-    'Jets': {
-        'JES': ('UP', 'DOWN'),
-        'JER': ('UP',),
-    },
-    'Taus': {
-        'TES': ('UP', 'DOWN'),
-    }
-} # ADD MORE HERE
+SYSTEMATICS_COMMON = [
+    ('JES_UP', 'TES_UP'),
+    ('JES_DOWN', 'TES_DOWN'),
+    ('JER_UP',),
+] # ADD MORE HERE
 
 # hadhad-only systematics
 SYSTEMATICS_HADHAD = {
