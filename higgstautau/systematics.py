@@ -38,8 +38,9 @@ from ROOT import TESUncertaintyProvider
 
 class ObjectSystematic(object):
 
-    def __init__(self, verbose=False):
+    def __init__(self, met_util, verbose=False):
 
+        self.met_util = met_util
         self.verbose = verbose
 
 
@@ -110,15 +111,15 @@ class JES(JetSystematic):
                             if dr < drmin:
                                 drmin = dr
 
-                # The bool is the "isPos" argumenti
+                # The bool is the "isPos" argument
                 if self.is_up:
                     shift = self.jesTool.getRelUncert(jet.pt,
                                  jet.eta,drmin,
-                                 True, self.nvtxjets, event.averageIntPerXing)
+                                 True, self.met_util.nvtxjets, event.averageIntPerXing)
                 else:
                     shift = -1 * self.jesTool.getRelUncert(jet.pt,
                                   jet.eta,drmin,
-                                  False, self.nvtxjets, event.averageIntPerXing)
+                                  False, self.met_util.nvtxjets, event.averageIntPerXing)
 
             shifts.append(shift)
         return shifts
@@ -344,15 +345,15 @@ class Systematics(EventFilter):
         if terms is not None:
             for term in terms:
                 if term == Systematics.JES_UP:
-                    systematic = JES(True, verbose=very_verbose)
+                    systematic = JES(True, met_util=self, verbose=very_verbose)
                 elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, verbose=very_verbose)
+                    systematic = JES(False, met_util=self, verbose=very_verbose)
                 elif term == Systematics.JER_UP:
-                    systematic = JER(True, verbose=very_verbose)
+                    systematic = JER(True, met_util=self, verbose=very_verbose)
                 elif term == Systematics.TES_UP:
-                    systematic = TES(True, verbose=very_verbose)
+                    systematic = TES(True, met_util=self, verbose=very_verbose)
                 elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, verbose=very_verbose)
+                    systematic = TES(False, met_util=self, verbose=very_verbose)
                 else:
                     raise ValueError("systematic not supported")
                 self.systematics.append(systematic)
