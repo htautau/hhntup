@@ -40,7 +40,7 @@ class ObjectSystematic(object):
 
     def __init__(self, sys_util, verbose=False):
 
-        self.sys_util = met_util
+        self.sys_util = sys_util
         self.verbose = verbose
 
 
