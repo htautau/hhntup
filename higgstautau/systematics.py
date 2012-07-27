@@ -57,10 +57,11 @@ class JetSystematic(ObjectSystematic):
         def wrapper(self, event):
 
             if self.verbose:
+                print "=" * 20
                 print "JETS BEFORE:"
                 for jet in event.jets:
                     print jet.pt
-                print "=" * 20
+                print "-" * 20
 
             shifts = f(self, event)
             for ijet in xrange(event.jet_n):
@@ -214,10 +215,11 @@ class TauSystematic(ObjectSystematic):
         def wrapper(self, event):
 
             if self.verbose:
+                print "=" * 20
                 print "TAUS BEFORE:"
                 for tau in event.taus:
                     print tau.pt
-                print "=" * 20
+                print "-" * 20
 
             shifts = f(self, event)
             for itau in xrange(event.tau_n):
@@ -470,7 +472,7 @@ class Systematics(EventFilter):
             event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
             event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-        self.met_util.setOriJetParameters(event.jet_pt)
+        self.met_utility.setOriJetParameters(event.jet_pt)
 
         """
         self.met_utility.setMETTerm(
@@ -556,7 +558,6 @@ class Systematics(EventFilter):
         """
         TAUS
         """
-        """
         self.met_utility.setTauParameters(
             event.tau_pt,
             event.tau_eta,
@@ -572,6 +573,7 @@ class Systematics(EventFilter):
             event.MET_RefTau_BDTMedium_etx,
             event.MET_RefTau_BDTMedium_ety,
             event.MET_RefTau_BDTMedium_sumet)
+        """
 
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
