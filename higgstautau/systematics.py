@@ -425,25 +425,25 @@ class Systematics(EventFilter):
             self.terms = terms
             for term in terms:
                 if term == Systematics.JES_UP:
-                    systematic = JES(True, sys_util=self, verbose=very_verbose)
+                    systematic = JES(True, sys_util=self, verbose=verbose)
                 elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, sys_util=self, verbose=very_verbose)
+                    systematic = JES(False, sys_util=self, verbose=verbose)
                 elif term == Systematics.JER_UP:
-                    systematic = JER(True, sys_util=self, verbose=very_verbose)
+                    systematic = JER(True, sys_util=self, verbose=verbose)
                 elif term == Systematics.TES_UP:
-                    systematic = TES(True, sys_util=self, verbose=very_verbose)
+                    systematic = TES(True, sys_util=self, verbose=verbose)
                 elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, sys_util=self, verbose=very_verbose)
+                    systematic = TES(False, sys_util=self, verbose=verbose)
                 elif term == Systematics.EES_UP:
                     systematic = EES(True, datatype=datatype, sys_util=self,
-                            verbose=very_verbose)
+                            verbose=verbose)
                 elif term == Systematics.EES_DOWN:
                     systematic = EES(False, datatype=datatype, sys_util=self,
-                            verbose=very_verbose)
+                            verbose=verbose)
                 elif term == Systematics.EER_UP:
-                    systematic = EER(True, sys_util=self, verbose=very_verbose)
+                    systematic = EER(True, sys_util=self, verbose=verbose)
                 elif term == Systematics.EER_DOWN:
-                    systematic = EER(False, sys_util=self, verbose=very_verbose)
+                    systematic = EER(False, sys_util=self, verbose=verbose)
                 else:
                     raise ValueError("systematic not supported")
                 self.systematics.append(systematic)
