@@ -271,24 +271,28 @@ class Systematics(EventFilter):
     EES_DOWN = METUtil.EESDown
     EER_UP = METUtil.EERUp
     EER_DOWN = METUtil.EERDown
+    ELECTRON_TERMS = {EES_UP, EES_DOWN, EER_UP, EER_DOWN}
 
     # photons
     PES_UP = METUtil.PESUp
     PES_DOWN = METUtil.PESDown
     PER_UP = METUtil.PERUp
     PER_DOWN = METUtil.PERDown
+    PHOTON_TERMS = {PES_UP, PES_DOWN, PER_UP, PER_DOWN}
 
     # taus
     TES_UP = METUtil.TESUp
     TES_DOWN = METUtil.TESDown
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
+    TAU_TERMS = {TES_UP, TES_DOWN, TER_UP, TER_DOWN}
 
     # jets
     JES_UP = METUtil.JESUp
     JES_DOWN = METUtil.JESDown
     JER_UP = METUtil.JERUp
     JER_DOWN = METUtil.JERDown # NOT USED!
+    JET_TERMS = {JES_UP, JES_DOWN, JER_UP, JER_DOWN}
 
     # muons
     MERID_UP = METUtil.MERIDUp
@@ -297,6 +301,7 @@ class Systematics(EventFilter):
     MERMS_DOWN = METUtil.MERMSDown
     MES_UP = METUtil.MESUp
     MES_DOWN = METUtil.MESDown
+    MUON_TERMS = {MERID_UP, MERID_DOWN, MERMS_UP, MERMS_DOWN, MES_UP, MES_DOWN}
 
     # tracks
     TRKES_UP = METUtil.TrkESUp
@@ -343,7 +348,7 @@ class Systematics(EventFilter):
 
         super(Systematics, self).__init__(**kwargs)
         self.systematics = []
-        self.terms = terms
+        self.terms = set([])
 
         if terms is not None:
             # remove possible duplicates
@@ -461,6 +466,8 @@ class Systematics(EventFilter):
 
         """
         JETS
+
+        Always use setJetParameters since they may be recalibrated upstream
         """
         self.met_utility.setJetParameters(
             event.jet_pt,
@@ -474,7 +481,7 @@ class Systematics(EventFilter):
 
         self.met_utility.setOriJetParameters(event.jet_pt)
 
-        """
+        """ NEVER USE THIS since jets may be recalibrated upstream
         self.met_utility.setMETTerm(
             METUtil.RefJet,
             event.MET_RefJet_BDTMedium_etx,
@@ -485,67 +492,64 @@ class Systematics(EventFilter):
         """
         ELECTRONS
         """
-        """
-        self.met_utility.setElectronParameters(
-            event.el_pt, # or smeared pT
-            event.el_eta,
-            event.el_phi,
-            event.el_MET_BDTMedium_wet,
-            event.el_MET_BDTMedium_wpx,
-            event.el_MET_BDTMedium_wpy,
-            event.el_MET_BDTMedium_statusWord)
-        """
+        if self.terms & Systematics.ELECTRON_TERMS:
+            self.met_utility.setElectronParameters(
+                event.el_pt,
+                event.el_eta,
+                event.el_phi,
+                event.el_MET_BDTMedium_wet,
+                event.el_MET_BDTMedium_wpx,
+                event.el_MET_BDTMedium_wpy,
+                event.el_MET_BDTMedium_statusWord)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.RefEle,
+                event.MET_RefEle_BDTMedium_etx,
+                event.MET_RefEle_BDTMedium_ety,
+                event.MET_RefEle_BDTMedium_sumet)
 
-        self.met_utility.setMETTerm(
-            METUtil.RefEle,
-            event.MET_RefEle_BDTMedium_etx,
-            event.MET_RefEle_BDTMedium_ety,
-            event.MET_RefEle_BDTMedium_sumet)
 
-
-        """ We don't use photons in this analysis...
-        self.met_utility.setPhotonParameters(
-            event.ph_pt, # or smeared pT
-            event.ph_eta,
-            event.ph_phi,
-            event.ph_MET_BDTMedium_wet,
-            event.ph_MET_BDTMedium_wpx,
-            event.ph_MET_BDTMedium_wpy,
-            event.ph_MET_BDTMedium_statusWord)
-        """
-        # take the MET terms directly for photons
-        self.met_utility.setMETTerm(
-            METUtil.RefGamma,
-            event.MET_RefGamma_BDTMedium_etx,
-            event.MET_RefGamma_BDTMedium_ety,
-            event.MET_RefGamma_BDTMedium_sumet)
+        if self.terms & Systematics.PHOTON_TERMS:
+            self.met_utility.setPhotonParameters(
+                event.ph_pt,
+                event.ph_eta,
+                event.ph_phi,
+                event.ph_MET_BDTMedium_wet,
+                event.ph_MET_BDTMedium_wpx,
+                event.ph_MET_BDTMedium_wpy,
+                event.ph_MET_BDTMedium_statusWord)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.RefGamma,
+                event.MET_RefGamma_BDTMedium_etx,
+                event.MET_RefGamma_BDTMedium_ety,
+                event.MET_RefGamma_BDTMedium_sumet)
 
         """
         MUONS
         """
-        """
-        self.met_utility.setMuonParameters(
-            event.mu_staco_pt, # or smeared pT
-            event.mu_staco_eta,
-            event.mu_staco_phi,
-            event.mu_staco_MET_BDTMedium_wet,
-            event.mu_staco_MET_BDTMedium_wpx,
-            event.mu_staco_MET_BDTMedium_wpy,
-            event.mu_staco_MET_BDTMedium_statusWord)
+        if self.terms & Systematics.MUON_TERMS:
+            self.met_utility.setMuonParameters(
+                event.mu_staco_pt, # or smeared pT
+                event.mu_staco_eta,
+                event.mu_staco_phi,
+                event.mu_staco_MET_BDTMedium_wet,
+                event.mu_staco_MET_BDTMedium_wpx,
+                event.mu_staco_MET_BDTMedium_wpy,
+                event.mu_staco_MET_BDTMedium_statusWord)
 
-        # In this instance there is an overloaded version of
-        # setExtraMuonParameters that accepts smeared pTs for spectro
-        self.met_utility.setExtraMuonParameters(
-            event.mu_staco_ms_pt, # or smeared pT
-            event.mu_staco_ms_theta,
-            event.mu_staco_ms_phi)
-        """
-
-        self.met_utility.setMETTerm(
-            METUtil.MuonTotal,
-            event.MET_Muon_Total_Staco_BDTMedium_etx,
-            event.MET_Muon_Total_Staco_BDTMedium_ety,
-            event.MET_Muon_Total_Staco_BDTMedium_sumet)
+            # In this instance there is an overloaded version of
+            # setExtraMuonParameters that accepts smeared pTs for spectro
+            self.met_utility.setExtraMuonParameters(
+                event.mu_staco_ms_pt, # or smeared pT
+                event.mu_staco_ms_theta,
+                event.mu_staco_ms_phi)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.MuonTotal,
+                event.MET_Muon_Total_Staco_BDTMedium_etx,
+                event.MET_Muon_Total_Staco_BDTMedium_ety,
+                event.MET_Muon_Total_Staco_BDTMedium_sumet)
 
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
@@ -558,22 +562,21 @@ class Systematics(EventFilter):
         """
         TAUS
         """
-        self.met_utility.setTauParameters(
-            event.tau_pt,
-            event.tau_eta,
-            event.tau_phi,
-            event.tau_MET_BDTMedium_wet,
-            event.tau_MET_BDTMedium_wpx,
-            event.tau_MET_BDTMedium_wpy,
-            event.tau_MET_BDTMedium_statusWord)
-
-        """
-        self.met_utility.setMETTerm(
-            METUtil.RefTau,
-            event.MET_RefTau_BDTMedium_etx,
-            event.MET_RefTau_BDTMedium_ety,
-            event.MET_RefTau_BDTMedium_sumet)
-        """
+        if self.terms & Systematics.TAU_TERMS:
+            self.met_utility.setTauParameters(
+                event.tau_pt,
+                event.tau_eta,
+                event.tau_phi,
+                event.tau_MET_BDTMedium_wet,
+                event.tau_MET_BDTMedium_wpx,
+                event.tau_MET_BDTMedium_wpy,
+                event.tau_MET_BDTMedium_statusWord)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.RefTau,
+                event.MET_RefTau_BDTMedium_etx,
+                event.MET_RefTau_BDTMedium_ety,
+                event.MET_RefTau_BDTMedium_sumet)
 
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
