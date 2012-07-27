@@ -2,11 +2,11 @@
 
 # 2012 Official Tau D3PDs
 ##################################################
-grid-submit -s LHSkim.py -u group.phys-higgs -l large --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg mc12_p1130_lephad
+grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg mc12_p1130_lephad
 
-grid-submit -s LHSkim.py -u group.phys-higgs -l large --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_muhad
-grid-submit -s LHSkim.py -u group.phys-higgs -l large --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_ehad
-grid-submit -s LHSkim.py -u group.phys-higgs -l large --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_leptau
+grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_muhad
+grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_ehad
+grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_leptau
 
 # 2012 Testing Tau D3PDs
 ##################################################
