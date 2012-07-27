@@ -457,6 +457,9 @@ class Systematics(EventFilter):
         for systematic in self.systematics:
             systematic.run(event)
 
+        """
+        JETS
+        """
         self.met_utility.setJetParameters(
             event.jet_pt,
             event.jet_eta,
@@ -467,6 +470,19 @@ class Systematics(EventFilter):
             event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
             event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
+        self.met_util.setOriJetParameters(event.jet_pt)
+
+        """
+        self.met_utility.setMETTerm(
+            METUtil.RefJet,
+            event.MET_RefJet_BDTMedium_etx,
+            event.MET_RefJet_BDTMedium_ety,
+            event.MET_RefJet_BDTMedium_sumet)
+        """
+
+        """
+        ELECTRONS
+        """
         """
         self.met_utility.setElectronParameters(
             event.el_pt, # or smeared pT
@@ -537,7 +553,10 @@ class Systematics(EventFilter):
             event.MET_RefMuon_Staco_BDTMedium_ety,
             event.MET_RefMuon_Staco_BDTMedium_sumet)
 
-
+        """
+        TAUS
+        """
+        """
         self.met_utility.setTauParameters(
             event.tau_pt,
             event.tau_eta,
@@ -553,21 +572,6 @@ class Systematics(EventFilter):
             event.MET_RefTau_BDTMedium_etx,
             event.MET_RefTau_BDTMedium_ety,
             event.MET_RefTau_BDTMedium_sumet)
-        """
-
-        """
-        self.met_utility.setMETTerm(
-            METUtil.RefJet,
-            event.MET_RefJet_BDTMedium_etx,
-            event.MET_RefJet_BDTMedium_ety,
-            event.MET_RefJet_BDTMedium_sumet)
-
-        self.met_utility.setMETTerm(
-            METUtil.Truth,
-            MET_Truth_NonInt_etx,
-            MET_Truth_NonInt_ety,
-            MET_Truth_NonInt_sumet)
-        """
 
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
