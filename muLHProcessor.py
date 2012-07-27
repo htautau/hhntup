@@ -36,7 +36,6 @@ from goodruns import GRL
 import subprocess
 
 import random
-random.seed(math.pi)
 
 YEAR = 2011
 
@@ -56,7 +55,6 @@ class muLHProcessor(ATLASStudent):
         self.args.syst_term = eval(self.args.syst_term)
         
 
-    @staticmethod
     def merge(inputs, output, metadata):
 
         # merge output trees
@@ -69,6 +67,7 @@ class muLHProcessor(ATLASStudent):
             for input in inputs:
                 grl |= GRL('%s:/lumi' % input)
             grl.save('%s:/lumi' % root_output)
+
 
     def work(self):
         """
@@ -134,8 +133,6 @@ class muLHProcessor(ATLASStudent):
             Trigger = noTriggers
 
         
-
-        
         # passthrough for MC for trigger acceptance studies
         event_filters = EventFilterList([
             SetElectronsFourVector(),
@@ -155,12 +152,15 @@ class muLHProcessor(ATLASStudent):
                 datatype=self.metadata.datatype,
                 verbose=False),
             JetPreSelection(),
+            MuonOverlapSelection(),
+            TauMuonOverlapRemoval(),
             MuonPreSelection(),
             ElectronPreSelection(),
             JetOverlapRemoval(),
-            JetCleaning(eta_max = 9999.0),
+            JetCleaning(self.metadata.datatype, YEAR),
             ElectronLArHole(),
-            TauLArHole(),
+            TauHasTrack(1),
+            TauLArHole(1),
             LArHole(datatype=self.metadata.datatype),
             LArError(),
             LeptonOverlapRemoval(),
@@ -311,7 +311,7 @@ class muLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x  = tau_x
             tree.lep_x = muon_x
-            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
+            mmc_mass, mmc_pt, mmc_met = 0,0,0#mass.missingmass(Tau, Muon, METx, METy, sumET, 1)
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt
             tree.met_mmc_tau_lep = mmc_met
@@ -412,7 +412,7 @@ class muLHProcessor(ATLASStudent):
         tree_train.Write()
         tree_test.FlushBaskets()
         tree_test.Write()
-
+        
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
             xml_string.Write('lumi')

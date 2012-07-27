@@ -41,119 +41,6 @@ class SetElectronsFourVector(EventFilter):
 
         return True
 
-###############################################################
-#
-# SOME OF THESE FILTERS ARE ALREADY IN ../filters.py
-# USE THEM INSTEAD AND REMOVE THESE BELOW!!!
-#
-###############################################################
-
-class TauElectronVeto(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.EleBDTLoose == 0)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauMuonVeto(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.muonVeto == 0)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauHasTrack(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.numTrack > 0)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauAuthor(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.author != 2)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauPT(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.pt > 20*GeV)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauEta(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: abs(tau.eta) < 2.1)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauJVF(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: True if abs(tau.track_eta[0]) > 2.1 else tau.jet_jvtxf > .5)
-        return len(event.taus) >= MIN_TAUS
-
-
-class Tau1Track3Track(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.numTrack in (1, 3))
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauCharge(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: abs(tau.charge) == 1)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauLoose(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: tau.JetBDTSigLoose)
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauCrack(EventFilter):
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau: not (1.37 < abs(tau.track_eta[0]) < 1.52))
-        return len(event.taus) >= MIN_TAUS
-
-
-class TauLArHole(EventFilter):
-
-    def passes(self, event):
-
-        if not 180614 <= event.RunNumber <= 184169:
-            return True
-
-        for tau in event.taus:
-            if tau.track_n > 0:
-                eta = tau.track_eta[0]
-                phi = tau.track_phi[0]
-
-                if (-0.1 < eta < 1.55) and (-0.9 < phi < -0.5):
-                    return False
-
-        return True
-
-
 
 class ElectronLArHole(EventFilter):
 
@@ -171,16 +58,6 @@ class ElectronLArHole(EventFilter):
 
         return True
 
-
-
-class JetCrackVeto(EventFilter):
-
-    def passes(self, event):
-
-        for jet in event.jets:
-            if jet.pt <= 20*GeV: continue
-            if 1.3 < abs(jet.emscale_eta) < 1.7: return False
-        return True
 
 
 
@@ -551,6 +428,17 @@ def muon_skimselection(mu):
     return True
 
 
+def muon_overlap_selection(mu):
+    """ Do a pre-preselection for overlap removal with taus and jets """
+    
+    if not (mu.pt > 4*GeV) : return False
+    if not (muon_has_good_track(mu)) : return False
+    if not (abs(mu.eta) < 2.5) : return False
+    if not (mu.loose) : return False
+
+    return True
+
+
 def muon_preselection(mu):
     """ Does the complete muon preselection """
 
@@ -597,7 +485,7 @@ def electron_preselection(el):
     if not (abs(el.cl_eta) < 2.47) : return False
     if (1.37 < abs(el.cl_eta) < 1.52) : return False
     if not (el.author == 1 or el.author == 3) : return False
-    if not (el.mediumPP) : return False
+    if not (el.loosePP) : return False
 
     return True
 
@@ -635,6 +523,14 @@ from ..filters import jet_selection
 NOTE: no need for lambda functions below, just pass the selection function
 directly. Right now you pass a function that calls a function...
 """
+
+class MuonOverlapSelection(EventFilter):
+    """ Selects low pt muons of good quality for overlap removal with taus """
+
+    def passes(self, event):
+
+        event.muons.select(lambda muon : muon_overlap_selection(muon))
+        return True
 
 
 class MuonPreSelection(EventFilter):
@@ -730,7 +626,7 @@ def OverlapCheck(event, DoMuonCheck = False, DoElectronCheck = False):
 
 
 class JetOverlapRemoval(EventFilter):
-    """Muons > Electrons > Taus > Jets"""
+    """Muons, Electrons > Jets"""
 
     def passes(self, event):
         """ Remove jets matching muons and electrons """
@@ -738,6 +634,15 @@ class JetOverlapRemoval(EventFilter):
         event.jets.select(lambda jet: not any([el for el in event.electrons if (utils.dR(getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi(), jet.eta, jet.phi) < 0.2)]))
         return True
 
+
+class TauMuonOverlapRemoval(EventFilter):
+    """Muons, Electrons > Jets"""
+
+    def passes(self, event):
+        """ Remove jets matching muons and electrons """
+        event.taus.select(lambda tau: not any([mu for mu in event.muons if (utils.dR(mu.eta, mu.phi, tau.eta, tau.phi) < 0.2)]))
+        return True
+    
 
 class LeptonOverlapRemoval(EventFilter):
     """ Muons > Electrons """
@@ -756,7 +661,6 @@ class FinalOverlapRemoval(EventFilter):
     def passes(self, event):
 
         event.taus.select(lambda tau: not any([el for el in event.electrons if (utils.dR(getattr(el,'fourvect').Eta(), getattr(el,'fourvect').Phi(), tau.eta, tau.phi) < 0.2)]))
-        event.taus.select(lambda tau: not any([mu for mu in event.muons if (utils.dR(mu.eta, mu.phi, tau.eta, tau.phi) < 0.2)]))
         event.jets.select(lambda jet: not any([tau for tau in event.taus if (utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.2)]))
 
         return len(event.taus) == 1

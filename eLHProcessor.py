@@ -36,7 +36,6 @@ from goodruns import GRL
 import subprocess
 
 import random
-random.seed(math.pi)
 
 YEAR = 2011
 
@@ -55,7 +54,6 @@ class eLHProcessor(ATLASStudent):
         self.args.syst_type = eval(self.args.syst_type)
         self.args.syst_term = eval(self.args.syst_term)
         
-
     @staticmethod
     def merge(inputs, output, metadata):
 
@@ -124,6 +122,10 @@ class eLHProcessor(ATLASStudent):
 
         chain.always_read(copied_variables)
 
+        # Store the event numbers
+        if self.metadata.datatype == datasets.DATA:
+            self.outputFile = open(self.metadata.name + '.e.EvtNum.' + str(random.random()).lstrip('0.') + '.txt', 'w')
+
         ###########################
         ## Set the event filters ##
         ###########################
@@ -158,6 +160,9 @@ class eLHProcessor(ATLASStudent):
                     verbose=False),
                 # Keep only jets with pt > 20 GeV. Keep event.
                 JetPreSelection(),
+                # Remove taus that match loosely selected muons.
+                MuonOverlapSelection(),
+                TauMuonOverlapRemoval(),
                 # Keep only muons with pt > 10 GeV, |eta| < 2.5, loose ID, has_good_track. Keep event.
                 MuonPreSelection(),
                 # Keep only electrons with cl_Et > 15 GeV, eta acceptance, medium ID, author. Keep event.
@@ -165,11 +170,12 @@ class eLHProcessor(ATLASStudent):
                 # Remove jets matching muons or electrons.
                 JetOverlapRemoval(),
                 # Remove bad jets.
-                JetCleaning(eta_max = 9999.0),
+                JetCleaning(self.metadata.datatype, YEAR),
                 # Event should not pass if there is an electron in the LArHole region in the corresponding run #'s.
                 ElectronLArHole(),
                 # Event should not pass if there is a tau in the LArHole region in the corresponding run #'s.
-                TauLArHole(),
+                TauHasTrack(1),
+                TauLArHole(1),
                 # Event should not pass if there is a jet (with enough high pt) in the LArHole region in the corresponding run #'s.
                 LArHole(datatype=self.metadata.datatype),
                 # Event should not pass if larError flag is > 1.
@@ -328,7 +334,7 @@ class eLHProcessor(ATLASStudent):
             tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x = tau_x
             tree.lep_x = electron_x
-            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
+            mmc_mass, mmc_pt, mmc_met = 0,0,0#mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt
             tree.met_mmc_tau_lep = mmc_met
@@ -418,6 +424,10 @@ class eLHProcessor(ATLASStudent):
 
             tree.weight = event_weight
 
+            # Store Event numbers
+            if self.metadata.datatype == datasets.DATA:
+                self.outputFile.write(str(event.EventNumber) + '\n')
+            
             # fill output ntuple
             tree.cutflow = cutflow.int()
             tree.Fill()
@@ -427,6 +437,9 @@ class eLHProcessor(ATLASStudent):
         tree_train.Write()
         tree_test.FlushBaskets()
         tree_test.Write()
+
+        if self.metadata.datatype == datasets.DATA:
+            self.outputFile.close()
 
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
