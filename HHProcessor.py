@@ -42,7 +42,8 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
-VERBOSE = False
+VERBOSE = True
+
 
 class HHProcessor(ATLASStudent):
     """
@@ -58,7 +59,7 @@ class HHProcessor(ATLASStudent):
         if self.args.syst_terms is not None:
             self.args.syst_terms = [
                 eval('Systematics.%s' % term) for term in
-                set(self.args.syst_terms.split(','))]
+                self.args.syst_terms.split(',')]
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -166,7 +167,8 @@ class HHProcessor(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=YEAR,
                 datatype=self.metadata.datatype,
-                verbose=VERBOSE),
+                verbose=VERBOSE,
+                very_verbose=VERBOSE),
             # since the jet recalibration is applied the MET must be
             # recalculated even if no other systematics are applied.
             PriVertex(),

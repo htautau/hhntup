@@ -340,9 +340,13 @@ class Systematics(EventFilter):
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
-
         self.systematics = []
+        self.terms = terms
+
         if terms is not None:
+            # remove possible duplicates
+            terms = set(terms)
+            self.terms = terms
             for term in terms:
                 if term == Systematics.JES_UP:
                     systematic = JES(True, met_util=self, verbose=very_verbose)
@@ -463,6 +467,7 @@ class Systematics(EventFilter):
             event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
             event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
+        """
         self.met_utility.setElectronParameters(
             event.el_pt, # or smeared pT
             event.el_eta,
@@ -471,6 +476,14 @@ class Systematics(EventFilter):
             event.el_MET_BDTMedium_wpx,
             event.el_MET_BDTMedium_wpy,
             event.el_MET_BDTMedium_statusWord)
+        """
+
+        self.met_utility.setMETTerm(
+            METUtil.RefEle,
+            event.MET_RefEle_BDTMedium_etx,
+            event.MET_RefEle_BDTMedium_ety,
+            event.MET_RefEle_BDTMedium_sumet)
+
 
         """ We don't use photons in this analysis...
         self.met_utility.setPhotonParameters(
@@ -489,6 +502,10 @@ class Systematics(EventFilter):
             event.MET_RefGamma_BDTMedium_ety,
             event.MET_RefGamma_BDTMedium_sumet)
 
+        """
+        MUONS
+        """
+        """
         self.met_utility.setMuonParameters(
             event.mu_staco_pt, # or smeared pT
             event.mu_staco_eta,
@@ -504,6 +521,22 @@ class Systematics(EventFilter):
             event.mu_staco_ms_pt, # or smeared pT
             event.mu_staco_ms_theta,
             event.mu_staco_ms_phi)
+        """
+
+        self.met_utility.setMETTerm(
+            METUtil.MuonTotal,
+            event.MET_Muon_Total_Staco_BDTMedium_etx,
+            event.MET_Muon_Total_Staco_BDTMedium_ety,
+            event.MET_Muon_Total_Staco_BDTMedium_sumet)
+
+        # Note that RefMuon is not rebuilt from muons
+        # -- it is a calorimeter term.
+        self.met_utility.setMETTerm(
+            METUtil.RefMuon,
+            event.MET_RefMuon_Staco_BDTMedium_etx,
+            event.MET_RefMuon_Staco_BDTMedium_ety,
+            event.MET_RefMuon_Staco_BDTMedium_sumet)
+
 
         self.met_utility.setTauParameters(
             event.tau_pt,
@@ -513,6 +546,14 @@ class Systematics(EventFilter):
             event.tau_MET_BDTMedium_wpx,
             event.tau_MET_BDTMedium_wpy,
             event.tau_MET_BDTMedium_statusWord)
+
+        """
+        self.met_utility.setMETTerm(
+            METUtil.RefTau,
+            event.MET_RefTau_BDTMedium_etx,
+            event.MET_RefTau_BDTMedium_ety,
+            event.MET_RefTau_BDTMedium_sumet)
+        """
 
         """
         self.met_utility.setMETTerm(
@@ -526,33 +567,7 @@ class Systematics(EventFilter):
             MET_Truth_NonInt_etx,
             MET_Truth_NonInt_ety,
             MET_Truth_NonInt_sumet)
-
-        self.met_utility.setMETTerm(
-            METUtil.RefEle,
-            event.MET_RefEle_BDTMedium_etx,
-            event.MET_RefEle_BDTMedium_ety,
-            event.MET_RefEle_BDTMedium_sumet)
-
-        self.met_utility.setMETTerm(
-            METUtil.MuonTotal,
-            event.MET_Muon_Total_Staco_BDTMedium_etx,
-            event.MET_Muon_Total_Staco_BDTMedium_ety,
-            event.MET_Muon_Total_Staco_BDTMedium_sumet)
-
-        self.met_utility.setMETTerm(
-            METUtil.RefTau,
-            event.MET_RefTau_BDTMedium_etx,
-            event.MET_RefTau_BDTMedium_ety,
-            event.MET_RefTau_BDTMedium_sumet)
         """
-
-        # Note that RefMuon is not rebuilt from muons
-        # -- it is a calorimeter term.
-        self.met_utility.setMETTerm(
-            METUtil.RefMuon,
-            event.MET_RefMuon_Staco_BDTMedium_etx,
-            event.MET_RefMuon_Staco_BDTMedium_ety,
-            event.MET_RefMuon_Staco_BDTMedium_sumet)
 
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
