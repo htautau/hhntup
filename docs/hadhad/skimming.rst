@@ -10,6 +10,7 @@ MC11:
 
 * Stage I: **group.phys-higgs.HHSkim.mc11_7TeV*p851.v1/**
 * Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v2/**
+* Stage II: v3 in progress                         
 
 MC12:
 
