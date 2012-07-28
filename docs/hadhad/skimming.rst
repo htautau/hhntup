@@ -21,6 +21,7 @@ Data11:
 
 * Stage I: **user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/**
 * Stage II: **group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v5/**
+* Stage II: v6 in progress
 
 Data12:
 
