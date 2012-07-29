@@ -172,7 +172,7 @@ def run_systematics(channel, student, systematics=None, **kwargs):
     else:
         systematics = []
     for sys_variations in iter_systematic_variations(channel):
-        set(sys_variations) not in systematics:
+        if set(sys_variations) not in systematics:
             continue
         print
         print '======== Running %s systematics ========' % '+'.join(sys_variations)
