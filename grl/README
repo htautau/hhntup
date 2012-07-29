@@ -12,3 +12,6 @@ To create the lumicalc histograms use the GRL here:
 https://atlas-lumicalc.cern.ch/ and add --plots in "Other Options:"
 See
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ExtendedPileupReweighting
+
+Keep ilumicalc output files in higgstautau/lumi
+(a soft link, not tracked in the repository)
