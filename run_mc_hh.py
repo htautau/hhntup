@@ -38,7 +38,9 @@ if not args.systematics_only:
 
 if not args.nominal_only:
     if args.systematics is not None:
-        args.systematics = args.systematics.split(',')
+        args.systematics = [
+                set(s.upper().split('+')) for s in
+                args.systematics.split(',')]
     # systematics
     cluster.run_systematics('HADHAD',
                 'HHProcessor.py',

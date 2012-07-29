@@ -26,9 +26,9 @@ SYSTEMATICS = {
     'MUHAD': SYSTEMATICS_COMMON + SYSTEMATICS_MUHAD,
 }
 
-def iter_systematic_variations(channel, include_nominal=False):
+def iter_systematics(channel, include_nominal=False):
 
     if include_nominal:
         yield None
     for sys_variations in SYSTEMATICS[channel.upper()]:
-        yield sys_variations
+        yield set(sys_variations)

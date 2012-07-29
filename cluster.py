@@ -4,7 +4,7 @@ import subprocess
 from subprocess import call
 import multiprocessing as mp
 from higgstautau.datasets import Database
-from systematics import iter_systematic_variations
+from systematics import iter_systematics
 
 
 HOSTNAME = socket.gethostname()
@@ -167,23 +167,19 @@ def run(student,
 
 def run_systematics(channel, student, systematics=None, **kwargs):
 
-    if systematics is not None:
-        systematics = [set(s.upper().split('+')) for s in systematics]
-    else:
-        systematics = []
-    for sys_variations in iter_systematic_variations(channel):
-        if set(sys_variations) not in systematics:
-            continue
+    for sys_variations in iter_systematics(channel):
+        if systematics is not None:
+            if sys_variations not in systematics:
+                continue
         print
         print '======== Running %s systematics ========' % '+'.join(sys_variations)
         print
         suffix = '--suffix %s' % '_'.join(sys_variations)
-        syst = '--syst-terms %s' % (
-                sys_object, sys_object, ','.join(sys_variations))
+        syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
             args=suffix.split(),
             student_args=syst.split(),
-            qsub_name_suffix=sys_variation,
+            qsub_name_suffix='_'.join(sys_variations),
             **kwargs)
 
 
