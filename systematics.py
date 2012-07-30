@@ -31,4 +31,4 @@ def iter_systematics(channel, include_nominal=False):
     if include_nominal:
         yield None
     for sys_variations in SYSTEMATICS[channel.upper()]:
-        yield set(sys_variations)
+        yield sys_variations
