@@ -153,12 +153,10 @@ class JER(JetSystematic):
             # is required, setting it to something like object phi ensures
             # a good mix of randomness and reproducibility.
             self.jetrandom.SetSeed(int(1.e5 * abs(jet.phi)))
-            jerShift = self.jetrandom.Gaus(0, smearingFactorSyst)
+            shift = self.jetrandom.Gaus(0, smearingFactorSyst)
 
-        if self.is_up:
-            shift = jerShift
-        else:
-            shift = -1 * jerShift # Usually not used, see below.
+        if not self.is_up:
+            shift *= -1
         jet.pt *= 1. + shift
 
         """
