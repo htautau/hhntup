@@ -477,62 +477,55 @@ class MC(Sample):
             trees = {}
             weighted_events = {}
 
-            for sys_object, sys_type, sys_variations in \
-                iter_systematics('hadhad', include_nominal=True):
+            trees['NOMINAL'] = None
+            weighted_events['NOMINAL'] = None
 
-                if sys_object is None:
-                    # nominal
-                    sys_terms = ('NOMINAL',)
-                    trees['NOMINAL'] = None
-                    weighted_events['NOMINAL'] = None
+            if ds.name in FILES and 'NOMINAL' in FILES[ds.name]:
+                rfile = FILES[ds.name]['NOMINAL']
+                trees['NOMINAL'] = rfile.Get('higgstautauhh')
+                weighted_events['NOMINAL'] = rfile.cutflow[1]
+            else:
+                rfile = ropen('.'.join([
+                    os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                trees['NOMINAL'] = rfile.Get('higgstautauhh')
+                weighted_events['NOMINAL'] = rfile.cutflow[1]
+                if ds.name not in FILES:
+                    FILES[ds.name] = {}
+                FILES[ds.name]['NOMINAL'] = rfile
+
+            for sys_variations in iter_systematics('hadhad'):
+
+                sys_term = '_'.join(sys_variations)
+                trees[sys_term] = None
+                weighted_events[sys_term] = None
+
+                if ds.name in FILES and sys_term in FILES[ds.name]:
+                    rfile = FILES[ds.name][sys_term]
+                    trees[sys_term] = rfile.Get('higgstautauhh')
+                    weighted_events[sys_term] = rfile.cutflow[1]
                 else:
-                    sys_terms = [sys_type + '_' + v for v in sys_variations]
-                    trees[sys_type] = {}
-                    weighted_events[sys_type] = {}
-                    for v in sys_variations:
-                        trees[sys_type][v] = None
-                        weighted_events[sys_type][v] = None
+                    rfile = ropen('.'.join([
+                        os.path.join(NTUPLE_PATH, PROCESSOR),
+                        '_'.join([ds.name, sys_term]), 'root']))
+                    trees[sys_term] = rfile.Get('higgstautauhh')
+                    weighted_events[sys_term] = rfile.cutflow[1]
+                    if ds.name not in FILES:
+                        FILES[ds.name] = {}
+                    FILES[ds.name][sys_term] = rfile
 
-                for sys_term in sys_terms:
-                    if ds.name in FILES and sys_term in FILES[ds.name]:
-                        rfile = FILES[ds.name][sys_term]
-                        if sys_term == 'NOMINAL':
-                            trees[sys_term] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_term] = rfile.cutflow[1]
-                        else:
-                            sys_type, variation = sys_term.split('_')
-                            trees[sys_type][variation] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_type][variation] = rfile.cutflow[1]
-                    else:
-                        if sys_term == 'NOMINAL':
-                            rfile = ropen('.'.join([
-                                os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
-                            trees[sys_term] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_term] = rfile.cutflow[1]
-                        else:
-                            sys_type, variation = sys_term.split('_')
-                            rfile = ropen('.'.join([
-                                os.path.join(NTUPLE_PATH, PROCESSOR),
-                                '_'.join([ds.name, sys_term]), 'root']))
-                            trees[sys_type][variation] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_type][variation] = rfile.cutflow[1]
-                        if ds.name not in FILES:
-                            FILES[ds.name] = {}
-                        FILES[ds.name][sys_term] = rfile
-
-                if isinstance(self, MC_Higgs):
-                    # use yellowhiggs for cross sections
-                    xs = yellowhiggs.xsbr(
-                            7, self.mass[i],
-                            self.mode, 'tautau')[0] * TAUTAUHADHADBR
-                    kfact = 1.
-                    effic = 1.
-                else:
-                    # use xsec for cross sections
-                    xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
-                if VERBOSE:
-                    print ds.name, xs, kfact, effic
-                    #print tree.GetEntries(), weighted_events
+            if isinstance(self, MC_Higgs):
+                # use yellowhiggs for cross sections
+                xs = yellowhiggs.xsbr(
+                        7, self.mass[i],
+                        self.mode, 'tautau')[0] * TAUTAUHADHADBR
+                kfact = 1.
+                effic = 1.
+            else:
+                # use xsec for cross sections
+                xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
+            if VERBOSE:
+                print ds.name, xs, kfact, effic
+                #print tree.GetEntries(), weighted_events
             self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property

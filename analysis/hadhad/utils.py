@@ -187,7 +187,9 @@ def draw(model,
                 axes=hist_ax, alpha=.8, ypadding=(.5, .1))
 
     if data is not None:
-        data_bars = rplt.errorbar(data, fmt='o', axes=hist_ax, ypadding=(.5, .1))
+        data_bars = rplt.errorbar(data,
+                fmt='o', axes=hist_ax, ypadding=(.5, .1),
+                emptybins=False)
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
@@ -197,7 +199,8 @@ def draw(model,
         total_model = sum(model)
         rplt.errorbar(
                 Hist.divide(data - total_model, total_model, option='B') * 100,
-                fmt='o', axes=ratio_ax)
+                fmt='o', axes=ratio_ax,
+                emptybins=False)
         ratio_ax.set_ylim((-100., 100.))
         #ratio_ax.yaxis.tick_right()
         ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
