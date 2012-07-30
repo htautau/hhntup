@@ -6,6 +6,8 @@ ParametrizedBDTSelection.root
 *.so
 deps/*
 higgstautau/pileup/*
-grl/2011/lumicalc/hadhad/*
-grl/2012/lumicalc/hadhad/*
+grl/2011/*
+grl/2012/*
+lumi/2012/hadhad/*
+lumi/2011/hadhad/*
 externaltools/*/share/*.root
