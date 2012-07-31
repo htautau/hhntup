@@ -768,26 +768,47 @@ class MC_ZH(MC_Higgs):
 
 class QCD(Sample):
 
-    def __init__(self, data, mc, scale=1., sample_region='SS'):
+    def __init__(self, data, mc, category,
+                 scale=1.,
+                 target_region='OS',
+                 control_region='SS',
+                 shape_region='SS',
+                 cuts=None):
 
         super(QCD, self).__init__(scale=scale)
         self.data = data
         self.mc = mc
+        self.category = category
         self.name = 'QCD'
         self.label = 'QCD Multi-jet'
         self.scale = 1.
-        self.sample_region = sample_region
+        self.target_region = target_region
+        self.control_region = control_region
+        self.shape_region = shape_region
         self.colour = '#59d454'
+        self.shape_scale = 1.
+        if shape_region != control_region:
+            tmp1 = Hist(10, -2, 2)
+            tmp2 = tmp1.Clone()
+            self.draw_into(
+                    tmp1,
+                    'tau1_BDTJetScore > -100',
+                    category, target_region,
+                    sample_region=control_region,
+                    cuts=cuts)
+            self.draw_into(
+                    tmp2,
+                    'tau1_BDTJetScore > -100',
+                    category, target_region,
+                    sample_region=shape_region,
+                    cuts=cuts)
+            self.shape_scale = tmp1.Integral() / tmp2.Integral()
 
-    def draw(self, expr, category, region, bins, min, max, cuts=None,
-             sample_region=None):
 
-        if sample_region is None:
-            sample_region = self.sample_region
+    def draw(self, expr, category, region, bins, min, max, cuts=None):
 
         hist = Hist(bins, min, max, title=self.label, name=self.name)
-        self.draw_into(hist, expr, category, region, cuts=cuts,
-                       sample_region=sample_region)
+        self.draw_into(hist, expr, category, region, cuts=cuts)
         hist.SetFillColor(self.colour)
         return hist
 
@@ -795,13 +816,11 @@ class QCD(Sample):
                   sample_region=None):
 
         if sample_region is None:
-            sample_region = self.sample_region
-
+            sample_region = self.shape_region
         MC_bkg_notOS = hist.Clone()
         for mc in self.mc:
-            mc.draw_into(MC_bkg_notOS, expr, category, sample_region, cuts=cuts)
-
-        # assume norm factor of 1., to be determined later in fit
+            mc.draw_into(MC_bkg_notOS, expr, category, sample_region,
+                         cuts=cuts)
         self.data.draw_into(hist, expr,
                             category, sample_region, cuts=cuts)
         hist -= MC_bkg_notOS
