@@ -374,11 +374,6 @@ if __name__ == '__main__':
 
     PLOTS_DIR = plots_dir(__file__)
 
-    # QCD shape region SS or !OS
-    shape_region = 'SS'
-    control_region = 'SS'
-    target_region = 'OS'
-
     mc_ztautau   = MC_Ztautau()
     mc_others = MC_Others()
 
@@ -388,9 +383,6 @@ if __name__ == '__main__':
     zh_125  =  MC_ZH(mass=125)
 
     data = Data()
-
-    qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
-              sample_region=control_region)
 
     signals = [
         vbf_125,
@@ -404,6 +396,14 @@ if __name__ == '__main__':
     for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         if category == 'preselection':
             continue
+        # QCD shape region SS or !OS
+        shape_region = cat_info['shape_region']
+        control_region = cat_info['control_region']
+        target_region = cat_info['target_region']
+
+        qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
+              sample_region=control_region)
+
         figures[category] = {}
 
         #cuts = Cut('80 < mass_mmc_tau1_tau2 < 110')
