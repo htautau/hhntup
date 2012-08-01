@@ -398,11 +398,10 @@ if __name__ == '__main__':
             continue
         # QCD shape region SS or !OS
         shape_region = cat_info['shape_region']
-        control_region = cat_info['control_region']
         target_region = cat_info['target_region']
 
         qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
-              sample_region=control_region)
+              shape_region=shape_region)
 
         figures[category] = {}
 
@@ -415,38 +414,16 @@ if __name__ == '__main__':
         # determine normalization of QCD and Ztautau
         # in each category separately
         qcd_scale, ztautau_scale = qcd_ztautau_norm(
-            qcd=qcd,
             ztautau=mc_ztautau,
             backgrounds=[mc_others],
             data=data,
             category=category,
             target_region=target_region,
-            control_region=control_region,
+            qcd_shape_region=shape_region,
             use_cache=args.use_cache)
 
         qcd.scale = qcd_scale
         mc_ztautau.scale = ztautau_scale
-
-        if shape_region != control_region:
-            tmp1 = Hist(10, -2, 2)
-            tmp2 = tmp1.Clone()
-
-            qcd.draw_into(
-                    tmp1,
-                    'tau1_BDTJetScore > -100',
-                    category, target_region,
-                    sample_region=control_region,
-                    cuts=cuts)
-
-            qcd.draw_into(
-                    tmp2,
-                    'tau1_BDTJetScore > -100',
-                    category, target_region,
-                    sample_region=shape_region,
-                    cuts=cuts)
-
-            qcd_scale *= tmp1.Integral() / tmp2.Integral()
-            qcd.scale = qcd_scale
 
         for expr, var_info in VARIABLES.items():
             if category.upper() not in var_info['cats']:

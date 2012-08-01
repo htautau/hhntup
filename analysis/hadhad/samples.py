@@ -768,42 +768,19 @@ class MC_ZH(MC_Higgs):
 
 class QCD(Sample):
 
-    def __init__(self, data, mc, category,
+    def __init__(self, data, mc,
                  scale=1.,
-                 target_region='OS',
-                 control_region='SS',
                  shape_region='SS',
                  cuts=None):
 
         super(QCD, self).__init__(scale=scale)
         self.data = data
         self.mc = mc
-        self.category = category
         self.name = 'QCD'
         self.label = 'QCD Multi-jet'
         self.scale = 1.
-        self.target_region = target_region
-        self.control_region = control_region
         self.shape_region = shape_region
         self.colour = '#59d454'
-        self.shape_scale = 1.
-        if shape_region != control_region:
-            tmp1 = Hist(10, -2, 2)
-            tmp2 = tmp1.Clone()
-            self.draw_into(
-                    tmp1,
-                    'tau1_BDTJetScore > -100',
-                    category, target_region,
-                    sample_region=control_region,
-                    cuts=cuts)
-            self.draw_into(
-                    tmp2,
-                    'tau1_BDTJetScore > -100',
-                    category, target_region,
-                    sample_region=shape_region,
-                    cuts=cuts)
-            self.shape_scale = tmp1.Integral() / tmp2.Integral()
-
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
@@ -812,17 +789,14 @@ class QCD(Sample):
         hist.SetFillColor(self.colour)
         return hist
 
-    def draw_into(self, hist, expr, category, region, cuts=None,
-                  sample_region=None):
+    def draw_into(self, hist, expr, category, region, cuts=None):
 
-        if sample_region is None:
-            sample_region = self.shape_region
         MC_bkg_notOS = hist.Clone()
         for mc in self.mc:
-            mc.draw_into(MC_bkg_notOS, expr, category, sample_region,
+            mc.draw_into(MC_bkg_notOS, expr, category, self.shape_region,
                          cuts=cuts)
         self.data.draw_into(hist, expr,
-                            category, sample_region, cuts=cuts)
+                            category, self.shape_region, cuts=cuts)
         hist -= MC_bkg_notOS
         hist *= self.scale
         hist.SetTitle(self.label)
@@ -838,7 +812,7 @@ class QCD(Sample):
 
         # SS data
         train, test = self.data.train_test(category=category,
-                                           region=self.sample_region,
+                                           region=self.shape_region,
                                            branches=branches,
                                            train_fraction=train_fraction,
                                            cuts=cuts)
@@ -850,7 +824,7 @@ class QCD(Sample):
         for mc in self.mc:
             # didn't train on MC here if using SS or !OS
             train, test = mc.train_test(category=category,
-                                        region=self.sample_region,
+                                        region=self.shape_region,
                                         branches=branches,
                                         train_fraction=train_fraction,
                                         cuts=cuts,
@@ -868,16 +842,17 @@ class QCD(Sample):
         TEMPFILE.cd()
         trees = [asrootpy(self.data.data.CopyTree(
                     self.data.cuts(category,
-                                   region=self.sample_region) & cuts))]
+                                   region=self.shape_region) & cuts))]
         for mc in self.mc:
             _trees = mc.trees(
                     category,
-                    region=self.sample_region,
+                    region=self.shape_region,
                     cuts=cuts,
                     systematic=systematic)
             for tree in _trees:
                 tree.Scale(-1)
             trees += _trees
+
         for tree in trees:
             tree.Scale(self.scale)
         return trees

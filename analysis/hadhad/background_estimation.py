@@ -124,13 +124,12 @@ def draw_fit(
         c.SaveAs(os.path.join(PLOTS_DIR, "%s.%s" % (name, format)))
 
 
-def qcd_ztautau_norm(qcd,
-                     ztautau,
+def qcd_ztautau_norm(ztautau,
                      backgrounds,
                      data,
                      category='preselection',
                      target_region='OS',
-                     control_region='SS',
+                     qcd_shape_region='SS',
                      cuts=None,
                      use_cache=True):
 
@@ -186,7 +185,7 @@ def qcd_ztautau_norm(qcd,
     ztautau.draw_into(
             ztautau_hist_control,
             expr,
-            category, control_region,
+            category, qcd_shape_region,
             cuts=control)
 
     for b in backgrounds:
@@ -196,7 +195,7 @@ def qcd_ztautau_norm(qcd,
                 cuts=control)
         b.draw_into(
                 bkg_hist_control, expr,
-                category, control_region,
+                category, qcd_shape_region,
                 cuts=control)
 
     data.draw_into(
@@ -208,7 +207,7 @@ def qcd_ztautau_norm(qcd,
     data.draw_into(
             data_hist_control,
             expr,
-            category, control_region,
+            category, qcd_shape_region,
             cuts=control)
 
     draw_fit(data_hist,

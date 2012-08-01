@@ -14,8 +14,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_VBF,
         'cuts': COMMON_CUTS, #& Cut('mass_jet1_jet2 > 100000'),
         'fitbins': 5,
-        'shape_region': '!OS',
-        'control_region': 'SS',
+        'qcd_shape_region': '!OS',
         'target_region': 'OS',
         'features': [
             'dEta_jets',
@@ -47,8 +46,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_BOOSTED,
         'cuts': COMMON_CUTS,
         'fitbins': 8,
-        'shape_region': 'SS',
-        'control_region': 'SS',
+        'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
             'sphericity',
@@ -69,8 +67,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_GGF,
         'cuts': COMMON_CUTS,
         'fitbins': 10,
-        'shape_region': 'SS',
-        'control_region': 'SS',
+        'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
             #'cos_theta_tau1_tau2',
@@ -87,8 +84,7 @@ CATEGORIES = {
         'code': None,
         'cuts': COMMON_CUTS,
         'fitbins': 10,
-        'shape_region': 'SS',
-        'control_region': 'SS',
+        'qcd_shape_region': 'SS',
         'target_region': 'OS',
     }
 }
