@@ -24,7 +24,7 @@ import samples
 from samples import *
 from categories import CATEGORIES
 import bkg_scales_cache
-from systematics import iter_systematic_variations
+from systematics import iter_systematics
 
 import numpy as np
 
@@ -305,7 +305,8 @@ def plot_clf(
              category_name=info['name'],
              name="BDT Score",
              output_name=output_name,
-             range=(min_score, max_score))
+             range=(min_score, max_score),
+             show_ratio=data_hist is not None)
 
 
 if __name__ == '__main__':
@@ -313,11 +314,6 @@ if __name__ == '__main__':
     use_cache = args.use_cache
     train_fraction = args.train_frac
     bins = 20
-
-    # QCD shape region SS or !OS
-    shape_region = 'SS'
-    control_region = 'SS'
-    target_region = 'OS'
 
     mc_ztautau = MC_Ztautau()
 
@@ -340,8 +336,7 @@ if __name__ == '__main__':
     data = Data()
 
     qcd = QCD(data=data,
-              mc=backgrounds[:],
-              sample_region=control_region)
+              mc=backgrounds[:])
 
     backgrounds.insert(0, qcd)
 
@@ -356,18 +351,13 @@ if __name__ == '__main__':
         if category == 'preselection':
             continue
         print category
+
+        # QCD shape region SS or !OS
+        qcd.shape_region = info['qcd_shape_region']
+        target_region = info['target_region']
         cuts = Cut()
-
-        qcd.scale = 1.
-        mc_ztautau.scale = 1.
-
-        qcd_scale, ztautau_scale = bkg_scales_cache.get_scales(category)
-
-        print qcd_scale, ztautau_scale
-
-        qcd.scale = qcd_scale
-        mc_ztautau.scale = ztautau_scale
-
+        qcd.scale, mc_ztautau.scale = bkg_scales_cache.get_scales(category)
+        print qcd.scale, mc_ztautau.scale
         branches = info['features']
 
         if args.cor:
@@ -494,7 +484,7 @@ if __name__ == '__main__':
                 pickle.dump(clf, f)
 
         # compare data and the model in a low mass control region
-        cuts = Cut('80 < mass_mmc_tau1_tau2 < 110')
+        cuts = Cut('mass_mmc_tau1_tau2 < 110')
         plot_clf(clf,
                  backgrounds,
                  category,
@@ -550,9 +540,14 @@ if __name__ == '__main__':
         bkg_scores = {}
         sig_scores = {}
 
-        for sys_object, sys_term in iter_systematic_variations(
+        for sys_variations in iter_systematics(
                 channel='hadhad',
                 include_nominal=True):
+
+            if sys_variations == 'NOMINAL':
+                sys_term = sys_variations
+            else:
+                sys_term = '_'.join(sys_variations)
 
             # apply on all backgrounds
             bkg_scores[sys_term] = []
@@ -609,13 +604,15 @@ if __name__ == '__main__':
             data_hist.Write()
             total_data = sum(data_hist)
 
-            for sys_object, sys_term in iter_systematic_variations(
+            for sys_variations in iter_systematics(
                     channel='hadhad',
                     include_nominal=True):
 
-                if sys_term is None:
+                if sys_variations == 'NOMINAL':
+                    sys_term = sys_variations
                     suffix = ''
                 else:
+                    sys_term = '_'.join(sys_variations)
                     suffix = '_' + sys_term
 
                 bkg_hists = []

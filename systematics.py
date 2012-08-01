@@ -29,6 +29,6 @@ SYSTEMATICS = {
 def iter_systematics(channel, include_nominal=False):
 
     if include_nominal:
-        yield None
+        yield 'NOMINAL'
     for sys_variations in SYSTEMATICS[channel.upper()]:
         yield set(sys_variations)
