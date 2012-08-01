@@ -397,11 +397,11 @@ if __name__ == '__main__':
         if category == 'preselection':
             continue
         # QCD shape region SS or !OS
-        shape_region = cat_info['shape_region']
+        qcd_shape_region = cat_info['qcd_shape_region']
         target_region = cat_info['target_region']
 
         qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
-              shape_region=shape_region)
+              shape_region=qcd_shape_region)
 
         figures[category] = {}
 
@@ -419,7 +419,7 @@ if __name__ == '__main__':
             data=data,
             category=category,
             target_region=target_region,
-            qcd_shape_region=shape_region,
+            qcd_shape_region=qcd_shape_region,
             use_cache=args.use_cache)
 
         qcd.scale = qcd_scale
@@ -446,7 +446,6 @@ if __name__ == '__main__':
             qcd_hist = qcd.draw(expr,
                                 category, target_region,
                                 bins, min, max,
-                                sample_region=shape_region,
                                 cuts=cuts)
 
             ztautau_hist = mc_ztautau.draw(expr,
