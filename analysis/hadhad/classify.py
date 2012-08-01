@@ -24,7 +24,7 @@ import samples
 from samples import *
 from categories import CATEGORIES
 import bkg_scales_cache
-from systematics import iter_systematic_variations
+from systematics import iter_systematics
 
 import numpy as np
 
@@ -540,9 +540,14 @@ if __name__ == '__main__':
         bkg_scores = {}
         sig_scores = {}
 
-        for sys_object, sys_term in iter_systematic_variations(
+        for sys_variations in iter_systematics(
                 channel='hadhad',
                 include_nominal=True):
+
+            if sys_variations == 'NOMINAL':
+                sys_term = sys_variations
+            else:
+                sys_term = '_'.join(sys_variations)
 
             # apply on all backgrounds
             bkg_scores[sys_term] = []
@@ -599,13 +604,15 @@ if __name__ == '__main__':
             data_hist.Write()
             total_data = sum(data_hist)
 
-            for sys_object, sys_term in iter_systematic_variations(
+            for sys_variations in iter_systematics(
                     channel='hadhad',
                     include_nominal=True):
 
-                if sys_term is None:
+                if sys_variations == 'NOMINAL':
+                    sys_term = sys_variations
                     suffix = ''
                 else:
+                    sys_term = '_'.join(sys_variations)
                     suffix = '_' + sys_term
 
                 bkg_hists = []
