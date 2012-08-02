@@ -119,7 +119,7 @@ def make_classification(
         same_size_train=True,
         same_size_test=False,
         standardize=False,
-        systematic=None):
+        systematic='NOMINAL'):
 
     signal_train_arrs = []
     signal_weight_train_arrs = []
@@ -312,7 +312,7 @@ class Sample(object):
                    branches,
                    train_fraction=None,
                    cuts=None,
-                   systematic=None):
+                   systematic='NOMINAL'):
         """
         Return recarray for training and for testing
         """
@@ -375,7 +375,7 @@ class Sample(object):
                  branches,
                  include_weight=True,
                  cuts=None,
-                 systematic=None):
+                 systematic='NOMINAL'):
 
         if include_weight and isinstance(self, MC):
             branches = branches + [
@@ -416,7 +416,7 @@ class Sample(object):
                 branches,
                 include_weight=True,
                 cuts=None,
-                systematic=None):
+                systematic='NOMINAL'):
 
         return r2a.recarray_to_ndarray(
                    self.recarray(
@@ -455,7 +455,7 @@ class Data(Sample):
               category,
               region,
               cuts=None,
-              systematic=None):
+              systematic='NOMINAL'):
         """
         systematics do not apply to data but the argument is present for
         coherence with the other samples
@@ -477,62 +477,55 @@ class MC(Sample):
             trees = {}
             weighted_events = {}
 
-            for sys_object, sys_type, sys_variations in \
-                iter_systematics('hadhad', include_nominal=True):
+            trees['NOMINAL'] = None
+            weighted_events['NOMINAL'] = None
 
-                if sys_object is None:
-                    # nominal
-                    sys_terms = ('NOMINAL',)
-                    trees['NOMINAL'] = None
-                    weighted_events['NOMINAL'] = None
+            if ds.name in FILES and 'NOMINAL' in FILES[ds.name]:
+                rfile = FILES[ds.name]['NOMINAL']
+                trees['NOMINAL'] = rfile.Get('higgstautauhh')
+                weighted_events['NOMINAL'] = rfile.cutflow[1]
+            else:
+                rfile = ropen('.'.join([
+                    os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                trees['NOMINAL'] = rfile.Get('higgstautauhh')
+                weighted_events['NOMINAL'] = rfile.cutflow[1]
+                if ds.name not in FILES:
+                    FILES[ds.name] = {}
+                FILES[ds.name]['NOMINAL'] = rfile
+
+            for sys_variations in iter_systematics('hadhad'):
+
+                sys_term = '_'.join(sys_variations)
+                trees[sys_term] = None
+                weighted_events[sys_term] = None
+
+                if ds.name in FILES and sys_term in FILES[ds.name]:
+                    rfile = FILES[ds.name][sys_term]
+                    trees[sys_term] = rfile.Get('higgstautauhh')
+                    weighted_events[sys_term] = rfile.cutflow[1]
                 else:
-                    sys_terms = [sys_type + '_' + v for v in sys_variations]
-                    trees[sys_type] = {}
-                    weighted_events[sys_type] = {}
-                    for v in sys_variations:
-                        trees[sys_type][v] = None
-                        weighted_events[sys_type][v] = None
+                    rfile = ropen('.'.join([
+                        os.path.join(NTUPLE_PATH, PROCESSOR),
+                        '_'.join([ds.name, sys_term]), 'root']))
+                    trees[sys_term] = rfile.Get('higgstautauhh')
+                    weighted_events[sys_term] = rfile.cutflow[1]
+                    if ds.name not in FILES:
+                        FILES[ds.name] = {}
+                    FILES[ds.name][sys_term] = rfile
 
-                for sys_term in sys_terms:
-                    if ds.name in FILES and sys_term in FILES[ds.name]:
-                        rfile = FILES[ds.name][sys_term]
-                        if sys_term == 'NOMINAL':
-                            trees[sys_term] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_term] = rfile.cutflow[1]
-                        else:
-                            sys_type, variation = sys_term.split('_')
-                            trees[sys_type][variation] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_type][variation] = rfile.cutflow[1]
-                    else:
-                        if sys_term == 'NOMINAL':
-                            rfile = ropen('.'.join([
-                                os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
-                            trees[sys_term] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_term] = rfile.cutflow[1]
-                        else:
-                            sys_type, variation = sys_term.split('_')
-                            rfile = ropen('.'.join([
-                                os.path.join(NTUPLE_PATH, PROCESSOR),
-                                '_'.join([ds.name, sys_term]), 'root']))
-                            trees[sys_type][variation] = rfile.Get('higgstautauhh')
-                            weighted_events[sys_type][variation] = rfile.cutflow[1]
-                        if ds.name not in FILES:
-                            FILES[ds.name] = {}
-                        FILES[ds.name][sys_term] = rfile
-
-                if isinstance(self, MC_Higgs):
-                    # use yellowhiggs for cross sections
-                    xs = yellowhiggs.xsbr(
-                            7, self.mass[i],
-                            self.mode, 'tautau')[0] * TAUTAUHADHADBR
-                    kfact = 1.
-                    effic = 1.
-                else:
-                    # use xsec for cross sections
-                    xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
-                if VERBOSE:
-                    print ds.name, xs, kfact, effic
-                    #print tree.GetEntries(), weighted_events
+            if isinstance(self, MC_Higgs):
+                # use yellowhiggs for cross sections
+                xs = yellowhiggs.xsbr(
+                        7, self.mass[i],
+                        self.mode, 'tautau')[0] * TAUTAUHADHADBR
+                kfact = 1.
+                effic = 1.
+            else:
+                # use xsec for cross sections
+                xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
+            if VERBOSE:
+                print ds.name, xs, kfact, effic
+                #print tree.GetEntries(), weighted_events
             self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property
@@ -562,26 +555,25 @@ class MC(Sample):
 
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
 
-            for sys_object, sys_type, sys_variations in \
-                iter_systematics('hadhad'):
-                for variation in sys_variations:
-                    sys_hist = hist.Clone()
-                    sys_hist.Reset()
-                    sys_tree = sys_trees[sys_type][variation]
-                    sys_event = sys_events[sys_type][variation]
-                    weight = TOTAL_LUMI * self.scale * xs * kfact * effic / sys_event
-                    weighted_selection = ('%.5f * mc_weight * pileup_weight * '
-                                          'tau1_weight * tau2_weight * (%s)' %
-                                          (weight, selection))
-                    for expr in exprs:
-                        sys_tree.Draw(expr, weighted_selection, hist=sys_hist)
-                    if sys_type not in sys_hists:
-                        sys_hists[sys_type] = {}
-                    if variation not in sys_hists[sys_type]:
-                        sys_hists[sys_type][variation] = sys_hist
-                    else:
-                        sys_hists[sys_type][variation] += sys_hist
-
+            """
+            for sys_variations in iter_systematics('hadhad'):
+                sys_hist = hist.Clone()
+                sys_hist.Reset()
+                sys_tree = sys_trees[sys_type][variation]
+                sys_event = sys_events[sys_type][variation]
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / sys_event
+                weighted_selection = ('%.5f * mc_weight * pileup_weight * '
+                                      'tau1_weight * tau2_weight * (%s)' %
+                                      (weight, selection))
+                for expr in exprs:
+                    sys_tree.Draw(expr, weighted_selection, hist=sys_hist)
+                if sys_type not in sys_hists:
+                    sys_hists[sys_type] = {}
+                if variation not in sys_hists[sys_type]:
+                    sys_hists[sys_type][variation] = sys_hist
+                else:
+                    sys_hists[sys_type][variation] += sys_hist
+            """
             tree = sys_trees['NOMINAL']
             events = sys_events['NOMINAL']
 
@@ -596,23 +588,17 @@ class MC(Sample):
                 tree.Draw(expr, weighted_selection, hist=hist)
 
         # set the systematics
-        hist.systematics = sys_hists
+        #hist.systematics = sys_hists
 
     def trees(self, category, region, cuts=None,
-              systematic=None):
+              systematic='NOMINAL'):
 
         TEMPFILE.cd()
         selection = self.cuts(category, region) & cuts
         trees = []
-        if systematic is not None:
-            sys_type, sys_var = systematic.split('_')
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
-            if systematic is None:
-                tree = sys_trees['NOMINAL']
-                events = sys_events['NOMINAL']
-            else:
-                tree = sys_trees[sys_type][sys_var]
-                events = sys_events[sys_type][sys_var]
+            tree = sys_trees[systematic]
+            events = sys_events[systematic]
             weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
@@ -776,7 +762,10 @@ class MC_ZH(MC_Higgs):
 
 class QCD(Sample):
 
-    def __init__(self, data, mc, scale=1., sample_region='SS'):
+    def __init__(self, data, mc,
+                 scale=1.,
+                 shape_region='SS',
+                 cuts=None):
 
         super(QCD, self).__init__(scale=scale)
         self.data = data
@@ -784,34 +773,24 @@ class QCD(Sample):
         self.name = 'QCD'
         self.label = 'QCD Multi-jet'
         self.scale = 1.
-        self.sample_region = sample_region
+        self.shape_region = shape_region
         self.colour = '#59d454'
 
-    def draw(self, expr, category, region, bins, min, max, cuts=None,
-             sample_region=None):
-
-        if sample_region is None:
-            sample_region = self.sample_region
+    def draw(self, expr, category, region, bins, min, max, cuts=None):
 
         hist = Hist(bins, min, max, title=self.label, name=self.name)
-        self.draw_into(hist, expr, category, region, cuts=cuts,
-                       sample_region=sample_region)
+        self.draw_into(hist, expr, category, region, cuts=cuts)
         hist.SetFillColor(self.colour)
         return hist
 
-    def draw_into(self, hist, expr, category, region, cuts=None,
-                  sample_region=None):
-
-        if sample_region is None:
-            sample_region = self.sample_region
+    def draw_into(self, hist, expr, category, region, cuts=None):
 
         MC_bkg_notOS = hist.Clone()
         for mc in self.mc:
-            mc.draw_into(MC_bkg_notOS, expr, category, sample_region, cuts=cuts)
-
-        # assume norm factor of 1., to be determined later in fit
+            mc.draw_into(MC_bkg_notOS, expr, category, self.shape_region,
+                         cuts=cuts)
         self.data.draw_into(hist, expr,
-                            category, sample_region, cuts=cuts)
+                            category, self.shape_region, cuts=cuts)
         hist -= MC_bkg_notOS
         hist *= self.scale
         hist.SetTitle(self.label)
@@ -823,11 +802,11 @@ class QCD(Sample):
                branches,
                train_fraction,
                cuts=None,
-               systematic=None):
+               systematic='NOMINAL'):
 
         # SS data
         train, test = self.data.train_test(category=category,
-                                           region=self.sample_region,
+                                           region=self.shape_region,
                                            branches=branches,
                                            train_fraction=train_fraction,
                                            cuts=cuts)
@@ -839,7 +818,7 @@ class QCD(Sample):
         for mc in self.mc:
             # didn't train on MC here if using SS or !OS
             train, test = mc.train_test(category=category,
-                                        region=self.sample_region,
+                                        region=self.shape_region,
                                         branches=branches,
                                         train_fraction=train_fraction,
                                         cuts=cuts,
@@ -852,21 +831,22 @@ class QCD(Sample):
         return scores, weight
 
     def trees(self, category, region, cuts=None,
-              systematic=None):
+              systematic='NOMINAL'):
 
         TEMPFILE.cd()
         trees = [asrootpy(self.data.data.CopyTree(
                     self.data.cuts(category,
-                                   region=self.sample_region) & cuts))]
+                                   region=self.shape_region) & cuts))]
         for mc in self.mc:
             _trees = mc.trees(
                     category,
-                    region=self.sample_region,
+                    region=self.shape_region,
                     cuts=cuts,
                     systematic=systematic)
             for tree in _trees:
                 tree.Scale(-1)
             trees += _trees
+
         for tree in trees:
             tree.Scale(self.scale)
         return trees
