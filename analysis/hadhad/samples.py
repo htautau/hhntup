@@ -119,7 +119,7 @@ def make_classification(
         same_size_train=True,
         same_size_test=False,
         standardize=False,
-        systematic=None):
+        systematic='NOMINAL'):
 
     signal_train_arrs = []
     signal_weight_train_arrs = []
@@ -312,7 +312,7 @@ class Sample(object):
                    branches,
                    train_fraction=None,
                    cuts=None,
-                   systematic=None):
+                   systematic='NOMINAL'):
         """
         Return recarray for training and for testing
         """
@@ -375,7 +375,7 @@ class Sample(object):
                  branches,
                  include_weight=True,
                  cuts=None,
-                 systematic=None):
+                 systematic='NOMINAL'):
 
         if include_weight and isinstance(self, MC):
             branches = branches + [
@@ -416,7 +416,7 @@ class Sample(object):
                 branches,
                 include_weight=True,
                 cuts=None,
-                systematic=None):
+                systematic='NOMINAL'):
 
         return r2a.recarray_to_ndarray(
                    self.recarray(
@@ -455,7 +455,7 @@ class Data(Sample):
               category,
               region,
               cuts=None,
-              systematic=None):
+              systematic='NOMINAL'):
         """
         systematics do not apply to data but the argument is present for
         coherence with the other samples
@@ -591,20 +591,14 @@ class MC(Sample):
         #hist.systematics = sys_hists
 
     def trees(self, category, region, cuts=None,
-              systematic=None):
+              systematic='NOMINAL'):
 
         TEMPFILE.cd()
         selection = self.cuts(category, region) & cuts
         trees = []
-        if systematic is not None:
-            sys_type, sys_var = systematic.split('_')
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
-            if systematic is None:
-                tree = sys_trees['NOMINAL']
-                events = sys_events['NOMINAL']
-            else:
-                tree = sys_trees[sys_type][sys_var]
-                events = sys_events[sys_type][sys_var]
+            tree = sys_trees[systematic]
+            events = sys_events[systematic]
             weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
@@ -808,7 +802,7 @@ class QCD(Sample):
                branches,
                train_fraction,
                cuts=None,
-               systematic=None):
+               systematic='NOMINAL'):
 
         # SS data
         train, test = self.data.train_test(category=category,
@@ -837,7 +831,7 @@ class QCD(Sample):
         return scores, weight
 
     def trees(self, category, region, cuts=None,
-              systematic=None):
+              systematic='NOMINAL'):
 
         TEMPFILE.cd()
         trees = [asrootpy(self.data.data.CopyTree(
