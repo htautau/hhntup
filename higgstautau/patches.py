@@ -8,7 +8,7 @@ import ROOT
 #################################################
 
 from externaltools import egammaAnalysisUtils
-from ROOT import isTightPlusPlus, isMediumPlusPlus, egammaMenu
+from ROOT import isTightPlusPlus, isMediumPlusPlus, egammaMenu, egammaPID
 
 class ElectronIDpatch(EventFilter):
     """
@@ -31,7 +31,7 @@ class ElectronIDpatch(EventFilter):
             f1           = e.f1
             f3           = e.f3
             wstot        = e.wstot
-            DEmaxs1      = -1
+            DEmaxs1      = 0
             if (e.emaxs1 + e.Emax2) != 0:
                 DEmaxs1      = (e.emaxs1 - e.Emax2)/(e.emaxs1 + e.Emax2)
             deltaEta     = e.deltaeta1
@@ -48,8 +48,11 @@ class ElectronIDpatch(EventFilter):
             nBlayer      = e.nBLHits
             nBlayerOutliers = e.nBLayerOutliers
             expectBlayer = bool(e.expectHitInBLayer)
-            ConvBit      = e.isEM
+            ConvBit      = e.isEM and (1 << egammaPID.ConversionMatch_Electron)
 
+            #Correct the loosePP flag
+            e.loosePP = isLoosePlusPlus(eta, eT, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, nSi, nSiOutliers, nPix, nPixOutliers)
+            
             #Correct the mediumPP flag
             e.mediumPP  = isMediumPlusPlus(eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, d0, TRratio, nTRT, nTRTOutliers,
                                            nSi, nSiOutliers, nPix, nPixOutliers, nBlayer, nBlayerOutliers, expectBlayer)

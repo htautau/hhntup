@@ -4,6 +4,8 @@
 ##################################################
 grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg mc12_p1130_lephad
 
+grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg embedded_p1130_lephad
+
 grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_muhad
 grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_ehad
 grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 4 -m datasets.cfg data12_p1130_leptau
@@ -14,6 +16,7 @@ grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-
 # grid-submit -s LHSkim.py -u mtm -p phys-higgs -l large --destSE=TOKYO-LCG2_PHYS-HIGGS -v 2 -m datasets.cfg mc12_p1011_lephad
 # grid-submit -s LHSkim.py -u mtm -p phys-higgs -l large --destSE=UNI-FREIBURG_PHYS-HIGGS -v 2 -m datasets.cfg mc12_p1011_SVTF_lephad
 # grid-submit -s LHSkim.py -u mtm -p phys-higgs -l large --destSE=UNI-FREIBURG_PHYS-HIGGS -v 2 -m datasets.cfg embedded_p851_lephad
+grid-submit -s LHSkim.py -u group.phys-higgs -l large --official --destSE=TOKYO-LCG2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 2 -m datasets.cfg embedded_p851_lephad
 # grid-submit -s LHSkim.py -u mtm -p phys-higgs -l large --destSE=NIKHEF-ELPROD_PHYS-HIGGS -v 2 -m datasets.cfg data12_p1011_muhad
 # grid-submit -s LHSkim.py -u mtm -p phys-higgs -l large --destSE=NIKHEF-ELPROD_PHYS-HIGGS -v 2 -m datasets.cfg data12_p1011_ehad
 # grid-submit -s LHSkim.py -u mtm -p phys-higgs -l large --destSE=NIKHEF-ELPROD_PHYS-HIGGS -v 2 -m datasets.cfg data12_p1011_leptau
