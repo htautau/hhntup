@@ -1,4 +1,5 @@
 from rootpy.tree.filtering import EventFilter
+from atlastools import utils
 
 
 class TauJetOverlapRemoval(EventFilter):

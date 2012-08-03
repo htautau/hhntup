@@ -201,7 +201,7 @@ VARIABLES = {
         'range': (0.7, 3.5),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
-    'dPhi_tau1_tau2': {
+    'fabs(dPhi_tau1_tau2)': {
         'title': r'$\Delta \phi_{\tau_{1},\/\tau_{2}}$',
         'filename': 'dphi_tau1_tau2',
         'bins': 20,
@@ -374,11 +374,6 @@ if __name__ == '__main__':
 
     PLOTS_DIR = plots_dir(__file__)
 
-    # QCD shape region SS or !OS
-    shape_region = 'SS'
-    control_region = 'SS'
-    target_region = 'OS'
-
     mc_ztautau   = MC_Ztautau()
     mc_others = MC_Others()
 
@@ -388,9 +383,6 @@ if __name__ == '__main__':
     zh_125  =  MC_ZH(mass=125)
 
     data = Data()
-
-    qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
-              sample_region=control_region)
 
     signals = [
         vbf_125,
@@ -404,6 +396,13 @@ if __name__ == '__main__':
     for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         if category == 'preselection':
             continue
+        # QCD shape region SS or !OS
+        qcd_shape_region = cat_info['qcd_shape_region']
+        target_region = cat_info['target_region']
+
+        qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
+              shape_region=qcd_shape_region)
+
         figures[category] = {}
 
         #cuts = Cut('80 < mass_mmc_tau1_tau2 < 110')
@@ -415,38 +414,16 @@ if __name__ == '__main__':
         # determine normalization of QCD and Ztautau
         # in each category separately
         qcd_scale, ztautau_scale = qcd_ztautau_norm(
-            qcd=qcd,
             ztautau=mc_ztautau,
             backgrounds=[mc_others],
             data=data,
             category=category,
             target_region=target_region,
-            control_region=control_region,
+            qcd_shape_region=qcd_shape_region,
             use_cache=args.use_cache)
 
         qcd.scale = qcd_scale
         mc_ztautau.scale = ztautau_scale
-
-        if shape_region != control_region:
-            tmp1 = Hist(10, -2, 2)
-            tmp2 = tmp1.Clone()
-
-            qcd.draw_into(
-                    tmp1,
-                    'tau1_BDTJetScore > -100',
-                    category, target_region,
-                    sample_region=control_region,
-                    cuts=cuts)
-
-            qcd.draw_into(
-                    tmp2,
-                    'tau1_BDTJetScore > -100',
-                    category, target_region,
-                    sample_region=shape_region,
-                    cuts=cuts)
-
-            qcd_scale *= tmp1.Integral() / tmp2.Integral()
-            qcd.scale = qcd_scale
 
         for expr, var_info in VARIABLES.items():
             if category.upper() not in var_info['cats']:
@@ -469,7 +446,6 @@ if __name__ == '__main__':
             qcd_hist = qcd.draw(expr,
                                 category, target_region,
                                 bins, min, max,
-                                sample_region=shape_region,
                                 cuts=cuts)
 
             ztautau_hist = mc_ztautau.draw(expr,

@@ -4,9 +4,9 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('--systematics', default=None)
-parser.add_argument('--nproc', default=5)
+parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--queue', default='short')
-parser.add_argument('--nice', default=10)
+parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
 parser.add_argument('--systematics-only', action='store_true', default=False)
 parser.add_argument('--dry', action='store_true', default=False)
@@ -38,7 +38,9 @@ if not args.systematics_only:
 
 if not args.nominal_only:
     if args.systematics is not None:
-        args.systematics = args.systematics.split(',')
+        args.systematics = [
+                set(s.upper().split('+')) for s in
+                args.systematics.split(',')]
     # systematics
     cluster.run_systematics('HADHAD',
                 'HHProcessor.py',

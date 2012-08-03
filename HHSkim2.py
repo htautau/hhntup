@@ -16,7 +16,6 @@ from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.pileup import PileupReweighting, TPileupReweighting
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 
@@ -204,14 +203,21 @@ class HHSkim2(ATLASStudent):
             else:
                 validate_log = open('skim2_validate_data_%d.txt' % chain.RunNumber, 'w')
 
-        if self.metadata.datatype == datasets.MC and self.metadata.year == 2011:
-            # don't apply on 2012 yet...
+        if self.metadata.datatype == datasets.MC:
+            from externaltools import PileupReweighting
+            from ROOT import Root
             # Initialize the pileup reweighting tool
-            pileup_tool = TPileupReweighting()
-            #pileup_tool.AddConfigFile('/global/endw/mc11_7TeV/higgs_tautau_hh_reskim_p851/TPileupReweighting.prw.root')
-            pileup_tool.AddConfigFile('higgstautau/pileup/mc11c_defaults.prw.root')
-            #pileup_tool.SetDataScaleFactors(1./1.11) 2012???
-            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/hadhad/ilumicalc_histograms_None_178044-191933.root')
+            pileup_tool = Root.TPileupReweighting()
+            if self.metadata.year == 2011:
+                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc11b_defaults.prw.root'))
+                pileup_tool.AddLumiCalcFile('lumi/2011/hadhad/ilumicalc_histograms_None_178044-191933.root')
+            elif self.metadata.year == 2012:
+                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc12a_defaults.prw.root'))
+                pileup_tool.SetDataScaleFactors(1./1.11)
+                pileup_tool.AddLumiCalcFile('lumi/2012/hadhad/ilumicalc_histograms_None_200841-205113.root')
+            else:
+                raise ValueError('No pileup reweighting defined for year %d' %
+                        self.metadata.year)
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(2)
             pileup_tool.Initialize()
@@ -225,8 +231,7 @@ class HHSkim2(ATLASStudent):
             assert len(event.taus) == 2
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
-            if self.metadata.datatype == datasets.MC and self.metadata.year == 2011:
-                # don't apply on 2012 yet...
+            if self.metadata.datatype == datasets.MC:
                 # set the event weight
                 tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                                    event.mc_channel_number,

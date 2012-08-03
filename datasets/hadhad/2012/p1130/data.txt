@@ -1,4 +1,4 @@
-data12_8TeV.00200804.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
+data12_8TeV.00200841.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00200842.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00200863.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00200913.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
@@ -13,13 +13,10 @@ data12_8TeV.00201113.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201120.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201138.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201190.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
-data12_8TeV.00201191.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201257.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201269.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201280.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201289.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
-data12_8TeV.00201351.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
-data12_8TeV.00201383.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201489.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201494.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
 data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130/
@@ -30,7 +27,6 @@ data12_8TeV.00202712.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130/
 data12_8TeV.00202740.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130/
 data12_8TeV.00202798.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130/
 data12_8TeV.00202965.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130/
-data12_8TeV.00202987.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130/
 data12_8TeV.00202991.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130/
 data12_8TeV.00203027.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1143_p1130/
 data12_8TeV.00203169.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130/
@@ -76,7 +72,6 @@ data12_8TeV.00204474.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130/
 data12_8TeV.00204564.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130/
 data12_8TeV.00204633.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130/
 data12_8TeV.00204668.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130/
-data12_8TeV.00204707.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130/
 data12_8TeV.00204726.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130/
 data12_8TeV.00204763.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130/
 data12_8TeV.00204769.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130/
@@ -96,10 +91,9 @@ data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130/
 data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130/
 data12_8TeV.00205112.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130/
 data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130/
-data12_8TeV.00206299.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1170_p1130/
-data12_8TeV.00206367.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1170_p1130/
 data12_8TeV.00206368.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1170_p1130/
 data12_8TeV.00206369.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130/
 data12_8TeV.00206409.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130/
-data12_8TeV.00206481.physics_JetTauEtmiss.merge.NTUP_TAU.f453_m1175_p1130/
 data12_8TeV.00206497.physics_JetTauEtmiss.merge.NTUP_TAU.f453_m1175_p1130/
+data12_8TeV.00206573.physics_JetTauEtmiss.merge.NTUP_TAU.f453_m1175_p1130/
+data12_8TeV.00206614.physics_JetTauEtmiss.merge.NTUP_TAU.f453_m1175_p1130/

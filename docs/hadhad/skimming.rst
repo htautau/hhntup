@@ -9,17 +9,17 @@ The latest versions of the skims are:
 MC11:
 
 * Stage I: **group.phys-higgs.HHSkim.mc11_7TeV*p851.v1/**
-* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v2/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc11_7TeV*p851.v1.v3/**
 
 MC12:
 
 * Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3/**
-* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3.v3/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3.v4/**
 
 Data11:
 
 * Stage I: **user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/**
-* Stage II: **group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v5/**
+* Stage II: **group.phys-higgs.HHSkim2.HTauSkim.data11_7TeV*p851.v4.v6/**
 
 Data12:
 
@@ -29,11 +29,14 @@ Data12:
 Embedding11:
 
 * Stage I: **group.phys-higgs.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1/**
-* Stage II: **group.phys-higgs.HHSkim2.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1.v1/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.period*.DESD_SGLMU.pro10.embedding-02-41.Ztautau_*_rereco_p851_EXT0.v1.v2/**
 
 Embedding12:
 
-On the way...
+* Stage I: group.phys-higgs.HHSkim.period*.DESD_SGLMU.pro13.embedding-02-42.Ztautau_hh_isol_mfsim_rereco_p1130_EXT0.v1/
+
+* Stage II: group.phys-higgs.HHSkim2.HHSkim.period*.DESD_SGLMU.pro13.embedding-02-42.Ztautau_hh_isol_mfsim_rereco_p1130_EXT0.v1.v1/
+
 
 These skims may still be running on the grid. Check
 `my pandamon page <http://panda.cern.ch/server/pandamon/query?ui=user&name=Edmund%20Dawe%20ptu-382>`_ or 

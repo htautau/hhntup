@@ -3,11 +3,7 @@ from atlastools.units import GeV
 from atlastools import datasets
 import os
 from math import sqrt
-
-try:
-    from externaltools import MissingMassCalculator
-except ImportError:
-    ROOT.gSystem.Load(os.path.join(os.path.dirname(__file__), "libMissingMassCalculator.so"))
+from externaltools import MissingMassCalculator
 
 
 MMC = ROOT.MissingMassCalculator()

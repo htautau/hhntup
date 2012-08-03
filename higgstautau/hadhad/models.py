@@ -138,7 +138,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
         tree.theta_tau1_tau2 = tau1.fourvect.Vect().Angle(tau2.fourvect.Vect())
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
-        tree.dPhi_tau1_tau2 = tau1.fourvect.DeltaPhi(tau2.fourvect)
+        tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
 
         for i, tau in zip((1,2), (tau1, tau2)):
 
