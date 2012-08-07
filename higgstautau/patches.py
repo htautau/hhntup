@@ -8,7 +8,13 @@ import ROOT
 #################################################
 
 from externaltools import egammaAnalysisUtils
-from ROOT import isTightPlusPlus, isMediumPlusPlus, egammaMenu, egammaPID
+from ROOT import isTightPlusPlus, isMediumPlusPlus, egammaMenu#, egammaPID
+
+
+class egammaPID(object):
+
+    ConversionMatch_Electron = 1
+
 
 class ElectronIDpatch(EventFilter):
     """
