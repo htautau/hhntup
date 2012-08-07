@@ -3,14 +3,6 @@ from itertools import ifilter
 from atlastools import utils
 from atlastools.units import GeV
 from rootpy.math.physics.vector import LorentzVector
-
-try:
-    from atlasutils.jets import cleaning as jetcleaning
-except ImportError:
-    class jetcleaning(object):
-        LOOSER = 0
-    print "Could not import atlastools.jets.cleaning"
-
 from atlastools import datasets
 from math import *
 
@@ -430,7 +422,7 @@ def muon_skimselection(mu):
 
 def muon_overlap_selection(mu):
     """ Do a pre-preselection for overlap removal with taus and jets """
-    
+
     if not (mu.pt > 4*GeV) : return False
     if not (muon_has_good_track(mu)) : return False
     if not (abs(mu.eta) < 2.5) : return False
@@ -642,7 +634,7 @@ class TauMuonOverlapRemoval(EventFilter):
         """ Remove jets matching muons and electrons """
         event.taus.select(lambda tau: not any([mu for mu in event.muons if (utils.dR(mu.eta, mu.phi, tau.eta, tau.phi) < 0.2)]))
         return True
-    
+
 
 class LeptonOverlapRemoval(EventFilter):
     """ Muons > Electrons """
