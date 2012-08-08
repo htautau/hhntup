@@ -67,7 +67,7 @@ def get_setup(filename):
 
 def run_helper(cmd):
 
-        subprocess.call(cmd, shell=True)
+    subprocess.call(cmd, shell=True)
 
 
 def qsub(cmd,
