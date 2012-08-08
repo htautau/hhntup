@@ -8,7 +8,7 @@ import ROOT
 #################################################
 
 from externaltools import egammaAnalysisUtils
-from ROOT import isTightPlusPlus, isMediumPlusPlus, egammaMenu#, egammaPID
+from ROOT import isTightPlusPlus, isMediumPlusPlus, isLoosePlusPlus, egammaMenu#, egammaPID
 
 
 class egammaPID(object):
