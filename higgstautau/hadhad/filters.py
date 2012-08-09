@@ -16,7 +16,7 @@ MIN_TAUS = 2
 
 class TauLeadSublead(EventFilter):
 
-    def __init__(self, lead = 25*GeV, sublead = 35*GeV, **kwargs):
+    def __init__(self, lead=35*GeV, sublead=25*GeV, **kwargs):
 
         super(TauLeadSublead, self).__init__(**kwargs)
         """
