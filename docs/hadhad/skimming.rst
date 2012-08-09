@@ -36,7 +36,7 @@ Embedding12:
 
 * Stage I: **group.phys-higgs.HHSkim.period*.DESD_SGLMU.pro13.embedding-02-42.Ztautau_hh_isol_mfsim_rereco_p1131_EXT0.v1/**
   Notes: Some files were on offline sites.
-* Stage II: *processing...*
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.period*.DESD_SGLMU.pro13.embedding-02-42.Ztautau_hh_isol_mfsim_rereco_p1131_EXT0.v1.v1/**
 
 
 These skims may still be running on the grid. Check
