@@ -407,7 +407,7 @@ def tau_preselection(tau):
 def tau_selection(tau):
     """ Finalizes the tau selection """
 
-    return True
+mu    return True
 
 
 ############################################################
@@ -454,7 +454,7 @@ def muon_selection(mu):
     """ Finalizes the muon selection """
 
     if not (mu.isCombinedMuon) : return False
-    if not (mu.pt > 20*GeV) : return False
+    if not (mu.pt > 22*GeV) : return False
 
     return True
 
