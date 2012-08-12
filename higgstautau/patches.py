@@ -8,7 +8,13 @@ import ROOT
 #################################################
 
 from externaltools import egammaAnalysisUtils
-from ROOT import isTightPlusPlus, isMediumPlusPlus, egammaMenu, egammaPID
+from ROOT import isTightPlusPlus, isMediumPlusPlus, isLoosePlusPlus, egammaMenu#, egammaPID
+
+
+class egammaPID(object):
+
+    ConversionMatch_Electron = 1
+
 
 class ElectronIDpatch(EventFilter):
     """
@@ -52,7 +58,7 @@ class ElectronIDpatch(EventFilter):
 
             #Correct the loosePP flag
             e.loosePP = isLoosePlusPlus(eta, eT, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, nSi, nSiOutliers, nPix, nPixOutliers)
-            
+
             #Correct the mediumPP flag
             e.mediumPP  = isMediumPlusPlus(eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, d0, TRratio, nTRT, nTRTOutliers,
                                            nSi, nSiOutliers, nPix, nPixOutliers, nBlayer, nBlayerOutliers, expectBlayer)
