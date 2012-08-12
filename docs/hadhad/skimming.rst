@@ -13,9 +13,8 @@ MC11:
 
 MC12:
 
-* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3/**
-  Notes: Possible event duplication in resubmitted old skims
-* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3.v4/**
+* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v4/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v4.v1/**
 
 Data11:
 
