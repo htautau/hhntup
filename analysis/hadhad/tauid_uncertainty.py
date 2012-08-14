@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from samples import MC_Ztautau
-from tauid.p851.selection import selection, nvtx_to_category
+from tauid.p851.selection import selection, nvtx_to_category, LEVELS, \
+    CATEGORIES, PRONGS
+from rootpy.tree import Cut
 
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
@@ -22,6 +24,7 @@ EFFIC_UNCERT = {
     },
 }
 
+
 def uncertainty(score, pt, prong, nvtx):
 
     loose = selection('loose', prong, nvtx).Eval(pt)
@@ -30,7 +33,7 @@ def uncertainty(score, pt, prong, nvtx):
 
     if score < loose:
         raise ValueError(
-            'No uncertainties defined for scores lower than looose')
+            'No uncertainties defined for scores lower than loose')
 
     if score < medium:
         return selection_uncertainty('loose', pt, prong, nvtx)
@@ -47,7 +50,51 @@ def selection_uncertainty(level, pt, prong, nvtx):
 
 if __name__ == '__main__':
 
-    ztautau = MC_Ztautau()
+    def efficiency(sample, selection, prong, category):
+
+        total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
+                 sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
+        passing = 0.
+        cut = (Cut('tau1_numTrack==%d && tau1_matched' % prong) |
+               Cut('tau2_numTrack==%d && tau2_matched' % prong)) & category
+        for event in sample(cut):
+            if event.tau1_numTrack == prong and event.tau1_matched:
+                if (event.tau1_BDTJetScore >
+                    selection.Eval(event.tau1_fourvect.Pt())):
+                    passing += 1.
+            if event.tau2_numTrack == prong and event.tau2_matched:
+                if (event.tau2_BDTJetScore >
+                    selection.Eval(event.tau2_fourvect.Pt())):
+                    passing += 1.
+        return passing / total
+
+
+    with ropen('bdt_uncertainty.root', 'recreate') as f:
+        ztautau = MC_Ztautau()
+        for prong in PRONGS:
+            for cat_str, category in CATEGORIES.items():
+
+                loose = selection('loose', prong, cat_str)
+                medium = selection('medium', prong, cat_str)
+                tight = selection('tight', prong, cat_str)
+
+                # binary search alpha x (medium - loose)
+                shift = medium - loose
+                uncert = EFFIC_UNCERT['loose'][prong]
+                shift.name = 'loose_%dp_%s' % (prong, cat_str)
+                shift.Write()
+
+                # binary search alpha x (tight - medium)
+                shift = tight - medium
+                uncert = EFFIC_UNCERT['medium'][prong]
+                shift.name = 'medium_%dp_%s' % (prong, cat_str)
+                shift.Write()
+
+                # binary search alpha x (1. - tight)
+                shift = 1. - tight
+                uncert = EFFIC_UNCERT['tight'][prong]
+                shift.name = 'tight_%dp_%s' % (prong, cat_str)
+                shift.Write()
 
 else:
 
