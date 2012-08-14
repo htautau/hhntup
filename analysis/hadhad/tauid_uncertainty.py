@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from samples import MC_Ztautau
-from tauid.p851.selection import selection
+from tauid.p851.selection import selection, nvtx_to_category
 
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
@@ -22,6 +22,28 @@ EFFIC_UNCERT = {
     },
 }
 
+def uncertainty(score, pt, prong, nvtx):
+
+    loose = selection('loose', prong, nvtx).Eval(pt)
+    medium = selection('medium', prong, nvtx).Eval(pt)
+    tight = selection('tight', prong, nvtx).Eval(pt)
+
+    if score < loose:
+        raise ValueError(
+            'No uncertainties defined for scores lower than looose')
+
+    if score < medium:
+        return selection_uncertainty('loose', pt, prong, nvtx)
+    elif score < tight:
+        return selection_uncertainty('medium', pt, prong, nvtx)
+    else:
+        return selection_uncertainty('tight', pt, prong, nvtx)
+
+
+def selection_uncertainty(level, pt, prong, nvtx):
+
+    return UNCERT[level][prong][nvtx_to_category(nvtx)].Eval(pt)
+
 
 if __name__ == '__main__':
 
@@ -29,10 +51,5 @@ if __name__ == '__main__':
 
 else:
 
-    def uncertainty(score, pt, prong, nvtx):
+    UNCERT = {}
 
-        loose = selection('loose', prong, nvtx)
-        medium = selection('medium', prong, nvtx)
-        tight = selection('tight', prong, nvtx)
-
-        return 0.
