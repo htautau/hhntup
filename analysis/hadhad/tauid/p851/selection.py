@@ -43,7 +43,16 @@ else:
 
     f = ropen(os.path.join(HERE, 'bdt_selection.root'))
 
-    def selection(level, prong, category):
+    def selection(level, prong, nvtx):
+
+        if nvtx <= 3:
+            category = '_3'
+        elif nvtx <= 5:
+            category = '3_5'
+        elif nvtx <= 7:
+            category = '5_7'
+        elif:
+            category = '7_'
 
         return f.Get('%s_%dp_%s' % (
             level, prong, category))

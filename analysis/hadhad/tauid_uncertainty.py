@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from samples import MC_Ztautau
 from tauid.p851.selection import selection
 
@@ -20,4 +22,17 @@ EFFIC_UNCERT = {
     },
 }
 
-ztautau = MC_Ztautau()
+
+if __name__ == '__main__':
+
+    ztautau = MC_Ztautau()
+
+else:
+
+    def uncertainty(score, pt, prong, nvtx):
+
+        loose = selection('loose', prong, nvtx)
+        medium = selection('medium', prong, nvtx)
+        tight = selection('tight', prong, nvtx)
+
+        return 0.
