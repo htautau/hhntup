@@ -53,6 +53,9 @@ if __name__ == '__main__':
 
     def efficiency(sample, selection, prong, category):
 
+        category = category.replace(
+                'tau_numberOfVertices', 'number_of_good_vertices')
+
         total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
                  sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
         passing = 0.
@@ -71,7 +74,7 @@ if __name__ == '__main__':
 
 
     with ropen('bdt_uncertainty.root', 'recreate') as f:
-        ztautau = MC_Ztautau()
+        ztautau = MC_Ztautau(systematics=False)
         for prong in PRONGS:
             for cat_str, category in CATEGORIES.items():
 
