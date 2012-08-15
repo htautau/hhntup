@@ -605,6 +605,29 @@ class MC(Sample):
             trees.append(selected_tree)
         return trees
 
+    def events(self, selection='', systematic='NOMINAL'):
+
+        total = 0.
+        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+            tree = sys_trees[systematic]
+            events = sys_events[systematic]
+            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+            total += weight * tree.GetEntries(selection)
+        return total
+
+    def iter(self, selection='', systematic='NOMINAL'):
+
+        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+            tree = sys_trees[systematic]
+            events = sys_events[systematic]
+            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+            if selection:
+                selected_tree = asrootpy(tree.CopyTree(selection))
+            else:
+                selected_tree = tree
+            for event in selected_tree:
+                yield weight, event
+
 
 class MC_Ztautau(MC):
 

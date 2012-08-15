@@ -10,6 +10,7 @@ parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
 parser.add_argument('--systematics-only', action='store_true', default=False)
 parser.add_argument('--dry', action='store_true', default=False)
+parser.add_argument('samples', nargs='?', default=None)
 
 args = parser.parse_args()
 
@@ -20,7 +21,9 @@ from higgstautau import samples
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
-datasets = samples.samples('hadhad')
+datasets = samples.samples('hadhad', args.samples)
+if not datasets:
+    sys.exit('No datasets selected!')
 
 if not args.systematics_only:
     # nominal values

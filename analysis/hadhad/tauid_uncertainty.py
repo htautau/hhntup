@@ -4,6 +4,7 @@ from samples import MC_Ztautau
 from tauid.p851.selection import selection, nvtx_to_category, LEVELS, \
     CATEGORIES, PRONGS
 from rootpy.tree import Cut
+from rootpy.io import open as ropen
 
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
@@ -57,15 +58,15 @@ if __name__ == '__main__':
         passing = 0.
         cut = (Cut('tau1_numTrack==%d && tau1_matched' % prong) |
                Cut('tau2_numTrack==%d && tau2_matched' % prong)) & category
-        for event in sample(cut):
+        for weight, event in sample.iter(cut):
             if event.tau1_numTrack == prong and event.tau1_matched:
                 if (event.tau1_BDTJetScore >
                     selection.Eval(event.tau1_fourvect.Pt())):
-                    passing += 1.
+                    passing += weight
             if event.tau2_numTrack == prong and event.tau2_matched:
                 if (event.tau2_BDTJetScore >
                     selection.Eval(event.tau2_fourvect.Pt())):
-                    passing += 1.
+                    passing += weight
         return passing / total
 
 
@@ -81,18 +82,21 @@ if __name__ == '__main__':
                 # binary search alpha x (medium - loose)
                 shift = medium - loose
                 uncert = EFFIC_UNCERT['loose'][prong]
+                print efficiency(ztautau, loose, prong, category)
                 shift.name = 'loose_%dp_%s' % (prong, cat_str)
                 shift.Write()
 
                 # binary search alpha x (tight - medium)
                 shift = tight - medium
                 uncert = EFFIC_UNCERT['medium'][prong]
+                print efficiency(ztautau, medium, prong, category)
                 shift.name = 'medium_%dp_%s' % (prong, cat_str)
                 shift.Write()
 
                 # binary search alpha x (1. - tight)
                 shift = 1. - tight
                 uncert = EFFIC_UNCERT['tight'][prong]
+                print efficiency(ztautau, tight, prong, category)
                 shift.name = 'tight_%dp_%s' % (prong, cat_str)
                 shift.Write()
 

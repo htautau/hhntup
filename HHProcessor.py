@@ -135,6 +135,7 @@ class HHProcessor(ATLASStudent):
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
+                            'number_of_good_vertices',
                             'RunNumber',
                             'EventNumber',
                             'lbn']
