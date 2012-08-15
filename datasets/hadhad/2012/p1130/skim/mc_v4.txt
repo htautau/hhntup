@@ -76,6 +76,9 @@ group.phys-higgs.HHSkim.mc12_8TeV.146843.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp3E
 group.phys-higgs.HHSkim.mc12_8TeV.146850.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.merge.NTUP_TAU.e1254_s1469_s1470_r3542_r3549_p1130.v4/
 group.phys-higgs.HHSkim.mc12_8TeV.146851.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.merge.NTUP_TAU.e1254_s1469_s1470_r3542_r3549_p1130.v4/
 group.phys-higgs.HHSkim.mc12_8TeV.146852.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.merge.NTUP_TAU.e1254_s1469_s1470_r3542_r3549_p1130.v4/
+group.phys-higgs.HHSkim.mc12_8TeV.147078.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp5.merge.NTUP_TAU.e1422_s1499_s1504_r3658_r3549_p1130.v4/
+group.phys-higgs.HHSkim.mc12_8TeV.147086.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp5.merge.NTUP_TAU.e1422_s1499_s1504_r3658_r3549_p1130.v4/
+group.phys-higgs.HHSkim.mc12_8TeV.147094.AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp5.merge.NTUP_TAU.e1422_s1499_s1504_r3658_r3549_p1130.v4/
 group.phys-higgs.HHSkim.mc12_8TeV.157951.Herwig_AUET2CTEQ6L1_WWtaunuqq.merge.NTUP_TAU.e1379_s1499_s1504_r3658_r3549_p1130.v4/
 group.phys-higgs.HHSkim.mc12_8TeV.157952.Herwig_AUET2CTEQ6L1_WZtaunuqq.merge.NTUP_TAU.e1379_s1499_s1504_r3658_r3549_p1130.v4/
 group.phys-higgs.HHSkim.mc12_8TeV.161572.PowHegPythia8_AU2CT10_ggH100_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1130.v4/
