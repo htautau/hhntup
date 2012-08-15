@@ -82,12 +82,14 @@ if __name__ == '__main__':
                 medium = selection('medium', prong, cat_str)
                 tight = selection('tight', prong, cat_str)
 
+                '''
                 # binary search alpha x (medium - loose)
                 shift = medium - loose
                 uncert = EFFIC_UNCERT['loose'][prong]
                 print efficiency(ztautau, loose, prong, category)
                 shift.name = 'loose_%dp_%s' % (prong, cat_str)
                 shift.Write()
+                '''
 
                 # binary search alpha x (tight - medium)
                 shift = tight - medium
