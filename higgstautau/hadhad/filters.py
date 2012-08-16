@@ -124,7 +124,7 @@ class TauTriggerMatch(EventFilter):
 
     def match(self, event, triggers):
         """
-        triggers: list of triggers (and thresholds )that are ORed.
+        triggers: list of triggers (and thresholds) that are ORed.
         Order them by priority i.e. put triggers with higher pT
         thesholds before triggers with lower thresholds.
         """
