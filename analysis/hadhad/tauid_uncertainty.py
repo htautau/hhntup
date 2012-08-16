@@ -51,7 +51,7 @@ def selection_uncertainty(level, pt, prong, nvtx):
 
 if __name__ == '__main__':
 
-    def efficiency(sample, selection, prong, category):
+    def efficiency(sample, selection, prong, category, validate=False):
 
         category = category.replace(
                 'tau_numberOfVertices', 'number_of_good_vertices')
@@ -63,11 +63,29 @@ if __name__ == '__main__':
                Cut('tau2_numTrack==%d && tau2_matched' % prong)) & category
         for weight, event in sample.iter(cut):
             if event.tau1_numTrack == prong and event.tau1_matched:
-                if (event.tau1_BDTJetScore >
+                if validate == 'loose':
+                    if event.tau1_JetBDTSigLoose == 1:
+                        passing += weight
+                elif validate == 'medium':
+                    if event.tau1_JetBDTSigMedium == 1:
+                        passing += weight
+                elif validate == 'tight':
+                    if event.tau1_JetBDTSigTight == 1:
+                        passing += weight
+                elif (event.tau1_BDTJetScore >
                     selection.Eval(event.tau1_fourvect.Pt())):
                     passing += weight
             if event.tau2_numTrack == prong and event.tau2_matched:
-                if (event.tau2_BDTJetScore >
+                if validate == 'loose':
+                    if event.tau2_JetBDTSigLoose == 1:
+                        passing += weight
+                elif validate == 'medium':
+                    if event.tau2_JetBDTSigMedium == 1:
+                        passing += weight
+                elif validate == 'tight':
+                    if event.tau2_JetBDTSigTight == 1:
+                        passing += weight
+                elif (event.tau2_BDTJetScore >
                     selection.Eval(event.tau2_fourvect.Pt())):
                     passing += weight
         return passing / total
@@ -95,6 +113,8 @@ if __name__ == '__main__':
                 shift = tight - medium
                 uncert = EFFIC_UNCERT['medium'][prong]
                 print efficiency(ztautau, medium, prong, category)
+                print efficiency(ztautau, medium, prong, category,
+                        validate='medium')
                 shift.name = 'medium_%dp_%s' % (prong, cat_str)
                 shift.Write()
 
@@ -102,6 +122,8 @@ if __name__ == '__main__':
                 shift = 1. - tight
                 uncert = EFFIC_UNCERT['tight'][prong]
                 print efficiency(ztautau, tight, prong, category)
+                print efficiency(ztautau, tight, prong, category,
+                        validate='tight')
                 shift.name = 'tight_%dp_%s' % (prong, cat_str)
                 shift.Write()
 
