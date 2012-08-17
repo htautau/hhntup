@@ -188,14 +188,14 @@ class TauIDProcessor(ATLASStudent):
 
             if len(event.truetaus) == 1:
                 true_tau1 = event.truetaus[0]
+                TrueTauBlock.set(tree, 1, true_tau1)
             elif len(event.truetaus) == 2:
                 true_tau1 = event.truetaus[0]
                 true_tau2 = event.truetaus[1]
+                TrueTauBlock.set(tree, 1, true_tau1)
+                TrueTauBlock.set(tree, 2, true_tau2)
             else:
                 continue
-
-            TrueTauBlock.set(tree, 1, true_tau1)
-            TrueTauBlock.set(tree, 2, true_tau2)
 
             tau_filters(event)
 
