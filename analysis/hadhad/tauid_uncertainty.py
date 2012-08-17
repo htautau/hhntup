@@ -90,12 +90,33 @@ if __name__ == '__main__':
                     passing += weight
         return passing / total
 
-    min_error = 0.005
 
     with ropen('bdt_uncertainty.root', 'recreate') as f:
         ztautau = MC_Ztautau(systematics=False, student='TauIDProcessor')
         for prong in PRONGS:
             for cat_str, category in CATEGORIES.items():
+
+                def binary_search(target, selection, shift, min_error=0.005):
+
+                    print "target:", target
+                    a = 0.
+                    b = 1.
+                    curr_effic = 1E100
+                    while abs(curr_effic - target) > min_error:
+                        mid = (a + b) / 2.
+                        curr_shift = mid * shift
+                        curr_effic = efficiency(ztautau,
+                                selection + curr_shift,
+                                prong, category)
+                        print curr_effic
+                        if curr_effic > target:
+                            a = mid
+                        else:
+                            b = mid
+                    print efficiency(ztautau, selection + curr_shift, prong, category)
+                    print list(curr_shift.y())
+                    print "=" * 20
+                    return curr_shift
 
                 loose = selection('loose', prong, cat_str)
                 medium = selection('medium', prong, cat_str)
@@ -127,37 +148,31 @@ if __name__ == '__main__':
                 print efficiency(ztautau, medium, prong, category,
                         validate='medium')
 
+                print target_tight
+                print efficiency(ztautau, tight, prong, category,
+                        validate='tight')
+
                 target_medium_high = target_medium + uncert_medium
                 target_medium_low = target_medium - uncert_medium
 
-                print "target:", target_medium_low
-                a = 0.
-                b = 1.
-                curr_effic = 1E100
-                while abs(curr_effic - target_medium_low) > min_error:
-                    mid = (a + b) / 2.
-                    curr_shift = mid * shift_medium_low
-                    curr_effic = efficiency(ztautau,
-                            medium + curr_shift,
-                            prong, category)
-                    print curr_effic
-                    if curr_effic > target_medium_low:
-                        a = mid
-                    else:
-                        b = mid
-                print efficiency(ztautau, medium + curr_shift, prong, category)
+                target_tight_high = target_tight + uncert_tight
+                target_tight_low = target_tight - uncert_tight
 
-                print "=" * 20
+                shift_medium_low = binary_search(target_medium_low, medium,
+                        shift_medium_low)
+                shift_medium_high = binary_search(target_medium_high, medium,
+                        shift_medium_high)
+
+                shift_tight_low = binary_search(target_tight_low, tight,
+                        shift_tight_low)
+                shift_tight_high = binary_search(target_tight_high, tight,
+                        shift_tight_high)
 
                 shift_medium_high.name = 'medium_high_%dp_%s' % (prong, cat_str)
                 shift_medium_high.Write()
                 shift_medium_low.name = 'medium_low_%dp_%s' % (prong, cat_str)
                 shift_medium_low.Write()
 
-                # binary search alpha x (1. - tight)
-                print target_tight
-                print efficiency(ztautau, tight, prong, category,
-                        validate='tight')
                 shift_tight_high.name = 'tight_high_%dp_%s' % (prong, cat_str)
                 shift_tight_high.Write()
                 shift_tight_low.name = 'tight_low_%dp_%s' % (prong, cat_str)
