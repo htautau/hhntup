@@ -181,7 +181,7 @@ class TauIDProcessor(ATLASStudent):
             tree.reset()
 
             # match only with visible true taus
-            event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
+            event.truetaus.select(lambda tau: tau.vis_Et > 20 * GeV and abs(tau.vis_eta) < 2.5)
 
             true_tau1 = None
             true_tau2 = None
