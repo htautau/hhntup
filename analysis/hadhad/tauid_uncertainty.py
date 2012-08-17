@@ -8,20 +8,20 @@ from rootpy.io import open as ropen
 
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
-Values are percents
+Values are percents / 100
 """
 EFFIC_UNCERT = {
     'loose': {
-        1: 4.,
-        3: 8.,
+        1: 0.04,
+        3: 0.08,
     },
     'medium': {
-        1: 5.,
-        3: 8.,
+        1: 0.05,
+        3: 0.08,
     },
     'tight': {
-        1: 4.,
-        3: 7.,
+        1: 0.04,
+        3: 0.07,
     },
 }
 
@@ -90,6 +90,7 @@ if __name__ == '__main__':
                     passing += weight
         return passing / total
 
+    min_error = 0.005
 
     with ropen('bdt_uncertainty.root', 'recreate') as f:
         ztautau = MC_Ztautau(systematics=False, student='TauIDProcessor')
@@ -101,31 +102,66 @@ if __name__ == '__main__':
                 tight = selection('tight', prong, cat_str)
 
                 # binary search alpha x (medium - loose)
-                shift = medium - loose
-                uncert = EFFIC_UNCERT['loose'][prong]
-                print efficiency(ztautau, loose, prong, category)
-                print efficiency(ztautau, loose, prong, category,
-                        validate='loose')
-                shift.name = 'loose_%dp_%s' % (prong, cat_str)
-                shift.Write()
+                #shift = medium - loose
+                #uncert = EFFIC_UNCERT['loose'][prong]
+                #print efficiency(ztautau, loose, prong, category)
+                #print efficiency(ztautau, loose, prong, category,
+                #        validate='loose')
+                #shift.name = 'loose_%dp_%s' % (prong, cat_str)
+                #shift.Write()
 
                 # binary search alpha x (tight - medium)
-                shift = tight - medium
-                uncert = EFFIC_UNCERT['medium'][prong]
-                print efficiency(ztautau, medium, prong, category)
+                shift_medium_low = tight - medium
+                shift_medium_high = medium - tight
+
+                shift_tight_low = 1. - tight
+                shift_tight_high = tight - 1.
+
+                uncert_medium = EFFIC_UNCERT['medium'][prong]
+                uncert_tight = EFFIC_UNCERT['tight'][prong]
+
+                target_medium = efficiency(ztautau, medium, prong, category)
+                target_tight = efficiency(ztautau, tight, prong, category)
+
+                print target_medium
                 print efficiency(ztautau, medium, prong, category,
                         validate='medium')
-                shift.name = 'medium_%dp_%s' % (prong, cat_str)
-                shift.Write()
+
+                target_medium_high = target_medium + uncert_medium
+                target_medium_low = target_medium - uncert_medium
+
+                print "target:", target_medium_low
+                a = 0.
+                b = 1.
+                curr_effic = 1E100
+                while abs(curr_effic - target_medium_low) > min_error:
+                    mid = (a + b) / 2.
+                    curr_shift = mid * shift_medium_low
+                    curr_effic = efficiency(ztautau,
+                            medium + curr_shift,
+                            prong, category)
+                    print curr_effic
+                    if curr_effic > target_medium_low:
+                        a = mid
+                    else:
+                        b = mid
+                print efficiency(ztautau, medium + curr_shift, prong, category)
+
+                print "=" * 20
+
+                shift_medium_high.name = 'medium_high_%dp_%s' % (prong, cat_str)
+                shift_medium_high.Write()
+                shift_medium_low.name = 'medium_low_%dp_%s' % (prong, cat_str)
+                shift_medium_low.Write()
 
                 # binary search alpha x (1. - tight)
-                shift = 1. - tight
-                uncert = EFFIC_UNCERT['tight'][prong]
-                print efficiency(ztautau, tight, prong, category)
+                print target_tight
                 print efficiency(ztautau, tight, prong, category,
                         validate='tight')
-                shift.name = 'tight_%dp_%s' % (prong, cat_str)
-                shift.Write()
+                shift_tight_high.name = 'tight_high_%dp_%s' % (prong, cat_str)
+                shift_tight_high.Write()
+                shift_tight_low.name = 'tight_low_%dp_%s' % (prong, cat_str)
+                shift_tight_low.Write()
 
 else:
 
