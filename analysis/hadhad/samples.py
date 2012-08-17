@@ -35,7 +35,7 @@ NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
 if not NTUPLE_PATH:
     sys.exit("You did not source setup.sh")
 NTUPLE_PATH = os.path.join(NTUPLE_PATH, 'hadhad')
-PROCESSOR = 'HHProcessor'
+DEFAULT_STUDENT = 'HHProcessor'
 TOTAL_LUMI = total_lumi()
 TAUTAUHADHADBR = 0.412997
 VERBOSE = False
@@ -292,13 +292,14 @@ class Sample(object):
         else (name, Cut(''))
         for name, info in categories.CATEGORIES.items()])
 
-    def __init__(self, scale=1., cuts=None):
+    def __init__(self, scale=1., cuts=None, student=DEFAULT_STUDENT):
 
         self.scale = scale
         if cuts is None:
             self._cuts = Cut()
         else:
             self._cuts = cuts
+        self.student = student
 
     def cuts(self, category, region):
 
@@ -430,10 +431,10 @@ class Sample(object):
 
 class Data(Sample):
 
-    def __init__(self, cuts=None):
+    def __init__(self, **kwargs):
 
-        super(Data, self).__init__(scale=1., cuts=cuts)
-        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, PROCESSOR),
+        super(Data, self).__init__(scale=1., **kwargs)
+        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student),
                                 'data.root']))
         self.data = self.DATA_FILE.Get('higgstautauhh')
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
@@ -465,9 +466,9 @@ class Data(Sample):
 
 class MC(Sample):
 
-    def __init__(self, scale=1., cuts=None, systematics=True):
+    def __init__(self, systematics=True, **kwargs):
 
-        super(MC, self).__init__(scale=scale, cuts=cuts)
+        super(MC, self).__init__(**kwargs)
         self.datasets = []
 
         for i, name in enumerate(self.samples):
@@ -485,7 +486,7 @@ class MC(Sample):
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
             else:
                 rfile = ropen('.'.join([
-                    os.path.join(NTUPLE_PATH, PROCESSOR), ds.name, 'root']))
+                    os.path.join(NTUPLE_PATH, self.student), ds.name, 'root']))
                 trees['NOMINAL'] = rfile.Get('higgstautauhh')
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
                 if ds.name not in FILES:
@@ -505,7 +506,7 @@ class MC(Sample):
                         weighted_events[sys_term] = rfile.cutflow[1]
                     else:
                         rfile = ropen('.'.join([
-                            os.path.join(NTUPLE_PATH, PROCESSOR),
+                            os.path.join(NTUPLE_PATH, self.student),
                             '_'.join([ds.name, sys_term]), 'root']))
                         trees[sys_term] = rfile.Get('higgstautauhh')
                         weighted_events[sys_term] = rfile.cutflow[1]
@@ -632,7 +633,7 @@ class MC(Sample):
 
 class MC_Ztautau(MC):
 
-    def __init__(self, scale=1., cuts=None, systematics=True):
+    def __init__(self, **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
@@ -642,56 +643,48 @@ class MC_Ztautau(MC):
         self._label = yml['latex']
         self.samples = yml['samples']
         self.colour = '#00a4ff'
-        super(MC_Ztautau, self).__init__(scale=scale,
-                                         cuts=cuts,
-                                         systematics=systematics)
+        super(MC_Ztautau, self).__init__(**kwargs)
 
 
 class MC_EWK(MC):
 
-    def __init__(self, scale=1., cuts=None, systematics=True):
+    def __init__(self, **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['ewk']
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
         self.colour = '#ff9f71'
-        super(MC_EWK, self).__init__(scale=scale,
-                                     cuts=cuts,
-                                     systematics=systematics)
+        super(MC_EWK, self).__init__(**kwargs)
 
 
 class MC_Top(MC):
 
-    def __init__(self, scale=1., cuts=None, systematics=True):
+    def __init__(self, **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['top']
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
         self.colour = '#0000ff'
-        super(MC_Top, self).__init__(scale=scale,
-                                     cuts=cuts,
-                                     systematics=systematics)
+        super(MC_Top, self).__init__(**kwargs)
 
 
 class MC_Diboson(MC):
 
-    def __init__(self, scale=1., cuts=None, systematics=True):
+    def __init__(self, **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['diboson']
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
         self.colour = '#ffd075'
-        super(MC_Diboson, self).__init__(scale=scale,
-                                         cuts=cuts,
-                                         systematics=systematics)
+        super(MC_Diboson, self).__init__(**kwargs)
 
 
 class MC_Others(MC):
 
-    def __init__(self, scale=1., cuts=None, systematics=True):
+    def __init__(self, **kwargs):
 
         yml_diboson = samples_db.BACKGROUNDS['hadhad']['diboson']
         yml_top = samples_db.BACKGROUNDS['hadhad']['top']
@@ -702,9 +695,7 @@ class MC_Others(MC):
         self._label = 'Others'
         self.name = 'Others'
         self.colour = '#ff7700'
-        super(MC_Others, self).__init__(scale=scale,
-                                        cuts=cuts,
-                                        systematics=systematics)
+        super(MC_Others, self).__init__(**kwargs)
 
 
 class MC_Higgs(MC):
@@ -718,8 +709,7 @@ class MC_Higgs(MC):
         'WH': 'wh',
     }
 
-    def __init__(self, mode, generator, mass=None, scale=1., cuts=None,
-                 systematics=True):
+    def __init__(self, mode, generator, mass=None, **kwargs):
 
         self.mode = MC_Higgs.MODES[mode]
 
@@ -738,61 +728,51 @@ class MC_Higgs(MC):
 
         self.samples = ['%s%s%d_tautauhh.mc11c' % (generator, mode, m)
                         for m in self.mass]
-        super(MC_Higgs, self).__init__(scale=scale,
-                                       cuts=cuts,
-                                       systematics=systematics)
+        super(MC_Higgs, self).__init__(**kwargs)
 
 
 class MC_VBF(MC_Higgs):
 
-    def __init__(self, mass=None, scale=1., cuts=None, systematics=True):
+    def __init__(self, mass=None, **kwargs):
 
         super(MC_VBF, self).__init__(
                 mode='VBFH',
                 mass=mass,
                 generator='PowHegPythia_',
-                scale=scale,
-                cuts=cuts,
-                systematics=systematics)
+                **kwargs)
 
 
 class MC_ggF(MC_Higgs):
 
-    def __init__(self, mass=None, scale=1., cuts=None, systematics=True):
+    def __init__(self, mass=None, **kwargs):
 
         super(MC_ggF, self).__init__(
                 mode='ggH',
                 mass=mass,
                 generator='PowHegPythia_',
-                scale=scale,
-                cuts=cuts,
-                systematics=systematics)
+                **kwargs)
 
 
 class MC_WH(MC_Higgs):
 
-    def __init__(self, mass=None, scale=1., cuts=None, systematics=True):
+    def __init__(self, mass=None, **kwargs):
 
         super(MC_WH, self).__init__(
                 mode='WH',
                 mass=mass,
                 generator='Pythia',
-                scale=scale,
-                cuts=cuts,
-                systematics=systematics)
+                **kwargs)
 
 
 class MC_ZH(MC_Higgs):
 
-    def __init__(self, mass=None, scale=1., cuts=None, systematics=True):
+    def __init__(self, mass=None):
 
         super(MC_ZH, self).__init__(
                 mode='ZH',
                 mass=mass,
                 generator='Pythia',
-                scale=scale,
-                cuts=cuts,
-                systematics=systematics)
+                **kwargs)
 
 
 class QCD(Sample):

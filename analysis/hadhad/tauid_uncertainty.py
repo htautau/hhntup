@@ -59,10 +59,10 @@ if __name__ == '__main__':
         total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
                  sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
         passing = 0.
-        cut = (Cut('tau1_numTrack==%d && tau1_matched' % prong) |
-               Cut('tau2_numTrack==%d && tau2_matched' % prong)) & category
+        cut = (Cut('tau1_numTrack==%d' % prong) |
+               Cut('tau2_numTrack==%d' % prong)) & category
         for weight, event in sample.iter(cut):
-            if event.tau1_numTrack == prong and event.tau1_matched:
+            if event.tau1_numTrack == prong:
                 if validate == 'loose':
                     if event.tau1_JetBDTSigLoose == 1:
                         passing += weight
@@ -75,7 +75,7 @@ if __name__ == '__main__':
                 elif (event.tau1_BDTJetScore >
                     selection.Eval(event.tau1_fourvect.Pt())):
                     passing += weight
-            if event.tau2_numTrack == prong and event.tau2_matched:
+            if event.tau2_numTrack == prong:
                 if validate == 'loose':
                     if event.tau2_JetBDTSigLoose == 1:
                         passing += weight
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
 
     with ropen('bdt_uncertainty.root', 'recreate') as f:
-        ztautau = MC_Ztautau(systematics=False)
+        ztautau = MC_Ztautau(systematics=False, student='TauIDProcessor')
         for prong in PRONGS:
             for cat_str, category in CATEGORIES.items():
 
@@ -100,14 +100,14 @@ if __name__ == '__main__':
                 medium = selection('medium', prong, cat_str)
                 tight = selection('tight', prong, cat_str)
 
-                '''
                 # binary search alpha x (medium - loose)
                 shift = medium - loose
                 uncert = EFFIC_UNCERT['loose'][prong]
                 print efficiency(ztautau, loose, prong, category)
+                print efficiency(ztautau, loose, prong, category,
+                        validate='loose')
                 shift.name = 'loose_%dp_%s' % (prong, cat_str)
                 shift.Write()
-                '''
 
                 # binary search alpha x (tight - medium)
                 shift = tight - medium
