@@ -418,9 +418,6 @@ class HHProcessor(ATLASStudent):
             tree.tau1_x = tau1_x
             tree.tau2_x = tau2_x
 
-            tree.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
-                                    (vtx.type == 3 and vtx.nTracks >= 2)])
-
             # Match jets to VBF partons
             if self.metadata.datatype == datasets.MC:
                 if 'VBF' in self.metadata.name:

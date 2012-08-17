@@ -91,7 +91,6 @@ class EventVariables(TreeModel):
     numJets = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
-    numVertices = IntCol()
     MET = FloatCol()
     MET_phi = FloatCol()
     MET_mmc = FloatCol()
@@ -130,18 +129,18 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
 
     @classmethod
     def set(cls, event, tree, tau1, tau2):
-        """
-        MMC and misc variables
-        """
-        tree.mass_vis_tau1_tau2 = utils.Mvis(tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
-        tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
-        tree.theta_tau1_tau2 = tau1.fourvect.Vect().Angle(tau2.fourvect.Vect())
-        tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
-        tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
-        tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+
+        if tau1 is not None and tau2 is not None:
+            tree.mass_vis_tau1_tau2 = utils.Mvis(tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
+            tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
+            tree.theta_tau1_tau2 = tau1.fourvect.Vect().Angle(tau2.fourvect.Vect())
+            tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
+            tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
+            tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
 
         for i, tau in zip((1,2), (tau1, tau2)):
-
+            if tau is None:
+                continue
             fourvect = tau.fourvect
             setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
             setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
