@@ -179,6 +179,8 @@ if __name__ == '__main__':
                 shift_tight_high = binary_search(target_tight_high, tight,
                         shift_tight_high, reverse=True)
 
+
+                f.cd()
                 shift_medium_high.name = 'medium_high_%dp_%s' % (prong, cat_str)
                 shift_medium_high.Write()
                 shift_medium_low.name = 'medium_low_%dp_%s' % (prong, cat_str)
