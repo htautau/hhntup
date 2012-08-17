@@ -133,10 +133,10 @@ if __name__ == '__main__':
 
                 # binary search alpha x (tight - medium)
                 shift_medium_low = tight - medium
-                shift_medium_high = medium - tight
+                shift_medium_high = loose - medium
 
                 shift_tight_low = 1. - tight
-                shift_tight_high = tight - 1.
+                shift_tight_high = medium - tight
 
                 uncert_medium = EFFIC_UNCERT['medium'][prong]
                 uncert_tight = EFFIC_UNCERT['tight'][prong]
