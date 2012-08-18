@@ -1,34 +1,11 @@
 #!/usr/bin/env python
 
 from samples import MC_Ztautau
-from tauid.p851.selection import selection, nvtx_to_category, LEVELS, \
+from higgstautau.tauid.selection.p851 import selection, nvtx_to_category, LEVELS, \
     CATEGORIES, PRONGS
 from rootpy.tree import Cut
 from rootpy.io import open as ropen
 from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
-
-
-def uncertainty(score, pt, prong, nvtx):
-
-    loose = selection('loose', prong, nvtx).Eval(pt)
-    medium = selection('medium', prong, nvtx).Eval(pt)
-    tight = selection('tight', prong, nvtx).Eval(pt)
-
-    if score < loose:
-        raise ValueError(
-            'No uncertainties defined for scores lower than loose')
-
-    if score < medium:
-        return selection_uncertainty('loose', pt, prong, nvtx)
-    elif score < tight:
-        return selection_uncertainty('medium', pt, prong, nvtx)
-    else:
-        return selection_uncertainty('tight', pt, prong, nvtx)
-
-
-def selection_uncertainty(level, pt, prong, nvtx):
-
-    return UNCERT[level][prong][nvtx_to_category(nvtx)].Eval(pt)
 
 
 if __name__ == '__main__':

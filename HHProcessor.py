@@ -483,12 +483,10 @@ class HHProcessor(ATLASStudent):
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
                 for tau in (tau1, tau2):
-                    """
-                    factors only valid for 2011 data/MC
-                    """
                     tau.BDTJetScore_high =
                     tau.BDTJetScore_low =
 
+                    # factors only valid for 2011 data/MC
                     if tau.matched:
                         # efficiency scale factor
                         effic_sf, err = tauid.EFFIC_SF_2011['medium']
