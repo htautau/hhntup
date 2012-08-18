@@ -32,6 +32,7 @@ from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
+from higgstautau import tauid
 
 from goodruns import GRL
 import subprocess
@@ -482,26 +483,36 @@ class HHProcessor(ATLASStudent):
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
                 for tau in (tau1, tau2):
-
+                    """
+                    factors only valid for 2011 data/MC
+                    """
                     tau.BDTJetScore_high =
                     tau.BDTJetScore_low =
 
                     if tau.matched:
                         # efficiency scale factor
-                        tau.efficiency_scale_factor = 1.
-                        tau.efficiency_scale_factor_high = 1.
-                        tau.efficiency_scale_factor_low = 1.
+                        effic_sf, err = tauid.EFFIC_SF_2011['medium']
+                        tau.efficiency_scale_factor = effic_sf
+                        tau.efficiency_scale_factor_high = effic_sf + err
+                        tau.efficiency_scale_factor_low = effic_sf - err
                     else:
                         # fake rate scale factor
                         if event.RunNumber >= 188902:
                             trig = "EF_tau%dT_medium1"
                         else:
                             trig = "EF_tau%d_medium1"
-                        tau.fakerate_scale_factor = fakerate_tool.getScaleFactor(
+                        sf = fakerate_tool.getScaleFactor(
                                 tau.pt, "Medium",
                                 trig % tau.trigger_match_thresh)
-                        tau.fakerate_scale_factor_high =
-                        tau.fakerate_scale_factor_low =
+                        tau.fakerate_scale_factor = sf
+                        tau.fakerate_scale_factor_high = (sf +
+                                getScaleFactorUncertainty(
+                                    tau.pt, "Medium",
+                                    trig % tau.trigger_match_thresh, True))
+                        tau.fakerate_scale_factor_low = (sf -
+                                getScaleFactorUncertainty(
+                                    tau.pt, "Medium",
+                                    trig % tau.trigger_match_thresh, False))
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
