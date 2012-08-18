@@ -5,25 +5,7 @@ from tauid.p851.selection import selection, nvtx_to_category, LEVELS, \
     CATEGORIES, PRONGS
 from rootpy.tree import Cut
 from rootpy.io import open as ropen
-
-"""
-https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
-Values are percents / 100
-"""
-EFFIC_UNCERT = {
-    'loose': {
-        1: 0.04,
-        3: 0.08,
-    },
-    'medium': {
-        1: 0.05,
-        3: 0.08,
-    },
-    'tight': {
-        1: 0.04,
-        3: 0.07,
-    },
-}
+from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
 
 
 def uncertainty(score, pt, prong, nvtx):

@@ -482,18 +482,26 @@ class HHProcessor(ATLASStudent):
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
                 for tau in (tau1, tau2):
+
+                    tau.BDTJetScore_high =
+                    tau.BDTJetScore_low =
+
                     if tau.matched:
                         # efficiency scale factor
-                        tau.weight = 1.
+                        tau.efficiency_scale_factor = 1.
+                        tau.efficiency_scale_factor_high = 1.
+                        tau.efficiency_scale_factor_low = 1.
                     else:
                         # fake rate scale factor
                         if event.RunNumber >= 188902:
                             trig = "EF_tau%dT_medium1"
                         else:
                             trig = "EF_tau%d_medium1"
-                        tau.weight = fakerate_tool.getScaleFactor(
+                        tau.fakerate_scale_factor = fakerate_tool.getScaleFactor(
                                 tau.pt, "Medium",
                                 trig % tau.trigger_match_thresh)
+                        tau.fakerate_scale_factor_high =
+                        tau.fakerate_scale_factor_low =
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)

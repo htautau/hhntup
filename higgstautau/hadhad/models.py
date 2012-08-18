@@ -20,6 +20,8 @@ import ROOT
 class RecoTau(TreeModel):
 
     BDTJetScore = FloatCol()
+    BDTJetScore_high = FloatCol()
+    BDTJetScore_low = FloatCol()
     BDTEleScore = FloatCol()
 
     JetBDTSigLoose = BoolCol()
@@ -38,8 +40,13 @@ class RecoTau(TreeModel):
     fourvect_boosted = LorentzVector
 
     # efficiency scale factor if matches truth
+    efficiency_scale_factor = FloatCol(default=1.)
+    efficiency_scale_factor_high = FloatCol(default=1.)
+    efficiency_scale_factor_low = FloatCol(default=1.)
     # else fake rate scale factor
-    weight = FloatCol()
+    fakerate_scale_factor = FloatCol(default=1.)
+    fakerate_scale_factor_high = FloatCol(default=1.)
+    fakerate_scale_factor_low = FloatCol(default=1.)
 
 
 class EventVariables(TreeModel):
@@ -143,6 +150,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
                 continue
             fourvect = tau.fourvect
             setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
+            setattr(tree, 'tau%i_BDTJetScore_high' % i, tau.BDTJetScore_high)
+            setattr(tree, 'tau%i_BDTJetScore_low' % i, tau.BDTJetScore_low)
+
             setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
 
             setattr(tree, 'tau%i_JetBDTSigLoose' % i, tau.JetBDTSigLoose)
@@ -161,7 +171,19 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_centrality' % i, tau.centrality)
             setattr(tree, 'tau%i_centrality_boosted' % i, tau.centrality_boosted)
 
-            setattr(tree, 'tau%i_weight' % i, tau.weight)
+            setattr(tree, 'tau%i_efficiency_scale_factor' % i,
+                    tau.efficiency_scale_factor)
+            setattr(tree, 'tau%i_efficiency_scale_factor_high' % i,
+                    tau.efficiency_scale_factor_high)
+            setattr(tree, 'tau%i_efficiency_scale_factor_low' % i,
+                    tau.efficiency_scale_factor_low)
+
+            setattr(tree, 'tau%i_fakerate_scale_factor' % i,
+                    tau.fakerate_scale_factor)
+            setattr(tree, 'tau%i_fakerate_scale_factor_high' % i,
+                    tau.fakerate_scale_factor_high)
+            setattr(tree, 'tau%i_fakerate_scale_factor_low' % i,
+                    tau.fakerate_scale_factor_low)
 
             setattr(tree, 'tau%i_matched' % i, tau.matched)
             setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)
