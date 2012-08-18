@@ -74,18 +74,21 @@ for channel in [o for o in os.listdir(__HERE) if
     #SAMPLES[channel] = yaml.load(open(SAMPLES_YML[channel]), OrderedDictYAMLLoader)
 
 
-def iter_samples(channel):
+def iter_samples(channel, type=None):
 
     channel = channel.lower()
     for sample_class in (SIGNALS[channel], BACKGROUNDS[channel]):
         for sample_type, sample_info in sample_class.items():
+            if type is not None:
+                if sample_type != type:
+                    continue
             for sample_name in sample_info['samples']:
                 yield sample_name
 
 
-def samples(channel):
+def samples(channel, type=None):
 
-    return [name for name in iter_samples(channel)]
+    return [name for name in iter_samples(channel, type)]
 
 
 if __name__ == '__main__':

@@ -1,7 +1,8 @@
 Introduction
 ============
 
-Plans:
+Plans
+-----
 
 * Use boosted decision trees (BDTs) to separate signal from background
 * Perform analysis separately in ggF, boosted and VBF categories
@@ -9,7 +10,8 @@ Plans:
 * Determine normalization of QCD and Ztautau from simultaneous fit with
   BDT distribution in low MMC mass region (80 - 110 GeV)
 
-Status:
+Status
+------
 
 * Pileup reweighting *DONE*
 * Define event selection *DONE*
@@ -22,25 +24,28 @@ Status:
 * Systematics *WORK IN PROGRESS*
 * Determine limits on Higgs cross sections *WORK IN PROGRESS*
 
-Outstanding Problems:
+Outstanding Problems
+--------------------
 
 * What is the excess in data at pi/2 in alpha (3D angle) between the two taus?
   Drop cos alpha if we cannot resolve this.
+  Using dR for now instead of cos alpha.
 * Do fitting of QCD and Ztautau with 2D track distribution in low MMC mass bin
   [80, 110]. Separately in each category. Try fitting without selection on
   tracks or charge and use nonOS data - nonOS MC as QCD.
 * Use shape of nonOS data - nonOS MC for QCD in OS region. Should smooth out
   QCD distributions with more stats. Possible bias in QCD background model since
   this will be the only sample with 2-track, 4-track etc taus.
-* Develop method of estimating systematics on the BDT score
-* Treat JES and TES as correlated (separately in signal and background)
-
+  This is now implemented for the VBF category.
+* Develop method of estimating systematics on the BDT score *WORK IN PROGRESS*
+* Treat JES and TES as correlated (separately in signal and background) *DONE*
+* Try embedding samples!!! Do they fix the angular distributions in VBF?
 
 Ideas
-=====
+-----
 
-* Try dR<3.2 cut on the taus to easily remove some QCD
-* Use dR>0.8 or 1.0 to fix low mass modeling
+* Try dR<2.8 cut on the taus to easily remove some QCD
+* Use dR>1.0 to fix low mass modeling
 * Use Higgs pT (see Michel's analysis). Bottom of ranking.
 * Use sum pT. Bottom of ranking
 * Split 0/1-jet category into boosted (1 jet above 150GeV) and non-boosted to
@@ -50,3 +55,4 @@ Ideas
   each subcategory separately using the MMC output.
   Swagato suggested this. gammagamma analysis does this.
   OR try calculating limits using 2D BDT vs MMC distributions.
+

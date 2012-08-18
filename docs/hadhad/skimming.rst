@@ -13,9 +13,8 @@ MC11:
 
 MC12:
 
-* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3/**
-  Notes: Possible event duplication in resubmitted old skims
-* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v3.v4/**
+* Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v4/**
+* Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v4.v1/**
 
 Data11:
 
@@ -40,9 +39,9 @@ Embedding12:
 
 
 These skims may still be running on the grid. Check
-`my pandamon page <http://panda.cern.ch/server/pandamon/query?ui=user&name=Edmund%20Dawe%20ptu-382>`_ or 
-`Dugan's page <http://panda.cern.ch/server/pandamon/query?ui=user&name=Dugan%20ONeil%20xba-044>`_
-for jobs still running.
+`Noel's <http://panda.cern.ch/server/pandamon/query?ui=user&name=Edmund%20Dawe%20ptu-382>`_ or 
+`Dugan's <http://panda.cern.ch/server/pandamon/query?ui=user&name=Dugan%20ONeil%20xba-044>`_
+panda page for jobs still running.
 
 The current skims will always be backed up on SFU-LCG2_LOCALGROUPDISK
 
@@ -55,21 +54,22 @@ least two loose tau candidates with a pT greater than 18 GeV (data only).
 
 A histogram named "cutflow" is also saved.
 The first bin is the total number of events and for MC the second
-bin is the weighted number of events (from mc_event_weight).
-
-The stage I script is here:
-`HHSkim.py <https://svnweb.cern.ch/trac/atlasphys/browser/Physics/Higgs/HSG4/software/common/higgspy_svn/trunk/HHSkim.py>`_
-and grid jobs are launched with the ``submit-hhskim2-*.sh`` scripts.
+bin is the weighted number of events (the sum of mc_event_weight over all events
+in the original sample).
 
 Data
 ~~~~
 
-1) Triggers::
+1) 2011 triggers::
 
-    if 177986 <= event.RunNumber <= 187815: # Periods B-K
-  		return event.EF_tau29_medium1_tau20_medium1
-    elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-  		return event.EF_tau29T_medium1_tau20T_medium1
+      if 177986 <= event.RunNumber <= 187815: # Periods B-K
+         return event.EF_tau29_medium1_tau20_medium1
+      elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+         return event.EF_tau29T_medium1_tau20T_medium1
+
+   2012 triggers::
+
+      event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
 
 2) Two loose taus:
 
@@ -85,15 +85,15 @@ MC
    requirements as above are imposed. Branches are created to hold the emulated
    trigger decisions:
 	  
-   * ``EF_tau29_medium1_tau20_medium1_EMULATED``
-   * ``EF_tau29T_medium1_tau20T_medium1_EMULATED``
+   * ``bool EF_tau29_medium1_tau20_medium1_EMULATED``
+   * ``bool EF_tau29T_medium1_tau20T_medium1_EMULATED``
 	
    During the emulation procedure offline taus are matched to the trigger
    objects. These matches are saved in additional branches:
 
-   * ``tau_trigger_match_index``: index of the matching EF tau, -1 if not matched.
-   * ``tau_trigger_match_thresh``: 20 or 29 depending on the threshold of the
-     matched trigger, 0 if not matched
+   * ``vector<int> tau_trigger_match_index``: index of the matching EF tau, -1 if not matched.
+   * ``vector<int> tau_trigger_match_thresh``: the threshold of the matched
+     trigger in GeV, 0 if not matched
 
 No other selection is performed on MC.
 
@@ -103,18 +103,13 @@ Stage II
 Stage II performs all event selection, cleaning and object selection. These
 additional branches are also created for convenience:
 
-* ``tau_selected``: true if this is a selected tau and false otherwise.
-  This is after pT cuts of 35/25 GeV (after the trigger matching) 
-* ``pileup_weight``: The output of the pileup reweighting tool
+* ``vector<bool> tau_selected``: true if this tau was and false otherwise.
+* ``float pileup_weight``: The output of the pileup reweighting tool
 
 Since the trigger matching is not performed on the data during stage I, this is
 performed in stage II and the same branches created during stage I for MC are
 now created for the data in stage II:
 
-* ``tau_trigger_match_index``: index of the matching EF tau, -1 if not matched.
-* ``tau_trigger_match_thresh``: 20 or 29 depending on the threshold of the
-  matched trigger, 0 if not matched
-
-The stage II script is here:
-`HHSkim2.py <https://svnweb.cern.ch/trac/atlasphys/browser/Physics/Higgs/HSG4/software/common/higgspy_svn/trunk/HHSkim2.py>`_
-and grid jobs are launched with the ``submit-hhskim-*.sh`` scripts.
+* ``vector<int> tau_trigger_match_index``: index of the matching EF tau, -1 if not matched.
+* ``vector<int> tau_trigger_match_thresh``: the threshold of the
+  matched trigger in GeV, 0 if not matched

@@ -56,6 +56,8 @@ class TauTriggerMatch(EventFilter):
                  year=None,
                  skim=False,
                  tree=None,
+                 num_taus=2,
+                 min_taus=None,
                  **kwargs):
 
         super(TauTriggerMatch, self).__init__(**kwargs)
@@ -66,6 +68,8 @@ class TauTriggerMatch(EventFilter):
         year %= 1000
         self.skim = skim
         self.tree = tree
+        self.num_taus = num_taus
+        self.min_taus = min_taus
 
         """
         WARNING: possible bias if matching between MC and data differs
@@ -95,13 +99,18 @@ class TauTriggerMatch(EventFilter):
         Matching performed during first skim with CoEPPTrigTool
         """
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
-        return len(event.taus) == MIN_TAUS
+        if self.min_taus is not None:
+            return len(event.taus) >= self.min_taus
+        else:
+            return len(event.taus) == self.num_taus
 
     def passes_mc12(self, event):
 
         self.match(event, self.triggers_12)
-        # event passes if at least two taus selected
-        return len(event.taus) == MIN_TAUS
+        if self.min_taus is not None:
+            return len(event.taus) >= self.min_taus
+        else:
+            return len(event.taus) == self.num_taus
 
     def passes_data11(self, event):
 
@@ -113,18 +122,22 @@ class TauTriggerMatch(EventFilter):
             raise ValueError("No trigger defined for run %i" % event.RunNumber)
         # TODO: clean up trigger config (no hardcoded values...)
         self.match(event, [(trigger, (29, 20))])
-        # event passes if at least two taus selected
-        return len(event.taus) == MIN_TAUS
+        if self.min_taus is not None:
+            return len(event.taus) >= self.min_taus
+        else:
+            return len(event.taus) == self.num_taus
 
     def passes_data12(self, event):
 
         self.match(event, self.triggers_12)
-        # event passes if at least two taus selected
-        return len(event.taus) == MIN_TAUS
+        if self.min_taus is not None:
+            return len(event.taus) >= self.min_taus
+        else:
+            return len(event.taus) == self.num_taus
 
     def match(self, event, triggers):
         """
-        triggers: list of triggers (and thresholds )that are ORed.
+        triggers: list of triggers (and thresholds) that are ORed.
         Order them by priority i.e. put triggers with higher pT
         thesholds before triggers with lower thresholds.
         """

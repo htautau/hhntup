@@ -135,6 +135,7 @@ class HHProcessor(ATLASStudent):
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
+                            'number_of_good_vertices',
                             'RunNumber',
                             'EventNumber',
                             'lbn']
@@ -416,9 +417,6 @@ class HHProcessor(ATLASStudent):
             tree.mass_collinear_tau1_tau2 = collin_mass
             tree.tau1_x = tau1_x
             tree.tau2_x = tau2_x
-
-            tree.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
-                                    (vtx.type == 3 and vtx.nTracks >= 2)])
 
             # Match jets to VBF partons
             if self.metadata.datatype == datasets.MC:
