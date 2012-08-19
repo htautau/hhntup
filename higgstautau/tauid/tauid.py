@@ -48,7 +48,7 @@ with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
     for level in ('medium', 'tight'):
         BDT_UNCERT[level] = {}
         for prong in PRONGS:
-            BDT_UNCERT[level] = {}
+            BDT_UNCERT[level][prong] = {}
             for category in CATEGORIES.keys():
                 BDT_UNCERT[level][prong][category] = {}
                 for dir in ('high', 'low'):
