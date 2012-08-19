@@ -59,6 +59,8 @@ with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
 
 def uncertainty(score, pt, prong, nvtx):
 
+    if prong > 1:
+        prong = 3
     loose = selection('loose', prong, nvtx).Eval(pt)
     medium = selection('medium', prong, nvtx).Eval(pt)
     tight = selection('tight', prong, nvtx).Eval(pt)
