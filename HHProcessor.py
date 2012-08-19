@@ -491,7 +491,7 @@ class HHProcessor(ATLASStudent):
                     # factors only valid for 2011 data/MC
                     if tau.matched:
                         # efficiency scale factor
-                        effic_sf, err = tauid.EFFIC_SF_2011['medium']
+                        effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
                         tau.efficiency_scale_factor = effic_sf
                         tau.efficiency_scale_factor_high = effic_sf + err
                         tau.efficiency_scale_factor_low = effic_sf - err

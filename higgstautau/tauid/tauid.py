@@ -42,6 +42,11 @@ EFFIC_SF_2011 = {
     },
 }
 
+def nprong(ntrack):
+
+    if ntrack > 1:
+        return 3
+    return 1
 
 BDT_UNCERT = {}
 with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
@@ -59,8 +64,7 @@ with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
 
 def uncertainty(score, pt, prong, nvtx):
 
-    if prong > 1:
-        prong = 3
+    prong = nprong(prong)
     loose = selection('loose', prong, nvtx).Eval(pt)
     medium = selection('medium', prong, nvtx).Eval(pt)
     tight = selection('tight', prong, nvtx).Eval(pt)
