@@ -506,11 +506,11 @@ class HHProcessor(ATLASStudent):
                                 trig % tau.trigger_match_thresh)
                         tau.fakerate_scale_factor = sf
                         tau.fakerate_scale_factor_high = (sf +
-                                getScaleFactorUncertainty(
+                                fakerate_tool.getScaleFactorUncertainty(
                                     tau.pt, "Medium",
                                     trig % tau.trigger_match_thresh, True))
                         tau.fakerate_scale_factor_low = (sf -
-                                getScaleFactorUncertainty(
+                                fakerate_tool.getScaleFactorUncertainty(
                                     tau.pt, "Medium",
                                     trig % tau.trigger_match_thresh, False))
 
