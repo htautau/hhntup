@@ -1,6 +1,9 @@
+import os
+from rootpy.io import open as ropen
 from .selection.p851 import selection, nvtx_to_category, LEVELS, \
     CATEGORIES, PRONGS
 
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
@@ -40,26 +43,38 @@ EFFIC_SF_2011 = {
 }
 
 
+BDT_UNCERT = {}
+with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
+    for level in ('medium', 'tight'):
+        BDT_UNCERT[level] = {}
+        for prong in PRONGS:
+            BDT_UNCERT[level] = {}
+            for category in CATEGORIES.keys():
+                BDT_UNCERT[level][prong][category] = {}
+                for dir in ('high', 'low'):
+                    BDT_UNCERT[level][prong][category][dir] = f.Get(
+                            '%s_%s_%dp_%s' % (
+                                level, dir, prong, category)).Clone()
+
+
 def uncertainty(score, pt, prong, nvtx):
 
     loose = selection('loose', prong, nvtx).Eval(pt)
     medium = selection('medium', prong, nvtx).Eval(pt)
     tight = selection('tight', prong, nvtx).Eval(pt)
 
-    if score < loose:
-        raise ValueError(
-            'No uncertainties defined for scores lower than loose')
-
     if score < medium:
-        return selection_uncertainty('loose', pt, prong, nvtx)
-    elif score < tight:
-        return selection_uncertainty('medium', pt, prong, nvtx)
+        raise ValueError(
+            'No uncertainties defined for scores lower than medium')
+
+    if score < tight:
+        high, low = selection_uncertainty('medium', pt, prong, nvtx)
     else:
-        return selection_uncertainty('tight', pt, prong, nvtx)
+        high, low = selection_uncertainty('tight', pt, prong, nvtx)
+    return score + high, score + low
 
 
 def selection_uncertainty(level, pt, prong, nvtx):
 
-    return UNCERT[level][prong][nvtx_to_category(nvtx)].Eval(pt)
-
-
+    uncert = BDT_UNCERT[level][prong][nvtx_to_category(nvtx)]
+    return uncert['high'].Eval(pt), uncert['low'].Eval(pt)
