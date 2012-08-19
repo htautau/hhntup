@@ -73,10 +73,10 @@ def uncertainty(score, pt, prong, nvtx):
         high, low = selection_uncertainty('medium', pt, prong, nvtx)
     else:
         high, low = selection_uncertainty('tight', pt, prong, nvtx)
-    return score + high, score + low
+    return score + high, score - low
 
 
 def selection_uncertainty(level, pt, prong, nvtx):
 
     uncert = BDT_UNCERT[level][prong][nvtx_to_category(nvtx)]
-    return uncert['high'].Eval(pt), uncert['low'].Eval(pt)
+    return -1 * uncert['high'].Eval(pt), uncert['low'].Eval(pt)
