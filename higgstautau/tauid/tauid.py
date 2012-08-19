@@ -73,6 +73,10 @@ def uncertainty(score, pt, prong, nvtx):
         high, low = selection_uncertainty('medium', pt, prong, nvtx)
     else:
         high, low = selection_uncertainty('tight', pt, prong, nvtx)
+    if score + high > 1.:
+        high = 1. - score
+    if score - low < 0.:
+        low = score
     return score + high, score - low
 
 
