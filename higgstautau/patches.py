@@ -73,39 +73,55 @@ class ElectronIDpatch(EventFilter):
 
 
 #################################################
-# Tau ID recalculation (p1130 tau D3PDs)
+# Tau ID recalculation
 #################################################
+from .tauid.p851.selection import selection as selection_2011
+from .tauid.p1130.selection import selection as selection_2012
 
 class TauIDpatch(EventFilter):
     """
     Recalculates the tau ID
     """
 
-    def __init__(self, graph, **kwargs):
+    def __init__(self, year, **kwargs):
 
         super(TauIDpatch, self).__init__(**kwargs)
 
-        #Load TGraphs
+        if year == 2011:
+            self.passes = self.passes_2011
+        elif year == 2012:
+            self.loose_1p   = selection_2012('loose', 1)
+            self.medium_1p  = selection_2012('medium', 1)
+            self.tight_1p   = selection_2012('tight', 1)
+            self.loose_3p   = selection_2012('loose', 3)
+            self.medium_3p  = selection_2012('medium', 3)
+            self.tight_3p   = selection_2012('tight', 3)
+            self.passes = self.passes_2012
+        else:
+            raise ValueError("No tauid patch defined for year %d" % year)
 
-        f = ropen(graph)
-        # rootpy.io.open raises exception if file is not found.
+    def passes_2011(self, event):
 
-        self.loose_1p   = f.Get('loose_1p')
-        self.medium_1p  = f.Get('medium_1p')
-        self.tight_1p   = f.Get('tight_1p')
-        self.loose_3p   = f.Get('loose_3p')
-        self.medium_3p  = f.Get('medium_3p')
-        self.tight_3p   = f.Get('tight_3p')
+        nvtx = event.number_of_good_vertices
+        for tau in event.taus:
 
+            pt = tau.pt
+            ntrack = tau.numTrack
 
-    def passes(self, event):
+            loose = selection_2011('loose', ntrack, nvtx).Eval(pt)
+            medium = selection_2011('medium', ntrack, nvtx).Eval(pt)
+            tight = selection_2011('tight', ntrack, nvtx).Eval(pt)
+
+            tau.JetBDTSigLoose  = (tau.BDTJetScore > loose)
+            tau.JetBDTSigMedium = (tau.BDTJetScore > medium)
+            tau.JetBDTSigTight  = (tau.BDTJetScore > tight)
+
+        return True
+
+    def passes_2012(self, event):
 
         for tau in event.taus:
             pt = tau.pt
-
-            cut_loose  = 0
-            cut_medium = 0
-            cut_tight  = 0
 
             if tau.numTrack <= 1:
                 cut_loose  = self.loose_1p.Eval(pt)

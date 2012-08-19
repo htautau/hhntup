@@ -184,6 +184,50 @@ class JER(JetSystematic):
         The standard practice is only to use res + uncertainty.
         """
 
+class TauIDSystematic(ObjectSystematic):
+
+    def __init__(self, is_up, **kwargs):
+
+        self.is_up = is_up # up or down variation
+        super(TauIDSystematic, self).__init__(**kwargs)
+
+    @staticmethod
+    def set(f):
+
+        def wrapper(self, event):
+
+            if self.verbose:
+                print "=" * 20
+                print "TAUS BEFORE:"
+                for tau in event.taus:
+                    print "score: %.4f loose: %d medium: %d tight: %d" % (
+                        tau.BDTJetScore,
+                        tau.JetBDTSigLoose,
+                        tau.JetBDTSigMedium,
+                        tau.JetBDTSigTight)
+                print "-" * 20
+
+            for tau in event.taus:
+                f(self, tau, event)
+
+            if self.verbose:
+                print "TAUS AFTER:"
+                for tau in event.taus:
+                    print "score: %.4f loose: %d medium: %d tight: %d" % (
+                        tau.BDTJetScore,
+                        tau.JetBDTSigLoose,
+                        tau.JetBDTSigMedium,
+                        tau.JetBDTSigTight)
+
+        return wrapper
+
+
+class TauBDT(TauIDSystematic):
+
+    @TauIDSystematic.set
+    def run(self, tau, event):
+
+
 
 class TauSystematic(ObjectSystematic):
 
@@ -353,6 +397,8 @@ class Systematics(EventFilter):
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
     TAU_TERMS = {TES_UP, TES_DOWN, TER_UP, TER_DOWN}
+    TAUID_UP = -1
+    TAUID_DOWN = -2
 
     # jets
     JES_UP = METUtil.JESUp

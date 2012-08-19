@@ -1,7 +1,8 @@
 import os
 from rootpy.io import open as ropen
-from .selection.p851 import selection, nvtx_to_category, LEVELS, \
-    CATEGORIES, PRONGS
+from .p851 import selection, nvtx_to_category, \
+    CATEGORIES
+from .common import LEVELS, PRONGS, nprong
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,12 +43,9 @@ EFFIC_SF_2011 = {
     },
 }
 
-def nprong(ntrack):
 
-    if ntrack > 1:
-        return 3
-    return 1
 
+# uncertainty currently only valid for 2011 MC
 BDT_UNCERT = {}
 with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
     for level in ('medium', 'tight'):

@@ -3,6 +3,7 @@
 from rootpy.io import open as ropen
 from rootpy.tree import Cut
 from rootpy.plotting import Graph
+from ..common import PRONGS, LEVELS, nprong
 import os
 
 
@@ -15,13 +16,6 @@ CATEGORIES = {
     '7_': Cut('tau_numberOfVertices>7'),
 }
 
-LEVELS = {
-    'loose': 1,
-    'medium': 2,
-    'tight': 3,
-}
-
-PRONGS = (1, 3)
 
 if __name__ == '__main__':
 
@@ -62,5 +56,6 @@ else:
 
     def selection(level, prong, nvtx):
 
+        prong = nprong(prong)
         return f.Get('%s_%dp_%s' % (
             level, prong, nvtx_to_category(nvtx)))

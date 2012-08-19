@@ -33,6 +33,7 @@ from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau import tauid
+from higgstautau.patches import ElectronIDpatch, TauIDpatch
 
 from goodruns import GRL
 import subprocess
@@ -189,6 +190,7 @@ class HHProcessor(ATLASStudent):
             TauEta(2),
             TauCrack(2),
             TauLArHole(2), # only veto taus, not entire event
+            TauIDpatch(year=YEAR),
             TauIDMedium(2),
             TauTriggerMatch(
                 config=trigger_config,
