@@ -483,8 +483,10 @@ class HHProcessor(ATLASStudent):
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
                 for tau in (tau1, tau2):
-                    tau.BDTJetScore_high =
-                    tau.BDTJetScore_low =
+
+                    tau.BDTJetScore_high, tau.BDTJetScore_low = tauid.uncertainty(
+                            tau.BDTJetScore, tau.pt, tau.numTrack,
+                            event.number_of_good_vertices)
 
                     # factors only valid for 2011 data/MC
                     if tau.matched:
