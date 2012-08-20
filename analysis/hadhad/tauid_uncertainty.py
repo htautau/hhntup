@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 from samples import MC_Ztautau
-from higgstautau.tauid.selection.p851 import selection, nvtx_to_category, LEVELS, \
-    CATEGORIES, PRONGS
+
+from higgstautau.tauid.p851 import selection, nvtx_to_category, CATEGORIES
+from higgstautau.tauid.common import LEVELS, PRONGS
+from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
+
 from rootpy.tree import Cut
 from rootpy.io import open as ropen
-from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
 
 
 if __name__ == '__main__':
@@ -85,6 +87,7 @@ if __name__ == '__main__':
                         prev_effic = curr_effic
                     print efficiency(ztautau, selection + curr_shift, prong, category)
                     print list(curr_shift.y())
+                    print list((selection + curr_shift).y())
                     print "=" * 20
                     return curr_shift
 
