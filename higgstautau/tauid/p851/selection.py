@@ -36,8 +36,17 @@ if __name__ == '__main__':
                         graph.Write()
 else:
 
-    f = ropen(os.path.join(HERE, 'bdt_selection.root'))
+    P851_SELECTION = {}
+    with ropen(os.path.join(HERE, 'bdt_selection.root')) as f:
+        for level in LEVELS.keys():
+            P851_SELECTION[level] = {}
+            for prong in PRONGS:
+                P851_SELECTION[level][prong] = {}
+                for category in CATEGORIES.keys():
+                    P851_SELECTION[level][prong][category] = f.Get(
+                            '%s_%dp_%s' % (level, prong, category)).Clone()
 
+    print P851_SELECTION
 
     def nvtx_to_category(nvtx):
 
@@ -57,5 +66,4 @@ else:
     def selection(level, prong, nvtx):
 
         prong = nprong(prong)
-        return f.Get('%s_%dp_%s' % (
-            level, prong, nvtx_to_category(nvtx)))
+        return P851_SELECTION[level][prong][nvtx_to_category(nvtx)]

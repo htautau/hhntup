@@ -4,7 +4,6 @@ from .p851 import selection, nvtx_to_category, \
     CATEGORIES
 from .common import LEVELS, PRONGS, nprong
 
-HERE = os.path.dirname(os.path.abspath(__file__))
 
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
@@ -43,6 +42,7 @@ EFFIC_SF_2011 = {
     },
 }
 
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 # uncertainty currently only valid for 2011 MC
 BDT_UNCERT = {}
