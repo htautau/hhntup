@@ -43,7 +43,7 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
-VERBOSE = False
+VERBOSE = True
 
 
 class HHProcessor(ATLASStudent):
@@ -162,6 +162,7 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 verbose=VERBOSE),
+            TauIDLoose(2),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS

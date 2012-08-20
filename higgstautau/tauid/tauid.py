@@ -67,6 +67,7 @@ def uncertainty(score, pt, prong, nvtx):
     tight = selection('tight', prong, nvtx).Eval(pt)
 
     if score < loose:
+        print score, loose
         raise ValueError(
             'No uncertainties defined for scores lower than loose')
 
