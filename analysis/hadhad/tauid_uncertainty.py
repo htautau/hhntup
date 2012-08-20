@@ -57,8 +57,8 @@ if __name__ == '__main__':
         for prong in PRONGS:
             for cat_str, category in CATEGORIES.items():
 
-                def binary_search(target, selection, shift, min_error=0.005,
-                        min_change=0.00001,
+                def binary_search(target, selection, shift, min_error=0.0001,
+                        min_change=0.000001,
                         reverse=False):
 
                     print "target:", target
@@ -141,7 +141,6 @@ if __name__ == '__main__':
                 shift_tight_high = binary_search(target_tight_high, tight,
                         shift_tight_high, reverse=True)
 
-
                 f.cd()
                 shift_medium_high.name = 'medium_high_%dp_%s' % (prong, cat_str)
                 shift_medium_high.Write()
@@ -152,8 +151,3 @@ if __name__ == '__main__':
                 shift_tight_high.Write()
                 shift_tight_low.name = 'tight_low_%dp_%s' % (prong, cat_str)
                 shift_tight_low.Write()
-
-else:
-
-    UNCERT = {}
-

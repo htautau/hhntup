@@ -46,7 +46,6 @@ else:
                     P851_SELECTION[level][prong][category] = f.Get(
                             '%s_%dp_%s' % (level, prong, category)).Clone()
 
-    print P851_SELECTION
 
     def nvtx_to_category(nvtx):
 
