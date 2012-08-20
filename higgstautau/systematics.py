@@ -6,7 +6,7 @@ import math
 from math import sin, sqrt, pow
 
 # local imports
-import .tauid
+from . import tauid
 
 from atlastools import utils
 from atlastools import datasets
