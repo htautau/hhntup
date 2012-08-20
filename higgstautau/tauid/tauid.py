@@ -74,14 +74,26 @@ def uncertainty(score, pt, prong, nvtx):
     high_medium, low_medium = selection_uncertainty('medium', pt, prong, nvtx)
     high_tight, low_tight = selection_uncertainty('tight', pt, prong, nvtx)
 
-    b_m_high = 1. - medium - high_medium
-    b_t_high = 1. - tight - high_tight
+    b_m_high = (1. - medium) + high_medium
+    b_t_high = (1. - tight) + high_tight
 
-    b_m_low = 1. - medium + low_medium
-    b_t_low = 1. - tight + low_tight
+    b_m_low = (1. - medium) - low_medium
+    b_t_low = (1. - tight) - low_tight
 
-    dx_high = max([high_medium / b_m_high, high_tight / b_t_high]) * (1. - score)
-    dx_low = max([low_medium / b_m_low, low_tight / b_t_low]) * (1. - score)
+    if b_m_low <= 0:
+        raise ValueError("low BDT medium selection error too high")
+    if b_t_low <= 0:
+        raise ValueError("low BDT tight selection error too high")
+
+    if score > tight - high_tight:
+        dx_high = (1. - score) * high_tight / b_t_high
+    else:
+        dx_high = (1. - score) * high_medium / b_m_high
+
+    if score > tight:
+        dx_low = (1. - score) * low_tight / b_t_low
+    else:
+        dx_low = (1. - score) * low_medium / b_m_low
 
     return score + dx_high, score - dx_low
 
