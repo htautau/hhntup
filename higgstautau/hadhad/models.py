@@ -20,8 +20,6 @@ import ROOT
 class RecoTau(TreeModel):
 
     BDTJetScore = FloatCol()
-    BDTJetScore_high = FloatCol()
-    BDTJetScore_low = FloatCol()
     BDTEleScore = FloatCol()
 
     JetBDTSigLoose = BoolCol()
@@ -150,9 +148,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
                 continue
             fourvect = tau.fourvect
             setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
-            setattr(tree, 'tau%i_BDTJetScore_high' % i, tau.BDTJetScore_high)
-            setattr(tree, 'tau%i_BDTJetScore_low' % i, tau.BDTJetScore_low)
-
             setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
 
             setattr(tree, 'tau%i_JetBDTSigLoose' % i, tau.JetBDTSigLoose)

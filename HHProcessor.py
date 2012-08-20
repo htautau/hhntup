@@ -486,18 +486,15 @@ class HHProcessor(ATLASStudent):
 
                 for tau in (tau1, tau2):
 
-                    tau.BDTJetScore_high, tau.BDTJetScore_low = tauid.uncertainty(
-                            tau.BDTJetScore, tau.pt, tau.numTrack,
-                            event.number_of_good_vertices)
-
                     # factors only valid for 2011 data/MC
                     if tau.matched:
                         # efficiency scale factor
                         effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
                         tau.efficiency_scale_factor = effic_sf
+                        # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
                         tau.efficiency_scale_factor_high = effic_sf + err
                         tau.efficiency_scale_factor_low = effic_sf - err
-                    else:
+                    if not tau.matched:
                         # fake rate scale factor
                         if event.RunNumber >= 188902:
                             trig = "EF_tau%dT_medium1"

@@ -49,9 +49,6 @@ class TauFourMomentum(FourMomentum):
         self.fakerate_scale_factor_high = 1.
         self.fakerate_scale_factor_low = 1.
 
-        self.BDTJetScore_high = self.BDTJetScore
-        self.BDTJetScore_low = self.BDTJetScore
-
         self.centrality = 0.
         self.centrality_boosted = 0.
 

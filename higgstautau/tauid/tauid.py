@@ -44,7 +44,6 @@ EFFIC_SF_2011 = {
 }
 
 
-
 # uncertainty currently only valid for 2011 MC
 BDT_UNCERT = {}
 with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
@@ -67,19 +66,23 @@ def uncertainty(score, pt, prong, nvtx):
     medium = selection('medium', prong, nvtx).Eval(pt)
     tight = selection('tight', prong, nvtx).Eval(pt)
 
-    if score < medium:
+    if score < loose:
         raise ValueError(
-            'No uncertainties defined for scores lower than medium')
+            'No uncertainties defined for scores lower than loose')
 
-    if score < tight:
-        high, low = selection_uncertainty('medium', pt, prong, nvtx)
-    else:
-        high, low = selection_uncertainty('tight', pt, prong, nvtx)
-    if score + high > 1.:
-        high = 1. - score
-    if score - low < 0.:
-        low = score
-    return score + high, score - low
+    high_medium, low_medium = selection_uncertainty('medium', pt, prong, nvtx)
+    high_tight, low_tight = selection_uncertainty('tight', pt, prong, nvtx)
+
+    b_m_high = 1. - medium - high_medium
+    b_t_high = 1. - tight - high_tight
+
+    b_m_low = 1. - medium + low_medium
+    b_t_low = 1. - tight + low_tight
+
+    dx_high = max([high_medium / b_m_high, high_tight / b_t_high]) * (1. - score)
+    dx_low = max([low_medium / b_m_low, low_tight / b_t_low]) * (1. - score)
+
+    return score + dx_high, score - dx_low
 
 
 def selection_uncertainty(level, pt, prong, nvtx):

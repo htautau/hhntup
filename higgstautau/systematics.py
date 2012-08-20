@@ -5,6 +5,9 @@ Adapted from the Example.C in MissingETUtility/macros
 import math
 from math import sin, sqrt, pow
 
+# local imports
+import .tauid
+
 from atlastools import utils
 from atlastools import datasets
 
@@ -223,10 +226,19 @@ class TauIDSystematic(ObjectSystematic):
 
 
 class TauBDT(TauIDSystematic):
-
+    """
+    Currently only valid for 2011 MC
+    """
     @TauIDSystematic.set
     def run(self, tau, event):
 
+        high, low = tauid.uncertainty(
+            tau.BDTJetScore, tau.pt, tau.numTrack,
+            event.number_of_good_vertices)
+        if self.is_up:
+            tau.BDTJetScore = high
+        else:
+            tau.BDTJetScore = low
 
 
 class TauSystematic(ObjectSystematic):
@@ -397,8 +409,8 @@ class Systematics(EventFilter):
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
     TAU_TERMS = {TES_UP, TES_DOWN, TER_UP, TER_DOWN}
-    TAUID_UP = -1
-    TAUID_DOWN = -2
+    TAUBDT_UP = -100
+    TAUBDT_DOWN = -101
 
     # jets
     JES_UP = METUtil.JESUp
@@ -488,6 +500,10 @@ class Systematics(EventFilter):
                     systematic = EER(True, sys_util=self, verbose=verbose)
                 elif term == Systematics.EER_DOWN:
                     systematic = EER(False, sys_util=self, verbose=verbose)
+                elif term == Systematics.TAUBDT_UP:
+                    systematic = TauBDT(True, sys_util=self, verbose=verbose)
+                elif term == Systematics.TAUBDT_DOWN:
+                    systematic = TauBDT(False, sys_util=self, verbose=verbose)
                 else:
                     raise ValueError("systematic not supported")
                 self.systematics.append(systematic)

@@ -10,6 +10,8 @@ SYSTEMATICS_COMMON = [
 
 # hadhad-only systematics
 SYSTEMATICS_HADHAD = [
+    ('TAUBDT_UP',),
+    ('TAUBDT_DOWN',),
 ] # ADD MORE HERE
 
 # electron-hadron-only systematics
