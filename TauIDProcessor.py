@@ -119,9 +119,6 @@ class TauIDProcessor(ATLASStudent):
             JetCleaning(
                 datatype=self.metadata.datatype,
                 year=YEAR),
-            ElectronVeto(),
-            MuonVeto(
-                year=YEAR),
         ])
 
         self.filters['event'] = event_filters
@@ -130,8 +127,6 @@ class TauIDProcessor(ATLASStudent):
         tau_filters = EventFilterList([
             TauAuthor(1),
             TauHasTrack(1),
-            TauMuonVeto(1),
-            TauElectronVeto(1),
             TauPT(1, thresh=25 * GeV),
             TauEta(1),
             TauCrack(1),
