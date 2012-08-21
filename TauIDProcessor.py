@@ -44,6 +44,11 @@ YEAR = 2011
 VERBOSE = False
 
 
+class SkimExtraModel(TreeModel):
+
+    number_of_good_vertices = IntCol()
+
+
 class TauIDProcessor(ATLASStudent):
 
     def work(self):
@@ -55,7 +60,7 @@ class TauIDProcessor(ATLASStudent):
         # trigger config tool to read trigger info in the ntuples
         trigger_config = get_trigger_config()
 
-        OutputModel = RecoTauBlock + EventVariables
+        OutputModel = RecoTauBlock + EventVariables + SkimExtraModel
 
         if self.metadata.datatype == datasets.MC:
             # only create truth branches for MC
@@ -91,7 +96,6 @@ class TauIDProcessor(ATLASStudent):
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
-                            'number_of_good_vertices',
                             'RunNumber',
                             'EventNumber',
                             'lbn']
@@ -105,10 +109,10 @@ class TauIDProcessor(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            Triggers(
-                datatype=self.metadata.datatype,
-                year=YEAR,
-                skim=False),
+            #Triggers(
+            #    datatype=self.metadata.datatype,
+            #    year=YEAR,
+            #    skim=False),
             PriVertex(),
             LArError(),
             LArHole(datatype=self.metadata.datatype),
@@ -128,17 +132,17 @@ class TauIDProcessor(ATLASStudent):
             TauHasTrack(1),
             TauMuonVeto(1),
             TauElectronVeto(1),
-            TauPT(1, thresh=30 * GeV),
+            TauPT(1, thresh=25 * GeV),
             TauEta(1),
             TauCrack(1),
             TauLArHole(1),
-            TauTriggerMatch(
-                config=trigger_config,
-                year=YEAR,
-                datatype=self.metadata.datatype,
-                skim=False,
-                tree=tree,
-                min_taus=1),
+            #TauTriggerMatch(
+            #    config=trigger_config,
+            #    year=YEAR,
+            #    datatype=self.metadata.datatype,
+            #    skim=False,
+            #    tree=tree,
+            #    min_taus=1),
         ])
 
         # define tree collections
@@ -180,8 +184,11 @@ class TauIDProcessor(ATLASStudent):
         for event in chain:
             tree.reset()
 
+            event.vertices.select(vertex_selection)
+            tree.number_of_good_vertices = len(event.vertices)
+
             # match only with visible true taus
-            event.truetaus.select(lambda tau: tau.vis_Et > 30 * GeV and abs(tau.vis_eta) < 2.5)
+            event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
             true_tau1 = None
             true_tau2 = None
@@ -194,8 +201,6 @@ class TauIDProcessor(ATLASStudent):
                 true_tau2 = event.truetaus[1]
                 TrueTauBlock.set(tree, 1, true_tau1)
                 TrueTauBlock.set(tree, 2, true_tau2)
-            else:
-                continue
 
             tau_filters(event)
 
