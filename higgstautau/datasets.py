@@ -720,6 +720,10 @@ if __name__ == '__main__':
     parser.add_argument('--data-prefix', default=None)
     parser.add_argument('--data-pattern', default='*.root*')
 
+    parser.add_argument('--embed-path', default=None)
+    parser.add_argument('--embed-prefix', default=None)
+    parser.add_argument('--embed-pattern', default='*.root*')
+
     parser.add_argument('--name', default='datasets')
 
     parser.add_argument('analysis',
@@ -775,6 +779,9 @@ if __name__ == '__main__':
         data_path = args.data_path
         data_prefix = args.data_prefix
         data_pattern = args.data_pattern
+        embd_path = args.embed_path
+        embd_prefix = args.embed_prefix
+        embd_pattern = args.embed_pattern
 
     db = Database(name=args.name, verbose=True)
 
