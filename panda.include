@@ -1,5 +1,4 @@
 *.tar.gz
-ParametrizedBDTSelection.root
 *.cfg
 *.spec
 *.yml
@@ -11,3 +10,5 @@ grl/2012/*
 lumi/2012/hadhad/*
 lumi/2011/hadhad/*
 externaltools/*/share/*.root
+higgstautau/tauid/*.root
+higgstautau/tauid/*/*.root
