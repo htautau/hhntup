@@ -17,8 +17,11 @@ if __name__ == '__main__':
         category = category.replace(
                 'tau_numberOfVertices', 'number_of_good_vertices')
 
-        total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
-                 sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
+        #total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
+        #         sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
+        total = (sample.events(Cut('tau1_numTrack==%d' % prong) & category) +
+                 sample.events(Cut('tau2_numTrack==%d' % prong) & category))
+
         passing = 0.
         cut = (Cut('tau1_numTrack==%d' % prong) |
                Cut('tau2_numTrack==%d' % prong)) & category
