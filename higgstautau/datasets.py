@@ -489,7 +489,6 @@ class Database(dict):
                         for run in _runs:
                             period_runs[run] = period
                     periods = {}
-                    print period_runs
                     for run, info in runs.items():
                         if run in period_runs:
                             _period = period_runs[run]
