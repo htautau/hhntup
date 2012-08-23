@@ -399,7 +399,7 @@ def tau_preselection(tau):
 def tau_selection(tau):
     """ Finalizes the tau selection """
 
-mu    return True
+    return True
 
 
 ############################################################
