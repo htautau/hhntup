@@ -489,8 +489,13 @@ class Database(dict):
                         for run in _runs:
                             period_runs[run] = period
                     periods = {}
+                    print period_runs
                     for run, info in runs.items():
-                        _period = period_runs[run]
+                        if run in period_runs:
+                            _period = period_runs[run]
+                        else:
+                            # ignore spurious runs
+                            continue
                         if _period in periods:
                             periods[_period] += info['dirs']
                         else:
