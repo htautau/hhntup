@@ -97,6 +97,15 @@ MC
 
 No other selection is performed on MC.
 
+Stage I for MC also creates the templates needed for pileup reweighting. These
+are saved in ``*.TPileupReweighting.prw.root`` in each dataset. To perform
+pileup reweighting you can either use the default templates that are provided by
+the pileup reweighting package or you can ``hadd`` together all of these
+``*.TPileupReweighting.prw.root`` provided by stage I into one file and use
+that::
+
+   hadd TPileupReweighting.prw.root */*TPileupReweighting.prw.root
+
 Stage II
 --------
 
