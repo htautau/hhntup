@@ -430,7 +430,7 @@ class Database(dict):
             for dir in data_dirs:
                 match = re.match(DATA_PATTERN, dir)
                 if match:
-                    stream = int(match.group('run'))
+                    stream = int(match.group('stream'))
                     if stream not in streams:
                         streams[stream] = []
                     else:
