@@ -211,14 +211,15 @@ class TauAuthor(EventFilter):
 
 class TauPT(EventFilter):
 
-    def __init__(self, min_taus, **kwargs):
+    def __init__(self, min_taus, thresh=20 * GeV, **kwargs):
 
         self.min_taus = min_taus
+        self.thresh = thresh
         super(TauPT, self).__init__(**kwargs)
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: tau.pt > 20 * GeV)
+        event.taus.select(lambda tau: tau.pt > self.thresh)
         return len(event.taus) >= self.min_taus
 
 

@@ -378,7 +378,7 @@ class HHSkim(ATLASStudent):
 
         if self.metadata.year == 2012:
             print "Patching Tau ID"
-            tauidpatch = TauIDpatch('ParametrizedBDTSelection.root')
+            tauidpatch = TauIDpatch(year=2012)
             print "Patching Electron ID"
             electronidpatch = ElectronIDpatch()
 

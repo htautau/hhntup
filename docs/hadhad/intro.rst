@@ -56,3 +56,9 @@ Ideas
   Swagato suggested this. gammagamma analysis does this.
   OR try calculating limits using 2D BDT vs MMC distributions.
 
+
+Notes
+-----
+
+* When shifting TES and BDT score, medium and tight must be recalculated.
+  MET term must also be recalculated...

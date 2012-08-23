@@ -1,0 +1,305 @@
+AlpgenJimmyZtautauNp0VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128920.AlpgenJimmyZtautauNp0VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851_tid655289_00]
+  ds: mc11_7TeV.128920.AlpgenJimmyZtautauNp0VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128920
+  name: AlpgenJimmyZtautauNp0VBFCut.mc11c
+  tag: e1003_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.116270.AlpgenJimmyZtautauNp0_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851_tid654165_00]
+  ds: mc11_7TeV.116270.AlpgenJimmyZtautauNp0_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 116270
+  name: AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c
+  tag: e959_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp0_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654126_00,
+    /cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654125_00]
+  ds: mc11_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 107670
+  name: AlpgenJimmyZtautauNp0_pt20.mc11c
+  tag: e835_s1299_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp1Mll7to40VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128951.AlpgenJimmyZtautauNp1Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851_tid732210_00]
+  ds: mc11_7TeV.128951.AlpgenJimmyZtautauNp1Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128951
+  name: AlpgenJimmyZtautauNp1Mll7to40VBFCut.mc11c
+  tag: e1029_s1372_s1370_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp1VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128921.AlpgenJimmyZtautauNp1VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851_tid655290_00]
+  ds: mc11_7TeV.128921.AlpgenJimmyZtautauNp1VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128921
+  name: AlpgenJimmyZtautauNp1VBFCut.mc11c
+  tag: e1003_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.116271.AlpgenJimmyZtautauNp1_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851_tid654166_00]
+  ds: mc11_7TeV.116271.AlpgenJimmyZtautauNp1_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 116271
+  name: AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c
+  tag: e959_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp1_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654127_00,
+    /cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654128_00]
+  ds: mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 107671
+  name: AlpgenJimmyZtautauNp1_pt20.mc11c
+  tag: e835_s1299_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp2Mll7to40VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128952.AlpgenJimmyZtautauNp2Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851_tid732211_00]
+  ds: mc11_7TeV.128952.AlpgenJimmyZtautauNp2Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128952
+  name: AlpgenJimmyZtautauNp2Mll7to40VBFCut.mc11c
+  tag: e1029_s1372_s1370_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp2VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128922.AlpgenJimmyZtautauNp2VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851_tid655291_00]
+  ds: mc11_7TeV.128922.AlpgenJimmyZtautauNp2VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128922
+  name: AlpgenJimmyZtautauNp2VBFCut.mc11c
+  tag: e1003_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.116272.AlpgenJimmyZtautauNp2_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_p851_tid655317_00]
+  ds: mc11_7TeV.116272.AlpgenJimmyZtautauNp2_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 116272
+  name: AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c
+  tag: e959_s1310_s1300_r3043_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp2_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654130_00,
+    /cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654129_00]
+  ds: mc11_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 107672
+  name: AlpgenJimmyZtautauNp2_pt20.mc11c
+  tag: e835_s1299_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp3Mll7to40VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128953.AlpgenJimmyZtautauNp3Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851_tid732212_00]
+  ds: mc11_7TeV.128953.AlpgenJimmyZtautauNp3Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128953
+  name: AlpgenJimmyZtautauNp3Mll7to40VBFCut.mc11c
+  tag: e1029_s1372_s1370_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp3VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128923.AlpgenJimmyZtautauNp3VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851_tid655293_00]
+  ds: mc11_7TeV.128923.AlpgenJimmyZtautauNp3VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128923
+  name: AlpgenJimmyZtautauNp3VBFCut.mc11c
+  tag: e1003_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.116273.AlpgenJimmyZtautauNp3_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851_tid654167_00]
+  ds: mc11_7TeV.116273.AlpgenJimmyZtautauNp3_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 116273
+  name: AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c
+  tag: e959_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp3_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654132_00,
+    /cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654131_00]
+  ds: mc11_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 107673
+  name: AlpgenJimmyZtautauNp3_pt20.mc11c
+  tag: e835_s1299_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp4Mll7to40VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128954.AlpgenJimmyZtautauNp4Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851_tid732213_00]
+  ds: mc11_7TeV.128954.AlpgenJimmyZtautauNp4Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128954
+  name: AlpgenJimmyZtautauNp4Mll7to40VBFCut.mc11c
+  tag: e1029_s1372_s1370_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp4VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128924.AlpgenJimmyZtautauNp4VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851_tid655294_00]
+  ds: mc11_7TeV.128924.AlpgenJimmyZtautauNp4VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128924
+  name: AlpgenJimmyZtautauNp4VBFCut.mc11c
+  tag: e1003_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.116274.AlpgenJimmyZtautauNp4_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851_tid654168_00]
+  ds: mc11_7TeV.116274.AlpgenJimmyZtautauNp4_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 116274
+  name: AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c
+  tag: e959_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp4_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654133_00,
+    /cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654134_00]
+  ds: mc11_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 107674
+  name: AlpgenJimmyZtautauNp4_pt20.mc11c
+  tag: e835_s1299_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp5Mll7to40VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128955.AlpgenJimmyZtautauNp5Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851_tid732214_00]
+  ds: mc11_7TeV.128955.AlpgenJimmyZtautauNp5Mll7to40VBFCut.merge.NTUP_TAUMEDIUM.e1029_s1372_s1370_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128955
+  name: AlpgenJimmyZtautauNp5Mll7to40VBFCut.mc11c
+  tag: e1029_s1372_s1370_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp5VBFCut.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.128925.AlpgenJimmyZtautauNp5VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851_tid655295_00]
+  ds: mc11_7TeV.128925.AlpgenJimmyZtautauNp5VBFCut.merge.NTUP_TAUMEDIUM.e1003_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 128925
+  name: AlpgenJimmyZtautauNp5VBFCut.mc11c
+  tag: e1003_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.116275.AlpgenJimmyZtautauNp5_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851_tid654169_00]
+  ds: mc11_7TeV.116275.AlpgenJimmyZtautauNp5_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 116275
+  name: AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c
+  tag: e959_s1310_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0
+AlpgenJimmyZtautauNp5_pt20.mc11c: !Dataset
+  category: mc11c
+  datatype: 1
+  dirs: [/cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654135_00,
+    /cluster/data09/endw/analysis/HSG4/higgstautau/skims/hadhad/mc11_7TeV/mmc_samples/ztautau/mc11_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851_tid654136_00]
+  ds: mc11_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
+  file_pattern: '*.root*'
+  grl: null
+  id: 107675
+  name: AlpgenJimmyZtautauNp5_pt20.mc11c
+  tag: e835_s1299_s1300_r3043_r2993_p851
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  treename: tau
+  version: 0

@@ -32,6 +32,8 @@ from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
+from higgstautau import tauid
+from higgstautau.patches import ElectronIDpatch, TauIDpatch
 
 from goodruns import GRL
 import subprocess
@@ -41,7 +43,7 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
-VERBOSE = False
+VERBOSE = True
 
 
 class HHProcessor(ATLASStudent):
@@ -160,6 +162,7 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 verbose=VERBOSE),
+            TauIDLoose(2),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
@@ -188,6 +191,7 @@ class HHProcessor(ATLASStudent):
             TauEta(2),
             TauCrack(2),
             TauLArHole(2), # only veto taus, not entire event
+            TauIDpatch(year=YEAR),
             TauIDMedium(2),
             TauTriggerMatch(
                 config=trigger_config,
@@ -482,18 +486,33 @@ class HHProcessor(ATLASStudent):
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
                 for tau in (tau1, tau2):
+
+                    # factors only valid for 2011 data/MC
                     if tau.matched:
                         # efficiency scale factor
-                        tau.weight = 1.
-                    else:
+                        effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
+                        tau.efficiency_scale_factor = effic_sf
+                        # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
+                        tau.efficiency_scale_factor_high = effic_sf + err
+                        tau.efficiency_scale_factor_low = effic_sf - err
+                    if not tau.matched:
                         # fake rate scale factor
                         if event.RunNumber >= 188902:
                             trig = "EF_tau%dT_medium1"
                         else:
                             trig = "EF_tau%d_medium1"
-                        tau.weight = fakerate_tool.getScaleFactor(
+                        sf = fakerate_tool.getScaleFactor(
                                 tau.pt, "Medium",
                                 trig % tau.trigger_match_thresh)
+                        tau.fakerate_scale_factor = sf
+                        tau.fakerate_scale_factor_high = (sf +
+                                fakerate_tool.getScaleFactorUncertainty(
+                                    tau.pt, "Medium",
+                                    trig % tau.trigger_match_thresh, True))
+                        tau.fakerate_scale_factor_low = (sf -
+                                fakerate_tool.getScaleFactorUncertainty(
+                                    tau.pt, "Medium",
+                                    trig % tau.trigger_match_thresh, False))
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)

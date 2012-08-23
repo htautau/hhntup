@@ -41,7 +41,13 @@ class TauFourMomentum(FourMomentum):
 
     def __init__(self):
 
-        self.weight = 1.
+        self.efficiency_scale_factor = 1.
+        self.efficiency_scale_factor_high = 1.
+        self.efficiency_scale_factor_low = 1.
+
+        self.fakerate_scale_factor = 1.
+        self.fakerate_scale_factor_high = 1.
+        self.fakerate_scale_factor_low = 1.
 
         self.centrality = 0.
         self.centrality_boosted = 0.

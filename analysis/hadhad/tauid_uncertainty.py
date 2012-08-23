@@ -1,52 +1,13 @@
 #!/usr/bin/env python
 
 from samples import MC_Ztautau
-from tauid.p851.selection import selection, nvtx_to_category, LEVELS, \
-    CATEGORIES, PRONGS
+
+from higgstautau.tauid.p851 import selection, nvtx_to_category, CATEGORIES
+from higgstautau.tauid.common import LEVELS, PRONGS
+from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
+
 from rootpy.tree import Cut
 from rootpy.io import open as ropen
-
-"""
-https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
-Values are percents / 100
-"""
-EFFIC_UNCERT = {
-    'loose': {
-        1: 0.04,
-        3: 0.08,
-    },
-    'medium': {
-        1: 0.05,
-        3: 0.08,
-    },
-    'tight': {
-        1: 0.04,
-        3: 0.07,
-    },
-}
-
-
-def uncertainty(score, pt, prong, nvtx):
-
-    loose = selection('loose', prong, nvtx).Eval(pt)
-    medium = selection('medium', prong, nvtx).Eval(pt)
-    tight = selection('tight', prong, nvtx).Eval(pt)
-
-    if score < loose:
-        raise ValueError(
-            'No uncertainties defined for scores lower than loose')
-
-    if score < medium:
-        return selection_uncertainty('loose', pt, prong, nvtx)
-    elif score < tight:
-        return selection_uncertainty('medium', pt, prong, nvtx)
-    else:
-        return selection_uncertainty('tight', pt, prong, nvtx)
-
-
-def selection_uncertainty(level, pt, prong, nvtx):
-
-    return UNCERT[level][prong][nvtx_to_category(nvtx)].Eval(pt)
 
 
 if __name__ == '__main__':
@@ -56,8 +17,11 @@ if __name__ == '__main__':
         category = category.replace(
                 'tau_numberOfVertices', 'number_of_good_vertices')
 
-        total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
-                 sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
+        #total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
+        #         sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
+        total = (sample.events(Cut('tau1_numTrack==%d' % prong) & category) +
+                 sample.events(Cut('tau2_numTrack==%d' % prong) & category))
+
         passing = 0.
         cut = (Cut('tau1_numTrack==%d' % prong) |
                Cut('tau2_numTrack==%d' % prong)) & category
@@ -96,8 +60,8 @@ if __name__ == '__main__':
         for prong in PRONGS:
             for cat_str, category in CATEGORIES.items():
 
-                def binary_search(target, selection, shift, min_error=0.005,
-                        min_change=0.00001,
+                def binary_search(target, selection, shift, min_error=0.0001,
+                        min_change=0.000001,
                         reverse=False):
 
                     print "target:", target
@@ -126,6 +90,7 @@ if __name__ == '__main__':
                         prev_effic = curr_effic
                     print efficiency(ztautau, selection + curr_shift, prong, category)
                     print list(curr_shift.y())
+                    print list((selection + curr_shift).y())
                     print "=" * 20
                     return curr_shift
 
@@ -179,7 +144,6 @@ if __name__ == '__main__':
                 shift_tight_high = binary_search(target_tight_high, tight,
                         shift_tight_high, reverse=True)
 
-
                 f.cd()
                 shift_medium_high.name = 'medium_high_%dp_%s' % (prong, cat_str)
                 shift_medium_high.Write()
@@ -190,8 +154,3 @@ if __name__ == '__main__':
                 shift_tight_high.Write()
                 shift_tight_low.name = 'tight_low_%dp_%s' % (prong, cat_str)
                 shift_tight_low.Write()
-
-else:
-
-    UNCERT = {}
-

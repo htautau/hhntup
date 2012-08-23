@@ -93,6 +93,8 @@ def draw(model,
 
     if output_formats is None:
         output_formats = ('png', 'eps', 'pdf')
+    elif isinstance(output_formats, str):
+        output_formats = output_formats.split(',')
     if data is None:
         show_ratio=False
         show_qq=False
@@ -202,6 +204,7 @@ def draw(model,
                 fmt='o', axes=ratio_ax,
                 emptybins=False)
         ratio_ax.set_ylim((-100., 100.))
+        ratio_ax.set_xlim(hist_ax.get_xlim())
         #ratio_ax.yaxis.tick_right()
         ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
                 fontsize=20, position=(0., 1.), va='top')
