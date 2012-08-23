@@ -88,7 +88,7 @@ class TauElectronEventVariables(TreeModel):
 
     numJets = IntCol()
     numJets30 = IntCol()
-    numJets35 = IntCol()
+    numJets50 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
     jet_btag  = ROOT.vector('float')
@@ -141,7 +141,7 @@ class TauMuonEventVariables(TreeModel):
 
     numJets = IntCol()
     numJets30 = IntCol()
-    numJets35 = IntCol()
+    numJets50 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
     jet_btag  = ROOT.vector('float')
@@ -193,7 +193,7 @@ class EventVariables(TreeModel):
     dphi_met_lep = FloatCol()
 
     numJets = IntCol()
-    numJets35 = IntCol()
+    numJets30 = IntCol()
     numJets50 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     truthjet_fourvect = ROOT.vector('TLorentzVector')
