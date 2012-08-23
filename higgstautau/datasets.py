@@ -529,7 +529,9 @@ class Dataset(yaml.YAMLObject):
                  version=None,
                  tag_pattern=None,
                  tag=None,
-                 grl=None):
+                 grl=None,
+                 year=None,
+                 stream=None):
 
         self.name = name
         self.datatype = datatype
@@ -543,6 +545,8 @@ class Dataset(yaml.YAMLObject):
         self.dirs = dirs
         self.file_pattern = file_pattern
         self.grl = grl
+        self.year = year
+        self.stream = stream
 
     @cached_property
     def xsec_effic(self):
