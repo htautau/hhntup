@@ -87,13 +87,20 @@ def uncertainty(score, pt, prong, nvtx):
 
     if score > tight - high_tight:
         dx_high = (1. - score) * high_tight / b_t_high
+    elif score > medium - high_medium:
+        dx_high = high_medium - (high_medium - high_tight) * (score - medium +
+                high_medium) / (tight - high_tight - (medium - high_medium))
     else:
-        dx_high = (1. - score) * high_medium / b_m_high
+        dx_high = high_medium
+
 
     if score > tight:
-        dx_low = (1. - score) * low_tight / b_t_low
+        dx_low = low_tight
+    elif score > medium + low_medium:
+        dx_low = low_medium - (low_medium - low_tight) * (score - (medium +
+                low_medium)) / (tight - (medium + low_medium))
     else:
-        dx_low = (1. - score) * low_medium / b_m_low
+        dx_low = low_medium
 
     return score + dx_high, score - dx_low
 
