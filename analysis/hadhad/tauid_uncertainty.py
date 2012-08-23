@@ -98,27 +98,26 @@ if __name__ == '__main__':
                 medium = selection('medium', prong, cat_str)
                 tight = selection('tight', prong, cat_str)
 
-                # binary search alpha x (medium - loose)
-                #shift = medium - loose
-                #uncert = EFFIC_UNCERT['loose'][prong]
-                #print efficiency(ztautau, loose, prong, category)
-                #print efficiency(ztautau, loose, prong, category,
-                #        validate='loose')
-                #shift.name = 'loose_%dp_%s' % (prong, cat_str)
-                #shift.Write()
+                shift_loose_low = medium - loose
+                shift_loose_high = 0. - loose
 
-                # binary search alpha x (tight - medium)
                 shift_medium_low = tight - medium
                 shift_medium_high = loose - medium
 
                 shift_tight_low = 1. - tight
                 shift_tight_high = medium - tight
 
+                uncert_loose = EFFIC_UNCERT['loose'][prong]
                 uncert_medium = EFFIC_UNCERT['medium'][prong]
                 uncert_tight = EFFIC_UNCERT['tight'][prong]
 
+                target_loose = efficiency(ztautau, loose, prong, category)
                 target_medium = efficiency(ztautau, medium, prong, category)
                 target_tight = efficiency(ztautau, tight, prong, category)
+
+                print target_loose
+                print efficiency(ztautau, loose, prong, category,
+                        validate='loose')
 
                 print target_medium
                 print efficiency(ztautau, medium, prong, category,
@@ -128,11 +127,19 @@ if __name__ == '__main__':
                 print efficiency(ztautau, tight, prong, category,
                         validate='tight')
 
+                target_loose_high = target_loose + uncert_loose
+                target_loose_low = target_loose - uncert_loose
+
                 target_medium_high = target_medium + uncert_medium
                 target_medium_low = target_medium - uncert_medium
 
                 target_tight_high = target_tight + uncert_tight
                 target_tight_low = target_tight - uncert_tight
+
+                shift_loose_low = binary_search(target_loose_low, loose,
+                        shift_loose_low)
+                shift_loose_high = binary_search(target_loose_high, loose,
+                        shift_loose_high, reverse=True)
 
                 shift_medium_low = binary_search(target_medium_low, medium,
                         shift_medium_low)
@@ -145,6 +152,11 @@ if __name__ == '__main__':
                         shift_tight_high, reverse=True)
 
                 f.cd()
+                shift_loose_high.name = 'loose_high_%dp_%s' % (prong, cat_str)
+                shift_loose_high.Write()
+                shift_loose_low.name = 'loose_low_%dp_%s' % (prong, cat_str)
+                shift_loose_low.Write()
+
                 shift_medium_high.name = 'medium_high_%dp_%s' % (prong, cat_str)
                 shift_medium_high.Write()
                 shift_medium_low.name = 'medium_low_%dp_%s' % (prong, cat_str)
