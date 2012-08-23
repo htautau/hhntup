@@ -1,0 +1,4 @@
+group10.perf-tau.data12_8TeV.00203719.physics_Muons.f446_m1148.01-08-14.D3PD_EXT0/
+group10.perf-tau.data12_8TeV.00203876.physics_Muons.f447_m1153.01-08-14.D3PD_EXT0/
+group10.perf-tau.data12_8TeV.00203934.physics_Muons.f447_m1153.01-08-14.D3PD_EXT0/
+group10.perf-tau.data12_8TeV.00204026.physics_Muons.f447_m1153.01-08-14.D3PD_EXT0/
