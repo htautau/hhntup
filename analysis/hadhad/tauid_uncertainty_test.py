@@ -56,6 +56,7 @@ for prong in PRONGS:
             print prong
             print cat_str
             print level
+            print "uncert: %.5f" % uncert_level
             print "effic: %.6f" % efficiency(ztautau, level_selection, prong, category)
             print "high: %.6f low: %.6f" % efficiency_uncertainty(
                     ztautau, level_selection, prong, category)
