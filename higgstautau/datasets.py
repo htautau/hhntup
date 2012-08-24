@@ -10,7 +10,7 @@ This module generates a database of all MC and data datasets
 USE_PYAMI = True
 try:
     from pyAMI.client import AMIClient
-    from pyAMI.query import get_dataset_xsec_min_max_effic, \
+    from pyAMI.query import get_dataset_xsec_effic, \
                             get_dataset_info, \
                             get_provenance, \
                             get_periods, \
@@ -42,6 +42,7 @@ from decorators import cached_property
 import yaml
 
 from atlastools.datasets import DATA, MC, EMBED
+import xsec
 
 YEAR = 11
 GRL = 'grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml'
@@ -618,24 +619,32 @@ class Dataset(yaml.YAMLObject):
         self.stream = stream
 
     @cached_property
-    def xsec_effic(self):
+    def xsec_kfact_effic(self):
 
         global XSEC_CACHE_MODIFIED
 
         if self.datatype == DATA:
-            return 1., 1., 1., 1.
+            return 1., 1., 1.
         if self.name in XSEC_CACHE:
             return XSEC_CACHE[self.name]
-        elif USE_PYAMI:
+
+        try:
+            xs, kfact, effic = xsec.xsec_kfact_effic('lephad', self.id)
+        except KeyError:
+            print "WARNING: cross section of dataset %d not available locally."
+            print "Looking it up in AMI instead. AMI cross sections can be very"
+            print "wrong! You have been warned!"
+            print "A k factor of 1. will be assumed."
+
+        if USE_PYAMI:
             if self.ds in DS_NOPROV:
-                xsec, xsec_min, xsec_max, effic = get_dataset_xsec_min_max_effic(amiclient, DS_NOPROV[self.ds])
+                xs, effic = get_dataset_xsec_effic(amiclient, DS_NOPROV[self.ds])
             else:
-                xsec, xsec_min, xsec_max, effic = get_dataset_xsec_min_max_effic(amiclient, self.ds)
-            XSEC_CACHE[self.name] = (xsec, xsec_min, xsec_max, effic)
+                xs, effic = get_dataset_xsec_effic(amiclient, self.ds)
+            XSEC_CACHE[self.name] = (xs, 1., effic)
             XSEC_CACHE_MODIFIED = True
-            return (xsec, xsec_min, xsec_max, effic)
-        else:
-            return (None, None, None, None)
+            return (xs, 1., effic)
+        raise Exception("cross section of dataset %s is not known!" % self.ds)
 
     @cached_property
     def files(self):
