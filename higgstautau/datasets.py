@@ -81,34 +81,43 @@ Common constants
 """
 MC_TREENAME = 'tau'
 DATA_TREENAME = 'tau'
-EMBD_TREENAME = 'tau'
+EMBED_TREENAME = 'tau'
 
-DATA_PATTERN = re.compile('^(?P<prefix>\S+\.)?data11_7TeV\.'
-                          '(?P<run>\d+)\.physics_'
-                          '(?P<stream>\S+)?'
-                          '\.merge\.NTUP_TAUMEDIUM\.(?P<tag>\w+)'
-                          '(\.(?P<suffix>\S+))?$')
+DATA_PATTERN = re.compile(
+        '^(?P<prefix>\S+\.)?data11_7TeV\.'
+        '(?P<run>\d+)\.physics_'
+        '(?P<stream>\S+)?'
+        '\.merge\.NTUP_TAUMEDIUM\.(?P<tag>\w+)'
+        '(\.(?P<suffix>\S+))?$')
 
-MC_TAG_PATTERN1 = re.compile('^e(?P<evnt>\d+)_'
-                             's(?P<digi>\d+)_'
-                             's(?P<digimerge>\d+)_'
-                             'r(?P<reco>\d+)_'
-                             'r(?P<recomerge>\d+)_'
-                             'p(?P<ntup>\d+)$')
+MC_TAG_PATTERN1 = re.compile(
+        '^e(?P<evnt>\d+)_'
+        's(?P<digi>\d+)_'
+        's(?P<digimerge>\d+)_'
+        'r(?P<reco>\d+)_'
+        'r(?P<recomerge>\d+)_'
+        'p(?P<ntup>\d+)$')
 
 # not all valid samples have a recomerge tag:
-MC_TAG_PATTERN2 = re.compile('^e(?P<evnt>\d+)_'
-                             's(?P<digi>\d+)_'
-                             's(?P<digimerge>\d+)_'
-                             'r(?P<reco>\d+)_'
-                             'p(?P<ntup>\d+)$')
+MC_TAG_PATTERN2 = re.compile(
+        '^e(?P<evnt>\d+)_'
+        's(?P<digi>\d+)_'
+        's(?P<digimerge>\d+)_'
+        'r(?P<reco>\d+)_'
+        'p(?P<ntup>\d+)$')
 
 # Embedded sample pattern
-EMBD_PATTERN = re.compile('^(?P<prefix>\S+\.)?group.phys-higgs\.period'
-                          '(?P<period>\S+)\.DESD_SGLMU.pro10.embedding-'
-                          '(?P<embedtag>\S+)?'
-                          '\.Ztautau_lh_isol_mfsim_rereco_(?P<tag>\w+)'
-                          '(_EXT0\.small\.(?P<skimtag>\S+)\.(?P<suffix>\S+))?$')
+EMBED_PATTERN = re.compile(
+        '^(?P<prefix>\S+)?'
+        'period(?P<period>[A-Z])'
+        '\.DESD_SGLMU\.pro10\.'
+        'embedding-(?P<embedtag>\S+)?'
+        '\.Ztautau_'
+        '(?P<channel>(lh)|(hh))_'
+        '(?P<isol>[a-z]+)_'
+        '(?P<mfs>[a-z]+)_'
+        'rereco_p(?P<tag>\d+)'
+        '_EXT0\.(small\.)?(?P<skimtag>\S+)\.(?P<suffix>\S+)$')
 
 """
 MC11a/b/c categories are defined here
@@ -338,85 +347,131 @@ class Database(dict):
                             if take_this:
                                 print "taking %s over %s" % (basename, dataset.ds)
                                 DATASETS[name] = Dataset(name=name,
-                                                datatype=MC,
-                                                treename=MC_TREENAME,
-                                                ds='mc11_7TeV.' +
-                                                match.group('id') + '.' +
-                                                match.group('name') +
-                                                '.merge.NTUP_TAUMEDIUM.' +
-                                                match.group('tag'),
-                                                id=int(match.group('id')),
-                                                category=cat,
-                                                version=version,
-                                                tag_pattern=MC_TAG_PATTERN.pattern,
-                                                tag=tag,
-                                                dirs=[dir],
-                                                file_pattern=mc_pattern)
+                                    datatype=MC,
+                                    treename=MC_TREENAME,
+                                    ds='mc11_7TeV.' +
+                                    match.group('id') + '.' +
+                                    match.group('name') +
+                                    '.merge.NTUP_TAUMEDIUM.' +
+                                    match.group('tag'),
+                                    id=int(match.group('id')),
+                                    category=cat,
+                                    version=version,
+                                    tag_pattern=MC_TAG_PATTERN.pattern,
+                                    tag=tag,
+                                    dirs=[dir],
+                                    file_pattern=mc_pattern)
                         else:
                             dataset.dirs.append(dir)
                     elif dataset is None or (dataset is not None and version > dataset.version):
                         self[name] = Dataset(name=name,
-                                            datatype=MC,
-                                            treename=MC_TREENAME,
-                                            ds='mc11_7TeV.' +
-                                            match.group('id') + '.' +
-                                            match.group('name') +
-                                            '.merge.NTUP_TAUMEDIUM.' +
-                                            match.group('tag'),
-                                            id=int(match.group('id')),
-                                            category=cat,
-                                            version=version,
-                                            tag_pattern=MC_TAG_PATTERN.pattern,
-                                            tag=tag,
-                                            dirs=[dir],
-                                            file_pattern=mc_pattern)
+                            datatype=MC,
+                            treename=MC_TREENAME,
+                            ds='mc11_7TeV.' +
+                            match.group('id') + '.' +
+                            match.group('name') +
+                            '.merge.NTUP_TAUMEDIUM.' +
+                            match.group('tag'),
+                            id=int(match.group('id')),
+                            category=cat,
+                            version=version,
+                            tag_pattern=MC_TAG_PATTERN.pattern,
+                            tag=tag,
+                            dirs=[dir],
+                            file_pattern=mc_pattern)
                 else:
                     print "Dataset not matched: %s" % basename
 
         #######################################################################
+
         if embd_path is not None:
+
             if embd_prefix:
                 embd_dirs = glob.glob(os.path.join(embd_path, embd_prefix) + '*')
             else:
                 embd_dirs = glob.glob(os.path.join(embd_path, '*'))
 
-            self['embd'] = Dataset(name='embd',
-                                       datatype=EMBED,
-                                       treename=EMBD_TREENAME,
-                                       ds='embd',
-                                       id=1,
-                                       # The GRL is the same for both lephad and hadhad analyses
-                                       grl=GRL,
-                                       dirs=embd_dirs,
-                                       file_pattern=embd_pattern)
-            periods = {}
+            # determine what channels are available
+            channels = {}
             for dir in embd_dirs:
                 if os.path.isdir(dir):
-                    match = re.match(EMBD_PATTERN, dir)
+                    match = re.match(EMBED_PATTERN, dir)
                     if match:
-                        period = match.group('period')
-                        tag = match.group('tag')
-                        if period not in periods:
-                            periods[period] = {'tag': tag, 'dirs': [dir]}
-                        else:
-                            periods[period]['dirs'].append(dir)
-                            if tag != periods[period]['tag']:
-                                print 'multiple copies of run with different tags: %s' % periods[period]['dirs']
+                        channel = match.group('channel')
+                        if channel not in channels:
+                            channels[channel] = []
+                        channels[channel].append(dir)
                     else:
                         print "this dir does not match valid ds name: %s" % dir
                 else:
                     print "this is not a dir: %s" % dir
 
-            for period, info in periods.items():
-                name = 'embd-%s' % period
-                self[name] = Dataset(name=name,
-                                         datatype=EMBED,
-                                         treename=EMBD_TREENAME,
-                                         ds=name,
-                                         id=1,
-                                         grl=GRL,
-                                         dirs=info['dirs'],
-                                         file_pattern=embd_pattern)
+            for channel, channel_dirs in channels.items():
+
+                # group dirs by isolation
+                isols = {}
+                for dir in channel_dirs:
+                    match = re.match(EMBED_PATTERN, dir)
+                    if match:
+                        isol = match.group('isol')
+                        if isol not in isols:
+                            isols[isol] = []
+                        isols[isol].append(dir)
+                    else:
+                        print "this dir does not match valid ds name: %s" % dir
+
+                for isol, isol_dirs in isols.items():
+
+                    # group dirs by mfs
+                    mfss = {}
+                    for dir in isol_dirs:
+                        match = re.match(EMBED_PATTERN, dir)
+                        if match:
+                            mfs = match.group('mfs')
+                            if mfs not in mfss:
+                                mfss[mfs] = []
+                            mfss[mfs].append(dir)
+                        else:
+                            print "this dir does not match valid ds name: %s" % dir
+
+                    for mfs, mfs_dirs in mfss.items():
+
+                        name = 'embed-%s-%s-%s' % (channel, isol, mfs)
+                        self[name] = Dataset(name,
+                            datatype=EMBED,
+                            treename=EMBED_TREENAME,
+                            ds=name,
+                            id=1,
+                            # The GRL is the same for both lephad and hadhad analyses
+                            grl=GRL,
+                            dirs=mfs_dirs,
+                            file_pattern=embd_pattern)
+
+                        periods = {}
+                        for dir in mfs_dirs:
+                            match = re.match(EMBED_PATTERN, dir)
+                            if match:
+                                period = match.group('period')
+                                tag = match.group('tag')
+                                if period not in periods:
+                                    periods[period] = {'tag': tag, 'dirs': [dir]}
+                                else:
+                                    periods[period]['dirs'].append(dir)
+                                    if tag != periods[period]['tag']:
+                                        print 'multiple copies of run with different tags: %s' % periods[period]['dirs']
+                            else:
+                                print "this dir does not match valid ds name: %s" % dir
+
+                        for period, info in periods.items():
+                            period_name = '%s-%s' % (name, period)
+                            self[period_name] = Dataset(name=period_name,
+                                datatype=EMBED,
+                                treename=EMBED_TREENAME,
+                                ds=period_name,
+                                id=1,
+                                grl=GRL,
+                                dirs=info['dirs'],
+                                file_pattern=embd_pattern)
 
         #######################################################################
 
@@ -433,8 +488,7 @@ class Database(dict):
                     stream = match.group('stream')
                     if stream not in streams:
                         streams[stream] = []
-                    else:
-                        streams[stream].append(dir)
+                    streams[stream].append(dir)
                 else:
                     print "this dir does not match valid ds name: %s" % dir
 
