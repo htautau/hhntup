@@ -1,0 +1,10 @@
+embedded:
+    - TES_UP
+    - TES_DOWN
+    - TAUBDT_UP
+    - TAUBDT_DOWN
+mc:
+    - JES_UP,TES_UP
+    - JES_DOWN,TES_DOWN
+    - TAUBDT_UP
+    - TAUBDT_DOWN
