@@ -17,41 +17,24 @@ if __name__ == '__main__':
         category = category.replace(
                 'tau_numberOfVertices', 'number_of_good_vertices')
 
-        #total = (sample.events(Cut('trueTau1_nProng==%d' % prong) & category) +
-        #         sample.events(Cut('trueTau2_nProng==%d' % prong) & category))
-        total = (sample.events(Cut('tau1_numTrack==%d' % prong) & category) +
-                 sample.events(Cut('tau2_numTrack==%d' % prong) & category))
+        #total = sample.events(Cut('trueTau1_nProng==%d' % prong) & category)
+        total = sample.events(Cut('tau1_numTrack==%d' % prong) & category)
 
         passing = 0.
-        cut = (Cut('tau1_numTrack==%d' % prong) |
-               Cut('tau2_numTrack==%d' % prong)) & category
+        cut = Cut('tau1_numTrack==%d' % prong) & category
         for weight, event in sample.iter(cut):
-            if event.tau1_numTrack == prong:
-                if validate == 'loose':
-                    if event.tau1_JetBDTSigLoose == 1:
-                        passing += weight
-                elif validate == 'medium':
-                    if event.tau1_JetBDTSigMedium == 1:
-                        passing += weight
-                elif validate == 'tight':
-                    if event.tau1_JetBDTSigTight == 1:
-                        passing += weight
-                elif (event.tau1_BDTJetScore >
-                    selection.Eval(event.tau1_fourvect.Pt())):
+            if validate == 'loose':
+                if event.tau1_JetBDTSigLoose == 1:
                     passing += weight
-            if event.tau2_numTrack == prong:
-                if validate == 'loose':
-                    if event.tau2_JetBDTSigLoose == 1:
-                        passing += weight
-                elif validate == 'medium':
-                    if event.tau2_JetBDTSigMedium == 1:
-                        passing += weight
-                elif validate == 'tight':
-                    if event.tau2_JetBDTSigTight == 1:
-                        passing += weight
-                elif (event.tau2_BDTJetScore >
-                    selection.Eval(event.tau2_fourvect.Pt())):
+            elif validate == 'medium':
+                if event.tau1_JetBDTSigMedium == 1:
                     passing += weight
+            elif validate == 'tight':
+                if event.tau1_JetBDTSigTight == 1:
+                    passing += weight
+            elif (event.tau1_BDTJetScore >
+                selection.Eval(event.tau1_fourvect.Pt())):
+                passing += weight
         return passing / total
 
 

@@ -172,6 +172,10 @@ class TauIDProcessor(ATLASStudent):
             tau = event.taus.getitem(reco_index)
             if tau in event.taus:
                 matched_reco = tau
+            else:
+                continue
+
+            tree.MET = event.MET_RefFinal_BDTMedium_et
 
             # fill tau block
             RecoTauBlock.set(event, tree, matched_reco, None)
