@@ -14,7 +14,6 @@ from higgstautau.hadhad.periods import total_lumi
 from higgstautau import datasets
 from higgstautau.decorators import cached_property, memoize_method
 from higgstautau import samples as samples_db
-from higgstautau import xsec
 
 # Higgs cross sections
 import yellowhiggs
@@ -36,6 +35,7 @@ if not NTUPLE_PATH:
     sys.exit("You did not source setup.sh")
 NTUPLE_PATH = os.path.join(NTUPLE_PATH, 'hadhad')
 DEFAULT_STUDENT = 'HHProcessor'
+DEFAULT_TREENAME = 'higgstautauhh'
 TOTAL_LUMI = total_lumi()
 TAUTAUHADHADBR = 0.412997
 VERBOSE = False
@@ -292,7 +292,9 @@ class Sample(object):
         else (name, Cut(''))
         for name, info in categories.CATEGORIES.items()])
 
-    def __init__(self, scale=1., cuts=None, student=DEFAULT_STUDENT):
+    def __init__(self, scale=1., cuts=None,
+                 student=DEFAULT_STUDENT,
+                 treename=DEFAULT_TREENAME):
 
         self.scale = scale
         if cuts is None:
@@ -300,6 +302,7 @@ class Sample(object):
         else:
             self._cuts = cuts
         self.student = student
+        self.treename = treename
 
     def cuts(self, category, region):
 
@@ -436,7 +439,7 @@ class Data(Sample):
         super(Data, self).__init__(scale=1., **kwargs)
         self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student),
                                 'data.root']))
-        self.data = self.DATA_FILE.Get('higgstautauhh')
+        self.data = self.DATA_FILE.Get(self.treename)
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
         self.name = 'Data'
@@ -482,12 +485,12 @@ class MC(Sample):
 
             if ds.name in FILES and 'NOMINAL' in FILES[ds.name]:
                 rfile = FILES[ds.name]['NOMINAL']
-                trees['NOMINAL'] = rfile.Get('higgstautauhh')
+                trees['NOMINAL'] = rfile.Get(self.treename)
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
             else:
                 rfile = ropen('.'.join([
                     os.path.join(NTUPLE_PATH, self.student), ds.name, 'root']))
-                trees['NOMINAL'] = rfile.Get('higgstautauhh')
+                trees['NOMINAL'] = rfile.Get(self.treename)
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
                 if ds.name not in FILES:
                     FILES[ds.name] = {}
@@ -502,13 +505,13 @@ class MC(Sample):
 
                     if ds.name in FILES and sys_term in FILES[ds.name]:
                         rfile = FILES[ds.name][sys_term]
-                        trees[sys_term] = rfile.Get('higgstautauhh')
+                        trees[sys_term] = rfile.Get(self.treename)
                         weighted_events[sys_term] = rfile.cutflow[1]
                     else:
                         rfile = ropen('.'.join([
                             os.path.join(NTUPLE_PATH, self.student),
                             '_'.join([ds.name, sys_term]), 'root']))
-                        trees[sys_term] = rfile.Get('higgstautauhh')
+                        trees[sys_term] = rfile.Get(self.treename)
                         weighted_events[sys_term] = rfile.cutflow[1]
                         if ds.name not in FILES:
                             FILES[ds.name] = {}
@@ -522,8 +525,7 @@ class MC(Sample):
                 kfact = 1.
                 effic = 1.
             else:
-                # use xsec for cross sections
-                xs, kfact, effic = xsec.xsec_kfact_effic('lephad', ds.id)
+                xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
                 print ds.name, xs, kfact, effic
                 #print tree.GetEntries(), weighted_events
@@ -867,6 +869,17 @@ class QCD(Sample):
         return trees
 
 
+class MC_TauID(MC):
+
+    def __init__(self, **kwargs):
+
+        self.name = 'TauID'
+        self._label = 'TauID'
+        self.samples = ['PythiaWtaunu_incl.mc11c']
+        self.colour = '#0000ff'
+        super(MC_TauID, self).__init__(student='TauIDProcessor', **kwargs)
+
+
 if __name__ == '__main__':
 
     from pyAMI.query import print_table
@@ -881,8 +894,8 @@ if __name__ == '__main__':
         if isinstance(sample, QCD):
             continue
         for datasets in sample.datasets:
-            for ds, tree, events, (xsec, xsec_min, xsec_max, effic) in datasets:
-                row = format % (ds.ds, xsec*1E3, xsec_min*1E3, xsec_max*1E3, ds.xsec_factor, effic, 1.)
+            for ds, tree, events, (xsec, kfact, effic) in datasets:
+                row = format % (ds.ds, xsec*1E3, kfact, ds.xsec_factor, effic)
                 table.append(row.split())
     print
     print
