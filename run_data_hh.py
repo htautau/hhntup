@@ -18,7 +18,7 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 CWD = os.getcwd()
 CMD = ("%s && ./run --output-path ntuples/hadhad "
        "-s HHProcessor.py -n %d --db datasets_hh "
-       "--nice %d --split %d:%%d data") % (
+       "--nice %d --split %d:%%d data-JetTauEtmiss") % (
                setup, args.nproc, args.nice, args.nsplit)
 
 for i in xrange(args.nsplit):
