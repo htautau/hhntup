@@ -1,8 +1,26 @@
 #!/usr/bin/env python
 
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('--student', default='LHProcessor.py')
+parser.add_argument('--systematics', default=None)
+parser.add_argument('--nproc', type=int, default=5)
+parser.add_argument('--queue', default='medium')
+parser.add_argument('--output-path', default='ntuples/lephad')
+parser.add_argument('--db', default='datasets_lh')
+parser.add_argument('--nice', type=int, default=10)
+parser.add_argument('--nominal-only', action='store_true', default=False)
+parser.add_argument('--systematics-only', action='store_true', default=False)
+parser.add_argument('--dry', action='store_true', default=False)
+parser.add_argument('--use-ssh', dest='use_qsub', action='store_false', default=True)
+parser.add_argument('samples', nargs='?', default=None)
+
+args = parser.parse_args()
+
+import sys
 import cluster
-import run_systematics
-#from higgstautau import samples
+from higgstautau import samples
 
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.michel.sfu.txt')
@@ -129,57 +147,61 @@ datasets = [
     'PowHegPythia_ggH135_tautaulh.mc11c',
     'PowHegPythia_ggH140_tautaulh.mc11c',
     'PowHegPythia_ggH145_tautaulh.mc11c',
-    'PowHegPythia_ggH150_tautaulh.mc11c'
+    'PowHegPythia_ggH150_tautaulh.mc11c',
+    'PythiaWH100_tautaulh.mc11c',
+    'PythiaWH105_tautaulh.mc11c',
+    'PythiaWH110_tautaulh.mc11c',
+    'PythiaWH115_tautaulh.mc11c',
+    'PythiaWH120_tautaulh.mc11c',
+    'PythiaWH125_tautaulh.mc11c',
+    'PythiaWH130_tautaulh.mc11c',
+    'PythiaWH135_tautaulh.mc11c',
+    'PythiaWH140_tautaulh.mc11c',
+    'PythiaWH145_tautaulh.mc11c',
+    'PythiaWH150_tautaulh.mc11c',
+    'PythiaZH100_tautaulh.mc11c',
+    'PythiaZH105_tautaulh.mc11c',
+    'PythiaZH110_tautaulh.mc11c',
+    'PythiaZH115_tautaulh.mc11c',
+    'PythiaZH120_tautaulh.mc11c',
+    'PythiaZH125_tautaulh.mc11c',
+    'PythiaZH130_tautaulh.mc11c',
+    'PythiaZH135_tautaulh.mc11c',
+    'PythiaZH140_tautaulh.mc11c',
+    'PythiaZH145_tautaulh.mc11c',
+    'PythiaZH150_tautaulh.mc11c'
     ]
 
-"""  or you can list datasets like:
-datasets = [
-    # EW background
-    "AlpgenJimmyZtautauNp[0-5]_pt20.mc11c",
-    "AlpgenJimmyZtautauNp[0-5]_Mll10to40_pt20.mc11c",
-    "AlpgenJimmyWtaunuNp[0-5]_pt20.mc11c",
-    "AlpgenJimmyZmumuNp[0-5]_pt20.mc11c",
-    "AlpgenJimmyZmumuNp[0-5]_Mll10to40_pt20.mc11c",
-    "AlpgenJimmyWmunuNp[0-5]_pt20.mc11c",
-    "AlpgenJimmyZeeNp[0-5]_pt20.mc11c",
-    "AlpgenJimmyZeeNp[0-5]_Mll10to40_pt20.mc11c",
-    "AlpgenJimmyWenuNp[0-5]_pt20.mc11c",
-    # Top
-    "st_*",
-    "AcerMC_Wt.mc11c",
-    "T1_McAtNlo_Jimmy.mc11c",
-    "TTbar_FullHad_McAtNlo_Jimmy.mc11c",
-    # Diboson
-    "gg2WW0240_JIMMY_WW_*",
-    "McAtNlo_JIMMY_WmZ_*",
-    "McAtNlo_JIMMY_WpWm_*",
-    "McAtNlo_JIMMY_WpZ_*",
-    "McAtNlo_JIMMY_ZZ_*",
-    # signal
-    "PowHegPythia_VBFH*_tautauhh.mc11c",
-    "PowHegPythia_ggH*_tautauhh.mc11c",
-    "PythiaZH*_tautauhh.mc11c",
-    "PythiaWH*_tautauhh.mc11c",
-]
-"""
+if not args.systematics_only:
+    # nominal values
+    cluster.run(args.student,
+                db=args.db,
+                datasets=datasets,
+                hosts=hosts,
+                nproc=args.nproc,
+                nice=args.nice,
+                setup=setup,
+                output_path=args.output_path,
+                use_qsub=args.use_qsub,
+                qsub_queue=args.queue,
+                dry_run=args.dry)
 
-# nominal values
-# cluster.run('eLHProcessor.py',
-#             db='datasets_elh',
-#             datasets=datasets,
-#             hosts=hosts,
-#             nproc=5,
-#             nice=10,
-#             setup=setup,
-#             use_qsub=True)
-
-# systematics
-run_systematics.run('EHAD',
-            'eLHProcessor.py',
-            db='datasets_elh',
-            datasets=datasets,
-            hosts=hosts,
-            nproc=5,
-            nice=10,
-            setup=setup,
-            use_qsub=True)
+if not args.nominal_only:
+    if args.systematics is not None:
+        args.systematics = [
+                set(s.upper().split('+')) for s in
+                args.systematics.split(',')]
+    # systematics
+    cluster.run_systematics('LEPHAD',
+                args.student,
+                db=args.db,
+                systematics=args.systematics,
+                datasets=datasets,
+                hosts=hosts,
+                nproc=args.nproc,
+                nice=args.nice,
+                setup=setup,
+                output_path=args.output_path,
+                use_qsub=args.use_qsub,
+                qsub_queue=args.queue,
+                dry_run=args.dry)

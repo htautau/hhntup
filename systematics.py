@@ -14,18 +14,13 @@ SYSTEMATICS_HADHAD = [
     ('TAUBDT_DOWN',),
 ] # ADD MORE HERE
 
-# electron-hadron-only systematics
-SYSTEMATICS_EHAD = [
-] # ADD MORE HERE
-
-# muon-hadron-only systematics
-SYSTEMATICS_MUHAD = [
+# lepton-hadron-only systematics
+SYSTEMATICS_LEPHAD = [
 ] # ADD MORE HERE
 
 SYSTEMATICS = {
     'HADHAD': SYSTEMATICS_COMMON + SYSTEMATICS_HADHAD,
-    'EHAD': SYSTEMATICS_COMMON + SYSTEMATICS_EHAD,
-    'MUHAD': SYSTEMATICS_COMMON + SYSTEMATICS_MUHAD,
+    'LEPHAD': SYSTEMATICS_COMMON + SYSTEMATICS_LEPHAD,
 }
 
 def iter_systematics(channel, include_nominal=False):

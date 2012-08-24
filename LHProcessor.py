@@ -35,25 +35,26 @@ from higgstautau.jetcalibration import JetCalibration
 from goodruns import GRL
 import subprocess
 
-import random
-
 YEAR = 2011
+VERBOSE = False
 
-class eLHProcessor(ATLASStudent):
+class LHProcessor(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
     """
 
     def __init__(self, options, **kwargs):
 
-        super(eLHProcessor, self).__init__(**kwargs)
+        super(LHProcessor, self).__init__(**kwargs)
         parser = ArgumentParser()
-        parser.add_argument('--syst-type', default='None')
-        parser.add_argument('--syst-term', default='None')
+        parser.add_argument('--syst-terms', default=None)
         self.args = parser.parse_args(options)
-        self.args.syst_type = eval(self.args.syst_type)
-        self.args.syst_term = eval(self.args.syst_term)
+        if self.args.syst_terms is not None:
+            self.args.syst_terms = [
+                eval('Systematics.%s' % term) for term in
+                self.args.syst_terms.split(',')]
         
+
     @staticmethod
     def merge(inputs, output, metadata):
 
@@ -67,6 +68,7 @@ class eLHProcessor(ATLASStudent):
             for input in inputs:
                 grl |= GRL('%s:/lumi' % input)
             grl.save('%s:/lumi' % root_output)
+
 
     def work(self):
         """
@@ -88,7 +90,7 @@ class eLHProcessor(ATLASStudent):
             onfilechange.append((update_grl, (self, merged_grl,)))
 
         # update the trigger config maps on every file change
-        #onfilechange.append((update_trigger_config, (trigger_config,)))
+        # onfilechange.append((update_trigger_config, (trigger_config,)))
 
         merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
 
@@ -99,17 +101,18 @@ class eLHProcessor(ATLASStudent):
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
         chain = TreeChain(self.metadata.treename,
-                          files=self.files,
-                          events=self.events,
-                          cache=True,
-                          cache_size=10000000,
-                          learn_entries=30,
-                          onfilechange=onfilechange)
+                         files=self.files,
+                         events=self.events,
+                         cache=True,
+                         cache_size=10000000,
+                         learn_entries=30,
+                         onfilechange=onfilechange)
 
         # create output tree
         self.output.cd()
         tree_train = Tree(name='lh_train', model=OutputModel)
         tree_test = Tree(name='lh_test', model=OutputModel)
+
 
         copied_variables = ['actualIntPerXing',
                             'averageIntPerXing',
@@ -122,79 +125,57 @@ class eLHProcessor(ATLASStudent):
 
         chain.always_read(copied_variables)
 
-        # Store the event numbers
+        ## set the trigger filter
+        Trigger = noTriggers
         if self.metadata.datatype == datasets.DATA:
-            self.outputFile = open(self.metadata.name + '.e.EvtNum.' + str(random.random()).lstrip('0.') + '.txt', 'w')
+            if self.metadata.stream == 'Egamma':
+                Trigger = eSLTriggers
+            if self.metadata.stream == 'Muons':
+                Trigger = muSLTriggers
+            if self.metadata.stream == 'JetTauEtmiss':
+                Trigger = AllDataLTTriggers
+            
+        if self.metadata.datatype == datasets.MC:
+            Trigger = AllMCTriggers
 
-        ###########################
-        ## Set the event filters ##
-        ###########################
-
-        # Use single-lepton triggers
-        Trigger = eMCSLTriggers
-        if ( self.metadata.datatype == datasets.DATA ):
-            Trigger = eSLTriggers
-        if ( self.metadata.datatype == datasets.EMBED ):
-            Trigger = noTriggers
-
-        # passthrough for MC for trigger acceptance studies
+        
+        ## Setting event filters
         event_filters = EventFilterList([
-                SetElectronsFourVector(),
-                # Require the event to fire a single-lepton trigger.
-                Trigger(),
-                GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-                JetCalibration(
-                    year=YEAR,
-                    datatype=self.metadata.datatype,
-                    verbose=False),
-                # At least 1 PV (not pile-up vertex) with Ntracks > 3.
-                PriVertex(),
-                MuonPtSmearing(datatype=self.metadata.datatype),
-                EgammaERescaling(datatype=self.metadata.datatype),
-                # Systematics
-                Systematics(
-                    systematic_type=self.args.syst_type,
-                    systematic_term=self.args.syst_term,
-                    year=YEAR,
-                    datatype=self.metadata.datatype,
-                    verbose=False),
-                # Keep only jets with pt > 20 GeV. Keep event.
-                JetPreSelection(),
-                # Remove taus that match loosely selected muons.
-                MuonOverlapSelection(),
-                TauMuonOverlapRemoval(),
-                # Keep only muons with pt > 10 GeV, |eta| < 2.5, loose ID, has_good_track. Keep event.
-                MuonPreSelection(),
-                # Keep only electrons with cl_Et > 15 GeV, eta acceptance, medium ID, author. Keep event.
-                ElectronPreSelection(),
-                # Remove jets matching muons or electrons.
-                JetOverlapRemoval(),
-                # Remove bad jets.
-                JetCleaning(self.metadata.datatype, YEAR),
-                # Event should not pass if there is an electron in the LArHole region in the corresponding run #'s.
-                ElectronLArHole(),
-                # Event should not pass if there is a tau in the LArHole region in the corresponding run #'s.
-                TauHasTrack(1),
-                TauLArHole(1),
-                # Event should not pass if there is a jet (with enough high pt) in the LArHole region in the corresponding run #'s.
-                LArHole(datatype=self.metadata.datatype),
-                # Event should not pass if larError flag is > 1.
-                LArError(),
-                # Remove electrons matching muons.
-                LeptonOverlapRemoval(),
-                # There should be only 1 electron or muon.
-                DileptonVeto(),
-                # Remove event if there is not at least one tightPP electron with cl_Et > 25 GeV.
-                ElectronSelection(),
-                # There must be at least one tau with pt > 20 GeV, |eta| < 2.5, numTrack = 1 or 3, BDT medium ID, charge = +/-1, author != 2, EleBDTMedium == 0, muonVeto == 0.
-                TauPreSelection(),
-                # There must be only one tau.
-                TauSelection(),
-                # Keep only jets with pt > 25 GeV, |eta| < 4.5, JVF > 0.75 if |eta| < 2.4.
-                JetSelection(),
-                # Remove taus that overlap with selected muons or electrons, and remove jets that overlap with surviving selected taus.
-                FinalOverlapRemoval()
-                ])
+            PrepareInputTree(),
+            Trigger(),
+            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
+            JetCalibration(
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                verbose=False),
+            PriVertex(),
+            MuonPtSmearing(datatype=self.metadata.datatype),
+            EgammaERescaling(datatype=self.metadata.datatype),
+            Systematics(
+                terms=self.args.syst_terms,
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                verbose=VERBOSE),
+            JetPreSelection(),
+            MuonOverlapSelection(),
+            TauMuonOverlapRemoval(),
+            MuonPreSelection(),
+            ElectronPreSelection(),
+            JetOverlapRemoval(),
+            JetCleaning(self.metadata.datatype, YEAR),
+            ElectronLArHole(),
+            TauHasTrack(1),
+            TauLArHole(1),
+            LArHole(datatype=self.metadata.datatype),
+            LArError(),
+            LeptonOverlapRemoval(),
+            DileptonVeto(),
+            LeptonSelection(datatype=self.metadata.datatype, stream=self.metadata.stream),
+            TauPreSelection(),
+            TauSelection(),
+            JetSelection(),
+            FinalOverlapRemoval()
+        ])
 
         self.filters['event'] = event_filters
 
@@ -210,6 +191,8 @@ class eLHProcessor(ATLASStudent):
         chain.define_collection(name="truthjets", prefix="jet_antikt4truth_", size="jet_antikt4truth_n", mix=FourMomentum)
         chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
+        chain.define_object(name='isLTT', prefix='')
+        chain.define_object(name='leptonType', prefix='')
 
         # define tree objects
         tree_train.define_object(name='tau', prefix='tau_')
@@ -218,41 +201,58 @@ class eLHProcessor(ATLASStudent):
         tree_test.define_object(name='lep', prefix='lep_')
 
         if self.metadata.datatype == datasets.MC:
+            from externaltools import PileupReweighting
+            from ROOT import Root
             # Initialize the pileup reweighting tool
-            pileup_tool = TPileupReweighting()
-            pileup_tool.AddConfigFile('higgstautau/pileup/%s_defaults.prw.root' % self.metadata.category)   # <--- Default file, NOT the one generated with the tool
-            #pileup_tool.AddLumiCalcFile('higgstautau/lephad/external/Pileup/ilumicalc_histograms_None_178044-191933_slimmed.root')
-            pileup_tool.AddLumiCalcFile('grl/2011/lumicalc/lephad/ilumicalc_histograms_None_178044-191933.root') # <--- "None" ? Shouldn't be with a trigger ?
+            pileup_tool = Root.TPileupReweighting()
+            if YEAR == 2011:
+                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc11b_defaults.prw.root'))
+                pileup_tool.AddLumiCalcFile('lumi/2011/hadhad/ilumicalc_histograms_None_178044-191933.root')
+            elif YEAR == 2012:
+                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc12a_defaults.prw.root'))
+                pileup_tool.SetDataScaleFactors(1./1.11)
+                pileup_tool.AddLumiCalcFile('lumi/2012/hadhad/ilumicalc_histograms_None_200841-205113.root')
+            else:
+                raise ValueError('No pileup reweighting defined for year %d' %
+                        YEAR)
             # discard unrepresented data (with mu not simulated in MC)
             pileup_tool.SetUnrepresentedDataAction(2)
             pileup_tool.Initialize()
+            print pileup_tool.getIntegratedLumiVector()
+
 
         # entering the main event loop...
-        for event in chain: # <--- the filters are applied at this point; the loop is over events that pass the filters
+        for event in chain:
 
             tree_train.reset()
             tree_test.reset()
             cutflow.reset()
 
-            # Select if the event goes into the training or the testing tree
+            #Select if the event goes into the training or the testing tree
+            
+            
             tree = None
-            #if event.EventNumber % 2 == 0:
-            #    tree = tree_train
-            #else:
-            #    tree = tree_test
             if event.EventNumber % 2:
                 tree = tree_train
             else:
                 tree = tree_test
 
-            # Select tau with highest BDT score and surviving electron
+            # Select tau with highest BDT score and surviving lepton
             Tau = event.taus[0]
-            Electron = event.electrons[0]
+            Lep = None
+            leptype = None
+            if event.leptonType == 'mu':
+                Lep = event.muons[0]
+                leptype = 0
+            if event.leptonType == 'e':
+                Lep = event.electrons[0]
+                leptype = 1
 
             """
             RecoTauLepBlock filling
             """
-            RecoTauLepBlock.set(event, tree, Tau, Electron, 1, ( self.metadata.datatype == datasets.MC ))
+            RecoTauLepBlock.set(event, tree, Tau, Lep, leptype, ( self.metadata.datatype == datasets.MC ))
+
 
             """
             Jets
@@ -261,28 +261,29 @@ class eLHProcessor(ATLASStudent):
             tree.numJets = numJets
 
             numJets50 = 0
-            numJets35 = 0
+            numJets30 = 0
 
             for jet in event.jets:
                 tree.jet_fourvect.push_back(jet.fourvect)
                 tree.jet_jvtxf.push_back(jet.jvtxf)
                 tree.jet_btag.push_back(jet.flavor_weight_JetFitterCOMBNN)
-                if jet.fourvect.Pt() > 35*GeV:
-                    numJets35 += 1
+                if jet.fourvect.Pt() > 30*GeV:
+                    numJets30 += 1
                     if jet.fourvect.Pt() > 50*GeV:
                         numJets50 += 1
 
             tree.numJets50 = numJets50
-            tree.numJets35 = numJets35
+            tree.numJets30 = numJets30
 
 
             """
             Truth jets
             """
-            
+
             if ( self.metadata.datatype == datasets.MC ):
                 for truthjet in event.truthjets:
                     tree.truthjet_fourvect.push_back(truthjet.fourvect)
+                
 
 
             """
@@ -291,17 +292,16 @@ class eLHProcessor(ATLASStudent):
             tree.numVertices = len([vtx for vtx in event.vertices if (vtx.type == 1 and vtx.nTracks >= 4) or
                                          (vtx.type == 3 and vtx.nTracks >= 2)])
 
-
-            # sumPt
             sumPt = 0
+
             sumPt += Tau.fourvect.Pt()
-            sumPt += Electron.fourvect.Pt()
+            sumPt += Lep.fourvect.Pt()
             for jet in event.jets:
                 sumPt += jet.fourvect.Pt()
+
             tree.sumPt = sumPt
 
-
-            # missing ET
+            #missing ET
             METx = event.MET_RefFinal_BDTMedium_etx
             METy = event.MET_RefFinal_BDTMedium_ety
             MET_vect = Vector2(METx, METy)
@@ -311,33 +311,35 @@ class eLHProcessor(ATLASStudent):
             sumET = event.MET_RefFinal_BDTMedium_sumet
             tree.MET_sig = (2. * MET_vect.Mod() / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
 
-            # transverse mass
-            elET = Electron.fourvect.Pt()
+            #transverse mass
+            lepET = Lep.fourvect.Pt()
             tauET = Tau.fourvect.Pt()
-            elPhiVector = Vector2(Electron.fourvect.Px(), Electron.fourvect.Py())
+            lepPhiVector = Vector2(Lep.fourvect.Px(), Lep.fourvect.Py())
             tauPhiVector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
-            dPhi_MET_electron = elPhiVector.DeltaPhi(MET_vect)
+            dPhi_MET_lep = lepPhiVector.DeltaPhi(MET_vect)
             dPhi_MET_tau  = tauPhiVector.DeltaPhi(MET_vect)
-            mT = sqrt(2*MET*elET*(1 - cos(dPhi_MET_electron)))
+            mT = sqrt(2*MET*lepET*(1 - cos(dPhi_MET_lep)))
             mTtau = sqrt(2*MET*tauET*(1 - cos(dPhi_MET_tau)))
             tree.mass_transverse_met_lep = mT
             tree.mass_transverse_met_tau = mTtau
-            tree.dphi_met_lep = dPhi_MET_electron
+            tree.dphi_met_lep = dPhi_MET_lep
 
-            # ddR
-            tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau.fourvect, Electron.fourvect, MET_vect)
- 
+            #ddR
+            tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau.fourvect, Lep.fourvect, MET_vect)
+            
+
             """
             Higgs fancier mass calculation
             """
-            collin_mass, tau_x, electron_x = mass.collinearmass(Tau, Electron, METx, METy)
+            collin_mass, tau_x, lep_x = mass.collinearmass(Tau, Lep, METx, METy)
             tree.mass_collinear_tau_lep = collin_mass
-            tree.tau_x = tau_x
-            tree.lep_x = electron_x
-            mmc_mass, mmc_pt, mmc_met = 0,0,0#mass.missingmass(Tau, Electron, METx, METy, sumET, 1)
+            tree.tau_x  = tau_x
+            tree.lep_x = lep_x
+            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Lep, METx, METy, sumET, leptype)
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt
             tree.met_mmc_tau_lep = mmc_met
+
 
 
             """
@@ -345,20 +347,20 @@ class eLHProcessor(ATLASStudent):
             """
 
             tau2Vector = Vector2(Tau.fourvect.Px(), Tau.fourvect.Py())
-            electron2Vector = Vector2(Electron.fourvect.Px(), Electron.fourvect.Py()) # <--- is the electron cluster Et multiplied by (cos(phi),sin(phi)) where phi is obtained as recommended by EGamma group
+            lep2Vector = Vector2(Lep.fourvect.Px(), Lep.fourvect.Py())
 
-            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, electron2Vector, MET_vect)
+            tree.met_phi_centrality = eventshapes.phi_centrality(tau2Vector, lep2Vector, MET_vect)
 
             mass_j1_j2 = -1111
             eta_product_j1_j2 = -1111
             eta_delta_j1_j2 = -1111
             tau_centrality_j1_j2 = -1111
-            electron_centrality_j1_j2 = -1111
+            lep_centrality_j1_j2 = -1111
             tau_j1_j2_phi_centrality = -1111
             sphericity = -1111
             aplanarity = -1111
 
-            #Calculate other jet stuff
+            #Calculate jet stuff
             allJetList = []
 
             for jet in event.jets:
@@ -384,15 +386,16 @@ class eLHProcessor(ATLASStudent):
                 eta_product_j1_j2 = jet1.Eta() * jet2.Eta()
                 eta_delta_j1_j2 = abs(jet1.Eta() - jet2.Eta())
                 tau_centrality_j1_j2 = eventshapes.eta_centrality(Tau.fourvect.Eta(), jet1.Eta(), jet2.Eta())
-                electron_centrality_j1_j2 = eventshapes.eta_centrality(Electron.fourvect.Eta(), jet1.Eta(), jet2.Eta())
+                lep_centrality_j1_j2 = eventshapes.eta_centrality(Lep.fourvect.Eta(), jet1.Eta(), jet2.Eta())
 
-            sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect, Electron.fourvect] + allJetList)
+            sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau.fourvect, Lep.fourvect] + allJetList)
+
 
             tree.mass_j1_j2 = mass_j1_j2
             tree.eta_product_j1_j2 = eta_product_j1_j2
             tree.eta_delta_j1_j2 = eta_delta_j1_j2
             tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
-            tree.lep_centrality_j1_j2 = electron_centrality_j1_j2
+            tree.lep_centrality_j1_j2 = lep_centrality_j1_j2
             tree.tau_j1_j2_phi_centrality = tau_j1_j2_phi_centrality
 
             tree.sphericity = sphericity
@@ -402,7 +405,7 @@ class eLHProcessor(ATLASStudent):
 
             event_weight = 1.0
 
-            # Get pileup weight
+            #Get pileup weight
             if self.metadata.datatype == datasets.MC:
                 # set the event pileup weight
                 event_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
@@ -410,24 +413,28 @@ class eLHProcessor(ATLASStudent):
                                                              event.averageIntPerXing)
 
                 # Correct for trigger luminosity in period I-K
-                if 185353 <= event.RunNumber <= 187815 and not event.EF_e22_medium:
-                    event_weight *= 0.49528
-
-                # Tau/Electron misidentification correction
+                if event.isLTT:
+                    if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
+                        event_weight *= 0.49528
+                else:
+                    if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
+                        event_weight *= 0.29186
+                        
+                #Tau/Electron misidentification correction
                 event_weight *= TauEfficiencySF(event, self.metadata.datatype)
 
-                # Electron scale factors
-                event_weight *= ElectronSF(event, self.metadata.datatype, pileup_tool)
+                #Lepton Scale factors
+                if not event.isLTT:
+                    if event.leptonType == 'mu':
+                        event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
+                    if event.leptonType == 'e':
+                        event_weight *= ElectronSF(event, self.metadata.datatype, pileup_tool)
 
-                # ggF Reweighting
+                #ggF Reweighting
                 event_weight *= ggFreweighting(event, self.metadata.name)
-
+            
             tree.weight = event_weight
 
-            # Store Event numbers
-            if self.metadata.datatype == datasets.DATA:
-                self.outputFile.write(str(event.EventNumber) + '\n')
-            
             # fill output ntuple
             tree.cutflow = cutflow.int()
             tree.Fill()
@@ -437,10 +444,7 @@ class eLHProcessor(ATLASStudent):
         tree_train.Write()
         tree_test.FlushBaskets()
         tree_test.Write()
-
-        if self.metadata.datatype == datasets.DATA:
-            self.outputFile.close()
-
+        
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
             xml_string.Write('lumi')

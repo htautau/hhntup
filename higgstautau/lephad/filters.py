@@ -14,7 +14,7 @@ See main documentation here:
 MIN_TAUS = 1
 
 
-class SetElectronsFourVector(EventFilter):
+class PrepareInputTree(EventFilter):
 
     def passes(self, event):
 
@@ -30,6 +30,39 @@ class SetElectronsFourVector(EventFilter):
             vect = LorentzVector()
             vect.SetPtEtaPhiE(et, eta, phi, el.cl_E)
             setattr(el, 'fourvect', vect)
+
+            ## Find the tau candidate matched to the electron to get the electron BDTJetScore
+            BDTJetLoose = -1
+            BDTJetMedium = -1
+            BDTJetTight = -1
+
+            BDTEleLoose = -1
+            BDTEleMedium = -1
+            BDTEleTight = -1
+            
+            for tau in event.taus:
+                tau_vect = LorentzVector()
+                tau_vect.SetPtEtaPhiM(tau.pt, tau.eta, tau.phi, 0)
+
+                if tau_vect.DeltaR(vect) < 0.2:
+                    BDTJetLoose  = tau.JetBDTSigLoose
+                    BDTJetMedium = tau.JetBDTSigMedium
+                    BDTJetTight  = tau.JetBDTSigTight
+
+                    BDTEleLoose  = tau.EleBDTLoose
+                    BDTEleMedium = tau.EleBDTMedium
+                    BDTEleTight  = tau.EleBDTTight
+
+            setattr(el, 'BDTJetLoose', BDTJetLoose)
+            setattr(el, 'BDTJetMedium', BDTJetMedium)
+            setattr(el, 'BDTJetTight', BDTJetTight)
+
+            setattr(el, 'BDTEleLoose',  BDTEleLoose)
+            setattr(el, 'BDTEleMedium', BDTEleMedium)
+            setattr(el, 'BDTEleTight',  BDTEleTight)
+
+        ## Append the isLTT (is Lepton-Tau trigger event) flag
+        event.isLTT = False
 
         return True
 
@@ -231,6 +264,7 @@ class AnyETriggers(EventFilter):
         if TriggersToOR: return True
         else: return False
 
+            
 
 # Electron SLT or LLT
 class AllETriggers(EventFilter):
@@ -240,6 +274,23 @@ class AllETriggers(EventFilter):
         LLT = eLTTriggers()
 
         return SLT.passes(event) or LLT.passes(event)
+
+
+#--------------------------------------------
+# Combined Data Triggers
+#--------------------------------------------
+class AllDataLTTriggers(EventFilter):
+
+    def passes(self, event):
+        muSLT = muSLTriggers()
+        muLTT = muLTTriggers()
+        eSLT  = eSLTriggers()
+        eLTT  = eLTTriggers()
+
+        isSLT = muSLT.passes(event) or eSLT.passes(event)
+        isLTT = muLTT.passes(event) or eLTT.passes(event)
+
+        return isLTT and not isSLT
 
 
 #--------------------------------------------
@@ -352,7 +403,10 @@ class AllMCTriggers(EventFilter):
         muonLTT = muMCLTTriggers()
         elecLTT = eMCLTTriggers()
 
-        return muonSLT.passes(event) or elecSLT.passes(event) or muonLTT.passes(event) or elecLTT.passes(event)
+        isSLT = muonSLT.passes(event) or elecSLT.passes(event)
+        isLTT = muonLTT.passes(event) or elecLTT.passes(event)
+
+        return isSLT or isLTT
 
 
 # Use any trigger
@@ -390,7 +444,8 @@ def tau_preselection(tau):
     if not (abs(tau.eta) < 2.5) : return False
     if not (tau.author != 2) : return False
     if not (abs(tau.charge) == 1) : return False
-    if not (tau.EleBDTMedium == 0) : return False
+    if tau.numTrack == 1:
+        if not (tau.EleBDTMedium == 0) : return False
     if not (tau.muonVeto == 0) : return False
 
     return True
@@ -442,15 +497,6 @@ def muon_preselection(mu):
     return True
 
 
-def muon_selection(mu):
-    """ Finalizes the muon selection """
-
-    if not (mu.isCombinedMuon) : return False
-    if not (mu.pt > 22*GeV) : return False
-
-    return True
-
-
 ############################################################
 # ELECTRON SELECTION
 ############################################################
@@ -481,16 +527,6 @@ def electron_preselection(el):
 
     return True
 
-
-def electron_selection(el):
-    """ Finalizes the electron selection"""
-
-    el_cl_Et = getattr(el,'fourvect').Pt()
-
-    if not (el_cl_Et > 25*GeV) : return False
-    if not (el.tightPP) : return False
-
-    return True
 
 
 ############################################################
@@ -534,15 +570,6 @@ class MuonPreSelection(EventFilter):
         return True
 
 
-class MuonSelection(EventFilter):
-    """Selects muons of good quality"""
-
-    def passes(self, event):
-
-        event.muons.select(lambda muon : muon_selection(muon))
-        return len(event.muons) > 0
-
-
 class ElectronPreSelection(EventFilter):
     """Selects electrons of good quality"""
 
@@ -552,14 +579,104 @@ class ElectronPreSelection(EventFilter):
         return True
 
 
-class ElectronSelection(EventFilter):
-    """Selects electrons of good quality"""
+class LeptonSelection(EventFilter):
+    """ Selects the lepton, with all possible trigger/stream provenance """
+
+    def __init__(self, datatype, stream, **kwargs):
+
+        self.datatype = datatype
+        self.stream = stream
+
+        super(LeptonSelection, self).__init__(**kwargs)
 
     def passes(self, event):
 
-        event.electrons.select(lambda electron : electron_selection(electron))
-        return len(event.electrons) > 0
+        # Get the lepton Pt
+        Pt = None
+        ID = None
+        if event.leptonType == 'e':
+            Pt = getattr(event.electrons[0],'fourvect').Pt()
+            ID = event.electrons[0].tightPP
+        if event.leptonType == 'mu':
+            Pt = event.muons[0].pt
+            ID = event.muons[0].isCombinedMuon
 
+        if not ID: return False
+
+            
+        if self.datatype == datasets.MC:
+                 
+            if event.leptonType == 'e':
+                if Pt > 25*GeV:
+                    trigger = eMCSLTriggers()
+                    if trigger.passes(event):
+                        return True
+                if 17*GeV < Pt <= 25*GeV:
+                    trigger = eMCLTTriggers()
+                    if trigger.passes(event):
+                        event.isLTT = True
+                        return True
+                return False
+
+            if event.leptonType == 'mu':
+                if Pt > 22*GeV:
+                    trigger = muMCSLTriggers()
+                    if trigger.passes(event):
+                        return True
+                if 17*GeV < Pt <= 22*GeV:
+                    trigger = muMCLTTriggers()
+                    if trigger.passes(event):
+                        event.isLTT = True
+                        return True
+                return False
+
+            
+        if self.datatype == datasets.DATA:
+            
+            if self.stream == 'JetTauEtmiss':
+                
+                if event.leptonType == 'e':
+                    SLT = eSLTriggers()
+                    LTT = eLTTriggers()
+                    if LTT.passes(event) and not SLT.passes(event):
+                        if 17*GeV < Pt <= 25*GeV:
+                            event.isLTT = True
+                            return True
+                    return False
+
+                if event.leptonType == 'mu':
+                    SLT = muSLTriggers()
+                    LTT = muLTTriggers()
+                    if LTT.passes(event) and not SLT.passes(event):
+                        if 17*GeV < Pt <= 22*GeV:
+                            event.isLTT = True
+                            return True
+                    return False
+
+            if self.stream == 'Egamma' and event.leptonType == 'e':
+                SLT = eSLTriggers()
+                LTT = eLTTriggers()
+                isSLT = SLT.passes(event)
+                isLTT = LTT.passes(event)
+                if isSLT and Pt > 25*GeV:
+                    return True
+                if isLTT and isSLT and 17*GeV < Pt <= 25*GeV:
+                    event.isLTT = True
+                    return True
+                return False
+
+            if self.stream == 'Muons' and event.leptonType == 'mu':
+                SLT = muSLTriggers()
+                LTT = muLTTriggers()
+                isSLT = SLT.passes(event)
+                isLTT = LTT.passes(event)
+                if isSLT and Pt > 22*GeV:
+                    return True
+                if isLTT and isSLT and 17*GeV < Pt <= 22*GeV:
+                    event.isLTT = True
+                    return True
+                return False
+                    
 
 class TauPreSelection(EventFilter):
     """Selects taus of good quality"""
@@ -576,7 +693,12 @@ class TauSelection(EventFilter):
     def passes(self, event):
 
         event.taus.select(lambda tau : tau_selection(tau))
-        return len(event.taus) == 1
+        if len(event.taus) == 1:
+            if event.isLTT:
+                return event.taus[0].pt > 25*GeV
+            else:
+                return True
+        return False
 
 
 class JetPreSelection(EventFilter):
@@ -659,11 +781,25 @@ class FinalOverlapRemoval(EventFilter):
 
 
 
+## Other Event selection
+
 class DileptonVeto(EventFilter):
     """Keep events with one muon only"""
 
     def passes(self, event):
-        return len(event.muons) + len(event.electrons) == 1
+
+        nMu = len(event.muons)
+        nE  = len(event.electrons)
+
+        if nE + nMu == 1:
+            if nE > 0:
+                event.leptonType = 'e'
+            if nMu > 0:
+                event.leptonType = 'mu'
+
+            return True
+        else:
+            return False
 
 
 class HasTau(EventFilter):
