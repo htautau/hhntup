@@ -631,7 +631,7 @@ class Dataset(yaml.YAMLObject):
         try:
             xs, kfact, effic = xsec.xsec_kfact_effic('lephad', self.id)
         except KeyError:
-            print "WARNING: cross section of dataset %d not available locally."
+            print "WARNING: cross section of dataset %s not available locally." % self.ds
             print "Looking it up in AMI instead. AMI cross sections can be very"
             print "wrong! You have been warned!"
             print "A k factor of 1. will be assumed."

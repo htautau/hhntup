@@ -39,7 +39,8 @@ DEFAULT_TREENAME = 'higgstautauhh'
 TOTAL_LUMI = total_lumi()
 TAUTAUHADHADBR = 0.412997
 VERBOSE = False
-DB = datasets.Database(name='datasets_hh', verbose=VERBOSE)
+DB_HH = datasets.Database(name='datasets_hh', verbose=VERBOSE)
+DB_TAUID = datasets.Database(name='datasets_tauid', verbose=VERBOSE)
 FILES = {}
 WORKING_POINT = 'Tight'
 ID = Cut('tau1_JetBDTSig%s==1 && tau2_JetBDTSig%s==1' %
@@ -469,14 +470,15 @@ class Data(Sample):
 
 class MC(Sample):
 
-    def __init__(self, systematics=True, **kwargs):
+    def __init__(self, systematics=True, db=DB_HH, **kwargs):
 
         super(MC, self).__init__(**kwargs)
+        self.db = db
         self.datasets = []
 
         for i, name in enumerate(self.samples):
 
-            ds = DB[name]
+            ds = self.db[name]
             trees = {}
             weighted_events = {}
 
@@ -894,7 +896,8 @@ class MC_TauID(MC):
         self._label = 'TauID'
         self.samples = ['PythiaWtaunu_incl.mc11c']
         self.colour = '#0000ff'
-        super(MC_TauID, self).__init__(student='TauIDProcessor', **kwargs)
+        super(MC_TauID, self).__init__(student='TauIDProcessor',
+                db=DB_TAUID, **kwargs)
 
 
 if __name__ == '__main__':
