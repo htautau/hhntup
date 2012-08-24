@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 
 from higgstautau import tauid
-from higgstautau.tauid.p851 import selection
+from higgstautau.tauid.p851 import selection, nvtx_to_category, CATEGORIES
+from higgstautau.tauid.common import LEVELS, PRONGS
+from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
+
+from samples import MC_TauID
 
 import numpy as np
 from matplotlib import pyplot as plt
+from tauid_uncertainty import efficiency, efficiency_uncertainty
 
 
 pt = 50000
@@ -36,3 +41,23 @@ for prong in tauid.PRONGS:
     plt.ylabel('BDT Score Uncertainty')
     plt.xlabel('BDT Score')
     plt.savefig('tauid_uncertainty_%dp.png' % prong)
+
+
+# closure test
+ztautau = MC_TauID(systematics=False)
+for prong in PRONGS:
+    for cat_str, category in CATEGORIES.items():
+        for level in LEVELS.keys():
+
+            level_selection = selection(level, prong, cat_str)
+
+            uncert_level = EFFIC_UNCERT[level][prong]
+
+            print prong
+            print cat_str
+            print level
+            print "effic: %.6f" % efficiency(ztautau, level_selection, prong, category)
+            print "high: %.6f low: %.6f" % efficiency_uncertainty(
+                    ztautau, level_selection, prong, category)
+
+            print "=" * 20
