@@ -648,6 +648,23 @@ class MC_Ztautau(MC):
         super(MC_Ztautau, self).__init__(**kwargs)
 
 
+class Embedded_Ztautau(MC):
+
+    def __init__(self, **kwargs):
+        """
+        Instead of setting the k factor here
+        the normalization is determined by a fit to the data
+        """
+        yml = samples_db.BACKGROUNDS['hadhad']['embedded-ztautau']
+        self.name = 'Ztautau'
+        self._label = yml['latex']
+        self.samples = yml['samples']
+        self.colour = '#00a4ff'
+        super(MC_Ztautau, self).__init__(**kwargs)
+
+        # requires special treatment of systematics
+
+
 class MC_EWK(MC):
 
     def __init__(self, **kwargs):
