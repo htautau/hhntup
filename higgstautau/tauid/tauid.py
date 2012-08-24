@@ -47,7 +47,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # uncertainty currently only valid for 2011 MC
 BDT_UNCERT = {}
 with ropen(os.path.join(HERE, 'bdt_uncertainty.root')) as f:
-    for level in ('medium', 'tight'):
+    for level in LEVELS.keys():
         BDT_UNCERT[level] = {}
         for prong in PRONGS:
             BDT_UNCERT[level][prong] = {}
@@ -66,20 +66,27 @@ def uncertainty(score, pt, prong, nvtx):
     medium = selection('medium', prong, nvtx).Eval(pt)
     tight = selection('tight', prong, nvtx).Eval(pt)
 
+    """
     if score < loose:
         print score, loose
         raise ValueError(
             'No uncertainties defined for scores lower than loose')
+    """
 
+    high_loose, low_loose = selection_uncertainty('loose', pt, prong, nvtx)
     high_medium, low_medium = selection_uncertainty('medium', pt, prong, nvtx)
     high_tight, low_tight = selection_uncertainty('tight', pt, prong, nvtx)
 
+    b_l_high = (1. - loose) + high_loose
     b_m_high = (1. - medium) + high_medium
     b_t_high = (1. - tight) + high_tight
 
+    b_l_low = (1. - loose) - low_loose
     b_m_low = (1. - medium) - low_medium
     b_t_low = (1. - tight) - low_tight
 
+    if b_l_low <= 0:
+        raise ValueError("low BDT loose selection error too high")
     if b_m_low <= 0:
         raise ValueError("low BDT medium selection error too high")
     if b_t_low <= 0:
@@ -93,16 +100,22 @@ def uncertainty(score, pt, prong, nvtx):
     elif score > medium - high_medium:
         dx_high = high_medium - (high_medium - high_tight) * (score - medium +
                 high_medium) / (tight - high_tight - (medium - high_medium))
+    elif score > loose - high_loose:
+        dx_high = high_loose - (high_loose - high_medium) * (score - loose +
+                high_loose) / (medium - high_medium - (loose - high_loose))
     else:
-        dx_high = high_medium
+        dx_high = high_loose
 
     if score > tight:
         dx_low = low_tight
     elif score > medium + low_medium:
         dx_low = low_medium - (low_medium - low_tight) * (score - (medium +
                 low_medium)) / (tight - (medium + low_medium))
+    elif score > loose + low_loose:
+        dx_low = low_loose - (low_loose - low_medium) * (score - (loose +
+            low_loose)) / (medium + low_medium - (loose + low_loose))
     else:
-        dx_low = low_medium
+        dx_low = low_loose
 
     return score + dx_high, score - dx_low
 
