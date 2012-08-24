@@ -80,7 +80,7 @@ def iter_samples(channel, type=None):
     for sample_class in (SIGNALS[channel], BACKGROUNDS[channel]):
         for sample_type, sample_info in sample_class.items():
             if type is not None:
-                if sample_type != type:
+                if sample_type not in type:
                     continue
             for sample_name in sample_info['samples']:
                 yield sample_name

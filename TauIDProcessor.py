@@ -185,32 +185,23 @@ class TauIDProcessor(ATLASStudent):
             # match only with visible true taus
             event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
-            true_tau1 = None
-            true_tau2 = None
-
             if len(event.truetaus) == 1:
-                true_tau1 = event.truetaus[0]
-                TrueTauBlock.set(tree, 1, true_tau1)
-            elif len(event.truetaus) == 2:
-                true_tau1 = event.truetaus[0]
-                true_tau2 = event.truetaus[1]
-                TrueTauBlock.set(tree, 1, true_tau1)
-                TrueTauBlock.set(tree, 2, true_tau2)
+                true_tau = event.truetaus[0]
+                TrueTauBlock.set(tree, 1, true_tau)
+            else:
+                continue
 
             tau_filters(event)
 
             # Truth-matching
-            matched_reco = {0: None, 1: None}
-            for i, true_tau in enumerate((true_tau1, true_tau2)):
-                if true_tau is None:
-                    continue
-                reco_index = true_tau.tauAssoc_index
-                tau = event.taus.getitem(reco_index)
-                if tau in event.taus:
-                    matched_reco[i] = tau
+            matched_reco = None
+            reco_index = true_tau.tauAssoc_index
+            tau = event.taus.getitem(reco_index)
+            if tau in event.taus:
+                matched_reco = tau
 
             # fill tau block
-            RecoTauBlock.set(event, tree, matched_reco[0], matched_reco[1])
+            RecoTauBlock.set(event, tree, matched_reco, None)
 
             # set the event weight
             tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
