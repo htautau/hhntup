@@ -14,7 +14,6 @@ from higgstautau.hadhad.periods import total_lumi
 from higgstautau import datasets
 from higgstautau.decorators import cached_property, memoize_method
 from higgstautau import samples as samples_db
-from higgstautau import xsec
 
 # Higgs cross sections
 import yellowhiggs
@@ -895,8 +894,8 @@ if __name__ == '__main__':
         if isinstance(sample, QCD):
             continue
         for datasets in sample.datasets:
-            for ds, tree, events, (xsec, xsec_min, xsec_max, effic) in datasets:
-                row = format % (ds.ds, xsec*1E3, xsec_min*1E3, xsec_max*1E3, ds.xsec_factor, effic, 1.)
+            for ds, tree, events, (xsec, kfact, effic) in datasets:
+                row = format % (ds.ds, xsec*1E3, kfact, ds.xsec_factor, effic)
                 table.append(row.split())
     print
     print
