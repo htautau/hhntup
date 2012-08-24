@@ -13,7 +13,7 @@ for prong in tauid.PRONGS:
     loose = selection('loose', prong, 3).Eval(pt)
     medium = selection('medium', prong, 3).Eval(pt)
     tight = selection('tight', prong, 3).Eval(pt)
-    scores = np.linspace(0., 1., 1000, endpoint=True)
+    scores = np.linspace(0.5, 1., 1000, endpoint=True)
     high = []
     low = []
     for score in scores:
@@ -26,7 +26,7 @@ for prong in tauid.PRONGS:
     ax.vlines([loose, medium, tight], [-.5, -.5, -.5], [.5, .5, .5], color='k',
             linestyles='--')
     ax.axhline(0., 0., 1.)
-    ax.set_xlim(0., 1.)
+    ax.set_xlim(scores[0], scores[-1])
     ax.set_ylim(min(low)*1.2, max(high)*1.2)
 
     # working point labels
