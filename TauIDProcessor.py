@@ -5,8 +5,6 @@ from argparse import ArgumentParser
 
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
-from rootpy.tree.cutflow import Cutflow
-from rootpy.math.physics.vector import Vector2
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 
@@ -53,33 +51,17 @@ class TauIDProcessor(ATLASStudent):
 
     def work(self):
 
-        # fake rate scale factor tool
-        fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
-        fakerate_tool = TFR.FakeRateScaler(fakerate_table)
-
         # trigger config tool to read trigger info in the ntuples
         trigger_config = get_trigger_config()
 
-        OutputModel = RecoTauBlock + EventVariables + SkimExtraModel
-
-        if self.metadata.datatype == datasets.MC:
-            # only create truth branches for MC
-            OutputModel += TrueTauBlock
+        OutputModel = (RecoTauBlock + EventVariables + SkimExtraModel +
+            TrueTauBlock)
 
         onfilechange = []
         # update the trigger config maps on every file change
         onfilechange.append((update_trigger_config, (trigger_config,)))
 
-        if self.metadata.datatype == datasets.DATA:
-            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
-        else:
-            merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
-
-        def update_cutflow(student, cutflow, name, file, tree):
-
-            cutflow += file.cutflow
-
-        onfilechange.append((update_cutflow, (self, merged_cutflow,)))
+        cutflow = Hist(2, 0, 2, name='cutflow', type='D')
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
         chain = TreeChain(self.metadata.treename,
@@ -119,12 +101,6 @@ class TauIDProcessor(ATLASStudent):
             JetCleaning(
                 datatype=self.metadata.datatype,
                 year=YEAR),
-        ])
-
-        self.filters['event'] = event_filters
-        chain.filters += event_filters
-
-        tau_filters = EventFilterList([
             TauAuthor(1),
             TauHasTrack(1),
             TauPT(1, thresh=25 * GeV),
@@ -140,6 +116,9 @@ class TauIDProcessor(ATLASStudent):
             #    min_taus=1),
         ])
 
+        self.filters['event'] = event_filters
+        chain.filters += event_filters
+
         # define tree collections
         chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
         chain.define_collection(name="taus_EF", prefix="trig_EF_tau_",
@@ -152,10 +131,6 @@ class TauIDProcessor(ATLASStudent):
         chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
         chain.define_collection(name="electrons", prefix="el_", size="el_n")
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
-
-        # define tree objects
-        tree.define_object(name='tau1', prefix='tau1_')
-        tree.define_object(name='tau2', prefix='tau2_')
 
         from externaltools import PileupReweighting
         from ROOT import Root
@@ -191,8 +166,6 @@ class TauIDProcessor(ATLASStudent):
             else:
                 continue
 
-            tau_filters(event)
-
             # Truth-matching
             matched_reco = None
             reco_index = true_tau.tauAssoc_index
@@ -213,4 +186,7 @@ class TauIDProcessor(ATLASStudent):
         self.output.cd()
         tree.FlushBaskets()
         tree.Write()
-        merged_cutflow.Write()
+        total_events = event_filters[0].total
+        cutflow[0] = total_events
+        cutflow[1] = total_events
+        cutflow.Write()
