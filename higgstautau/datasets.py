@@ -255,11 +255,11 @@ class Database(dict):
                 pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
                             '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '(?P<format>\S+)\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
+                            '\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
                 pattern2 = ('^mc11_7TeV\.(?P<id>\d+)'
                             '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '(?P<format>\S+)\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
+                            '\.v(?P<version>\d+)\.(?P<suffix>\S+)$')
             else:
                 pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
                             '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
