@@ -870,6 +870,17 @@ class QCD(Sample):
         return trees
 
 
+class MC_TauID(MC):
+
+    def __init__(self, **kwargs):
+
+        self.name = 'TauID'
+        self._label = 'TauID'
+        self.samples = ['PythiaWtaunu_incl.mc11c']
+        self.colour = '#0000ff'
+        super(MC_TauID, self).__init__(student='TauIDProcessor', **kwargs)
+
+
 if __name__ == '__main__':
 
     from pyAMI.query import print_table

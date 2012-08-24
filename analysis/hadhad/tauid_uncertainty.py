@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from samples import MC_Ztautau
+from samples import MC_TauID
 
 from higgstautau.tauid.p851 import selection, nvtx_to_category, CATEGORIES
 from higgstautau.tauid.common import LEVELS, PRONGS
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
 
     with ropen('bdt_uncertainty.root', 'recreate') as f:
-        ztautau = MC_Ztautau(systematics=False, student='TauIDProcessor')
+        ztautau = MC_TauID(systematics=False)
         for prong in PRONGS:
             for cat_str, category in CATEGORIES.items():
 
