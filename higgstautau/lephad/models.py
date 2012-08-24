@@ -55,6 +55,14 @@ class RecoLepton(TreeModel):
     fourvect = LorentzVector
     leptype = BoolCol()
 
+    BDTJetLoose  = IntCol()
+    BDTJetMedium = IntCol()
+    BDTJetTight  = IntCol()
+
+    BDTEleLoose  = IntCol()
+    BDTEleMedium = IntCol()
+    BDTEleTight  = IntCol()
+
 
 class RecoMET(TreeModel):
 
@@ -88,7 +96,7 @@ class TauElectronEventVariables(TreeModel):
 
     numJets = IntCol()
     numJets30 = IntCol()
-    numJets35 = IntCol()
+    numJets50 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
     jet_btag  = ROOT.vector('float')
@@ -141,7 +149,7 @@ class TauMuonEventVariables(TreeModel):
 
     numJets = IntCol()
     numJets30 = IntCol()
-    numJets35 = IntCol()
+    numJets50 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     jet_jvtxf = ROOT.vector('float')
     jet_btag  = ROOT.vector('float')
@@ -193,7 +201,7 @@ class EventVariables(TreeModel):
     dphi_met_lep = FloatCol()
 
     numJets = IntCol()
-    numJets35 = IntCol()
+    numJets30 = IntCol()
     numJets50 = IntCol()
     jet_fourvect = ROOT.vector('TLorentzVector')
     truthjet_fourvect = ROOT.vector('TLorentzVector')
@@ -337,11 +345,24 @@ class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
             track_iso = lep.ptcone40/muon_pt <= 0.06
             calo_iso  = lep.etcone20/muon_pt <= 0.04
             setattr(tree, 'lep_isolated', (track_iso and calo_iso))
+            setattr(tree, 'lep_BDTJetLoose', -1)
+            setattr(tree, 'lep_BDTJetMedium', -1)
+            setattr(tree, 'lep_BDTJetTight', -1)
+            setattr(tree, 'lep_BDTEleLoose', -1)
+            setattr(tree, 'lep_BDTEleMedium', -1)
+            setattr(tree, 'lep_BDTEleTight', -1)
 
         if leptype == 1: # Is an electron
             track_iso = ( lep.ptcone40 / lep.cl_et < 0.06 )
             calo_iso  = ( lep.Etcone20 / lep.cl_et < 0.08 )
             setattr(tree, 'lep_isolated', (track_iso and calo_iso))
+            setattr(tree, 'lep_BDTJetLoose', lep.BDTJetLoose)
+            setattr(tree, 'lep_BDTJetMedium', lep.BDTJetMedium)
+            setattr(tree, 'lep_BDTJetTight', lep.BDTJetTight)
+            setattr(tree, 'lep_BDTEleLoose', lep.BDTEleLoose)
+            setattr(tree, 'lep_BDTEleMedium', lep.BDTEleMedium)
+            setattr(tree, 'lep_BDTEleTight', lep.BDTEleTight)
+            
 
         #Find out if the tau is matched to an electron
         TauIsEl = False
