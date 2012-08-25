@@ -1,5 +1,6 @@
 ztautau:
     name: Ztautau
+    systematics: mc
     latex: '$Z/\gamma^{*}$'
     math: 'Z/\gamma^{*}'
     samples:
@@ -16,8 +17,40 @@ ztautau:
         - 'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
+embedded-ztautau:
+    name: Ztautau
+    systematics: embedded
+    latex: '$Z/\gamma^{*}$'
+    math: 'Z/\gamma^{*}'
+    samples:
+        - 'embed-hh-isol-mfsim'
+embedded-ztautau-mfsup:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$'
+    math: 'Z/\gamma^{*}'
+    samples:
+        - 'embed-hh-isol-mfsup'
+embedded-ztautau-mfsdown:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$'
+    math: 'Z/\gamma^{*}'
+    samples:
+        - 'embed-hh-isol-mfsdown'
+embedded-ztautau-noisol:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$'
+    math: 'Z/\gamma^{*}'
+    samples:
+        - 'embed-hh-noisol-mfsim'
+embedded-ztautau-tightisol:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$'
+    math: 'Z/\gamma^{*}'
+    samples:
+        - 'embed-hh-tightisol-mfsim'
 ewk:
     name: EW
+    systematics: mc
     latex: EW
     math: EW
     samples:
@@ -71,6 +104,7 @@ ewk:
         - 'AlpgenJimmyWenuNp5_pt20.mc11c'
 top:
     name: Top
+    systematics: mc
     latex: Top
     math: Top
     samples:
@@ -85,6 +119,7 @@ top:
         - 'AcerMC_Wt.mc11c'
 diboson:
     name: Diboson
+    systematics: mc
     latex: Diboson
     math: Diboson
     samples:

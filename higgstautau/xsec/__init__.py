@@ -1,1 +1,1 @@
-from .compare import xsec_kfact_effic
+from .xsec import xsec_kfact_effic

@@ -14,7 +14,7 @@ parser.add_argument('--nominal-only', action='store_true', default=False)
 parser.add_argument('--systematics-only', action='store_true', default=False)
 parser.add_argument('--dry', action='store_true', default=False)
 parser.add_argument('--use-ssh', dest='use_qsub', action='store_false', default=True)
-parser.add_argument('samples', nargs='?', default=None)
+parser.add_argument('samples', nargs='*', default=None)
 
 args = parser.parse_args()
 
@@ -27,7 +27,8 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = samples.samples('hadhad', args.samples)
 if not datasets:
-    sys.exit('No datasets selected!')
+    # assume raw ds names are given
+    datasets = args.samples
 
 if not args.systematics_only:
     # nominal values

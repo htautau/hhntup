@@ -7,17 +7,17 @@ hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
 datasets = [
-    'data-B',
-    'data-D',
-    'data-E',
-    'data-F',
-    'data-G',
-    'data-H',
-    'data-I',
-    'data-J',
-    'data-K',
-    'data-L',
-    'data-M',
+    'data-JetTauEtmiss-B',
+    'data-JetTauEtmiss-D',
+    'data-JetTauEtmiss-E',
+    'data-JetTauEtmiss-F',
+    'data-JetTauEtmiss-G',
+    'data-JetTauEtmiss-H',
+    'data-JetTauEtmiss-I',
+    'data-JetTauEtmiss-J',
+    'data-JetTauEtmiss-K',
+    'data-JetTauEtmiss-L',
+    'data-JetTauEtmiss-M',
 ]
 
 cluster.run('HHProcessor.py',

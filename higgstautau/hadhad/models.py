@@ -41,10 +41,14 @@ class RecoTau(TreeModel):
     efficiency_scale_factor = FloatCol(default=1.)
     efficiency_scale_factor_high = FloatCol(default=1.)
     efficiency_scale_factor_low = FloatCol(default=1.)
-    # else fake rate scale factor
+    # fake rate scale factor for taus that do not match truth
     fakerate_scale_factor = FloatCol(default=1.)
     fakerate_scale_factor_high = FloatCol(default=1.)
     fakerate_scale_factor_low = FloatCol(default=1.)
+    # trigger efficiency correction
+    trigger_scale_factor = FloatCol(default=1.)
+    trigger_scale_factor_high = FloatCol(default=1.)
+    trigger_scale_factor_low = FloatCol(default=1.)
 
 
 class EventVariables(TreeModel):
@@ -55,6 +59,7 @@ class EventVariables(TreeModel):
     # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)
     mc_weight = FloatCol(default=1.)
+    ggf_weight = FloatCol(default=1.)
 
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
