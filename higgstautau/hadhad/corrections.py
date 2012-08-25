@@ -48,6 +48,6 @@ class TauTriggerEfficiency(EventFilter):
             tau.trigger_scale_factor_low = corr.getSF(tau.pt, -1)
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
-            raise Exception("there must be exactly two unique trigger match
-                    thresholds (29, 20). Got: %s" % str(thresh))
+            raise Exception("there must be exactly two unique trigger match"
+                    " thresholds (29, 20). Got: %s" % str(thresh))
         return True
