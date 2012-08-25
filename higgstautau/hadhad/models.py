@@ -55,6 +55,7 @@ class EventVariables(TreeModel):
     # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)
     mc_weight = FloatCol(default=1.)
+    ggf_weight = FloatCol(default=1.)
 
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()

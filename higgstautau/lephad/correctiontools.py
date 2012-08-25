@@ -11,9 +11,6 @@ from externaltools import TrigMuonEfficiency
 
 from externaltools import egammaAnalysisUtils
 
-from externaltools import ggFReweighting
-
-ggFResources = ggFReweighting.RESOURCE_PATH
 
 from ROOT import std, TLorentzVector, TFile
 from higgstautau.mixins import *
@@ -331,57 +328,3 @@ def ElectronSF(event, datatype, pileupTool):
     weight *= trigSF
 
     return weight
-
-
-#################################################
-#ggF reweighting
-#################################################
-
-from ROOT import ggFReweighting
-
-ggF_tool = {}
-ggF_tool[100] = ggFReweighting("PowHeg", 100, "Mean", ggFResources, "mc11")
-ggF_tool[105] = ggFReweighting("PowHeg", 105, "Mean", ggFResources, "mc11")
-ggF_tool[110] = ggFReweighting("PowHeg", 110, "Mean", ggFResources, "mc11")
-ggF_tool[115] = ggFReweighting("PowHeg", 115, "Mean", ggFResources, "mc11")
-ggF_tool[120] = ggFReweighting("PowHeg", 120, "Mean", ggFResources, "mc11")
-ggF_tool[125] = ggFReweighting("PowHeg", 125, "Mean", ggFResources, "mc11")
-ggF_tool[130] = ggFReweighting("PowHeg", 130, "Mean", ggFResources, "mc11")
-ggF_tool[135] = ggFReweighting("PowHeg", 135, "Mean", ggFResources, "mc11")
-ggF_tool[140] = ggFReweighting("PowHeg", 140, "Mean", ggFResources, "mc11")
-ggF_tool[145] = ggFReweighting("PowHeg", 145, "Mean", ggFResources, "mc11")
-ggF_tool[150] = ggFReweighting("PowHeg", 150, "Mean", ggFResources, "mc11")
-
-def getggFTool(higgsMass):
-    if higgsMass in ggF_tool:
-        return ggF_tool[higgsMass]
-    else:
-        print "@@@@@ Higgs mass cannot be determined for ggF tool...using 100 GeV for now"
-        print "      This message is normal for non-Higgs samples."
-        return ggF_tool[100]
-
-
-def ggFreweighting(event, dataname):
-    """
-    Reweight the ggF samples
-    """
-
-    if dataname.find('PowHegPythia_ggH') == -1: return 1.0
-
-    #Extract mass value
-    mass = int(dataname.lstrip('PowHegPythia_ggH').rstrip('_tautaulh.mc11c'))
-
-    #Get corresponding ggF tool setting
-    ggFTool = getggFTool(mass)
-
-    #Find the Higgs particle in mc
-    nMC = event.mc_n
-    pt = 0
-    for i in range(0, nMC):
-        if event.mc_pdgId[i] == 25 and event.mc_status[i] != 3:
-            pt = event.mc_pt[i]/1000
-
-    if pt > 0:
-        return ggFTool.getWeight(pt)
-    else:
-        return 1.0

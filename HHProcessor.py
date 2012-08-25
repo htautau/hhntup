@@ -5,7 +5,6 @@ from argparse import ArgumentParser
 
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
-from rootpy.tree.cutflow import Cutflow
 from rootpy.math.physics.vector import Vector2
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
@@ -34,6 +33,7 @@ from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
+from higgstautau.corrections import reweight_ggf
 
 from goodruns import GRL
 import subprocess
@@ -210,8 +210,6 @@ class HHProcessor(ATLASStudent):
 
         chain.filters += event_filters
 
-        cutflow = Cutflow()
-
         # define tree collections
         chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
         chain.define_collection(name="taus_EF", prefix="trig_EF_tau_",
@@ -258,7 +256,6 @@ class HHProcessor(ATLASStudent):
         # entering the main event loop...
         for event in chain:
             tree.reset()
-            cutflow.reset()
 
             # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
@@ -517,14 +514,18 @@ class HHProcessor(ATLASStudent):
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
 
-            # fill output ntuple
-            tree.cutflow = cutflow.int()
+            # set the event weights
             if self.metadata.datatype == datasets.MC:
                 # set the event weight
                 tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                                    event.mc_channel_number,
                                                                    event.averageIntPerXing)
                 tree.mc_weight = event.mc_event_weight
+                if YEAR == 2011:
+                    tree.ggf_weight = reweight_ggf(event, self.metadata.name)
+                # no ggf reweighting for 2012 MC
+
+            # fill output ntuple
             tree.Fill()
 
         self.output.cd()
