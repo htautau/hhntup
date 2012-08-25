@@ -105,6 +105,8 @@ def iter_systematics(channel, dataset, type=None):
             if type is not None:
                 if sample_type not in type:
                     continue
+            if 'systematics' not in sample_info:
+                continue
             systematics = SYSTEMATICS[channel][sample_info['systematics']]
             for sample_name in sample_info['samples']:
                 if sample_name == dataset:
