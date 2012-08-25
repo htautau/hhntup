@@ -127,7 +127,7 @@ now created for the data in stage II:
 Issues / Ideas
 --------------
 
-* Fix trigger threshold association in 2012 MC skims
+* Fix trigger threshold association
 * Run skim II directly on D3PDs to get absolute cut-flows
 * Also keep track of weighted cut-flow (``mc_event_weight``, pileup weight)
 * Remove 2tau38 trigger in 2012 skims
