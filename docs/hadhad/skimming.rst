@@ -133,5 +133,6 @@ Issues / Ideas
 * Remove 2tau38 trigger in 2012 skims
 * Implement new trigger emulation in 2012 skims
 * Set trigger scale factors, efficiency scale factors, fake rate scale factors
-  in the skims. 
+  in the skims.
+* Run and save the MMC output in skim II
 * Separate skims for systematics?
