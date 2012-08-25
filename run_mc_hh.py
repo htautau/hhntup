@@ -42,7 +42,8 @@ if not args.systematics_only:
                 output_path=args.output_path,
                 use_qsub=args.use_qsub,
                 qsub_queue=args.queue,
-                dry_run=args.dry)
+                dry_run=args.dry,
+                separate_student_output=True)
 
 if not args.nominal_only:
     if args.systematics is not None:
@@ -62,4 +63,5 @@ if not args.nominal_only:
                 output_path=args.output_path,
                 use_qsub=args.use_qsub,
                 qsub_queue=args.queue,
-                dry_run=args.dry)
+                dry_run=args.dry,
+                separate_student_output=True)

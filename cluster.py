@@ -1,5 +1,5 @@
 import socket
-import os
+import os, errno
 import subprocess
 from subprocess import call
 import multiprocessing as mp
@@ -66,6 +66,16 @@ def get_setup(filename):
                             in f.readlines()])
 
 
+def mkdir_p(path):
+
+    try:
+        os.makedirs(path)
+    except OSError as exc: # Python >2.5
+        if exc.errno == errno.EEXIST:
+            pass
+        else: raise
+
+
 def run_helper(cmd):
 
     subprocess.call(cmd, shell=True)
@@ -107,7 +117,8 @@ def run(student,
         use_qsub=False,
         qsub_queue='medium',
         qsub_name_suffix=None,
-        dry_run=False):
+        dry_run=False,
+        separate_student_output=False):
 
     if args is None:
         args = ' '
@@ -120,6 +131,15 @@ def run(student,
         qsub_name_suffix = '_' + qsub_name_suffix
 
     database = Database(db)
+
+    output_path = os.path.normpath(output_path)
+    if separate_student_output and os.path.basename(output_path) != student:
+        output_path = os.path.join(output_path, os.path.splitext(student)[0])
+    if not os.path.exists(output_path):
+        if dry_run:
+            print "mkdir -p %s" % output_path
+        else:
+            mkdir_p(output_path)
 
     CMD = "./run --output-path %s -s %s -n %%d --db %s --nice %d %s%%s" % (
             output_path, student, db, nice, args)
