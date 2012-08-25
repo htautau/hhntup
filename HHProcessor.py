@@ -44,7 +44,7 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
-VERBOSE = True
+VERBOSE = False
 
 
 class HHProcessor(ATLASStudent):

@@ -1,6 +1,8 @@
 import os
+from operator import itemgetter
 import ROOT
 from rootpy.tree.filtering import *
+from atlastools.units import GeV
 from externaltools import TauTriggerCorrections
 
 
@@ -25,6 +27,23 @@ class TauTriggerEfficiency(EventFilter):
         super(TauTriggerEfficiency, self).__init__(**kwargs)
 
     def passes(self, event):
+
+        assert len(event.taus) == 2
+
+        idx = [tau.trigger_match_index for tau in event.taus]
+        assert len(set(idx)) == 2
+
+        # fix trigger threshold association
+        taus = [(tau, event.taus_EF.getitem(tau.trigger_match_index)) for
+                tau in event.taus]
+        # sort by pT of EF tau
+        taus = sorted(taus, key=lambda tau: tau[1].pt, reverse=True)
+
+        taus[0][0].trigger_match_thresh = 29
+        taus[1][0].trigger_match_thresh = 20
+
+        assert taus[0][1].pt > 29 * GeV
+        assert taus[1][1].pt > 20 * GeV
 
         thresh = []
         for tau in event.taus:
