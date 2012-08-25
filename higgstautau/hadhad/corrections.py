@@ -1,3 +1,4 @@
+import os
 import ROOT
 from rootpy.tree.filtering import *
 from externaltools import TauTriggerCorrections
