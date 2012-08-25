@@ -109,8 +109,9 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        # update the trigger config maps on every file change
-        onfilechange.append((update_trigger_config, (trigger_config,)))
+        if self.metadata.datatype != datasets.EMBED:
+            # update the trigger config maps on every file change
+            onfilechange.append((update_trigger_config, (trigger_config,)))
 
         if self.metadata.datatype == datasets.DATA:
             merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
@@ -158,7 +159,8 @@ class HHProcessor(ATLASStudent):
             Triggers(
                 datatype=self.metadata.datatype,
                 year=YEAR,
-                skim=False),
+                skim=False,
+                passthrough=self.metadata.datatype == datasets.EMBED),
             JetCalibration(
                 year=YEAR,
                 datatype=self.metadata.datatype,
@@ -199,13 +201,16 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 skim=False,
-                tree=tree),
+                tree=tree,
+                pasthrough=self.metadata.datatype == datasets.EMBED),
             TauLeadSublead(
                 lead=35*GeV,
                 sublead=25*GeV),
             TauTriggerEfficiency(
                 year=YEAR,
-                passthrough=self.metadata.datatype == datasets.DATA),
+                passthrough=self.metadata.datatype in (
+                    datasets.DATA,
+                    datasets.EMBED),
             JetSelection(),
             TauJetOverlapRemoval(),
         ])
