@@ -52,8 +52,8 @@ class TauTriggerMatch(EventFilter):
     def __init__(self,
                  config,
                  datatype,
+                 year,
                  dR=0.2,
-                 year=None,
                  skim=False,
                  tree=None,
                  num_taus=2,
@@ -63,8 +63,6 @@ class TauTriggerMatch(EventFilter):
         super(TauTriggerMatch, self).__init__(**kwargs)
         self.config = config
         self.dR = dR
-        if year is None:
-            year = datetime.datetime.now().year
         year %= 1000
         self.skim = skim
         self.tree = tree

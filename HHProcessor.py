@@ -482,9 +482,13 @@ class HHProcessor(ATLASStudent):
 
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
+                # fix trigger_match_thresh for 2012 skims
+
                 for tau in (tau1, tau2):
 
-                    # factors only valid for 2011 data/MC
+                    # factors and corrections are currently
+                    # only valid for 2011 data/MC
+
                     if tau.matched:
                         # efficiency scale factor
                         effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
@@ -492,7 +496,7 @@ class HHProcessor(ATLASStudent):
                         # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
                         tau.efficiency_scale_factor_high = effic_sf + err
                         tau.efficiency_scale_factor_low = effic_sf - err
-                    if not tau.matched:
+                    else:
                         # fake rate scale factor
                         if event.RunNumber >= 188902:
                             trig = "EF_tau%dT_medium1"
