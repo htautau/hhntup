@@ -41,10 +41,12 @@ class RecoTau(TreeModel):
     efficiency_scale_factor = FloatCol(default=1.)
     efficiency_scale_factor_high = FloatCol(default=1.)
     efficiency_scale_factor_low = FloatCol(default=1.)
+
     # fake rate scale factor for taus that do not match truth
     fakerate_scale_factor = FloatCol(default=1.)
     fakerate_scale_factor_high = FloatCol(default=1.)
     fakerate_scale_factor_low = FloatCol(default=1.)
+
     # trigger efficiency correction
     trigger_scale_factor = FloatCol(default=1.)
     trigger_scale_factor_high = FloatCol(default=1.)
@@ -184,6 +186,13 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
                     tau.fakerate_scale_factor_high)
             setattr(tree, 'tau%i_fakerate_scale_factor_low' % i,
                     tau.fakerate_scale_factor_low)
+
+            setattr(tree, 'tau%i_trigger_scale_factor' % i,
+                    tau.trigger_scale_factor)
+            setattr(tree, 'tau%i_trigger_scale_factor_high' % i,
+                    tau.trigger_scale_factor_high)
+            setattr(tree, 'tau%i_trigger_scale_factor_low' % i,
+                    tau.trigger_scale_factor_low)
 
             setattr(tree, 'tau%i_matched' % i, tau.matched)
             setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)
