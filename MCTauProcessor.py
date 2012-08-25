@@ -22,13 +22,18 @@ class Event(TreeModel):
 
     match_collision = BoolCol(default=False)
     matched = BoolCol(False)
-    METx = FloatCol()
-    METy = FloatCol()
+    MET_x = FloatCol()
+    MET_y = FloatCol()
+    MET_phi = FloatCol()
+    MET = FloatCol()
     sumET = FloatCol()
 
 
 class RecoTau(TreeModel):
 
+    pt = FloatCol()
+    phi = FloatCol()
+    eta = FloatCol()
     fourvect = LorentzVector
     numTrack = IntCol()
     nPi0 = IntCol()
@@ -182,6 +187,9 @@ class MCTauProcessor(ATLASStudent):
                 continue
             out_tree.match_collision = False
 
+            out_tree.tau1_pt = tau1.pt
+            out_tree.tau1_phi = tau1.phi
+            out_tree.tau1_eta = tau1.eta
             out_tree.tau1_fourvect.set_from(tau1.fourvect)
             out_tree.tau1_numTrack = tau1.numTrack
             out_tree.tau1_nPi0 = tau1.nPi0
@@ -195,6 +203,9 @@ class MCTauProcessor(ATLASStudent):
                                                   tau1.secvtx_y,
                                                   tau1.secvtx_z))
 
+            out_tree.tau2_pt = tau2.pt
+            out_tree.tau2_phi = tau2.phi
+            out_tree.tau2_eta = tau2.eta
             out_tree.tau2_fourvect.set_from(tau2.fourvect)
             out_tree.tau2_numTrack = tau2.numTrack
             out_tree.tau2_nPi0 = tau2.nPi0
@@ -245,8 +256,10 @@ class MCTauProcessor(ATLASStudent):
                 print (tau1.privtx_x, tau1.privtx_y, tau1.privtx_z)
                 print (tau1.secvtx_x, tau1.secvtx_y, tau1.secvtx_z)
 
-            out_tree.METx = event.MET_RefFinal_BDTMedium_etx
-            out_tree.METy = event.MET_RefFinal_BDTMedium_ety
+            out_tree.MET_x = event.MET_RefFinal_BDTMedium_etx
+            out_tree.MET_y = event.MET_RefFinal_BDTMedium_ety
+            out_tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
+            out_tree.MET = event.MET_RefFinal_BDTMedium_et
             out_tree.sumET = event.MET_RefFinal_BDTMedium_sumet
 
             out_tree.Fill()
