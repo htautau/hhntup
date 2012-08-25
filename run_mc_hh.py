@@ -50,7 +50,7 @@ if not args.nominal_only:
                 set(s.upper().split('+')) for s in
                 args.systematics.split(',')]
     # systematics
-    cluster.run_systematics('HADHAD',
+    cluster.run_systematics_new('HADHAD',
                 args.student,
                 db=args.db,
                 systematics=args.systematics,

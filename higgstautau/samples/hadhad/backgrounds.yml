@@ -35,7 +35,7 @@ embedded-ztautau-mfsdown:
     latex: '$Z/\gamma^{*}$'
     math: 'Z/\gamma^{*}'
     samples:
-        - 'embed-hh-isol-mfsdown'
+        - 'embed-hh-isol-mfsdn'
 embedded-ztautau-noisol:
     name: Ztautau
     latex: '$Z/\gamma^{*}$'

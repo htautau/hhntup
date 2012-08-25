@@ -56,10 +56,12 @@ class OrderedDictYAMLLoader(yaml.Loader):
 
 SIGNALS_YML = {}
 BACKGROUNDS_YML = {}
+SYSTEMATICS_YML = {}
 #SAMPLES_YML = {}
 
 SIGNALS = {}
 BACKGROUNDS = {}
+SYSTEMATICS = {}
 #SAMPLES = {}
 
 for channel in [o for o in os.listdir(__HERE) if
@@ -68,10 +70,14 @@ for channel in [o for o in os.listdir(__HERE) if
     SIGNALS_YML[channel] = os.path.join(__HERE, channel, 'signals.yml')
     BACKGROUNDS_YML[channel] = os.path.join(__HERE, channel, 'backgrounds.yml')
     #SAMPLES_YML[channel] = os.path.join(__HERE, channel, 'samples.yml')
+    SYSTEMATICS_YML[channel] = os.path.join(__HERE, channel, 'systematics.yml')
 
-    SIGNALS[channel] = yaml.load(open(SIGNALS_YML[channel]), OrderedDictYAMLLoader)
-    BACKGROUNDS[channel] = yaml.load(open(BACKGROUNDS_YML[channel]), OrderedDictYAMLLoader)
+    SIGNALS[channel] = yaml.load(open(SIGNALS_YML[channel]),
+            OrderedDictYAMLLoader)
+    BACKGROUNDS[channel] = yaml.load(open(BACKGROUNDS_YML[channel]),
+            OrderedDictYAMLLoader)
     #SAMPLES[channel] = yaml.load(open(SAMPLES_YML[channel]), OrderedDictYAMLLoader)
+    SYSTEMATICS[channel] = yaml.load(open(SYSTEMATICS_YML[channel]))
 
 
 def iter_samples(channel, type=None):
@@ -79,7 +85,7 @@ def iter_samples(channel, type=None):
     channel = channel.lower()
     for sample_class in (SIGNALS[channel], BACKGROUNDS[channel]):
         for sample_type, sample_info in sample_class.items():
-            if type is not None:
+            if type:
                 if sample_type not in type:
                     continue
             for sample_name in sample_info['samples']:
@@ -89,6 +95,22 @@ def iter_samples(channel, type=None):
 def samples(channel, type=None):
 
     return [name for name in iter_samples(channel, type)]
+
+
+def iter_systematics(channel, dataset, type=None):
+
+    channel = channel.lower()
+    for sample_class in (SIGNALS[channel], BACKGROUNDS[channel]):
+        for sample_type, sample_info in sample_class.items():
+            if type is not None:
+                if sample_type not in type:
+                    continue
+            systematics = SYSTEMATICS[channel][sample_info['systematics']]
+            for sample_name in sample_info['samples']:
+                if sample_name == dataset:
+                    for sys_variations in systematics:
+                        yield sys_variations.split(',')
+                    return
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import subprocess
 from subprocess import call
 import multiprocessing as mp
 from higgstautau.datasets import Database
+from higgstautau import samples
 from systematics import iter_systematics
 
 
@@ -181,6 +182,23 @@ def run_systematics(channel, student, systematics=None, **kwargs):
             student_args=syst.split(),
             qsub_name_suffix='_'.join(sys_variations),
             **kwargs)
+
+
+def run_systematics_new(channel, student, datasets, systematics=None, **kwargs):
+
+    for dataset in datasets:
+        for sys_variations in samples.iter_systematics(channel, dataset):
+            if systematics is not None:
+                if sys_variations not in systematics:
+                    continue
+            suffix = '--suffix %s' % '_'.join(sys_variations)
+            syst = '--syst-terms %s' % ','.join(sys_variations)
+            run(student,
+                datasets=[dataset],
+                args=suffix.split(),
+                student_args=syst.split(),
+                qsub_name_suffix='_'.join(sys_variations),
+                **kwargs)
 
 
 if __name__ == "__main__":
