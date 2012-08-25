@@ -34,6 +34,7 @@ from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.corrections import reweight_ggf
+from higgstautau.hadhad.corrections import TauTriggerEfficiency
 
 from goodruns import GRL
 import subprocess
@@ -202,6 +203,9 @@ class HHProcessor(ATLASStudent):
             TauLeadSublead(
                 lead=35*GeV,
                 sublead=25*GeV),
+            TauTriggerEfficiency(
+                year=YEAR,
+                passthrough=self.metadata.datatype == datasets.DATA),
             JetSelection(),
             TauJetOverlapRemoval(),
         ])
