@@ -204,21 +204,21 @@ def run_systematics(channel, student, systematics=None, **kwargs):
             **kwargs)
 
 
-def run_systematics_new(channel, student, datasets, systematics=None, **kwargs):
+def run_systematics_new(channel, student, datasets, systematics,
+        filter_systematics=None, **kwargs):
 
-    for dataset in datasets:
-        for sys_variations in samples.iter_systematics(channel, dataset):
-            if systematics is not None:
-                if sys_variations not in systematics:
-                    continue
-            suffix = '--suffix %s' % '_'.join(sys_variations)
-            syst = '--syst-terms %s' % ','.join(sys_variations)
-            run(student,
-                datasets=[dataset],
-                args=suffix.split(),
-                student_args=syst.split(),
-                qsub_name_suffix='_'.join(sys_variations),
-                **kwargs)
+    for sys_variations in systematics:
+        if filter_systematics is not None:
+            if sys_variations not in filter_systematics:
+                continue
+        suffix = '--suffix %s' % '_'.join(sys_variations)
+        syst = '--syst-terms %s' % ','.join(sys_variations)
+        run(student,
+            datasets=datasets,
+            args=suffix.split(),
+            student_args=syst.split(),
+            qsub_name_suffix='_'.join(sys_variations),
+            **kwargs)
 
 
 if __name__ == "__main__":
