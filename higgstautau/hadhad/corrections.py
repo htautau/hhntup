@@ -109,7 +109,7 @@ class TauTriggerEfficiency(EventFilter):
             if self.tes_systematic:
                 print "%f %f" % (tau.pt, tau.pt_nominal)
                 tau.trigger_scale_factor = (corr.getSF(tau.pt, 0) *
-                    corr.getEffMC(tau.pt, 0) / corr.getEffMC(tau.pt_nominal, 0))
+                    corr.getMCEff(tau.pt, 0) / corr.getMCEff(tau.pt_nominal, 0))
             else:
                 tau.trigger_scale_factor = corr.getSF(tau.pt, 0)
             tau.trigger_scale_factor_high = corr.getSF(tau.pt, 1)
