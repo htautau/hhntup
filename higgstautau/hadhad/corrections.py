@@ -77,12 +77,14 @@ class TauTriggerEfficiency(EventFilter):
         assert taus[0][1].pt > 29 * GeV
         assert taus[1][1].pt > 20 * GeV
 
+        """
         if event.RunNumber >= 188902:
             assert taus[0][1].EF_tau29T_medium1 == 1
             assert taus[1][1].EF_tau20T_medium1 == 1
         else:
             assert taus[0][1].EF_tau29_medium1 == 1
             assert taus[1][1].EF_tau20_medium1 == 1
+        """
 
         thresh = []
         for tau in event.taus:
