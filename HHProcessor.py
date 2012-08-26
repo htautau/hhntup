@@ -281,7 +281,7 @@ class HHProcessor(ATLASStudent):
                 leading_jets.append(jets[0])
                 current_channel = CATEGORY_BOOSTED
                 # subleading jet above 30
-                if len(jets) >= 2 and jets[1].pt > 35 * GeV: # was 30
+                if len(jets) >= 2 and jets[1].pt > 30 * GeV:
                     leading_jets.append(jets[1])
                     current_channel = CATEGORY_VBF
             tree.category = current_channel
