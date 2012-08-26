@@ -59,9 +59,9 @@ class HHProcessor(ATLASStudent):
         parser.add_argument('--syst-terms', default=None)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
-            self.args.syst_terms = [
+            self.args.syst_terms = set([
                 eval('Systematics.%s' % term) for term in
-                self.args.syst_terms.split(',')]
+                self.args.syst_terms.split(',')])
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -209,6 +209,7 @@ class HHProcessor(ATLASStudent):
             TauTriggerEfficiency(
                 year=YEAR,
                 datatype=self.metadata.datatype,
+                tes_systematic=Systematics.TES_TERMS & self.args.syst_terms,
                 passthrough=self.metadata.datatype == datasets.DATA),
             JetSelection(),
             TauJetOverlapRemoval(),
