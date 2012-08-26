@@ -60,7 +60,16 @@ class TauFourMomentum(FourMomentum):
         self.matched_dR = 9999.
         self.matched_collision = False
 
+        self._pt_nominal = -1111.
+
         super(TauFourMomentum, self).__init__()
+
+    @property
+    def pt_nominal(self):
+
+        if self._pt_nominal != -1111.:
+            return self._pt_nominal
+        return self.pt
 
     @cached_property
     def fourvect(self):

@@ -290,6 +290,8 @@ class TES(TauSystematic):
             shift = 0
         if not self.is_up:
             shift *= -1
+        # need nominal pT for trigger efficiency correction
+        tau._pt_nominal = tau.pt
         tau.pt *= 1. + shift
 
 
