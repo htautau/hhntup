@@ -210,7 +210,7 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 passthrough=self.metadata.datatype in (
                     datasets.DATA,
-                    datasets.EMBED),
+                    datasets.EMBED)),
             JetSelection(),
             TauJetOverlapRemoval(),
         ])
