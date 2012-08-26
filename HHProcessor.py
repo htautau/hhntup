@@ -202,7 +202,7 @@ class HHProcessor(ATLASStudent):
                 datatype=self.metadata.datatype,
                 skim=False,
                 tree=tree,
-                pasthrough=self.metadata.datatype == datasets.EMBED),
+                passthrough=self.metadata.datatype == datasets.EMBED),
             TauLeadSublead(
                 lead=35*GeV,
                 sublead=25*GeV),
