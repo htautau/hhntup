@@ -38,9 +38,9 @@ class TauTriggerEfficiency(EventFilter):
                 self.corrections = {}
                 for thresh in (29, 20):
                     self.corrections[thresh] = {}
-                    for tight, bdt_label  in zip((0, 'BDTm'), (1, 'BDTt')):
+                    for tight, bdt_label  in zip((0, 1), ('BDTm', 'BDTt')):
                         self.corrections[thresh][tight] = {}
-                        for period, is_late in zip(('', False), ('T', True)):
+                        for period, is_late in zip(('', 'T'), (False, True)):
                             tool = ROOT.TauTriggerCorrections()
                             tool.loadInputFile(
                                 os.path.join(base,

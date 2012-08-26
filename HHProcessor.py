@@ -209,7 +209,8 @@ class HHProcessor(ATLASStudent):
             TauTriggerEfficiency(
                 year=YEAR,
                 datatype=self.metadata.datatype,
-                tes_systematic=Systematics.TES_TERMS & self.args.syst_terms,
+                tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
+                    self.args.syst_terms),
                 passthrough=self.metadata.datatype == datasets.DATA),
             JetSelection(),
             TauJetOverlapRemoval(),
