@@ -510,17 +510,20 @@ class HHProcessor(ATLASStudent):
                             trig = "EF_tau%dT_medium1"
                         else:
                             trig = "EF_tau%d_medium1"
+                        wp = "Medium"
+                        if tau.JetBDTSigTight:
+                            wp = "Tight"
                         sf = fakerate_tool.getScaleFactor(
-                                tau.pt, "Medium",
+                                tau.pt, wp,
                                 trig % tau.trigger_match_thresh)
                         tau.fakerate_scale_factor = sf
                         tau.fakerate_scale_factor_high = (sf +
                                 fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, "Medium",
+                                    tau.pt, wp,
                                     trig % tau.trigger_match_thresh, True))
                         tau.fakerate_scale_factor_low = (sf -
                                 fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, "Medium",
+                                    tau.pt, wp,
                                     trig % tau.trigger_match_thresh, False))
 
             # fill tau block

@@ -35,6 +35,7 @@ class TauTriggerEfficiency(EventFilter):
                 self.correct_20.loadInputFile(
                         "../root/triggerSF_wmcpara_EF_tau20_medium1.root",
                         "1P3P","BDTm" )
+                # separate for medium and tight
             else:
                 raise ValueError(
                     "No trigger efficiency corrections defined for datatype %d"
