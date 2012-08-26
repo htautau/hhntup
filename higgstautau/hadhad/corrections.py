@@ -4,6 +4,7 @@ import ROOT
 from rootpy.tree.filtering import *
 from atlastools.units import GeV
 from externaltools import TauTriggerCorrections
+from atlastools import datasets
 
 
 class TauTriggerEfficiency(EventFilter):
@@ -12,21 +13,39 @@ class TauTriggerEfficiency(EventFilter):
     currently only supports 2011
     """
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, year, datatype, **kwargs):
 
-        self.year = year
+        self.year = year % 1000
+        self.datatype = datatype
         base = TauTriggerCorrections.RESOURCE_PATH
-        self.correct_20 = ROOT.TauTriggerCorrections(os.path.join(base,
-            'triggerSF_EF_tau20_medium1.root'))
-        self.correct_29 = ROOT.TauTriggerCorrections(os.path.join(base,
-            'triggerSF_EF_tau29_medium1.root'))
-        self.correct_20T = ROOT.TauTriggerCorrections(os.path.join(base,
-            'triggerSF_EF_tau20T_medium1.root'))
-        self.correct_29T = ROOT.TauTriggerCorrections(os.path.join(base,
-            'triggerSF_EF_tau29T_medium1.root'))
+
+        if self.year == 11:
+            if datatype == datasets.MC:
+                self.correct_20 = ROOT.TauTriggerCorrections(os.path.join(base,
+                    'triggerSF_EF_tau20_medium1.root'))
+                self.correct_29 = ROOT.TauTriggerCorrections(os.path.join(base,
+                    'triggerSF_EF_tau29_medium1.root'))
+                self.correct_20T = ROOT.TauTriggerCorrections(os.path.join(base,
+                    'triggerSF_EF_tau20T_medium1.root'))
+                self.correct_29T = ROOT.TauTriggerCorrections(os.path.join(base,
+                    'triggerSF_EF_tau29T_medium1.root'))
+            elif datatype == datasets.EMBED:
+                # use the 3D param
+                self.correct_20 = ROOT.TauTriggerCorrections()
+                self.correct_20.loadInputFile(
+                        "../root/triggerSF_wmcpara_EF_tau20_medium1.root",
+                        "1P3P","BDTm" )
+            else:
+                raise ValueError(
+                    "No trigger efficiency corrections defined for datatype %d"
+                    % datatype)
+            self.passes = self.passes_11
+        else:
+            raise ValueError(
+                "No trigger efficiency corrections defined for year %d" % year)
         super(TauTriggerEfficiency, self).__init__(**kwargs)
 
-    def passes(self, event):
+    def passes_11(self, event):
 
         assert len(event.taus) == 2
 

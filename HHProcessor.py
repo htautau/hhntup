@@ -208,9 +208,8 @@ class HHProcessor(ATLASStudent):
                 sublead=25*GeV),
             TauTriggerEfficiency(
                 year=YEAR,
-                passthrough=self.metadata.datatype in (
-                    datasets.DATA,
-                    datasets.EMBED)),
+                datatype=self.metadata.datatype,
+                passthrough=self.metadata.datatype == datasets.DATA),
             JetSelection(),
             TauJetOverlapRemoval(),
         ])
@@ -491,7 +490,7 @@ class HHProcessor(ATLASStudent):
 
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
-                # fix trigger_match_thresh for 2012 skims
+                # fix trigger_match_thresh in the skims
 
                 for tau in (tau1, tau2):
 
