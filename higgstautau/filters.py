@@ -31,7 +31,7 @@ class PriVertex(EventFilter):
 
     def passes(self, event):
 
-        return any(ifilter(primary_vertex_selection(vxp), event.vertices))
+        return any(ifilter(primary_vertex_selection, event.vertices))
 
 
 class JetCleaning(EventFilter):
