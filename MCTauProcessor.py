@@ -256,11 +256,18 @@ class MCTauProcessor(ATLASStudent):
                 print (tau1.privtx_x, tau1.privtx_y, tau1.privtx_z)
                 print (tau1.secvtx_x, tau1.secvtx_y, tau1.secvtx_z)
 
-            out_tree.MET_x = event.MET_RefFinal_BDTMedium_etx
-            out_tree.MET_y = event.MET_RefFinal_BDTMedium_ety
-            out_tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
-            out_tree.MET = event.MET_RefFinal_BDTMedium_et
-            out_tree.sumET = event.MET_RefFinal_BDTMedium_sumet
+            if self.metadata.year == 2011:
+                out_tree.MET_x = event.MET_RefFinal_BDTMedium_etx
+                out_tree.MET_y = event.MET_RefFinal_BDTMedium_ety
+                out_tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
+                out_tree.MET = event.MET_RefFinal_BDTMedium_et
+                out_tree.sumET = event.MET_RefFinal_BDTMedium_sumet
+            else:
+                out_tree.MET_x = event.MET_RefFinal_STVF_etx
+                out_tree.MET_y = event.MET_RefFinal_STVF_ety
+                out_tree.MET_phi = event.MET_RefFinal_STVF_phi
+                out_tree.MET = event.MET_RefFinal_STVF_et
+                out_tree.sumET = event.MET_RefFinal_STVF_sumet
 
             out_tree.Fill()
 
