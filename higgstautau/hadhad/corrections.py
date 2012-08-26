@@ -49,10 +49,6 @@ class TauTriggerEfficiency(EventFilter):
                                 "1P3P", bdt_label)
                             self.corrections[thresh][tight][is_late] = tool
                 self.passes = self.passes_11_embed
-            else:
-                raise ValueError(
-                    "No trigger efficiency corrections defined for datatype %d"
-                    % datatype)
         else:
             raise ValueError(
                 "No trigger efficiency corrections defined for year %d" % year)
