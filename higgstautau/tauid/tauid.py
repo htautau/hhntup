@@ -92,11 +92,11 @@ def uncertainty(score, pt, prong, nvtx):
     if b_t_low <= 0:
         raise ValueError("low BDT tight selection error too high")
 
-    if score > 1. - high_tight:
-        dx_high = 1. - score
-    elif score > tight - high_tight:
-        #dx_high = (1. - score) * high_tight / b_t_high
-        dx_high = high_tight
+    #if score > 1. - high_tight:
+    #   dx_high = 1. - score
+    if score > tight - high_tight:
+        dx_high = (1. - score) * high_tight / b_t_high
+        #dx_high = high_tight
     elif score > medium - high_medium:
         dx_high = high_medium - (high_medium - high_tight) * (score - medium +
                 high_medium) / (tight - high_tight - (medium - high_medium))

@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 from tauid_uncertainty import efficiency, efficiency_uncertainty
 
 
-pt = 50000
+pt = 40000
 
 for prong in tauid.PRONGS:
     loose = selection('loose', prong, 3).Eval(pt)

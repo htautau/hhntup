@@ -151,14 +151,14 @@ if __name__ == '__main__':
                 print target_tight
                 print efficiency_validation(ztautau, 'tight', prong, category)
 
-                target_loose_high = target_loose + uncert_loose
-                target_loose_low = target_loose - uncert_loose
+                target_loose_high = target_loose * (1. + uncert_loose)
+                target_loose_low = target_loose * (1. - uncert_loose)
 
-                target_medium_high = target_medium + uncert_medium
-                target_medium_low = target_medium - uncert_medium
+                target_medium_high = target_medium * (1. + uncert_medium)
+                target_medium_low = target_medium * (1. - uncert_medium)
 
-                target_tight_high = target_tight + uncert_tight
-                target_tight_low = target_tight - uncert_tight
+                target_tight_high = target_tight * (1. + uncert_tight)
+                target_tight_low = target_tight * (1. - uncert_tight)
 
                 shift_loose_low = binary_search(target_loose_low, loose,
                         shift_loose_low)
