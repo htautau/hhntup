@@ -18,7 +18,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_VBF,
         'cuts': COMMON_CATEGORY_CUTS,
         'fitbins': 5,
-        'qcd_shape_region': '!OS',
+        'qcd_shape_region': 'SS', #'!OS',
         'target_region': 'OS',
         'features': [
             'dEta_jets',
