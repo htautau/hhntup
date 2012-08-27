@@ -23,10 +23,10 @@ CWD = os.getcwd()
 
 for i in xrange(args.nsplit):
     for dataset in datasets:
-        CMD = ("%s && ./run --output-path ntuples/hadhad "
+        CMD = ("%s && ./run --output-path ntuples/lephad/%s "
                "-s LHProcessor.py -n %d --db datasets_lh "
         "--nice %d --split %d:%%d %s") % (
-            setup, args.nproc, args.nice, args.nsplit, dataset)
+            setup, dataset, args.nproc, args.nice, args.nsplit, dataset)
         
         cmd = "cd %s && %s" % (CWD, CMD % (i + 1))
         cluster.qsub(
