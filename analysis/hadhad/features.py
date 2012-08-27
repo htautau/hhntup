@@ -170,14 +170,14 @@ VARIABLES = {
         'title': r'$\tau_{1}$ BDT Score',
         'filename': 'tau1_BDTJetScore',
         'bins': 20,
-        'range': (.5, 1),
+        'range': (.55, 1),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_BDTJetScore': {
         'title': r'$\tau_{2}$ BDT Score',
         'filename': 'tau2_BDTJetScore',
         'bins': 20,
-        'range': (.5, 1),
+        'range': (.55, 1),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'cos_theta_tau1_tau2': {
@@ -369,7 +369,6 @@ if __name__ == '__main__':
     from utils import *
     from matplotlib import cm
     from samples import *
-    from matplotlib.backends.backend_pdf import PdfPages
     from background_estimation import qcd_ztautau_norm
     from config import plots_dir
     import os
@@ -493,18 +492,21 @@ if __name__ == '__main__':
                     dir=PLOTS_DIR)
             figures[category][expr] = fig
 
-    import datetime
-    now = datetime.datetime.today()
-    # put all plots in a multipage pdf
-    for category, exprs in figures.items():
-        pdf = PdfPages(os.path.join(PLOTS_DIR, 'features_%s.pdf' % category))
-        for expr, fig in sorted(exprs.items(), key=lambda x: x[0]):
-            pdf.savefig(fig)
-        d = pdf.infodict()
-        d['Title'] = 'Features'
-        d['Author'] = 'Noel Dawe'
-        d['Subject'] = 'Higgs tautau hh features'
-        d['Keywords'] = 'higgs tau'
-        d['CreationDate'] = now
-        d['ModDate'] = now
-        pdf.close()
+    if set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
+        # only create multipage pdf of all plots if we created all plots
+        from matplotlib.backends.backend_pdf import PdfPages
+        import datetime
+        now = datetime.datetime.today()
+        # put all plots in a multipage pdf
+        for category, exprs in figures.items():
+            pdf = PdfPages(os.path.join(PLOTS_DIR, 'features_%s.pdf' % category))
+            for expr, fig in sorted(exprs.items(), key=lambda x: x[0]):
+                pdf.savefig(fig)
+            d = pdf.infodict()
+            d['Title'] = 'Features'
+            d['Author'] = 'Noel Dawe'
+            d['Subject'] = 'Higgs tautau hh features'
+            d['Keywords'] = 'higgs tau'
+            d['CreationDate'] = now
+            d['ModDate'] = now
+            pdf.close()

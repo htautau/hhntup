@@ -57,6 +57,8 @@ Ideas
   Swagato suggested this. gammagamma analysis does this.
   OR try calculating limits using 2D BDT vs MMC distributions.
 * Look at sideband above 150GeV to check shape and norm
+* Use SS for VBF norm but !OS for QCD in plots after norm to smooth it out
+  Check that BDTJetScore is still well modeled.
 
 
 Notes
