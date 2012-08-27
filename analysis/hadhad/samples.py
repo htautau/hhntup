@@ -438,8 +438,8 @@ class Data(Sample):
     def __init__(self, **kwargs):
 
         super(Data, self).__init__(scale=1., **kwargs)
-        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student),
-                                'data.root']))
+        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student, self.student),
+                                'data-JetTauEtMiss.root']))
         self.data = self.DATA_FILE.Get(self.treename)
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
@@ -491,14 +491,14 @@ class MC(Sample):
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
             else:
                 rfile = ropen('.'.join([
-                    os.path.join(NTUPLE_PATH, self.student), ds.name, 'root']))
+                    os.path.join(NTUPLE_PATH, self.student, self.student), ds.name, 'root']))
                 trees['NOMINAL'] = rfile.Get(self.treename)
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
                 if ds.name not in FILES:
                     FILES[ds.name] = {}
                 FILES[ds.name]['NOMINAL'] = rfile
 
-            if systematics:
+            if systematics and not isinstance(self, Embedded_Ztautau):
                 for sys_variations in iter_systematics('hadhad'):
 
                     sys_term = '_'.join(sys_variations)
@@ -511,7 +511,7 @@ class MC(Sample):
                         weighted_events[sys_term] = rfile.cutflow[1]
                     else:
                         rfile = ropen('.'.join([
-                            os.path.join(NTUPLE_PATH, self.student),
+                            os.path.join(NTUPLE_PATH, self.student, self.student),
                             '_'.join([ds.name, sys_term]), 'root']))
                         trees[sys_term] = rfile.Get(self.treename)
                         weighted_events[sys_term] = rfile.cutflow[1]
@@ -526,6 +526,8 @@ class MC(Sample):
                         self.mode, 'tautau')[0] * TAUTAUHADHADBR
                 kfact = 1.
                 effic = 1.
+            elif isinstance(self, Embedded_Ztautau):
+                xs, kfact, effic = 1., 1., 1.
             else:
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
@@ -582,10 +584,21 @@ class MC(Sample):
             tree = sys_trees['NOMINAL']
             events = sys_events['NOMINAL']
 
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
-            weighted_selection = ('%.5f * mc_weight * pileup_weight * '
-                                  'tau1_weight * tau2_weight * (%s)' %
-                                  (weight, selection))
+            if isinstance(self, Embedded_Ztautau):
+                weight = self.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            weighted_selection = (
+                    '%.5f * mc_weight * pileup_weight * '
+                    'tau1_efficiency_scale_factor * '
+                    'tau2_efficiency_scale_factor * '
+                    'tau1_fakerate_scale_factor * '
+                    'tau2_fakerate_scale_factor * '
+                    'tau1_trigger_scale_factor * '
+                    'tau2_trigger_scale_factor * (%s)' %
+                    (weight, selection))
+
             if VERBOSE:
                 print weighted_selection
 
@@ -604,7 +617,12 @@ class MC(Sample):
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            if isinstance(self, Embedded_Ztautau):
+                weight = self.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
             trees.append(selected_tree)
@@ -616,7 +634,12 @@ class MC(Sample):
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            if isinstance(self, Embedded_Ztautau):
+                weight = self.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
             total += weight * tree.GetEntries(selection)
         return total
 
@@ -626,7 +649,12 @@ class MC(Sample):
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            if isinstance(self, Embedded_Ztautau):
+                weight = seld.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
             if selection:
                 selected_tree = asrootpy(tree.CopyTree(selection))
             else:
@@ -662,7 +690,7 @@ class Embedded_Ztautau(MC):
         self._label = yml['latex']
         self.samples = yml['samples']
         self.colour = '#00a4ff'
-        super(MC_Ztautau, self).__init__(**kwargs)
+        super(Embedded_Ztautau, self).__init__(**kwargs)
 
         # requires special treatment of systematics
 

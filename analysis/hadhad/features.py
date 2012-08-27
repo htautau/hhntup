@@ -374,7 +374,8 @@ if __name__ == '__main__':
 
     PLOTS_DIR = plots_dir(__file__)
 
-    mc_ztautau   = MC_Ztautau()
+    #mc_ztautau   = MC_Ztautau()
+    ztautau = Embedded_Ztautau()
     mc_others = MC_Others()
 
     vbf_125 = MC_VBF(mass=125)
@@ -400,7 +401,7 @@ if __name__ == '__main__':
         qcd_shape_region = cat_info['qcd_shape_region']
         target_region = cat_info['target_region']
 
-        qcd = QCD(data=data, mc=[mc_others, mc_ztautau],
+        qcd = QCD(data=data, mc=[mc_others, ztautau],
               shape_region=qcd_shape_region)
 
         figures[category] = {}
@@ -409,12 +410,12 @@ if __name__ == '__main__':
         cuts = Cut()
 
         qcd.scale = 1.
-        mc_ztautau.scale = 1.
+        ztautau.scale = 1.
 
         # determine normalization of QCD and Ztautau
         # in each category separately
         qcd_scale, ztautau_scale = qcd_ztautau_norm(
-            ztautau=mc_ztautau,
+            ztautau=ztautau,
             backgrounds=[mc_others],
             data=data,
             category=category,
@@ -423,7 +424,7 @@ if __name__ == '__main__':
             use_cache=args.use_cache)
 
         qcd.scale = qcd_scale
-        mc_ztautau.scale = ztautau_scale
+        ztautau.scale = ztautau_scale
 
         for expr, var_info in VARIABLES.items():
             if category.upper() not in var_info['cats']:
@@ -448,7 +449,7 @@ if __name__ == '__main__':
                                 bins, min, max,
                                 cuts=cuts)
 
-            ztautau_hist = mc_ztautau.draw(expr,
+            ztautau_hist = ztautau.draw(expr,
                                            category, target_region,
                                            bins, min, max,
                                            cuts=cuts)
