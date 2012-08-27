@@ -439,7 +439,7 @@ class Data(Sample):
 
         super(Data, self).__init__(scale=1., **kwargs)
         self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student, self.student),
-                                'data-JetTauEtMiss.root']))
+                                'data-JetTauEtmiss.root']))
         self.data = self.DATA_FILE.Get(self.treename)
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
@@ -539,7 +539,8 @@ class MC(Sample):
     def label(self):
 
         l = self._label
-        if self.scale != 1. and not isinstance(self, MC_Ztautau):
+        if self.scale != 1. and not isinstance(self,
+                (MC_Ztautau, Embedded_Ztautua)):
             l += r' ($\sigma_{SM} \times %g$)' % self.scale
         return l
 
@@ -815,7 +816,7 @@ class MC_WH(MC_Higgs):
 
 class MC_ZH(MC_Higgs):
 
-    def __init__(self, mass=None):
+    def __init__(self, mass=None, **kwargs):
 
         super(MC_ZH, self).__init__(
                 mode='ZH',

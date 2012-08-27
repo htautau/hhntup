@@ -626,10 +626,11 @@ class Dataset(yaml.YAMLObject):
         if self.datatype == DATA:
             return 1., 1., 1.
         if self.name in XSEC_CACHE:
+            print "WARNING: using cached cross section for dataset %s" % self.ds
             return XSEC_CACHE[self.name]
 
         try:
-            xs, kfact, effic = xsec.xsec_kfact_effic('lephad', self.id)
+            return xsec.xsec_kfact_effic('lephad', self.id)
         except KeyError:
             print "WARNING: cross section of dataset %s not available locally." % self.ds
             print "Looking it up in AMI instead. AMI cross sections can be very"
@@ -643,7 +644,7 @@ class Dataset(yaml.YAMLObject):
                 xs, effic = get_dataset_xsec_effic(amiclient, self.ds)
             XSEC_CACHE[self.name] = (xs, 1., effic)
             XSEC_CACHE_MODIFIED = True
-            return (xs, 1., effic)
+            return xs, 1., effic
         raise Exception("cross section of dataset %s is not known!" % self.ds)
 
     @cached_property
@@ -667,7 +668,7 @@ yaml.add_constructor(u'!Dataset', dataset_constructor)
 
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
-        #print "Loading cross-section cache..."
+        print "Loading cross-section cache..."
         XSEC_CACHE = pickle.load(cache)
 
 
@@ -676,7 +677,7 @@ def write_cache():
 
     if XSEC_CACHE_MODIFIED:
         with open(XSEC_CACHE_FILE, 'w') as cache:
-            #print "Saving cross-section cache to disk..."
+            print "Saving cross-section cache to disk..."
             pickle.dump(XSEC_CACHE, cache)
 
 
