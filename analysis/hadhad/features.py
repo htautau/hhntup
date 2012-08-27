@@ -107,7 +107,7 @@ VARIABLES = {
         'title': r'$M^{MMC}_{\tau_{1},\/\tau_{2}}$',
         'filename': 'mass_MMC',
         'bins': 20,
-        'range': (0, 250),
+        'range': (50, 250),
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -353,19 +353,21 @@ VARIABLES = {
 if __name__ == '__main__':
 
     from argparse import ArgumentParser
+    from categories import CATEGORIES
 
     parser = ArgumentParser()
     parser.add_argument('--no-cache', action='store_false', dest='use_cache',
             help="do not use cached background scale factors "
             "and instead recalculate them",
             default=True)
+    parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
+    parser.add_argument('--plots', nargs='*')
     args = parser.parse_args()
 
     import ROOT
     ROOT.gROOT.SetBatch(True)
     from utils import *
     from matplotlib import cm
-    from categories import CATEGORIES
     from samples import *
     from matplotlib.backends.backend_pdf import PdfPages
     from background_estimation import qcd_ztautau_norm
@@ -395,8 +397,9 @@ if __name__ == '__main__':
     figures = {}
 
     for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
-        #if category == 'preselection':
-        #    continue
+
+        if category not in args.categories:
+            continue
 
         # QCD shape region SS or !OS
         qcd_shape_region = cat_info['qcd_shape_region']
@@ -428,7 +431,11 @@ if __name__ == '__main__':
         ztautau.scale = ztautau_scale
 
         for expr, var_info in VARIABLES.items():
+
             if category.upper() not in var_info['cats']:
+                continue
+
+            if args.plots and expr not in args.plots:
                 continue
 
             print
