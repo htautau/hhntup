@@ -540,7 +540,7 @@ class MC(Sample):
 
         l = self._label
         if self.scale != 1. and not isinstance(self,
-                (MC_Ztautau, Embedded_Ztautua)):
+                (MC_Ztautau, Embedded_Ztautau)):
             l += r' ($\sigma_{SM} \times %g$)' % self.scale
         return l
 
