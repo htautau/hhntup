@@ -63,7 +63,7 @@ CATEGORIES = {
         ]
     },
     'ggf': {
-            'name': r'$\tau_{had}\tau_{had}$: Non-Boosted Category',
+        'name': r'$\tau_{had}\tau_{had}$: Non-Boosted Category',
         'code': categories.CATEGORY_GGF,
         'cuts': COMMON_CUTS,
         'fitbins': 10,

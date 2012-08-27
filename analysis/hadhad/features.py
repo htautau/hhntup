@@ -395,8 +395,9 @@ if __name__ == '__main__':
     figures = {}
 
     for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
-        if category == 'preselection':
-            continue
+        #if category == 'preselection':
+        #    continue
+
         # QCD shape region SS or !OS
         qcd_shape_region = cat_info['qcd_shape_region']
         target_region = cat_info['target_region']
@@ -439,26 +440,31 @@ if __name__ == '__main__':
             if 'scale' in var_info:
                 expr = "%s * %f" % (expr, var_info['scale'])
 
-            other_hist = mc_others.draw(expr,
-                                  category, target_region,
-                                  bins, min, max,
-                                  cuts=cuts)
+            other_hist = mc_others.draw(
+                    expr,
+                    category, target_region,
+                    bins, min, max,
+                    cuts=cuts)
 
-            qcd_hist = qcd.draw(expr,
-                                category, target_region,
-                                bins, min, max,
-                                cuts=cuts)
+            qcd_hist = qcd.draw(
+                    expr,
+                    category, target_region,
+                    bins, min, max,
+                    cuts=cuts)
 
-            ztautau_hist = ztautau.draw(expr,
-                                           category, target_region,
-                                           bins, min, max,
-                                           cuts=cuts)
+            ztautau_hist = ztautau.draw(
+                    expr,
+                    category, target_region,
+                    bins, min, max,
+                    cuts=cuts)
+
             bkg_hists = [qcd_hist, other_hist, ztautau_hist]
 
-            data_hist = data.draw(expr,
-                                  category, target_region,
-                                  bins, min, max,
-                                  cuts=cuts)
+            data_hist = data.draw(
+                    expr,
+                    category, target_region,
+                    bins, min, max,
+                    cuts=cuts)
 
             print "Data events: %d" % sum(data_hist)
             print "Model events: %f" % sum(sum(bkg_hists))
@@ -466,17 +472,18 @@ if __name__ == '__main__':
                 print hist.GetTitle(), sum(hist)
             print "Data / Model: %f" % (sum(data_hist) / sum(sum(bkg_hists)))
 
-            fig = draw(data=data_hist, model=bkg_hists,
-                       name=var_info['title'],
-                       output_name=var_info['filename'],
-                       category_name=cat_info['name'],
-                       category=category,
-                       units=var_info.get('units', None),
-                       range=var_info['range'],
-                       show_ratio=True,
-                       show_qq=False,
-                       model_colour_map=None,
-                       dir=PLOTS_DIR)
+            fig = draw(
+                    data=data_hist, model=bkg_hists,
+                    name=var_info['title'],
+                    output_name=var_info['filename'],
+                    category_name=cat_info['name'],
+                    category=category,
+                    units=var_info.get('units', None),
+                    range=var_info['range'],
+                    show_ratio=True,
+                    show_qq=False,
+                    model_colour_map=None,
+                    dir=PLOTS_DIR)
             figures[category][expr] = fig
 
     import datetime
