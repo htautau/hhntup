@@ -12,17 +12,26 @@ from math import *
 from . import jetcleaning
 
 
-class PriVertex(EventFilter):
+def primary_vertex_selection(vxp):
 
-    def passes(self, event):
+    return vxp.type == 1 and vxp.nTracks >= 4
 
-        return any(ifilter(lambda vxp: vxp.type == 1 and vxp.nTracks >= 4, event.vertices))
+
+def pileup_vertex_selection(vxp):
+
+    return vxp.type == 3 and vxp.nTracks >= 2
 
 
 def vertex_selection(vxp):
     """ Does the full primary and pileup vertex selection """
+    return primary_vertex_selection(vxp) or pileup_vertex_selection(vxp)
 
-    return (vxp.type == 1 and vxp.nTracks >= 4) or (vxp.type == 3 and vxp.nTracks >= 2)
+
+class PriVertex(EventFilter):
+
+    def passes(self, event):
+
+        return any(ifilter(primary_vertex_selection, event.vertices))
 
 
 class JetCleaning(EventFilter):

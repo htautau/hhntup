@@ -290,6 +290,8 @@ class TES(TauSystematic):
             shift = 0
         if not self.is_up:
             shift *= -1
+        # need nominal pT for trigger efficiency correction
+        tau._pt_nominal = tau.pt
         tau.pt *= 1. + shift
 
 
@@ -408,6 +410,7 @@ class Systematics(EventFilter):
     TES_DOWN = METUtil.TESDown
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
+    TES_TERMS = {TES_UP, TES_DOWN}
     TAU_TERMS = {TES_UP, TES_DOWN, TER_UP, TER_DOWN}
     TAUBDT_UP = -100
     TAUBDT_DOWN = -101

@@ -122,3 +122,17 @@ now created for the data in stage II:
 * ``vector<int> tau_trigger_match_index``: index of the matching EF tau, -1 if not matched.
 * ``vector<int> tau_trigger_match_thresh``: the threshold of the
   matched trigger in GeV, 0 if not matched
+
+
+Issues / Ideas
+--------------
+
+* Fix trigger threshold association
+* Run skim II directly on D3PDs to get absolute cut-flows
+* Also keep track of weighted cut-flow (``mc_event_weight``, pileup weight)
+* Remove 2tau38 trigger in 2012 skims
+* Implement new trigger emulation in 2012 skims
+* Set trigger scale factors, efficiency scale factors, fake rate scale factors
+  in the skims.
+* Run and save the MMC output in skim II
+* Separate skims for systematics?

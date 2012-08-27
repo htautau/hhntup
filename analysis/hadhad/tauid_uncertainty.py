@@ -1,42 +1,86 @@
 #!/usr/bin/env python
 
-from samples import MC_TauID
-
-from higgstautau.tauid.p851 import selection, nvtx_to_category, CATEGORIES
-from higgstautau.tauid.common import LEVELS, PRONGS
-from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
-
 from rootpy.tree import Cut
-from rootpy.io import open as ropen
+from higgstautau.tauid import uncertainty
+
+
+def efficiency(sample, selection, prong, category):
+
+    category = category.replace(
+            'tau_numberOfVertices', 'number_of_good_vertices')
+
+    #total = sample.events(Cut('trueTau1_nProng==%d' % prong) & category)
+    total = sample.events(Cut('tau1_numTrack==%d' % prong) & category)
+
+    passing = 0.
+    cut = Cut('tau1_numTrack==%d' % prong) & category
+    for weight, event in sample.iter(cut):
+        if (event.tau1_BDTJetScore >
+            selection.Eval(event.tau1_fourvect.Pt())):
+            passing += weight
+    return passing / total
+
+
+def efficiency_uncertainty(sample, selection, prong, category):
+
+    category = category.replace(
+            'tau_numberOfVertices', 'number_of_good_vertices')
+
+    #total = sample.events(Cut('trueTau1_nProng==%d' % prong) & category)
+    total = sample.events(Cut('tau1_numTrack==%d' % prong) & category)
+
+    passing_high = 0.
+    passing_low = 0.
+    cut = Cut('tau1_numTrack==%d' % prong) & category
+    for weight, event in sample.iter(cut):
+        pt = event.tau1_fourvect.Pt()
+        high_score, low_score = uncertainty(
+                event.tau1_BDTJetScore,
+                pt,
+                event.tau1_numTrack,
+                event.number_of_good_vertices)
+        selection_cut = selection.Eval(pt)
+        if high_score > selection_cut:
+            passing_high += weight
+        if low_score > selection_cut:
+            passing_low += weight
+    return passing_high / total, passing_low / total
+
+
+def efficiency_validation(sample, selection, prong, category):
+
+    category = category.replace(
+            'tau_numberOfVertices', 'number_of_good_vertices')
+
+    #total = sample.events(Cut('trueTau1_nProng==%d' % prong) & category)
+    total = sample.events(Cut('tau1_numTrack==%d' % prong) & category)
+
+    passing = 0.
+    cut = Cut('tau1_numTrack==%d' % prong) & category
+    for weight, event in sample.iter(cut):
+        if validate == 'loose':
+            if event.tau1_JetBDTSigLoose == 1:
+                passing += weight
+        elif validate == 'medium':
+            if event.tau1_JetBDTSigMedium == 1:
+                passing += weight
+        elif validate == 'tight':
+            if event.tau1_JetBDTSigTight == 1:
+                passing += weight
+        else:
+            raise ValueError("invalid working point: %s" % selection)
+    return passing / total
 
 
 if __name__ == '__main__':
 
-    def efficiency(sample, selection, prong, category, validate=False):
+    from samples import MC_TauID
 
-        category = category.replace(
-                'tau_numberOfVertices', 'number_of_good_vertices')
+    from higgstautau.tauid.p851 import selection, nvtx_to_category, CATEGORIES
+    from higgstautau.tauid.common import LEVELS, PRONGS
+    from higgstautau.tauid import EFFIC_UNCERT_2011 as EFFIC_UNCERT
 
-        #total = sample.events(Cut('trueTau1_nProng==%d' % prong) & category)
-        total = sample.events(Cut('tau1_numTrack==%d' % prong) & category)
-
-        passing = 0.
-        cut = Cut('tau1_numTrack==%d' % prong) & category
-        for weight, event in sample.iter(cut):
-            if validate == 'loose':
-                if event.tau1_JetBDTSigLoose == 1:
-                    passing += weight
-            elif validate == 'medium':
-                if event.tau1_JetBDTSigMedium == 1:
-                    passing += weight
-            elif validate == 'tight':
-                if event.tau1_JetBDTSigTight == 1:
-                    passing += weight
-            elif (event.tau1_BDTJetScore >
-                selection.Eval(event.tau1_fourvect.Pt())):
-                passing += weight
-        return passing / total
-
+    from rootpy.io import open as ropen
 
     with ropen('bdt_uncertainty.root', 'recreate') as f:
         ztautau = MC_TauID(systematics=False)
@@ -99,16 +143,13 @@ if __name__ == '__main__':
                 target_tight = efficiency(ztautau, tight, prong, category)
 
                 print target_loose
-                print efficiency(ztautau, loose, prong, category,
-                        validate='loose')
+                print efficiency_validation(ztautau, 'loose', prong, category)
 
                 print target_medium
-                print efficiency(ztautau, medium, prong, category,
-                        validate='medium')
+                print efficiency_validation(ztautau, 'medium', prong, category)
 
                 print target_tight
-                print efficiency(ztautau, tight, prong, category,
-                        validate='tight')
+                print efficiency_validation(ztautau, 'tight', prong, category)
 
                 target_loose_high = target_loose + uncert_loose
                 target_loose_low = target_loose - uncert_loose

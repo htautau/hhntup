@@ -31,6 +31,7 @@ from higgstautau.trigger import utils as triggerutils
 from higgstautau.pileup import TPileupReweighting
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
+from higgstautau.corrections import reweight_ggf
 
 from goodruns import GRL
 import subprocess
@@ -53,7 +54,7 @@ class LHProcessor(ATLASStudent):
             self.args.syst_terms = [
                 eval('Systematics.%s' % term) for term in
                 self.args.syst_terms.split(',')]
-        
+
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -134,11 +135,11 @@ class LHProcessor(ATLASStudent):
                 Trigger = muSLTriggers
             if self.metadata.stream == 'JetTauEtmiss':
                 Trigger = AllDataLTTriggers
-            
+
         if self.metadata.datatype == datasets.MC:
             Trigger = AllMCTriggers
 
-        
+
         ## Setting event filters
         event_filters = EventFilterList([
             PrepareInputTree(),
@@ -229,8 +230,8 @@ class LHProcessor(ATLASStudent):
             cutflow.reset()
 
             #Select if the event goes into the training or the testing tree
-            
-            
+
+
             tree = None
             if event.EventNumber % 2:
                 tree = tree_train
@@ -283,7 +284,7 @@ class LHProcessor(ATLASStudent):
             if ( self.metadata.datatype == datasets.MC ):
                 for truthjet in event.truthjets:
                     tree.truthjet_fourvect.push_back(truthjet.fourvect)
-                
+
 
 
             """
@@ -326,7 +327,7 @@ class LHProcessor(ATLASStudent):
 
             #ddR
             tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau.fourvect, Lep.fourvect, MET_vect)
-            
+
 
             """
             Higgs fancier mass calculation
@@ -419,7 +420,7 @@ class LHProcessor(ATLASStudent):
                 else:
                     if 185353 <= event.RunNumber <= 187815 and not event.EF_mu18_MG_medium:
                         event_weight *= 0.29186
-                        
+
                 #Tau/Electron misidentification correction
                 event_weight *= TauEfficiencySF(event, self.metadata.datatype)
 
@@ -431,8 +432,8 @@ class LHProcessor(ATLASStudent):
                         event_weight *= ElectronSF(event, self.metadata.datatype, pileup_tool)
 
                 #ggF Reweighting
-                event_weight *= ggFreweighting(event, self.metadata.name)
-            
+                event_weight *= reweight_ggf(event, self.metadata.name)
+
             tree.weight = event_weight
 
             # fill output ntuple
@@ -444,7 +445,7 @@ class LHProcessor(ATLASStudent):
         tree_train.Write()
         tree_test.FlushBaskets()
         tree_test.Write()
-        
+
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
             xml_string.Write('lumi')

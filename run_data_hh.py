@@ -16,7 +16,7 @@ args = parser.parse_args()
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
 CWD = os.getcwd()
-CMD = ("%s && ./run --output-path ntuples/hadhad "
+CMD = ("%s && ./run --output-path ntuples/hadhad/HHProcessor "
        "-s HHProcessor.py -n %d --db datasets_hh "
        "--nice %d --split %d:%%d data-JetTauEtmiss") % (
                setup, args.nproc, args.nice, args.nsplit)
@@ -27,7 +27,7 @@ for i in xrange(args.nsplit):
         cmd,
         ncpus=args.nproc,
         name='HHProcessor.data_%d' % (i + 1),
-        stderr_path='ntuples/hadhad',
-        stdout_path='ntuples/hadhad',
+        stderr_path='ntuples/hadhad/HHProcessor',
+        stdout_path='ntuples/hadhad/HHProcessor',
         queue=args.queue,
         dry_run=args.dry)

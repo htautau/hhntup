@@ -1,9 +1,10 @@
 import socket
-import os
+import os, errno
 import subprocess
 from subprocess import call
 import multiprocessing as mp
 from higgstautau.datasets import Database
+from higgstautau import samples
 from systematics import iter_systematics
 
 
@@ -65,6 +66,16 @@ def get_setup(filename):
                             in f.readlines()])
 
 
+def mkdir_p(path):
+
+    try:
+        os.makedirs(path)
+    except OSError as exc: # Python >2.5
+        if exc.errno == errno.EEXIST:
+            pass
+        else: raise
+
+
 def run_helper(cmd):
 
     subprocess.call(cmd, shell=True)
@@ -106,7 +117,8 @@ def run(student,
         use_qsub=False,
         qsub_queue='medium',
         qsub_name_suffix=None,
-        dry_run=False):
+        dry_run=False,
+        separate_student_output=False):
 
     if args is None:
         args = ' '
@@ -119,6 +131,15 @@ def run(student,
         qsub_name_suffix = '_' + qsub_name_suffix
 
     database = Database(db)
+
+    output_path = os.path.normpath(output_path)
+    if separate_student_output and os.path.basename(output_path) != student:
+        output_path = os.path.join(output_path, os.path.splitext(student)[0])
+    if not os.path.exists(output_path):
+        if dry_run:
+            print "mkdir -p %s" % output_path
+        else:
+            mkdir_p(output_path)
 
     CMD = "./run --output-path %s -s %s -n %%d --db %s --nice %d %s%%s" % (
             output_path, student, db, nice, args)
@@ -177,6 +198,23 @@ def run_systematics(channel, student, systematics=None, **kwargs):
         suffix = '--suffix %s' % '_'.join(sys_variations)
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
+            args=suffix.split(),
+            student_args=syst.split(),
+            qsub_name_suffix='_'.join(sys_variations),
+            **kwargs)
+
+
+def run_systematics_new(channel, student, datasets, systematics,
+        filter_systematics=None, **kwargs):
+
+    for sys_variations in systematics:
+        if filter_systematics is not None:
+            if sys_variations not in filter_systematics:
+                continue
+        suffix = '--suffix %s' % '_'.join(sys_variations)
+        syst = '--syst-terms %s' % ','.join(sys_variations)
+        run(student,
+            datasets=datasets,
             args=suffix.split(),
             student_args=syst.split(),
             qsub_name_suffix='_'.join(sys_variations),

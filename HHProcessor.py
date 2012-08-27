@@ -5,7 +5,6 @@ from argparse import ArgumentParser
 
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
-from rootpy.tree.cutflow import Cutflow
 from rootpy.math.physics.vector import Vector2
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
@@ -34,6 +33,8 @@ from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
+from higgstautau.corrections import reweight_ggf
+from higgstautau.hadhad.corrections import TauTriggerEfficiency
 
 from goodruns import GRL
 import subprocess
@@ -43,7 +44,7 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
-VERBOSE = True
+VERBOSE = False
 
 
 class HHProcessor(ATLASStudent):
@@ -58,9 +59,9 @@ class HHProcessor(ATLASStudent):
         parser.add_argument('--syst-terms', default=None)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
-            self.args.syst_terms = [
+            self.args.syst_terms = set([
                 eval('Systematics.%s' % term) for term in
-                self.args.syst_terms.split(',')]
+                self.args.syst_terms.split(',')])
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -108,8 +109,9 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        # update the trigger config maps on every file change
-        onfilechange.append((update_trigger_config, (trigger_config,)))
+        if self.metadata.datatype != datasets.EMBED:
+            # update the trigger config maps on every file change
+            onfilechange.append((update_trigger_config, (trigger_config,)))
 
         if self.metadata.datatype == datasets.DATA:
             merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
@@ -157,7 +159,8 @@ class HHProcessor(ATLASStudent):
             Triggers(
                 datatype=self.metadata.datatype,
                 year=YEAR,
-                skim=False),
+                skim=False,
+                passthrough=self.metadata.datatype == datasets.EMBED),
             JetCalibration(
                 year=YEAR,
                 datatype=self.metadata.datatype,
@@ -198,10 +201,17 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 skim=False,
-                tree=tree),
+                tree=tree,
+                passthrough=self.metadata.datatype == datasets.EMBED),
             TauLeadSublead(
                 lead=35*GeV,
                 sublead=25*GeV),
+            TauTriggerEfficiency(
+                year=YEAR,
+                datatype=self.metadata.datatype,
+                tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
+                    self.args.syst_terms),
+                passthrough=self.metadata.datatype == datasets.DATA),
             JetSelection(),
             TauJetOverlapRemoval(),
         ])
@@ -209,8 +219,6 @@ class HHProcessor(ATLASStudent):
         self.filters['event'] = event_filters
 
         chain.filters += event_filters
-
-        cutflow = Cutflow()
 
         # define tree collections
         chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
@@ -258,7 +266,6 @@ class HHProcessor(ATLASStudent):
         # entering the main event loop...
         for event in chain:
             tree.reset()
-            cutflow.reset()
 
             # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
@@ -274,7 +281,7 @@ class HHProcessor(ATLASStudent):
                 leading_jets.append(jets[0])
                 current_channel = CATEGORY_BOOSTED
                 # subleading jet above 30
-                if len(jets) >= 2 and jets[1].pt > 35 * GeV: # was 30
+                if len(jets) >= 2 and jets[1].pt > 30 * GeV:
                     leading_jets.append(jets[1])
                     current_channel = CATEGORY_VBF
             tree.category = current_channel
@@ -485,9 +492,13 @@ class HHProcessor(ATLASStudent):
 
                 tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
 
+                # fix trigger_match_thresh in the skims
+
                 for tau in (tau1, tau2):
 
-                    # factors only valid for 2011 data/MC
+                    # factors and corrections are currently
+                    # only valid for 2011 data/MC
+
                     if tau.matched:
                         # efficiency scale factor
                         effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
@@ -495,36 +506,43 @@ class HHProcessor(ATLASStudent):
                         # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
                         tau.efficiency_scale_factor_high = effic_sf + err
                         tau.efficiency_scale_factor_low = effic_sf - err
-                    if not tau.matched:
+                    else:
                         # fake rate scale factor
                         if event.RunNumber >= 188902:
                             trig = "EF_tau%dT_medium1"
                         else:
                             trig = "EF_tau%d_medium1"
+                        wp = "Medium"
+                        if tau.JetBDTSigTight:
+                            wp = "Tight"
                         sf = fakerate_tool.getScaleFactor(
-                                tau.pt, "Medium",
+                                tau.pt, wp,
                                 trig % tau.trigger_match_thresh)
                         tau.fakerate_scale_factor = sf
                         tau.fakerate_scale_factor_high = (sf +
                                 fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, "Medium",
+                                    tau.pt, wp,
                                     trig % tau.trigger_match_thresh, True))
                         tau.fakerate_scale_factor_low = (sf -
                                 fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, "Medium",
+                                    tau.pt, wp,
                                     trig % tau.trigger_match_thresh, False))
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
 
-            # fill output ntuple
-            tree.cutflow = cutflow.int()
+            # set the event weights
             if self.metadata.datatype == datasets.MC:
                 # set the event weight
                 tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                                    event.mc_channel_number,
                                                                    event.averageIntPerXing)
                 tree.mc_weight = event.mc_event_weight
+                if YEAR == 2011:
+                    tree.ggf_weight = reweight_ggf(event, self.metadata.name)
+                # no ggf reweighting for 2012 MC
+
+            # fill output ntuple
             tree.Fill()
 
         self.output.cd()

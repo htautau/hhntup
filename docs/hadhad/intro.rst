@@ -48,8 +48,9 @@ Ideas
 * Use dR>1.0 to fix low mass modeling
 * Use Higgs pT (see Michel's analysis). Bottom of ranking.
 * Use sum pT. Bottom of ranking
-* Split 0/1-jet category into boosted (1 jet above 150GeV) and non-boosted to
+* Split 0/1-jet category into boosted (1 jet above 50GeV) and non-boosted to
   improve sensitivity. DONE. Large improvement.
+* Require "Higgs pT" > 100 GeV or X in the boosted category.
 * Reduce number of bins in VBF BDT fit.
 * Try defining separate categories on final BDT output and calculating limits in
   each subcategory separately using the MMC output.
