@@ -378,10 +378,6 @@ if __name__ == '__main__':
     ztautau = Embedded_Ztautau()
     mc_others = MC_Others()
 
-    print mc_others.events()
-    import sys
-    sys.exit()
-
     vbf_125 = MC_VBF(mass=125)
     ggf_125 = MC_ggF(mass=125)
     wh_125  =  MC_WH(mass=125)
