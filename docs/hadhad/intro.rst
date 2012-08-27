@@ -56,6 +56,7 @@ Ideas
   each subcategory separately using the MMC output.
   Swagato suggested this. gammagamma analysis does this.
   OR try calculating limits using 2D BDT vs MMC distributions.
+* Look at sideband above 150GeV to check shape and norm
 
 
 Notes
