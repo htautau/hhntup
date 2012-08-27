@@ -1,4 +1,5 @@
 import os, errno
+import getpass
 
 
 PLOTS_DIR = './plots'
@@ -17,7 +18,7 @@ def plots_dir(script):
 
     script = os.path.basename(script)
     script = os.path.splitext(script)[0]
-    dir = os.path.join(PLOTS_DIR, script)
+    dir = os.path.join(PLOTS_DIR, script, getpass.getuser())
     if not os.path.exists(dir):
         mkdir_p(dir)
     return dir
