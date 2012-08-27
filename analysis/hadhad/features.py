@@ -198,7 +198,7 @@ VARIABLES = {
         'title': r'$\Delta R_{\tau_{1},\/\tau_{2}}$',
         'filename': 'dr_tau1_tau2',
         'bins': 20,
-        'range': (0.7, 3.5),
+        'range': (0.8, 3.0),
         'cats': ['VBF', 'GGF', 'BOOSTED']
     },
     'fabs(dPhi_tau1_tau2)': {
