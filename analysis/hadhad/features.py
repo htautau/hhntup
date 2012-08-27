@@ -8,14 +8,14 @@ VARIABLES = {
         'filename': 'averageIntPerXing',
         'bins': 20,
         'range': (1, 21),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'actualIntPerXing': {
         'title': r'$\langle\mu\rangle|_{LB}(BCID)$',
         'filename': 'actualIntPerXing',
         'bins': 20,
         'range': (1, 21),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'sum_pt': {
         'title': r'$\sum p_T$',
@@ -24,7 +24,7 @@ VARIABLES = {
         'range': (50, 450),
         'scale': 0.001,
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'sum_pt_full': {
         'title': r'$\sum p_T$ (all)',
@@ -33,7 +33,7 @@ VARIABLES = {
         'range': (50, 450),
         'scale': 0.001,
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'higgs_pt': {
         'title': r'Higgs $p_T$',
@@ -41,14 +41,14 @@ VARIABLES = {
         'bins': 20,
         'range': (0, 200),
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'numJets': {
         'title': r'Number of Jets with $p_T>25$ GeV',
         'filename': 'numjets',
         'bins': 7,
         'range': (-.5, 6.5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'MET': {
         'title': r'$E^{miss}_{T}$',
@@ -57,7 +57,7 @@ VARIABLES = {
         'range': (0, 100),
         'scale': 1./1000,
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'sphericity': {
         'title': r'sphericity',
@@ -92,7 +92,7 @@ VARIABLES = {
         'filename': 'met_centrality',
         'bins': 20,
         'range': (-math.sqrt(2), math.sqrt(2)),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'mass2_vis_tau1_tau2': {
         'title': r'$M^{vis}_{\tau_{1},\/\tau_{2}}$',
@@ -101,7 +101,7 @@ VARIABLES = {
         'range': (0, 250),
         'scale': 0.001,
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'mass_mmc_tau1_tau2': {
         'title': r'$M^{MMC}_{\tau_{1},\/\tau_{2}}$',
@@ -109,7 +109,7 @@ VARIABLES = {
         'bins': 20,
         'range': (0, 250),
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'mass_collinear_tau1_tau2': {
         'title': r'$M^{col}_{\tau_{1},\/\tau_{2}}$',
@@ -118,7 +118,7 @@ VARIABLES = {
         'range': (0, 250),
         'units': 'GeV',
         'scale': 0.001,
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_fourvect.Pt()': {
         'title': r'$p_{T_{\tau_{1}}}$',
@@ -127,7 +127,7 @@ VARIABLES = {
         'range': (20, 100),
         'scale': 0.001,
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_fourvect.Pt()': {
         'title': r'$p_{T_{\tau_{2}}}$',
@@ -136,98 +136,98 @@ VARIABLES = {
         'range': (20, 100),
         'scale': 0.001,
         'units': 'GeV',
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_numTrack': {
         'title': r'$\tau_{1}$ Number of Tracks',
         'filename': 'tau1_numTrack',
         'bins': 5,
         'range': (-.5, 4.5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_numTrack': {
         'title': r'$\tau_{2}$ Number of Tracks',
         'filename': 'tau2_numTrack',
         'bins': 5,
         'range': (-.5, 4.5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_x': {
         'title': r'$\tau_{1_{x}}$',
         'filename': 'tau1_x',
         'bins': 20,
         'range': (-5, 5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_x': {
         'title': r'$\tau_{2_{x}}$',
         'filename': 'tau2_x',
         'bins': 20,
         'range': (-5, 5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_BDTJetScore': {
         'title': r'$\tau_{1}$ BDT Score',
         'filename': 'tau1_BDTJetScore',
         'bins': 20,
         'range': (.5, 1),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_BDTJetScore': {
         'title': r'$\tau_{2}$ BDT Score',
         'filename': 'tau2_BDTJetScore',
         'bins': 20,
         'range': (.5, 1),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'cos_theta_tau1_tau2': {
         'title': r'$\cos(\alpha_{\tau_{1},\/\tau_{2}})$',
         'filename': 'cos_theta_tau1_tau2',
         'bins': 20,
         'range': (-1, 1),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'theta_tau1_tau2': {
         'title': r'$\alpha_{\tau_{1},\/\tau_{2}}$',
         'filename': 'theta_tau1_tau2',
         'bins': 20,
         'range': (0, math.pi),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'dR_tau1_tau2': {
         'title': r'$\Delta R_{\tau_{1},\/\tau_{2}}$',
         'filename': 'dr_tau1_tau2',
         'bins': 20,
         'range': (0.8, 3.0),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'fabs(dPhi_tau1_tau2)': {
         'title': r'$\Delta \phi_{\tau_{1},\/\tau_{2}}$',
         'filename': 'dphi_tau1_tau2',
         'bins': 20,
         'range': (0., math.pi),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     ('tau1_fourvect.Eta()', 'tau2_fourvect.Eta()'): {
         'title': r'$\eta_{\tau_{1,\/2}}$',
         'filename': 'tau_eta',
         'bins': 20,
         'range': (-3, 3),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_charge': {
         'title': r'$\tau_1$ Charge',
         'filename': 'tau1_charge',
         'bins': 5,
         'range': (-2.5, 2.5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_charge': {
         'title': r'$\tau_2$ Charge',
         'filename': 'tau2_charge',
         'bins': 5,
         'range': (-2.5, 2.5),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_centrality': {
         'title': r'$\tau_1$ Centrality',
@@ -248,14 +248,14 @@ VARIABLES = {
         'filename': 'tau1_eta',
         'bins': 20,
         'range': (-3, 3),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_fourvect.Eta()': {
         'title': r'$\eta_{\tau_{2}}$',
         'filename': 'tau2_eta',
         'bins': 20,
         'range': (-3, 3),
-        'cats': ['VBF', 'GGF', 'BOOSTED']
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'jet1_fourvect.Eta()': {
         'title': r'$\eta_{jet_{1}}$',
