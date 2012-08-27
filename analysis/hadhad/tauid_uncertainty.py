@@ -58,13 +58,13 @@ def efficiency_validation(sample, selection, prong, category):
     passing = 0.
     cut = Cut('tau1_numTrack==%d' % prong) & category
     for weight, event in sample.iter(cut):
-        if validate == 'loose':
+        if selection == 'loose':
             if event.tau1_JetBDTSigLoose == 1:
                 passing += weight
-        elif validate == 'medium':
+        elif selection == 'medium':
             if event.tau1_JetBDTSigMedium == 1:
                 passing += weight
-        elif validate == 'tight':
+        elif selection == 'tight':
             if event.tau1_JetBDTSigTight == 1:
                 passing += weight
         else:
