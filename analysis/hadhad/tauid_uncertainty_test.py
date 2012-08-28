@@ -44,7 +44,9 @@ for prong in tauid.PRONGS:
 
 
 # closure test
-ztautau = MC_TauID(systematics=False)
+tauid_sample = MC_TauID(systematics=False)
+
+"""
 for prong in PRONGS:
     for cat_str, category in CATEGORIES.items():
         for level in LEVELS.keys():
@@ -62,3 +64,38 @@ for prong in PRONGS:
                     ztautau, level_selection, prong, category)
 
             print "=" * 20
+"""
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+from higgstautau.tauid import uncertainty
+from rootpy.plotting import Hist, Canvas
+from matplotlib import pyplot as plt
+from rootpy.plotting import root2matplotlib as rplt
+
+
+nominal = Hist(50, 0, 1, title='nominal')
+high = nominal.Clone(title='high')
+low = nominal.Clone(title='low')
+
+high.linecolor = 'red'
+low.linecolor = 'blue'
+
+for weight, event in tauid_sample.iter():
+    high_score, low_score = uncertainty(
+            event.tau1_BDTJetScore,
+            pt,
+            event.tau1_numTrack,
+            event.number_of_good_vertices)
+    nominal.Fill(event.tau1_BDTJetScore, weight)
+    low.Fill(low_score, weight)
+    high.Fill(high_score, weight)
+
+fig = plt.figure()
+rplt.hist(nominal, histtype='stepfilled')
+rplt.hist(high, histtype='stepfilled')
+rplt.hist(low, histtype='stepfilled')
+plt.xlabel('BDT Score')
+plt.ylabel('Events')
+plt.legend(loc='upper left')
+plt.savefig('tauid_test.png')
