@@ -360,6 +360,11 @@ if __name__ == '__main__':
             help="do not use cached background scale factors "
             "and instead recalculate them",
             default=True)
+    parser.add_argument('--no-systematics', action='store_false',
+            dest='systematics',
+            help="turn off systematics",
+            default=True)
+
     parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
     parser.add_argument('--plots', nargs='*')
     args = parser.parse_args()
@@ -375,14 +380,14 @@ if __name__ == '__main__':
 
     PLOTS_DIR = plots_dir(__file__)
 
-    #mc_ztautau   = MC_Ztautau()
-    ztautau = Embedded_Ztautau()
-    mc_others = MC_Others()
+    #mc_ztautau   = MC_Ztautau(systematics=args.systematics)
+    ztautau = Embedded_Ztautau(systematics=args.systematics)
+    mc_others = MC_Others(systematics=args.systematics)
 
-    vbf_125 = MC_VBF(mass=125)
-    ggf_125 = MC_ggF(mass=125)
-    wh_125  =  MC_WH(mass=125)
-    zh_125  =  MC_ZH(mass=125)
+    vbf_125 = MC_VBF(mass=125, systematics=args.systematics)
+    ggf_125 = MC_ggF(mass=125, systematics=args.systematics)
+    wh_125  =  MC_WH(mass=125, systematics=args.systematics)
+    zh_125  =  MC_ZH(mass=125, systematics=args.systematics)
 
     data = Data()
 
