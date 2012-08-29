@@ -156,14 +156,14 @@ VARIABLES = {
         'title': r'$\tau_{1_{x}}$',
         'filename': 'tau1_x',
         'bins': 20,
-        'range': (-5, 5),
+        'range': (-3, 4),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_x': {
         'title': r'$\tau_{2_{x}}$',
         'filename': 'tau2_x',
         'bins': 20,
-        'range': (-5, 5),
+        'range': (-3, 4),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_BDTJetScore': {
@@ -422,7 +422,7 @@ if __name__ == '__main__':
 
         # determine normalization of QCD and Ztautau
         # in each category separately
-        qcd_scale, ztautau_scale = qcd_ztautau_norm(
+        qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = qcd_ztautau_norm(
             ztautau=ztautau,
             backgrounds=[mc_others],
             data=data,

@@ -288,6 +288,6 @@ def qcd_ztautau_norm(ztautau,
 
     bkg_scales_cache.set_scales(
             category,
-            qcd_scale, qcd_scale_error
+            qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
     return qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error
