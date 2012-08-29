@@ -327,7 +327,8 @@ class Sample(object):
 
     def __init__(self, scale=1., cuts=None,
                  student=DEFAULT_STUDENT,
-                 treename=DEFAULT_TREENAME):
+                 treename=DEFAULT_TREENAME,
+                 **hist_decor):
 
         self.scale = scale
         if cuts is None:
@@ -336,6 +337,7 @@ class Sample(object):
             self._cuts = cuts
         self.student = student
         self.treename = treename
+        self.hist_decor = hist_decor
 
     def get_weight_branches(self, systematic):
 
@@ -484,7 +486,8 @@ class Data(Sample):
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name)
+        hist = Hist(bins, min, max, title=self.label, name=self.name,
+                **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
         return hist
 
@@ -556,11 +559,11 @@ class MC(Sample):
                             FILES[ds.name] = {}
                         FILES[ds.name][sys_term] = rfile
 
-            if isinstance(self, MC_Higgs):
+            if isinstance(self, (MC_Higgs, MC_All_Higgs)):
                 # use yellowhiggs for cross sections
                 xs = yellowhiggs.xsbr(
                         7, self.mass[i],
-                        self.mode, 'tautau')[0] * TAUTAUHADHADBR
+                        self.mode[i], 'tautau')[0] * TAUTAUHADHADBR
                 kfact = 1.
                 effic = 1.
             elif isinstance(self, Embedded_Ztautau):
@@ -583,9 +586,9 @@ class MC(Sample):
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name)
+        hist = Hist(bins, min, max, title=self.label, name=self.name,
+                **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
-        hist.SetFillColor(self.colour)
         return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
@@ -699,7 +702,7 @@ class MC(Sample):
 
 class MC_Ztautau(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#00a4ff', **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
@@ -708,13 +711,12 @@ class MC_Ztautau(MC):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#00a4ff'
-        super(MC_Ztautau, self).__init__(**kwargs)
+        super(MC_Ztautau, self).__init__(color=color, **kwargs)
 
 
 class Embedded_Ztautau(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#00a4ff', **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
@@ -723,51 +725,46 @@ class Embedded_Ztautau(MC):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#00a4ff'
-        super(Embedded_Ztautau, self).__init__(**kwargs)
-
+        super(Embedded_Ztautau, self).__init__(color=color, **kwargs)
         # requires special treatment of systematics
 
 
 class MC_EWK(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#ff9f71', **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['ewk']
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#ff9f71'
-        super(MC_EWK, self).__init__(**kwargs)
+        super(MC_EWK, self).__init__(color=color, **kwargs)
 
 
 class MC_Top(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#0000ff', **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['top']
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#0000ff'
-        super(MC_Top, self).__init__(**kwargs)
+        super(MC_Top, self).__init__(color=color, **kwargs)
 
 
 class MC_Diboson(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#ffd075', **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['diboson']
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#ffd075'
-        super(MC_Diboson, self).__init__(**kwargs)
+        super(MC_Diboson, self).__init__(color=color, **kwargs)
 
 
 class MC_Others(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#ff7700', **kwargs):
 
         yml_diboson = samples_db.BACKGROUNDS['hadhad']['diboson']
         yml_top = samples_db.BACKGROUNDS['hadhad']['top']
@@ -777,8 +774,7 @@ class MC_Others(MC):
                         yml_ewk['samples'])
         self._label = 'Others'
         self.name = 'Others'
-        self.colour = '#ff7700'
-        super(MC_Others, self).__init__(**kwargs)
+        super(MC_Others, self).__init__(color=color, **kwargs)
 
 
 class MC_Higgs(MC):
@@ -794,7 +790,7 @@ class MC_Higgs(MC):
 
     def __init__(self, mode, generator, mass=None, **kwargs):
 
-        self.mode = MC_Higgs.MODES[mode]
+        self.mode = [MC_Higgs.MODES[mode]]
 
         if mass is None:
             mass = MC_Higgs.MASS_POINTS
@@ -812,6 +808,38 @@ class MC_Higgs(MC):
         self.samples = ['%s%s%d_tautauhh.mc11c' % (generator, mode, m)
                         for m in self.mass]
         super(MC_Higgs, self).__init__(**kwargs)
+
+
+class MC_All_Higgs(MC):
+
+    def __init__(self, mass=None, **kwargs):
+
+        if mass is None:
+            mass = MC_Higgs.MASS_POINTS
+
+        if isinstance(mass, (list, tuple)):
+            self._label = r'$H\rightarrow\tau_{h}\tau_{h}$'
+            self.name = 'Signal'
+            self.mass = mass
+        else:
+            self._label = r'$H(%d)\rightarrow\tau_{h}\tau_{h}$' % mass
+            self.name = 'Signal%d' % mass
+            self.mass = [mass]
+
+        self.samples = ['PowHegPythia_VBFH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode = ['vbf' for m in self.mass]
+        self.samples += ['PowHegPythia_ggH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode += ['ggf' for m in self.mass]
+        self.samples += ['PythiaZH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode += ['zh' for m in self.mass]
+        self.samples += ['PythiaWH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode += ['wh' for m in self.mass]
+        self.mass *= 4
+        super(MC_All_Higgs, self).__init__(**kwargs)
 
 
 class MC_VBF(MC_Higgs):
@@ -863,22 +891,22 @@ class QCD(Sample):
     def __init__(self, data, mc,
                  scale=1.,
                  shape_region='SS',
-                 cuts=None):
+                 cuts=None,
+                 color='#59d454'):
 
-        super(QCD, self).__init__(scale=scale)
+        super(QCD, self).__init__(scale=scale, color=color)
         self.data = data
         self.mc = mc
         self.name = 'QCD'
         self.label = 'QCD Multi-jet'
         self.scale = 1.
         self.shape_region = shape_region
-        self.colour = '#59d454'
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name)
+        hist = Hist(bins, min, max, title=self.label, name=self.name,
+                **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
-        hist.SetFillColor(self.colour)
         return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
@@ -957,7 +985,6 @@ class MC_TauID(MC):
         self.name = 'TauID'
         self._label = 'TauID'
         self.samples = ['PythiaWtaunu_incl.mc11c']
-        self.colour = '#0000ff'
         super(MC_TauID, self).__init__(student='TauIDProcessor',
                 db=DB_TAUID, **kwargs)
 

@@ -384,19 +384,14 @@ if __name__ == '__main__':
     ztautau = Embedded_Ztautau(systematics=args.systematics)
     mc_others = MC_Others(systematics=args.systematics)
 
-    vbf_125 = MC_VBF(mass=125, systematics=args.systematics)
-    ggf_125 = MC_ggF(mass=125, systematics=args.systematics)
-    wh_125  =  MC_WH(mass=125, systematics=args.systematics)
-    zh_125  =  MC_ZH(mass=125, systematics=args.systematics)
+    higgs_125 = MC_All_Higgs(
+            mass=125,
+            systematics=args.systematics,
+            scale=50,
+            linecolor='red',
+            linestyle='dashed')
 
-    data = Data()
-
-    signals = [
-        vbf_125,
-        ggf_125,
-        wh_125,
-        zh_125
-    ]
+    data = Data(markersize=2)
 
     figures = {}
 
@@ -477,6 +472,12 @@ if __name__ == '__main__':
                     bins, min, max,
                     cuts=cuts)
 
+            signal_hist = higgs_125.draw(
+                    expr,
+                    category, target_region,
+                    bins, min, max,
+                    cuts=cuts)
+
             print "Data events: %d" % sum(data_hist)
             print "Model events: %f" % sum(sum(bkg_hists))
             for hist in bkg_hists:
@@ -485,6 +486,7 @@ if __name__ == '__main__':
 
             fig = draw(
                     data=data_hist, model=bkg_hists,
+                    signal=signal_hist,
                     name=var_info['title'],
                     output_name=var_info['filename'],
                     category_name=cat_info['name'],
