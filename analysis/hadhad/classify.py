@@ -315,7 +315,8 @@ if __name__ == '__main__':
     train_fraction = args.train_frac
     bins = 20
 
-    mc_ztautau = MC_Ztautau()
+    #ztautau = MC_Ztautau()
+    ztautau = Embedded_Ztautau()
 
     mc_ewk = MC_EWK()
     mc_top = MC_Top()
@@ -330,7 +331,7 @@ if __name__ == '__main__':
         mc_top,
         mc_diboson,
         mc_ewk,
-        mc_ztautau,
+        ztautau,
     ]
 
     data = Data()
@@ -356,8 +357,13 @@ if __name__ == '__main__':
         qcd.shape_region = info['qcd_shape_region']
         target_region = info['target_region']
         cuts = Cut()
-        qcd.scale, mc_ztautau.scale = bkg_scales_cache.get_scales(category)
-        print qcd.scale, mc_ztautau.scale
+
+        qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = \
+        bkg_scales_cache.get_scales(category)
+
+        qcd.scale = qcd_scale
+        ztautau.scale = ztautau_scale
+
         branches = info['features']
 
         if args.cor:
@@ -594,9 +600,8 @@ if __name__ == '__main__':
         max_score += padding
         hist_template = Hist(bins, min_score, max_score)
 
-        with ropen(
-                os.path.join(LIMITS_DIR, '%s.root' % category),
-                'recreate') as f:
+        with ropen(os.path.join(LIMITS_DIR, '%s.root' % category),
+                   'recreate') as f:
 
             data_hist = hist_template.Clone(name=data.name)
             map(data_hist.Fill, data_scores)

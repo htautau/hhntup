@@ -293,6 +293,38 @@ class Sample(object):
         else (name, Cut(''))
         for name, info in categories.CATEGORIES.items()])
 
+    WEIGHT_BRANCHES = [
+        'mc_weight',
+        'pileup_weight',
+        # effic high and low already accounted for in TAUBDT_UP/DOWN
+        'tau1_efficiency_scale_factor',
+        'tau2_efficiency_scale_factor',
+    ]
+
+    WEIGHT_SYSTEMATICS = {
+        'TRIGGER': {
+            'UP': [
+                'tau1_trigger_scale_factor_high',
+                'tau2_trigger_scale_factor_high'],
+            'DOWN': [
+                'tau1_trigger_scale_factor_low',
+                'tau2_trigger_scale_factor_low'],
+            'NOMINAL': [
+                'tau1_trigger_scale_factor',
+                'tau2_trigger_scale_factor']},
+        'FAKERATE': {
+            'UP': [
+                'tau1_fakerate_scale_factor_high',
+                'tau2_fakerate_scale_factor_high'],
+            'DOWN': [
+                'tau1_fakerate_scale_factor_low',
+                'tau2_fakerate_scale_factor_low'],
+            'NOMINAL': [
+            	'tau1_fakerate_scale_factor',
+                'tau2_fakerate_scale_factor']},
+    }
+
+
     def __init__(self, scale=1., cuts=None,
                  student=DEFAULT_STUDENT,
                  treename=DEFAULT_TREENAME):
@@ -304,6 +336,21 @@ class Sample(object):
             self._cuts = cuts
         self.student = student
         self.treename = treename
+
+    def get_weight_branches(self, systematic):
+
+        weight_branches = Sample.WEIGHT_BRANCHES[:]
+        if systematic == 'NOMINAL':
+            systerm = None
+            variation = 'NOMINAL'
+        else:
+            systerm, variation = systematics.split('_')
+        for term, variations in Sample.WEIGHT_SYSTEMATICS.items():
+            if term == systerm:
+                weight_branches += variations[variation]
+            else:
+                weight_branches += variations['NOMINAL']
+        return weight_branches
 
     def cuts(self, category, region):
 
@@ -321,14 +368,14 @@ class Sample(object):
         """
         Return recarray for training and for testing
         """
+        weight_branches = self.get_weight_branches(systematic)
+
         if train_fraction is not None:
+
             assert 0 < train_fraction < 1.
+
             if isinstance(self, MC):
-                branches = branches + [
-                    'mc_weight',
-                    'pileup_weight',
-                    'tau1_weight',
-                    'tau2_weight']
+                branches = branches + weight_branches
 
             train_arrs = []
             test_arrs = []
@@ -345,15 +392,11 @@ class Sample(object):
                     weight_name='weight')
                 if isinstance(self, MC):
                     # merge the three weight columns
-                    arr['weight'] *= (arr['mc_weight'] * arr['pileup_weight'] *
-                                      arr['tau1_weight'] * arr['tau2_weight'])
+                    arr['weight'] *= reduce(np.multiply,
+                            [arr[br] for br in weight_branches])
                     # remove the mc_weight and pileup_weight fields
                     arr = recfunctions.rec_drop_fields(
-                        arr,
-                        ['mc_weight',
-                         'pileup_weight',
-                         'tau1_weight',
-                         'tau2_weight'])
+                        arr, weight_branches)
                 split_idx = int(train_fraction * float(arr.shape[0]))
                 arr_train, arr_test = arr[:split_idx], arr[split_idx:]
                 # scale the weights to account for train_fraction
@@ -382,12 +425,9 @@ class Sample(object):
                  cuts=None,
                  systematic='NOMINAL'):
 
+        weight_branches = self.get_weight_branches(systematic)
         if include_weight and isinstance(self, MC):
-            branches = branches + [
-                'mc_weight',
-                'pileup_weight',
-                'tau1_weight',
-                'tau2_weight']
+            branches = branches + weight_branches
 
         try:
             arr = r2a.tree_to_recarray(
@@ -404,15 +444,12 @@ class Sample(object):
 
         if include_weight and isinstance(self, MC):
             # merge the three weight columns
-            arr['weight'] *= (arr['mc_weight'] * arr['pileup_weight'] *
-                              arr['tau1_weight'] * arr['tau2_weight'])
+            arr['weight'] *= reduce(np.multiply,
+                    [arr[br] for br in weight_branches])
+
             # remove the mc_weight and pileup_weight fields
             arr = recfunctions.rec_drop_fields(
-                arr,
-                ['mc_weight',
-                 'pileup_weight',
-                 'tau1_weight',
-                 'tau2_weight'])
+                arr, weight_branches)
         return arr
 
     def ndarray(self,
@@ -591,14 +628,10 @@ class MC(Sample):
                 weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
 
             weighted_selection = (
-                    '%.5f * mc_weight * pileup_weight * '
-                    'tau1_efficiency_scale_factor * '
-                    'tau2_efficiency_scale_factor * '
-                    'tau1_fakerate_scale_factor * '
-                    'tau2_fakerate_scale_factor * '
-                    'tau1_trigger_scale_factor * '
-                    'tau2_trigger_scale_factor * (%s)' %
-                    (weight, selection))
+                    '%f * %s * (%s)' %
+                    (weight,
+                     ' * '.join(self.get_weight_branches('NOMINAL')),
+                     selection))
 
             if VERBOSE:
                 print weighted_selection
