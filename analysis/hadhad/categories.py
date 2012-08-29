@@ -8,7 +8,7 @@ MASS_FIX = Cut('mass_mmc_tau1_tau2 > 70')
 MAX_NJET = Cut('numJets <= 3')
 MET = Cut('MET > 20000')
 #DIJET_MASS = Cut('mass_jet1_jet2 > 100000')
-MET_CENTRALITY = Cut('MET_centrality > 0.5')
+MET_CENTRALITY = Cut('MET_centrality > 0')
 
 COMMON_CATEGORY_CUTS = DR_FIX & MASS_FIX & MAX_NJET & ID_MEDIUM & MET_CENTRALITY
 PRESELECTION_CUTS = ID_MEDIUM

@@ -100,10 +100,10 @@ def mass(tau1, tau2,
 
     MMC.RunMissingMassCalculator()
     MMC_mass = -1
-    MMC_Pt = -1
-    MMC_MET = -1
+    MMC_resonance = ROOT.TLorentzVector(0, 0, 0, 0)
+    MMC_met = ROOT.TVector2(0, 0)
     if MMC.GetFitStatus() == 1: # MMC output: 1=found solution; 0= no slution
         MMC_mass = MMC.GetFittedMass(method) # use 2 instead of 1 to remove spikes in output
-        MMC_Pt = MMC.GetResonanceVec(method).Pt()
-        MMC_MET = MMC.GetFittedMetVec(method).Mod()
-    return MMC_mass, MMC_Pt, MMC_MET
+        MMC_resonance = MMC.GetResonanceVec(method)
+        MMC_met = MMC.GetFittedMetVec(method)
+    return MMC_mass, MMC_resonance, MMC_met

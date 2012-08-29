@@ -253,36 +253,36 @@ def draw(model,
         qq_ax.set_xlim((gg_graph.xedgesl(0), gg_graph.xedgesh(-1)))
         qq_ax.set_ylim((min(y_low), max(y_up)))
 
-    if signal is not None:
-        if isinstance(signal, (list, tuple)):
-            model_legend = hist_ax.legend(
-                reversed(model_bars + signal_bars), [h.title for h in
-                    reversed(model + signal)],
-                prop=prop, title=category_name,
-                loc='upper left',
-                numpoints=1)
-        else:
-            model_legend = hist_ax.legend(
-                    reversed(model_bars + [signal_bars[0]]), [h.title for h in
-                        reversed(model + [signal])],
-                    prop=prop, title=category_name,
-                    loc='upper left',
-                    numpoints=1)
-    else:
-        model_legend = hist_ax.legend(
-                reversed(model_bars), [h.title for h in reversed(model)],
-                prop=prop, title=category_name,
-                loc='upper left',
-                numpoints=1)
+    model_legend = hist_ax.legend(
+            reversed(model_bars), [h.title for h in reversed(model)],
+            prop=prop, title=category_name,
+            loc='upper left',
+            numpoints=1)
 
     format_legend(model_legend)
 
+    right_legend_bars = []
+    right_legend_titles =[]
+
     if data is not None:
-        data_legend = hist_ax.legend([data_bars], [data.title],
+        right_legend_bars.append(data_bars)
+        right_legend_titles.append(data.title)
+    if signal is not None:
+        if isinstance(signal, (list, tuple)):
+            right_legend_bars += signal_bars
+            right_legend_titles += [s.title for s in signal]
+        else:
+            right_legend_bars.append(signal_bars[0])
+            right_legend_titles.append(signal.title)
+
+    if right_legend_bars:
+        right_legend = hist_ax.legend(
+                right_legend_bars,
+                right_legend_titles,
                 prop=prop,
                 loc='upper right',
                 numpoints=1)
-        format_legend(data_legend)
+        format_legend(right_legend)
         hist_ax.add_artist(model_legend)
 
     if units is not None:

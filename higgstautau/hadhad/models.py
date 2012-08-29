@@ -101,13 +101,25 @@ class EventVariables(TreeModel):
     eta_product_jets_boosted = FloatCol()
 
     numJets = IntCol()
-    jet_fourvect = ROOT.vector('TLorentzVector')
-    jet_jvtxf = ROOT.vector('float')
+
     MET = FloatCol()
+    MET_x = FloatCol()
+    MET_y = FloatCol()
     MET_phi = FloatCol()
-    MET_mmc = FloatCol()
-    HT = FloatCol()
     MET_sig = FloatCol()
+    MET_vec = Vector2
+
+    MET_mmc = FloatCol()
+    MET_mmc_x = FloatCol()
+    MET_mmc_y = FloatCol()
+    MET_mmc_phi = FloatCol()
+    MET_mmc_vec = Vector2
+
+    mmc_resonance = LorentzVector
+    mmc_resonance_pt = FloatCol()
+
+    sumET = FloatCol()
+
     error = BoolCol()
     jet_transformation = LorentzRotation
     jet_beta = Vector3
@@ -123,7 +135,6 @@ class EventVariables(TreeModel):
     sphericity_boosted = FloatCol()
     aplanarity_boosted = FloatCol()
 
-    higgs_pt = FloatCol()
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
 
