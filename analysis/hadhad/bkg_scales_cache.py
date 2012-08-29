@@ -25,12 +25,12 @@ def read_scales(name='background_scales.cache'):
 def get_scales(category):
 
     if category in SCALES:
-        qcd_scale, ztautau_scale = SCALES[category]
+        qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = SCALES[category]
         print "scale factors for %s category" % category
-        print "    qcd scale: %.3f" % qcd_scale
-        print "    ztautau scale: %.3f" % ztautau_scale
+        print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+        print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
         print
-        return qcd_scale, ztautau_scale
+        return qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error
     else:
         return None
 
@@ -40,14 +40,18 @@ def has_category(category):
     return category in SCALES
 
 
-def set_scales(category, qcd_scale, ztautau_scale):
+def set_scales(category,
+        qcd_scale, qcd_scale_error,
+        ztautau_scale, ztautau_scale_error):
 
     global MODIFIED
     print "setting scale factors for %s category" % category
-    print "    qcd scale: %.3f" % qcd_scale
-    print "    ztautau scale: %.3f" % ztautau_scale
+    print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+    print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
     print
-    SCALES[category] = (qcd_scale, ztautau_scale)
+    SCALES[category] = (
+            qcd_scale, qcd_scale_error,
+            ztautau_scale, ztautau_scale_error)
     MODIFIED = True
 
 
@@ -58,10 +62,11 @@ if __name__ == '__main__':
         read_scales(sys.argv[1])
     else:
         read_scales()
-    for category, (qcd_scale, ztautau_scale) in SCALES.items():
+    for category, (qcd_scale, qcd_scale_error,
+            ztautau_scale, ztautau_scale_error) in SCALES.items():
         print "scale factors for %s category" % category
-        print "    qcd scale: %.5f" % qcd_scale
-        print "    ztautau scale: %.5f" % ztautau_scale
+        print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+        print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
         print
 else:
     import atexit
