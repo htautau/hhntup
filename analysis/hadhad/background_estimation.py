@@ -265,9 +265,6 @@ def qcd_ztautau_norm(ztautau,
     factor = data_hist.Integral() / (qcd_hist + ztautau_hist * ztautau_scale +
             bkg_hist).Integral()
 
-    print "fitted scale factors for %s category" % category
-    print "    qcd scale: %.3f" % qcd_scale
-    print "    ztautau scale: %.3f" % ztautau_scale
     print "data / model in this control region: %.3f" % factor
     print
 
@@ -289,5 +286,8 @@ def qcd_ztautau_norm(ztautau,
              qcd_scale=qcd_scale,
              ztautau_scale=ztautau_scale)
 
-    bkg_scales_cache.set_scales(category, qcd_scale, ztautau_scale)
-    return qcd_scale, ztautau_scale
+    bkg_scales_cache.set_scales(
+            category,
+            qcd_scale, qcd_scale_error
+            ztautau_scale, ztautau_scale_error)
+    return qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error
