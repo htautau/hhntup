@@ -60,6 +60,9 @@ class TauFourMomentum(FourMomentum):
         self.matched_dR = 9999.
         self.matched_collision = False
 
+        # overlap checking
+        self.min_dr_jet = 9999.
+
         self._pt_nominal = -1111.
 
         super(TauFourMomentum, self).__init__()

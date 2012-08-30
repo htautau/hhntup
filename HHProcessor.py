@@ -289,6 +289,14 @@ class HHProcessor(ATLASStudent):
             if current_channel == CATEGORY_VBF: # VBF optimized
                 jet1, jet2 = leading_jets
                 RecoJetBlock.set(tree, jet1, jet2)
+
+                tau1.min_dr_jet = min(
+                        tau1.fourvect.DeltaR(jet1.fourvect),
+                        tau1.fourvect.DeltaR(jet2.fourvect))
+                tau2.min_dr_jet = min(
+                        tau2.fourvect.DeltaR(jet1.fourvect),
+                        tau2.fourvect.DeltaR(jet2.fourvect))
+
                 """
                 Reco tau variables
                 This must come after the RecoJetBlock is filled since
@@ -350,6 +358,10 @@ class HHProcessor(ATLASStudent):
             elif current_channel == CATEGORY_BOOSTED:
                 jet1 = leading_jets[0]
                 RecoJetBlock.set(tree, jet1)
+
+                tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
+                tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
+
                 """
                 Reco tau variables
                 This must come after the RecoJetBlock is filled since
