@@ -146,7 +146,6 @@ datasets = [
     # 'McAtNlo_JIMMY_ZZ_llqq.mc11c',
     # 'McAtNlo_JIMMY_ZZ_tautaununu.mc11c',
     # 'McAtNlo_JIMMY_ZZ_tautauqq.mc11c',
-    # 'T1_McAtNlo_Jimmy.mc11c',
     # 'TTbar_FullHad_McAtNlo_Jimmy.mc11c',
     # 'gg2WW0240_JIMMY_WW_enuenu.mc11c',
     # 'gg2WW0240_JIMMY_WW_enutaunu.mc11c',
