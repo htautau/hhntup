@@ -78,27 +78,23 @@ def correlations(signal, signal_weight,
                      "correlation_background_%s" % channel)
 
 
-def get_samples(mass=None):
+def get_samples(masses=None, modes=None, embedding=True):
 
-    mc_ztautau = MC_Ztautau()
-    mc_ewk = MC_EWK()
-    mc_ttbar = MC_TTbar()
-    mc_singletop = MC_SingleTop()
-    mc_diboson = MC_Diboson()
+    if embedding:
+        ztautau = Embedded_Ztautau()
+    else:
+        ztautau = MC_Ztautau()
+    ewk = EWK()
+    others = Others()
 
     backgrounds = (
-        mc_ztautau,
-        mc_ewk,
-        mc_ttbar,
-        mc_singletop,
-        mc_diboson,
+        ztautau,
+        ewk,
+        others,
     )
 
     signals = (
-        MC_VBF(mass=mass),
-        MC_ggF(mass=mass),
-        MC_WH(mass=mass),
-        MC_ZH(mass=mass)
+        Higgs(masses=masses, modes=modes)
     )
     return signals, backgrounds
 
@@ -509,6 +505,14 @@ class Data(Sample):
         return [asrootpy(self.data.CopyTree(self.cuts(category, region) & cuts))]
 
 
+class Signal:
+    pass
+
+
+class Background:
+    pass
+
+
 class MC(Sample):
 
     def __init__(self, systematics=True, db=DB_HH, **kwargs):
@@ -701,7 +705,7 @@ class MC(Sample):
                 yield weight, event
 
 
-class MC_Ztautau(MC):
+class MC_Ztautau(MC, Background):
 
     def __init__(self, color='#00a4ff', **kwargs):
         """
@@ -715,7 +719,7 @@ class MC_Ztautau(MC):
         super(MC_Ztautau, self).__init__(color=color, **kwargs)
 
 
-class Embedded_Ztautau(MC):
+class Embedded_Ztautau(MC, Background):
 
     def __init__(self, color='#00a4ff', **kwargs):
         """
@@ -730,7 +734,7 @@ class Embedded_Ztautau(MC):
         # requires special treatment of systematics
 
 
-class MC_EWK(MC):
+class EWK(MC, Background):
 
     def __init__(self, color='#ff9f71', **kwargs):
 
@@ -738,10 +742,11 @@ class MC_EWK(MC):
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
-        super(MC_EWK, self).__init__(color=color, **kwargs)
+        self.systematics_class = yml['systematics']
+        super(EWK, self).__init__(color=color, **kwargs)
 
 
-class MC_Top(MC):
+class Top(MC, Background):
 
     def __init__(self, color='#0000ff', **kwargs):
 
@@ -749,10 +754,10 @@ class MC_Top(MC):
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
-        super(MC_Top, self).__init__(color=color, **kwargs)
+        super(Top, self).__init__(color=color, **kwargs)
 
 
-class MC_Diboson(MC):
+class Diboson(MC, Background):
 
     def __init__(self, color='#ffd075', **kwargs):
 
@@ -760,10 +765,10 @@ class MC_Diboson(MC):
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
-        super(MC_Diboson, self).__init__(color=color, **kwargs)
+        super(Diboson, self).__init__(color=color, **kwargs)
 
 
-class MC_Others(MC):
+class Others(MC, Background):
 
     def __init__(self, color='#ff7700', **kwargs):
 
@@ -775,116 +780,64 @@ class MC_Others(MC):
                         yml_ewk['samples'])
         self._label = 'Others'
         self.name = 'Others'
-        super(MC_Others, self).__init__(color=color, **kwargs)
+        super(Others, self).__init__(color=color, **kwargs)
 
 
-class MC_Higgs(MC):
+class Higgs(MC, Signal):
 
     MASS_POINTS = range(100, 155, 5)
 
     MODES = {
-        'ggH': 'ggf',
-        'VBFH': 'vbf',
-        'ZH': 'zh',
-        'WH': 'wh',
+        'ggf': ('ggH', 'PowHegPythia_'),
+        'vbf': ('VBFH', 'PowHegPythia_'),
+        'zh': ('ZH', 'Pythia'),
+        'wh': ('WH', 'Pythia'),
     }
 
-    def __init__(self, mode, generator, mass=None, **kwargs):
+    def __init__(self, modes=None, masses=None, **kwargs):
 
-        self.mode = [MC_Higgs.MODES[mode]]
-
-        if mass is None:
-            mass = MC_Higgs.MASS_POINTS
-
-        if isinstance(mass, (list, tuple)):
-            self._label = r'%s $H\rightarrow\tau_{h}\tau_{h}$' % mode
-            self.name = 'Signal'
-            self.mass = mass
+        if masses is None:
+            self.masses = Higgs.MASS_POINTS
         else:
-            self._label = r'%s $H(%d)\rightarrow\tau_{h}\tau_{h}$' % \
-                           (mode, mass)
-            self.name = 'Signal%d' % mass
-            self.mass = [mass]
+            self.masses = masses
+            assert len(masses) > 0
+            for mass in masses:
+                assert mass in Higgs.MASS_POINTS
+            assert len(set(masses)) = len(masses)
 
-        self.samples = ['%s%s%d_tautauhh.mc11c' % (generator, mode, m)
-                        for m in self.mass]
-        super(MC_Higgs, self).__init__(**kwargs)
-
-
-class MC_All_Higgs(MC):
-
-    def __init__(self, mass=None, **kwargs):
-
-        if mass is None:
-            mass = MC_Higgs.MASS_POINTS
-
-        if isinstance(mass, (list, tuple)):
-            self._label = r'$H\rightarrow\tau_{h}\tau_{h}$'
-            self.name = 'Signal'
-            self.mass = mass
+        if modes is None:
+            self.modes = Higgs.MODES.keys()
         else:
-            self._label = r'$H(%d)\rightarrow\tau_{h}\tau_{h}$' % mass
-            self.name = 'Signal%d' % mass
-            self.mass = [mass]
+            self.modes = modes
+            assert len(modes) > 0
+            for mode in modes:
+                assert mode in Higgs.MODES
+            assert len(set(modes)) = len(modes)
 
-        self.samples = ['PowHegPythia_VBFH%d_tautauhh.mc11c' % m
-                        for m in self.mass]
-        self.mode = ['vbf' for m in self.mass]
-        self.samples += ['PowHegPythia_ggH%d_tautauhh.mc11c' % m
-                        for m in self.mass]
-        self.mode += ['ggf' for m in self.mass]
-        self.samples += ['PythiaZH%d_tautauhh.mc11c' % m
-                        for m in self.mass]
-        self.mode += ['zh' for m in self.mass]
-        self.samples += ['PythiaWH%d_tautauhh.mc11c' % m
-                        for m in self.mass]
-        self.mode += ['wh' for m in self.mass]
-        self.mass *= 4
-        super(MC_All_Higgs, self).__init__(**kwargs)
+        str_mass = ''
+        if len(self.masses) == 1:
+            str_mass = str(self.masses[0])
 
+        str_mode = ''
+        if len(self.modes) == 1:
+            str_modes = str(self.modes[0])
 
-class MC_VBF(MC_Higgs):
+        self._label = r'{mode} $H{mass}\rightarrow\tau_{h}\tau_{h}$'.format(
+                mass=str_mass,
+                mode=str_mode)
+        self.name = '{mode}Signal{mass}'.format(
+                mass=str_mass,
+                mode=str_mode)
 
-    def __init__(self, mass=None, **kwargs):
+        self.samples = []
+        for mode in self.modes:
+            mode_str = Higgs.MODES[mode][0]
+            generator = Higgs.MODES[mode][1]
+            for mass in self.masses:
+                self.samples.append('%s%s%d_tautauhh.mc11c' % (
+                    generator, mode_str, mass))
 
-        super(MC_VBF, self).__init__(
-                mode='VBFH',
-                mass=mass,
-                generator='PowHegPythia_',
-                **kwargs)
-
-
-class MC_ggF(MC_Higgs):
-
-    def __init__(self, mass=None, **kwargs):
-
-        super(MC_ggF, self).__init__(
-                mode='ggH',
-                mass=mass,
-                generator='PowHegPythia_',
-                **kwargs)
-
-
-class MC_WH(MC_Higgs):
-
-    def __init__(self, mass=None, **kwargs):
-
-        super(MC_WH, self).__init__(
-                mode='WH',
-                mass=mass,
-                generator='Pythia',
-                **kwargs)
-
-
-class MC_ZH(MC_Higgs):
-
-    def __init__(self, mass=None, **kwargs):
-
-        super(MC_ZH, self).__init__(
-                mode='ZH',
-                mass=mass,
-                generator='Pythia',
-                **kwargs)
+        super(Higgs, self).__init__(**kwargs)
 
 
 class QCD(Sample):

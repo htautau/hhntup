@@ -439,12 +439,12 @@ if __name__ == '__main__':
 
     PLOTS_DIR = plots_dir(__file__)
 
-    #mc_ztautau   = MC_Ztautau(systematics=args.systematics)
+    #ztautau   = MC_Ztautau(systematics=args.systematics)
     ztautau = Embedded_Ztautau(systematics=args.systematics)
-    mc_others = MC_Others(systematics=args.systematics)
+    others = Others(systematics=args.systematics)
 
-    higgs_125 = MC_All_Higgs(
-            mass=125,
+    higgs_125 = Higgs(
+            masses=[125],
             systematics=args.systematics,
             scale=50,
             linecolor='red',
@@ -478,7 +478,7 @@ if __name__ == '__main__':
         # in each category separately
         qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = qcd_ztautau_norm(
             ztautau=ztautau,
-            backgrounds=[mc_others],
+            backgrounds=[others],
             data=data,
             category=category,
             target_region=target_region,
@@ -505,7 +505,7 @@ if __name__ == '__main__':
             if 'scale' in var_info:
                 expr = "%s * %f" % (expr, var_info['scale'])
 
-            other_hist = mc_others.draw(
+            other_hist = others.draw(
                     expr,
                     category, target_region,
                     bins, min, max,
