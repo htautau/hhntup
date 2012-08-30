@@ -293,9 +293,43 @@ class Sample(object):
         else (name, Cut(''))
         for name, info in categories.CATEGORIES.items()])
 
+    WEIGHT_BRANCHES = [
+        'mc_weight',
+        'pileup_weight',
+        'ggf_weight',
+        # effic high and low already accounted for in TAUBDT_UP/DOWN
+        'tau1_efficiency_scale_factor',
+        'tau2_efficiency_scale_factor',
+    ]
+
+    WEIGHT_SYSTEMATICS = {
+        'TRIGGER': {
+            'UP': [
+                'tau1_trigger_scale_factor_high',
+                'tau2_trigger_scale_factor_high'],
+            'DOWN': [
+                'tau1_trigger_scale_factor_low',
+                'tau2_trigger_scale_factor_low'],
+            'NOMINAL': [
+                'tau1_trigger_scale_factor',
+                'tau2_trigger_scale_factor']},
+        'FAKERATE': {
+            'UP': [
+                'tau1_fakerate_scale_factor_high',
+                'tau2_fakerate_scale_factor_high'],
+            'DOWN': [
+                'tau1_fakerate_scale_factor_low',
+                'tau2_fakerate_scale_factor_low'],
+            'NOMINAL': [
+            	'tau1_fakerate_scale_factor',
+                'tau2_fakerate_scale_factor']},
+    }
+
+
     def __init__(self, scale=1., cuts=None,
                  student=DEFAULT_STUDENT,
-                 treename=DEFAULT_TREENAME):
+                 treename=DEFAULT_TREENAME,
+                 **hist_decor):
 
         self.scale = scale
         if cuts is None:
@@ -304,6 +338,22 @@ class Sample(object):
             self._cuts = cuts
         self.student = student
         self.treename = treename
+        self.hist_decor = hist_decor
+
+    def get_weight_branches(self, systematic):
+
+        weight_branches = Sample.WEIGHT_BRANCHES[:]
+        if systematic == 'NOMINAL':
+            systerm = None
+            variation = 'NOMINAL'
+        else:
+            systerm, variation = systematics.split('_')
+        for term, variations in Sample.WEIGHT_SYSTEMATICS.items():
+            if term == systerm:
+                weight_branches += variations[variation]
+            else:
+                weight_branches += variations['NOMINAL']
+        return weight_branches
 
     def cuts(self, category, region):
 
@@ -321,14 +371,14 @@ class Sample(object):
         """
         Return recarray for training and for testing
         """
+        weight_branches = self.get_weight_branches(systematic)
+
         if train_fraction is not None:
+
             assert 0 < train_fraction < 1.
+
             if isinstance(self, MC):
-                branches = branches + [
-                    'mc_weight',
-                    'pileup_weight',
-                    'tau1_weight',
-                    'tau2_weight']
+                branches = branches + weight_branches
 
             train_arrs = []
             test_arrs = []
@@ -345,15 +395,11 @@ class Sample(object):
                     weight_name='weight')
                 if isinstance(self, MC):
                     # merge the three weight columns
-                    arr['weight'] *= (arr['mc_weight'] * arr['pileup_weight'] *
-                                      arr['tau1_weight'] * arr['tau2_weight'])
+                    arr['weight'] *= reduce(np.multiply,
+                            [arr[br] for br in weight_branches])
                     # remove the mc_weight and pileup_weight fields
                     arr = recfunctions.rec_drop_fields(
-                        arr,
-                        ['mc_weight',
-                         'pileup_weight',
-                         'tau1_weight',
-                         'tau2_weight'])
+                        arr, weight_branches)
                 split_idx = int(train_fraction * float(arr.shape[0]))
                 arr_train, arr_test = arr[:split_idx], arr[split_idx:]
                 # scale the weights to account for train_fraction
@@ -382,12 +428,9 @@ class Sample(object):
                  cuts=None,
                  systematic='NOMINAL'):
 
+        weight_branches = self.get_weight_branches(systematic)
         if include_weight and isinstance(self, MC):
-            branches = branches + [
-                'mc_weight',
-                'pileup_weight',
-                'tau1_weight',
-                'tau2_weight']
+            branches = branches + weight_branches
 
         try:
             arr = r2a.tree_to_recarray(
@@ -404,15 +447,12 @@ class Sample(object):
 
         if include_weight and isinstance(self, MC):
             # merge the three weight columns
-            arr['weight'] *= (arr['mc_weight'] * arr['pileup_weight'] *
-                              arr['tau1_weight'] * arr['tau2_weight'])
+            arr['weight'] *= reduce(np.multiply,
+                    [arr[br] for br in weight_branches])
+
             # remove the mc_weight and pileup_weight fields
             arr = recfunctions.rec_drop_fields(
-                arr,
-                ['mc_weight',
-                 'pileup_weight',
-                 'tau1_weight',
-                 'tau2_weight'])
+                arr, weight_branches)
         return arr
 
     def ndarray(self,
@@ -438,8 +478,8 @@ class Data(Sample):
     def __init__(self, **kwargs):
 
         super(Data, self).__init__(scale=1., **kwargs)
-        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student),
-                                'data.root']))
+        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student, self.student),
+                                'data-JetTauEtmiss.root']))
         self.data = self.DATA_FILE.Get(self.treename)
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
@@ -447,7 +487,8 @@ class Data(Sample):
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name)
+        hist = Hist(bins, min, max, title=self.label, name=self.name,
+                **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
         return hist
 
@@ -491,14 +532,14 @@ class MC(Sample):
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
             else:
                 rfile = ropen('.'.join([
-                    os.path.join(NTUPLE_PATH, self.student), ds.name, 'root']))
+                    os.path.join(NTUPLE_PATH, self.student, self.student), ds.name, 'root']))
                 trees['NOMINAL'] = rfile.Get(self.treename)
                 weighted_events['NOMINAL'] = rfile.cutflow[1]
                 if ds.name not in FILES:
                     FILES[ds.name] = {}
                 FILES[ds.name]['NOMINAL'] = rfile
 
-            if systematics:
+            if systematics and not isinstance(self, Embedded_Ztautau):
                 for sys_variations in iter_systematics('hadhad'):
 
                     sys_term = '_'.join(sys_variations)
@@ -511,7 +552,7 @@ class MC(Sample):
                         weighted_events[sys_term] = rfile.cutflow[1]
                     else:
                         rfile = ropen('.'.join([
-                            os.path.join(NTUPLE_PATH, self.student),
+                            os.path.join(NTUPLE_PATH, self.student, self.student),
                             '_'.join([ds.name, sys_term]), 'root']))
                         trees[sys_term] = rfile.Get(self.treename)
                         weighted_events[sys_term] = rfile.cutflow[1]
@@ -519,13 +560,15 @@ class MC(Sample):
                             FILES[ds.name] = {}
                         FILES[ds.name][sys_term] = rfile
 
-            if isinstance(self, MC_Higgs):
+            if isinstance(self, (MC_Higgs, MC_All_Higgs)):
                 # use yellowhiggs for cross sections
                 xs = yellowhiggs.xsbr(
                         7, self.mass[i],
-                        self.mode, 'tautau')[0] * TAUTAUHADHADBR
+                        self.mode[i], 'tautau')[0] * TAUTAUHADHADBR
                 kfact = 1.
                 effic = 1.
+            elif isinstance(self, Embedded_Ztautau):
+                xs, kfact, effic = 1., 1., 1.
             else:
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
@@ -537,15 +580,16 @@ class MC(Sample):
     def label(self):
 
         l = self._label
-        if self.scale != 1. and not isinstance(self, MC_Ztautau):
+        if self.scale != 1. and not isinstance(self,
+                (MC_Ztautau, Embedded_Ztautau)):
             l += r' ($\sigma_{SM} \times %g$)' % self.scale
         return l
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name)
+        hist = Hist(bins, min, max, title=self.label, name=self.name,
+                **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
-        hist.SetFillColor(self.colour)
         return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
@@ -582,10 +626,17 @@ class MC(Sample):
             tree = sys_trees['NOMINAL']
             events = sys_events['NOMINAL']
 
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
-            weighted_selection = ('%.5f * mc_weight * pileup_weight * '
-                                  'tau1_weight * tau2_weight * (%s)' %
-                                  (weight, selection))
+            if isinstance(self, Embedded_Ztautau):
+                weight = self.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            weighted_selection = (
+                    '%f * %s * (%s)' %
+                    (weight,
+                     ' * '.join(self.get_weight_branches('NOMINAL')),
+                     selection))
+
             if VERBOSE:
                 print weighted_selection
 
@@ -604,7 +655,12 @@ class MC(Sample):
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            if isinstance(self, Embedded_Ztautau):
+                weight = self.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
             trees.append(selected_tree)
@@ -616,7 +672,12 @@ class MC(Sample):
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            if isinstance(self, Embedded_Ztautau):
+                weight = self.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
             total += weight * tree.GetEntries(selection)
         return total
 
@@ -626,7 +687,12 @@ class MC(Sample):
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
+            if isinstance(self, Embedded_Ztautau):
+                weight = seld.scale
+            else:
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+
             if selection:
                 selected_tree = asrootpy(tree.CopyTree(selection))
             else:
@@ -637,7 +703,7 @@ class MC(Sample):
 
 class MC_Ztautau(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#00a4ff', **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
@@ -646,13 +712,12 @@ class MC_Ztautau(MC):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#00a4ff'
-        super(MC_Ztautau, self).__init__(**kwargs)
+        super(MC_Ztautau, self).__init__(color=color, **kwargs)
 
 
 class Embedded_Ztautau(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#00a4ff', **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
@@ -661,51 +726,46 @@ class Embedded_Ztautau(MC):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#00a4ff'
-        super(MC_Ztautau, self).__init__(**kwargs)
-
+        super(Embedded_Ztautau, self).__init__(color=color, **kwargs)
         # requires special treatment of systematics
 
 
 class MC_EWK(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#ff9f71', **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['ewk']
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#ff9f71'
-        super(MC_EWK, self).__init__(**kwargs)
+        super(MC_EWK, self).__init__(color=color, **kwargs)
 
 
 class MC_Top(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#0000ff', **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['top']
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#0000ff'
-        super(MC_Top, self).__init__(**kwargs)
+        super(MC_Top, self).__init__(color=color, **kwargs)
 
 
 class MC_Diboson(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#ffd075', **kwargs):
 
         yml = samples_db.BACKGROUNDS['hadhad']['diboson']
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.colour = '#ffd075'
-        super(MC_Diboson, self).__init__(**kwargs)
+        super(MC_Diboson, self).__init__(color=color, **kwargs)
 
 
 class MC_Others(MC):
 
-    def __init__(self, **kwargs):
+    def __init__(self, color='#ff7700', **kwargs):
 
         yml_diboson = samples_db.BACKGROUNDS['hadhad']['diboson']
         yml_top = samples_db.BACKGROUNDS['hadhad']['top']
@@ -715,8 +775,7 @@ class MC_Others(MC):
                         yml_ewk['samples'])
         self._label = 'Others'
         self.name = 'Others'
-        self.colour = '#ff7700'
-        super(MC_Others, self).__init__(**kwargs)
+        super(MC_Others, self).__init__(color=color, **kwargs)
 
 
 class MC_Higgs(MC):
@@ -732,7 +791,7 @@ class MC_Higgs(MC):
 
     def __init__(self, mode, generator, mass=None, **kwargs):
 
-        self.mode = MC_Higgs.MODES[mode]
+        self.mode = [MC_Higgs.MODES[mode]]
 
         if mass is None:
             mass = MC_Higgs.MASS_POINTS
@@ -750,6 +809,38 @@ class MC_Higgs(MC):
         self.samples = ['%s%s%d_tautauhh.mc11c' % (generator, mode, m)
                         for m in self.mass]
         super(MC_Higgs, self).__init__(**kwargs)
+
+
+class MC_All_Higgs(MC):
+
+    def __init__(self, mass=None, **kwargs):
+
+        if mass is None:
+            mass = MC_Higgs.MASS_POINTS
+
+        if isinstance(mass, (list, tuple)):
+            self._label = r'$H\rightarrow\tau_{h}\tau_{h}$'
+            self.name = 'Signal'
+            self.mass = mass
+        else:
+            self._label = r'$H(%d)\rightarrow\tau_{h}\tau_{h}$' % mass
+            self.name = 'Signal%d' % mass
+            self.mass = [mass]
+
+        self.samples = ['PowHegPythia_VBFH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode = ['vbf' for m in self.mass]
+        self.samples += ['PowHegPythia_ggH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode += ['ggf' for m in self.mass]
+        self.samples += ['PythiaZH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode += ['zh' for m in self.mass]
+        self.samples += ['PythiaWH%d_tautauhh.mc11c' % m
+                        for m in self.mass]
+        self.mode += ['wh' for m in self.mass]
+        self.mass *= 4
+        super(MC_All_Higgs, self).__init__(**kwargs)
 
 
 class MC_VBF(MC_Higgs):
@@ -787,7 +878,7 @@ class MC_WH(MC_Higgs):
 
 class MC_ZH(MC_Higgs):
 
-    def __init__(self, mass=None):
+    def __init__(self, mass=None, **kwargs):
 
         super(MC_ZH, self).__init__(
                 mode='ZH',
@@ -801,22 +892,22 @@ class QCD(Sample):
     def __init__(self, data, mc,
                  scale=1.,
                  shape_region='SS',
-                 cuts=None):
+                 cuts=None,
+                 color='#59d454'):
 
-        super(QCD, self).__init__(scale=scale)
+        super(QCD, self).__init__(scale=scale, color=color)
         self.data = data
         self.mc = mc
         self.name = 'QCD'
         self.label = 'QCD Multi-jet'
         self.scale = 1.
         self.shape_region = shape_region
-        self.colour = '#59d454'
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name)
+        hist = Hist(bins, min, max, title=self.label, name=self.name,
+                **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
-        hist.SetFillColor(self.colour)
         return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
@@ -895,7 +986,6 @@ class MC_TauID(MC):
         self.name = 'TauID'
         self._label = 'TauID'
         self.samples = ['PythiaWtaunu_incl.mc11c']
-        self.colour = '#0000ff'
         super(MC_TauID, self).__init__(student='TauIDProcessor',
                 db=DB_TAUID, **kwargs)
 

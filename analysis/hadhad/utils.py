@@ -172,25 +172,38 @@ def draw(model,
 
     if model_colour_map is not None:
         set_colours(model, model_colour_map)
-    if signal is not None and signal_colour_map is not None:
+
+    if isinstance(signal, (list, tuple)) and signal_colour_map is not None:
         set_colours(signal, signal_colour_map)
 
     model_bars = rplt.bar(model, linewidth=0,
             stacked=True, yerr='quadratic', axes=hist_ax,
-            ypadding=(.5, .1))
+            ypadding=(.55, .1))
 
     if signal is not None:
         if signal_scale != 1.:
-            for sig in signal:
-                sig *= signal_scale
-                sig.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(), signal_scale))
-        signal_bars = rplt.bar(signal, linewidth=0,
-                stacked=True, yerr='quadratic',
-                axes=hist_ax, alpha=.8, ypadding=(.5, .1))
+            if isinstance(signal, (list, tuple)):
+                for sig in signal:
+                    sig *= signal_scale
+                    sig.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(), signal_scale))
+            else:
+                signal *= signal_scale
+                signal.SetTitle(r'%s $\times\/%d$' % (signal.GetTitle(),
+                    signal_scale))
+
+        if isinstance(signal, (list, tuple)):
+            signal_bars = rplt.bar(signal, linewidth=0,
+                    stacked=True, yerr='quadratic',
+                    axes=hist_ax, alpha=.8, ypadding=(.55, .1))
+        else:
+            _, _, signal_bars = rplt.hist(signal,
+                    histtype='stepfilled',
+                    axes=hist_ax, ypadding=(.55, .1))
+
 
     if data is not None:
         data_bars = rplt.errorbar(data,
-                fmt='o', axes=hist_ax, ypadding=(.5, .1),
+                fmt='o', axes=hist_ax, ypadding=(.55, .1),
                 emptybins=False)
 
     if show_ratio:
@@ -245,14 +258,31 @@ def draw(model,
             prop=prop, title=category_name,
             loc='upper left',
             numpoints=1)
+
     format_legend(model_legend)
 
+    right_legend_bars = []
+    right_legend_titles =[]
+
     if data is not None:
-        data_legend = hist_ax.legend([data_bars], [data.title],
+        right_legend_bars.append(data_bars)
+        right_legend_titles.append(data.title)
+    if signal is not None:
+        if isinstance(signal, (list, tuple)):
+            right_legend_bars += signal_bars
+            right_legend_titles += [s.title for s in signal]
+        else:
+            right_legend_bars.append(signal_bars[0])
+            right_legend_titles.append(signal.title)
+
+    if right_legend_bars:
+        right_legend = hist_ax.legend(
+                right_legend_bars,
+                right_legend_titles,
                 prop=prop,
                 loc='upper right',
                 numpoints=1)
-        format_legend(data_legend)
+        format_legend(right_legend)
         hist_ax.add_artist(model_legend)
 
     if units is not None:

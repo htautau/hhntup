@@ -289,6 +289,14 @@ class HHProcessor(ATLASStudent):
             if current_channel == CATEGORY_VBF: # VBF optimized
                 jet1, jet2 = leading_jets
                 RecoJetBlock.set(tree, jet1, jet2)
+
+                tau1.min_dr_jet = min(
+                        tau1.fourvect.DeltaR(jet1.fourvect),
+                        tau1.fourvect.DeltaR(jet2.fourvect))
+                tau2.min_dr_jet = min(
+                        tau2.fourvect.DeltaR(jet1.fourvect),
+                        tau2.fourvect.DeltaR(jet2.fourvect))
+
                 """
                 Reco tau variables
                 This must come after the RecoJetBlock is filled since
@@ -350,6 +358,10 @@ class HHProcessor(ATLASStudent):
             elif current_channel == CATEGORY_BOOSTED:
                 jet1 = leading_jets[0]
                 RecoJetBlock.set(tree, jet1)
+
+                tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
+                tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
+
                 """
                 Reco tau variables
                 This must come after the RecoJetBlock is filled since
@@ -385,26 +397,35 @@ class HHProcessor(ATLASStudent):
             METx = event.MET_RefFinal_BDTMedium_etx
             METy = event.MET_RefFinal_BDTMedium_ety
             MET_vect = Vector2(METx, METy)
-            MET_3vect = Vector3(METx, METy, 0.)
             MET = event.MET_RefFinal_BDTMedium_et
+
             tree.MET = MET
+            tree.MET_x = METx
+            tree.MET_y = METy
             tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
+            tree.MET_vec.set_from(MET_vect)
+
             sumET = event.MET_RefFinal_BDTMedium_sumet
-            tree.HT = sumET
+            tree.sumET = sumET
             tree.MET_sig = (2. * MET / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
             MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
 
-            tau1_2vector = Vector2(tau1.fourvect.Px(), tau1.fourvect.Py())
-            tau2_2vector = Vector2(tau2.fourvect.Px(), tau2.fourvect.Py())
-            tree.MET_centrality = eventshapes.phi_centrality(tau1_2vector,
-                                                             tau2_2vector,
+            tree.MET_centrality = eventshapes.phi_centrality(tau1.fourvect,
+                                                             tau2.fourvect,
                                                              MET_vect)
 
             # Mass
-            mmc_mass, mmc_pt, mmc_met = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(tau1, tau2, METx, METy, sumET)
+
             tree.mass_mmc_tau1_tau2 = mmc_mass
-            tree.higgs_pt = mmc_pt
-            tree.MET_mmc = mmc_met
+            tree.mmc_resonance.set_from(mmc_resonance)
+            if mmc_mass > 0:
+                tree.mmc_resonance_pt = mmc_resonance.Pt()
+            tree.MET_mmc = mmc_met.Mod()
+            tree.MET_mmc_x = mmc_met.X()
+            tree.MET_mmc_y = mmc_met.Y()
+            tree.MET_mmc_phi = mmc_met.Phi()
+            tree.MET_mmc_vec.set_from(mmc_met)
 
             """
             if tau1.numTrack <= 1:

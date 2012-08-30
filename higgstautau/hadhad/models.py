@@ -30,6 +30,7 @@ class RecoTau(TreeModel):
     seedCalo_numTrack = IntCol()
     numTrack = IntCol()
     charge = IntCol()
+    jvtxf = FloatCol()
 
     centrality = FloatCol()
     centrality_boosted = FloatCol()
@@ -51,6 +52,9 @@ class RecoTau(TreeModel):
     trigger_scale_factor = FloatCol(default=1.)
     trigger_scale_factor_high = FloatCol(default=1.)
     trigger_scale_factor_low = FloatCol(default=1.)
+
+    # overlap checking
+    min_dr_jet = FloatCol(default=9999)
 
 
 class EventVariables(TreeModel):
@@ -101,13 +105,25 @@ class EventVariables(TreeModel):
     eta_product_jets_boosted = FloatCol()
 
     numJets = IntCol()
-    jet_fourvect = ROOT.vector('TLorentzVector')
-    jet_jvtxf = ROOT.vector('float')
+
     MET = FloatCol()
+    MET_x = FloatCol()
+    MET_y = FloatCol()
     MET_phi = FloatCol()
-    MET_mmc = FloatCol()
-    HT = FloatCol()
     MET_sig = FloatCol()
+    MET_vec = Vector2
+
+    MET_mmc = FloatCol()
+    MET_mmc_x = FloatCol()
+    MET_mmc_y = FloatCol()
+    MET_mmc_phi = FloatCol()
+    MET_mmc_vec = Vector2
+
+    mmc_resonance = LorentzVector
+    mmc_resonance_pt = FloatCol()
+
+    sumET = FloatCol()
+
     error = BoolCol()
     jet_transformation = LorentzRotation
     jet_beta = Vector3
@@ -123,7 +139,6 @@ class EventVariables(TreeModel):
     sphericity_boosted = FloatCol()
     aplanarity_boosted = FloatCol()
 
-    higgs_pt = FloatCol()
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
 
@@ -145,7 +160,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
         if tau1 is not None and tau2 is not None:
             tree.mass_vis_tau1_tau2 = utils.Mvis(tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
             tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
-            tree.theta_tau1_tau2 = tau1.fourvect.Vect().Angle(tau2.fourvect.Vect())
+            tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
             tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
             tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
             tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
@@ -165,6 +180,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
             setattr(tree, 'tau%i_numTrack' % i, tau.numTrack)
             setattr(tree, 'tau%i_charge' % i, tau.charge)
+            setattr(tree, 'tau%i_jvtxf' % i, tau.jet_jvtxf)
+
             getattr(tree, 'tau%i_fourvect' % i).set_from(tau.fourvect)
             tau.fourvect_boosted.set_from(tau.fourvect)
             tau.fourvect_boosted.Boost(tree.jet_beta * -1)
@@ -197,6 +214,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_matched' % i, tau.matched)
             setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)
             setattr(tree, 'tau%i_matched_collision' % i, tau.matched_collision)
+            setattr(tree, 'tau%i_min_dr_jet' % i, tau.min_dr_jet)
 
 
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
