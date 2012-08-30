@@ -267,8 +267,6 @@ class HHProcessor(ATLASStudent):
         for event in chain:
             tree.reset()
 
-            print tree.jet1_fourvect
-
             # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
 
