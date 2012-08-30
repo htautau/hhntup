@@ -4,6 +4,7 @@ from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
+import os
 
 from externaltools import MuonMomentumCorrections
 from externaltools import MuonEfficiencyCorrections
@@ -11,6 +12,8 @@ from externaltools import TrigMuonEfficiency
 
 from externaltools import egammaAnalysisUtils
 
+from externaltools import HSG4TriggerSF as HSG4
+from externaltools import TauTriggerCorrections as TTC
 
 from ROOT import std, TLorentzVector, TFile
 from higgstautau.mixins import *
@@ -43,7 +46,7 @@ class MuonPtSmearing(EventFilter):
 
     def passes(self, event):
 
-        if self.datatype != datasets.MC: return True
+        if self.datatype == datasets.DATA: return True
 
         for mu in event.muons:
 
@@ -88,6 +91,7 @@ class MuonPtSmearing(EventFilter):
 #################################################
 
 from ROOT import eg2011
+from ROOT import CaloIsoCorrection
 
 egammaER = eg2011.EnergyRescaler()
 egammaER.useDefaultCalibConstants("2011")
@@ -107,40 +111,41 @@ class EgammaERescaling(EventFilter):
 
         for el in event.electrons:
 
-            # Seed with event number, reproducible smear for different analyses
+            ## Seed with event number, reproducible smear for different analyses
             egammaER.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(getattr(el,'fourvect').Phi()+pi)*1000000.))
 
             raw_e  = el.cl_E
             raw_et = getattr(el,'fourvect').Pt()
             corrected_e  = raw_e
             corrected_et = raw_et
+            cl_eta = el.cl_eta
 
-            # Calibration for electrons in the transition region in Data and MC
-            scaleFactorForTransitionRegion = egammaER.applyMCCalibrationMeV(el.cl_eta, raw_et, 'ELECTRON')
+            ## Calibration for electrons in the transition region in Data and MC
+            scaleFactorForTransitionRegion = egammaER.applyMCCalibrationMeV(cl_eta, raw_et, 'ELECTRON')
             corrected_e  *= scaleFactorForTransitionRegion
             corrected_et *= scaleFactorForTransitionRegion
 
-            if self.datatype == datasets.MC:
-                # Smearing correction in MC
+            if self.datatype == datasets.MC or self.datatype == datasets.EMBED:
+                ## Smearing correction in MC
                 sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
-                smearFactor = egammaER.getSmearingCorrectionMeV(el.cl_eta, corrected_e, sys, False, '2011')
+                smearFactor = egammaER.getSmearingCorrectionMeV(cl_eta, corrected_e, sys, False, '2011')
                 corrected_e  *= smearFactor
                 corrected_et *= smearFactor
             else:
-                # Calibration correction in Data
+                ## Calibration correction in Data
                 sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
                 scaleFactor = 1
                 if corrected_e > 0:
-                    scaleFactor = egammaER.applyEnergyCorrectionMeV(el.cl_eta, el.cl_phi, corrected_e, corrected_et, sys, 'ELECTRON') / corrected_e
+                    scaleFactor = egammaER.applyEnergyCorrectionMeV(cl_eta, el.cl_phi, corrected_e, corrected_et, sys, 'ELECTRON') / corrected_e
                 corrected_e  *= scaleFactor
                 corrected_et *= scaleFactor
 
 
-            # Modify E and Et in transient D3PD
+            ## Modify E and Et in transient D3PD
             el.cl_E  = corrected_e
             el.cl_et = corrected_et
 
-            # Adjust MET accordingly
+            ## Adjust MET accordingly
             if ((el.nSCTHits + el.nPixHits) < 4):
                 px = raw_et * cos(el.cl_phi)
                 py = raw_et * sin(el.cl_phi)
@@ -155,6 +160,39 @@ class EgammaERescaling(EventFilter):
             event.MET_RefFinal_BDTMedium_etx += ( px - corrected_px ) * el.MET_BDTMedium_wpx[0]
             event.MET_RefFinal_BDTMedium_ety += ( py - corrected_py ) * el.MET_BDTMedium_wpy[0]
             event.MET_RefFinal_BDTMedium_sumet -= ( raw_et - corrected_et ) * el.MET_BDTMedium_wet[0]
+
+            
+            ## Correct Isolation
+            nPV = 0
+            for vxp in event.vertices:
+                if vxp.nTracks >= 2: nPV += 1
+            EtaS2 = el.etas2
+            EtaP  = el.etap
+            EtCone20 = el.Etcone20
+            newElectronEtCone20 = EtCone20
+
+            if self.datatype == datasets.MC:
+                newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
+                                                                                   corrected_e,
+                                                                                   EtaS2,
+                                                                                   EtaP,
+                                                                                   cl_eta,
+                                                                                   20,
+                                                                                   True,
+                                                                                   EtCone20)
+            else:
+                newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
+                                                                                   corrected_e,
+                                                                                   EtaS2,
+                                                                                   EtaP,
+                                                                                   cl_eta,
+                                                                                   20,
+                                                                                   False,
+                                                                                   EtCone20)
+                
+
+            el.Etcone20 = newElectronEtCone20
+            
 
         return True
 
@@ -195,6 +233,7 @@ def TauEfficiencySF(event, datatype):
 # Muon Efficiency corrections
 #################################################
 
+## Scale factors for single muon triggers
 from ROOT import Analysis
 from ROOT import LeptonTriggerSF
 
@@ -245,11 +284,20 @@ def MuonSF(event, datatype, pileup_tool):
 
     return w
 
+## Scale factor for lephad triggers
+from ROOT import HSG4TriggerSF
+def MuonLTTSF(muon, runNumber):
+
+    sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
+    return sfTool.getSFMuon(muon.fourvect, runNumber, 0)
+        
+
 
 #################################################
 # Electron Efficiency corrections
 #################################################
 
+## Scale factors for single electron triggers
 from ROOT import egammaSFclass
 
 egammaSF = egammaSFclass()
@@ -328,3 +376,34 @@ def ElectronSF(event, datatype, pileupTool):
     weight *= trigSF
 
     return weight
+
+
+## Scale factor for lephad triggers
+def ElectronLTTSF(electron, runNumber):
+
+    sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
+    return sfTool.getSFMuon(electron.fourvect, runNumber, 0)
+
+
+
+#################################################
+# Special LTT corrections for embedded
+#################################################
+from ROOT import TauTriggerCorrections
+
+def EmbedTauTriggerCorr(Tau, nvtx, runNumber):
+    ttc = TauTriggerCorrections()
+    weight = 1.0
+    ttcPath = TTC.RESOURCE_PATH
+    if runNumber > 186755:
+        status =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'))
+        weight =  ttc.get3DMCEff(Tau.fourvect.Pt(), Tau.fourvect.Eta(), nvtx, 0)
+        status =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20_medium1.root'))
+        weight *= ttc.getSF(Tau.fourvect.Pt(), 0)
+    else:
+        status = ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau16_loose.root'))
+        weight = ttc.getDataEff(Tau.fourvect.Pt(), 0)
+
+    return weight
+            
+        
