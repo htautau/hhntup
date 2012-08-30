@@ -30,6 +30,7 @@ class RecoTau(TreeModel):
     seedCalo_numTrack = IntCol()
     numTrack = IntCol()
     charge = IntCol()
+    jvtxf = FloatCol()
 
     centrality = FloatCol()
     centrality_boosted = FloatCol()
@@ -156,7 +157,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
         if tau1 is not None and tau2 is not None:
             tree.mass_vis_tau1_tau2 = utils.Mvis(tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
             tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
-            tree.theta_tau1_tau2 = tau1.fourvect.Vect().Angle(tau2.fourvect.Vect())
+            tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
             tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
             tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
             tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
@@ -176,6 +177,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
             setattr(tree, 'tau%i_numTrack' % i, tau.numTrack)
             setattr(tree, 'tau%i_charge' % i, tau.charge)
+            setattr(tree, 'tau%i_jvtxf' % i, tau.jet_jvtxf)
+
             getattr(tree, 'tau%i_fourvect' % i).set_from(tau.fourvect)
             tau.fourvect_boosted.set_from(tau.fourvect)
             tau.fourvect_boosted.Boost(tree.jet_beta * -1)
