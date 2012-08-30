@@ -412,6 +412,7 @@ class HHProcessor(ATLASStudent):
             tree.MET_mmc = mmc_met.Mod()
             tree.MET_mmc_x = mmc_met.X()
             tree.MET_mmc_y = mmc_met.Y()
+            tree.MET_mmc_phi = mmc_met.Phi()
             tree.MET_mmc_vec.set_from(mmc_met)
 
             """

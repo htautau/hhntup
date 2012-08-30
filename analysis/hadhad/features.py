@@ -35,9 +35,9 @@ VARIABLES = {
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
-    'higgs_pt': {
-        'title': r'Higgs $p_T$',
-        'filename': 'higgs_pt',
+    'mmc_resonance_pt': {
+        'title': r'MMC Resonance $p_T$',
+        'filename': 'mmc_resonance_pt',
         'bins': 20,
         'range': (0, 200),
         'units': 'GeV',
@@ -57,6 +57,65 @@ VARIABLES = {
         'range': (0, 100),
         'scale': 1./1000,
         'units': 'GeV',
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_x': {
+        'title': r'$E^{miss}_{T_{x}}$',
+        'filename': 'MET_x',
+        'bins': 20,
+        'range': (0, 100),
+        'scale': 1./1000,
+        'units': 'GeV',
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_y': {
+        'title': r'$E^{miss}_{T_{y}}$',
+        'filename': 'MET_y',
+        'bins': 20,
+        'range': (0, 100),
+        'scale': 1./1000,
+        'units': 'GeV',
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_phi': {
+        'title': r'$E^{miss}_{T} \phi$',
+        'filename': 'MET_phi',
+        'bins': 20,
+        'range': (-math.pi, math.pi),
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_mmc': {
+        'title': r'$E^{miss}_{T}$ MMC',
+        'filename': 'MET_mmc',
+        'bins': 20,
+        'range': (0, 100),
+        'scale': 1./1000,
+        'units': 'GeV',
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_mmc_x': {
+        'title': r'$E^{miss}_{T_{x}}$ MMC',
+        'filename': 'MET_mmc_x',
+        'bins': 20,
+        'range': (0, 100),
+        'scale': 1./1000,
+        'units': 'GeV',
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_mmc_y': {
+        'title': r'$E^{miss}_{T_{y}}$ MMC',
+        'filename': 'MET_mmc_y',
+        'bins': 20,
+        'range': (0, 100),
+        'scale': 1./1000,
+        'units': 'GeV',
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'MET_mmc_vec.Phi()': {
+        'title': r'$E^{miss}_{T} \phi$ MMC',
+        'filename': 'MET_mmc_phi',
+        'bins': 20,
+        'range': (-math.pi, math.pi),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'sphericity': {
