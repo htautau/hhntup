@@ -1,7 +1,9 @@
 import warnings
 import numpy as np
 warnings.filterwarnings('error', category=np.ComplexWarning)
-warnings.filterwarnings('error', 'transvers momentum = 0!', RuntimeWarning)
+
+# jet calibration sometimes gives jets with pT=0
+#warnings.filterwarnings('error', 'transvers momentum = 0!', RuntimeWarning)
 
 import ROOT
 import math
