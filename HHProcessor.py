@@ -1,3 +1,8 @@
+import warnings
+import numpy as np
+warnings.filterwarnings('error', category=np.ComplexWarning)
+#warnings.filterwarnings('error', category=RuntimeWarning)
+
 import ROOT
 import math
 

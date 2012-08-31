@@ -27,7 +27,6 @@ from rootpy.math.stats.correlation import correlation_plot
 
 import categories
 import features
-from systematics import iter_systematics
 
 
 NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
@@ -520,6 +519,7 @@ class MC(Sample):
         super(MC, self).__init__(**kwargs)
         self.db = db
         self.datasets = []
+        self.systematics = systematics
 
         for i, name in enumerate(self.samples):
 
@@ -543,7 +543,7 @@ class MC(Sample):
                     FILES[ds.name] = {}
                 FILES[ds.name]['NOMINAL'] = rfile
 
-            if systematics and not isinstance(self, Embedded_Ztautau):
+            if self.systematics:
                 for sys_variations in iter_systematics('hadhad'):
 
                     sys_term = '_'.join(sys_variations)
@@ -564,7 +564,7 @@ class MC(Sample):
                             FILES[ds.name] = {}
                         FILES[ds.name][sys_term] = rfile
 
-            if isinstance(self, (MC_Higgs, MC_All_Higgs)):
+            if isinstance(self, Higgs):
                 # use yellowhiggs for cross sections
                 xs = yellowhiggs.xsbr(
                         7, self.mass[i],
@@ -608,25 +608,6 @@ class MC(Sample):
 
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
 
-            """
-            for sys_variations in iter_systematics('hadhad'):
-                sys_hist = hist.Clone()
-                sys_hist.Reset()
-                sys_tree = sys_trees[sys_type][variation]
-                sys_event = sys_events[sys_type][variation]
-                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / sys_event
-                weighted_selection = ('%.5f * mc_weight * pileup_weight * '
-                                      'tau1_weight * tau2_weight * (%s)' %
-                                      (weight, selection))
-                for expr in exprs:
-                    sys_tree.Draw(expr, weighted_selection, hist=sys_hist)
-                if sys_type not in sys_hists:
-                    sys_hists[sys_type] = {}
-                if variation not in sys_hists[sys_type]:
-                    sys_hists[sys_type][variation] = sys_hist
-                else:
-                    sys_hists[sys_type][variation] += sys_hist
-            """
             tree = sys_trees['NOMINAL']
             events = sys_events['NOMINAL']
 
@@ -644,11 +625,46 @@ class MC(Sample):
             if VERBOSE:
                 print weighted_selection
 
+            # fill nominal histogram
             for expr in exprs:
                 tree.Draw(expr, weighted_selection, hist=hist)
 
+            if not self.systematics:
+                continue
+
+            # iterate over systematic variation trees
+            for sys_variations in iter_systematics('hadhad'):
+                sys_hist = hist.Clone()
+                sys_hist.Reset()
+                sys_tree = sys_trees[sys_type][variation]
+                sys_event = sys_events[sys_type][variation]
+                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / sys_event
+
+                for expr in exprs:
+                    sys_tree.Draw(expr, weighted_selection, hist=sys_hist)
+
+                if sys_type not in sys_hists:
+                    sys_hists[sys_type] = {}
+                if variation not in sys_hists[sys_type]:
+                    sys_hists[sys_type][variation] = sys_hist
+                else:
+                    sys_hists[sys_type][variation] += sys_hist
+
+            # iterate over weight systematics on the nominal tree
+            for weight_branches, sys_variation in self.iter_weight_systematics():
+                sys_hist = hist.Clone()
+                sys_hist.Reset()
+                weighted_selection = (
+                    '%f * %s * (%s)' %
+                    (weight,
+                     ' * '.join(weight_branches),
+                     selection))
+                for expr in exprs:
+                    tree.Draw(expr, weighted_selection, hist=sys_hist)
+                sys_hists[sys_variation] = sys_hist
+
         # set the systematics
-        #hist.systematics = sys_hists
+        hist.systematics = sys_hists
 
     def trees(self, category, region, cuts=None,
               systematic='NOMINAL'):

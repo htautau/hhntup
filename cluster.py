@@ -118,7 +118,8 @@ def run(student,
         qsub_queue='medium',
         qsub_name_suffix=None,
         dry_run=False,
-        separate_student_output=False):
+        separate_student_output=False,
+        warnings_as_errors=False):
 
     if args is None:
         args = ' '
@@ -141,8 +142,12 @@ def run(student,
         else:
             mkdir_p(output_path)
 
-    CMD = "./run --output-path %s -s %s -n %%d --db %s --nice %d %s%%s" % (
-            output_path, student, db, nice, args)
+    python_flags = ''
+    if warnings_as_errors:
+        python_flags = '-W error'
+
+    CMD = "python %s run --output-path %s -s %s -n %%d --db %s --nice %d %s%%s" % (
+           python_flags, output_path, student, db, nice, args)
     if setup is not None:
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()
