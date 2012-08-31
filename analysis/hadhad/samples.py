@@ -576,8 +576,7 @@ class MC(Sample):
             else:
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
-                print ds.name, xs, kfact, effic
-                #print tree.GetEntries(), weighted_events
+                print ds.name, xs, kfact, effic,
             self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
 
     @property
@@ -608,26 +607,27 @@ class MC(Sample):
 
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
 
-            tree = sys_trees['NOMINAL']
-            events = sys_events['NOMINAL']
+            nominal_tree = sys_trees['NOMINAL']
+            nominal_events = sys_events['NOMINAL']
 
             if isinstance(self, Embedded_Ztautau):
-                weight = self.scale
+                nominal_weight = self.scale
             else:
-                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+                nominal_weight = (TOTAL_LUMI * self.scale *
+                        xs * kfact * effic / nominal_events)
 
-            weighted_selection = (
-                    '%f * %s * (%s)' %
-                    (weight,
-                     ' * '.join(self.get_weight_branches('NOMINAL')),
-                     selection))
+            nominal_weighted_selection = (
+                '%f * %s * (%s)' %
+                (nominal_weight,
+                 ' * '.join(self.get_weight_branches('NOMINAL')),
+                 selection))
 
             if VERBOSE:
-                print weighted_selection
+                print nominal_weighted_selection
 
             # fill nominal histogram
             for expr in exprs:
-                tree.Draw(expr, weighted_selection, hist=hist)
+                nominal_tree.Draw(expr, nominal_weighted_selection, hist=hist)
 
             if not self.systematics:
                 continue
@@ -636,19 +636,29 @@ class MC(Sample):
             for sys_variations in iter_systematics('hadhad'):
                 sys_hist = hist.Clone()
                 sys_hist.Reset()
+
                 sys_tree = sys_trees[sys_type][variation]
                 sys_event = sys_events[sys_type][variation]
-                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / sys_event
+
+                if isinstance(self, Embedded_Ztautau):
+                    sys_weight = self.scale
+                else:
+                    sys_weight = (TOTAL_LUMI * self.scale *
+                            xs * kfact * effic / sys_event)
+
+                sys_weighted_selection = (
+                    '%f * %s * (%s)' %
+                    (sys_weight,
+                     ' * '.join(self.get_weight_branches('NOMINAL')),
+                     selection))
 
                 for expr in exprs:
-                    sys_tree.Draw(expr, weighted_selection, hist=sys_hist)
+                    sys_tree.Draw(expr, sys_weighted_selection, hist=sys_hist)
 
-                if sys_type not in sys_hists:
-                    sys_hists[sys_type] = {}
-                if variation not in sys_hists[sys_type]:
-                    sys_hists[sys_type][variation] = sys_hist
+                if variation not in sys_hists:
+                    sys_hists[variation] = sys_hist
                 else:
-                    sys_hists[sys_type][variation] += sys_hist
+                    sys_hists[variation] += sys_hist
 
             # iterate over weight systematics on the nominal tree
             for weight_branches, sys_variation in self.iter_weight_systematics():
@@ -742,10 +752,15 @@ class Embedded_Ztautau(MC, Background):
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['hadhad']['embedded-ztautau']
+        db = samples_db.BACKGROUNDS['hadhad']
+        yml = db['embedded-ztautau']
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
+
+        systematic_samples = {}
+        systematic_samples['MFSUP'] = db['embedded-ztautau-mfsup']['samples']
+
         super(Embedded_Ztautau, self).__init__(color=color, **kwargs)
         # requires special treatment of systematics
 
