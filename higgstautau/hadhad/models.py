@@ -183,8 +183,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_jvtxf' % i, tau.jet_jvtxf)
 
             getattr(tree, 'tau%i_fourvect' % i).set_from(tau.fourvect)
-            tau.fourvect_boosted.set_from(tau.fourvect)
-            tau.fourvect_boosted.Boost(tree.jet_beta * -1)
             getattr(tree, 'tau%i_fourvect_boosted' % i).set_from(tau.fourvect_boosted)
 
             setattr(tree, 'tau%i_centrality' % i, tau.centrality)
@@ -229,15 +227,6 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + Matche
             # the jets should already be sorted by eta
             # sort by eta
             # jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect.Eta())
-
-            # determine jet CoM frame
-            beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-            tree.jet_beta.set_from(beta)
-
-            jet1.fourvect_boosted.set_from(jet1.fourvect)
-            jet2.fourvect_boosted.set_from(jet2.fourvect)
-            jet1.fourvect_boosted.Boost(beta * -1)
-            jet2.fourvect_boosted.Boost(beta * -1)
 
             # sort by transformed eta
             #jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect_boosted.Eta())

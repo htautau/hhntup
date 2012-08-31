@@ -103,7 +103,7 @@ class TauTriggerEfficiency(EventFilter):
             # correct for TES variations (only on nominal)
             # pt_nominal should equal pt when TES is not applied
             if self.tes_systematic:
-                print "%f %f" % (tau.pt, tau.pt_nominal)
+                #print "%f %f" % (tau.pt, tau.pt_nominal)
                 tau.trigger_scale_factor = (corr.getSF(tau.pt, 0) *
                     corr.getMCEff(tau.pt, 0) / corr.getMCEff(tau.pt_nominal, 0))
             else:

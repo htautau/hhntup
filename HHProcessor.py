@@ -1,7 +1,7 @@
 import warnings
 import numpy as np
 warnings.filterwarnings('error', category=np.ComplexWarning)
-#warnings.filterwarnings('error', category=RuntimeWarning)
+warnings.filterwarnings('error', 'transvers momentum = 0!', RuntimeWarning)
 
 import ROOT
 import math
@@ -293,6 +293,22 @@ class HHProcessor(ATLASStudent):
 
             if current_channel == CATEGORY_VBF: # VBF optimized
                 jet1, jet2 = leading_jets
+
+                # determine boost of system
+                # determine jet CoM frame
+                beta = (jet1.fourvect + jet2.fourvect).BoostVector()
+                tree.jet_beta.set_from(beta)
+
+                jet1.fourvect_boosted.set_from(jet1.fourvect)
+                jet2.fourvect_boosted.set_from(jet2.fourvect)
+                jet1.fourvect_boosted.Boost(beta * -1)
+                jet2.fourvect_boosted.Boost(beta * -1)
+
+                tau1.fourvect_boosted.set_from(tau1.fourvect)
+                tau2.fourvect_boosted.set_from(tau2.fourvect)
+                tau1.fourvect_boosted.Boost(beta * -1)
+                tau2.fourvect_boosted.Boost(beta * -1)
+
                 RecoJetBlock.set(tree, jet1, jet2)
 
                 tau1.min_dr_jet = min(
