@@ -752,14 +752,11 @@ class Embedded_Ztautau(MC, Background):
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        db = samples_db.BACKGROUNDS['hadhad']
-        yml = db['embedded-ztautau']
+        yml = samples_db.BACKGROUNDS['hadhad']['embedded-ztautau']
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-
-        systematic_samples = {}
-        systematic_samples['MFSUP'] = db['embedded-ztautau-mfsup']['samples']
+        systematic_samples = yml['systematics_samples']
 
         super(Embedded_Ztautau, self).__init__(color=color, **kwargs)
         # requires special treatment of systematics
