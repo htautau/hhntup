@@ -228,7 +228,7 @@ class eLTTriggers(EventFilter):
         """
         try:
             if 177986 <= event.RunNumber <= 186755:
-                return event.EF_tau16_e15_medium
+                return event.EF_tau16_loose_e15_medium
             elif 186873 <= event.RunNumber <= 187815:
                 return event.EF_tau20_medium_e15_medium
             elif 188902 <= event.RunNumber <= 191933:
