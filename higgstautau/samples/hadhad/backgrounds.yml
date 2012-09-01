@@ -25,10 +25,11 @@ embedded_ztautau:
     samples:
         - 'embed-hh-isol-mfsim'
     systematics_samples:
-        MFSUP: 'embed-hh-isol-mfsup'
-        MFSDOWN: 'embed-hh-isol-mfsdn'
-        NOISOL: 'embed-hh-noisol-mfsim'
-        TIGHTISOL: 'embed-hh-tightisol-mfsim'
+        'embed-hh-isol-mfsim':
+            'embed-hh-isol-mfsup': MFSUP
+            'embed-hh-isol-mfsdn': MFSDOWN
+            'embed-hh-noisol-mfsim': NOISOL
+            'embed-hh-tightisol-mfsim': TIGHTISOL
 ewk:
     name: EW
     systematics: mc

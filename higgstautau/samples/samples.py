@@ -100,7 +100,8 @@ def iter_samples(channel, patterns=None, systematics=False):
             else:
                 samp = sample_info['samples'][:]
                 if 'systematics_samples' in sample_info:
-                    samp += sample_info['systematics_samples'].values()
+                    for sample, sys_samp in sample_info['systematics_samples']:
+                        samp += sys_samp.keys()
                 yield samp
 
 

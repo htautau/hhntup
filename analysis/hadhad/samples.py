@@ -335,8 +335,14 @@ class Sample(object):
         self.treename = treename
         self.hist_decor = hist_decor
 
+    def check_systematic(self, systematic):
+
+        if systematic != 'NOMINAL' and isinstance(self, Data):
+            raise TypeError('Do not apply systematics on data!')
+
     def get_weight_branches(self, systematic):
 
+        self.check_systematic(systematic)
         weight_branches = Sample.WEIGHT_BRANCHES[:]
         if systematic == 'NOMINAL':
             systerm = None
@@ -366,6 +372,7 @@ class Sample(object):
         """
         Return recarray for training and for testing
         """
+        self.check_systematic(systematic)
         weight_branches = self.get_weight_branches(systematic)
 
         if train_fraction is not None:
@@ -423,6 +430,8 @@ class Sample(object):
                  cuts=None,
                  systematic='NOMINAL'):
 
+        self.check_systematic(systematic)
+
         weight_branches = self.get_weight_branches(systematic)
         if include_weight and isinstance(self, MC):
             branches = branches + weight_branches
@@ -458,6 +467,7 @@ class Sample(object):
                 cuts=None,
                 systematic='NOMINAL'):
 
+        self.check_systematic(systematic)
         return r2a.recarray_to_ndarray(
                    self.recarray(
                        category,
@@ -496,10 +506,8 @@ class Data(Sample):
               region,
               cuts=None,
               systematic='NOMINAL'):
-        """
-        systematics do not apply to data but the argument is present for
-        coherence with the other samples
-        """
+
+        self.check_sytematic(systematic)
         TEMPFILE.cd()
         return [asrootpy(self.data.CopyTree(self.cuts(category, region) & cuts))]
 
@@ -514,7 +522,11 @@ class Background:
 
 class MC(Sample):
 
-    def __init__(self, systematics=True, db=DB_HH, **kwargs):
+    def __init__(self,
+            systematics=True,
+            systematics_samples=None,
+            db=DB_HH,
+            **kwargs):
 
         super(MC, self).__init__(**kwargs)
         self.db = db
@@ -564,11 +576,33 @@ class MC(Sample):
                             FILES[ds.name] = {}
                         FILES[ds.name][sys_term] = rfile
 
+                if systematics_samples and name in systematics_samples:
+
+                    for sample_name, sys_term in systematics_samples.items():
+
+                        sys_ds = self.db[sample_name]
+                        trees[sys_term] = None
+                        weighted_events[sys_term] = None
+
+                        if sys_ds.name in FILES and sys_term in FILES[sys_ds.name]:
+                            rfile = FILES[sys_ds.name][sys_term]
+                            trees[sys_term] = rfile.Get(self.treename)
+                            weighted_events[sys_term] = rfile.cutflow[1]
+                        else:
+                            rfile = ropen('.'.join([
+                                os.path.join(NTUPLE_PATH, self.student, self.student),
+                                sys_ds.name, 'root']))
+                            trees[sys_term] = rfile.Get(self.treename)
+                            weighted_events[sys_term] = rfile.cutflow[1]
+                            if sys_ds.name not in FILES:
+                                FILES[sys_ds.name] = {}
+                            FILES[sys_ds.name][sys_term] = rfile
+
             if isinstance(self, Higgs):
                 # use yellowhiggs for cross sections
                 xs = yellowhiggs.xsbr(
-                        7, self.mass[i],
-                        self.mode[i], 'tautau')[0] * TAUTAUHADHADBR
+                        7, self.masses[i],
+                        self.modes[i], 'tautau')[0] * TAUTAUHADHADBR
                 kfact = 1.
                 effic = 1.
             elif isinstance(self, Embedded_Ztautau):
@@ -633,12 +667,17 @@ class MC(Sample):
                 continue
 
             # iterate over systematic variation trees
-            for sys_variations in iter_systematics('hadhad'):
+            for sys_term in sys_trees.keys():
+
+                # skip the nominal tree
+                if sys_term == 'NOMINAL':
+                    continue
+
                 sys_hist = hist.Clone()
                 sys_hist.Reset()
 
-                sys_tree = sys_trees[sys_type][variation]
-                sys_event = sys_events[sys_type][variation]
+                sys_tree = sys_trees[sys_term]
+                sys_event = sys_events[sys_term]
 
                 if isinstance(self, Embedded_Ztautau):
                     sys_weight = self.scale
@@ -655,23 +694,30 @@ class MC(Sample):
                 for expr in exprs:
                     sys_tree.Draw(expr, sys_weighted_selection, hist=sys_hist)
 
-                if variation not in sys_hists:
-                    sys_hists[variation] = sys_hist
+                if sys_term not in sys_hists:
+                    sys_hists[sys_term] = sys_hist
                 else:
-                    sys_hists[variation] += sys_hist
+                    sys_hists[sys_term] += sys_hist
 
             # iterate over weight systematics on the nominal tree
-            for weight_branches, sys_variation in self.iter_weight_systematics():
+            for weight_branches, sys_term in self.iter_weight_systematics():
+
                 sys_hist = hist.Clone()
                 sys_hist.Reset()
+
                 weighted_selection = (
                     '%f * %s * (%s)' %
-                    (weight,
+                    (nominal_weight,
                      ' * '.join(weight_branches),
                      selection))
+
                 for expr in exprs:
-                    tree.Draw(expr, weighted_selection, hist=sys_hist)
-                sys_hists[sys_variation] = sys_hist
+                    nominal_tree.Draw(expr, weighted_selection, hist=sys_hist)
+
+                if sys_term not in sys_hists:
+                    sys_hists[sys_term] = sys_hist
+                else:
+                    sys_hists[sys_term] += sys_hist
 
         # set the systematics
         hist.systematics = sys_hists
@@ -825,29 +871,27 @@ class Higgs(MC, Signal):
     def __init__(self, modes=None, masses=None, **kwargs):
 
         if masses is None:
-            self.masses = Higgs.MASS_POINTS
+            masses = Higgs.MASS_POINTS
         else:
-            self.masses = masses
             assert len(masses) > 0
             for mass in masses:
                 assert mass in Higgs.MASS_POINTS
             assert len(set(masses)) = len(masses)
 
         if modes is None:
-            self.modes = Higgs.MODES.keys()
+            modes = Higgs.MODES.keys()
         else:
-            self.modes = modes
             assert len(modes) > 0
             for mode in modes:
                 assert mode in Higgs.MODES
             assert len(set(modes)) = len(modes)
 
         str_mass = ''
-        if len(self.masses) == 1:
+        if len(masses) == 1:
             str_mass = str(self.masses[0])
 
         str_mode = ''
-        if len(self.modes) == 1:
+        if len(modes) == 1:
             str_modes = str(self.modes[0])
 
         self._label = r'{mode} $H{mass}\rightarrow\tau_{h}\tau_{h}$'.format(
@@ -858,12 +902,16 @@ class Higgs(MC, Signal):
                 mode=str_mode)
 
         self.samples = []
-        for mode in self.modes:
+        self.masses = []
+        self.modes = []
+        for mode in modes:
             mode_str = Higgs.MODES[mode][0]
             generator = Higgs.MODES[mode][1]
-            for mass in self.masses:
+            for mass in masses:
                 self.samples.append('%s%s%d_tautauhh.mc11c' % (
                     generator, mode_str, mass))
+                self.masses.append(mass)
+                self.modes.append(mode)
 
         super(Higgs, self).__init__(**kwargs)
 
