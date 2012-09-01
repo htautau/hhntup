@@ -356,6 +356,15 @@ class Sample(object):
                 weight_branches += variations['NOMINAL']
         return weight_branches
 
+    def iter_weight_branches(self):
+
+        for type, variations in Sample.WEIGHT_SYSTEMATICS.items():
+            for variation in variations:
+                if variation == 'NOMINAL':
+                    continue
+                term = '%s_%s' % (type, variation)
+                yield self.get_weight_branches(term), term
+
     def cuts(self, category, region):
 
         return (Sample.CATEGORIES[category] &
@@ -524,6 +533,7 @@ class MC(Sample):
 
     def __init__(self,
             systematics=True,
+            systematics_terms=None,
             systematics_samples=None,
             db=DB_HH,
             **kwargs):
@@ -556,28 +566,27 @@ class MC(Sample):
                 FILES[ds.name]['NOMINAL'] = rfile
 
             if self.systematics:
-                for sys_variations in iter_systematics('hadhad'):
+                if systematics_terms:
+                    for sys_term in systematics_terms:
 
-                    sys_term = '_'.join(sys_variations)
-                    trees[sys_term] = None
-                    weighted_events[sys_term] = None
+                        trees[sys_term] = None
+                        weighted_events[sys_term] = None
 
-                    if ds.name in FILES and sys_term in FILES[ds.name]:
-                        rfile = FILES[ds.name][sys_term]
-                        trees[sys_term] = rfile.Get(self.treename)
-                        weighted_events[sys_term] = rfile.cutflow[1]
-                    else:
-                        rfile = ropen('.'.join([
-                            os.path.join(NTUPLE_PATH, self.student, self.student),
-                            '_'.join([ds.name, sys_term]), 'root']))
-                        trees[sys_term] = rfile.Get(self.treename)
-                        weighted_events[sys_term] = rfile.cutflow[1]
-                        if ds.name not in FILES:
-                            FILES[ds.name] = {}
-                        FILES[ds.name][sys_term] = rfile
+                        if ds.name in FILES and sys_term in FILES[ds.name]:
+                            rfile = FILES[ds.name][sys_term]
+                            trees[sys_term] = rfile.Get(self.treename)
+                            weighted_events[sys_term] = rfile.cutflow[1]
+                        else:
+                            rfile = ropen('.'.join([
+                                os.path.join(NTUPLE_PATH, self.student, self.student),
+                                '_'.join([ds.name, sys_term]), 'root']))
+                            trees[sys_term] = rfile.Get(self.treename)
+                            weighted_events[sys_term] = rfile.cutflow[1]
+                            if ds.name not in FILES:
+                                FILES[ds.name] = {}
+                            FILES[ds.name][sys_term] = rfile
 
                 if systematics_samples and name in systematics_samples:
-
                     for sample_name, sys_term in systematics_samples.items():
 
                         sys_ds = self.db[sample_name]
@@ -637,7 +646,10 @@ class MC(Sample):
         else:
             exprs = (expr,)
 
-        sys_hists = {}
+        if hasattr(hist, 'systematics'):
+            sys_hists = hist.systematics
+        else:
+            sys_hists = {}
 
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
 
@@ -700,7 +712,7 @@ class MC(Sample):
                     sys_hists[sys_term] += sys_hist
 
             # iterate over weight systematics on the nominal tree
-            for weight_branches, sys_term in self.iter_weight_systematics():
+            for weight_branches, sys_term in self.iter_weight_branches():
 
                 sys_hist = hist.Clone()
                 sys_hist.Reset()
@@ -788,7 +800,12 @@ class MC_Ztautau(MC, Background):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        super(MC_Ztautau, self).__init__(color=color, **kwargs)
+        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(MC_Ztautau, self).__init__(
+                color=color,
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class Embedded_Ztautau(MC, Background):
@@ -802,10 +819,14 @@ class Embedded_Ztautau(MC, Background):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        systematic_samples = yml['systematics_samples']
-
-        super(Embedded_Ztautau, self).__init__(color=color, **kwargs)
-        # requires special treatment of systematics
+        systematics_samples = yml['systematics_samples']
+        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(Embedded_Ztautau, self).__init__(
+                color=color,
+                systematics_samples=systematics_samples,
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class EWK(MC, Background):
@@ -816,8 +837,12 @@ class EWK(MC, Background):
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
-        self.systematics_class = yml['systematics']
-        super(EWK, self).__init__(color=color, **kwargs)
+        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(EWK, self).__init__(
+                color=color,
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class Top(MC, Background):
@@ -828,7 +853,12 @@ class Top(MC, Background):
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
-        super(Top, self).__init__(color=color, **kwargs)
+        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(Top, self).__init__(
+                color=color,
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class Diboson(MC, Background):
@@ -839,7 +869,12 @@ class Diboson(MC, Background):
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
-        super(Diboson, self).__init__(color=color, **kwargs)
+        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(Diboson, self).__init__(
+                color=color,
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class Others(MC, Background):
@@ -854,7 +889,12 @@ class Others(MC, Background):
                         yml_ewk['samples'])
         self._label = 'Others'
         self.name = 'Others'
-        super(Others, self).__init__(color=color, **kwargs)
+        syst = SYSTEMATICS['hadhad']['mc']
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(Others, self).__init__(
+                color=color,
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class Higgs(MC, Signal):
@@ -913,7 +953,11 @@ class Higgs(MC, Signal):
                 self.masses.append(mass)
                 self.modes.append(mode)
 
-        super(Higgs, self).__init__(**kwargs)
+        syst = SYSTEMATICS['hadhad']['mc']
+        systematics_terms = [term.replace(',', '_') for term in syst]
+        super(Higgs, self).__init__(
+                systematics_terms=systematics_terms,
+                **kwargs)
 
 
 class QCD(Sample):
@@ -949,6 +993,8 @@ class QCD(Sample):
                             category, self.shape_region, cuts=cuts)
         hist -= MC_bkg_notOS
         hist *= self.scale
+        if hasattr(MC_bkg_notOS, 'systematics'):
+
         hist.SetTitle(self.label)
 
     def scores(self,
