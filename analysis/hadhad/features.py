@@ -63,7 +63,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{x}}$',
         'filename': 'MET_x',
         'bins': 20,
-        'range': (0, 100),
+        'range': (-75, 75),
         'scale': 1./1000,
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
@@ -72,7 +72,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{y}}$',
         'filename': 'MET_y',
         'bins': 20,
-        'range': (0, 100),
+        'range': (-75, 75),
         'scale': 1./1000,
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
@@ -89,7 +89,6 @@ VARIABLES = {
         'filename': 'MET_mmc',
         'bins': 20,
         'range': (0, 100),
-        'scale': 1./1000,
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -97,8 +96,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{x}}$ MMC',
         'filename': 'MET_mmc_x',
         'bins': 20,
-        'range': (0, 100),
-        'scale': 1./1000,
+        'range': (-75, 75),
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -106,8 +104,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{y}}$ MMC',
         'filename': 'MET_mmc_y',
         'bins': 20,
-        'range': (0, 100),
-        'scale': 1./1000,
+        'range': (-75, 75),
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -223,6 +220,20 @@ VARIABLES = {
         'filename': 'tau2_x',
         'bins': 20,
         'range': (-3, 4),
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'tau1_jvtxf': {
+        'title': r'$\tau_{1}$ JVF',
+        'filename': 'tau1_jvf',
+        'bins': 20,
+        'range': (0, 1),
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'tau2_jvtxf': {
+        'title': r'$\tau_{2}$ JVF',
+        'filename': 'tau2_jvf',
+        'bins': 20,
+        'range': (0, 1),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_BDTJetScore': {
@@ -463,7 +474,7 @@ if __name__ == '__main__':
         qcd_shape_region = cat_info['qcd_shape_region']
         target_region = cat_info['target_region']
 
-        qcd = QCD(data=data, mc=[mc_others, ztautau],
+        qcd = QCD(data=data, mc=[others, ztautau],
               shape_region=qcd_shape_region)
 
         figures[category] = {}

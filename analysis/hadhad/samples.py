@@ -348,7 +348,7 @@ class Sample(object):
             systerm = None
             variation = 'NOMINAL'
         else:
-            systerm, variation = systematics.split('_')
+            systerm, variation = systematic.split('_')
         for term, variations in Sample.WEIGHT_SYSTEMATICS.items():
             if term == systerm:
                 weight_branches += variations[variation]
@@ -587,7 +587,7 @@ class MC(Sample):
                             FILES[ds.name][sys_term] = rfile
 
                 if systematics_samples and name in systematics_samples:
-                    for sample_name, sys_term in systematics_samples.items():
+                    for sample_name, sys_term in systematics_samples[name].items():
 
                         sys_ds = self.db[sample_name]
                         trees[sys_term] = None
@@ -800,7 +800,7 @@ class MC_Ztautau(MC, Background):
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
-        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(MC_Ztautau, self).__init__(
                 color=color,
@@ -815,12 +815,12 @@ class Embedded_Ztautau(MC, Background):
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['hadhad']['embedded-ztautau']
+        yml = samples_db.BACKGROUNDS['hadhad']['embedded_ztautau']
         self.name = 'Ztautau'
         self._label = yml['latex']
         self.samples = yml['samples']
         systematics_samples = yml['systematics_samples']
-        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(Embedded_Ztautau, self).__init__(
                 color=color,
@@ -837,7 +837,7 @@ class EWK(MC, Background):
         self.name = 'EWK'
         self._label = yml['latex']
         self.samples = yml['samples']
-        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(EWK, self).__init__(
                 color=color,
@@ -853,7 +853,7 @@ class Top(MC, Background):
         self.name = 'Top'
         self._label = yml['latex']
         self.samples = yml['samples']
-        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(Top, self).__init__(
                 color=color,
@@ -869,7 +869,7 @@ class Diboson(MC, Background):
         self.name = 'Diboson'
         self._label = yml['latex']
         self.samples = yml['samples']
-        syst = SYSTEMATICS['hadhad'][yml['systematics']]
+        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(Diboson, self).__init__(
                 color=color,
@@ -889,7 +889,7 @@ class Others(MC, Background):
                         yml_ewk['samples'])
         self._label = 'Others'
         self.name = 'Others'
-        syst = SYSTEMATICS['hadhad']['mc']
+        syst = samples_db.SYSTEMATICS['hadhad']['mc']
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(Others, self).__init__(
                 color=color,
@@ -916,7 +916,7 @@ class Higgs(MC, Signal):
             assert len(masses) > 0
             for mass in masses:
                 assert mass in Higgs.MASS_POINTS
-            assert len(set(masses)) = len(masses)
+            assert len(set(masses)) == len(masses)
 
         if modes is None:
             modes = Higgs.MODES.keys()
@@ -924,22 +924,22 @@ class Higgs(MC, Signal):
             assert len(modes) > 0
             for mode in modes:
                 assert mode in Higgs.MODES
-            assert len(set(modes)) = len(modes)
+            assert len(set(modes)) == len(modes)
 
         str_mass = ''
         if len(masses) == 1:
-            str_mass = str(self.masses[0])
+            str_mass = str(masses[0])
 
         str_mode = ''
         if len(modes) == 1:
-            str_modes = str(self.modes[0])
+            str_mode = str(modes[0]) + ' '
 
-        self._label = r'{mode} $H{mass}\rightarrow\tau_{h}\tau_{h}$'.format(
-                mass=str_mass,
-                mode=str_mode)
+        self._label = r'%s$H%s\rightarrow\tau_{h}\tau_{h}$' % (
+                str_mode, str_mass)
+
         self.name = '{mode}Signal{mass}'.format(
                 mass=str_mass,
-                mode=str_mode)
+                mode=str_mode.strip())
 
         self.samples = []
         self.masses = []
@@ -953,7 +953,7 @@ class Higgs(MC, Signal):
                 self.masses.append(mass)
                 self.modes.append(mode)
 
-        syst = SYSTEMATICS['hadhad']['mc']
+        syst = samples_db.SYSTEMATICS['hadhad']['mc']
         systematics_terms = [term.replace(',', '_') for term in syst]
         super(Higgs, self).__init__(
                 systematics_terms=systematics_terms,
@@ -989,11 +989,16 @@ class QCD(Sample):
         for mc in self.mc:
             mc.draw_into(MC_bkg_notOS, expr, category, self.shape_region,
                          cuts=cuts)
-        self.data.draw_into(hist, expr,
+
+        data_hist = hist.Clone()
+        self.data.draw_into(data_hist, expr,
                             category, self.shape_region, cuts=cuts)
-        hist -= MC_bkg_notOS
-        hist *= self.scale
+
+        hist += (data_hist - MC_bkg_notOS) * self.scale
         if hasattr(MC_bkg_notOS, 'systematics'):
+            hist.systematics = {}
+            for sys_term, sys_hist in MC_bkg_notOS.systematics.items():
+                hist.systematics[sys_term] = (data_hist - sys_hist) * self.scale
 
         hist.SetTitle(self.label)
 
