@@ -112,19 +112,20 @@ def run(student,
         nice=0,
         output_path='.',
         setup=None,
-        args=None,
         student_args=None,
         use_qsub=False,
         qsub_queue='medium',
         qsub_name_suffix=None,
         dry_run=False,
         separate_student_output=False,
-        warnings_as_errors=False):
+        warnings_as_errors=False,
+        **kwargs):
 
-    if args is None:
-        args = ' '
+    if not kwargs:
+        args = ''
     else:
-        args = ' '.join(args) + ' '
+        args = ' '.join(['--%s %s' % (key, value)
+            for key, value in kwargs.items()]) + ' '
 
     if qsub_name_suffix is None:
         qsub_name_suffix = ''
@@ -158,6 +159,17 @@ def run(student,
     procs = []
     while len(datasets) > 0:
         ds = datasets.pop(0)
+
+        output_name = os.path.splitext(student)[0] + '.' + ds
+        if 'suffix' in kwargs:
+            output_name += '_%s' % kwargs['suffix']
+        output_name += '.root'
+        output_name = os.path.join(output_path, output_name)
+        if os.path.exists(output_name):
+            print "Output %s already exists. Please delete it and resubmit." % (
+                output_name)
+            continue
+
         # determine actual number of required CPU cores
         files = database[ds].files
         nproc_actual = min(nproc, len(files))
@@ -200,12 +212,11 @@ def run_systematics(channel, student, systematics=None, **kwargs):
         print
         print '======== Running %s systematics ========' % '+'.join(sys_variations)
         print
-        suffix = '--suffix %s' % '_'.join(sys_variations)
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
-            args=suffix.split(),
             student_args=syst.split(),
             qsub_name_suffix='_'.join(sys_variations),
+            suffix='_'.join(sys_variations),
             **kwargs)
 
 
@@ -216,13 +227,12 @@ def run_systematics_new(channel, student, datasets, systematics,
         if filter_systematics is not None:
             if sys_variations not in filter_systematics:
                 continue
-        suffix = '--suffix %s' % '_'.join(sys_variations)
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
             datasets=datasets,
-            args=suffix.split(),
             student_args=syst.split(),
             qsub_name_suffix='_'.join(sys_variations),
+            suffix='_'.join(sys_variations),
             **kwargs)
 
 
