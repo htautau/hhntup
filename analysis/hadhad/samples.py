@@ -577,18 +577,22 @@ class MC(Sample):
 
             if isinstance(self, Embedded_Ztautau):
                 events_bin = 0
+                events_hist = 'cutflow_event'
             else:
                 events_bin = 1
+                events_hist = 'cutflow'
 
             if ds.name in FILES and 'NOMINAL' in FILES[ds.name]:
                 rfile = FILES[ds.name]['NOMINAL']
                 trees['NOMINAL'] = rfile.Get(self.treename)
-                weighted_events['NOMINAL'] = rfile.cutflow[events_bin]
+                weighted_events['NOMINAL'] = getattr(rfile,
+                        events_hist)[events_bin]
             else:
                 rfile = ropen('.'.join([
                     os.path.join(NTUPLE_PATH, self.student, self.student), ds.name, 'root']))
                 trees['NOMINAL'] = rfile.Get(self.treename)
-                weighted_events['NOMINAL'] = rfile.cutflow[events_bin]
+                weighted_events['NOMINAL'] = getattr(rfile,
+                        events_hist)[events_bin]
                 if ds.name not in FILES:
                     FILES[ds.name] = {}
                 FILES[ds.name]['NOMINAL'] = rfile
@@ -615,13 +619,15 @@ class MC(Sample):
                         if ds.name in FILES and sys_term in FILES[ds.name]:
                             rfile = FILES[ds.name][sys_term]
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[events_bin]
+                            weighted_events[sys_term] = getattr(rfile,
+                                    events_hist)[events_bin]
                         else:
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, self.student, self.student),
                                 '_'.join([ds.name, '_'.join(actual_sys_term)]), 'root']))
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[events_bin]
+                            weighted_events[sys_term] = getattr(rfile,
+                                    events_hist)[events_bin]
                             if ds.name not in FILES:
                                 FILES[ds.name] = {}
                             FILES[ds.name][sys_term] = rfile
@@ -639,13 +645,15 @@ class MC(Sample):
                         if sys_ds.name in FILES and sys_term in FILES[sys_ds.name]:
                             rfile = FILES[sys_ds.name][sys_term]
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[events_bin]
+                            weighted_events[sys_term] = getattr(rfile,
+                                    events_hist)[events_bin]
                         else:
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, self.student, self.student),
                                 sys_ds.name, 'root']))
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[events_bin]
+                            weighted_events[sys_term] = getattr(rfile,
+                                    events_hist)[events_bin]
                             if sys_ds.name not in FILES:
                                 FILES[sys_ds.name] = {}
                             FILES[sys_ds.name][sys_term] = rfile
@@ -668,7 +676,8 @@ class MC(Sample):
                 kfact = 1.
                 effic = 1.
             elif isinstance(self, Embedded_Ztautau):
-                xs, kfact, effic = 1., 1., 1.
+                # use Pythia Ztautau xsec [nb]
+                xs, kfact, effic = 8.7804E-01, 1., 1.
             else:
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
