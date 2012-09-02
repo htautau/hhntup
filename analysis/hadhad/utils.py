@@ -89,7 +89,8 @@ def draw(model,
          show_ratio=False,
          show_qq=False,
          output_formats=None,
-         dir='.'):
+         dir='.',
+         systematics=None):
 
     if output_formats is None:
         output_formats = ('png', 'eps', 'pdf')

@@ -420,6 +420,15 @@ VARIABLES = {
 }
 
 
+SYSTEMATICS = [
+    ('TAUBDT_UP', 'TAUBDT_DOWN'),
+    ('JES_UP,TES_UP', 'JES_DOWN,TES_DOWN'),
+    ('JER_UP'),
+    ('TRIGGER_UP', 'TRIGGER_DOWN'),
+    ('FAKERATE_UP', 'FAKERATE_DOWN'),
+]
+
+
 if __name__ == '__main__':
 
     from argparse import ArgumentParser
@@ -528,6 +537,8 @@ if __name__ == '__main__':
                     bins, min, max,
                     cuts=cuts)
 
+            print qcd_hist.systematics
+
             ztautau_hist = ztautau.draw(
                     expr,
                     category, target_region,
@@ -566,7 +577,8 @@ if __name__ == '__main__':
                     show_ratio=True,
                     show_qq=False,
                     model_colour_map=None,
-                    dir=PLOTS_DIR)
+                    dir=PLOTS_DIR,
+                    systematics=SYSTEMATICS if args.systematics else None)
             figures[category][expr] = fig
 
     if set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
