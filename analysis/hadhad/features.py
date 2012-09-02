@@ -426,7 +426,7 @@ SYSTEMATICS = [
     #('MFS_UP', 'MFS_DOWN'),
     #('ISOL_UP', 'ISOL_DOWN'),
     ('TRIGGER_UP', 'TRIGGER_DOWN'),
-    #('FAKERATE_UP', 'FAKERATE_DOWN'),
+    ('FAKERATE_UP', 'FAKERATE_DOWN'),
 ]
 
 
