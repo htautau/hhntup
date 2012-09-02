@@ -232,13 +232,12 @@ def draw(model,
         band_height = high_band + low_band
         band_height.fillstyle = '/'
         band_height.linecolor = 'yellow'
-        band_height.fillstyle = 'hollow'
-        band_height.fillcolor = 'white'
         band_bars = rplt.bar(band_height,
                 bottom=band_base,
                 linewidth=1,
                 axes=hist_ax,
-                ypadding=(.55, .1))
+                ypadding=(.55, .1),
+                fill=False)
 
     if signal is not None:
         if signal_scale != 1.:

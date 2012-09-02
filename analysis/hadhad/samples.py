@@ -334,6 +334,10 @@ class Sample(object):
         self.student = student
         self.treename = treename
         self.hist_decor = hist_decor
+        if isinstance(self, Higgs):
+            self.hist_decor['fillstyle'] = 'hollow'
+        else:
+            self.hist_decor['fillstyle'] = 'solid'
 
     def check_systematic(self, systematic):
 
