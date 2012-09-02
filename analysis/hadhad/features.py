@@ -440,6 +440,9 @@ if __name__ == '__main__':
             help="do not use cached background scale factors "
             "and instead recalculate them",
             default=True)
+    parser.add_argument('--only-fit', action='store_true',
+            help="only fit the Ztautau and QCD background, don't make plots",
+            default=False)
     parser.add_argument('--no-systematics', action='store_false',
             dest='systematics',
             help="turn off systematics",
@@ -505,6 +508,9 @@ if __name__ == '__main__':
             target_region=target_region,
             qcd_shape_region=qcd_shape_region,
             use_cache=args.use_cache)
+
+        if args.only_fit:
+            continue
 
         qcd.scale = qcd_scale
         ztautau.scale = ztautau_scale
