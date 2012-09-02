@@ -363,7 +363,7 @@ class Sample(object):
                 if variation == 'NOMINAL':
                     continue
                 term = '%s_%s' % (type, variation)
-                yield self.get_weight_branches(term), term
+                yield self.get_weight_branches(term), tuple([term])
 
     def cuts(self, category, region):
 
@@ -531,6 +531,25 @@ class Background:
 
 class MC(Sample):
 
+    SYSTEMATICS = [
+        ('TAUBDT_UP',),
+        ('TAUBDT_DOWN',),
+        ('JES_UP', 'TES_UP'),
+        ('JES_DOWN','TES_DOWN'),
+        ('JER_UP',),
+        ('MFS_UP',),
+        ('MFS_DOWN',),
+        ('ISOL_UP',),
+        ('ISOL_DOWN',),
+    ]
+
+    SYSTEMATICS_BY_WEIGHT = [
+        ('TRIGGER_UP',),
+        ('TRIGGER_DOWN',),
+        ('FAKERATE_UP',),
+        ('FAKERATE_DOWN',),
+    ]
+
     def __init__(self,
             systematics=True,
             systematics_terms=None,
@@ -566,8 +585,20 @@ class MC(Sample):
                 FILES[ds.name]['NOMINAL'] = rfile
 
             if self.systematics:
+
+                unused_terms = MC.SYSTEMATICS[:]
+
                 if systematics_terms:
                     for sys_term in systematics_terms:
+
+                        # merge terms such as JES_UP,TES_UP (embedding) and TES_UP (MC)
+                        actual_sys_term = sys_term
+                        for term in unused_terms:
+                            if set(term) & set(sys_term):
+                                if len(sys_term) < len(term):
+                                    print "merging %s and %s" % (term, sys_term)
+                                    sys_term = term
+                                break
 
                         trees[sys_term] = None
                         weighted_events[sys_term] = None
@@ -579,16 +610,19 @@ class MC(Sample):
                         else:
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, self.student, self.student),
-                                '_'.join([ds.name, sys_term]), 'root']))
+                                '_'.join([ds.name, '_'.join(actual_sys_term)]), 'root']))
                             trees[sys_term] = rfile.Get(self.treename)
                             weighted_events[sys_term] = rfile.cutflow[1]
                             if ds.name not in FILES:
                                 FILES[ds.name] = {}
                             FILES[ds.name][sys_term] = rfile
 
+                        unused_terms.remove(sys_term)
+
                 if systematics_samples and name in systematics_samples:
                     for sample_name, sys_term in systematics_samples[name].items():
 
+                        sys_term = tuple(sys_term.split(','))
                         sys_ds = self.db[sample_name]
                         trees[sys_term] = None
                         weighted_events[sys_term] = None
@@ -606,6 +640,16 @@ class MC(Sample):
                             if sys_ds.name not in FILES:
                                 FILES[sys_ds.name] = {}
                             FILES[sys_ds.name][sys_term] = rfile
+
+                        unused_terms.remove(sys_term)
+
+                if unused_terms:
+                    print "UNUSED TERMS for %s:" % self.name
+                    print unused_terms
+
+                    for term in unused_terms:
+                        trees[term] = trees['NOMINAL']
+                        weighted_events[term] = weighted_events['NOMINAL']
 
             if isinstance(self, Higgs):
                 # use yellowhiggs for cross sections
@@ -679,7 +723,7 @@ class MC(Sample):
                 continue
 
             # iterate over systematic variation trees
-            for sys_term in sys_trees.keys():
+            for sys_term in sys_trees.iterkeys():
 
                 # skip the nominal tree
                 if sys_term == 'NOMINAL':
@@ -801,7 +845,7 @@ class MC_Ztautau(MC, Background):
         self._label = yml['latex']
         self.samples = yml['samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(MC_Ztautau, self).__init__(
                 color=color,
                 systematics_terms=systematics_terms,
@@ -821,7 +865,7 @@ class Embedded_Ztautau(MC, Background):
         self.samples = yml['samples']
         systematics_samples = yml['systematics_samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(Embedded_Ztautau, self).__init__(
                 color=color,
                 systematics_samples=systematics_samples,
@@ -838,7 +882,7 @@ class EWK(MC, Background):
         self._label = yml['latex']
         self.samples = yml['samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(EWK, self).__init__(
                 color=color,
                 systematics_terms=systematics_terms,
@@ -854,7 +898,7 @@ class Top(MC, Background):
         self._label = yml['latex']
         self.samples = yml['samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(Top, self).__init__(
                 color=color,
                 systematics_terms=systematics_terms,
@@ -870,7 +914,7 @@ class Diboson(MC, Background):
         self._label = yml['latex']
         self.samples = yml['samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(Diboson, self).__init__(
                 color=color,
                 systematics_terms=systematics_terms,
@@ -890,7 +934,7 @@ class Others(MC, Background):
         self._label = 'Others'
         self.name = 'Others'
         syst = samples_db.SYSTEMATICS['hadhad']['mc']
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(Others, self).__init__(
                 color=color,
                 systematics_terms=systematics_terms,
@@ -954,7 +998,7 @@ class Higgs(MC, Signal):
                 self.modes.append(mode)
 
         syst = samples_db.SYSTEMATICS['hadhad']['mc']
-        systematics_terms = [term.replace(',', '_') for term in syst]
+        systematics_terms = [tuple(term.split(',')) for term in syst]
         super(Higgs, self).__init__(
                 systematics_terms=systematics_terms,
                 **kwargs)

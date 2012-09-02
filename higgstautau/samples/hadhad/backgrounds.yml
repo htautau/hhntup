@@ -26,10 +26,10 @@ embedded_ztautau:
         - 'embed-hh-isol-mfsim'
     systematics_samples:
         'embed-hh-isol-mfsim':
-            'embed-hh-isol-mfsup': MFSUP
-            'embed-hh-isol-mfsdn': MFSDOWN
-            'embed-hh-noisol-mfsim': NOISOL
-            'embed-hh-tightisol-mfsim': TIGHTISOL
+            'embed-hh-isol-mfsup': MFS_UP
+            'embed-hh-isol-mfsdn': MFS_DOWN
+            'embed-hh-noisol-mfsim': ISOL_DOWN
+            'embed-hh-tightisol-mfsim': ISOL_UP
 ewk:
     name: EW
     systematics: mc

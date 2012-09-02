@@ -96,7 +96,7 @@ def iter_samples(channel, patterns=None, systematics=False):
                 if 'systematics' not in sample_info:
                     continue
                 syst = SYSTEMATICS[channel][sample_info['systematics']]
-                yield sample_info['samples'][:], [set(var.split(',')) for var in syst]
+                yield sample_info['samples'][:], [tuple(var.split(',')) for var in syst]
             else:
                 samp = sample_info['samples'][:]
                 if 'systematics_samples' in sample_info:

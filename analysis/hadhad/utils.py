@@ -181,6 +181,22 @@ def draw(model,
             stacked=True, yerr='quadratic', axes=hist_ax,
             ypadding=(.55, .1))
 
+    if systematics is not None:
+        # draw systematics band
+        # add separate variations in quadrature
+        var_high = []
+        var_low = []
+        for variations in systematics:
+            if len(variations) == 2:
+                high, low = variations
+            elif len(variations) == 1:
+                high = variations[0]
+                low = 'NOMINAL'
+            else:
+                raise ValueError(
+                        "only one or two variations per term are allowed")
+
+
     if signal is not None:
         if signal_scale != 1.:
             if isinstance(signal, (list, tuple)):
