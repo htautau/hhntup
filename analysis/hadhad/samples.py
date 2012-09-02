@@ -575,15 +575,20 @@ class MC(Sample):
             trees['NOMINAL'] = None
             weighted_events['NOMINAL'] = None
 
+            if isinstance(self, Embedded_Ztautau):
+                events_bin = 0
+            else:
+                events_bin = 1
+
             if ds.name in FILES and 'NOMINAL' in FILES[ds.name]:
                 rfile = FILES[ds.name]['NOMINAL']
                 trees['NOMINAL'] = rfile.Get(self.treename)
-                weighted_events['NOMINAL'] = rfile.cutflow[1]
+                weighted_events['NOMINAL'] = rfile.cutflow[events_bin]
             else:
                 rfile = ropen('.'.join([
                     os.path.join(NTUPLE_PATH, self.student, self.student), ds.name, 'root']))
                 trees['NOMINAL'] = rfile.Get(self.treename)
-                weighted_events['NOMINAL'] = rfile.cutflow[1]
+                weighted_events['NOMINAL'] = rfile.cutflow[events_bin]
                 if ds.name not in FILES:
                     FILES[ds.name] = {}
                 FILES[ds.name]['NOMINAL'] = rfile
@@ -591,10 +596,6 @@ class MC(Sample):
             if self.systematics:
 
                 unused_terms = MC.SYSTEMATICS[:]
-                if isinstance(self, Embedded_Ztautau):
-                    events_bin = 0
-                else:
-                    events_bin = 1
 
                 if systematics_terms:
                     for sys_term in systematics_terms:
