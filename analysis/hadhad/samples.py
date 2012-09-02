@@ -644,12 +644,12 @@ class MC(Sample):
                         unused_terms.remove(sys_term)
 
                 if unused_terms:
-                    print "UNUSED TERMS for %s:" % self.name
-                    print unused_terms
+                    #print "UNUSED TERMS for %s:" % self.name
+                    #print unused_terms
 
                     for term in unused_terms:
-                        trees[term] = trees['NOMINAL']
-                        weighted_events[term] = weighted_events['NOMINAL']
+                        trees[term] = None # flag to use NOMINAL
+                        weighted_events[term] = None # flag to use NOMINAL
 
             if isinstance(self, Higgs):
                 # use yellowhiggs for cross sections
@@ -730,25 +730,28 @@ class MC(Sample):
                     continue
 
                 sys_hist = hist.Clone()
-                sys_hist.Reset()
 
                 sys_tree = sys_trees[sys_term]
                 sys_event = sys_events[sys_term]
 
-                if isinstance(self, Embedded_Ztautau):
-                    sys_weight = self.scale
-                else:
-                    sys_weight = (TOTAL_LUMI * self.scale *
-                            xs * kfact * effic / sys_event)
+                if sys_tree is not None:
 
-                sys_weighted_selection = (
-                    '%f * %s * (%s)' %
-                    (sys_weight,
-                     ' * '.join(self.get_weight_branches('NOMINAL')),
-                     selection))
+                    sys_hist.Reset()
 
-                for expr in exprs:
-                    sys_tree.Draw(expr, sys_weighted_selection, hist=sys_hist)
+                    if isinstance(self, Embedded_Ztautau):
+                        sys_weight = self.scale
+                    else:
+                        sys_weight = (TOTAL_LUMI * self.scale *
+                                xs * kfact * effic / sys_event)
+
+                    sys_weighted_selection = (
+                        '%f * %s * (%s)' %
+                        (sys_weight,
+                         ' * '.join(self.get_weight_branches('NOMINAL')),
+                         selection))
+
+                    for expr in exprs:
+                        sys_tree.Draw(expr, sys_weighted_selection, hist=sys_hist)
 
                 if sys_term not in sys_hists:
                     sys_hists[sys_term] = sys_hist
