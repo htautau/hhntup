@@ -591,6 +591,10 @@ class MC(Sample):
             if self.systematics:
 
                 unused_terms = MC.SYSTEMATICS[:]
+                if isinstance(self, Embedded_Ztautau):
+                    events_bin = 0
+                else:
+                    events_bin = 1
 
                 if systematics_terms:
                     for sys_term in systematics_terms:
@@ -610,13 +614,13 @@ class MC(Sample):
                         if ds.name in FILES and sys_term in FILES[ds.name]:
                             rfile = FILES[ds.name][sys_term]
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[1]
+                            weighted_events[sys_term] = rfile.cutflow[events_bin]
                         else:
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, self.student, self.student),
                                 '_'.join([ds.name, '_'.join(actual_sys_term)]), 'root']))
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[1]
+                            weighted_events[sys_term] = rfile.cutflow[events_bin]
                             if ds.name not in FILES:
                                 FILES[ds.name] = {}
                             FILES[ds.name][sys_term] = rfile
@@ -634,13 +638,13 @@ class MC(Sample):
                         if sys_ds.name in FILES and sys_term in FILES[sys_ds.name]:
                             rfile = FILES[sys_ds.name][sys_term]
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[1]
+                            weighted_events[sys_term] = rfile.cutflow[events_bin]
                         else:
                             rfile = ropen('.'.join([
                                 os.path.join(NTUPLE_PATH, self.student, self.student),
                                 sys_ds.name, 'root']))
                             trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = rfile.cutflow[1]
+                            weighted_events[sys_term] = rfile.cutflow[events_bin]
                             if sys_ds.name not in FILES:
                                 FILES[sys_ds.name] = {}
                             FILES[sys_ds.name][sys_term] = rfile
