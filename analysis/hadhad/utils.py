@@ -1,4 +1,5 @@
 import os
+import math
 
 import numpy as np
 
@@ -184,18 +185,60 @@ def draw(model,
     if systematics is not None:
         # draw systematics band
         # add separate variations in quadrature
+        total_model = sum(model)
         var_high = []
         var_low = []
         for variations in systematics:
             if len(variations) == 2:
                 high, low = variations
+                high = tuple(high.split(','))
+                low = tuple(low.split(','))
             elif len(variations) == 1:
-                high = variations[0]
+                high = tuple(variations[0].split(','))
                 low = 'NOMINAL'
             else:
                 raise ValueError(
                         "only one or two variations per term are allowed")
-
+            total_high = model[0].Clone()
+            total_high.Reset()
+            total_low = total_high.Clone()
+            total_max = total_high.Clone()
+            total_min = total_high.Clone()
+            for m in model:
+                total_high += m.systematics[high]
+                if low == 'NOMINAL':
+                    total_low += m.Clone()
+                else:
+                    total_low += m.systematics[low]
+            for i in xrange(len(total_high)):
+                total_max[i] = max(total_high[i], total_low[i], total_model[i])
+                total_min[i] = min(total_high[i], total_low[i], total_model[i])
+            var_high.append(total_max)
+            var_low.append(total_min)
+        # sum variations in quadrature bin-by-bin
+        high_band = total_model.Clone()
+        high_band.Reset()
+        low_band = high_band.Clone()
+        for i in xrange(len(high_band)):
+            sum_high = math.sqrt(
+                    sum([(v[i] - total_model[i])**2 for v in var_high]))
+            sum_low = math.sqrt(
+                    sum([(v[i] - total_model[i])**2 for v in var_low]))
+            high_band[i] = sum_high
+            low_band[i] = sum_low
+        # draw band as hatched histogram with base of model - low_band
+        # and height of high_band + low_band
+        band_base = total_model - low_band
+        band_height = high_band + low_band
+        band_height.fillstyle = '/'
+        band_height.linecolor = 'yellow'
+        band_height.fillstyle = 'hollow'
+        band_height.fillcolor = 'white'
+        band_bars = rplt.bar(band_height,
+                bottom=band_base,
+                linewidth=1,
+                axes=hist_ax,
+                ypadding=(.55, .1))
 
     if signal is not None:
         if signal_scale != 1.:
