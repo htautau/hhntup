@@ -704,11 +704,8 @@ class MC(Sample):
             nominal_tree = sys_trees['NOMINAL']
             nominal_events = sys_events['NOMINAL']
 
-            if isinstance(self, Embedded_Ztautau):
-                nominal_weight = self.scale
-            else:
-                nominal_weight = (TOTAL_LUMI * self.scale *
-                        xs * kfact * effic / nominal_events)
+            nominal_weight = (TOTAL_LUMI * self.scale *
+                    xs * kfact * effic / nominal_events)
 
             nominal_weighted_selection = (
                 '%f * %s * (%s)' %
@@ -742,11 +739,8 @@ class MC(Sample):
 
                     sys_hist.Reset()
 
-                    if isinstance(self, Embedded_Ztautau):
-                        sys_weight = self.scale
-                    else:
-                        sys_weight = (TOTAL_LUMI * self.scale *
-                                xs * kfact * effic / sys_event)
+                    sys_weight = (TOTAL_LUMI * self.scale *
+                            xs * kfact * effic / sys_event)
 
                     sys_weighted_selection = (
                         '%f * %s * (%s)' %
@@ -795,10 +789,7 @@ class MC(Sample):
             tree = sys_trees[systematic]
             events = sys_events[systematic]
 
-            if isinstance(self, Embedded_Ztautau):
-                weight = self.scale
-            else:
-                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
 
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
@@ -812,10 +803,7 @@ class MC(Sample):
             tree = sys_trees[systematic]
             events = sys_events[systematic]
 
-            if isinstance(self, Embedded_Ztautau):
-                weight = self.scale
-            else:
-                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
 
             total += weight * tree.GetEntries(selection)
         return total
@@ -827,10 +815,7 @@ class MC(Sample):
             tree = sys_trees[systematic]
             events = sys_events[systematic]
 
-            if isinstance(self, Embedded_Ztautau):
-                weight = seld.scale
-            else:
-                weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
 
             if selection:
                 selected_tree = asrootpy(tree.CopyTree(selection))
