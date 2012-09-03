@@ -74,10 +74,6 @@ See branches_remove and branches_keep below
 import ROOT
 import math
 
-# Dugan
-from ROOT import TFile
-#
-
 from atlastools import utils
 from atlastools import datasets
 from atlastools.units import GeV
@@ -93,6 +89,9 @@ from higgstautau.mixins import TauFourMomentum, MCParticle
 from higgstautau.hadhad.filters import Triggers
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.filters import vertex_selection
+import higgstautau.skimming.hadhad as hhskimming
+from hhskimming import branches as hhbranches
+from hhskimming.models import *
 
 import goodruns
 
@@ -100,130 +99,6 @@ import goodruns
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 WRITE_ALL = False
-
-branches_remove = [
-    "cl_*",
-    "ph_*",
-
-    # these large mc branches are useless since
-    # they contain barcodes and not indices
-    # use mc_parent_index and mc_child_index
-    "mc_children",
-    "mc_parents",
-
-    #"jet_AntiKt4TopoEM_*", <== jet cleaning recommendation is with TopoEM jets
-    #"jet_AntiKt4LCTopo_*",  <== need these for MET systematics
-    "jet_AntiKt6*",
-    #"jet_flavor_*",  <== need these for systematics...
-    "jet_*Assoc*",
-
-    "tau_otherTrk_*",
-    "tau_cell_*",
-    "tau_cluster_*",
-
-    "EF_2e*",
-    "EF_2mu*",
-    "EF_2j*",
-    "EF_xe*",
-    "EF_xs*",
-    "EF_e*",
-    "EF_mu*",
-    "EF_MU*",
-    "EF_g*",
-    "EF_j*",
-    "EF_g*",
-    "L1_*",
-    "L2_*",
-
-    "muonTruth*",
-    "jet_antikt4truth_*",
-    "collcand_*",
-
-    "el_*",
-    "mu_*",
-    "MET_*Reg*",
-]
-
-# override globs above
-branches_keep = [
-    "el_n",
-    "el_cl_E",
-    "el_tracketa",
-    "el_trackphi",
-    "el_author",
-    "el_charge",
-    "el_loosePP",
-    "el_mediumPP",
-    "el_tightPP",
-    "el_OQ",
-    # required for electron ID recalc
-    "el_cl_eta",
-    "el_cl_phi",
-    "el_m",
-    "el_deltaeta1",
-    "el_deltaphi2",
-    "el_Emax2",
-    "el_emaxs1",
-    "el_etas2",
-    "el_Ethad",
-    "el_Ethad1",
-    "el_expectHitInBLayer",
-    "el_f1",
-    "el_f3",
-    "el_isEM",
-    "el_nBLayerOutliers",
-    "el_nBLHits",
-    "el_nPixelOutliers",
-    "el_nPixHits",
-    "el_nSCTOutliers",
-    "el_nSiHits",
-    "el_nTRTHits",
-    "el_nTRTOutliers",
-    "el_reta",
-    "el_trackd0_physics",
-    "el_trackqoverp",
-    "el_TRTHighTOutliersRatio",
-    "el_weta2",
-    "el_wstot",
-
-    "mu_staco_n",
-    "mu_staco_E",
-    "mu_staco_pt",
-    "mu_staco_eta",
-    "mu_staco_phi",
-    "mu_staco_loose",
-    "mu_staco_medium",
-    "mu_staco_tight",
-    "mu_staco_isSegmentTaggedMuon",
-    "mu_staco_expectBLayerHit",
-    "mu_staco_nBLHits",
-    "mu_staco_nPixHits",
-    "mu_staco_nPixelDeadSensors",
-    "mu_staco_nSCTHits",
-    "mu_staco_nSCTDeadSensors",
-    "mu_staco_nPixHoles",
-    "mu_staco_nSCTHoles",
-    "mu_staco_nTRTHits",
-    "mu_staco_nTRTOutliers",
-]
-
-
-class SkimExtraModel(TreeModel):
-
-    number_of_good_vertices = IntCol()
-
-
-class SkimExtraTauPtModel(TreeModel):
-
-    tau_pt = FloatCol()
-
-
-class TriggerEmulation(TreeModel):
-
-    EF_tau29_medium1_tau20_medium1_EMULATED = BoolCol()
-    EF_tau29T_medium1_tau20T_medium1_EMULATED = BoolCol()
-    tau_trigger_match_index = ROOT.vector('int')
-    tau_trigger_match_thresh = ROOT.vector('int')
 
 
 class HHSkim(ATLASStudent):
@@ -305,25 +180,28 @@ class HHSkim(ATLASStudent):
                         (update_trigger_trees, (self, trigger_tool_wrapper,)))
 
         # initialize the TreeChain of all input files
-        intree = TreeChain(self.metadata.treename,
-                           files=self.files,
-                           events=self.events,
-                           onfilechange=onfilechange)
+        intree = TreeChain(
+                self.metadata.treename,
+                files=self.files,
+                events=self.events,
+                onfilechange=onfilechange)
 
         Model = SkimExtraModel
         if self.metadata.datatype == datasets.MC:
             Model += TriggerEmulation
 
-        outtree = Tree(name=self.metadata.treename,
-                       file=self.output,
-                       model=Model)
+        outtree = Tree(
+                name=self.metadata.treename,
+                file=self.output,
+                model=Model)
 
-        removed_branches = intree.glob(branches_remove, prune=branches_keep)
-
-        outtree.set_buffer(intree.buffer,
-                           ignore_branches=removed_branches,
-                           create_branches=True,
-                           visible=False)
+        outtree.set_buffer(
+                intree.buffer,
+                ignore_branches=intree.glob(
+                    hhbranches.REMOVE,
+                    prune=hhbranches.KEEP),
+                create_branches=True,
+                visible=False)
 
         if self.metadata.datatype == datasets.DATA:
             # outtree_extra holds info for events not included in the skim
