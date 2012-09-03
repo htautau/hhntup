@@ -475,7 +475,7 @@ if __name__ == '__main__':
             linecolor='red',
             linestyle='dashed')
 
-    data = Data(markersize=2)
+    data = Data(markersize=1.2)
 
     figures = {}
 

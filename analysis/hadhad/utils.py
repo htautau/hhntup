@@ -206,7 +206,8 @@ def draw(model,
     if data is not None:
         data_bars = rplt.errorbar(data,
                 fmt='o', axes=hist_ax, ypadding=(.55, .1),
-                emptybins=False)
+                emptybins=False,
+                zorder=10000)
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
