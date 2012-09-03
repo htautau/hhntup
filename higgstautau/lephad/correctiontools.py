@@ -50,17 +50,17 @@ class MuonPtSmearing(EventFilter):
 
         for mu in event.muons:
 
-            #Obtain parameters for correction
+            ## Obtain parameters for correction
             charge = mu.charge
-            eta    = mu.eta
-            pt     = mu.pt
+            eta    = mu.fourvect.Eta()
+            pt     = mu.fourvect.Pt()
             pt_ms  = sin(mu.ms_theta)/abs(mu.ms_qoverp)
             pt_id  = sin(mu.id_theta)/abs(mu.id_qoverp)
 
-            #Seed with event number, reproducible smear for different analyses
+            ## Seed with event number, reproducible smear for different analyses
             muonSmear.SetSeed(event.EventNumber)
 
-            #Pass parameters, get smeared Pt
+            ## Pass parameters, get smeared Pt
             muonSmear.Event(pt_ms, pt_id, pt, eta, charge)
             pt_smear = -1
 
@@ -69,10 +69,15 @@ class MuonPtSmearing(EventFilter):
             else:
                 pt_smear = muonSmear.pTID()
 
-            #Adjust Pt in transient D3PD
+            ## Adjust Pt in transient D3PD
             mu.pt = pt_smear
 
-            #Adjust MET accordingly
+            ## Adjust Pt of the muon 4-vector
+            newMufourvect = TLorentzVector()
+            newMufourvect.SetPtEtaPhiM(pt_smear, eta, mu.fourvect.Phi(), mu.fourvect.M())
+            setattr(mu, 'fourvect', newMufourvect)
+
+            ## Adjust MET accordingly
             px = pt*cos(mu.phi)
             py = pt*sin(mu.phi)
 
@@ -144,6 +149,14 @@ class EgammaERescaling(EventFilter):
             ## Modify E and Et in transient D3PD
             el.cl_E  = corrected_e
             el.cl_et = corrected_et
+
+            ## Modify the fourvector which is used for the rest of the tree filling
+            el_eta = el.fourvect.Eta()
+            el_phi = el.fourvect.Phi()
+            newElfourvect = TLorentzVector()
+            newElfourvect.SetPtEtaPhiE(corrected_et, el_eta, el_phi, corrected_e)
+            setattr(el, 'fourvect', newElfourvect)
+            
 
             ## Adjust MET accordingly
             if ((el.nSCTHits + el.nPixHits) < 4):
