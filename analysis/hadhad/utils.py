@@ -1,4 +1,5 @@
 import os
+import math
 
 import numpy as np
 
@@ -89,7 +90,8 @@ def draw(model,
          show_ratio=False,
          show_qq=False,
          output_formats=None,
-         dir='.'):
+         dir='.',
+         systematics=None):
 
     if output_formats is None:
         output_formats = ('png', 'eps', 'pdf')
@@ -177,7 +179,7 @@ def draw(model,
         set_colours(signal, signal_colour_map)
 
     model_bars = rplt.bar(model, linewidth=0,
-            stacked=True, yerr='quadratic', axes=hist_ax,
+            stacked=True, axes=hist_ax,
             ypadding=(.55, .1))
 
     if signal is not None:
@@ -200,12 +202,6 @@ def draw(model,
                     histtype='stepfilled',
                     axes=hist_ax, ypadding=(.55, .1))
 
-
-    if data is not None:
-        data_bars = rplt.errorbar(data,
-                fmt='o', axes=hist_ax, ypadding=(.55, .1),
-                emptybins=False)
-
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
         ratio_ax.axhline(y=0, color='black')
@@ -215,6 +211,7 @@ def draw(model,
         rplt.errorbar(
                 Hist.divide(data - total_model, total_model, option='B') * 100,
                 fmt='o', axes=ratio_ax,
+                barsabove=True,
                 emptybins=False)
         ratio_ax.set_ylim((-100., 100.))
         ratio_ax.set_xlim(hist_ax.get_xlim())
@@ -252,6 +249,107 @@ def draw(model,
         frame.set_linewidth(0)
         qq_ax.set_xlim((gg_graph.xedgesl(0), gg_graph.xedgesh(-1)))
         qq_ax.set_ylim((min(y_low), max(y_up)))
+
+    if systematics is not None:
+        # draw systematics band
+        # add separate variations in quadrature
+        # also include stat error in quadrature
+        total_model = sum(model)
+        var_high = []
+        var_low = []
+        for variations in systematics:
+            if len(variations) == 2:
+                high, low = variations
+                high = tuple(high.split(','))
+                low = tuple(low.split(','))
+            elif len(variations) == 1:
+                high = tuple(variations[0].split(','))
+                low = 'NOMINAL'
+            else:
+                raise ValueError(
+                        "only one or two variations per term are allowed")
+            total_high = model[0].Clone()
+            total_high.Reset()
+            total_low = total_high.Clone()
+            total_max = total_high.Clone()
+            total_min = total_high.Clone()
+            for m in model:
+                total_high += m.systematics[high]
+                if low == 'NOMINAL':
+                    total_low += m.Clone()
+                else:
+                    total_low += m.systematics[low]
+            for i in xrange(len(total_high)):
+                total_max[i] = max(total_high[i], total_low[i], total_model[i])
+                total_min[i] = min(total_high[i], total_low[i], total_model[i])
+            var_high.append(total_max)
+            var_low.append(total_min)
+
+        # include stat error variation
+        total_model_stat_high = total_model.Clone()
+        total_model_stat_low = total_model.Clone()
+        for i in xrange(len(total_model)):
+            total_model_stat_high[i] += total_model.yerrh(i)
+            total_model_stat_low[i] -= total_model.yerrl(i)
+        var_high.append(total_model_stat_high)
+        var_low.append(total_model_stat_low)
+
+        # sum variations in quadrature bin-by-bin
+        high_band = total_model.Clone()
+        high_band.Reset()
+        low_band = high_band.Clone()
+        for i in xrange(len(high_band)):
+            sum_high = math.sqrt(
+                    sum([(v[i] - total_model[i])**2 for v in var_high]))
+            sum_low = math.sqrt(
+                    sum([(v[i] - total_model[i])**2 for v in var_low]))
+            high_band[i] = sum_high
+            low_band[i] = sum_low
+        # draw band as hatched histogram with base of model - low_band
+        # and height of high_band + low_band
+        """
+        band_base = total_model - low_band
+        band_height = high_band + low_band
+        band_height.fillstyle = '/'
+        band_height.linecolor = 'yellow'
+        band_bars = rplt.bar(band_height,
+                bottom=band_base,
+                linewidth=1,
+                axes=hist_ax,
+                ypadding=(.55, .1),
+                fill=False)
+        """
+        rplt.fill_between(total_model + high_band,
+                    total_model - low_band,
+                    edgecolor='yellow',
+                    linewidth=0,
+                    facecolor=(0,0,0,0),
+                    hatch='////',
+                    axes=hist_ax,
+                    zorder=100)
+
+        if show_ratio:
+            # plot band on ratio plot
+            high_band += total_model
+            low_band = total_model - low_band
+            high_ratio = Hist.divide(
+                    high_band - total_model, total_model, option='B') * 100
+            low_ratio = Hist.divide(
+                    low_band - total_model, total_model, option='B') * 100
+
+            rplt.fill_between(high_ratio, low_ratio,
+                    edgecolor='yellow',
+                    linewidth=0,
+                    facecolor=(0,0,0,0),
+                    hatch='////',
+                    axes=ratio_ax)
+
+    if data is not None:
+        data_bars = rplt.errorbar(data,
+                fmt='o', axes=hist_ax, ypadding=(.55, .1),
+                emptybins=False,
+                barsabove=True,
+                zorder=1000)
 
     model_legend = hist_ax.legend(
             reversed(model_bars), [h.title for h in reversed(model)],

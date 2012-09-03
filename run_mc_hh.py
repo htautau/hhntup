@@ -14,6 +14,7 @@ parser.add_argument('--nominal-only', action='store_true', default=False)
 parser.add_argument('--systematics-only', action='store_true', default=False)
 parser.add_argument('--dry', action='store_true', default=False)
 parser.add_argument('--use-ssh', dest='use_qsub', action='store_false', default=True)
+parser.add_argument('--warnings-as-errors', action='store_true', default=False)
 parser.add_argument('samples', nargs='*', default=None)
 
 args = parser.parse_args()
@@ -42,12 +43,13 @@ if not args.systematics_only:
                 use_qsub=args.use_qsub,
                 qsub_queue=args.queue,
                 dry_run=args.dry,
-                separate_student_output=True)
+                separate_student_output=True,
+                warnings_as_errors=args.warnings_as_errors)
 
 if not args.nominal_only:
     if args.systematics is not None:
         args.systematics = [
-                set(s.upper().split('+')) for s in
+                tuple(s.upper().split('+')) for s in
                 args.systematics.split(',')]
     # systematics
     for datasets, systematics in samples.iter_samples('hadhad', args.samples,
@@ -66,4 +68,5 @@ if not args.nominal_only:
                     use_qsub=args.use_qsub,
                     qsub_queue=args.queue,
                     dry_run=args.dry,
-                    separate_student_output=True)
+                    separate_student_output=True,
+                    warnings_as_errors=args.warnings_as_errors)

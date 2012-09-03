@@ -17,37 +17,19 @@ ztautau:
         - 'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
-embedded-ztautau:
+embedded_ztautau:
     name: Ztautau
     systematics: embedded
     latex: '$Z/\gamma^{*}$'
     math: 'Z/\gamma^{*}'
     samples:
         - 'embed-hh-isol-mfsim'
-embedded-ztautau-mfsup:
-    name: Ztautau
-    latex: '$Z/\gamma^{*}$'
-    math: 'Z/\gamma^{*}'
-    samples:
-        - 'embed-hh-isol-mfsup'
-embedded-ztautau-mfsdown:
-    name: Ztautau
-    latex: '$Z/\gamma^{*}$'
-    math: 'Z/\gamma^{*}'
-    samples:
-        - 'embed-hh-isol-mfsdn'
-embedded-ztautau-noisol:
-    name: Ztautau
-    latex: '$Z/\gamma^{*}$'
-    math: 'Z/\gamma^{*}'
-    samples:
-        - 'embed-hh-noisol-mfsim'
-embedded-ztautau-tightisol:
-    name: Ztautau
-    latex: '$Z/\gamma^{*}$'
-    math: 'Z/\gamma^{*}'
-    samples:
-        - 'embed-hh-tightisol-mfsim'
+    systematics_samples:
+        'embed-hh-isol-mfsim':
+            'embed-hh-isol-mfsup': MFS_UP
+            'embed-hh-isol-mfsdn': MFS_DOWN
+            'embed-hh-noisol-mfsim': ISOL_DOWN
+            'embed-hh-tightisol-mfsim': ISOL_UP
 ewk:
     name: EW
     systematics: mc

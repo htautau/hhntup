@@ -60,26 +60,22 @@ class OrderedDictYAMLLoader(yaml.Loader):
 SIGNALS_YML = {}
 BACKGROUNDS_YML = {}
 SYSTEMATICS_YML = {}
-#SAMPLES_YML = {}
 
 SIGNALS = {}
 BACKGROUNDS = {}
 SYSTEMATICS = {}
-#SAMPLES = {}
 
 for channel in [o for o in os.listdir(__HERE) if
         os.path.isdir(os.path.join(__HERE, o))]:
 
     SIGNALS_YML[channel] = os.path.join(__HERE, channel, 'signals.yml')
     BACKGROUNDS_YML[channel] = os.path.join(__HERE, channel, 'backgrounds.yml')
-    #SAMPLES_YML[channel] = os.path.join(__HERE, channel, 'samples.yml')
     SYSTEMATICS_YML[channel] = os.path.join(__HERE, channel, 'systematics.yml')
 
     SIGNALS[channel] = yaml.load(open(SIGNALS_YML[channel]),
             OrderedDictYAMLLoader)
     BACKGROUNDS[channel] = yaml.load(open(BACKGROUNDS_YML[channel]),
             OrderedDictYAMLLoader)
-    #SAMPLES[channel] = yaml.load(open(SAMPLES_YML[channel]), OrderedDictYAMLLoader)
     SYSTEMATICS[channel] = yaml.load(open(SYSTEMATICS_YML[channel]))
 
 
@@ -100,9 +96,13 @@ def iter_samples(channel, patterns=None, systematics=False):
                 if 'systematics' not in sample_info:
                     continue
                 syst = SYSTEMATICS[channel][sample_info['systematics']]
-                yield sample_info['samples'], [set(var.split(',')) for var in syst]
+                yield sample_info['samples'][:], [tuple(var.split(',')) for var in syst]
             else:
-                yield sample_info['samples']
+                samp = sample_info['samples'][:]
+                if 'systematics_samples' in sample_info:
+                    for sample, sys_samp in sample_info['systematics_samples'].items():
+                        samp += sys_samp.keys()
+                yield samp
 
 
 def samples(channel, patterns=None):

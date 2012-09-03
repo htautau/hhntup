@@ -63,7 +63,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{x}}$',
         'filename': 'MET_x',
         'bins': 20,
-        'range': (0, 100),
+        'range': (-75, 75),
         'scale': 1./1000,
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
@@ -72,7 +72,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{y}}$',
         'filename': 'MET_y',
         'bins': 20,
-        'range': (0, 100),
+        'range': (-75, 75),
         'scale': 1./1000,
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
@@ -89,7 +89,6 @@ VARIABLES = {
         'filename': 'MET_mmc',
         'bins': 20,
         'range': (0, 100),
-        'scale': 1./1000,
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -97,8 +96,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{x}}$ MMC',
         'filename': 'MET_mmc_x',
         'bins': 20,
-        'range': (0, 100),
-        'scale': 1./1000,
+        'range': (-75, 75),
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -106,8 +104,7 @@ VARIABLES = {
         'title': r'$E^{miss}_{T_{y}}$ MMC',
         'filename': 'MET_mmc_y',
         'bins': 20,
-        'range': (0, 100),
-        'scale': 1./1000,
+        'range': (-75, 75),
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
@@ -223,6 +220,20 @@ VARIABLES = {
         'filename': 'tau2_x',
         'bins': 20,
         'range': (-3, 4),
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'tau1_jvtxf': {
+        'title': r'$\tau_{1}$ JVF',
+        'filename': 'tau1_jvf',
+        'bins': 20,
+        'range': (0, 1),
+        'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
+    },
+    'tau2_jvtxf': {
+        'title': r'$\tau_{2}$ JVF',
+        'filename': 'tau2_jvf',
+        'bins': 20,
+        'range': (0, 1),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau1_BDTJetScore': {
@@ -408,6 +419,17 @@ VARIABLES = {
     },
 }
 
+SYSTEMATICS = [
+    ('TAUBDT_UP', 'TAUBDT_DOWN'),
+    ('JES_UP,TES_UP', 'JES_DOWN,TES_DOWN'),
+    ('JER_UP',),
+    ('MFS_UP', 'MFS_DOWN'),
+    ('ISOL_UP', 'ISOL_DOWN'),
+    ('TRIGGER_UP', 'TRIGGER_DOWN'),
+    ('FAKERATE_UP', 'FAKERATE_DOWN'),
+    ('FIT_UP', 'FIT_DOWN'),
+]
+
 
 if __name__ == '__main__':
 
@@ -419,6 +441,9 @@ if __name__ == '__main__':
             help="do not use cached background scale factors "
             "and instead recalculate them",
             default=True)
+    parser.add_argument('--only-fit', action='store_true',
+            help="only fit the Ztautau and QCD background, don't make plots",
+            default=False)
     parser.add_argument('--no-systematics', action='store_false',
             dest='systematics',
             help="turn off systematics",
@@ -439,18 +464,18 @@ if __name__ == '__main__':
 
     PLOTS_DIR = plots_dir(__file__)
 
-    #mc_ztautau   = MC_Ztautau(systematics=args.systematics)
+    #ztautau   = MC_Ztautau(systematics=args.systematics)
     ztautau = Embedded_Ztautau(systematics=args.systematics)
-    mc_others = MC_Others(systematics=args.systematics)
+    others = Others(systematics=args.systematics)
 
-    higgs_125 = MC_All_Higgs(
-            mass=125,
+    higgs_125 = Higgs(
+            masses=[125],
             systematics=args.systematics,
             scale=50,
             linecolor='red',
             linestyle='dashed')
 
-    data = Data(markersize=2)
+    data = Data(markersize=1.2)
 
     figures = {}
 
@@ -463,7 +488,7 @@ if __name__ == '__main__':
         qcd_shape_region = cat_info['qcd_shape_region']
         target_region = cat_info['target_region']
 
-        qcd = QCD(data=data, mc=[mc_others, ztautau],
+        qcd = QCD(data=data, mc=[others, ztautau],
               shape_region=qcd_shape_region)
 
         figures[category] = {}
@@ -478,15 +503,20 @@ if __name__ == '__main__':
         # in each category separately
         qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = qcd_ztautau_norm(
             ztautau=ztautau,
-            backgrounds=[mc_others],
+            backgrounds=[others],
             data=data,
             category=category,
             target_region=target_region,
             qcd_shape_region=qcd_shape_region,
             use_cache=args.use_cache)
 
+        if args.only_fit:
+            continue
+
         qcd.scale = qcd_scale
+        qcd.scale_error = qcd_scale_error
         ztautau.scale = ztautau_scale
+        ztautau.scale_error = ztautau_scale_error
 
         for expr, var_info in VARIABLES.items():
 
@@ -505,7 +535,7 @@ if __name__ == '__main__':
             if 'scale' in var_info:
                 expr = "%s * %f" % (expr, var_info['scale'])
 
-            other_hist = mc_others.draw(
+            other_hist = others.draw(
                     expr,
                     category, target_region,
                     bins, min, max,
@@ -516,6 +546,8 @@ if __name__ == '__main__':
                     category, target_region,
                     bins, min, max,
                     cuts=cuts)
+
+            print qcd_hist.systematics
 
             ztautau_hist = ztautau.draw(
                     expr,
@@ -555,7 +587,8 @@ if __name__ == '__main__':
                     show_ratio=True,
                     show_qq=False,
                     model_colour_map=None,
-                    dir=PLOTS_DIR)
+                    dir=PLOTS_DIR,
+                    systematics=SYSTEMATICS if args.systematics else None)
             figures[category][expr] = fig
 
     if set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
