@@ -92,6 +92,7 @@ from higgstautau.filters import vertex_selection
 import higgstautau.skimming.hadhad as hhskimming
 from hhskimming import branches as hhbranches
 from hhskimming.models import *
+from higgtautau.pileup import PileupTemplates, PileupReweight
 
 import goodruns
 
@@ -128,55 +129,36 @@ class HHSkim(ATLASStudent):
             xml_string.Write(self.metadata.treename)
             self.output.cd()
 
+        event_filters = EventFilterList([
+            EmbeddingPileupPatch(
+                passthrough=self.metadata.datatype != datasets.EMBED),
+            PileupTemplates(
+                passthrough=self.metadata.datatype != datasets.MC),
+            TauTriggerEmulation(
+                year=self.metadata.year,
+                passthrough=self.metadata.datatype != datasets.MC),
+            Triggers(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                skim=True),
+            # the BDT bits are broken in the p1130 production, correct them
+            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
+            # PRODUCTION TAG!!!
+            TauIDpatch(
+                year=self.metadata.year,
+                passthrough=self.metadata.year != 2012),
+            # patch electron ID for 2012
+            ElectronIDpatch(
+                passthrough=self.metadata.year != 2012),
+            PileupReweight(
+                passthrough=self.metadata.datatype != datasets.MC)
+        ])
+
         onfilechange = []
 
         if self.metadata.datatype == datasets.MC:
-            from externaltools import PileupReweighting
-            from ROOT import Root
-
-            PileupReweighting = Root.TPileupReweighting
-
-            # initialize the pileup reweighting tool
-            pileup_tool = PileupReweighting()
-            if self.metadata.year == 2011:
-                pileup_tool.UsePeriodConfig("MC11b")
-            elif self.metadata.year == 2012:
-                pileup_tool.UsePeriodConfig("MC12a")
-            pileup_tool.Initialize()
-
-            if self.metadata.year == 2011: # only can emulate 2011 currently...
-                from externaltools import CoEPPTrigTool
-                from ROOT import CoEPP
-                # initialize the trigger emulation tool
-                trigger_tool_wrapper = CoEPP.OfficialWrapper()
-                trigger_tool = CoEPP.TriggerTool()
-                trigger_tool.setWrapper(trigger_tool_wrapper)
-                trigger_config = CoEPPTrigTool.get_resource(
-                        'config_EF_DiTau.xml')
-                trigger_tool.setXMLFile(trigger_config)
-                trigger_tool.initializeFromXML()
-
-                trigger_A = trigger_tool.getTriggerChecked(
-                        "EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
-                trigger_B = trigger_tool.getTriggerChecked(
-                        "EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
-                trigger_C = trigger_tool.getTriggerChecked(
-                        "EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
-
-                trigger_run_dict = {
-                    180164: (trigger_A, 'EF_tau29_medium1_tau20_medium1'),
-                    183003: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
-                    186169: (trigger_B, 'EF_tau29_medium1_tau20_medium1'),
-                    189751: (trigger_C, 'EF_tau29T_medium1_tau20T_medium1'),
-                }
-
-                def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
-
-                    trigger_tool_wrapper.loadMainTree(tree)
-                    trigger_tool_wrapper.loadMetaTree(
-                            file.Get('%sMeta/TrigConfTree' % name))
-
-                onfilechange.append(
+            # TODO get trigger emul tool here
+            onfilechange.append(
                         (update_trigger_trees, (self, trigger_tool_wrapper,)))
 
         # initialize the TreeChain of all input files
@@ -256,12 +238,6 @@ class HHSkim(ATLASStudent):
                     branches=extra_variables,
                     create_branches=True, visible=False)
 
-        # set the event filters
-        trigger_filter = Triggers(
-                datatype=self.metadata.datatype,
-                year=self.metadata.year,
-                skim=True)
-
         # define tau collection
         intree.define_collection(
                 name='taus',
@@ -286,101 +262,14 @@ class HHSkim(ATLASStudent):
         nevents_mc_weight = 0
         emulated_trigger_passed = False
 
-        if self.metadata.year == 2012:
-            print "Patching Tau ID"
-            tauidpatch = TauIDpatch(year=2012)
-            print "Patching Electron ID"
-            electronidpatch = ElectronIDpatch()
-
         # entering the main event loop...
         for event in intree:
 
-            nevents += 1
-
-            if self.metadata.datatype == datasets.EMBED:
-                # fix averageIntPerXing
-                # HACK: stored in pz of mc particle with pdg ID 39
-                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
-                averageIntPerXing = None
-                for p in intree.mc:
-                    if p.pdgId == 39:
-                        averageIntPerXing = p.fourvect.Pz()
-                        break
-                if averageIntPerXing is not None:
-                    event.averageIntPerXing = averageIntPerXing
-                else:
-                    print "pdgID 39 not found! Skipping event..."
-                    nevents -= 1
-                    continue
-
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weight += event.mc_event_weight
-                pileup_tool.Fill(
-                        event.RunNumber,
-                        event.mc_channel_number,
-                        event.mc_event_weight,
-                        event.averageIntPerXing);
-
-                if self.metadata.year == 2011:
-                    trigger_tool_wrapper.setEventNumber(event._entry.value)
-                    trigger, triggername = trigger_run_dict[event.RunNumber]
-                    trigger.switchOn()
-                    trigger_tool.executeTriggers()
-                    emulated_trigger_passed = trigger.passed()
-
-                    outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
-                    outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
-                    outtree.tau_trigger_match_index.clear()
-                    outtree.tau_trigger_match_thresh.clear()
-
 
             if self.metadata.datatype == datasets.EMBED or \
                emulated_trigger_passed or trigger_filter(event):
-
-                if emulated_trigger_passed:
-                    if triggername == 'EF_tau29_medium1_tau20_medium1':
-                        outtree.EF_tau29_medium1_tau20_medium1_EMULATED = True
-                    else:
-                        outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = True
-
-                    # trigger matching
-                    trig1 = trigger.getTrigger1() # EF_tau29(T)_medium1
-                    trig2 = trigger.getTrigger2() # EF_tau20(T)_medium1
-                    for tau in event.taus:
-                        thresh = 0
-                        idx = -1
-                        idx1 = trig1.matchIndex(tau.fourvect)
-                        idx2 = trig2.matchIndex(tau.fourvect)
-                        if idx1 == idx2 != -1:
-                            idx = idx1
-                            thresh = 29
-                        elif idx1 == -1 and idx2 > -1:
-                            idx = idx2
-                            thresh = 20
-                        elif idx2 == -1 and idx1 > -1:
-                            idx = idx1
-                            thresh = 29
-                        elif idx2 != idx1: # both >-1 and non-equal
-                            # take index of closer one using dR
-                            trigtau1TLV = trigger_tool.buildEFTauTLV(idx1)
-                            trigtau2TLV = trigger_tool.buildEFTauTLV(idx2)
-                            if trigtau1TLV.DeltaR(tau.fourvect) < trigtau2TLV.DeltaR(tau.fourvect):
-                                idx = idx1
-                                thresh = 29
-                            else:
-                                idx = idx2
-                                thresh = 20
-
-                        outtree.tau_trigger_match_index.push_back(idx)
-                        outtree.tau_trigger_match_thresh.push_back(thresh)
-
-                if self.metadata.year == 2012:
-                    # the BDT bits are broken in the p1130 production, correct them
-                    # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
-                    # PRODUCTION TAG!!!
-                    tauidpatch(event)
-                    # patch electron ID for 2012
-                    electronidpatch(event)
 
                 event.vertices.select(vertex_selection)
                 number_of_good_vertices = len(event.vertices)
@@ -411,10 +300,6 @@ class HHSkim(ATLASStudent):
                 if WRITE_ALL:
                     outtree.Fill()
 
-            if self.metadata.datatype == datasets.MC \
-               and self.metadata.year == 2011:
-                trigger.switchOff()
-
         self.output.cd()
 
         if self.metadata.datatype == datasets.MC:
@@ -432,17 +317,3 @@ class HHSkim(ATLASStudent):
         outtree.Write()
         outtree_extra.FlushBaskets()
         outtree_extra.Write()
-
-        if self.metadata.datatype == datasets.MC:
-            # write the pileup reweighting file
-            pileup_tool.WriteToFile()
-
-            if self.metadata.year == 2011:
-                # turn on triggers so they show up as "active" in the report
-                trigger_A.switchOn()
-                trigger_B.switchOn()
-                trigger_C.switchOn()
-
-                # finalize the trigger_tool
-                trigger_tool.finalize()
-                trigger_tool.summary()
