@@ -182,7 +182,6 @@ def draw(model,
             stacked=True, axes=hist_ax,
             ypadding=(.55, .1))
 
-
     if signal is not None:
         if signal_scale != 1.:
             if isinstance(signal, (list, tuple)):
@@ -203,12 +202,6 @@ def draw(model,
                     histtype='stepfilled',
                     axes=hist_ax, ypadding=(.55, .1))
 
-    if data is not None:
-        data_bars = rplt.errorbar(data,
-                fmt='o', axes=hist_ax, ypadding=(.55, .1),
-                emptybins=False,
-                zorder=10000)
-
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
         ratio_ax.axhline(y=0, color='black')
@@ -218,6 +211,7 @@ def draw(model,
         rplt.errorbar(
                 Hist.divide(data - total_model, total_model, option='B') * 100,
                 fmt='o', axes=ratio_ax,
+                barsabove=True,
                 emptybins=False)
         ratio_ax.set_ylim((-100., 100.))
         ratio_ax.set_xlim(hist_ax.get_xlim())
@@ -328,10 +322,11 @@ def draw(model,
         rplt.fill_between(total_model + high_band,
                     total_model - low_band,
                     edgecolor='yellow',
+                    linewidth=0,
                     facecolor=(0,0,0,0),
-                    hatch='/',
+                    hatch='////',
                     axes=hist_ax,
-                    zorder=1000)
+                    zorder=100)
 
         if show_ratio:
             # plot band on ratio plot
@@ -344,9 +339,17 @@ def draw(model,
 
             rplt.fill_between(high_ratio, low_ratio,
                     edgecolor='yellow',
+                    linewidth=0,
                     facecolor=(0,0,0,0),
-                    hatch='/',
+                    hatch='////',
                     axes=ratio_ax)
+
+    if data is not None:
+        data_bars = rplt.errorbar(data,
+                fmt='o', axes=hist_ax, ypadding=(.55, .1),
+                emptybins=False,
+                barsabove=True,
+                zorder=1000)
 
     model_legend = hist_ax.legend(
             reversed(model_bars), [h.title for h in reversed(model)],
