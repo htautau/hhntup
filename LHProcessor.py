@@ -175,6 +175,7 @@ class LHProcessor(ATLASStudent):
             TauPreSelection(),
             TauSelection(),
             JetSelection(),
+            
             FinalOverlapRemoval()
         ])
 
@@ -412,6 +413,12 @@ class LHProcessor(ATLASStudent):
             ## Event weight corrections for MC
             ###################################
             if self.metadata.datatype == datasets.MC:
+                ## Apply mc event weight:
+                try:
+                    event_weight *= event.mc_weight[0]
+                except AttributeError:
+                    pass
+                
                 # set the event pileup weight
                 event_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                              event.mc_channel_number,
@@ -448,7 +455,10 @@ class LHProcessor(ATLASStudent):
             #################################################
             if self.metadata.datatype == datasets.EMBED:
                 ## Apply mc event weight:
-                event_weight *= event.mc_weight[0]
+                try:
+                    event_weight *= event.mc_weight[0]
+                except AttributeError:
+                    pass
 
                 #Tau/Electron misidentification correction
                 event_weight *= TauEfficiencySF(event, self.metadata.datatype)
