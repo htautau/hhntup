@@ -72,7 +72,8 @@ class HHSkim2(ATLASStudent):
             grls = []
             merged_grl = goodruns.GRL()
             for fname in self.files:
-                merged_grl |= goodruns.GRL('%s:/Lumi/%s' % (fname, self.metadata.treename))
+                merged_grl |= goodruns.GRL(
+                        '%s:/Lumi/%s' % (fname, self.metadata.treename))
             lumi_dir = self.output.mkdir('Lumi')
             lumi_dir.cd()
             xml_string= ROOT.TObjString(merged_grl.str())
@@ -108,31 +109,36 @@ class HHSkim2(ATLASStudent):
             onfilechange.append((update_trigger_config, (trigger_config,)))
 
         # initialize the TreeChain of all input files
-        chain = TreeChain(self.metadata.treename,
-                          files=self.files,
-                          events=self.events,
-                          onfilechange=onfilechange)
+        chain = TreeChain(
+                self.metadata.treename,
+                files=self.files,
+                events=self.events,
+                onfilechange=onfilechange)
 
         Model = Skim2Variables
         if self.metadata.datatype == datasets.DATA:
             Model += TriggerMatching
 
-        tree = Tree(name=self.metadata.treename,
-                    file=self.output,
-                    model=Model)
+        tree = Tree(
+                name=self.metadata.treename,
+                file=self.output,
+                model=Model)
 
-        tree.set_buffer(chain.buffer,
-                        create_branches=True)
+        tree.set_buffer(
+                chain.buffer,
+                create_branches=True)
 
         # set the event filters
         event_filters = EventFilterList([
-            GRLFilter(self.grl,
-                      passthrough=(self.metadata.datatype != datasets.DATA
-                                   or self.metadata.year == 2012)),
-            Triggers(datatype=self.metadata.datatype,
-                     year=self.metadata.year,
-                     skim=False,
-                     passthrough=self.metadata.datatype == datasets.EMBED),
+            GRLFilter(
+                self.grl,
+                passthrough=(self.metadata.datatype != datasets.DATA
+                             or self.metadata.year == 2012)),
+            Triggers(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                skim=False,
+                passthrough=self.metadata.datatype == datasets.EMBED),
             PriVertex(),
             LArError(),
             # no need to recalibrate jets in 2012 (yet...)
@@ -162,13 +168,15 @@ class HHSkim2(ATLASStudent):
             # only for p1130 samples (applied in skim1)
             #TauIDpatch('ParametrizedBDTSelection.root',
             #    passthrough=self.metadata.year != 2012),
-            TauIDMedium(2),
-            TauTriggerMatch(config=trigger_config,
-                            year=self.metadata.year,
-                            datatype=self.metadata.datatype,
-                            skim=True,
-                            tree=tree,
-                            passthrough=self.metadata.datatype == datasets.EMBED),
+            # changed to loose to provide larger OS control region
+            TauIDLoose(2),
+            TauTriggerMatch(
+                config=trigger_config,
+                year=self.metadata.year,
+                datatype=self.metadata.datatype,
+                skim=True,
+                tree=tree,
+                passthrough=self.metadata.datatype == datasets.EMBED),
         ])
 
         self.filters['event'] = event_filters
@@ -176,19 +184,49 @@ class HHSkim2(ATLASStudent):
         chain.filters += event_filters
 
         # define tree collections
-        chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
-        chain.define_collection(name="taus_EF", prefix="trig_EF_tau_",
-                                size="trig_EF_tau_n", mix=TauFourMomentum)
-
+        chain.define_collection(
+                name="taus",
+                prefix="tau_",
+                size="tau_n",
+                mix=TauFourMomentum)
+        chain.define_collection(
+                name="taus_EF",
+                prefix="trig_EF_tau_",
+                size="trig_EF_tau_n",
+                mix=TauFourMomentum)
         # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
-        chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
-        chain.define_collection(name="jets_EM", prefix="jet_AntiKt4TopoEM_",
-                size="jet_AntiKt4TopoEM_n", mix=FourMomentum)
-        chain.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n", mix=MCTauFourMomentum)
-        chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
-        chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
-        chain.define_collection(name="electrons", prefix="el_", size="el_n")
-        chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
+        chain.define_collection(
+                name="jets",
+                prefix="jet_",
+                size="jet_n",
+                mix=FourMomentum)
+        chain.define_collection(
+                name="jets_EM",
+                prefix="jet_AntiKt4TopoEM_",
+                size="jet_AntiKt4TopoEM_n",
+                mix=FourMomentum)
+        chain.define_collection(
+                name="truetaus",
+                prefix="trueTau_",
+                size="trueTau_n",
+                mix=MCTauFourMomentum)
+        chain.define_collection(
+                name="mc",
+                prefix="mc_",
+                size="mc_n",
+                mix=MCParticle)
+        chain.define_collection(
+                name="muons",
+                prefix="mu_staco_",
+                size="mu_staco_n")
+        chain.define_collection(
+                name="electrons",
+                prefix="el_",
+                size="el_n")
+        chain.define_collection(
+                name="vertices",
+                prefix="vxp_",
+                size="vxp_n")
 
         # define tree objects
         tree.define_object(name='tau1', prefix='tau1_')
@@ -199,9 +237,11 @@ class HHSkim2(ATLASStudent):
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
             if self.metadata.datatype == datasets.MC:
-                validate_log = open('skim2_validate_mc_%d.txt' % chain.mc_channel_number, 'w')
+                validate_log = open('skim2_validate_mc_%d.txt' %
+                        chain.mc_channel_number, 'w')
             else:
-                validate_log = open('skim2_validate_data_%d.txt' % chain.RunNumber, 'w')
+                validate_log = open('skim2_validate_data_%d.txt' %
+                        chain.RunNumber, 'w')
 
         if self.metadata.datatype == datasets.MC:
             from externaltools import PileupReweighting
@@ -209,12 +249,20 @@ class HHSkim2(ATLASStudent):
             # Initialize the pileup reweighting tool
             pileup_tool = Root.TPileupReweighting()
             if self.metadata.year == 2011:
-                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc11b_defaults.prw.root'))
-                pileup_tool.AddLumiCalcFile('lumi/2011/hadhad/ilumicalc_histograms_None_178044-191933.root')
+                pileup_tool.AddConfigFile(
+                        PileupReweighting.get_resource(
+                            'mc11b_defaults.prw.root'))
+                pileup_tool.AddLumiCalcFile(
+                        'lumi/2011/hadhad/'
+                        'ilumicalc_histograms_None_178044-191933.root')
             elif self.metadata.year == 2012:
-                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc12a_defaults.prw.root'))
+                pileup_tool.AddConfigFile(
+                        PileupReweighting.get_resource(
+                            'mc12a_defaults.prw.root'))
                 pileup_tool.SetDataScaleFactors(1./1.11)
-                pileup_tool.AddLumiCalcFile('lumi/2012/hadhad/ilumicalc_histograms_None_200841-205113.root')
+                pileup_tool.AddLumiCalcFile(
+                        'lumi/2012/hadhad/'
+                        'ilumicalc_histograms_None_200841-205113.root')
             else:
                 raise ValueError('No pileup reweighting defined for year %d' %
                         self.metadata.year)
@@ -233,9 +281,10 @@ class HHSkim2(ATLASStudent):
             selected_idx.sort()
             if self.metadata.datatype == datasets.MC:
                 # set the event weight
-                tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
-                                                                   event.mc_channel_number,
-                                                                   event.averageIntPerXing)
+                tree.pileup_weight = pileup_tool.GetCombinedWeight(
+                        event.RunNumber,
+                        event.mc_channel_number,
+                        event.averageIntPerXing)
             if VALIDATE:
                 if self.metadata.datatype == datasets.MC:
                     print >> validate_log, event.mc_channel_number,
