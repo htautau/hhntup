@@ -729,9 +729,15 @@ class MC(Sample):
             if VERBOSE:
                 print nominal_weighted_selection
 
+            current_hist = hist.Clone()
+            current_hist.Reset()
+
             # fill nominal histogram
             for expr in exprs:
-                nominal_tree.Draw(expr, nominal_weighted_selection, hist=hist)
+                nominal_tree.Draw(expr, nominal_weighted_selection,
+                        hist=current_hist)
+
+            hist += current_hist
 
             if not self.systematics:
                 continue
@@ -743,7 +749,7 @@ class MC(Sample):
                 if sys_term == 'NOMINAL':
                     continue
 
-                sys_hist = hist.Clone()
+                sys_hist = current_hist.Clone()
 
                 sys_tree = sys_trees[sys_term]
                 sys_event = sys_events[sys_term]
@@ -772,7 +778,7 @@ class MC(Sample):
             # iterate over weight systematics on the nominal tree
             for weight_branches, sys_term in self.iter_weight_branches():
 
-                sys_hist = hist.Clone()
+                sys_hist = current_hist.Clone()
                 sys_hist.Reset()
 
                 weighted_selection = (
@@ -788,6 +794,25 @@ class MC(Sample):
                     sys_hists[sys_term] = sys_hist
                 else:
                     sys_hists[sys_term] += sys_hist
+
+            # QCD + Ztautau fit error
+            if isinstance(self, Ztautau):
+                up_fit = current_hist.Clone()
+                up_fit *= ((self.scale + self.scale_error) / self.scale)
+                down_fit = current_hist.Clone()
+                down_fit *= ((self.scale - self.scale_error) / self.scale)
+                if ('FIT_UP',) not in sys_hists:
+                    sys_hists[('FIT_UP',)] = up_fit
+                    sys_hists[('FIT_DOWN',)] = down_fit
+                else:
+                    sys_hists[('FIT_UP',)] += up_fit
+                    sys_hists[('FIT_DOWN',)] += down_fit
+            else:
+                for _term in [('FIT_UP',), ('FIT_DOWN',)]:
+                    if _term not in sys_hists:
+                        sys_hists[_term] = current_hist.Clone()
+                    else:
+                        sys_hists[_term] += current_hist.Clone()
 
         # set the systematics
         hist.systematics = sys_hists
@@ -838,7 +863,11 @@ class MC(Sample):
                 yield weight, event
 
 
-class MC_Ztautau(MC, Background):
+class Ztautau:
+    pass
+
+
+class MC_Ztautau(MC, Ztautau, Background):
 
     def __init__(self, color='#00a4ff', **kwargs):
         """
@@ -851,13 +880,14 @@ class MC_Ztautau(MC, Background):
         self.samples = yml['samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [tuple(term.split(',')) for term in syst]
+        self.scale_error = 0.
         super(MC_Ztautau, self).__init__(
                 color=color,
                 systematics_terms=systematics_terms,
                 **kwargs)
 
 
-class Embedded_Ztautau(MC, Background):
+class Embedded_Ztautau(MC, Ztautau, Background):
 
     def __init__(self, color='#00a4ff', **kwargs):
         """
@@ -871,6 +901,7 @@ class Embedded_Ztautau(MC, Background):
         systematics_samples = yml['systematics_samples']
         syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
         systematics_terms = [tuple(term.split(',')) for term in syst]
+        self.scale_error = 0.
         super(Embedded_Ztautau, self).__init__(
                 color=color,
                 systematics_samples=systematics_samples,
@@ -1023,6 +1054,7 @@ class QCD(Sample):
         self.name = 'QCD'
         self.label = 'QCD Multi-jet'
         self.scale = 1.
+        self.scale_error = 0.
         self.shape_region = shape_region
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
@@ -1047,7 +1079,12 @@ class QCD(Sample):
         if hasattr(MC_bkg_notOS, 'systematics'):
             hist.systematics = {}
             for sys_term, sys_hist in MC_bkg_notOS.systematics.items():
-                hist.systematics[sys_term] = (data_hist - sys_hist) * self.scale
+                scale = self.scale
+                if sys_term == ('FIT_UP',):
+                    scale = self.scale + self.scale_error
+                elif sys_term == ('FIT_DOWN',):
+                    scale = self.scale - self.scale_error
+                hist.systematics[sys_term] = (data_hist - sys_hist) * scale
 
         hist.SetTitle(self.label)
 

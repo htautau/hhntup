@@ -427,6 +427,7 @@ SYSTEMATICS = [
     #('ISOL_UP', 'ISOL_DOWN'),
     ('TRIGGER_UP', 'TRIGGER_DOWN'),
     ('FAKERATE_UP', 'FAKERATE_DOWN'),
+    ('FIT_UP', 'FIT_DOWN'),
 ]
 
 
@@ -513,7 +514,9 @@ if __name__ == '__main__':
             continue
 
         qcd.scale = qcd_scale
+        qcd.scale_error = qcd_scale_error
         ztautau.scale = ztautau_scale
+        ztautau.scale_error = ztautau_scale_error
 
         for expr, var_info in VARIABLES.items():
 
