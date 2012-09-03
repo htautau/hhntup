@@ -99,6 +99,7 @@ def draw(model,
     if data is None:
         show_ratio=False
         show_qq=False
+
     vscale = 1.
     left_margin = 0.16
     bottom_margin = 0.16
@@ -411,9 +412,9 @@ def draw(model,
     plt.close(fig)
     return fig
 
-
+"""
 def significance():
-    """
+
     # plot the signal significance on the same axis
     sig_ax = ax.twinx()
     # reverse cumsum
@@ -441,5 +442,4 @@ def significance():
             xytext=(max_cut + 0.1 * 1., max_sig),
                  arrowprops=dict(color='black', shrink=0.15),
                  ha='left', va='center', color='black')
-    """
-    pass
+"""
