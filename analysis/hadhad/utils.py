@@ -105,6 +105,7 @@ def draw(model,
     top_margin = 0.05
     right_margin = 0.05
     ratio_sep_margin = 0.025
+    ypadding = (.55, .1)
 
     width = 1. - right_margin - left_margin
     height = 1. - top_margin - bottom_margin
@@ -179,7 +180,7 @@ def draw(model,
 
     model_bars = rplt.bar(model, linewidth=0,
             stacked=True, axes=hist_ax,
-            ypadding=(.55, .1))
+            ypadding=ypadding)
 
     if signal is not None:
         if signal_scale != 1.:
@@ -195,11 +196,11 @@ def draw(model,
         if isinstance(signal, (list, tuple)):
             signal_bars = rplt.bar(signal, linewidth=0,
                     stacked=True, yerr='quadratic',
-                    axes=hist_ax, alpha=.8, ypadding=(.55, .1))
+                    axes=hist_ax, alpha=.8, ypadding=ypadding)
         else:
             _, _, signal_bars = rplt.hist(signal,
                     histtype='stepfilled',
-                    axes=hist_ax, ypadding=(.55, .1))
+                    axes=hist_ax, ypadding=ypadding)
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
@@ -306,18 +307,6 @@ def draw(model,
             low_band[i] = sum_low
         # draw band as hatched histogram with base of model - low_band
         # and height of high_band + low_band
-        """
-        band_base = total_model - low_band
-        band_height = high_band + low_band
-        band_height.fillstyle = '/'
-        band_height.linecolor = 'yellow'
-        band_bars = rplt.bar(band_height,
-                bottom=band_base,
-                linewidth=1,
-                axes=hist_ax,
-                ypadding=(.55, .1),
-                fill=False)
-        """
         rplt.fill_between(total_model + high_band,
                     total_model - low_band,
                     edgecolor='yellow',
@@ -345,7 +334,8 @@ def draw(model,
 
     if data is not None:
         data_bars = rplt.errorbar(data,
-                fmt='o', axes=hist_ax, ypadding=(.55, .1),
+                fmt='o', axes=hist_ax,
+                ypadding=ypadding,
                 emptybins=False,
                 barsabove=True,
                 zorder=1000)
