@@ -312,6 +312,7 @@ def draw(model,
             low_band[i] = sum_low
         # draw band as hatched histogram with base of model - low_band
         # and height of high_band + low_band
+        """
         band_base = total_model - low_band
         band_height = high_band + low_band
         band_height.fillstyle = '/'
@@ -322,6 +323,14 @@ def draw(model,
                 axes=hist_ax,
                 ypadding=(.55, .1),
                 fill=False)
+        """
+        rplt.fill_between(total_model + high_band,
+                    total_model - low_band,
+                    edgecolor='yellow',
+                    facecolor=(0,0,0,0),
+                    hatch='/',
+                    axes=hist_ax,
+                    zorder=1000)
 
         if show_ratio:
             # plot band on ratio plot
