@@ -204,19 +204,17 @@ class Triggers(EventFilter):
         'EF_2tau38T_medium1'
     ]
 
-    def __init__(self, datatype, year=None, skim=False, **kwargs):
+    def __init__(self, datatype, year, **kwargs):
 
-        if year is None:
-            year = datetime.datetime.now().year
         year %= 1000
         if year == 11:
             if datatype == datasets.DATA:
                 self.passes = self.passes_data11
             else:
-                if skim:
-                    self.passes = self.passes_mc11_skim
-                else:
-                    self.passes = self.passes_mc11
+                #if skim:
+                #    self.passes = self.passes_mc11_skim
+                #else:
+                self.passes = self.passes_mc11
         elif year == 12:
             if datatype == datasets.DATA:
                 self.passes = self.passes_data12
@@ -237,6 +235,7 @@ class Triggers(EventFilter):
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
+    """
     def passes_mc11_skim(self, event):
         try:
             if 177986 <= event.RunNumber <= 187815: # Periods B-K
@@ -247,6 +246,7 @@ class Triggers(EventFilter):
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+    """
 
     def passes_data11(self, event):
         try:
@@ -259,14 +259,14 @@ class Triggers(EventFilter):
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
-    def passes_data12(self, event):
+    def passes_mc12(self, event):
         try:
             return event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
 
-    def passes_mc12(self, event):
+    def passes_data12(self, event):
         try:
             return event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
         except AttributeError, e:

@@ -56,8 +56,6 @@ class TauTriggerEmulation(EventFilter):
         self.trigger_tool.executeTriggers()
         emulated_trigger_passed = trigger.passed()
 
-        self.outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
-        self.outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
         self.outtree.tau_trigger_match_index.clear()
         self.outtree.tau_trigger_match_thresh.clear()
 
@@ -97,18 +95,23 @@ class TauTriggerEmulation(EventFilter):
 
                 self.outtree.tau_trigger_match_index.push_back(idx)
                 self.outtree.tau_trigger_match_thresh.push_back(thresh)
-            trigger.switchOff()
-            return True
+        else:
+            self.outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
+            self.outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
+            for tau in event.taus:
+                self.outtree.tau_trigger_match_index.push_back(-1)
+                self.outtree.tau_trigger_match_thresh.push_back(0)
+
         trigger.switchOff()
-        return False
+        return True
 
     def finalize_11(self):
 
         # turn on triggers so they show up as "active" in the report
-        trigger_A.switchOn()
-        trigger_B.switchOn()
-        trigger_C.switchOn()
+        self.trigger_A.switchOn()
+        self.trigger_B.switchOn()
+        self.trigger_C.switchOn()
 
         # finalize the trigger_tool
-        trigger_tool.finalize()
-        trigger_tool.summary()
+        self.trigger_tool.finalize()
+        self.trigger_tool.summary()
