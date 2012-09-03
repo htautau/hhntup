@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('cairo')
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import matplotlib.font_manager as fm
@@ -34,11 +33,11 @@ LATEX_PREAMBLE = '''
 ''' % package_path('unicode-math')
 """
 
-plt.rcParams['ps.useafm'] = True
-rc('text', usetex=True)
-rc('font', family='sans-serif')
+#plt.rcParams['ps.useafm'] = True
+#rc('text', usetex=True)
+#rc('font', family='sans-serif')
 rc('text.latex', preamble=LATEX_PREAMBLE)
-plt.rcParams['pdf.fonttype'] = 42
+#plt.rcParams['pdf.fonttype'] = 42
 
 
 def set_colours(hists, colour_map=cm.jet):
