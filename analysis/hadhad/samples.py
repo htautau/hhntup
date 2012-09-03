@@ -676,7 +676,7 @@ class MC(Sample):
                 kfact = 1.
                 effic = 1.
             elif isinstance(self, Embedded_Ztautau):
-                xs, kfact, effic = 1., 1., 1.
+                xs, kfact, effic = 1./100, 1., 1.
             else:
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
