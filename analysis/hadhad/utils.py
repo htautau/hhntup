@@ -179,7 +179,7 @@ def draw(model,
         set_colours(signal, signal_colour_map)
 
     model_bars = rplt.bar(model, linewidth=0,
-            stacked=True, yerr='quadratic', axes=hist_ax,
+            stacked=True, axes=hist_ax,
             ypadding=(.55, .1))
 
 
@@ -258,6 +258,7 @@ def draw(model,
     if systematics is not None:
         # draw systematics band
         # add separate variations in quadrature
+        # also include stat error in quadrature
         total_model = sum(model)
         var_high = []
         var_low = []
@@ -288,6 +289,16 @@ def draw(model,
                 total_min[i] = min(total_high[i], total_low[i], total_model[i])
             var_high.append(total_max)
             var_low.append(total_min)
+
+        # include stat error variation
+        total_model_stat_high = total_model.Clone()
+        total_model_stat_low = total_model.Clone()
+        for i in xrange(len(total_model)):
+            total_model_stat_high[i] += total_model.yerrh(i)
+            total_model_stat_low[i] -= total_model.yerrl(i)
+        var_high.append(total_model_stat_high)
+        var_low.append(total_model_stat_low)
+
         # sum variations in quadrature bin-by-bin
         high_band = total_model.Clone()
         high_band.Reset()
@@ -323,7 +334,7 @@ def draw(model,
 
             rplt.fill_between(high_ratio, low_ratio,
                     edgecolor='yellow',
-                    fill=False,
+                    facecolor=(0,0,0,0),
                     hatch='/',
                     axes=ratio_ax)
 

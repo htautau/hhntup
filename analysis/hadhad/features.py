@@ -423,8 +423,8 @@ SYSTEMATICS = [
     ('TAUBDT_UP', 'TAUBDT_DOWN'),
     ('JES_UP,TES_UP', 'JES_DOWN,TES_DOWN'),
     ('JER_UP',),
-    ('MFS_UP', 'MFS_DOWN'),
-    ('ISOL_UP', 'ISOL_DOWN'),
+    #('MFS_UP', 'MFS_DOWN'),
+    #('ISOL_UP', 'ISOL_DOWN'),
     ('TRIGGER_UP', 'TRIGGER_DOWN'),
     ('FAKERATE_UP', 'FAKERATE_DOWN'),
 ]
