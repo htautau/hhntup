@@ -315,8 +315,11 @@ class HHSkim(ATLASStudent):
 
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weight += event.mc_event_weight
-                pileup_tool.Fill(event.RunNumber, event.mc_channel_number,
-                                 event.mc_event_weight, event.averageIntPerXing);
+                pileup_tool.Fill(
+                        event.RunNumber,
+                        event.mc_channel_number,
+                        event.mc_event_weight,
+                        event.averageIntPerXing);
 
                 if self.metadata.year == 2011:
                     trigger_tool_wrapper.setEventNumber(event._entry.value)
