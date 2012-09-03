@@ -245,7 +245,8 @@ class HHSkim(ATLASStudent):
             grls = []
             merged_grl = goodruns.GRL()
             for fname in self.files:
-                merged_grl |= goodruns.GRL('%s:/Lumi/%s' % (fname, self.metadata.treename))
+                merged_grl |= goodruns.GRL(
+                        '%s:/Lumi/%s' % (fname, self.metadata.treename))
             lumi_dir = self.output.mkdir('Lumi')
             lumi_dir.cd()
             xml_string= ROOT.TObjString(merged_grl.str())
@@ -275,13 +276,17 @@ class HHSkim(ATLASStudent):
                 trigger_tool_wrapper = CoEPP.OfficialWrapper()
                 trigger_tool = CoEPP.TriggerTool()
                 trigger_tool.setWrapper(trigger_tool_wrapper)
-                trigger_config = CoEPPTrigTool.get_resource('config_EF_DiTau.xml')
+                trigger_config = CoEPPTrigTool.get_resource(
+                        'config_EF_DiTau.xml')
                 trigger_tool.setXMLFile(trigger_config)
                 trigger_tool.initializeFromXML()
 
-                trigger_A = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
-                trigger_B = trigger_tool.getTriggerChecked("EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
-                trigger_C = trigger_tool.getTriggerChecked("EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
+                trigger_A = trigger_tool.getTriggerChecked(
+                        "EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
+                trigger_B = trigger_tool.getTriggerChecked(
+                        "EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
+                trigger_C = trigger_tool.getTriggerChecked(
+                        "EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
 
                 trigger_run_dict = {
                     180164: (trigger_A, 'EF_tau29_medium1_tau20_medium1'),
@@ -293,9 +298,11 @@ class HHSkim(ATLASStudent):
                 def update_trigger_trees(student, trigger_tool_wrapper, name, file, tree):
 
                     trigger_tool_wrapper.loadMainTree(tree)
-                    trigger_tool_wrapper.loadMetaTree(file.Get('%sMeta/TrigConfTree' % name))
+                    trigger_tool_wrapper.loadMetaTree(
+                            file.Get('%sMeta/TrigConfTree' % name))
 
-                onfilechange.append((update_trigger_trees, (self, trigger_tool_wrapper,)))
+                onfilechange.append(
+                        (update_trigger_trees, (self, trigger_tool_wrapper,)))
 
         # initialize the TreeChain of all input files
         intree = TreeChain(self.metadata.treename,
@@ -320,9 +327,10 @@ class HHSkim(ATLASStudent):
 
         if self.metadata.datatype == datasets.DATA:
             # outtree_extra holds info for events not included in the skim
-            outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_after_trigger',
-                                 file=self.output,
-                                 model=SkimExtraModel + SkimExtraTauPtModel)
+            outtree_extra = Tree(
+                    name=self.metadata.treename + '_failed_skim_after_trigger',
+                    file=self.output,
+                    model=SkimExtraModel + SkimExtraTauPtModel)
 
             extra_variables = [
                 'trig_EF_tau_pt',
@@ -343,34 +351,58 @@ class HHSkim(ATLASStudent):
             else:
                 raise ValueError("No triggers defined for year %d" % year)
 
-            outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
+            outtree_extra.set_buffer(
+                    intree.buffer,
+                    branches=extra_variables,
+                    create_branches=True,
+                    visible=False)
         else:
             # write out some branches for all events
             # that failed the skim before trigger only for MC
             # Used to get the total pileup reweighting sum
             if self.metadata.datatype == datasets.MC:
-                outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_trigger',
-                                     file=self.output)
+                outtree_extra = Tree(
+                        name=self.metadata.treename + '_failed_skim_before_trigger',
+                        file=self.output)
             else: #embedding
-                outtree_extra = Tree(name=self.metadata.treename + '_failed_skim_before_selection',
-                                     file=self.output)
+                outtree_extra = Tree(
+                        name=self.metadata.treename + '_failed_skim_before_selection',
+                        file=self.output)
             extra_variables = [
                 'actualIntPerXing',
                 'averageIntPerXing',
                 'RunNumber',
             ]
-            outtree_extra.set_buffer(intree.buffer, branches=extra_variables, create_branches=True, visible=False)
+            outtree_extra.set_buffer(
+                    intree.buffer,
+                    branches=extra_variables,
+                    create_branches=True, visible=False)
 
         # set the event filters
-        trigger_filter = Triggers(datatype=self.metadata.datatype,
-                                  year=self.metadata.year,
-                                  skim=True)
+        trigger_filter = Triggers(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                skim=True)
 
         # define tau collection
-        intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
-        intree.define_collection(name="electrons", prefix="el_", size="el_n")
-        intree.define_collection(name='vertices', prefix='vxp_', size='vxp_n')
-        intree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
+        intree.define_collection(
+                name='taus',
+                prefix='tau_',
+                size='tau_n',
+                mix=TauFourMomentum)
+        intree.define_collection(
+                name="electrons",
+                prefix="el_",
+                size="el_n")
+        intree.define_collection(
+                name='vertices',
+                prefix='vxp_',
+                size='vxp_n')
+        intree.define_collection(
+                name="mc",
+                prefix="mc_",
+                size="mc_n",
+                mix=MCParticle)
 
         nevents = 0
         nevents_mc_weight = 0
@@ -471,9 +503,11 @@ class HHSkim(ATLASStudent):
 
                 event.vertices.select(vertex_selection)
                 number_of_good_vertices = len(event.vertices)
-                event.taus.select(lambda tau: tau.author != 2 and tau.numTrack > 0 and
-                                              tau.pt > 18*GeV and
-                                              (tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1))
+                event.taus.select(lambda tau:
+                        tau.author != 2 and
+                        tau.numTrack > 0 and
+                        tau.pt > 18*GeV and
+                        (tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1))
                 number_of_good_taus = len(event.taus)
                 if (number_of_good_taus > 1 and
                     (self.metadata.datatype in (datasets.DATA, datasets.EMBED))) \
