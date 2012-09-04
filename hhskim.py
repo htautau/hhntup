@@ -75,9 +75,6 @@ class hhskim(ATLASStudent):
         count_funcs = {}
 
         if datatype == datasets.MC:
-            # TODO get trigger emul tool here
-            onfilechange.append(
-                        (update_trigger_trees, (self, trigger_tool_wrapper,)))
 
             def mc_weight_count(event):
                 return event.mc_event_weight
@@ -85,6 +82,17 @@ class hhskim(ATLASStudent):
             count_funcs = {
                 'mc_weight': mc_weight_count,
             }
+
+        trigger_emulation = TauTriggerEmulation(
+                year=year,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+
+        if datatype == datasets.MC:
+            onfilechange.append(
+                (trigger_emulation.update_trigger_trees,
+                    (self, trigger_emulation)))
 
         trigger_config = None
 
@@ -108,12 +116,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             #ExtraInfoTree(
             #   count_funcs=count_funcs)
-            TauTriggerEmulation(
-                year=year,
-                tree=tree,
-                passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            Triggers(
+                        Triggers(
                 datatype=datatype,
                 year=year,
                 skim=True,
