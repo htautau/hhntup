@@ -199,7 +199,8 @@ class hhskim(ATLASStudent):
                 files=self.files,
                 events=self.events,
                 onfilechange=onfilechange,
-                filters=event_filters)
+                filters=event_filters,
+                verbose=True)
 
         tree.set_buffer(
                 chain.buffer,
