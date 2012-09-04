@@ -5,17 +5,19 @@ from atlastools import utils
 from atlastools import datasets
 from atlastools.units import GeV
 from atlastools.batch import ATLASStudent
+from atlastools.filtering import GRLFilter
 
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel
 from rootpy.types import *
 from rootpy.io import open as ropen
-from rootpy.plotting import Hist
 
 from higgstautau.mixins import TauFourMomentum, MCParticle
-from higgstautau.hadhad.filters import Triggers
+from higgstautau.filters import *
+from higgstautau.hadhad.filters import *
+from higgstautau.trigger import update_trigger_config, get_trigger_config
+from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.filters import vertex_selection
 import higgstautau.skimming.hadhad as hhskimming
 from hhskimming import branches as hhbranches
 from hhskimming.models import *
@@ -79,6 +81,10 @@ class HHSkim(ATLASStudent):
             }
 
         event_filters = EventFilterList([
+            GRLFilter(
+                self.grl,
+                passthrough=(self.metadata.datatype != datasets.DATA
+                             or self.metadata.year == 2012)),
             EmbeddingPileupPatch(
                 passthrough=self.metadata.datatype != datasets.EMBED,
                 count_funcs=count_funcs),
@@ -97,6 +103,10 @@ class HHSkim(ATLASStudent):
                 year=self.metadata.year,
                 skim=True,
                 count_funcs=count_funcs),
+            PriVertex(
+                count_funcs=count_funcs),
+            LArError(
+                count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
@@ -108,6 +118,29 @@ class HHSkim(ATLASStudent):
             ElectronIDpatch(
                 passthrough=self.metadata.year != 2012,
                 count_funcs=count_funcs),
+            # no need to recalibrate jets in 2012 (yet...)
+            JetCalibration(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                verbose=VERBOSE,
+                passthrough=self.metadata.year == 2012,
+                count_funcs=count_funcs),
+            LArHole(
+                datatype=self.metadata.datatype,
+                count_funcs=count_funcs),
+            JetCleaning(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                count_funcs=count_funcs),
+            ElectronVeto(
+                count_funcs=count_funcs),
+            MuonVeto(
+                year=self.metadata.year,
+                count_funcs=count_funcs),
+            TauElectronVeto(2,
+                count_funcs=count_funcs),
+            TauMuonVeto(2,
+                count_funcs=count_funcs),
             TauAuthor(2,
                 count_funcs=count_funcs),
             TauHasTrack(2,
@@ -115,7 +148,21 @@ class HHSkim(ATLASStudent):
             TauPT(2,
                 thresh=20 * GeV,
                 count_funcs=count_funcs),
+            TauEta(2,
+                count_funcs=count_funcs),
+            TauCrack(2,
+                count_funcs=count_funcs),
+            TauLArHole(2,
+                count_funcs=count_funcs),
             TauID_BDTLoose_LLHLoose(2
+                count_funcs=count_funcs),
+            TauTriggerMatch(
+                config=trigger_config,
+                year=self.metadata.year,
+                datatype=self.metadata.datatype,
+                skim=True,
+                tree=tree,
+                passthrough=self.metadata.datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PileupReweight(
                 passthrough=self.metadata.datatype != datasets.MC,
@@ -195,25 +242,50 @@ class HHSkim(ATLASStudent):
                     create_branches=True, visible=False)
         """
 
-        # define tau collection
+        # define tree collections
         chain.define_collection(
-                name='taus',
-                prefix='tau_',
-                size='tau_n',
+                name="taus",
+                prefix="tau_",
+                size="tau_n",
                 mix=TauFourMomentum)
         chain.define_collection(
-                name="electrons",
-                prefix="el_",
-                size="el_n")
+                name="taus_EF",
+                prefix="trig_EF_tau_",
+                size="trig_EF_tau_n",
+                mix=TauFourMomentum)
+        # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
         chain.define_collection(
-                name='vertices',
-                prefix='vxp_',
-                size='vxp_n')
+                name="jets",
+                prefix="jet_",
+                size="jet_n",
+                mix=FourMomentum)
+        chain.define_collection(
+                name="jets_EM",
+                prefix="jet_AntiKt4TopoEM_",
+                size="jet_AntiKt4TopoEM_n",
+                mix=FourMomentum)
+        chain.define_collection(
+                name="truetaus",
+                prefix="trueTau_",
+                size="trueTau_n",
+                mix=MCTauFourMomentum)
         chain.define_collection(
                 name="mc",
                 prefix="mc_",
                 size="mc_n",
                 mix=MCParticle)
+        chain.define_collection(
+                name="muons",
+                prefix="mu_staco_",
+                size="mu_staco_n")
+        chain.define_collection(
+                name="electrons",
+                prefix="el_",
+                size="el_n")
+        chain.define_collection(
+                name="vertices",
+                prefix="vxp_",
+                size="vxp_n")
 
         # entering the main event loop...
         for event in chain:
