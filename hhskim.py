@@ -31,11 +31,14 @@ VALIDATE = False
 VERBOSE = False
 
 
-class HHSkim(ATLASStudent):
+class hhskim(ATLASStudent):
 
     def work(self):
 
-        if self.metadata.datatype != datasets.EMBED:
+        datatype = self.metadata.datatype
+        year = self.metadata.year
+
+        if datatype != datasets.EMBED:
             # merge TrigConfTrees
             metadirname = '%sMeta' % self.metadata.treename
             trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
@@ -45,7 +48,7 @@ class HHSkim(ATLASStudent):
             trigconfchain.Merge(self.output, -1, 'fast keep')
             self.output.cd()
 
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             # merge GRL XML strings
             grls = []
             merged_grl = goodruns.GRL()
@@ -58,9 +61,10 @@ class HHSkim(ATLASStudent):
             xml_string.Write(self.metadata.treename)
             self.output.cd()
 
-        Model = SkimExtraModel
-        if self.metadata.datatype == datasets.MC:
-            Model += TriggerEmulation
+        Model = SkimModel + TriggerMatching
+        if datatype == datasets.MC:
+            if year == 2011:
+                Model += TriggerEmulation11
 
         tree = Tree(
                 name=self.metadata.treename,
@@ -70,7 +74,7 @@ class HHSkim(ATLASStudent):
         onfilechange = []
         count_funcs = {}
 
-        if self.metadata.datatype == datasets.MC:
+        if datatype == datasets.MC:
             # TODO get trigger emul tool here
             onfilechange.append(
                         (update_trigger_trees, (self, trigger_tool_wrapper,)))
@@ -84,7 +88,7 @@ class HHSkim(ATLASStudent):
 
         trigger_config = None
 
-        if self.metadata.datatype != datasets.EMBED:
+        if datatype != datasets.EMBED:
             # trigger config tool to read trigger info in the ntuples
             trigger_config = get_trigger_config()
 
@@ -94,24 +98,24 @@ class HHSkim(ATLASStudent):
         event_filters = EventFilterList([
             GRLFilter(
                 self.grl,
-                passthrough=(self.metadata.datatype != datasets.DATA
-                             or self.metadata.year == 2012)),
+                passthrough=(datatype != datasets.DATA
+                             or year == 2012)),
             EmbeddingPileupPatch(
-                passthrough=self.metadata.datatype != datasets.EMBED,
+                passthrough=datatype != datasets.EMBED,
                 count_funcs=count_funcs),
             PileupTemplates(
-                passthrough=self.metadata.datatype != datasets.MC,
+                passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             #ExtraInfoTree(
             #   count_funcs=count_funcs)
             TauTriggerEmulation(
-                year=self.metadata.year,
+                year=year,
                 tree=tree,
-                passthrough=self.metadata.datatype != datasets.MC,
+                passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             Triggers(
-                datatype=self.metadata.datatype,
-                year=self.metadata.year,
+                datatype=datatype,
+                year=year,
                 skim=True,
                 count_funcs=count_funcs),
             PriVertex(
@@ -122,31 +126,31 @@ class HHSkim(ATLASStudent):
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
             TauIDpatch(
-                year=self.metadata.year,
-                passthrough=self.metadata.year != 2012,
+                year=year,
+                passthrough=year != 2012,
                 count_funcs=count_funcs),
             # patch electron ID for 2012
             ElectronIDpatch(
-                passthrough=self.metadata.year != 2012,
+                passthrough=year != 2012,
                 count_funcs=count_funcs),
             # no need to recalibrate jets in 2012 (yet...)
             JetCalibration(
-                datatype=self.metadata.datatype,
-                year=self.metadata.year,
+                datatype=datatype,
+                year=year,
                 verbose=VERBOSE,
-                passthrough=self.metadata.year == 2012,
+                passthrough=year == 2012,
                 count_funcs=count_funcs),
             LArHole(
-                datatype=self.metadata.datatype,
+                datatype=datatype,
                 count_funcs=count_funcs),
             JetCleaning(
-                datatype=self.metadata.datatype,
-                year=self.metadata.year,
+                datatype=datatype,
+                year=year,
                 count_funcs=count_funcs),
             ElectronVeto(
                 count_funcs=count_funcs),
             MuonVeto(
-                year=self.metadata.year,
+                year=year,
                 count_funcs=count_funcs),
             TauElectronVeto(2,
                 count_funcs=count_funcs),
@@ -169,16 +173,16 @@ class HHSkim(ATLASStudent):
                 count_funcs=count_funcs),
             TauTriggerMatch(
                 config=trigger_config,
-                year=self.metadata.year,
-                datatype=self.metadata.datatype,
+                year=year,
+                datatype=datatype,
                 skim=True,
                 tree=tree,
-                passthrough=self.metadata.datatype == datasets.EMBED,
+                passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PileupReweight(
-                year=self.metadata.year,
+                year=year,
                 tree=tree,
-                passthrough=self.metadata.datatype != datasets.MC,
+                passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
         ])
 
@@ -201,7 +205,7 @@ class HHSkim(ATLASStudent):
                 visible=False)
 
         """
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             # tree_extra holds info for events not included in the skim
             tree_extra = Tree(
                     name=self.metadata.treename + '_failed_skim_after_trigger',
@@ -220,9 +224,9 @@ class HHSkim(ATLASStudent):
                 'lbn'
             ]
 
-            if self.metadata.year % 1000 == 11:
+            if year % 1000 == 11:
                 extra_variables += Triggers.triggers_11
-            elif self.metadata.year % 1000 == 12:
+            elif year % 1000 == 12:
                 extra_variables += Triggers.triggers_12
             else:
                 raise ValueError("No triggers defined for year %d" % year)
@@ -236,7 +240,7 @@ class HHSkim(ATLASStudent):
             # write out some branches for all events
             # that failed the skim before trigger only for MC
             # Used to get the total pileup reweighting sum
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 tree_extra = Tree(
                         name=self.metadata.treename + '_failed_skim_before_trigger',
                         file=self.output)
@@ -302,11 +306,14 @@ class HHSkim(ATLASStudent):
 
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 validate_log = open('skim2_validate_mc_%d.txt' %
                         chain.mc_channel_number, 'w')
-            else:
+            elif datatype == datasets.DATA:
                 validate_log = open('skim2_validate_data_%d.txt' %
+                        chain.RunNumber, 'w')
+            else:
+                validate_log = open('skim2_validate_embedded_%d.txt' %
                         chain.RunNumber, 'w')
 
         # entering the main event loop...
@@ -314,37 +321,37 @@ class HHSkim(ATLASStudent):
 
             event.vertices.select(vertex_selection)
             tree.number_of_good_vertices = len(event.vertices)
-            if self.metadata.datatype == datasets.EMBED:
+
+            if datatype == datasets.EMBED:
                 # select two leading taus by pT
                 event.taus.sort(key=lambda tau: tau.pt, reverse=True)
                 event.taus.slice(stop=2)
+
             assert len(event.taus) == 2
+
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
-            if self.metadata.datatype == datasets.MC:
-                # set the event weight
-                tree.pileup_weight = pileup_tool.GetCombinedWeight(
-                        event.RunNumber,
-                        event.mc_channel_number,
-                        event.averageIntPerXing)
+
             if VALIDATE:
-                if self.metadata.datatype == datasets.MC:
+                if datatype == datasets.MC:
                     print >> validate_log, event.mc_channel_number,
                 print >> validate_log, event.RunNumber, event.EventNumber,
                 print >> validate_log, "%.4f" % tree.pileup_weight,
                 for idx in selected_idx:
                     print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
                 print >> validate_log
+
             tree.tau_selected.clear()
             for i in xrange(event.tau_n):
                 if i in selected_idx:
                     tree.tau_selected.push_back(True)
                 else:
                     tree.tau_selected.push_back(False)
+
             tree.Fill()
 
             """
-            elif self.metadata.datatype == datasets.DATA:
+            elif datatype == datasets.DATA:
                 tree_extra.number_of_good_vertices = number_of_good_vertices
                 if event.taus:
                     # There can be at most one good tau if this event failed the skim
@@ -352,14 +359,14 @@ class HHSkim(ATLASStudent):
                 else:
                     tree_extra.tau_pt = -1111.
                 tree_extra.Fill()
-            elif self.metadata.datatype == datasets.EMBED:
+            elif datatype == datasets.EMBED:
                 tree_extra.Fill()
             """
 
         self.output.cd()
 
         """
-        if self.metadata.datatype == datasets.MC:
+        if datatype == datasets.MC:
             # store the original weighted number of events
             cutflow = Hist(2, 0, 2, name='cutflow', type='D')
             cutflow[1] = nevents_mc_weight
