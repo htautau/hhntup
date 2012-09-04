@@ -7,7 +7,7 @@ PileupReweighting = Root.TPileupReweighting
 
 class PileupTemplates(EventFilter):
 
-    def __init__(self, year):
+    def __init__(self, year, **kwargs):
 
         # initialize the pileup reweighting tool
         self.pileup_tool = PileupReweighting()
@@ -16,6 +16,7 @@ class PileupTemplates(EventFilter):
         elif year == 2012:
             self.pileup_tool.UsePeriodConfig("MC12a")
         self.pileup_tool.Initialize()
+        super(PileupTemplates, self).__init__(**kwargs)
 
     def passes(self, event):
 

@@ -164,6 +164,8 @@ class HHSkim(ATLASStudent):
                 passthrough=self.metadata.datatype != datasets.MC),
         ])
 
+        self.filters['event'] = event_filters
+
         onfilechange = []
 
         if self.metadata.datatype == datasets.MC:
@@ -176,7 +178,8 @@ class HHSkim(ATLASStudent):
                 self.metadata.treename,
                 files=self.files,
                 events=self.events,
-                onfilechange=onfilechange)
+                onfilechange=onfilechange,
+                filters=event_filters)
 
         outtree.set_buffer(
                 chain.buffer,

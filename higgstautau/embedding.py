@@ -17,5 +17,5 @@ class EmbeddingPileupPatch(EventFilter):
             event.averageIntPerXing = averageIntPerXing
         else:
             print "pdgID 39 not found! Skipping event..."
-            nevents -= 1
-            continue
+            return None
+        return True

@@ -8,7 +8,7 @@ class TauTriggerEmulation(EventFilter):
     """
     Tau trigger emulation (only apply on MC)
     """
-    def __init__(self, year, outtree):
+    def __init__(self, year, outtree, **kwargs):
 
         self.outtree = outtree
 
@@ -38,6 +38,8 @@ class TauTriggerEmulation(EventFilter):
 
             self.passes = self.passes_11
             self.finalize = self.finalize_11
+
+        super(TauTriggerEmulation, self).__init__(**kwargs)
 
     @staticmethod
     def update_trigger_trees(student, tool, name, file, tree):
