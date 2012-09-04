@@ -1,4 +1,4 @@
-from rootpy.tree.filters import EventFilter
+from rootpy.tree.filtering import EventFilter
 
 from externaltools import CoEPPTrigTool
 from ROOT import CoEPP
@@ -8,38 +8,41 @@ class TauTriggerEmulation(EventFilter):
     """
     Tau trigger emulation (only apply on MC)
     """
-    def __init__(self, year, tree, **kwargs):
+    def __init__(self, year, tree, passthrough=False, **kwargs):
 
-        self.tree = tree
+        if not passthrough:
+            self.tree = tree
 
-        if year == 2011: # only can emulate 2011 currently...
-            # initialize the trigger emulation tool
-            self.trigger_tool_wrapper = CoEPP.OfficialWrapper()
-            self.trigger_tool = CoEPP.TriggerTool()
-            self.trigger_tool.setWrapper(trigger_tool_wrapper)
-            trigger_config = CoEPPTrigTool.get_resource(
-                    'config_EF_DiTau.xml')
-            self.trigger_tool.setXMLFile(trigger_config)
-            self.trigger_tool.initializeFromXML()
+            if year == 2011: # only can emulate 2011 currently...
+                # initialize the trigger emulation tool
+                self.trigger_tool_wrapper = CoEPP.OfficialWrapper()
+                self.trigger_tool = CoEPP.TriggerTool()
+                self.trigger_tool.setWrapper(self.trigger_tool_wrapper)
+                trigger_config = CoEPPTrigTool.get_resource(
+                        'config_EF_DiTau.xml')
+                self.trigger_tool.setXMLFile(trigger_config)
+                self.trigger_tool.initializeFromXML()
 
-            self.trigger_A = trigger_tool.getTriggerChecked(
-                    "EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
-            self.trigger_B = trigger_tool.getTriggerChecked(
-                    "EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
-            self.trigger_C = trigger_tool.getTriggerChecked(
-                    "EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
+                self.trigger_A = self.trigger_tool.getTriggerChecked(
+                        "EF_tau29_medium1_tau20_medium1_Hypo_00_02_42")
+                self.trigger_B = self.trigger_tool.getTriggerChecked(
+                        "EF_tau29_medium1_tau20_medium1_Hypo_00_03_02")
+                self.trigger_C = self.trigger_tool.getTriggerChecked(
+                        "EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02")
 
-            self.trigger_run_dict = {
-                180164: (self.trigger_A, 'EF_tau29_medium1_tau20_medium1'),
-                183003: (self.trigger_B, 'EF_tau29_medium1_tau20_medium1'),
-                186169: (self.trigger_B, 'EF_tau29_medium1_tau20_medium1'),
-                189751: (self.trigger_C, 'EF_tau29T_medium1_tau20T_medium1'),
-            }
+                self.trigger_run_dict = {
+                    180164: (self.trigger_A, 'EF_tau29_medium1_tau20_medium1'),
+                    183003: (self.trigger_B, 'EF_tau29_medium1_tau20_medium1'),
+                    186169: (self.trigger_B, 'EF_tau29_medium1_tau20_medium1'),
+                    189751: (self.trigger_C, 'EF_tau29T_medium1_tau20T_medium1'),
+                }
 
-            self.passes = self.passes_11
-            self.finalize = self.finalize_11
+                self.passes = self.passes_11
+                self.finalize = self.finalize_11
 
-        super(TauTriggerEmulation, self).__init__(**kwargs)
+        super(TauTriggerEmulation, self).__init__(
+                passthrough=passthrough,
+                **kwargs)
 
     @staticmethod
     def update_trigger_trees(student, tool, name, file, tree):

@@ -17,6 +17,7 @@ class PileupTemplates(EventFilter):
             elif year == 2012:
                 self.pileup_tool.UsePeriodConfig("MC12a")
             self.pileup_tool.Initialize()
+
         super(PileupTemplates, self).__init__(
                 passthrough=passthrough,
                 **kwargs)
@@ -28,6 +29,7 @@ class PileupTemplates(EventFilter):
             event.mc_channel_number,
             event.mc_event_weight,
             event.averageIntPerXing)
+        return True
 
     def finalize(self):
 

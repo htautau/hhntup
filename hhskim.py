@@ -12,16 +12,17 @@ from rootpy.tree import Tree, TreeChain, TreeModel
 from rootpy.types import *
 from rootpy.io import open as ropen
 
-from higgstautau.mixins import TauFourMomentum, MCParticle
+from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
+from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
+from higgstautau.trigger.emulation import TauTriggerEmulation
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-import higgstautau.skimming.hadhad as hhskimming
-from hhskimming import branches as hhbranches
-from hhskimming.models import *
-from higgtautau.pileup import PileupTemplates, PileupReweight
+from higgstautau.skimming.hadhad import branches as hhbranches
+from higgstautau.skimming.hadhad.models import *
+from higgstautau.pileup import PileupTemplates, PileupReweight
 
 import goodruns
 
@@ -107,19 +108,20 @@ class hhskim(ATLASStudent):
             GRLFilter(
                 self.grl,
                 passthrough=(datatype != datasets.DATA
-                             or year == 2012)),
+                             or year == 2012),
+                count_funcs=count_funcs),
             EmbeddingPileupPatch(
                 passthrough=datatype != datasets.EMBED,
                 count_funcs=count_funcs),
             PileupTemplates(
+                year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             #ExtraInfoTree(
             #   count_funcs=count_funcs)
-                        Triggers(
+            Triggers(
                 datatype=datatype,
                 year=year,
-                skim=True,
                 count_funcs=count_funcs),
             PriVertex(
                 count_funcs=count_funcs),
@@ -172,7 +174,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauLArHole(2,
                 count_funcs=count_funcs),
-            TauID_BDTLoose_LLHLoose(2
+            TauID_BDTLoose_LLHLoose(2,
                 count_funcs=count_funcs),
             TauTriggerMatch(
                 config=trigger_config,
