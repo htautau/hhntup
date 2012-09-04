@@ -27,6 +27,8 @@ import goodruns
 
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
+VALIDATE = False
+VERBOSE = False
 
 
 class HHSkim(ATLASStudent):
@@ -60,7 +62,7 @@ class HHSkim(ATLASStudent):
         if self.metadata.datatype == datasets.MC:
             Model += TriggerEmulation
 
-        outtree = Tree(
+        tree = Tree(
                 name=self.metadata.treename,
                 file=self.output,
                 model=Model)
@@ -80,6 +82,15 @@ class HHSkim(ATLASStudent):
                 'mc_weight': mc_weight_count,
             }
 
+        trigger_config = None
+
+        if self.metadata.datatype != datasets.EMBED:
+            # trigger config tool to read trigger info in the ntuples
+            trigger_config = get_trigger_config()
+
+            # update the trigger config maps on every file change
+            onfilechange.append((update_trigger_config, (trigger_config,)))
+
         event_filters = EventFilterList([
             GRLFilter(
                 self.grl,
@@ -95,7 +106,7 @@ class HHSkim(ATLASStudent):
             #   count_funcs=count_funcs)
             TauTriggerEmulation(
                 year=self.metadata.year,
-                outtree=outtree,
+                tree=tree,
                 passthrough=self.metadata.datatype != datasets.MC,
                 count_funcs=count_funcs),
             Triggers(
@@ -165,6 +176,8 @@ class HHSkim(ATLASStudent):
                 passthrough=self.metadata.datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PileupReweight(
+                year=self.metadata.year,
+                tree=tree,
                 passthrough=self.metadata.datatype != datasets.MC,
                 count_funcs=count_funcs),
         ])
@@ -179,7 +192,7 @@ class HHSkim(ATLASStudent):
                 onfilechange=onfilechange,
                 filters=event_filters)
 
-        outtree.set_buffer(
+        tree.set_buffer(
                 chain.buffer,
                 ignore_branches=chain.glob(
                     hhbranches.REMOVE,
@@ -189,8 +202,8 @@ class HHSkim(ATLASStudent):
 
         """
         if self.metadata.datatype == datasets.DATA:
-            # outtree_extra holds info for events not included in the skim
-            outtree_extra = Tree(
+            # tree_extra holds info for events not included in the skim
+            tree_extra = Tree(
                     name=self.metadata.treename + '_failed_skim_after_trigger',
                     file=self.output,
                     model=SkimExtraModel + SkimExtraTauPtModel)
@@ -214,7 +227,7 @@ class HHSkim(ATLASStudent):
             else:
                 raise ValueError("No triggers defined for year %d" % year)
 
-            outtree_extra.set_buffer(
+            tree_extra.set_buffer(
                     chain.buffer,
                     branches=extra_variables,
                     create_branches=True,
@@ -224,11 +237,11 @@ class HHSkim(ATLASStudent):
             # that failed the skim before trigger only for MC
             # Used to get the total pileup reweighting sum
             if self.metadata.datatype == datasets.MC:
-                outtree_extra = Tree(
+                tree_extra = Tree(
                         name=self.metadata.treename + '_failed_skim_before_trigger',
                         file=self.output)
             else: #embedding
-                outtree_extra = Tree(
+                tree_extra = Tree(
                         name=self.metadata.treename + '_failed_skim_before_selection',
                         file=self.output)
             extra_variables = [
@@ -236,7 +249,7 @@ class HHSkim(ATLASStudent):
                 'averageIntPerXing',
                 'RunNumber',
             ]
-            outtree_extra.set_buffer(
+            tree_extra.set_buffer(
                     chain.buffer,
                     branches=extra_variables,
                     create_branches=True, visible=False)
@@ -287,23 +300,60 @@ class HHSkim(ATLASStudent):
                 prefix="vxp_",
                 size="vxp_n")
 
+        if VALIDATE: # only validate on a single data run or MC channel
+            chain.GetEntry(0)
+            if self.metadata.datatype == datasets.MC:
+                validate_log = open('skim2_validate_mc_%d.txt' %
+                        chain.mc_channel_number, 'w')
+            else:
+                validate_log = open('skim2_validate_data_%d.txt' %
+                        chain.RunNumber, 'w')
+
         # entering the main event loop...
         for event in chain:
 
             event.vertices.select(vertex_selection)
-            outtree.number_of_good_vertices = len(event.vertices)
-            outtree.Fill()
+            tree.number_of_good_vertices = len(event.vertices)
+            if self.metadata.datatype == datasets.EMBED:
+                # select two leading taus by pT
+                event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+                event.taus.slice(stop=2)
+            assert len(event.taus) == 2
+            selected_idx = [tau.index for tau in event.taus]
+            selected_idx.sort()
+            if self.metadata.datatype == datasets.MC:
+                # set the event weight
+                tree.pileup_weight = pileup_tool.GetCombinedWeight(
+                        event.RunNumber,
+                        event.mc_channel_number,
+                        event.averageIntPerXing)
+            if VALIDATE:
+                if self.metadata.datatype == datasets.MC:
+                    print >> validate_log, event.mc_channel_number,
+                print >> validate_log, event.RunNumber, event.EventNumber,
+                print >> validate_log, "%.4f" % tree.pileup_weight,
+                for idx in selected_idx:
+                    print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
+                print >> validate_log
+            tree.tau_selected.clear()
+            for i in xrange(event.tau_n):
+                if i in selected_idx:
+                    tree.tau_selected.push_back(True)
+                else:
+                    tree.tau_selected.push_back(False)
+            tree.Fill()
+
             """
             elif self.metadata.datatype == datasets.DATA:
-                outtree_extra.number_of_good_vertices = number_of_good_vertices
+                tree_extra.number_of_good_vertices = number_of_good_vertices
                 if event.taus:
                     # There can be at most one good tau if this event failed the skim
-                    outtree_extra.tau_pt = event.taus[0].pt
+                    tree_extra.tau_pt = event.taus[0].pt
                 else:
-                    outtree_extra.tau_pt = -1111.
-                outtree_extra.Fill()
+                    tree_extra.tau_pt = -1111.
+                tree_extra.Fill()
             elif self.metadata.datatype == datasets.EMBED:
-                outtree_extra.Fill()
+                tree_extra.Fill()
             """
 
         self.output.cd()
@@ -320,10 +370,15 @@ class HHSkim(ATLASStudent):
         cutflow.Write()
         """
 
+        if VALIDATE:
+            validate_log.close()
+            # sort the output by event number for MC
+            # sort +2 -3 -n skim2_validate_mc_125205.txt -o skim2_validate_mc_125205.txt
+
         # flush any baskets remaining in memory to disk
-        outtree.FlushBaskets()
-        outtree.Write()
+        tree.FlushBaskets()
+        tree.Write()
         """
-        outtree_extra.FlushBaskets()
-        outtree_extra.Write()
+        tree_extra.FlushBaskets()
+        tree_extra.Write()
         """

@@ -8,9 +8,9 @@ class TauTriggerEmulation(EventFilter):
     """
     Tau trigger emulation (only apply on MC)
     """
-    def __init__(self, year, outtree, **kwargs):
+    def __init__(self, year, tree, **kwargs):
 
-        self.outtree = outtree
+        self.tree = tree
 
         if year == 2011: # only can emulate 2011 currently...
             # initialize the trigger emulation tool
@@ -58,14 +58,14 @@ class TauTriggerEmulation(EventFilter):
         self.trigger_tool.executeTriggers()
         emulated_trigger_passed = trigger.passed()
 
-        self.outtree.tau_trigger_match_index.clear()
-        self.outtree.tau_trigger_match_thresh.clear()
+        self.tree.tau_trigger_match_index.clear()
+        self.tree.tau_trigger_match_thresh.clear()
 
         if emulated_trigger_passed:
             if triggername == 'EF_tau29_medium1_tau20_medium1':
-                self.outtree.EF_tau29_medium1_tau20_medium1_EMULATED = True
+                self.tree.EF_tau29_medium1_tau20_medium1_EMULATED = True
             else:
-                self.outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = True
+                self.tree.EF_tau29T_medium1_tau20T_medium1_EMULATED = True
 
             # trigger matching
             trig1 = trigger.getTrigger1() # EF_tau29(T)_medium1
@@ -95,14 +95,14 @@ class TauTriggerEmulation(EventFilter):
                         idx = idx2
                         thresh = 20
 
-                self.outtree.tau_trigger_match_index.push_back(idx)
-                self.outtree.tau_trigger_match_thresh.push_back(thresh)
+                self.tree.tau_trigger_match_index.push_back(idx)
+                self.tree.tau_trigger_match_thresh.push_back(thresh)
         else:
-            self.outtree.EF_tau29_medium1_tau20_medium1_EMULATED = False
-            self.outtree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
+            self.tree.EF_tau29_medium1_tau20_medium1_EMULATED = False
+            self.tree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
             for tau in event.taus:
-                self.outtree.tau_trigger_match_index.push_back(-1)
-                self.outtree.tau_trigger_match_thresh.push_back(0)
+                self.tree.tau_trigger_match_index.push_back(-1)
+                self.tree.tau_trigger_match_thresh.push_back(0)
 
         trigger.switchOff()
         return True

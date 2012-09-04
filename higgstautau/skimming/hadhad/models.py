@@ -21,3 +21,13 @@ class TriggerEmulation(TreeModel):
     tau_trigger_match_thresh = ROOT.vector('int')
 
 
+class TriggerMatching(TreeModel):
+
+    tau_trigger_match_index = ROOT.vector('int')
+    tau_trigger_match_thresh = ROOT.vector('int')
+
+
+class Skim2Variables(TreeModel):
+
+    tau_selected = ROOT.vector('bool')
+    pileup_weight = FloatCol(default=1.)
