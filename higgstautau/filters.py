@@ -298,6 +298,20 @@ class TauIDLoose(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class TauID_BDTLoose_LLHLoose(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(TauID_BDTLoose_LLHLoose, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau:
+                tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1)
+        return len(event.taus) >= self.min_taus
+
+
 class TauIDMedium(EventFilter):
 
     def __init__(self, min_taus, **kwargs):

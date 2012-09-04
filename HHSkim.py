@@ -1,76 +1,3 @@
-"""
-==================
-Skimming procedure
-==================
-
-For DATA skimming:
-------------------
-
-    1) Triggers
-
-        if 177986 <= event.RunNumber <= 187815: # Periods B-K
-            return event.EF_tau29_medium1_tau20_medium1
-        elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-            return event.EF_tau29T_medium1_tau20T_medium1
-
-        See Triggers in filters.py
-
-    2) Two LOOSE taus
-
-        - tau_author!=2 && tau_pT > 18 GeV && tau_numTrack > 0
-        - tau_JetBDTLoose==1 || tau_tauLlhLoose==1
-
-        * Note pT>18GeV cut was chosen to be able to fluctuate the TES.
-
-        With these two selection (1 & 2), we expect factor 50 reduction which
-        results in ~400-500 GB disk space at 5 fb-1.
-
-
-For MC skimming:
-----------------
-
-    1) Triggers: same as above.
-
-
-======================
-Extra Trees/Histograms
-======================
-
-Some information has to be kept during the skimming.
-
-Just after the "Trigger" requirement, the histograms/trees should be made according
-to each trigger decision.  (three histograms for each variable below)
-
- * number of events within GRL (to check consistency of LumiCalc)
- * mu-distribution
- * # of vertices
- * # of LOOSE taus (pt>18GeV, LLH loose || BDT loose)
- * # of EF tau trigger object  (no matching is necessary)
- * tau pT spectrum
- * EF tau pT spectrum  (no matching is necessary)
- * MET
- * anything else???
-
-
-=================
-Trigger Emulation
-=================
-
-Emulation is performed using the CoEPPTrigTool package
-
-180164: EF_tau29_medium1_tau20_medium1_Hypo_00_02_42
-183003: EF_tau29_medium1_tau20_medium1_Hypo_00_03_02
-186169: EF_tau29_medium1_tau20_medium1_Hypo_00_03_02
-189751: EF_tau29T_medium1_tau20T_medium1_Hypo_00_03_02
-
-
-==============
-Branch removal
-==============
-
-See branches_remove and branches_keep below
-"""
-
 import ROOT
 import math
 
@@ -136,42 +63,66 @@ class HHSkim(ATLASStudent):
                 file=self.output,
                 model=Model)
 
-        event_filters = EventFilterList([
-            EmbeddingPileupPatch(
-                passthrough=self.metadata.datatype != datasets.EMBED),
-            PileupTemplates(
-                passthrough=self.metadata.datatype != datasets.MC),
-            ExtraInfoTree(
-                )
-            TauTriggerEmulation(
-                year=self.metadata.year,
-                outtree=outtree,
-                passthrough=self.metadata.datatype != datasets.MC),
-            Triggers(
-                datatype=self.metadata.datatype,
-                year=self.metadata.year,
-                skim=True),
-            # the BDT bits are broken in the p1130 production, correct them
-            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
-            # PRODUCTION TAG!!!
-            TauIDpatch(
-                year=self.metadata.year,
-                passthrough=self.metadata.year != 2012),
-            # patch electron ID for 2012
-            ElectronIDpatch(
-                passthrough=self.metadata.year != 2012),
-            PileupReweight(
-                passthrough=self.metadata.datatype != datasets.MC),
-        ])
-
-        self.filters['event'] = event_filters
-
         onfilechange = []
+        count_funcs = {}
 
         if self.metadata.datatype == datasets.MC:
             # TODO get trigger emul tool here
             onfilechange.append(
                         (update_trigger_trees, (self, trigger_tool_wrapper,)))
+
+            def mc_weight_count(event):
+                return event.mc_event_weight
+
+            count_funcs = {
+                'mc_weight': mc_weight_count,
+            }
+
+        event_filters = EventFilterList([
+            EmbeddingPileupPatch(
+                passthrough=self.metadata.datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            PileupTemplates(
+                passthrough=self.metadata.datatype != datasets.MC,
+                count_funcs=count_funcs),
+            #ExtraInfoTree(
+            #   count_funcs=count_funcs)
+            TauTriggerEmulation(
+                year=self.metadata.year,
+                outtree=outtree,
+                passthrough=self.metadata.datatype != datasets.MC,
+                count_funcs=count_funcs),
+            Triggers(
+                datatype=self.metadata.datatype,
+                year=self.metadata.year,
+                skim=True,
+                count_funcs=count_funcs),
+            # the BDT bits are broken in the p1130 production, correct them
+            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
+            # PRODUCTION TAG!!!
+            TauIDpatch(
+                year=self.metadata.year,
+                passthrough=self.metadata.year != 2012,
+                count_funcs=count_funcs),
+            # patch electron ID for 2012
+            ElectronIDpatch(
+                passthrough=self.metadata.year != 2012,
+                count_funcs=count_funcs),
+            TauAuthor(2,
+                count_funcs=count_funcs),
+            TauHasTrack(2,
+                count_funcs=count_funcs),
+            TauPT(2,
+                thresh=20 * GeV,
+                count_funcs=count_funcs),
+            TauID_BDTLoose_LLHLoose(2
+                count_funcs=count_funcs),
+            PileupReweight(
+                passthrough=self.metadata.datatype != datasets.MC,
+                count_funcs=count_funcs),
+        ])
+
+        self.filters['event'] = event_filters
 
         # initialize the TreeChain of all input files
         chain = TreeChain(
@@ -264,29 +215,12 @@ class HHSkim(ATLASStudent):
                 size="mc_n",
                 mix=MCParticle)
 
-        nevents = 0
-        nevents_mc_weight = 0
-
         # entering the main event loop...
         for event in chain:
 
-            if self.metadata.datatype == datasets.MC:
-                nevents_mc_weight += event.mc_event_weight
-
             event.vertices.select(vertex_selection)
-            number_of_good_vertices = len(event.vertices)
-            event.taus.select(lambda tau:
-                    tau.author != 2 and
-                    tau.numTrack > 0 and
-                    tau.pt > 18*GeV and
-                    (tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1))
-            number_of_good_taus = len(event.taus)
-
-            if (number_of_good_taus > 1 and
-                (self.metadata.datatype in (datasets.DATA, datasets.EMBED))) \
-               or self.metadata.datatype == datasets.MC:
-                outtree.number_of_good_vertices = number_of_good_vertices
-                outtree.Fill()
+            outtree.number_of_good_vertices = len(event.vertices)
+            outtree.Fill()
             """
             elif self.metadata.datatype == datasets.DATA:
                 outtree_extra.number_of_good_vertices = number_of_good_vertices
@@ -302,6 +236,7 @@ class HHSkim(ATLASStudent):
 
         self.output.cd()
 
+        """
         if self.metadata.datatype == datasets.MC:
             # store the original weighted number of events
             cutflow = Hist(2, 0, 2, name='cutflow', type='D')
@@ -311,6 +246,7 @@ class HHSkim(ATLASStudent):
         # store the original number of events
         cutflow[0] = nevents
         cutflow.Write()
+        """
 
         # flush any baskets remaining in memory to disk
         outtree.FlushBaskets()
