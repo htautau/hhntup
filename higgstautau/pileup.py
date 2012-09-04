@@ -2,7 +2,6 @@ from rootpy.tree.filtering import EventFilter
 
 from externaltools import PileupReweighting
 from ROOT import Root
-PileupReweighting = Root.TPileupReweighting
 
 
 class PileupTemplates(EventFilter):
@@ -11,7 +10,7 @@ class PileupTemplates(EventFilter):
 
         if not passthrough:
             # initialize the pileup reweighting tool
-            self.pileup_tool = PileupReweighting()
+            self.pileup_tool = Root.TPileupReweighting()
             if year == 2011:
                 self.pileup_tool.UsePeriodConfig("MC11b")
             elif year == 2012:
@@ -46,7 +45,7 @@ class PileupReweight(EventFilter):
             self.tree = tree
 
             # Initialize the pileup reweighting tool
-            self.pileup_tool = PileupReweighting()
+            self.pileup_tool = Root.TPileupReweighting()
             if year == 2011:
                 self.pileup_tool.AddConfigFile(
                         PileupReweighting.get_resource(

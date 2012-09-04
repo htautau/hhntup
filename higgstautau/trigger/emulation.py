@@ -4,6 +4,16 @@ from externaltools import CoEPPTrigTool
 from ROOT import CoEPP
 
 
+def update_trigger_trees(student, tool, name, file, tree):
+    """
+    This method must be called when each new tree is loaded in the chain
+    """
+    if not tool.passthrough and tool.year == 2011:
+        tool.trigger_tool_wrapper.loadMainTree(tree)
+        tool.trigger_tool_wrapper.loadMetaTree(
+                file.Get('%sMeta/TrigConfTree' % name))
+
+
 class TauTriggerEmulation(EventFilter):
     """
     Tau trigger emulation (only apply on MC)
@@ -11,6 +21,8 @@ class TauTriggerEmulation(EventFilter):
     def __init__(self, year, tree, passthrough=False, **kwargs):
 
         if not passthrough:
+
+            self.year = year
             self.tree = tree
 
             if year == 2011: # only can emulate 2011 currently...
@@ -43,15 +55,6 @@ class TauTriggerEmulation(EventFilter):
         super(TauTriggerEmulation, self).__init__(
                 passthrough=passthrough,
                 **kwargs)
-
-    @staticmethod
-    def update_trigger_trees(student, tool, name, file, tree):
-        """
-        This method must be called when each new tree is loaded in the chain
-        """
-        tool.trigger_tool_wrapper.loadMainTree(tree)
-        tool.trigger_tool_wrapper.loadMetaTree(
-                file.Get('%sMeta/TrigConfTree' % name))
 
     def passes_11(self, event):
 

@@ -17,7 +17,7 @@ from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.trigger.emulation import TauTriggerEmulation
+from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.skimming.hadhad import branches as hhbranches
@@ -88,12 +88,11 @@ class hhskim(ATLASStudent):
                 year=year,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
+                count_funcs=count_funcs)
 
         if datatype == datasets.MC:
             onfilechange.append(
-                (trigger_emulation.update_trigger_trees,
-                    (self, trigger_emulation)))
+                (update_trigger_trees, (self, trigger_emulation,)))
 
         trigger_config = None
 
@@ -119,6 +118,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             #ExtraInfoTree(
             #   count_funcs=count_funcs)
+            trigger_emulation,
             Triggers(
                 datatype=datatype,
                 year=year,
