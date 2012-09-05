@@ -1,5 +1,4 @@
 import ROOT
-import math
 
 from atlastools import utils
 from atlastools import datasets
@@ -23,6 +22,7 @@ from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.skimming.hadhad import branches as hhbranches
 from higgstautau.skimming.hadhad.models import *
 from higgstautau.pileup import PileupTemplates, PileupReweight
+from higgstautau.hadhad.collections import define_collections
 
 import goodruns
 
@@ -205,49 +205,8 @@ class hhskim(ATLASStudent):
                 visible=False)
 
         # define tree collections
-        chain.define_collection(
-                name="taus",
-                prefix="tau_",
-                size="tau_n",
-                mix=TauFourMomentum)
-        chain.define_collection(
-                name="taus_EF",
-                prefix="trig_EF_tau_",
-                size="trig_EF_tau_n",
-                mix=TauFourMomentum)
-        # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
-        chain.define_collection(
-                name="jets",
-                prefix="jet_",
-                size="jet_n",
-                mix=FourMomentum)
-        chain.define_collection(
-                name="jets_EM",
-                prefix="jet_AntiKt4TopoEM_",
-                size="jet_AntiKt4TopoEM_n",
-                mix=FourMomentum)
-        chain.define_collection(
-                name="truetaus",
-                prefix="trueTau_",
-                size="trueTau_n",
-                mix=MCTauFourMomentum)
-        chain.define_collection(
-                name="mc",
-                prefix="mc_",
-                size="mc_n",
-                mix=MCParticle)
-        chain.define_collection(
-                name="muons",
-                prefix="mu_staco_",
-                size="mu_staco_n")
-        chain.define_collection(
-                name="electrons",
-                prefix="el_",
-                size="el_n")
-        chain.define_collection(
-                name="vertices",
-                prefix="vxp_",
-                size="vxp_n")
+        define_collections(chain)
+        define_collections(tree)
 
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
