@@ -80,12 +80,13 @@ class TauTriggerMatch(EventFilter):
                 self.triggerutils = triggerutils
                 self.passes = self.passes_mc12
             else:
-                raise ValueError("No MC trigger matching defined for year %d" % year)
+                raise ValueError("No MC trigger matching defined for year %d" %
+                        year)
 
     def passes_mc11(self, event):
 
         """
-        Matching performed during first skim with CoEPPTrigTool
+        Matching performed during trigger emulation with CoEPPTrigTool
         """
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
         if self.min_taus is not None:

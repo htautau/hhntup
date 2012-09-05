@@ -109,7 +109,7 @@ class TauTriggerEmulation(EventFilter):
             else:
                 event.EF_tau29T_medium1_tau20T_medium1 = False
 
-            for tau in event.taus:
+            for tau in self.tree.taus:
                 self.tree.tau_trigger_match_index.push_back(-1)
                 self.tree.tau_trigger_match_thresh.push_back(0)
 
