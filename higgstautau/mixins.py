@@ -64,6 +64,8 @@ class TauFourMomentum(FourMomentum):
         self.trigger_match_thresh = 0
         self.trigger_match_index = -1
 
+        self.collinear_momentum_fraction = -9999.
+
         self.centrality = 0.
         self.centrality_boosted = 0.
 

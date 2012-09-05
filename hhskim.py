@@ -284,23 +284,6 @@ class hhskim(ATLASStudent):
                     print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
                 print >> validate_log
 
-            tree.tau_selected.clear()
-            tree.tau_trigger_match_index.clear()
-            tree.tau_trigger_match_thresh.clear()
-
-            # set the skim-defined variables in the output tree
-            for i in xrange(event.tau_n):
-                if i in selected_idx:
-                    tree.tau_selected.push_back(True)
-                    tree.tau_trigger_match_index.push_back(
-                            tau.trigger_match_index)
-                    self.tree.tau_trigger_match_thresh.push_back(
-                            tau.trigger_match_thresh)
-                else:
-                    tree.tau_selected.push_back(False)
-                    tree.tau_trigger_match_index.push_back(-1)
-                    tree.tau_trigger_match_thresh.push_back(0)
-
             # ditau mass
             METx = event.MET.etx
             METy = event.MET.ety
@@ -323,14 +306,29 @@ class hhskim(ATLASStudent):
             collin_mass, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
             tree.tau_collinear_mass = collin_mass
-            tree.tau_collinear_momentum_frac = tau1_x
-            tree.tau_collinear_momentum_frac = tau2_x
+            tau1.collinear_momentum_fraction = tau1_x
+            tau2.collinear_momentum_fraction = tau2_x
 
             # visible mass
             tree.tau_visible_mass = (tau1.fourvect + tau2.fourvect).M()
 
             if year == 2011:
                 tree.ggf_weight = reweight_ggf(event, self.metadata.name)
+
+            tree.tau_selected.clear()
+            tree.tau_trigger_match_index.clear()
+            tree.tau_trigger_match_thresh.clear()
+            tree.tau_collinear_momentum_fraction.clear()
+
+            # set the skim-defined variables in the output tree
+            for i in xrange(event.tau_n):
+                tree.tau_selected.push_back(i in selected_idx)
+                tree.tau_trigger_match_index.push_back(
+                        tau.trigger_match_index)
+                self.tree.tau_trigger_match_thresh.push_back(
+                        tau.trigger_match_thresh)
+                self.tree.tau_collinear_momentum_fraction.push_back(
+                        tau.collinear_momentum_fraction)
 
             # fill the output tree
             tree.Fill()
