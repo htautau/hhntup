@@ -61,9 +61,8 @@ class TauTriggerEmulation(EventFilter):
         trigger, triggername = self.trigger_run_dict[event.RunNumber]
         trigger.switchOn()
         self.trigger_tool.executeTriggers()
-        emulated_trigger_passed = trigger.passed()
 
-        if emulated_trigger_passed:
+        if trigger.passed():
             if triggername == 'EF_tau29_medium1_tau20_medium1':
                 event.EF_tau29_medium1_tau20_medium1 = True
             else:
@@ -72,8 +71,6 @@ class TauTriggerEmulation(EventFilter):
             # trigger matching
             trig1 = trigger.getTrigger1() # EF_tau29(T)_medium1
             trig2 = trigger.getTrigger2() # EF_tau20(T)_medium1
-            matched_taus = []
-            matched_idx = []
             for tau in event.taus:
                 idx = -1
                 idx1 = trig1.matchIndex(tau.fourvect)
@@ -93,9 +90,6 @@ class TauTriggerEmulation(EventFilter):
                     else:
                         idx = idx2
                 tau.trigger_match_index = idx
-                if idx > -1:
-                    matched_taus.append(tau)
-                    matched_idx.append(idx)
         else:
             if triggername == 'EF_tau29_medium1_tau20_medium1':
                 event.EF_tau29_medium1_tau20_medium1 = False
