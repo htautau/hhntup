@@ -204,7 +204,8 @@ class hhskim(ATLASStudent):
                     hhbranches.REMOVE,
                     prune=hhbranches.KEEP),
                 create_branches=True,
-                transfer_objects=True)
+                transfer_objects=True,
+                visible=False)
 
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
