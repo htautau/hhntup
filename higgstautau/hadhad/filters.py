@@ -201,54 +201,19 @@ class Triggers(EventFilter):
 
     triggers_12 = [
         'EF_tau29Ti_medium1_tau20Ti_medium1',
-        'EF_2tau38T_medium1'
     ]
 
-    def __init__(self, datatype, year, **kwargs):
+    def __init__(self, year, **kwargs):
 
-        year %= 1000
-        if year == 11:
-            if datatype == datasets.DATA:
-                self.passes = self.passes_data11
-            else:
-                #if skim:
-                #    self.passes = self.passes_mc11_skim
-                #else:
-                self.passes = self.passes_mc11
-        elif year == 12:
-            if datatype == datasets.DATA:
-                self.passes = self.passes_data12
-            else:
-                self.passes = self.passes_mc12
+        if year == 2011:
+            self.passes = self.passes_11
+        elif year == 2012:
+            self.passes = self.passes_12
         else:
             raise ValueError("No triggers defined for year %d" % year)
         super(Triggers, self).__init__(**kwargs)
 
-    def passes_mc11(self, event):
-        try:
-            if 177986 <= event.RunNumber <= 187815: # Periods B-K
-                return event.EF_tau29_medium1_tau20_medium1_EMULATED
-            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-                return event.EF_tau29T_medium1_tau20T_medium1_EMULATED
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
-
-    """
-    def passes_mc11_skim(self, event):
-        try:
-            if 177986 <= event.RunNumber <= 187815: # Periods B-K
-                return event.EF_tau29_medium1_tau20_medium1
-            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-                return event.EF_tau29T_medium1_tau20T_medium1
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
-    """
-
-    def passes_data11(self, event):
+    def passes_11(self, event):
         try:
             if 177986 <= event.RunNumber <= 187815: # Periods B-K
                 return event.EF_tau29_medium1_tau20_medium1
@@ -259,16 +224,9 @@ class Triggers(EventFilter):
             raise e
         raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
 
-    def passes_mc12(self, event):
+    def passes_12(self, event):
         try:
-            return event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-
-    def passes_data12(self, event):
-        try:
-            return event.EF_tau29Ti_medium1_tau20Ti_medium1 or event.EF_2tau38T_medium1
+            return event.EF_tau29Ti_medium1_tau20Ti_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -293,57 +251,6 @@ mc_triggers = [
     'EF_xe60_tight_noMu',
     'EF_xe60_verytight_noMu'
 ]
-
-
-class SkimmingDataTriggers(EventFilter):
-
-    def passes(self, event):
-        """
-        The lowest un-prescaled trigger can be found in
-        https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled
-
-        Periods     Runs            Luminosity      Trigger selection
-        B           177986-178109   17.379 pb^-1    tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        D           179710-180481   184.774 pb^-1   tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        E           180614-180776   52.198 pb^-1    tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        F           182013-182519   157.298 pb^-1   tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        G           182726-183462   571.944 pb^-1   tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        H           183544-184169   285.787 pb^-1   tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        I           185353-186493   410.998 pb^-1   tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_noMu
-        J           186516-186755   239.713 pb^-1   tau29_medium1_tau20_medium1 OR tau100_medium OR xe60_tight_noMu
-        K1-K2       186873-187219                   tau29_medium1_tau20_medium1 OR tau125_medium1 OR xe60_tight_noMu
-        K3-K6       187453-187815   683.897 pb^-1   EF_tau29_medium1_tau20_medium1 OR tau29T_medium1_tau20T_medium1 OR tau125_medium1 OR xe60_tight_noMu
-        L           188902-190343   1613.055 pb^-1  tau29T_medium1_tau20T_medium1 OR tau125_medium1 OR xe60_verytight_noMu
-        M           190608-191933   1172.250 pb^-1  tau29T_medium1_tau20T_medium1 OR tau125_medium1 OR xe60_verytight_noMu
-        """
-        try:
-            if 177986 <= event.RunNumber <= 186493: # Period B-I 1480.36 pb-1
-                return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_noMu
-            elif 186516 <= event.RunNumber <= 186755: # Period J 226.392 pb-1
-                return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_tight_noMu
-            elif 186873 <= event.RunNumber <= 187219: # Period K1-K2 391.09 pb-1
-                return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau125_medium1 or event.EF_xe60_tight_noMu
-            elif 187453 <= event.RunNumber <= 187815: # Period K3-K6 170.616 pb-1
-                return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau29T_medium1_tau20T_medium1 or event.EF_tau125_medium1 or event.EF_xe60_tight_noMu
-            elif 188902 <= event.RunNumber <= 191933: # Period L-M 2392.85 pb-1
-                return event.EF_tau29T_medium1_tau20T_medium1 or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
-
-
-class SkimmingMCTriggers(EventFilter):
-
-    def passes(self, event):
-        """
-        OR of all triggers above
-
-        EF_tau29T_medium1_tau20T_medium1 is not available in new MC11 so we use the equivalent:
-        EF_tau29_medium1_tau20_medium1 && L1_2TAU11_TAU15
-        """
-        return event.EF_tau29_medium1_tau20_medium1 or event.EF_tau100_medium or event.EF_xe60_noMu or \
-               event.EF_xe60_tight_noMu or event.EF_tau125_medium1 or event.EF_xe60_verytight_noMu
 
 
 class ElectronVeto(EventFilter):

@@ -69,9 +69,9 @@ class TauTriggerEmulation(EventFilter):
 
         if emulated_trigger_passed:
             if triggername == 'EF_tau29_medium1_tau20_medium1':
-                self.tree.EF_tau29_medium1_tau20_medium1_EMULATED = True
+                event.EF_tau29_medium1_tau20_medium1 = True
             else:
-                self.tree.EF_tau29T_medium1_tau20T_medium1_EMULATED = True
+                event.EF_tau29T_medium1_tau20T_medium1 = True
 
             # trigger matching
             trig1 = trigger.getTrigger1() # EF_tau29(T)_medium1
@@ -104,8 +104,11 @@ class TauTriggerEmulation(EventFilter):
                 self.tree.tau_trigger_match_index.push_back(idx)
                 self.tree.tau_trigger_match_thresh.push_back(thresh)
         else:
-            self.tree.EF_tau29_medium1_tau20_medium1_EMULATED = False
-            self.tree.EF_tau29T_medium1_tau20T_medium1_EMULATED = False
+            if triggername == 'EF_tau29_medium1_tau20_medium1':
+                event.EF_tau29_medium1_tau20_medium1 = False
+            else:
+                event.EF_tau29T_medium1_tau20T_medium1 = False
+
             for tau in event.taus:
                 self.tree.tau_trigger_match_index.push_back(-1)
                 self.tree.tau_trigger_match_thresh.push_back(0)

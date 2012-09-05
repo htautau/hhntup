@@ -62,15 +62,10 @@ class hhskim(ATLASStudent):
             xml_string.Write(self.metadata.treename)
             self.output.cd()
 
-        Model = SkimModel + TriggerMatching
-        if datatype == datasets.MC:
-            if year == 2011:
-                Model += TriggerEmulation11
-
         tree = Tree(
                 name=self.metadata.treename,
                 file=self.output,
-                model=Model)
+                model=SkimModel + TriggerMatching)
 
         onfilechange = []
         count_funcs = {}

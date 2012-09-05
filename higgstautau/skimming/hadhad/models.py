@@ -10,12 +10,6 @@ class SkimModel(TreeModel):
     pileup_weight = FloatCol(default=1.)
 
 
-class TriggerEmulation11(TreeModel):
-
-    EF_tau29_medium1_tau20_medium1_EMULATED = BoolCol()
-    EF_tau29T_medium1_tau20T_medium1_EMULATED = BoolCol()
-
-
 class TriggerMatching(TreeModel):
 
     tau_trigger_match_index = ROOT.vector('int')
