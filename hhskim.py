@@ -28,6 +28,7 @@ from higgstautau.skimming.hadhad import branches as hhbranches
 from higgstautau.skimming.hadhad.models import *
 from higgstautau.pileup import PileupTemplates, PileupReweight
 from higgstautau.hadhad.objects import define_objects
+from higgstautau.corrections import reweight_ggf
 
 import goodruns
 
@@ -263,6 +264,7 @@ class hhskim(ATLASStudent):
 
             assert len(event.taus) == 2
 
+            tau1, tau2 = event.taus
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
 
@@ -309,6 +311,19 @@ class hhskim(ATLASStudent):
             tree.MMC_MET_x = mmc_met.X()
             tree.MMC_MET_y = mmc_met.Y()
             tree.MMC_MET_phi = math.pi - mmc_met.Phi()
+
+            # colinear mass
+            collin_mass, tau1_x, tau2_x = mass.collinearmass(
+                    tau1, tau2, METx, METy)
+            tree.tau_colinear_mass = collin_mass
+            tree.tau_colinear_momentum_frac = tau1_x
+            tree.tau_colinear_momentum_frac = tau2_x
+
+            # visible mass
+            tree.tau_visible_mass = (tau1.fourvect + tau2.fourvect).M()
+
+            if year == 2011:
+                tree.ggf_weight = reweight_ggf(event, self.metadata.name)
 
             # fill the output tree
             tree.Fill()

@@ -9,6 +9,7 @@ class SkimModel(TreeModel):
     number_of_good_vertices = IntCol()
     tau_selected = ROOT.vector('bool')
     pileup_weight = FloatCol(default=1.)
+    ggf_weight = FloatCol(default=1.)
 
 
 class TriggerMatching(TreeModel):
@@ -17,12 +18,7 @@ class TriggerMatching(TreeModel):
     tau_trigger_match_thresh = ROOT.vector('int')
 
 
-class SkimExtraTauPtModel(TreeModel):
-
-    tau_pt = FloatCol()
-
-
-class MMCModel(TreeModel):
+class MassModel(TreeModel):
 
     MMC_mass = FloatCol()
     MMC_resonance = LorentzVector
@@ -31,3 +27,8 @@ class MMCModel(TreeModel):
     MMC_MET_x = FloatCol()
     MMC_MET_y = FloatCol()
     MMC_MET_phi = FloatCol()
+
+    tau_collinear_mass = FloatCol()
+    tau_collinear_momentum_fraction = ROOT.vector('float')
+
+    tau_visible_mass = FloatCol()
