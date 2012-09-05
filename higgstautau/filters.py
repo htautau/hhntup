@@ -31,6 +31,7 @@ class PriVertex(EventFilter):
 
     def passes(self, event):
 
+        event.vertices.select(vertex_selection)
         return any(ifilter(primary_vertex_selection, event.vertices))
 
 

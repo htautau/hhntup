@@ -108,7 +108,10 @@ class TauIDpatch(EventFilter):
 
     def passes_2011(self, event):
 
-        nvtx = event.number_of_good_vertices
+        #nvtx = event.number_of_good_vertices
+        # assume vertex selection already applied!
+        nvtx = len(event.vertices)
+
         for tau in event.taus:
 
             pt = tau.pt

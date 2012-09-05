@@ -51,6 +51,9 @@ def match_threshold(event, thresholds):
     taus = sorted(taus, key=lambda tau: tau[1].pt, reverse=True)
 
     # sanity check
+    for tau in taus:
+        print tau[0].trigger_match_index
+    print "===="
     assert len(thresholds) == len(taus)
 
     # assign thresholds in descending order

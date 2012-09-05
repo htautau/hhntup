@@ -21,6 +21,7 @@ from higgstautau import mass
 from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
+from higgstautau.trigger.matching import TauTriggerMatch
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
@@ -261,7 +262,6 @@ class hhskim(ATLASStudent):
         # entering the main event loop...
         for event in chain:
 
-            event.vertices.select(vertex_selection)
             tree.number_of_good_vertices = len(event.vertices)
 
             if datatype == datasets.EMBED:
@@ -325,9 +325,9 @@ class hhskim(ATLASStudent):
                 tree.tau_selected.push_back(i in selected_idx)
                 tree.tau_trigger_match_index.push_back(
                         tau.trigger_match_index)
-                self.tree.tau_trigger_match_thresh.push_back(
+                tree.tau_trigger_match_thresh.push_back(
                         tau.trigger_match_thresh)
-                self.tree.tau_collinear_momentum_fraction.push_back(
+                tree.tau_collinear_momentum_fraction.push_back(
                         tau.collinear_momentum_fraction)
 
             # fill the output tree
