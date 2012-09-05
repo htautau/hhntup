@@ -1,17 +1,8 @@
 from rootpy.tree.filtering import *
-from itertools import ifilter
 from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
-import datetime
-
-"""
-See main documentation here:
-    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToHH2012Winter
-"""
-
-MIN_TAUS = 2
 
 
 class TauLeadSublead(EventFilter):
@@ -194,15 +185,6 @@ class Triggers(EventFilter):
     See lowest unprescaled triggers here:
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
     """
-    triggers_11 = [
-        'EF_tau29_medium1_tau20_medium1',
-        'EF_tau29T_medium1_tau20T_medium1'
-    ]
-
-    triggers_12 = [
-        'EF_tau29Ti_medium1_tau20Ti_medium1',
-    ]
-
     def __init__(self, year, **kwargs):
 
         if year == 2011:
@@ -230,27 +212,6 @@ class Triggers(EventFilter):
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
-
-
-data_triggers = [
-    'EF_tau29_medium1_tau20_medium1',
-    'EF_tau29T_medium1_tau20T_medium1'
-    'EF_tau100_medium',
-    'EF_tau125_medium1',
-    'EF_xe60_noMu',
-    'EF_xe60_tight_noMu',
-    'EF_xe60_verytight_noMu',
-]
-
-mc_triggers = [
-    'EF_tau29_medium1_tau20_medium1',
-    'L1_2TAU11_TAU15',
-    'EF_tau100_medium',
-    'EF_tau125_medium1',
-    'EF_xe60_noMu',
-    'EF_xe60_tight_noMu',
-    'EF_xe60_verytight_noMu'
-]
 
 
 class ElectronVeto(EventFilter):
@@ -290,5 +251,4 @@ class MuonVeto(EventFilter):
            if not muon_has_good_track(muon, self.year):
                continue
            return False
-
        return True
