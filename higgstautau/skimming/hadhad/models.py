@@ -32,3 +32,6 @@ class MassModel(TreeModel):
     tau_collinear_momentum_fraction = ROOT.vector('float')
 
     tau_visible_mass = FloatCol()
+
+
+class TauCorrections(TreeModel):
