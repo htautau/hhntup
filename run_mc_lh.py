@@ -7,7 +7,7 @@ parser.add_argument('--student', default='LHProcessor.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--queue', default='medium')
-parser.add_argument('--output-path', default='ntuples/lephad_testElectron')
+parser.add_argument('--output-path', default='ntuples/lephad')
 parser.add_argument('--db', default='datasets_lh')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
@@ -46,7 +46,6 @@ datasets = [
     'AlpgenJimmyWtaunuNp4_pt20.mc11c',
     'AlpgenJimmyWtaunuNp5_pt20.mc11c',
     'AlpgenJimmyZeeNp0_Mll10to40_pt20.mc11c',
-    'AlpgenJimmyZeeNp0_pt20.mc11c',
     'AlpgenJimmyZeeNp1_Mll10to40_pt20.mc11c',
     'AlpgenJimmyZeeNp1_pt20.mc11c',
     'AlpgenJimmyZeeNp2_Mll10to40_pt20.mc11c',
@@ -70,7 +69,6 @@ datasets = [
     'AlpgenJimmyZmumuNp5_Mll10to40_pt20.mc11c',
     'AlpgenJimmyZmumuNp5_pt20.mc11c',
     'AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c',
-    'AlpgenJimmyZtautauNp0_pt20.mc11c',
     'AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c',
     'AlpgenJimmyZtautauNp1_pt20.mc11c',
     'AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c',
