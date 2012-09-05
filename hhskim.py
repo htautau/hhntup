@@ -81,7 +81,6 @@ class hhskim(ATLASStudent):
 
         trigger_emulation = TauTriggerEmulation(
                 year=year,
-                tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs)
 
@@ -250,6 +249,15 @@ class hhskim(ATLASStudent):
                     tree.tau_selected.push_back(True)
                 else:
                     tree.tau_selected.push_back(False)
+
+            self.tree.tau_trigger_match_index.clear()
+            self.tree.tau_trigger_match_thresh.clear()
+
+            for tau in self.tree.taus:
+                self.tree.tau_trigger_match_index.push_back(-1)
+                self.tree.tau_trigger_match_index.push_back(idx)
+                self.tree.tau_trigger_match_thresh.push_back(thresh)
+                self.tree.tau_trigger_match_thresh.push_back(0)
 
             tree.Fill()
 

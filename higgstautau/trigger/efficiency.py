@@ -56,6 +56,7 @@ class TauTriggerEfficiency(EventFilter):
 
     def passes_11_mc(self, event):
 
+        """
         assert len(event.taus) == 2
 
         idx = [tau.trigger_match_index for tau in event.taus]
@@ -72,6 +73,7 @@ class TauTriggerEfficiency(EventFilter):
 
         assert taus[0][1].pt > 29 * GeV
         assert taus[1][1].pt > 20 * GeV
+        """
 
         """
         if event.RunNumber >= 188902:
@@ -136,5 +138,4 @@ class TauTriggerEfficiency(EventFilter):
             tau.trigger_scale_factor_low = corr.get3DMCEff(
                         tau.pt, tau.eta,
                         npileup_vtx, -1)
-
         return True

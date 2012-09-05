@@ -61,6 +61,9 @@ class TauFourMomentum(FourMomentum):
         self.trigger_scale_factor_high = 1.
         self.trigger_scale_factor_low = 1.
 
+        self.trigger_match_thresh = 0
+        self.trigger_match_index = -1
+
         self.centrality = 0.
         self.centrality_boosted = 0.
 

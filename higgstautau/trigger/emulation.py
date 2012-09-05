@@ -18,12 +18,11 @@ class TauTriggerEmulation(EventFilter):
     """
     Tau trigger emulation (only apply on MC)
     """
-    def __init__(self, year, tree, passthrough=False, **kwargs):
+    def __init__(self, year, passthrough=False, **kwargs):
 
         if not passthrough:
 
             self.year = year
-            self.tree = tree
 
             if year == 2011: # only can emulate 2011 currently...
                 # initialize the trigger emulation tool
@@ -64,9 +63,6 @@ class TauTriggerEmulation(EventFilter):
         self.trigger_tool.executeTriggers()
         emulated_trigger_passed = trigger.passed()
 
-        self.tree.tau_trigger_match_index.clear()
-        self.tree.tau_trigger_match_thresh.clear()
-
         if emulated_trigger_passed:
             if triggername == 'EF_tau29_medium1_tau20_medium1':
                 event.EF_tau29_medium1_tau20_medium1 = True
@@ -76,42 +72,35 @@ class TauTriggerEmulation(EventFilter):
             # trigger matching
             trig1 = trigger.getTrigger1() # EF_tau29(T)_medium1
             trig2 = trigger.getTrigger2() # EF_tau20(T)_medium1
+            matched_taus = []
+            matched_idx = []
             for tau in event.taus:
-                thresh = 0
                 idx = -1
                 idx1 = trig1.matchIndex(tau.fourvect)
                 idx2 = trig2.matchIndex(tau.fourvect)
                 if idx1 == idx2 != -1:
                     idx = idx1
-                    thresh = 29
                 elif idx1 == -1 and idx2 > -1:
                     idx = idx2
-                    thresh = 20
                 elif idx2 == -1 and idx1 > -1:
                     idx = idx1
-                    thresh = 29
                 elif idx2 != idx1: # both >-1 and non-equal
                     # take index of closer one using dR
                     trigtau1TLV = self.trigger_tool.buildEFTauTLV(idx1)
                     trigtau2TLV = self.trigger_tool.buildEFTauTLV(idx2)
                     if trigtau1TLV.DeltaR(tau.fourvect) < trigtau2TLV.DeltaR(tau.fourvect):
                         idx = idx1
-                        thresh = 29
                     else:
                         idx = idx2
-                        thresh = 20
-
-                self.tree.tau_trigger_match_index.push_back(idx)
-                self.tree.tau_trigger_match_thresh.push_back(thresh)
+                tau.trigger_match_index = idx
+                if idx > -1:
+                    matched_taus.append(tau)
+                    matched_idx.append(idx)
         else:
             if triggername == 'EF_tau29_medium1_tau20_medium1':
                 event.EF_tau29_medium1_tau20_medium1 = False
             else:
                 event.EF_tau29T_medium1_tau20T_medium1 = False
-
-            for tau in self.tree.taus:
-                self.tree.tau_trigger_match_index.push_back(-1)
-                self.tree.tau_trigger_match_thresh.push_back(0)
 
         trigger.switchOff()
         return True
