@@ -1,5 +1,8 @@
 import ROOT
 
+import math
+from argparse import ArgumentParser
+
 from atlastools import utils
 from atlastools import datasets
 from atlastools.units import GeV
@@ -14,15 +17,17 @@ from rootpy.io import open as ropen
 from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
+from higgstautau import mass
 from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
+from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.skimming.hadhad import branches as hhbranches
 from higgstautau.skimming.hadhad.models import *
 from higgstautau.pileup import PileupTemplates, PileupReweight
-from higgstautau.hadhad.collections import define_collections
+from higgstautau.hadhad.objects import define_objects
 
 import goodruns
 
@@ -33,6 +38,17 @@ VERBOSE = False
 
 
 class hhskim(ATLASStudent):
+
+    def __init__(self, options, **kwargs):
+
+        super(hhskim, self).__init__(**kwargs)
+        parser = ArgumentParser()
+        parser.add_argument('--syst-terms', default=None)
+        self.args = parser.parse_args(options)
+        if self.args.syst_terms is not None:
+            self.args.syst_terms = set([
+                eval('Systematics.%s' % term) for term in
+                self.args.syst_terms.split(',')])
 
     def work(self):
 
@@ -62,10 +78,15 @@ class hhskim(ATLASStudent):
             xml_string.Write(self.metadata.treename)
             self.output.cd()
 
+
+        # define the model of the output tree
+        Model = SkimModel + TriggerMatching + MMCModel
+
+        # create the output tree
         tree = Tree(
                 name=self.metadata.treename,
                 file=self.output,
-                model=SkimModel + TriggerMatching)
+                model=Model)
 
         onfilechange = []
         count_funcs = {}
@@ -97,6 +118,7 @@ class hhskim(ATLASStudent):
             # update the trigger config maps on every file change
             onfilechange.append((update_trigger_config, (trigger_config,)))
 
+        # define the list of event filters
         event_filters = EventFilterList([
             GRLFilter(
                 self.grl,
@@ -120,23 +142,30 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             LArError(
                 count_funcs=count_funcs),
-            # the BDT bits are broken in the p1130 production, correct them
-            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
-            # PRODUCTION TAG!!!
-            TauIDpatch(
-                year=year,
-                passthrough=year != 2012,
-                count_funcs=count_funcs),
-            # patch electron ID for 2012
-            ElectronIDpatch(
-                passthrough=year != 2012,
-                count_funcs=count_funcs),
             # no need to recalibrate jets in 2012 (yet...)
             JetCalibration(
                 datatype=datatype,
                 year=year,
                 verbose=VERBOSE,
                 passthrough=year == 2012,
+                count_funcs=count_funcs),
+            # PUT THE SYSTEMATICS "FILTER" BEFORE
+            # ANY FILTERS THAT REFER TO OBJECTS
+            # BUT AFTER CALIBRATIONS
+            Systematics(
+                terms=self.args.syst_terms,
+                year=year,
+                datatype=datatype,
+                verbose=VERBOSE),
+            # the BDT bits are broken in the p1130 production, correct them
+            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
+            # PRODUCTION TAG!!!
+            TauIDpatch(
+                year=year,
+                count_funcs=count_funcs),
+            # patch electron ID for 2012
+            ElectronIDpatch(
+                passthrough=year != 2012,
                 count_funcs=count_funcs),
             LArHole(
                 datatype=datatype,
@@ -184,6 +213,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
         ])
 
+        # set the event filters
         self.filters['event'] = event_filters
 
         # initialize the TreeChain of all input files
@@ -195,8 +225,10 @@ class hhskim(ATLASStudent):
                 filters=event_filters,
                 verbose=True)
 
-        define_collections(chain)
+        define_objects(chain, year)
 
+        # include the branches in the input chain in the output tree
+        # set branches to be removed in ignore_branches
         tree.set_buffer(
                 chain.buffer,
                 ignore_branches=chain.glob(
@@ -225,7 +257,7 @@ class hhskim(ATLASStudent):
             tree.number_of_good_vertices = len(event.vertices)
 
             if datatype == datasets.EMBED:
-                # select two leading taus by pT
+                # select two leading taus by pT for embedding samples
                 event.taus.sort(key=lambda tau: tau.pt, reverse=True)
                 event.taus.slice(stop=2)
 
@@ -247,6 +279,7 @@ class hhskim(ATLASStudent):
             tree.tau_trigger_match_index.clear()
             tree.tau_trigger_match_thresh.clear()
 
+            # set the skim-defined variables in the output tree
             for i in xrange(event.tau_n):
                 if i in selected_idx:
                     tree.tau_selected.push_back(True)
@@ -259,6 +292,25 @@ class hhskim(ATLASStudent):
                     tree.tau_trigger_match_index.push_back(-1)
                     tree.tau_trigger_match_thresh.push_back(0)
 
+            # ditau mass
+            METx = event.MET.etx
+            METy = event.MET.ety
+            MET = event.MET.et
+            sumET = event.MET.sumet
+
+            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
+                    tau1, tau2, METx, METy, sumET)
+
+            tree.MMC_mass = mmc_mass
+            tree.MMC_resonance.set_from(mmc_resonance)
+            if mmc_mass > 0:
+                tree.MMC_resonance_pt = mmc_resonance.Pt()
+            tree.MMC_MET = mmc_met.Mod()
+            tree.MMC_MET_x = mmc_met.X()
+            tree.MMC_MET_y = mmc_met.Y()
+            tree.MMC_MET_phi = math.pi - mmc_met.Phi()
+
+            # fill the output tree
             tree.Fill()
 
         self.output.cd()

@@ -1,7 +1,7 @@
 from ..mixins import *
 
 
-def define_collections(tree):
+def define_objects(tree, year):
 
     tree.define_collection(
             name="taus",
@@ -46,3 +46,11 @@ def define_collections(tree):
             name="vertices",
             prefix="vxp_",
             size="vxp_n")
+
+    if year == 2011:
+        met = 'MET_RefFinal_BDTMedium_'
+    else:
+        met = 'MET_RefFinal_STVF_'
+    tree.define_object(
+            name='MET',
+            prefix=met)

@@ -1,4 +1,5 @@
 import ROOT
+from rootpy.math.physics.vector import LorentzVector
 from rootpy.tree import TreeModel
 from rootpy.types import *
 
@@ -19,3 +20,14 @@ class TriggerMatching(TreeModel):
 class SkimExtraTauPtModel(TreeModel):
 
     tau_pt = FloatCol()
+
+
+class MMCModel(TreeModel):
+
+    MMC_mass = FloatCol()
+    MMC_resonance = LorentzVector
+    MMC_resonance_pt = FloatCol()
+    MMC_MET = FloatCol()
+    MMC_MET_x = FloatCol()
+    MMC_MET_y = FloatCol()
+    MMC_MET_phi = FloatCol()
