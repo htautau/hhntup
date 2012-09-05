@@ -29,6 +29,7 @@ from higgstautau.skimming.hadhad.models import *
 from higgstautau.pileup import PileupTemplates, PileupReweight
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
+from higgstautau.hadhad.corrections import TauTriggerEfficiency
 
 import goodruns
 
@@ -207,6 +208,12 @@ class hhskim(ATLASStudent):
                 tree=tree,
                 passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
+            TauTriggerEfficiency(
+                year=year,
+                datatype=datatype,
+                tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
+                    self.args.syst_terms),
+                passthrough=datatype == datasets.DATA),
             PileupReweight(
                 year=year,
                 tree=tree,
