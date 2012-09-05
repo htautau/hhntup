@@ -201,6 +201,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauID_BDTLoose_LLHLoose(2,
                 count_funcs=count_funcs),
+            # take two leading taus
+
+
             TauTriggerMatch(
                 config=trigger_config,
                 year=year,
@@ -284,7 +287,7 @@ class hhskim(ATLASStudent):
                     print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
                 print >> validate_log
 
-            # ditau mass
+            # missing mass
             METx = event.MET.etx
             METy = event.MET.ety
             MET = event.MET.et
