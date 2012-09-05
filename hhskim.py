@@ -115,7 +115,6 @@ class hhskim(ATLASStudent):
             #   count_funcs=count_funcs)
             trigger_emulation,
             Triggers(
-                datatype=datatype,
                 year=year,
                 count_funcs=count_funcs),
             PriVertex(
@@ -204,61 +203,6 @@ class hhskim(ATLASStudent):
                     prune=hhbranches.KEEP),
                 create_branches=True,
                 visible=False)
-
-        """
-        if datatype == datasets.DATA:
-            # tree_extra holds info for events not included in the skim
-            tree_extra = Tree(
-                    name=self.metadata.treename + '_failed_skim_after_trigger',
-                    file=self.output,
-                    model=SkimExtraModel + SkimExtraTauPtModel)
-
-            extra_variables = [
-                'trig_EF_tau_pt',
-                'actualIntPerXing',
-                'averageIntPerXing',
-                'MET_RefFinal_BDTMedium_phi',
-                'MET_RefFinal_BDTMedium_et'
-                'MET_RefFinal_BDTMedium_sumet',
-                'EventNumber',
-                'RunNumber',
-                'lbn'
-            ]
-
-            if year % 1000 == 11:
-                extra_variables += Triggers.triggers_11
-            elif year % 1000 == 12:
-                extra_variables += Triggers.triggers_12
-            else:
-                raise ValueError("No triggers defined for year %d" % year)
-
-            tree_extra.set_buffer(
-                    chain.buffer,
-                    branches=extra_variables,
-                    create_branches=True,
-                    visible=False)
-        else:
-            # write out some branches for all events
-            # that failed the skim before trigger only for MC
-            # Used to get the total pileup reweighting sum
-            if datatype == datasets.MC:
-                tree_extra = Tree(
-                        name=self.metadata.treename + '_failed_skim_before_trigger',
-                        file=self.output)
-            else: #embedding
-                tree_extra = Tree(
-                        name=self.metadata.treename + '_failed_skim_before_selection',
-                        file=self.output)
-            extra_variables = [
-                'actualIntPerXing',
-                'averageIntPerXing',
-                'RunNumber',
-            ]
-            tree_extra.set_buffer(
-                    chain.buffer,
-                    branches=extra_variables,
-                    create_branches=True, visible=False)
-        """
 
         # define tree collections
         chain.define_collection(
@@ -351,32 +295,7 @@ class hhskim(ATLASStudent):
 
             tree.Fill()
 
-            """
-            elif datatype == datasets.DATA:
-                tree_extra.number_of_good_vertices = number_of_good_vertices
-                if event.taus:
-                    # There can be at most one good tau if this event failed the skim
-                    tree_extra.tau_pt = event.taus[0].pt
-                else:
-                    tree_extra.tau_pt = -1111.
-                tree_extra.Fill()
-            elif datatype == datasets.EMBED:
-                tree_extra.Fill()
-            """
-
         self.output.cd()
-
-        """
-        if datatype == datasets.MC:
-            # store the original weighted number of events
-            cutflow = Hist(2, 0, 2, name='cutflow', type='D')
-            cutflow[1] = nevents_mc_weight
-        else:
-            cutflow = Hist(1, 0, 1, name='cutflow', type='D')
-        # store the original number of events
-        cutflow[0] = nevents
-        cutflow.Write()
-        """
 
         if VALIDATE:
             validate_log.close()
@@ -386,7 +305,3 @@ class hhskim(ATLASStudent):
         # flush any baskets remaining in memory to disk
         tree.FlushBaskets()
         tree.Write()
-        """
-        tree_extra.FlushBaskets()
-        tree_extra.Write()
-        """
