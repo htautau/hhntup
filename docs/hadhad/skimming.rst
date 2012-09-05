@@ -16,6 +16,11 @@ MC12:
 * Stage I: **group.phys-higgs.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v4/**
 * Stage II: **group.phys-higgs.HHSkim2.HHSkim.mc12_8TeV*NTUP_TAU*p1130.v4.v1/**
 
+Due to a temporary regression in rootpy a bug was introduced into the trigger
+step of the cut-flow. This has been fixed and the few MC12 skim 2 samples that
+were affected have been recovered as v4.v2. 
+For all samples that exist as both v4.v1 and v4.v2, use the v4.v2 versions.
+
 Data11:
 
 * Stage I: **user.NoelDawe.HTauSkim.data11_7TeV*p851.v4/**

@@ -196,17 +196,15 @@ class hhskim(ATLASStudent):
                 filters=event_filters,
                 verbose=True)
 
+        define_collections(chain)
+
         tree.set_buffer(
                 chain.buffer,
                 ignore_branches=chain.glob(
                     hhbranches.REMOVE,
                     prune=hhbranches.KEEP),
                 create_branches=True,
-                visible=False)
-
-        # define tree collections
-        define_collections(chain)
-        define_collections(tree)
+                transfer_objects=True)
 
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
