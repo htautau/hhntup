@@ -35,3 +35,15 @@ class MassModel(TreeModel):
 
 
 class TauCorrections(TreeModel):
+
+    efficiency_scale_factor = ROOT.vector('float')
+    efficiency_scale_factor_high = ROOT.vector('float')
+    efficiency_scale_factor_low = ROOT.vector('float')
+
+    fakerate_scale_factor = ROOT.vector('float')
+    fakerate_scale_factor_high = ROOT.vector('float')
+    fakerate_scale_factor_low = ROOT.vector('float')
+
+    trigger_scale_factor = ROOT.vector('float')
+    trigger_scale_factor_high = ROOT.vector('float')
+    trigger_scale_factor_low = ROOT.vector('float')

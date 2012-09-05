@@ -82,7 +82,7 @@ class hhskim(ATLASStudent):
 
 
         # define the model of the output tree
-        Model = SkimModel + TriggerMatching + MMCModel
+        Model = SkimModel + TriggerMatching + MassModel + TauCorrections
 
         # create the output tree
         tree = Tree(
@@ -319,12 +319,12 @@ class hhskim(ATLASStudent):
             tree.MMC_MET_y = mmc_met.Y()
             tree.MMC_MET_phi = math.pi - mmc_met.Phi()
 
-            # colinear mass
+            # collinear mass
             collin_mass, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
-            tree.tau_colinear_mass = collin_mass
-            tree.tau_colinear_momentum_frac = tau1_x
-            tree.tau_colinear_momentum_frac = tau2_x
+            tree.tau_collinear_mass = collin_mass
+            tree.tau_collinear_momentum_frac = tau1_x
+            tree.tau_collinear_momentum_frac = tau2_x
 
             # visible mass
             tree.tau_visible_mass = (tau1.fourvect + tau2.fourvect).M()
