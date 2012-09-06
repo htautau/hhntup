@@ -96,7 +96,6 @@ class MuonPtSmearing(EventFilter):
 #################################################
 
 from ROOT import eg2011
-from ROOT import CaloIsoCorrection
 
 egammaER = eg2011.EnergyRescaler()
 egammaER.useDefaultCalibConstants("2011")
@@ -174,19 +173,38 @@ class EgammaERescaling(EventFilter):
             event.MET_RefFinal_BDTMedium_ety += ( py - corrected_py ) * el.MET_BDTMedium_wpy[0]
             event.MET_RefFinal_BDTMedium_sumet -= ( raw_et - corrected_et ) * el.MET_BDTMedium_wet[0]
 
-            
-            ## Correct Isolation
-            nPV = 0
-            for vxp in event.vertices:
-                if vxp.nTracks >= 2: nPV += 1
+        return True
+
+    
+from ROOT import CaloIsoCorrection
+class ElectronIsoCorrection(EventFilter):
+    """
+    Correction for electron calorimeter isolation variables
+    """
+    
+    def __init__(self, datatype, **kwargs):
+
+        super(ElectronIsoCorrection, self).__init__(**kwargs)
+        self.datatype = datatype
+
+    def passes(self, event):
+
+        nPV = 0
+        for vxp in event.vertices:
+            if vxp.nTracks >= 2: nPV += 1
+        
+        for el in event.electrons:
+            E = el.fourvect.E()
             EtaS2 = el.etas2
             EtaP  = el.etap
+            cl_eta = el.cl_eta
             EtCone20 = el.Etcone20
-            newElectronEtCone20 = EtCone20
+            newEtCone20 = EtCone20
+            
 
             if self.datatype == datasets.MC:
                 newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
-                                                                                   corrected_e,
+                                                                                   E,
                                                                                    EtaS2,
                                                                                    EtaP,
                                                                                    cl_eta,
@@ -195,19 +213,17 @@ class EgammaERescaling(EventFilter):
                                                                                    EtCone20)
             else:
                 newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
-                                                                                   corrected_e,
+                                                                                   E,
                                                                                    EtaS2,
                                                                                    EtaP,
                                                                                    cl_eta,
                                                                                    20,
                                                                                    False,
                                                                                    EtCone20)
-                
-
-            el.Etcone20 = newElectronEtCone20
-            
-
+            el.Etcone20 = newEtCone20
         return True
+        
+    
 
 
 #################################################
@@ -274,26 +290,10 @@ def MuonSF(event, datatype, pileup_tool):
     #Get SF tool
     muonSF = getMuonSF(pileup_tool)
 
-    #Store electrons and muons for the trigger efficiency tool
-    std_muons     = std.vector(TLorentzVector)()
-    std_electrons = std.vector(TLorentzVector)()
-
     for mu in event.muons:
         muon = TLorentzVector()
         muon.SetPtEtaPhiM(mu.pt, mu.eta, mu.phi, mu.m)
-        std_muons.push_back(muon)
         w *= muonSF.scaleFactor(muon)
-
-    for e in event.electrons:
-        electron = TLorentzVector()
-        cl_eta = e.cl_eta
-        trk_eta = e.tracketa
-        cl_Et = e.cl_E/cosh(trk_eta)
-        electron.SetPtEtaPhiM(cl_Et, cl_eta, e.cl_phi, e.m)
-        std_electrons.push_back(electron)
-
-    trigSF = leptonTriggerSF.GetTriggerSF(event.RunNumber, False, std_muons, 1, std_electrons, 2)
-    w *= trigSF.first
 
     return w
 
@@ -315,10 +315,10 @@ from ROOT import egammaSFclass
 
 egammaSF = egammaSFclass()
 
-def ElectronSF(event, datatype, pileupTool):
+def ElectronSF(event, datatype):
 
-    ## Apply only on MC
-    if datatype != datasets.MC: return 1.0
+    ## Apply only on MC and embedded
+    if datatype == datasets.DATA: return 1.0
 
     ## Weight
     weight = 1.0
@@ -328,42 +328,27 @@ def ElectronSF(event, datatype, pileupTool):
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EfficiencyMeasurements
     """
 
-    ## Load muonSF tool
-    muonSF = getMuonSF(pileupTool)
-
-    ## Store electrons and muons for the trigger efficiency tool
-    v_muTLVs = std.vector(TLorentzVector)()
-    v_elTLVs = std.vector(TLorentzVector)()
-
-    for mu in event.muons:
-        print "There should not be a muon"
-        muTLV = TLorentzVector()
-        muTLV.SetPtEtaPhiM(mu.pt, mu.eta, mu.phi, mu.m)
-        v_muTLVs.push_back(muTLV)
-        weight *= muonSF.scaleFactor(muTLV)
-
     for iel, el in enumerate(event.electrons):
         if iel > 0:
             print 'WARNING in ElectronSF(): using more than 1 electron in efficiency correction'
-        elTLV = TLorentzVector()
-        pt = getattr(el,'fourvect').Pt()
+        pt = el.fourvect.Pt()
         eta = el.cl_eta
-        phi = el.cl_phi
-        E = el.cl_E
-        elTLV.SetPtEtaPhiE(pt,eta,phi,E)
-        v_elTLVs.push_back(elTLV)
-        reconstructionEffCorr = (egammaSF.scaleFactor(el.cl_eta, getattr(el,'fourvect').Pt(), 4, 0, 6, True)).first # track + reco eff SF
-        identificationEffCorr = (egammaSF.scaleFactor(el.cl_eta, getattr(el,'fourvect').Pt(), 7, 0, 6, True)).first # ID eff SF
+        reconstructionEffCorr = (egammaSF.scaleFactor(eta, pt, 4, 0, 6, True)).first # track + reco eff SF
+        identificationEffCorr = (egammaSF.scaleFactor(eta, pt, 7, 0, 6, True)).first # ID eff SF
         ## We don't use electrons in the forward region, so we don't need to apply SF for them.
         totalEffCorr = reconstructionEffCorr * identificationEffCorr
         weight *= totalEffCorr
 
+    return weight
+
+
+## Scale factor for single electron triggers
+def LeptonSLTSF(event, datatype, pileupTool):
     """
     Trigger efficiency correction.
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool
     """
-    if v_muTLVs.size() > 0: print 'WARNING in ElectronSF(): vector of muons is NOT empty'
     ## From the
     ## https://twiki.cern.ch/twiki/bin/viewauth/Atlas/TrigMuonEfficiency#LeptonTriggerSF_Tool
     ## Twiki:
@@ -383,19 +368,39 @@ def ElectronSF(event, datatype, pileupTool):
     ## Twiki:
     ## * The trigger matching is not applied for this analysis because of missing information in D3PDs,
     ##   but this is a small effect.
+
+    v_muTLVs = std.vector(TLorentzVector)()
+    v_elTLVs = std.vector(TLorentzVector)()
+
+    for imu, mu in enumerate(event.muons):
+        if imu > 0:
+            print 'WARNING in LeptonSF(): using more than 1 muon in efficiency correction'
+        muTLV = TLorentzVector()
+        muTLV.SetPtEtaPhiM(mu.pt, mu.eta, mu.phi, mu.m)
+        v_muTLVs.push_back(muTLV)
+
+    for iel, el in enumerate(event.electrons):
+        if iel > 0:
+            print 'WARNING in LeptonSF(): using more than 1 electron in efficiency correction'
+        elTLV = TLorentzVector()
+        pt  = el.fourvect.Pt()
+        eta = el.cl_eta
+        phi = el.cl_phi
+        E   = el.fourvect.E()
+        elTLV.SetPtEtaPhiE(pt,eta,phi,E)
+        v_elTLVs.push_back(elTLV)
+    
     pileupTool.SetRandomSeed(314159 + event.mc_channel_number*2718 + event.EventNumber)
     randomRunNumber = pileupTool.GetRandomRunNumber(event.RunNumber)
     trigSF = (leptonTriggerSF.GetTriggerSF(randomRunNumber, False, v_muTLVs, 1, v_elTLVs, 2)).first
-    weight *= trigSF
 
-    return weight
-
+    return trigSF
 
 ## Scale factor for lephad triggers
 def ElectronLTTSF(electron, runNumber):
 
     sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
-    return sfTool.getSFMuon(electron.fourvect, runNumber, 0)
+    return sfTool.getSFElec(electron.fourvect, runNumber, 0)
 
 
 

@@ -15,9 +15,9 @@ args = parser.parse_args()
 
 setup = cluster.get_setup('setup.michel.sfu.txt')
 
-datasets = ['data-Egamma',
-            'data-JetTauEtmiss',
-            'data-Muons',
+datasets = [#'data-Egamma',
+            #'data-JetTauEtmiss',
+            #'data-Muons',
             'embed-lh-isol-mfsim']
 
 CWD = os.getcwd()
@@ -25,7 +25,7 @@ CWD = os.getcwd()
 for i in xrange(args.nsplit):
     for dataset in datasets:
 
-        CMD = ("%s && ./run --output-path ntuples/lephad_testElectron/%s "
+        CMD = ("%s && ./run --output-path ntuples/lephad/%s "
                "-s LHProcessor.py -n %d --db datasets_lh "
         "--nice %d --split %d:%%d %s") % (
             setup, dataset, args.nproc, args.nice, args.nsplit, dataset)
@@ -35,7 +35,7 @@ for i in xrange(args.nsplit):
             cmd,
             ncpus=args.nproc,
             name= ('LHProcessor.data-%s_%d') % (dataset, (i + 1)),
-            stderr_path='ntuples/lephad_testElectron/' + dataset,
-            stdout_path='ntuples/lephad_testElectron/' + dataset,
+            stderr_path='ntuples/lephad/' + dataset,
+            stdout_path='ntuples/lephad/' + dataset,
             queue=args.queue,
             dry_run=args.dry)
