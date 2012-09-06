@@ -52,7 +52,7 @@ def match_threshold(event, thresholds):
 
     # sanity check
     for tau in taus:
-        print tau[0].trigger_match_index
+        print tau[0].trigger_match_index, tau[1].pt
     print "===="
     assert len(thresholds) == len(taus)
 
