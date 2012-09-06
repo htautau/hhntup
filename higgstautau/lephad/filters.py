@@ -573,6 +573,21 @@ class LeptonSelection(EventFilter):
 
         if not ID: return False
 
+
+        if self.datatype == datasets.EMBED:
+                 
+            if event.leptonType == 'e':
+                if Pt > 17*GeV:
+                    return True
+                else:
+                    return False
+
+            if event.leptonType == 'mu':
+                if Pt > 17*GeV:
+                    return True
+                else:
+                    return False
+
             
         if self.datatype == datasets.MC:
                  

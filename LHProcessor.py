@@ -200,7 +200,7 @@ class LHProcessor(ATLASStudent):
         tree_test.define_object(name='tau', prefix='tau_')
         tree_test.define_object(name='lep', prefix='lep_')
 
-        if self.metadata.datatype == datasets.MC:
+        if self.metadata.datatype == datasets.MC or self.metadata.datatype == datasets.EMBED:
             from externaltools import PileupReweighting
             from ROOT import Root
             # Initialize the pileup reweighting tool
