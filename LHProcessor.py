@@ -150,18 +150,16 @@ class LHProcessor(ATLASStudent):
                 datatype=self.metadata.datatype,
                 verbose=False),
             PriVertex(),
-            MuonPtSmearing(datatype=self.metadata.datatype),
-            EgammaERescaling(datatype=self.metadata.datatype),
             Systematics(
                 terms=self.args.syst_terms,
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 verbose=VERBOSE),
             JetPreSelection(),
-            MuonOverlapSelection(),
-            TauMuonOverlapRemoval(),
             MuonPreSelection(),
+            MuonPtSmearing(datatype=self.metadata.datatype),
             ElectronPreSelection(),
+            EgammaERescaling(datatype=self.metadata.datatype),
             JetOverlapRemoval(),
             JetCleaning(self.metadata.datatype, YEAR),
             ElectronLArHole(),
@@ -175,8 +173,8 @@ class LHProcessor(ATLASStudent):
             TauPreSelection(),
             TauSelection(),
             JetSelection(),
-            
-            FinalOverlapRemoval()
+            FinalOverlapRemoval(),
+            ElectronIsoCorrection(datatype=self.metadata.datatype)
         ])
 
         self.filters['event'] = event_filters
@@ -202,7 +200,7 @@ class LHProcessor(ATLASStudent):
         tree_test.define_object(name='tau', prefix='tau_')
         tree_test.define_object(name='lep', prefix='lep_')
 
-        if self.metadata.datatype == datasets.MC:
+        if self.metadata.datatype == datasets.MC or self.metadata.datatype == datasets.EMBED:
             from externaltools import PileupReweighting
             from ROOT import Root
             # Initialize the pileup reweighting tool
@@ -435,12 +433,15 @@ class LHProcessor(ATLASStudent):
                 #Tau/Electron misidentification correction
                 event_weight *= TauEfficiencySF(event, self.metadata.datatype)
 
-                #Lepton Scale factors
+                #Lepton Efficiency scale factors
+                if event.leptonType == 'mu':
+                    event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
+                if event.leptonType == 'e':
+                    event_weight *= ElectronSF(event, self.metadata.datatype)
+                
+                #Lepton Trigger scale factors
                 if not event.isLTT:
-                    if event.leptonType == 'mu':
-                        event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
-                    if event.leptonType == 'e':
-                        event_weight *= ElectronSF(event, self.metadata.datatype, pileup_tool)
+                    event_weight *= LeptonSLTSF(event, self.metadata.datatype, pileup_tool)
                 else:
                     if event.leptonType == 'mu':
                         event_weight *= MuonLTTSF(Lep, event.RunNumber)
@@ -463,12 +464,15 @@ class LHProcessor(ATLASStudent):
                 #Tau/Electron misidentification correction
                 event_weight *= TauEfficiencySF(event, self.metadata.datatype)
 
-                #Lepton Scale factors
+                #Lepton Efficiency scale factors
+                if event.leptonType == 'mu':
+                    event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
+                if event.leptonType == 'e':
+                    event_weight *= ElectronSF(event, self.metadata.datatype)
+                
+                #Lepton Trigger scale factors
                 if not event.isLTT:
-                    if event.leptonType == 'mu':
-                        event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
-                    if event.leptonType == 'e':
-                        event_weight *= ElectronSF(event, self.metadata.datatype, pileup_tool)
+                    event_weight *= LeptonSLTSF(event, self.metadata.datatype, pileup_tool)
                 else:
                     if event.leptonType == 'mu':
                         event_weight *= MuonLTTSF(Lep, event.RunNumber)

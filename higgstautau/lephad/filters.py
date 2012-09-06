@@ -31,36 +31,6 @@ class PrepareInputTree(EventFilter):
             vect.SetPtEtaPhiE(et, eta, phi, el.cl_E)
             setattr(el, 'fourvect', vect)
 
-            ## Find the tau candidate matched to the electron to get the electron BDTJetScore
-            BDTJetLoose = -1
-            BDTJetMedium = -1
-            BDTJetTight = -1
-
-            BDTEleLoose = -1
-            BDTEleMedium = -1
-            BDTEleTight = -1
-            
-            for tau in event.taus:
-                tau_vect = LorentzVector()
-                tau_vect.SetPtEtaPhiM(tau.pt, tau.eta, tau.phi, 0)
-
-                if tau_vect.DeltaR(vect) < 0.2:
-                    BDTJetLoose  = tau.JetBDTSigLoose
-                    BDTJetMedium = tau.JetBDTSigMedium
-                    BDTJetTight  = tau.JetBDTSigTight
-
-                    BDTEleLoose  = tau.EleBDTLoose
-                    BDTEleMedium = tau.EleBDTMedium
-                    BDTEleTight  = tau.EleBDTTight
-
-            setattr(el, 'BDTJetLoose', BDTJetLoose)
-            setattr(el, 'BDTJetMedium', BDTJetMedium)
-            setattr(el, 'BDTJetTight', BDTJetTight)
-
-            setattr(el, 'BDTEleLoose',  BDTEleLoose)
-            setattr(el, 'BDTEleMedium', BDTEleMedium)
-            setattr(el, 'BDTEleTight',  BDTEleTight)
-
         ## Append the isLTT (is Lepton-Tau trigger event) flag
         event.isLTT = False
 
@@ -602,6 +572,21 @@ class LeptonSelection(EventFilter):
             ID = event.muons[0].isCombinedMuon
 
         if not ID: return False
+
+
+        if self.datatype == datasets.EMBED:
+                 
+            if event.leptonType == 'e':
+                if Pt > 17*GeV:
+                    return True
+                else:
+                    return False
+
+            if event.leptonType == 'mu':
+                if Pt > 17*GeV:
+                    return True
+                else:
+                    return False
 
             
         if self.datatype == datasets.MC:
