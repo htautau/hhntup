@@ -15,26 +15,33 @@ class JetCalibration(EventFilter):
     """
     This class applies jet calibrations and allows all events to pass through
     """
-    def __init__(self, datatype, year, verbose=False, **kwargs):
+    def __init__(self, datatype, year,
+            verbose=False,
+            passthrough=False,
+            **kwargs):
 
-        super(JetCalibration, self).__init__(**kwargs)
-        self.year = year
-        self.datatype = datatype
-        self.isdata = datatype in (datasets.DATA, datasets.EMBED)
-        self.verbose = verbose
-        self.algo = "AntiKt4LCTopo"
-        if year == 2011:
-            self.config_file = ApplyJetCalibration.get_resource(
-                    'CalibrationConfigs/InsituJES_2011_Preliminary.config')
-        elif year == 2012:
-            self.config_file = ApplyJetCalibration.get_resource(
-                    'CalibrationConfigs/Rel17_JES.config')
-        else:
-            raise ValueError("No JES calibration defined for year %d" % year)
-        self.jes_tool = JetCalibrationTool(
-                self.algo,
-                self.config_file,
-                self.isdata)
+        super(JetCalibration, self).__init__(
+                passthrough=passthrough,
+                **kwargs)
+
+        if not passthrough:
+            self.year = year
+            self.datatype = datatype
+            self.isdata = datatype in (datasets.DATA, datasets.EMBED)
+            self.verbose = verbose
+            self.algo = "AntiKt4LCTopo"
+            if year == 2011:
+                self.config_file = ApplyJetCalibration.get_resource(
+                        'CalibrationConfigs/InsituJES_2011_Preliminary.config')
+            elif year == 2012:
+                self.config_file = ApplyJetCalibration.get_resource(
+                        'CalibrationConfigs/Rel17_JES.config')
+            else:
+                raise ValueError("No JES calibration defined for year %d" % year)
+            self.jes_tool = JetCalibrationTool(
+                    self.algo,
+                    self.config_file,
+                    self.isdata)
 
     def passes(self, event):
 

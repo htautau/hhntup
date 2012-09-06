@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('cairo')
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import matplotlib.font_manager as fm
@@ -34,11 +33,11 @@ LATEX_PREAMBLE = '''
 ''' % package_path('unicode-math')
 """
 
-plt.rcParams['ps.useafm'] = True
-rc('text', usetex=True)
-rc('font', family='sans-serif')
+#plt.rcParams['ps.useafm'] = True
+#rc('text', usetex=True)
+#rc('font', family='sans-serif')
 rc('text.latex', preamble=LATEX_PREAMBLE)
-plt.rcParams['pdf.fonttype'] = 42
+#plt.rcParams['pdf.fonttype'] = 42
 
 
 def set_colours(hists, colour_map=cm.jet):
@@ -100,12 +99,14 @@ def draw(model,
     if data is None:
         show_ratio=False
         show_qq=False
+
     vscale = 1.
     left_margin = 0.16
     bottom_margin = 0.16
     top_margin = 0.05
     right_margin = 0.05
     ratio_sep_margin = 0.025
+    ypadding = (.55, .1)
 
     width = 1. - right_margin - left_margin
     height = 1. - top_margin - bottom_margin
@@ -180,7 +181,7 @@ def draw(model,
 
     model_bars = rplt.bar(model, linewidth=0,
             stacked=True, axes=hist_ax,
-            ypadding=(.55, .1))
+            ypadding=ypadding)
 
     if signal is not None:
         if signal_scale != 1.:
@@ -196,11 +197,11 @@ def draw(model,
         if isinstance(signal, (list, tuple)):
             signal_bars = rplt.bar(signal, linewidth=0,
                     stacked=True, yerr='quadratic',
-                    axes=hist_ax, alpha=.8, ypadding=(.55, .1))
+                    axes=hist_ax, alpha=.8, ypadding=ypadding)
         else:
             _, _, signal_bars = rplt.hist(signal,
                     histtype='stepfilled',
-                    axes=hist_ax, ypadding=(.55, .1))
+                    axes=hist_ax, ypadding=ypadding)
 
     if show_ratio:
         ratio_ax = plt.axes(rect_ratio)
@@ -307,18 +308,6 @@ def draw(model,
             low_band[i] = sum_low
         # draw band as hatched histogram with base of model - low_band
         # and height of high_band + low_band
-        """
-        band_base = total_model - low_band
-        band_height = high_band + low_band
-        band_height.fillstyle = '/'
-        band_height.linecolor = 'yellow'
-        band_bars = rplt.bar(band_height,
-                bottom=band_base,
-                linewidth=1,
-                axes=hist_ax,
-                ypadding=(.55, .1),
-                fill=False)
-        """
         rplt.fill_between(total_model + high_band,
                     total_model - low_band,
                     edgecolor='yellow',
@@ -346,7 +335,8 @@ def draw(model,
 
     if data is not None:
         data_bars = rplt.errorbar(data,
-                fmt='o', axes=hist_ax, ypadding=(.55, .1),
+                fmt='o', axes=hist_ax,
+                ypadding=ypadding,
                 emptybins=False,
                 barsabove=True,
                 zorder=1000)
@@ -422,9 +412,9 @@ def draw(model,
     plt.close(fig)
     return fig
 
-
+"""
 def significance():
-    """
+
     # plot the signal significance on the same axis
     sig_ax = ax.twinx()
     # reverse cumsum
@@ -452,5 +442,4 @@ def significance():
             xytext=(max_cut + 0.1 * 1., max_sig),
                  arrowprops=dict(color='black', shrink=0.15),
                  ha='left', va='center', color='black')
-    """
-    pass
+"""

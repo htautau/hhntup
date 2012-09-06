@@ -447,7 +447,7 @@ class HHProcessor(ATLASStudent):
             tree.MET_mmc = mmc_met.Mod()
             tree.MET_mmc_x = mmc_met.X()
             tree.MET_mmc_y = mmc_met.Y()
-            tree.MET_mmc_phi = mmc_met.Phi()
+            tree.MET_mmc_phi = math.pi - mmc_met.Phi()
             tree.MET_mmc_vec.set_from(mmc_met)
 
             """
@@ -578,9 +578,10 @@ class HHProcessor(ATLASStudent):
             # set the event weights
             if self.metadata.datatype == datasets.MC:
                 # set the event weight
-                tree.pileup_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
-                                                                   event.mc_channel_number,
-                                                                   event.averageIntPerXing)
+                tree.pileup_weight = pileup_tool.GetCombinedWeight(
+                        event.RunNumber,
+                        event.mc_channel_number,
+                        event.averageIntPerXing)
                 tree.mc_weight = event.mc_event_weight
                 if YEAR == 2011:
                     tree.ggf_weight = reweight_ggf(event, self.metadata.name)

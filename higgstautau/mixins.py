@@ -9,6 +9,14 @@ This module contains "mixin" classes for adding
 functionality to Tree objects ("decorating" them).
 """
 
+__all__ = [
+    'FourMomentum',
+    'TauFourMomentum',
+    'ElFourMomentum',
+    'MCTauFourMomentum',
+    'MCParticle',
+]
+
 
 class FourMomentum(object):
 
@@ -53,6 +61,11 @@ class TauFourMomentum(FourMomentum):
         self.trigger_scale_factor_high = 1.
         self.trigger_scale_factor_low = 1.
 
+        self.trigger_match_thresh = 0
+        self.trigger_match_index = -1
+
+        self.collinear_momentum_fraction = -9999.
+
         self.centrality = 0.
         self.centrality_boosted = 0.
 
@@ -94,7 +107,6 @@ class TauFourMomentum(FourMomentum):
                 ldtrkindex = i
                 ldtrkpt = pt
         return ldtrkindex
-
 
 
 class ElFourMomentum(FourMomentum):

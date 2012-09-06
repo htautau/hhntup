@@ -20,7 +20,6 @@ class ElectronIDpatch(EventFilter):
     """
     Recalculates the electron ID based on electron variables
     """
-
     def passes(self, event):
 
         #iterate over all electron candidates
@@ -28,7 +27,8 @@ class ElectronIDpatch(EventFilter):
 
             #Retrieve relevant branches
             eta          = e.etas2
-            if eta == -999: continue
+            if eta == -999:
+                continue
             eT           = e.cl_E/cosh(eta)
             rHad         = e.Ethad/eT
             rHad1        = e.Ethad1/eT
@@ -57,16 +57,23 @@ class ElectronIDpatch(EventFilter):
             ConvBit      = e.isEM and (1 << egammaPID.ConversionMatch_Electron)
 
             #Correct the loosePP flag
-            e.loosePP = isLoosePlusPlus(eta, eT, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, nSi, nSiOutliers, nPix, nPixOutliers)
+            e.loosePP = isLoosePlusPlus(
+                    eta, eT, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1,
+                    deltaEta, nSi, nSiOutliers, nPix, nPixOutliers)
 
             #Correct the mediumPP flag
-            e.mediumPP  = isMediumPlusPlus(eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, d0, TRratio, nTRT, nTRTOutliers,
-                                           nSi, nSiOutliers, nPix, nPixOutliers, nBlayer, nBlayerOutliers, expectBlayer)
-
+            e.mediumPP  = isMediumPlusPlus(
+                    eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1,
+                    deltaEta, d0, TRratio, nTRT, nTRTOutliers,
+                    nSi, nSiOutliers, nPix, nPixOutliers, nBlayer,
+                    nBlayerOutliers, expectBlayer)
 
             #Correct the tightPP flag
-            e.tightPP = isTightPlusPlus(eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1, deltaEta, d0, TRratio, nTRT, nTRTOutliers,
-                                        nSi, nSiOutliers, nPix, nPixOutliers, nBlayer, nBlayerOutliers, expectBlayer, eOverp, deltaPhi, ConvBit)
+            e.tightPP = isTightPlusPlus(
+                    eta, eT, f3, rHad, rHad1, Reta, w2, f1, wstot, DEmaxs1,
+                    deltaEta, d0, TRratio, nTRT, nTRTOutliers,
+                    nSi, nSiOutliers, nPix, nPixOutliers, nBlayer,
+                    nBlayerOutliers, expectBlayer, eOverp, deltaPhi, ConvBit)
 
         return True
 
@@ -82,7 +89,6 @@ class TauIDpatch(EventFilter):
     """
     Recalculates the tau ID
     """
-
     def __init__(self, year, **kwargs):
 
         super(TauIDpatch, self).__init__(**kwargs)
@@ -102,7 +108,10 @@ class TauIDpatch(EventFilter):
 
     def passes_2011(self, event):
 
-        nvtx = event.number_of_good_vertices
+        #nvtx = event.number_of_good_vertices
+        # assume vertex selection already applied!
+        nvtx = len(event.vertices)
+
         for tau in event.taus:
 
             pt = tau.pt

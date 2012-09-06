@@ -1,3 +1,0 @@
-svn co svn+ssh://${USER}@svn.cern.ch/reps/atlasusr/wdavey/CoEPPTrigTool/trunk CoEPPTrigTool
-
-https://twiki.cern.ch/twiki/bin/view/Main/CoEPPTrigTool
