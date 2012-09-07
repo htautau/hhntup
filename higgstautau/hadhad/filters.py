@@ -59,6 +59,9 @@ class Triggers(EventFilter):
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
 
+        # TODO use tau27Ti_m1_tau18Ti_m1_L2loose for period E
+        # need emulaion, SFs for this
+
 
 class ElectronVeto(EventFilter):
 

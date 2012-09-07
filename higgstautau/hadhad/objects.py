@@ -51,6 +51,7 @@ def define_objects(tree, year):
         met = 'MET_RefFinal_BDTMedium_'
     else:
         met = 'MET_RefFinal_STVF_'
+    print "Using %s*" % met
     tree.define_object(
             name='MET',
             prefix=met)
