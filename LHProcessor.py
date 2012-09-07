@@ -161,6 +161,7 @@ class LHProcessor(ATLASStudent):
             EgammaERescaling(datatype=self.metadata.datatype),
             ElectronPreSelection(),
             JetOverlapRemoval(),
+            ElectronEtaSelection(),
             JetCleaning(self.metadata.datatype, YEAR),
             ElectronLArHole(),
             TauHasTrack(1),
