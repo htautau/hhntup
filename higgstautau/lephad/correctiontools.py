@@ -343,7 +343,7 @@ def ElectronSF(event, datatype):
 
 
 ## Scale factor for single electron triggers
-def LeptonSLTSF(event, datatype, pileupTool):
+def LeptonSLTSF(event, datatype):
     """
     Trigger efficiency correction.
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
@@ -390,9 +390,7 @@ def LeptonSLTSF(event, datatype, pileupTool):
         elTLV.SetPtEtaPhiE(pt,eta,phi,E)
         v_elTLVs.push_back(elTLV)
     
-    pileupTool.SetRandomSeed(314159 + event.mc_channel_number*2718 + event.EventNumber)
-    randomRunNumber = pileupTool.GetRandomRunNumber(event.RunNumber)
-    trigSF = (leptonTriggerSF.GetTriggerSF(randomRunNumber, False, v_muTLVs, 1, v_elTLVs, 2)).first
+    trigSF = (leptonTriggerSF.GetTriggerSF(event.RunNumber, False, v_muTLVs, 1, v_elTLVs, 2)).first
 
     return trigSF
 
@@ -413,14 +411,17 @@ def EmbedTauTriggerCorr(Tau, nvtx, runNumber):
     ttc = TauTriggerCorrections()
     weight = 1.0
     ttcPath = TTC.RESOURCE_PATH
+    tauPt  = Tau.fourvect.Pt()
+    tauEta = Tau.fourvect.Eta()
+    
     if runNumber > 186755:
-        status =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'))
-        weight =  ttc.get3DMCEff(Tau.fourvect.Pt(), Tau.fourvect.Eta(), nvtx, 0)
+        status =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'), '1P3P', 'BDTm')
+        weight =  ttc.get3DMCEff(tauPt, tauEta , nvtx, 0)
         status =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20_medium1.root'))
-        weight *= ttc.getSF(Tau.fourvect.Pt(), 0)
+        weight *= ttc.getSF(tauPt, 0)
     else:
-        status = ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau16_loose.root'))
-        weight = ttc.getDataEff(Tau.fourvect.Pt(), 0)
+        status = ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau16_loose.root'))
+        weight = ttc.getDataEff(tauPt, 0)
 
     return weight
             

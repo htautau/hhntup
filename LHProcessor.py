@@ -441,7 +441,7 @@ class LHProcessor(ATLASStudent):
                 
                 #Lepton Trigger scale factors
                 if not event.isLTT:
-                    event_weight *= LeptonSLTSF(event, self.metadata.datatype, pileup_tool)
+                    event_weight *= LeptonSLTSF(event, self.metadata.datatype)
                 else:
                     if event.leptonType == 'mu':
                         event_weight *= MuonLTTSF(Lep, event.RunNumber)
@@ -455,33 +455,45 @@ class LHProcessor(ATLASStudent):
             ## Event weight corrections for embedded samples
             #################################################
             if self.metadata.datatype == datasets.EMBED:
+
+                mc_w            = 1.0
+                tausf_w         = 1.0
+                muonsf_w        = 1.0
+                electronsf_w    = 1.0
+                leptonsltsf_w   = 1.0
+                muonlttsf_w     = 1.0
+                electronlttsf_w = 1.0
+                taulttsf_w      = 1.0
+                
                 ## Apply mc event weight:
                 try:
-                    event_weight *= event.mc_weight[0]
+                    mc_w = event.mc_weight[0]
                 except AttributeError:
                     pass
 
                 #Tau/Electron misidentification correction
-                event_weight *= TauEfficiencySF(event, self.metadata.datatype)
+                tausf_w = TauEfficiencySF(event, self.metadata.datatype)
 
                 #Lepton Efficiency scale factors
                 if event.leptonType == 'mu':
-                    event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
+                    muonsf_w = MuonSF(event, self.metadata.datatype, pileup_tool)
                 if event.leptonType == 'e':
-                    event_weight *= ElectronSF(event, self.metadata.datatype)
+                    electronsf_w = ElectronSF(event, self.metadata.datatype)
                 
                 #Lepton Trigger scale factors
                 if not event.isLTT:
-                    event_weight *= LeptonSLTSF(event, self.metadata.datatype, pileup_tool)
+                    leptonsltsf_w = LeptonSLTSF(event, self.metadata.datatype)
                 else:
                     if event.leptonType == 'mu':
-                        event_weight *= MuonLTTSF(Lep, event.RunNumber)
+                        muonlltsf_w = MuonLTTSF(Lep, event.RunNumber)
                     if event.leptonType == 'e':
-                        event_weight *= ElectronLTTSF(Lep, event.RunNumber)
+                        electronlltsf_w = ElectronLTTSF(Lep, event.RunNumber)
 
                 #Tau trigger scale factors
-                event_weight *= EmbedTauTriggerCorr(Tau, npileup_vtx, event.RunNumber)
-
+                taulttsf_w = EmbedTauTriggerCorr(Tau, npileup_vtx, event.RunNumber)
+                
+            event_weight = mc_w * muonsf_w * electronsf_w * leptonsltsf_w * muonlttsf_w * electronlttsf_w * taulttsf_w
+                
             tree.weight = event_weight
 
             # fill output ntuple

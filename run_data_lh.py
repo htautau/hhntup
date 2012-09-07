@@ -6,7 +6,7 @@ import cluster
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
-parser.add_argument('--nproc', type=int, default=3)
+parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
