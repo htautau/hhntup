@@ -492,7 +492,7 @@ class LHProcessor(ATLASStudent):
                 #Tau trigger scale factors
                 taulttsf_w = EmbedTauTriggerCorr(Tau, npileup_vtx, event.RunNumber)
                 
-            event_weight = mc_w * muonsf_w * electronsf_w * leptonsltsf_w * muonlttsf_w * electronlttsf_w * taulttsf_w
+                event_weight = mc_w * muonsf_w * electronsf_w * leptonsltsf_w * muonlttsf_w * electronlttsf_w * taulttsf_w
                 
             tree.weight = event_weight
 
