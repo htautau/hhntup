@@ -105,18 +105,14 @@ higgs_125 = Higgs(
 
 if 'train' in args.actions:
 
+    # all modes, all masses
     signals_train = [
-        Higgs(modes=['vbf']),
-        Higgs(modes=['ggf']),
-        Higgs(modes=['wh']),
-        Higgs(modes=['zh']),
+        Higgs(),
     ]
 
+    # all modes, 125GeV mass
     signals_test = [
-        MC_VBF(mass=125),
-        MC_ggF(mass=125),
-        MC_WH(mass=125),
-        MC_ZH(mass=125),
+        Higgs(mass=125),
     ]
 
     backgrounds = [
@@ -445,11 +441,10 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
 
             # apply on all signal masses
             sig_scores[sys_term] = []
-            for mass in MC_Higgs.MASS_POINTS:
-                for mode in (MC_VBF, MC_ggF, MC_WH, MC_ZH):
-                    signal = mode(mass=mass)
+            for mass in Higgs.MASS_POINTS:
+                for mode in Higgs.MODES.keys():
                     scores, weight = apply_clf(clf,
-                        signal,
+                        Higgs(mode=mode, mass=mass),
                         category=category,
                         region=target_region,
                         branches=branches,
@@ -462,7 +457,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                         max_score = _max
                     sig_scores[sys_term].append(
                         ('Signal_%d_%s' %
-                            (mass, signal.mode), scores, weight))
+                            (mass, mode), scores, weight))
 
         padding = (max_score - min_score) / (2 * bins)
         min_score -= padding

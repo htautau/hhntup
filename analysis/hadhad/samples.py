@@ -988,10 +988,16 @@ class Higgs(MC, Signal):
         'wh': ('WH', 'Pythia'),
     }
 
-    def __init__(self, modes=None, masses=None, **kwargs):
+    def __init__(self,
+            mode=None, modes=None,
+            mass=None, masses=None, **kwargs):
 
         if masses is None:
-            masses = Higgs.MASS_POINTS
+            if mass is not None:
+                assert mass in Higgs.MASS_POINTS
+                masses = [mass]
+            else:
+                masses = Higgs.MASS_POINTS
         else:
             assert len(masses) > 0
             for mass in masses:
@@ -999,7 +1005,11 @@ class Higgs(MC, Signal):
             assert len(set(masses)) == len(masses)
 
         if modes is None:
-            modes = Higgs.MODES.keys()
+            if mode is not None:
+                assert mode in Higgs.MODES
+                modes = [mode]
+            else:
+                modes = Higgs.MODES.keys()
         else:
             assert len(modes) > 0
             for mode in modes:
