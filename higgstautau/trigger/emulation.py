@@ -24,7 +24,9 @@ class TauTriggerEmulation(EventFilter):
 
             self.year = year
 
-            if year == 2011: # only can emulate 2011 currently...
+            if year == 2011:
+                # emulation not required in 2012 yet since the SFs are wrt
+                # the default triggers
                 # initialize the trigger emulation tool
                 self.trigger_tool_wrapper = CoEPP.OfficialWrapper()
                 self.trigger_tool = CoEPP.TriggerTool()

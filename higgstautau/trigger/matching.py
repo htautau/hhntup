@@ -7,43 +7,13 @@ from math import *
 from . import utils as triggerutils
 
 
-def match_index(event, trigger):
-
-    matched_taus = []
-    matches = {}
-    # get indices of trigger taus associated with this trigger
-    trigger_idx = triggerutils.get_tau_trigger_obj_idx(
-        self.config,
-        event,
-        trigger)
-
-    # sanity check
-    assert len(trigger_idx) == 2
-
-    taus = list(event.taus)
-
-    # for each EF tau find closest matching reco tau
-    for EF_idx in trigger_idx:
-        trigger_tau = event.taus_EF.getitem(EF_idx)
-        closest_dR = 99999
-        closest_tau = None
-        for tau in taus:
-            dR = utils.dR(
-                    triggertau.eta, triggertau.phi,
-                    tau.eta, tau.phi)
-            if dR < self.dR and dR < closest_dR:
-                closest_dR = dR
-                closest_tau = tau
-        if closest_tau is not None:
-            tau.trigger_match_index = EF_idx
-            # remove match from future matches (greedy match)
-            taus.remove(closest_tau)
-
-
 def match_threshold(event, thresholds):
     """
     thresholds must be in descending order
     """
+    if len(event.taus) < 2:
+        return
+
     taus = [(tau, event.taus_EF.getitem(tau.trigger_match_index)) for
             tau in event.taus]
 
@@ -52,7 +22,7 @@ def match_threshold(event, thresholds):
 
     # sanity check
     for tau in taus:
-        print tau[0].trigger_match_index, tau[1].pt
+        print tau[0].trigger_match_index, tau[1].pt, tau[0].pt
     print "===="
     assert len(thresholds) == len(taus)
 
@@ -135,7 +105,7 @@ class TauTriggerMatch(EventFilter):
             trigger = 'EF_tau29T_medium1_tau20T_medium1'
         else:
             raise ValueError("No trigger defined for run %i" % event.RunNumber)
-        match_index(event, trigger)
+        self.match_index(event, trigger)
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
         match_threshold(event, (29, 20))
         if self.min_taus is not None:
@@ -145,7 +115,7 @@ class TauTriggerMatch(EventFilter):
 
     def passes_mc12(self, event):
 
-        match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
+        self.match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
         match_threshold(event, (29, 20))
         if self.min_taus is not None:
@@ -155,10 +125,43 @@ class TauTriggerMatch(EventFilter):
 
     def passes_data12(self, event):
 
-        match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
+        self.match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
         match_threshold(event, (29, 20))
         if self.min_taus is not None:
             return len(event.taus) >= self.min_taus
         else:
             return len(event.taus) == self.num_taus
+
+    def match_index(self, event, trigger):
+
+        matched_taus = []
+        matches = {}
+        # get indices of trigger taus associated with this trigger
+        trigger_idx = triggerutils.get_tau_trigger_obj_idx(
+            self.config,
+            event,
+            trigger)
+
+        # sanity check
+        print trigger_idx
+        assert len(trigger_idx) == 2
+
+        taus = list(event.taus)
+
+        # for each EF tau find closest matching reco tau
+        for EF_idx in trigger_idx:
+            trigger_tau = event.taus_EF.getitem(EF_idx)
+            closest_dR = 99999
+            closest_tau = None
+            for tau in taus:
+                dR = utils.dR(
+                        trigger_tau.eta, trigger_tau.phi,
+                        tau.eta, tau.phi)
+                if dR < self.dR and dR < closest_dR:
+                    closest_dR = dR
+                    closest_tau = tau
+            if closest_tau is not None:
+                tau.trigger_match_index = EF_idx
+                # remove match from future matches (greedy match)
+                taus.remove(closest_tau)

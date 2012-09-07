@@ -13,20 +13,30 @@ MMC.SetNiterFit2(30)
 #MMC.SetNiterFit3(10)
 MMC.SetNsigmaMETscan(3.0)
 MMC.SetApplyMassScale(0)
-
+HACKED = False
 
 """
-This module contains utility functions for using libMissingMassCalculator.so
+Use MET_STVF for 2012 and use large scanning space hack
 """
 
 def mass(tau1, tau2,
          METx, METy, sumET,
-         tau2_lep_type = -1,
-         method = 1):
+         tau2_lep_type=-1,
+         method=1,
+         year=None):
     """
     Missing mass calculation
     returns the most likely mass
     """
+    global HACKED
+
+    if year == 2012 and not HACKED:
+        # temporary hack to reduce failure rate
+        print "using larger MMC param space search..."
+        MMC.SetNiterFit2(40)
+        MMC.SetNsigmaMETscan(4.0)
+        HACKED = True
+
     vis_tau1 = ROOT.TLorentzVector()
     # 1 prong
     if tau1.numTrack <= 1:
@@ -60,7 +70,9 @@ def mass(tau1, tau2,
         vis_tau2.SetPtEtaPhiM(tau2.pt/GeV, tau2.eta, tau2.phi, 0.105658)
 
     else:
-        raise ValueError('tau2_lep_type in missingmass.mass() should be -1 (had), 0 (electron) or 1 (muon). It is ' + str(tau2_lep_type))
+        raise ValueError(
+                'tau2_lep_type in missingmass.mass() should be '
+                '-1 (had), 0 (electron) or 1 (muon). It is ' + str(tau2_lep_type))
 
 
     MMC.SetVisTauVec(0, vis_tau1)

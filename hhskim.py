@@ -22,6 +22,7 @@ from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
 from higgstautau.trigger.matching import TauTriggerMatch
+from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
@@ -30,7 +31,6 @@ from higgstautau.skimming.hadhad.models import *
 from higgstautau.pileup import PileupTemplates, PileupReweight
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
-from higgstautau.hadhad.corrections import TauTriggerEfficiency
 
 import goodruns
 
@@ -199,11 +199,11 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauLArHole(2,
                 count_funcs=count_funcs),
-            TauID_BDTLoose_LLHLoose(2,
-                count_funcs=count_funcs),
-            # take two leading taus
-
-
+            #TauID_BDTLoose_LLHLoose(2,
+            #    count_funcs=count_funcs),
+            TauIDMedium(2,
+                 count_funcs=count_funcs),
+            # take two leading taus at this point?
             TauTriggerMatch(
                 config=trigger_config,
                 year=year,
@@ -217,7 +217,7 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
                     self.args.syst_terms),
-                passthrough=datatype == datasets.DATA),
+                passthrough=datatype == datasets.DATA or year == 2012),
             PileupReweight(
                 year=year,
                 tree=tree,
@@ -294,7 +294,8 @@ class hhskim(ATLASStudent):
             sumET = event.MET.sumet
 
             mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
-                    tau1, tau2, METx, METy, sumET)
+                    tau1, tau2, METx, METy, sumET,
+                    year=year)
 
             tree.MMC_mass = mmc_mass
             tree.MMC_resonance.set_from(mmc_resonance)
