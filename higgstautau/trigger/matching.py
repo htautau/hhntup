@@ -55,6 +55,7 @@ class TauTriggerMatch(EventFilter):
             self.config = config
             self.dR = dR
             year %= 1000
+            self.year = year
             self.skim = skim
             self.tree = tree
             self.num_taus = num_taus
@@ -134,6 +135,11 @@ class TauTriggerMatch(EventFilter):
             return len(event.taus) == self.num_taus
 
     def match_index(self, event, trigger):
+
+        """
+        Use the info stored in the D3PD for 2012:
+        trig_EF_tau_EF_tau29Ti_medium1_tau20Ti_medium1
+        """
 
         matched_taus = []
         matches = {}

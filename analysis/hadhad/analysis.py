@@ -115,12 +115,6 @@ if 'train' in args.actions:
         Higgs(mass=125),
     ]
 
-    backgrounds = [
-        qcd,
-        ztautau,
-        others,
-    ]
-
 figures = {}
 
 for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
@@ -236,8 +230,15 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         continue
 
     if 'train' in args.actions:
+
+        backgrounds = [
+            qcd,
+            ztautau,
+            others,
+        ]
+
         # define training and test samples
-        branches = info['features']
+        branches = cat_info['features']
 
         if args.cor:
             branches = branches + ['mass_mmc_tau1_tau2']
@@ -362,17 +363,18 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
 
         # compare data and the model in a low mass control region
         cuts = Cut('mass_mmc_tau1_tau2 < 110')
-        plot_clf(clf,
-                 backgrounds,
-                 category,
-                 target_region,
-                 branches,
-                 signals=None,
-                 data=data,
-                 cuts=cuts,
-                 train_fraction=train_fraction,
-                 draw_data=True,
-                 name='control')
+        plot_clf(
+            clf,
+            backgrounds,
+            category,
+            target_region,
+            branches,
+            signals=None,
+            data=data,
+            cuts=cuts,
+            train_fraction=args.train_fraction,
+            draw_data=True,
+            name='control')
 
         # show the background model and 125 GeV signal above mass control region
         cuts = Cut('mass_mmc_tau1_tau2 > 110')
@@ -385,7 +387,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             signals=signals_test,
             signal_scale=20,
             cuts=cuts,
-            train_fraction=train_fraction,
+            train_fraction=args.train_fraction,
             name='ROI')
 
         # Create histograms for the limit setting with HistFactory

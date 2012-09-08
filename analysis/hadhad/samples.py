@@ -26,7 +26,7 @@ from rootpy import root2array as r2a
 from rootpy.math.stats.correlation import correlation_plot
 
 import categories
-import features
+import variables
 
 
 NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
@@ -70,7 +70,7 @@ def correlations(signal, signal_weight,
                  branches, channel):
 
     # draw correlation plots
-    names = [features.VARIABLES[branch]['title'] for branch in branches]
+    names = [variables.VARIABLES[branch]['title'] for branch in branches]
     correlation_plot(signal, signal_weight, names,
                      "correlation_signal_%s" % channel)
     correlation_plot(background, background_weight, names,
@@ -96,176 +96,6 @@ def get_samples(masses=None, modes=None, embedding=True):
         Higgs(masses=masses, modes=modes)
     )
     return signals, backgrounds
-
-
-def make_classification(
-        signals,
-        backgrounds,
-        category,
-        region,
-        branches,
-        cuts=None,
-        train_fraction=None,
-        max_sig_train=None,
-        max_bkg_train=None,
-        max_sig_test=None,
-        max_bkg_test=None,
-        norm_sig_to_bkg_train=True,
-        norm_sig_to_bkg_test=False,
-        same_size_train=True,
-        same_size_test=False,
-        standardize=False,
-        systematic='NOMINAL'):
-
-    signal_train_arrs = []
-    signal_weight_train_arrs = []
-    signal_test_arrs = []
-    signal_weight_test_arrs = []
-
-    for signal in signals:
-        train, test = signal.train_test(
-            category, region,
-            branches=branches,
-            train_fraction=train_fraction,
-            cuts=cuts,
-            systematic=systematic)
-        signal_weight_train_arrs.append(train['weight'])
-        signal_weight_test_arrs.append(test['weight'])
-
-        signal_train_arrs.append(
-            np.vstack(train[branch] for branch in branches).T)
-        signal_test_arrs.append(
-            np.vstack(test[branch] for branch in branches).T)
-
-    background_train_arrs = []
-    background_weight_train_arrs = []
-    background_test_arrs = []
-    background_weight_test_arrs = []
-
-    for background in backgrounds:
-        train, test = background.train_test(
-            category, region,
-            branches=branches,
-            train_fraction=train_fraction,
-            cuts=cuts,
-            systematic=systematic)
-        background_weight_train_arrs.append(train['weight'])
-        background_weight_test_arrs.append(test['weight'])
-
-        background_train_arrs.append(
-            np.vstack(train[branch] for branch in branches).T)
-        background_test_arrs.append(
-            np.vstack(test[branch] for branch in branches).T)
-
-    signal_train = np.concatenate(signal_train_arrs)
-    signal_weight_train = np.concatenate(signal_weight_train_arrs)
-    signal_test = np.concatenate(signal_test_arrs)
-    signal_weight_test = np.concatenate(signal_weight_test_arrs)
-
-    background_train = np.concatenate(background_train_arrs)
-    background_weight_train = np.concatenate(background_weight_train_arrs)
-    background_test = np.concatenate(background_test_arrs)
-    background_weight_test = np.concatenate(background_weight_test_arrs)
-
-    if max_sig_train is not None and max_sig_train < len(signal_train):
-        subsample = np.random.permutation(max_sig_train)[:len(signal_train)]
-        signal_train = signal_train[subsample]
-        signal_weight_train = signal_weight_train[subsample]
-
-    if max_bkg_train is not None and max_bkg_train < len(background_train):
-        subsample = np.random.permutation(max_bkg_train)[:len(background_train)]
-        background_train = background_train[subsample]
-        background_weight_train = background_weight_train[subsample]
-
-    if max_sig_test is not None and max_sig_test < len(signal_test):
-        subsample = np.random.permutation(max_sig_test)[:len(signal_test)]
-        signal_test = signal_test[subsample]
-        signal_weight_test = signal_weight_test[subsample]
-
-    if max_bkg_test is not None and max_bkg_test < len(background_test):
-        subsample = np.random.permutation(max_bkg_test)[:len(background_test)]
-        background_test = background_test[subsample]
-        background_weight_test = background_weight_test[subsample]
-
-    if same_size_train:
-        if len(background_train) > len(signal_train):
-            # random subsample of background so it's the same size as signal
-            subsample = np.random.permutation(
-                len(background_train))[:len(signal_train)]
-            background_train = background_train[subsample]
-            background_weight_train = background_weight_train[subsample]
-        elif len(background_train) < len(signal_train):
-            # random subsample of signal so it's the same size as background
-            subsample = np.random.permutation(
-                len(signal_train))[:len(background_train)]
-            signal_train = signal_train[subsample]
-            signal_weight_train = signal_weight_train[subsample]
-
-    if same_size_test:
-        if len(background_test) > len(signal_test):
-            # random subsample of background so it's the same size as signal
-            subsample = np.random.permutation(
-                len(background_test))[:len(signal_test)]
-            background_test = background_test[subsample]
-            background_weight_test = background_weight_test[subsample]
-        elif len(background_test) < len(signal_test):
-            # random subsample of signal so it's the same size as background
-            subsample = np.random.permutation(
-                len(signal_test))[:len(background_test)]
-            signal_test = signal_test[subsample]
-            signal_weight_test = signal_weight_test[subsample]
-
-    if norm_sig_to_bkg_train:
-        # normalize signal to background
-        signal_weight_train *= (
-            background_weight_train.sum() / signal_weight_train.sum())
-
-    if norm_sig_to_bkg_test:
-        # normalize signal to background
-        signal_weight_test *= (
-            background_weight_test.sum() / signal_weight_test.sum())
-
-    print "Training Samples:"
-    print "Signal: %d events, %s features" % signal_train.shape
-    print "Sum(signal weights): %f" % signal_weight_train.sum()
-    print "Background: %d events, %s features" % background_train.shape
-    print "Sum(background weight): %f" % background_weight_train.sum()
-    print
-    print "Test Samples:"
-    print "Signal: %d events, %s features" % signal_test.shape
-    print "Sum(signal weights): %f" % signal_weight_test.sum()
-    print "Background: %d events, %s features" % background_test.shape
-    print "Sum(background weight): %f" % background_weight_test.sum()
-
-    # create training/testing samples
-    sample_train = np.concatenate((background_train, signal_train))
-    sample_test = np.concatenate((background_test, signal_test))
-
-    sample_weight_train = np.concatenate(
-        (background_weight_train, signal_weight_train))
-    sample_weight_test = np.concatenate(
-        (background_weight_test, signal_weight_test))
-
-    if standardize:
-        sample_train = std(sample_train)
-        sample_test = std(sample_test)
-
-    labels_train = np.concatenate(
-        (np.zeros(len(background_train)), np.ones(len(signal_train))))
-    labels_test = np.concatenate(
-        (np.zeros(len(background_test)), np.ones(len(signal_test))))
-
-    # random permutation of training sample
-    perm = np.random.permutation(len(labels_train))
-    sample_train = sample_train[perm]
-    sample_weight_train = sample_weight_train[perm]
-    labels_train = labels_train[perm]
-
-    # split the dataset in two equal parts respecting label proportions
-    #train, test = iter(StratifiedKFold(labels, 2)).next()
-    return sample_train, sample_test,\
-        sample_weight_train, sample_weight_test,\
-        labels_train, labels_test
 
 
 class Sample(object):
