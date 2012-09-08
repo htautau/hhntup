@@ -15,7 +15,8 @@ parser.add_argument('--no-clf-cache',
         help="do not use cached classifier "
         "and instead train a new one",
         default=True)
-parser.add_argument('--actions', nargs='*', choices=['plot', 'train'])
+parser.add_argument('--actions', nargs='*', choices=['plot', 'train'],
+        default=[])
 parser.add_argument('--no-systematics', action='store_false',
         dest='systematics',
         help="turn off systematics",
