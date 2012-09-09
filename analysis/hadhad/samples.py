@@ -350,7 +350,7 @@ class Data(Sample):
               cuts=None,
               systematic='NOMINAL'):
 
-        self.check_sytematic(systematic)
+        self.check_systematic(systematic)
         TEMPFILE.cd()
         return [asrootpy(self.data.CopyTree(self.cuts(category, region) & cuts))]
 

@@ -109,7 +109,7 @@ def apply_clf(
                 cuts=cuts,
                 systematic=systematic)
     elif isinstance(sample, Data):
-        data_sample = data.ndarray(
+        data_sample = sample.ndarray(
                 category=category,
                 region=region,
                 branches=branches,
