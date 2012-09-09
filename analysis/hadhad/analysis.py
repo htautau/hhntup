@@ -24,7 +24,7 @@ parser.add_argument('--no-systematics', action='store_false',
 parser.add_argument('--nfold', type=int, default=5)
 parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
-parser.add_argument('--train-frac', type=float, default=.5)
+parser.add_argument('--train-fraction', type=float, default=.5)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
 parser.add_argument('--plots', nargs='*')
 args = parser.parse_args()
@@ -72,7 +72,7 @@ from rootpy.io import open as ropen
 from tabulartext import PrettyTable
 
 
-QUICK = False
+QUICK = True
 
 # grid search params
 if QUICK:

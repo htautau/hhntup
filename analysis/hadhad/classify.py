@@ -7,6 +7,7 @@ from matplotlib.ticker import IndexLocator, FuncFormatter
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 
+from samples import *
 
 def plot_grid_scores(
         grid_scores, best_point, params, name,
