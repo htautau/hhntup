@@ -8,6 +8,7 @@ from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 
 from samples import *
+from utils import draw
 
 def plot_grid_scores(
         grid_scores, best_point, params, name,
@@ -137,6 +138,7 @@ def plot_clf(
         category,
         region,
         branches,
+        category_name,
         signals=None,
         signal_scale=1.,
         data=None,
@@ -253,7 +255,7 @@ def plot_clf(
              signal=sig_hists,
              signal_scale=signal_scale,
              category=category,
-             category_name=info['name'],
+             category_name=category_name,
              name="BDT Score",
              output_name=output_name,
              range=(min_score, max_score),
