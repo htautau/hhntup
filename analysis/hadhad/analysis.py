@@ -43,6 +43,7 @@ from background_estimation import qcd_ztautau_norm
 from classify import *
 from config import plots_dir
 from utils import *
+from systematics import SYSTEMATICS
 
 # stdlib imports
 import pickle
@@ -281,10 +282,10 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 clf = pickle.load(f)
             print clf
         else:
-            cv = StratifiedKFold(labels_train, args.nfold)
             # train a new BDT
-            clf = AdaBoostClassifier(DecisionTreeClassifier(),
-                    beta=.5,
+            clf = AdaBoostClassifier(
+                    DecisionTreeClassifier(),
+                    learn_rate=.5,
                     compute_importances=True)
             # see top of file for grid search param constants
             grid_params = {
@@ -293,10 +294,13 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             }
             #clf = SVC(probability=True, scale_C=True)
             # first grid search min_samples_leaf for the maximum n_estimators
-            grid_clf = GridSearchCV(clf, grid_params, score_func=precision_score,
-                                    n_jobs=-1)
-            grid_clf.fit(sample_train, labels_train, sample_weight=sample_weight_train,
-                         cv=StratifiedKFold(labels_train, args.nfold))
+            grid_clf = GridSearchCV(
+                    clf, grid_params, score_func=precision_score,
+                    cv = StratifiedKFold(labels_train, args.nfold),
+                    n_jobs=-1)
+            grid_clf.fit(
+                    sample_train, labels_train,
+                    sample_weight=sample_weight_train)
             clf = grid_clf.best_estimator_
             grid_scores = grid_clf.grid_scores_
             """
@@ -332,7 +336,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                         DecisionTreeClassifier(
                             min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
                         n_estimators=n_estimators,
-                        beta=.5, compute_importances=True)
+                        learn_rate=.5, compute_importances=True)
                 clf.fit(sample_train, labels_train,
                         sample_weight=sample_weight_train)
                 print

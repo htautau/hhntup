@@ -319,6 +319,7 @@ def draw(model,
 
         if show_ratio:
             # plot band on ratio plot
+            # TODO correct this...
             high_band += total_model
             low_band = total_model - low_band
             high_ratio = Hist.divide(
