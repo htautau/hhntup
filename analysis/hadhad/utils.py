@@ -43,7 +43,7 @@ rc('text.latex', preamble=LATEX_PREAMBLE)
 def set_colours(hists, colour_map=cm.jet):
 
     for i, h in enumerate(hists):
-        colour = colour_map(1.*i/(len(hists)-1))
+        colour = colour_map((i + 1) / float(len(hists) + 1))
         h.SetColor(colour)
 
 
