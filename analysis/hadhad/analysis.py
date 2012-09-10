@@ -69,7 +69,7 @@ from matplotlib.ticker import IndexLocator, FuncFormatter
 # rootpy imports
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
-from tabulartext import PrettyTable
+from rootpy.extern.tabulartext import PrettyTable
 
 
 QUICK = True
@@ -212,7 +212,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             print "Data / Model: %f" % (sum(data_hist) / sum(sum(bkg_hists)))
 
             fig = draw(
-                    data=data_hist, model=bkg_hists,
+                    data=data_hist,
+                    model=bkg_hists,
                     signal=signal_hist,
                     name=var_info['title'],
                     output_name=var_info['filename'],
@@ -253,7 +254,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category=category,
             region=target_region,
             branches=branches,
-            train_fraction=None,
+            train_fraction=args.train_fraction,
             max_sig_train=None,
             max_bkg_train=None,
             max_sig_test=None,
@@ -410,6 +411,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             region=target_region,
             branches=branches,
             cuts=cuts)
+
         _min = data_scores.min()
         _max = data_scores.max()
         if _min < min_score:

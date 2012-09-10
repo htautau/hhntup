@@ -57,7 +57,7 @@ def format_legend(l):
 
 def root_axes(ax, no_xlabels=False, vscale=1.):
 
-    ax.get_frame().set_linewidth(2)
+    ax.patch.set_linewidth(2)
     ax.xaxis.set_minor_locator(AutoMinorLocator())
     ax.yaxis.set_minor_locator(AutoMinorLocator())
 

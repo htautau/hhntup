@@ -938,11 +938,12 @@ class QCD(Sample):
                systematic='NOMINAL'):
 
         # SS data
-        train, test = self.data.train_test(category=category,
-                                           region=self.shape_region,
-                                           branches=branches,
-                                           train_fraction=train_fraction,
-                                           cuts=cuts)
+        train, test = self.data.train_test(
+                category=category,
+                region=self.shape_region,
+                branches=branches,
+                train_fraction=train_fraction,
+                cuts=cuts)
         weight = test['weight']
         sample = np.vstack(test[branch] for branch in branches).T
         scores = clf.predict_proba(sample)[:,-1]
@@ -950,12 +951,13 @@ class QCD(Sample):
         # subtract SS MC
         for mc in self.mc:
             # didn't train on MC here if using SS or !OS
-            train, test = mc.train_test(category=category,
-                                        region=self.shape_region,
-                                        branches=branches,
-                                        train_fraction=train_fraction,
-                                        cuts=cuts,
-                                        systematic=systematic)
+            train, test = mc.train_test(
+                    category=category,
+                    region=self.shape_region,
+                    branches=branches,
+                    train_fraction=train_fraction,
+                    cuts=cuts,
+                    systematic=systematic)
             sample = np.vstack(test[branch] for branch in branches).T
             scores = np.concatenate((scores, clf.predict_proba(sample)[:,-1]))
             weight = np.concatenate((weight, test['weight'] * -1))

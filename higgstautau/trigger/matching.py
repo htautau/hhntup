@@ -7,47 +7,20 @@ from math import *
 from . import utils as triggerutils
 
 
-def match_threshold(event, thresholds):
+class TauTriggerMatchIndex(EventFilter):
     """
-    thresholds must be in descending order
+    Match reco taus to trigger taus. If there are more than two EF taus, take
+    the leading two.
     """
-    if len(event.taus) < 2:
-        return
-
-    taus = [(tau, event.taus_EF.getitem(tau.trigger_match_index)) for
-            tau in event.taus]
-
-    # sort by pT of EF tau
-    taus = sorted(taus, key=lambda tau: tau[1].pt, reverse=True)
-
-    # sanity check
-    for tau in taus:
-        print tau[0].trigger_match_index, tau[1].pt, tau[0].pt
-    print "===="
-    assert len(thresholds) == len(taus)
-
-    # assign thresholds in descending order
-    for i in xrange(len(taus)):
-        taus[i][0].trigger_match_thresh = thresholds[i]
-        # sanity check
-        assert taus[i][1].pt > thresholds[i] * GeV
-
-
-class TauTriggerMatch(EventFilter):
-
     def __init__(self,
                  config,
                  datatype,
                  year,
                  dR=0.2,
-                 skim=False,
-                 tree=None,
-                 num_taus=2,
-                 min_taus=None,
                  passthrough=False,
                  **kwargs):
 
-        super(TauTriggerMatch, self).__init__(
+        super(TauTriggerMatchIndex, self).__init__(
                 passthrough=passthrough,
                 **kwargs)
 
@@ -56,11 +29,6 @@ class TauTriggerMatch(EventFilter):
             self.dR = dR
             year %= 1000
             self.year = year
-            self.skim = skim
-            self.tree = tree
-            self.num_taus = num_taus
-            self.min_taus = min_taus
-
             """
             WARNING: possible bias if matching between MC and data differs
             """
@@ -92,11 +60,7 @@ class TauTriggerMatch(EventFilter):
         Matching performed during trigger emulation with CoEPPTrigTool
         """
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
-        match_threshold(event, (29, 20))
-        if self.min_taus is not None:
-            return len(event.taus) >= self.min_taus
-        else:
-            return len(event.taus) == self.num_taus
+        return len(event.taus) >= 2
 
     def passes_data11(self, event):
 
@@ -108,39 +72,25 @@ class TauTriggerMatch(EventFilter):
             raise ValueError("No trigger defined for run %i" % event.RunNumber)
         self.match_index(event, trigger)
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
-        match_threshold(event, (29, 20))
-        if self.min_taus is not None:
-            return len(event.taus) >= self.min_taus
-        else:
-            return len(event.taus) == self.num_taus
+        return len(event.taus) >= 2
 
     def passes_mc12(self, event):
 
         self.match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
-        match_threshold(event, (29, 20))
-        if self.min_taus is not None:
-            return len(event.taus) >= self.min_taus
-        else:
-            return len(event.taus) == self.num_taus
+        return len(event.taus) >= 2
 
     def passes_data12(self, event):
 
         self.match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
-        match_threshold(event, (29, 20))
-        if self.min_taus is not None:
-            return len(event.taus) >= self.min_taus
-        else:
-            return len(event.taus) == self.num_taus
+        return len(event.taus) >= 2
 
     def match_index(self, event, trigger):
-
         """
         Use the info stored in the D3PD for 2012:
         trig_EF_tau_EF_tau29Ti_medium1_tau20Ti_medium1
         """
-
         matched_taus = []
         matches = {}
         # get indices of trigger taus associated with this trigger
@@ -148,10 +98,8 @@ class TauTriggerMatch(EventFilter):
             self.config,
             event,
             trigger)
-
-        # sanity check
-        print trigger_idx
-        assert len(trigger_idx) == 2
+        # trigger_idx can contain 3 indices
+        # will need to take the leading two
 
         taus = list(event.taus)
 
@@ -171,3 +119,46 @@ class TauTriggerMatch(EventFilter):
                 tau.trigger_match_index = EF_idx
                 # remove match from future matches (greedy match)
                 taus.remove(closest_tau)
+
+
+class TauTriggerMatchThreshold(EventFilter):
+    """
+    Match previously matched reco taus to thresholds of the trigger
+    """
+    def __init__(self,
+                 passthrough=False,
+                 **kwargs):
+
+        super(TauTriggerMatchThreshold, self).__init__(
+                passthrough=passthrough,
+                **kwargs)
+
+    def passes(self, event):
+
+        match_threshold(event, (29, 20))
+        return True
+
+    def match_threshold(self, event, thresholds):
+        """
+        thresholds must be in descending order
+        """
+        assert len(event.taus) == 2
+
+        # assume only matched taus remain in event.taus
+        taus = [(tau, event.taus_EF.getitem(tau.trigger_match_index)) for
+                tau in event.taus]
+
+        # sort by pT of EF tau
+        taus = sorted(taus, key=lambda tau: tau[1].pt, reverse=True)
+
+        # sanity check
+        for tau in taus:
+            print tau[0].trigger_match_index, tau[1].pt, tau[0].pt
+        print "===="
+        assert len(thresholds) == len(taus)
+
+        # assign thresholds in descending order
+        for i in xrange(len(taus)):
+            taus[i][0].trigger_match_thresh = thresholds[i]
+            # sanity check
+            assert taus[i][1].pt > thresholds[i] * GeV
