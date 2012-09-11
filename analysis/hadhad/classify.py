@@ -96,20 +96,10 @@ def apply_clf(
         category,
         region,
         branches,
-        cuts=None,
-        train_fraction=.5,
-        systematic='NOMINAL'):
+        train_fraction,
+        cuts=None):
 
-    if isinstance(sample, QCD):
-        scores, weight = sample.scores(
-                clf,
-                category=category,
-                region=region,
-                branches=branches,
-                train_fraction=train_fraction,
-                cuts=cuts,
-                systematic=systematic)
-    elif isinstance(sample, Data):
+    if isinstance(sample, Data):
         data_sample = sample.ndarray(
                 category=category,
                 region=region,
@@ -118,18 +108,15 @@ def apply_clf(
                 cuts=cuts)
         scores = clf.predict_proba(data_sample)[:,-1]
         weight = np.ones(len(scores))
-    else: # MC
-        train, test = sample.train_test(
+        return scores, weight
+    else: # QCD or MC
+        return sample.scores(
+                clf,
                 category=category,
                 region=region,
                 branches=branches,
                 train_fraction=train_fraction,
-                cuts=cuts,
-                systematic=systematic)
-        weight = test['weight']
-        input = np.vstack(test[branch] for branch in branches).T
-        scores = clf.predict_proba(input)[:,-1]
-    return scores, weight
+                cuts=cuts)
 
 
 def plot_clf(
@@ -138,12 +125,12 @@ def plot_clf(
         category,
         region,
         branches,
+        train_fraction,
         category_name,
         signals=None,
         signal_scale=1.,
         data=None,
         cuts=None,
-        train_fraction=.5,
         name=None,
         draw_histograms=True,
         draw_data=False,
@@ -268,8 +255,8 @@ def make_classification(
         category,
         region,
         branches,
+        train_fraction,
         cuts=None,
-        train_fraction=None,
         max_sig_train=None,
         max_bkg_train=None,
         max_sig_test=None,

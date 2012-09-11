@@ -113,7 +113,7 @@ if 'train' in args.actions:
     ]
 
     # all modes, 125GeV mass
-    signals_test = [
+    signals_eval = [
         Higgs(mass=125),
     ]
 
@@ -367,6 +367,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             with open('clf_%s.pickle' % category, 'w') as f:
                 pickle.dump(clf, f)
 
+        """
         # compare data and the model in a low mass control region
         cuts = Cut('mass_mmc_tau1_tau2 < 110')
         plot_clf(
@@ -392,83 +393,69 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             target_region,
             branches,
             category_name=cat_info['name'],
-            signals=signals_test,
+            signals=signals_eval,
             signal_scale=20,
             cuts=cuts,
             train_fraction=args.train_fraction,
             name='ROI')
+        """
 
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
-        min_score = 1.
-        max_score = 0.
 
-        # apply on data
+        # data scores
         data_scores, _ = apply_clf(
             clf,
             data,
             category=category,
             region=target_region,
             branches=branches,
+            train_fraction=args.train_fraction,
             cuts=cuts)
 
+        # background model scores
+        bkg_scores = {}
+        for bkg in backgrounds:
+            scores_dict = bkg.scores(clf,
+                    branches,
+                    train_fraction=args.train_fraction,
+                    category=category,
+                    region=target_region,
+                    cuts=cuts)
+            bkg_scores[bkg.name] = (bkg, scores_dict)
+
+        # signal scores for all masses and modes
+        sig_scores = {}
+        for mass in Higgs.MASS_POINTS:
+            for mode in Higgs.MODES.keys():
+                sig = Higgs(mode=mode, mass=mass)
+                scores_dict = sig.scores(clf,
+                        branches,
+                        train_fraction=args.train_fraction,
+                        category=category,
+                        region=target_region,
+                        cuts=cuts)
+                name = 'Signal_%d_%s' % (mass, mode)
+                sig_scores[name] = (sig, scores_dict)
+
+        # determine min and max scores
+        min_score = 1.
+        max_score = 0.
         _min = data_scores.min()
         _max = data_scores.max()
         if _min < min_score:
             min_score = _min
         if _max > max_score:
             max_score = _max
-
-        bkg_scores = {}
-        sig_scores = {}
-
-        for sys_variations in iter_systematics(
-                channel='hadhad',
-                include_nominal=True):
-
-            if sys_variations == 'NOMINAL':
-                sys_term = sys_variations
-            else:
-                sys_term = '_'.join(sys_variations)
-
-            # apply on all backgrounds
-            bkg_scores[sys_term] = []
-            for bkg in backgrounds:
-                scores, weight = apply_clf(
-                    clf,
-                    bkg,
-                    category=category,
-                    region=target_region,
-                    branches=branches,
-                    cuts=cuts,
-                    systematic=sys_term)
-                bkg_scores[sys_term].append((bkg.name, scores, weight))
-                _min = scores.min()
-                _max = scores.max()
-                if _min < min_score:
-                    min_score = _min
-                if _max > max_score:
-                    max_score = _max
-
-            # apply on all signal masses
-            sig_scores[sys_term] = []
-            for mass in Higgs.MASS_POINTS:
-                for mode in Higgs.MODES.keys():
-                    scores, weight = apply_clf(clf,
-                        Higgs(mode=mode, mass=mass),
-                        category=category,
-                        region=target_region,
-                        branches=branches,
-                        cuts=cuts)
-                    _min = scores.min()
-                    _max = scores.max()
+        for d in (bkg_scores, sig_scores):
+            for name, (samp, scores_dict) in d.items():
+                for sys_term, scores in scores_dict.items():
+                    _min = min([min(s[0]) for s in scores])
+                    _max = max([max(s[0]) for s in scores])
                     if _min < min_score:
                         min_score = _min
                     if _max > max_score:
                         max_score = _max
-                    sig_scores[sys_term].append(
-                        ('Signal_%d_%s' %
-                            (mass, mode), scores, weight))
 
         padding = (max_score - min_score) / (2 * bins)
         min_score -= padding
@@ -484,6 +471,19 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             data_hist.Write()
             total_data = sum(data_hist)
 
+            for d in (bkg_scores, sig_scores):
+                for name, (samp, scores_dict) in d.items():
+                    for sys_term, score_weights in scores_dict.items():
+                        sys_term = '_'.join(sys_term)
+                        suffix = '_' + sys_term
+                        hist = hist_template.Clone(name=name + suffix)
+                        for scores, weights in score_weights:
+                            for score, w in zip(scores, weights):
+                                hist.Fill(score, w)
+                        f.cd()
+                        hist.Write()
+
+            """
             for sys_variations in iter_systematics(
                     channel='hadhad',
                     include_nominal=True):
@@ -517,7 +517,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     bkg.Write()
                 for sig in sig_hists:
                     sig.Write()
-
+            """
 
 # save all variable plots in one large multipage pdf
 if 'plot' in args.actions and set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
