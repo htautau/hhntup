@@ -19,7 +19,7 @@ from rootpy.registry import lookup_demotion
 
 from higgstautau.mixins import TauFourMomentum, ElFourMomentum
 from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
-                                       OverlapCheck, SetElectronsFourVector #, AnyMuTriggers, AnyETriggers, AnyMCTriggers
+                                       OverlapCheck, PrepareInputTree
 
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 import goodruns
@@ -27,6 +27,7 @@ import goodruns
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
+YEAR = 2012
 
 class SkimExtraModel(TreeModel):
 
@@ -103,11 +104,14 @@ class LHSkim(ATLASStudent):
         intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
 
         # set the event filters
-        event_filters = EventFilterList([
-            SetElectronsFourVector(),
-            ElectronIDpatch(),
-            TauIDpatch('ParametrizedBDTSelection.root')
-        ])
+
+        eventFilterList = [PrepareInputTree()]
+
+        if YEAR == 2012:
+            eventFilterList.append(ElectronIDpatch())
+            eventFilterList.append(TauIDpatch('ParametrizedBDTSelection.root'))
+        
+        event_filters = EventFilterList(eventFilterList)
 
         self.filters['event'] = event_filters
         intree.filters += event_filters
