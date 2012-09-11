@@ -43,7 +43,7 @@ rc('text.latex', preamble=LATEX_PREAMBLE)
 def set_colours(hists, colour_map=cm.jet):
 
     for i, h in enumerate(hists):
-        colour = colour_map(1.*i/(len(hists)-1))
+        colour = colour_map((i + 1) / float(len(hists) + 1))
         h.SetColor(colour)
 
 
@@ -57,7 +57,7 @@ def format_legend(l):
 
 def root_axes(ax, no_xlabels=False, vscale=1.):
 
-    ax.get_frame().set_linewidth(2)
+    ax.patch.set_linewidth(2)
     ax.xaxis.set_minor_locator(AutoMinorLocator())
     ax.yaxis.set_minor_locator(AutoMinorLocator())
 
@@ -319,6 +319,7 @@ def draw(model,
 
         if show_ratio:
             # plot band on ratio plot
+            # TODO correct this...
             high_band += total_model
             low_band = total_model - low_band
             high_ratio = Hist.divide(

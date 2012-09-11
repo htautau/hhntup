@@ -15,7 +15,8 @@ parser.add_argument('--no-clf-cache',
         help="do not use cached classifier "
         "and instead train a new one",
         default=True)
-parser.add_argument('--actions', nargs='*', choices=['plot', 'train'])
+parser.add_argument('--actions', nargs='*', choices=['plot', 'train'],
+        default=[])
 parser.add_argument('--no-systematics', action='store_false',
         dest='systematics',
         help="turn off systematics",
@@ -23,7 +24,7 @@ parser.add_argument('--no-systematics', action='store_false',
 parser.add_argument('--nfold', type=int, default=5)
 parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
-parser.add_argument('--train-frac', type=float, default=.5)
+parser.add_argument('--train-fraction', type=float, default=.5)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
 parser.add_argument('--plots', nargs='*')
 args = parser.parse_args()
@@ -42,6 +43,7 @@ from background_estimation import qcd_ztautau_norm
 from classify import *
 from config import plots_dir
 from utils import *
+from systematics import SYSTEMATICS
 
 # stdlib imports
 import pickle
@@ -67,10 +69,10 @@ from matplotlib.ticker import IndexLocator, FuncFormatter
 # rootpy imports
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
-from tabulartext import PrettyTable
+from rootpy.extern.tabulartext import PrettyTable
 
 
-QUICK = False
+QUICK = True
 
 # grid search params
 if QUICK:
@@ -111,14 +113,8 @@ if 'train' in args.actions:
     ]
 
     # all modes, 125GeV mass
-    signals_test = [
+    signals_eval = [
         Higgs(mass=125),
-    ]
-
-    backgrounds = [
-        qcd,
-        ztautau,
-        others,
     ]
 
 figures = {}
@@ -216,7 +212,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             print "Data / Model: %f" % (sum(data_hist) / sum(sum(bkg_hists)))
 
             fig = draw(
-                    data=data_hist, model=bkg_hists,
+                    data=data_hist,
+                    model=bkg_hists,
                     signal=signal_hist,
                     name=var_info['title'],
                     output_name=var_info['filename'],
@@ -236,8 +233,15 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         continue
 
     if 'train' in args.actions:
+
+        backgrounds = [
+            qcd,
+            ztautau,
+            others,
+        ]
+
         # define training and test samples
-        branches = info['features']
+        branches = cat_info['features']
 
         if args.cor:
             branches = branches + ['mass_mmc_tau1_tau2']
@@ -250,7 +254,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category=category,
             region=target_region,
             branches=branches,
-            train_fraction=None,
+            train_fraction=args.train_fraction,
             max_sig_train=None,
             max_bkg_train=None,
             max_sig_test=None,
@@ -279,10 +283,10 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 clf = pickle.load(f)
             print clf
         else:
-            cv = StratifiedKFold(labels_train, args.nfold)
             # train a new BDT
-            clf = AdaBoostClassifier(DecisionTreeClassifier(),
-                    beta=.5,
+            clf = AdaBoostClassifier(
+                    DecisionTreeClassifier(),
+                    learn_rate=.5,
                     compute_importances=True)
             # see top of file for grid search param constants
             grid_params = {
@@ -291,10 +295,13 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             }
             #clf = SVC(probability=True, scale_C=True)
             # first grid search min_samples_leaf for the maximum n_estimators
-            grid_clf = GridSearchCV(clf, grid_params, score_func=precision_score,
-                                    n_jobs=-1)
-            grid_clf.fit(sample_train, labels_train, sample_weight=sample_weight_train,
-                         cv=StratifiedKFold(labels_train, args.nfold))
+            grid_clf = GridSearchCV(
+                    clf, grid_params, score_func=precision_score,
+                    cv = StratifiedKFold(labels_train, args.nfold),
+                    n_jobs=-1)
+            grid_clf.fit(
+                    sample_train, labels_train,
+                    sample_weight=sample_weight_train)
             clf = grid_clf.best_estimator_
             grid_scores = grid_clf.grid_scores_
             """
@@ -330,7 +337,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                         DecisionTreeClassifier(
                             min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
                         n_estimators=n_estimators,
-                        beta=.5, compute_importances=True)
+                        learn_rate=.5, compute_importances=True)
                 clf.fit(sample_train, labels_train,
                         sample_weight=sample_weight_train)
                 print
@@ -360,19 +367,22 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             with open('clf_%s.pickle' % category, 'w') as f:
                 pickle.dump(clf, f)
 
+        """
         # compare data and the model in a low mass control region
         cuts = Cut('mass_mmc_tau1_tau2 < 110')
-        plot_clf(clf,
-                 backgrounds,
-                 category,
-                 target_region,
-                 branches,
-                 signals=None,
-                 data=data,
-                 cuts=cuts,
-                 train_fraction=train_fraction,
-                 draw_data=True,
-                 name='control')
+        plot_clf(
+            clf,
+            backgrounds,
+            category,
+            target_region,
+            branches,
+            category_name=cat_info['name'],
+            signals=None,
+            data=data,
+            cuts=cuts,
+            train_fraction=args.train_fraction,
+            draw_data=True,
+            name='control')
 
         # show the background model and 125 GeV signal above mass control region
         cuts = Cut('mass_mmc_tau1_tau2 > 110')
@@ -382,82 +392,75 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category,
             target_region,
             branches,
-            signals=signals_test,
+            category_name=cat_info['name'],
+            signals=signals_eval,
             signal_scale=20,
             cuts=cuts,
-            train_fraction=train_fraction,
+            train_fraction=args.train_fraction,
             name='ROI')
+        """
 
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
-        min_score = 1.
-        max_score = 0.
 
-        # apply on data
+        # data scores
         data_scores, _ = apply_clf(
             clf,
             data,
             category=category,
             region=target_region,
             branches=branches,
+            train_fraction=args.train_fraction,
             cuts=cuts)
+
+        # background model scores
+        bkg_scores = {}
+        for bkg in backgrounds:
+            scores_dict = bkg.scores(clf,
+                    branches,
+                    train_fraction=args.train_fraction,
+                    category=category,
+                    region=target_region,
+                    cuts=cuts)
+            bkg_scores[bkg.name] = (bkg, scores_dict)
+
+        # signal scores for all masses and modes
+        sig_scores = {}
+        for mass in Higgs.MASS_POINTS:
+            for mode in Higgs.MODES.keys():
+                sig = Higgs(mode=mode, mass=mass)
+                scores_dict = sig.scores(clf,
+                        branches,
+                        train_fraction=args.train_fraction,
+                        category=category,
+                        region=target_region,
+                        cuts=cuts)
+                name = 'Signal_%d_%s' % (mass, mode)
+                sig_scores[name] = (sig, scores_dict)
+
+        # determine min and max scores
+        min_score = 1.
+        max_score = 0.
         _min = data_scores.min()
         _max = data_scores.max()
         if _min < min_score:
             min_score = _min
         if _max > max_score:
             max_score = _max
-
-        bkg_scores = {}
-        sig_scores = {}
-
-        for sys_variations in iter_systematics(
-                channel='hadhad',
-                include_nominal=True):
-
-            if sys_variations == 'NOMINAL':
-                sys_term = sys_variations
-            else:
-                sys_term = '_'.join(sys_variations)
-
-            # apply on all backgrounds
-            bkg_scores[sys_term] = []
-            for bkg in backgrounds:
-                scores, weight = apply_clf(
-                    clf,
-                    bkg,
-                    category=category,
-                    region=target_region,
-                    branches=branches,
-                    cuts=cuts,
-                    systematic=sys_term)
-                bkg_scores[sys_term].append((bkg.name, scores, weight))
-                _min = scores.min()
-                _max = scores.max()
-                if _min < min_score:
-                    min_score = _min
-                if _max > max_score:
-                    max_score = _max
-
-            # apply on all signal masses
-            sig_scores[sys_term] = []
-            for mass in Higgs.MASS_POINTS:
-                for mode in Higgs.MODES.keys():
-                    scores, weight = apply_clf(clf,
-                        Higgs(mode=mode, mass=mass),
-                        category=category,
-                        region=target_region,
-                        branches=branches,
-                        cuts=cuts)
-                    _min = scores.min()
-                    _max = scores.max()
-                    if _min < min_score:
-                        min_score = _min
-                    if _max > max_score:
-                        max_score = _max
-                    sig_scores[sys_term].append(
-                        ('Signal_%d_%s' %
-                            (mass, mode), scores, weight))
+        for d in (bkg_scores, sig_scores):
+            for name, (samp, scores_dict) in d.items():
+                for sys_term, scores_weights in scores_dict.items():
+                    assert len(scores_weights) > 0
+                    for scores, weights in scores_weights:
+                        assert len(scores) == len(weights)
+                        if len(scores) == 0:
+                            continue
+                        _min = np.min(scores)
+                        _max = np.max(scores)
+                        if _min < min_score:
+                            min_score = _min
+                        if _max > max_score:
+                            max_score = _max
 
         padding = (max_score - min_score) / (2 * bins)
         min_score -= padding
@@ -473,6 +476,19 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             data_hist.Write()
             total_data = sum(data_hist)
 
+            for d in (bkg_scores, sig_scores):
+                for name, (samp, scores_dict) in d.items():
+                    for sys_term, score_weights in scores_dict.items():
+                        sys_term = '_'.join(sys_term)
+                        suffix = '_' + sys_term
+                        hist = hist_template.Clone(name=name + suffix)
+                        for scores, weights in score_weights:
+                            for score, w in zip(scores, weights):
+                                hist.Fill(score, w)
+                        f.cd()
+                        hist.Write()
+
+            """
             for sys_variations in iter_systematics(
                     channel='hadhad',
                     include_nominal=True):
@@ -506,7 +522,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     bkg.Write()
                 for sig in sig_hists:
                     sig.Write()
-
+            """
 
 # save all variable plots in one large multipage pdf
 if 'plot' in args.actions and set(args.categories) == set(CATEGORIES.keys()) and not args.plots:

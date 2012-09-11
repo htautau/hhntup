@@ -199,17 +199,16 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauLArHole(2,
                 count_funcs=count_funcs),
-            #TauID_BDTLoose_LLHLoose(2,
-            #    count_funcs=count_funcs),
-            TauIDMedium(2,
-                 count_funcs=count_funcs),
-            # take two leading taus at this point?
-            TauTriggerMatch(
+            TauID_BDTLoose_LLHLoose(2,
+                count_funcs=count_funcs),
+            TauTriggerMatchIndex(
                 config=trigger_config,
                 year=year,
                 datatype=datatype,
-                skim=True,
-                tree=tree,
+                passthrough=datatype == datasets.EMBED,
+                count_funcs=count_funcs),
+            # select two leading taus at this point
+            TauTriggerMatchThreshold(
                 passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             TauTriggerEfficiency(
