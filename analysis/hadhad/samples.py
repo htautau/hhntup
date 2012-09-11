@@ -744,7 +744,7 @@ class MC(Sample):
                 scores_dict[('FIT_DOWN',)].append((np.copy(nominal_scores), down_fit))
             else:
                 for _term in [('FIT_UP',), ('FIT_DOWN',)]:
-                    if _term not in sys_hists:
+                    if _term not in scores_dict:
                         scores_dict[_term] = []
                     scores_dict[_term].append((
                         np.copy(nominal_scores),

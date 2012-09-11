@@ -449,13 +449,18 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             max_score = _max
         for d in (bkg_scores, sig_scores):
             for name, (samp, scores_dict) in d.items():
-                for sys_term, scores in scores_dict.items():
-                    _min = min([min(s[0]) for s in scores])
-                    _max = max([max(s[0]) for s in scores])
-                    if _min < min_score:
-                        min_score = _min
-                    if _max > max_score:
-                        max_score = _max
+                for sys_term, scores_weights in scores_dict.items():
+                    assert len(scores_weights) > 0
+                    for scores, weights in scores_weights:
+                        assert len(scores) == len(weights)
+                        if len(scores) == 0:
+                            continue
+                        _min = np.min(scores)
+                        _max = np.max(scores)
+                        if _min < min_score:
+                            min_score = _min
+                        if _max > max_score:
+                            max_score = _max
 
         padding = (max_score - min_score) / (2 * bins)
         min_score -= padding
