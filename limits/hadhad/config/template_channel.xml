@@ -17,8 +17,16 @@
         <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_ggf_JER_UP"
             HistoNameLow="Signal_%(mass)d_ggf" />
-        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.038" Low="0.958"/>-->
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="Signal_%(mass)d_ggf_FAKERATE_UP"
+            HistoNameLow="Signal_%(mass)d_ggf_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="Signal_%(mass)d_ggf_TRIGGER_UP"
+            HistoNameLow="Signal_%(mass)d_ggf_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="Signal_%(mass)d_ggf_TAUBDT_UP"
+            HistoNameLow="Signal_%(mass)d_ggf_TAUBDT_DOWN" />
+        <!-- Theory Systematics -->
         <OverallSys Name="pdf_gg" High="1.079" Low="0.923"/>
         <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>
     </Sample>
@@ -34,8 +42,16 @@
         <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_vbf_JER_UP"
             HistoNameLow="Signal_%(mass)d_vbf" />
-        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.034" Low="0.958"/>-->
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="Signal_%(mass)d_vbf_FAKERATE_UP"
+            HistoNameLow="Signal_%(mass)d_vbf_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="Signal_%(mass)d_vbf_TRIGGER_UP"
+            HistoNameLow="Signal_%(mass)d_vbf_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="Signal_%(mass)d_vbf_TAUBDT_UP"
+            HistoNameLow="Signal_%(mass)d_vbf_TAUBDT_DOWN" />
+        <!-- Theory Systematics -->
         <OverallSys Name="pdf_qqbar" High="1.027" Low="0.979"/>
         <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>
     </Sample>
@@ -51,8 +67,16 @@
         <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_zh_JER_UP"
             HistoNameLow="Signal_%(mass)d_zh" />
-        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>-->
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="Signal_%(mass)d_zh_FAKERATE_UP"
+            HistoNameLow="Signal_%(mass)d_zh_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="Signal_%(mass)d_zh_TRIGGER_UP"
+            HistoNameLow="Signal_%(mass)d_zh_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="Signal_%(mass)d_zh_TAUBDT_UP"
+            HistoNameLow="Signal_%(mass)d_zh_TAUBDT_DOWN" />
+        <!-- Theory Systematics -->
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
@@ -68,8 +92,16 @@
         <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_wh_JER_UP"
             HistoNameLow="Signal_%(mass)d_wh" />
-        <!--<OverallSys Name="T_EFF" High="1.08" Low="0.92"/>
-        <OverallSys Name="T_TRIG" High="1.039" Low="0.961"/>-->
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="Signal_%(mass)d_wh_FAKERATE_UP"
+            HistoNameLow="Signal_%(mass)d_wh_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="Signal_%(mass)d_wh_TRIGGER_UP"
+            HistoNameLow="Signal_%(mass)d_wh_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="Signal_%(mass)d_wh_TAUBDT_UP"
+            HistoNameLow="Signal_%(mass)d_wh_TAUBDT_DOWN" />
+        <!-- Theory Systematics -->
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
@@ -83,7 +115,25 @@
         <HistoSys Name="JER"
             HistoNameHigh="Ztautau_JER_UP"
             HistoNameLow="Ztautau" />
-        <!--<OverallSys Name="Fit" High="1.092" Low="0.908"/>-->
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="Ztautau_FAKERATE_UP"
+            HistoNameLow="Ztautau_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="Ztautau_TRIGGER_UP"
+            HistoNameLow="Ztautau_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="Ztautau_TAUBDT_UP"
+            HistoNameLow="Ztautau_TAUBDT_DOWN" />
+        <HistoSys Name="FIT"
+            HistoNameHigh="Ztautau_FIT_UP"
+            HistoNameLow="Ztautau_FIT_DOWN" />
+        <!-- Embedding Systematics -->
+        <HistoSys Name="ISOL"
+            HistoNameHigh="Ztautau_ISOL_UP"
+            HistoNameLow="Ztautau_ISOL_DOWN" />
+        <HistoSys Name="MFS"
+            HistoNameHigh="Ztautau_MFS_UP"
+            HistoNameLow="Ztautau_MFS_DOWN" />
     </Sample>
 
     <Sample Name="QCD" InputFile="./data/%(category)s.root"
@@ -95,43 +145,38 @@
         <HistoSys Name="JER"
             HistoNameHigh="QCD_JER_UP"
             HistoNameLow="QCD" />
-        <!--<OverallSys Name="Fit" High="1.39" Low="0.61" />-->
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="QCD_FAKERATE_UP"
+            HistoNameLow="QCD_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="QCD_TRIGGER_UP"
+            HistoNameLow="QCD_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="QCD_TAUBDT_UP"
+            HistoNameLow="QCD_TAUBDT_DOWN" />
+        <HistoSys Name="FIT"
+            HistoNameHigh="QCD_FIT_UP"
+            HistoNameLow="QCD_FIT_DOWN" />
     </Sample>
 
-    <Sample Name="EWK" InputFile="./data/%(category)s.root"
-        HistoName="EWK" NormalizeByTheory="True" >
+    <Sample Name="Others" InputFile="./data/%(category)s.root"
+        HistoName="Others" NormalizeByTheory="True" >
         <StatError Activate="True" />
         <HistoSys Name="JES_TES"
-            HistoNameHigh="EWK_JES_UP_TES_UP"
-            HistoNameLow="EWK_JES_DOWN_TES_DOWN" />
+            HistoNameHigh="Others_JES_UP_TES_UP"
+            HistoNameLow="Others_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
-            HistoNameHigh="EWK_JER_UP"
-            HistoNameLow="EWK" />
-        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
-    </Sample>
-    
-    <Sample Name="Top" InputFile="./data/%(category)s.root"
-        HistoName="Top" NormalizeByTheory="True" >
-        <StatError Activate="True" />
-        <HistoSys Name="JES_TES"
-            HistoNameHigh="Top_JES_UP_TES_UP"
-            HistoNameLow="Top_JES_DOWN_TES_DOWN" />
-        <HistoSys Name="JER"
-            HistoNameHigh="Top_JER_UP"
-            HistoNameLow="Top" />
-        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
-    </Sample>
-    
-    <Sample Name="Diboson" InputFile="./data/%(category)s.root"
-        HistoName="Diboson" NormalizeByTheory="True" >
-        <StatError Activate="True" />
-        <HistoSys Name="JES_TES"
-            HistoNameHigh="Diboson_JES_UP_TES_UP"
-            HistoNameLow="Diboson_JES_DOWN_TES_DOWN" />
-        <HistoSys Name="JER"
-            HistoNameHigh="Diboson_JER_UP"
-            HistoNameLow="Diboson" />
-        <!--<OverallSys Name="F_EFF" High="1.20" Low="0.80"/>-->
+            HistoNameHigh="Others_JER_UP"
+            HistoNameLow="Others" />
+        <HistoSys Name="FAKERATE"
+            HistoNameHigh="Others_FAKERATE_UP"
+            HistoNameLow="Others_FAKERATE_DOWN" />
+        <HistoSys Name="TRIGGER"
+            HistoNameHigh="Others_TRIGGER_UP"
+            HistoNameLow="Others_TRIGGER_DOWN" />
+        <HistoSys Name="TAUBDT"
+            HistoNameHigh="Others_TAUBDT_UP"
+            HistoNameLow="Others_TAUBDT_DOWN" />
     </Sample>
     
 </Channel>
