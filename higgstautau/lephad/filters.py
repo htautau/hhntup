@@ -491,9 +491,15 @@ def electron_preselection(el):
 
     if not (el_cl_Et > 15*GeV) : return False
     if not (abs(el.cl_eta) < 2.47) : return False
-    if (1.37 < abs(el.cl_eta) < 1.52) : return False
     if not (el.author == 1 or el.author == 3) : return False
     if not (el.loosePP) : return False
+
+    return True
+
+def electron_etaselection(el):
+    """ Does the complete electron preselection """
+
+    if (1.37 < abs(el.cl_eta) < 1.52) : return False
 
     return True
 
@@ -546,6 +552,15 @@ class ElectronPreSelection(EventFilter):
     def passes(self, event):
 
         event.electrons.select(lambda electron : electron_preselection(electron))
+        return True
+
+
+class ElectronEtaSelection(EventFilter):
+    """Selects electrons outside of the crack region"""
+
+    def passes(self, event):
+
+        event.electrons.select(lambda electron : electron_etaselection(electron))
         return True
 
 
