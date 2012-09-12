@@ -72,17 +72,8 @@ from rootpy.io import open as ropen
 from rootpy.extern.tabulartext import PrettyTable
 
 
-QUICK = True
+QUICK = False
 
-# grid search params
-if QUICK:
-    # quick search for testing
-    MIN_SAMPLES_LEAF = range(100, 120, 10)
-    N_ESTIMATORS = range(10, 15, 2)
-else:
-    # full search
-    MIN_SAMPLES_LEAF = range(10, 100, 10) + range(100, 2050, 50)
-    N_ESTIMATORS = range(20, 1001, 30)
 
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
 if not LIMITS_DIR:
@@ -288,6 +279,19 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     DecisionTreeClassifier(),
                     learn_rate=.5,
                     compute_importances=True)
+
+            # grid search params
+            if QUICK:
+                # quick search for testing
+                MIN_SAMPLES_LEAF = range(100, 120, 10)
+                N_ESTIMATORS = range(10, 15, 2)
+            else:
+                # full search
+                max_min_leaf = int((sample_train.shape[0] / 2.) *
+                        (args.nfold - 1.) / args.nfold)
+                MIN_SAMPLES_LEAF = range(50, max_min_leaf, max_min_leaf / 50)
+                N_ESTIMATORS = range(20, 2001, 30)
+
             # see top of file for grid search param constants
             grid_params = {
                 'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
@@ -296,7 +300,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             #clf = SVC(probability=True, scale_C=True)
             # first grid search min_samples_leaf for the maximum n_estimators
             grid_clf = GridSearchCV(
-                    clf, grid_params, score_func=precision_score,
+                    clf, grid_params,
+                    # use default ClassifierMixin score
+                    #score_func=precision_score,
                     cv = StratifiedKFold(labels_train, args.nfold),
                     n_jobs=-1)
             grid_clf.fit(
@@ -479,8 +485,11 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             for d in (bkg_scores, sig_scores):
                 for name, (samp, scores_dict) in d.items():
                     for sys_term, score_weights in scores_dict.items():
-                        sys_term = '_'.join(sys_term)
-                        suffix = '_' + sys_term
+                        if sys_term == 'NOMINAL':
+                            suffix = ''
+                        else:
+                            sys_term = '_'.join(sys_term)
+                            suffix = '_' + sys_term
                         hist = hist_template.Clone(name=name + suffix)
                         for scores, weights in score_weights:
                             for score, w in zip(scores, weights):
