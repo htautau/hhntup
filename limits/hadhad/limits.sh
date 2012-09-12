@@ -17,7 +17,7 @@ rm -f bandPlotData_ggf.txt
 rm -f bandPlotData_boosted.txt
 rm -f bandPlotData_vbf.txt
 
-for mass in $(seq 100 5 150)
+for mass in $(seq 120 5 130)
 do
     echo "*************************************"
     echo "Calculating limits for mass point ${mass}"

@@ -760,7 +760,17 @@ class MC(Sample):
             tree = sys_trees[systematic]
             events = sys_events[systematic]
 
-            weight = TOTAL_LUMI * self.scale * xs * kfact * effic / events
+            if tree is None:
+                tree = sys_trees['NOMINAL']
+                events = sys_events['NOMINAL']
+
+            scale = self.scale
+            if isinstance(self, Ztautau):
+                if systematic == ('FIT_UP',):
+                    scale = self.scale + self.scale_error
+                elif systematic == ('FIT_DOWN',):
+                    scale = self.scale - self.scale_error
+            weight = scale * TOTAL_LUMI * xs * kfact * effic / events
 
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)

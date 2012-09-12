@@ -219,7 +219,6 @@ def draw(model,
         #ratio_ax.yaxis.tick_right()
         ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
                 fontsize=20, position=(0., 1.), va='top')
-
     if show_qq:
         qq_ax = plt.axes(rect_qq)
         gg_graph = qqplot(data, sum(model))
@@ -261,10 +260,8 @@ def draw(model,
         for variations in systematics:
             if len(variations) == 2:
                 high, low = variations
-                high = tuple(high.split(','))
-                low = tuple(low.split(','))
             elif len(variations) == 1:
-                high = tuple(variations[0].split(','))
+                high = variations[0]
                 low = 'NOMINAL'
             else:
                 raise ValueError(
@@ -306,6 +303,7 @@ def draw(model,
                     sum([(v[i] - total_model[i])**2 for v in var_low]))
             high_band[i] = sum_high
             low_band[i] = sum_low
+
         # draw band as hatched histogram with base of model - low_band
         # and height of high_band + low_band
         rplt.fill_between(total_model + high_band,
@@ -317,23 +315,6 @@ def draw(model,
                     axes=hist_ax,
                     zorder=100)
 
-        if show_ratio:
-            # plot band on ratio plot
-            # TODO correct this...
-            high_band += total_model
-            low_band = total_model - low_band
-            high_ratio = Hist.divide(
-                    high_band - total_model, total_model, option='B') * 100
-            low_ratio = Hist.divide(
-                    low_band - total_model, total_model, option='B') * 100
-
-            rplt.fill_between(high_ratio, low_ratio,
-                    edgecolor='yellow',
-                    linewidth=0,
-                    facecolor=(0,0,0,0),
-                    hatch='////',
-                    axes=ratio_ax)
-
     if data is not None:
         data_bars = rplt.errorbar(data,
                 fmt='o', axes=hist_ax,
@@ -341,6 +322,44 @@ def draw(model,
                 emptybins=False,
                 barsabove=True,
                 zorder=1000)
+        if show_ratio:
+            ratio_ax = plt.axes(rect_ratio)
+            ratio_ax.axhline(y=0, color='black')
+            ratio_ax.axhline(y=50, color='black', linestyle='--')
+            ratio_ax.axhline(y=-50, color='black', linestyle='--')
+            total_model = sum(model)
+            error = Hist.divide(data - total_model, total_model, option='B')
+            error.linecolor = 'black'
+            error.linewidth = 1
+            error.fillstyle = 'hollow'
+            error *= 100
+            rplt.hist(
+                    error,
+                    axes=ratio_ax,
+                    histtype='stepfilled')
+            ratio_ax.set_ylim((-100., 100.))
+            ratio_ax.set_xlim(hist_ax.get_xlim())
+            #ratio_ax.yaxis.tick_right()
+            ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
+                    fontsize=20, position=(0., 1.), va='top')
+            """
+            if systematics is not None:
+                # plot band on ratio plot
+                # TODO correct this...
+                high_band += total_model
+                low_band = total_model - low_band
+                high_ratio = Hist.divide(
+                        high_band - total_model, total_model, option='B') * 100
+                low_ratio = Hist.divide(
+                        low_band - total_model, total_model, option='B') * 100
+
+                rplt.fill_between(high_ratio, low_ratio,
+                        edgecolor='yellow',
+                        linewidth=0,
+                        facecolor=(0,0,0,0),
+                        hatch='////',
+                        axes=ratio_ax)
+            """
 
     model_legend = hist_ax.legend(
             reversed(model_bars), [h.title for h in reversed(model)],
