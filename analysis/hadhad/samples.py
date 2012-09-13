@@ -1253,5 +1253,54 @@ if __name__ == '__main__':
             bins, min, max,
             cuts=cuts)
 
-    print sum(data_hist) / (sum(qcd_hist) + sum(ztautau_hist) + sum(other_hist))
+    print "Data: %f" % sum(data_hist)
+    print "QCD: %f" % sum(qcd_hist)
+    print "Z: %f" % sum(ztautau_hist)
+    print "Others: %f" % sum(other_hist)
+    print "Data / Model: %f" % (sum(data_hist) / (sum(qcd_hist) +
+        sum(ztautau_hist) + sum(other_hist)))
 
+    # test scores
+    from categories import CATEGORIES
+    import pickle
+    import numpy as np
+
+    branches = CATEGORIES[category]['features']
+
+    train_frac = .5
+
+    with open('clf_%s.pickle' % category, 'r') as f:
+        clf = pickle.load(f)
+        print clf
+
+    other_scores, other_weights = others.scores(
+            clf, branches,
+            train_frac,
+            category, target_region,
+            cuts=cuts)['NOMINAL']
+
+    qcd_scores, qcd_weights = qcd.scores(
+            clf, branches,
+            train_frac,
+            category, target_region,
+            cuts=cuts)['NOMINAL']
+
+    ztautau_scores, ztautau_weights = ztautau.scores(
+            clf, branches,
+            train_frac,
+            category, target_region,
+            cuts=cuts)['NOMINAL']
+
+    data_sample = data.ndarray(
+            category=category,
+            region=target_region,
+            branches=branches,
+            include_weight=False,
+            cuts=cuts)
+
+    data_scores = clf.predict_proba(data_sample)[:,-1]
+
+    print "Data: %d" % (len(data_scores))
+    print "QCD: %f" % np.sum(qcd_weights)
+    print "Z: %f" % np.sum(ztautau_weights)
+    print "Others: %f" % np.sum(other_weights)
