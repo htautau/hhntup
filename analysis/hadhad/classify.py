@@ -90,35 +90,6 @@ def plot_grid_scores(
     plt.clf()
 
 
-def apply_clf(
-        clf,
-        sample,
-        category,
-        region,
-        branches,
-        train_fraction,
-        cuts=None):
-
-    if isinstance(sample, Data):
-        data_sample = sample.ndarray(
-                category=category,
-                region=region,
-                branches=branches,
-                include_weight=False,
-                cuts=cuts)
-        scores = clf.predict_proba(data_sample)[:,-1]
-        weight = np.ones(len(scores))
-        return scores, weight
-    else: # QCD or MC
-        return sample.scores(
-                clf,
-                category=category,
-                region=region,
-                branches=branches,
-                train_fraction=train_fraction,
-                cuts=cuts)
-
-
 def plot_clf(
         background_scores,
         category,
@@ -126,7 +97,6 @@ def plot_clf(
         signal_scores=None,
         signal_scale=1.,
         data_scores=None,
-        cuts=None,
         name=None,
         draw_histograms=True,
         draw_data=False,
@@ -201,6 +171,7 @@ def plot_clf(
              output_name=output_name,
              range=(min_score, max_score),
              show_ratio=data_hist is not None,
+             model_colour_map=None,
              systematics=systematics)
 
 

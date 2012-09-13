@@ -434,7 +434,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             name='control',
             bins=args.bins,
             min_score=min_score,
-            max_score=max_score)
+            max_score=max_score,
+            systematics=SYSTEMATICS if args.systematics else None)
 
         # signal scores for M=125
         signal_scores_eval = signal_eval.scores(clf,
@@ -469,7 +470,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             name='ROI',
             bins=args.bins,
             min_score=min_score,
-            max_score=max_score)
+            max_score=max_score,
+            systematics=SYSTEMATICS if args.systematics else None)
 
         # signal scores for all masses and modes
         sig_scores = {}
