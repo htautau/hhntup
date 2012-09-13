@@ -426,7 +426,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         print cuts
         plot_clf(
             background_scores=bkg_scores,
-            category,
+            category=category,
             category_name=cat_info['name'],
             signal_scores=None,
             data_scores=data_scores,
@@ -462,7 +462,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         print cuts
         plot_clf(
             background_scores=bkg_scores,
-            category,
+            category=category,
             category_name=cat_info['name'],
             signal_scores=(signal_eval, signal_scores_eval),
             signal_scale=50,
