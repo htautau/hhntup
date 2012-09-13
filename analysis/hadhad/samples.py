@@ -1197,22 +1197,61 @@ class MC_TauID(MC):
 
 if __name__ == '__main__':
 
-    from pyAMI.query import print_table
-    signals, backgrounds = get_samples('2jet', purpose='train')
+    from background_estimation import qcd_ztautau_norm
 
-    table = [['dataset',
-              'mean sigma [pb]', 'min sigma [pb]', 'max sigma [pb]',
-              'sigma factor',
-              'filter effic', 'K factor']]
-    format = "%s %.8f %.8f %.8f %.6f %.6f %.6f"
-    for sample in signals + backgrounds:
-        if isinstance(sample, QCD):
-            continue
-        for datasets in sample.datasets:
-            for ds, tree, events, (xsec, kfact, effic) in datasets:
-                row = format % (ds.ds, xsec*1E3, kfact, ds.xsec_factor, effic)
-                table.append(row.split())
-    print
-    print
-    table.sort(key=lambda row: row[0])
-    print_table(table)
+    # tests
+    category='boosted'
+    shape_region = 'SS'
+    target_region = 'OS'
+
+    ztautau = Embedded_Ztautau(systematics=False)
+    others = Others(systematics=False)
+    data = Data()
+    qcd = QCD(data=data, mc=[others, ztautau],
+          shape_region='SS')
+
+    qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = qcd_ztautau_norm(
+        ztautau=ztautau,
+        backgrounds=[others],
+        data=data,
+        category=category,
+        target_region=target_region,
+        qcd_shape_region=shape_region,
+        use_cache=True)
+
+    qcd.scale = qcd_scale
+    qcd.scale_error = qcd_scale_error
+    ztautau.scale = ztautau_scale
+    ztautau.scale_error = ztautau_scale_error
+
+    expr = 'tau1_BDTJetScore'
+    cuts = None
+    bins = 20
+    min, max = 0, 1
+
+    other_hist = others.draw(
+            expr,
+            category, target_region,
+            bins, min, max,
+            cuts=cuts)
+
+    qcd_hist = qcd.draw(
+            expr,
+            category, target_region,
+            bins, min, max,
+            cuts=cuts)
+
+    ztautau_hist = ztautau.draw(
+            expr,
+            category, target_region,
+            bins, min, max,
+            cuts=cuts)
+
+    data_hist = data.draw(
+            expr,
+            category, target_region,
+            bins, min, max,
+            cuts=cuts)
+
+    print sum(data_hist) / (sum(qcd_hist) + sum(ztautau_hist) + sum(other_hist))
+
