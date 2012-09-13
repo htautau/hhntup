@@ -53,44 +53,18 @@ import random
 
 sys.path.insert(0,'.')
 
-if not args.student:
-    sys.exit("Student file not defined!")
-
-dataroot = os.getenv('DATAROOT', None)
-if dataroot is None:
-    sys.exit("$DATAROOT not defined!")
-
-if len(args.datasets) == 0:
-    print "No samples specified!"
-    sys.exit(1)
-
 if len(args.datasets) == 1:
+    # WHAT IS THIS??
     if args.datasets[0].lower() == 'all':
+        dataroot = os.getenv('DATAROOT', None)
+        if dataroot is None:
+            sys.exit("$DATAROOT not defined!")
         args = []
         dirs = glob.glob(os.path.join(dataroot,'*'))
         for dir in dirs:
             print dir
             if os.path.isfile(os.path.join(dir,'meta.yml')):
                 args.append(os.path.basename(dir))
-
-if args.runs != None and args.periods != None:
-    print "Warning: you specified both runs and data periods."
-    print "Your run selection will override the periods selection"
-    args.periods = None
-
-if args.periods is not None:
-    print "using period(s) %s for data sample" % args.periods
-elif args.runs is not None:
-    print "using run(s) %s for data sample" % args.runs
-
-if args.runs != None:
-    if ',' in args.runs:
-        args.runs = [int(run) for run in args.runs.split(',')]
-    elif '-' in args.runs:
-        begin, end = args.runs.split('-')
-        args.runs = range(int(begin), int(end)+1)
-    else:
-        args.runs = [int(args.runs)]
 
 db = datasets.Database(args.db)
 
