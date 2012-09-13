@@ -120,104 +120,60 @@ def apply_clf(
 
 
 def plot_clf(
-        clf,
-        backgrounds,
+        background_scores,
         category,
-        region,
-        branches,
-        train_fraction,
         category_name,
-        signals=None,
+        signal_scores=None,
         signal_scale=1.,
-        data=None,
+        data_scores=None,
         cuts=None,
         name=None,
         draw_histograms=True,
         draw_data=False,
         save_histograms=False,
-        bins=10):
+        bins=10,
+        min_score=0,
+        max_score=1,
+        systematics=None):
 
-    max_score = 0.
-    min_score = 1.
-
-    bkg_scores = []
-    for bkg in backgrounds:
-        scores, weight = apply_clf(
-            clf,
-            bkg,
-            category=category,
-            region=region,
-            branches=branches,
-            cuts=cuts,
-            train_fraction=train_fraction)['NOMINAL']
-        _min = scores.min()
-        _max = scores.max()
-        if _min < min_score:
-            min_score = _min
-        if _max > max_score:
-            max_score = _max
-        bkg_scores.append((bkg.label, bkg.hist_decor, scores, weight))
-
-    if signals is not None:
-        sig_scores = []
-        for sig in signals:
-            scores, weight = apply_clf(
-                clf,
-                sig,
-                category=category,
-                region=region,
-                branches=branches,
-                cuts=cuts,
-                train_fraction=train_fraction)['NOMINAL']
-            _min = scores.min()
-            _max = scores.max()
-            if _min < min_score:
-                min_score = _min
-            if _max > max_score:
-                max_score = _max
-            sig_scores.append((sig.label, sig.hist_decor, scores, weight))
-    else:
-        sig_scores = None
-
-    if data is not None and draw_data:
-        data_scores, _ = apply_clf(
-            clf,
-            data,
-            category=category,
-            region=region,
-            branches=branches,
-            cuts=cuts,
-            train_fraction=train_fraction)
-        _min = data_scores.min()
-        _max = data_scores.max()
-        if _min < min_score:
-            min_score = _min
-        if _max > max_score:
-            max_score = _max
-    else:
-        data_scores = None
-
-    padding = (max_score - min_score) / (2 * bins)
-    min_score -= padding
-    max_score += padding
     hist_template = Hist(bins, min_score, max_score)
 
     bkg_hists = []
-    for label, decor, scores, weight in bkg_scores:
-        hist = hist_template.Clone(title=label, **decor)
+    for bkg, scores_dict in background_scores:
+        hist = hist_template.Clone(title=bkg.label)
+        scores, weight = scores_dict['NOMINAL']
         for score, w in zip(scores, weight):
             hist.Fill(score, w)
+        hist.decorate(**bkg.hist_decor)
+        hist.systematics = {}
+        for sys_term in scores_dict.keys():
+            if sys_term == 'NOMINAL':
+                continue
+            sys_hist = hist_template.Clone()
+            scores, weight = scores_dict[sys_term]
+            for score, w in zip(scores, weight):
+                sys_hist.Fill(score, w)
+            hist.systematics[sys_term] = sys_hist
         bkg_hists.append(hist)
 
-    if signals is not None:
-        sig_hists = []
-        for label, decor, scores, weight in sig_scores:
-            hist = hist_template.Clone(title=label, **decor)
+    if signal_scores is not None:
+        signal, signal_scores = signal_scores
+        sig_hist = hist_template.Clone(title=signal.label)
+        scores, weight = signal_scores['NOMINAL']
+        for score, w in zip(scores, weight):
+            sig_hist.Fill(score, w)
+        sig_hist.decorate(**signal.hist_decor)
+        sig_hist.systematics = {}
+        for sys_term in signal_scores.keys():
+            if sys_term == 'NOMINAL':
+                continue
+            sys_hist = hist_template.Clone()
+            scores, weight = signal_scores[sys_term]
             for score, w in zip(scores, weight):
-                hist.Fill(score, w)
-            sig_hists.append(hist)
+                sys_hist.Fill(score, w)
+            sig_hist.systematics[sys_term] = sys_hist
     else:
-        sig_hists = None
+        sig_hist = None
 
     if data is not None and draw_data:
         data_hist = hist_template.Clone(title=data.label)
@@ -236,14 +192,15 @@ def plot_clf(
             output_name += '_' + name
         draw(data=data_hist,
              model=bkg_hists,
-             signal=sig_hists,
+             signal=sig_hist,
              signal_scale=signal_scale,
              category=category,
              category_name=category_name,
              name="BDT Score",
              output_name=output_name,
              range=(min_score, max_score),
-             show_ratio=data_hist is not None)
+             show_ratio=data_hist is not None,
+             systematics=systematics)
 
 
 def make_classification(

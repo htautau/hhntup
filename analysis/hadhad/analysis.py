@@ -22,6 +22,7 @@ parser.add_argument('--no-systematics', action='store_false',
         help="turn off systematics",
         default=True)
 parser.add_argument('--nfold', type=int, default=5)
+parser.add_argument('--clf-bins', dest='bins', type=int, default=20)
 parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
 parser.add_argument('--train-fraction', type=float, default=.5)
@@ -82,15 +83,13 @@ LIMITS_DIR = os.path.join(LIMITS_DIR, 'hadhad', 'data')
 
 PLOTS_DIR = plots_dir(__file__)
 
-bins=20
-
 #ztautau   = MC_Ztautau(systematics=args.systematics)
 ztautau = Embedded_Ztautau(systematics=args.systematics)
 others = Others(systematics=args.systematics)
 data = Data(markersize=1.2)
 
 higgs_125 = Higgs(
-        masses=[125],
+        mass=125,
         systematics=args.systematics,
         scale=50,
         linecolor='red',
@@ -100,13 +99,15 @@ if 'train' in args.actions:
 
     # all modes, all masses
     signals_train = [
-        Higgs(),
+        Higgs(systematics=args.systematics),
     ]
 
     # all modes, 125GeV mass
-    signals_eval = [
-        Higgs(mass=125),
-    ]
+    signal_eval = Higgs(
+            mass=125,
+            systematics=args.systematics,
+            linecolor='red',
+            linestyle='dashed')
 
 figures = {}
 
@@ -227,13 +228,12 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
 
         backgrounds = [
             qcd,
-            ztautau,
             others,
+            ztautau,
         ]
 
         # define training and test samples
         branches = cat_info['features']
-
 
         # train a classifier
         if args.use_clf_cache and os.path.isfile('clf_%s.pickle' % category):
@@ -374,38 +374,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             with open('clf_%s.pickle' % category, 'w') as f:
                 pickle.dump(clf, f)
 
-        # compare data and the model in a low mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 < 110')
-        plot_clf(
-            clf,
-            backgrounds,
-            category,
-            target_region,
-            branches,
-            category_name=cat_info['name'],
-            signals=None,
-            data=data,
-            cuts=cuts,
-            train_fraction=args.train_fraction,
-            draw_data=True,
-            name='control')
-
-        # show the background model and 125 GeV signal above mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 > 110')
-        plot_clf(
-            clf,
-            backgrounds,
-            category,
-            target_region,
-            branches,
-            category_name=cat_info['name'],
-            signals=signals_eval,
-            signal_scale=20,
-            cuts=cuts,
-            train_fraction=args.train_fraction,
-            name='ROI')
-
-        continue
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
 
@@ -419,8 +387,18 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             train_fraction=args.train_fraction,
             cuts=cuts)
 
+        # determine min and max scores
+        min_score = 1.
+        max_score = 0.
+        _min = data_scores.min()
+        _max = data_scores.max()
+        if _min < min_score:
+            min_score = _min
+        if _max > max_score:
+            max_score = _max
+
         # background model scores
-        bkg_scores = {}
+        bkg_scores = []
         for bkg in backgrounds:
             scores_dict = bkg.scores(clf,
                     branches,
@@ -428,7 +406,71 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     category=category,
                     region=target_region,
                     cuts=cuts)
-            bkg_scores[bkg.name] = (bkg, scores_dict)
+
+            for sys_term, (scores, weights) in scores_dict.items():
+                assert len(scores) == len(weights)
+                if len(scores) == 0:
+                    continue
+                _min = np.min(scores)
+                _max = np.max(scores)
+                if _min < min_score:
+                    min_score = _min
+                if _max > max_score:
+                    max_score = _max
+
+            bkg_scores.append((bkg, scores_dict))
+
+        # compare data and the model in a low mass control region
+        cuts = Cut('mass_mmc_tau1_tau2 < 110')
+        print "plotting classifier output in control region..."
+        print cuts
+        plot_clf(
+            background_scores=bkg_scores,
+            category,
+            category_name=cat_info['name'],
+            signal_scores=None,
+            data_scores=data_scores,
+            cuts=cuts,
+            draw_data=True,
+            name='control',
+            bins=args.bins,
+            min_score=min_score,
+            max_score=max_score)
+
+        # signal scores for M=125
+        signal_scores_eval = signal_eval.scores(clf,
+                branches,
+                train_fraction=args.train_fraction,
+                category=category,
+                region=target_region,
+                cuts=cuts)
+
+        for sys_term, (scores, weights) in signal_scores_eval.items():
+            assert len(scores) == len(weights)
+            if len(scores) == 0:
+                continue
+            _min = np.min(scores)
+            _max = np.max(scores)
+            if _min < min_score:
+                min_score = _min
+            if _max > max_score:
+                max_score = _max
+
+        # show the background model and 125 GeV signal above mass control region
+        cuts = Cut('mass_mmc_tau1_tau2 > 110')
+        print "Plotting classifier output in signal region..."
+        print cuts
+        plot_clf(
+            background_scores=bkg_scores,
+            category,
+            category_name=cat_info['name'],
+            signal_scores=(signal_eval, signal_scores_eval),
+            signal_scale=50,
+            cuts=cuts,
+            name='ROI',
+            bins=args.bins,
+            min_score=min_score,
+            max_score=max_score)
 
         # signal scores for all masses and modes
         sig_scores = {}
@@ -441,37 +483,25 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                         category=category,
                         region=target_region,
                         cuts=cuts)
+
+                for sys_term, (scores, weights) in scores_dict.items():
+                    assert len(scores) == len(weights)
+                    if len(scores) == 0:
+                        continue
+                    _min = np.min(scores)
+                    _max = np.max(scores)
+                    if _min < min_score:
+                        min_score = _min
+                    if _max > max_score:
+                        max_score = _max
+
                 name = 'Signal_%d_%s' % (mass, mode)
                 sig_scores[name] = (sig, scores_dict)
 
-        # determine min and max scores
-        min_score = 1.
-        max_score = 0.
-        _min = data_scores.min()
-        _max = data_scores.max()
-        if _min < min_score:
-            min_score = _min
-        if _max > max_score:
-            max_score = _max
-        for d in (bkg_scores, sig_scores):
-            for name, (samp, scores_dict) in d.items():
-                for sys_term, scores_weights in scores_dict.items():
-                    assert len(scores_weights) > 0
-                    for scores, weights in scores_weights:
-                        assert len(scores) == len(weights)
-                        if len(scores) == 0:
-                            continue
-                        _min = np.min(scores)
-                        _max = np.max(scores)
-                        if _min < min_score:
-                            min_score = _min
-                        if _max > max_score:
-                            max_score = _max
-
-        padding = (max_score - min_score) / (2 * bins)
+        padding = (max_score - min_score) / (2 * args.bins)
         min_score -= padding
         max_score += padding
-        hist_template = Hist(bins, min_score, max_score)
+        hist_template = Hist(args.bins, min_score, max_score)
 
         with ropen(os.path.join(LIMITS_DIR, '%s.root' % category),
                    'recreate') as f:
@@ -480,58 +510,25 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             map(data_hist.Fill, data_scores)
             f.cd()
             data_hist.Write()
-            total_data = sum(data_hist)
+
+            bkg_scores = dict([(bkg.name, (bkg, scores_dict))
+                for (bkg, scores_dict) in bkg_scores])
+
+            print bkg_scores
 
             for d in (bkg_scores, sig_scores):
                 for name, (samp, scores_dict) in d.items():
-                    for sys_term, score_weights in scores_dict.items():
+                    for sys_term, (scores, weights) in scores_dict.items():
                         if sys_term == 'NOMINAL':
                             suffix = ''
                         else:
                             sys_term = '_'.join(sys_term)
                             suffix = '_' + sys_term
                         hist = hist_template.Clone(name=name + suffix)
-                        for scores, weights in score_weights:
-                            for score, w in zip(scores, weights):
-                                hist.Fill(score, w)
+                        for score, w in zip(scores, weights):
+                            hist.Fill(score, w)
                         f.cd()
                         hist.Write()
-
-            """
-            for sys_variations in iter_systematics(
-                    channel='hadhad',
-                    include_nominal=True):
-
-                if sys_variations == 'NOMINAL':
-                    sys_term = sys_variations
-                    suffix = ''
-                else:
-                    sys_term = '_'.join(sys_variations)
-                    suffix = '_' + sys_term
-
-                bkg_hists = []
-                for bkg_name, scores, weight in bkg_scores[sys_term]:
-                    hist = hist_template.Clone(name=bkg_name + suffix)
-                    for score, w in zip(scores, weight):
-                        hist.Fill(score, w)
-                    bkg_hists.append(hist)
-
-                sig_hists = []
-                for sig_name, scores, weight in sig_scores[sys_term]:
-                    hist = hist_template.Clone(name=sig_name + suffix)
-                    for score, w in zip(scores, weight):
-                        hist.Fill(score, w)
-                    sig_hists.append(hist)
-
-                total_model = sum(sum(bkg_hists))
-                print "Systematic: %s  Data / Model: %.5f" % (
-                    sys_term, total_data / total_model)
-                f.cd()
-                for bkg in bkg_hists:
-                    bkg.Write()
-                for sig in sig_hists:
-                    sig.Write()
-            """
 
 # save all variable plots in one large multipage pdf
 if 'plot' in args.actions and set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
