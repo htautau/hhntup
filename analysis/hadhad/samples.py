@@ -214,34 +214,6 @@ class Sample(object):
                 categories.CATEGORIES[category]['cuts'] &
                 Sample.REGIONS[region] & self._cuts)
 
-    @classmethod
-    def tree_array_split(cls,
-            tree,
-            branches,
-            train_fraction,
-            weight_branches=None):
-
-        if weight_branches is not None:
-            branches = branches + weight_branches
-        arr = r2a.tree_to_recarray(
-            tree,
-            branches=branches,
-            include_weight=True,
-            weight_name='weight')
-        if weight_branches is not None:
-            # merge the three weight columns
-            arr['weight'] *= reduce(np.multiply,
-                    [arr[br] for br in weight_branches])
-            # remove the separate weight branches
-            arr = recfunctions.rec_drop_fields(
-                arr, weight_branches)
-        split_idx = int(train_fraction * arr.shape[0])
-        arr_train, arr_test = arr[:split_idx], arr[split_idx:]
-        # scale the weights to account for train_fraction
-        arr_train['weight'] *= 1. / train_fraction
-        arr_test['weight'] *= 1. / (1. - train_fraction)
-        return arr_train, arr_test
-
     def train_test(self,
                    category,
                    region,
@@ -253,26 +225,32 @@ class Sample(object):
         Return recarray for training and for testing
         """
         self.check_systematic(systematic)
-
-        if isinstance(self, MC):
-            weight_branches = self.get_weight_branches(systematic)
-        else:
-            weight_branches = None
-
         assert 0 < train_fraction < 1, "Train fraction must be between 0 and 1"
-        train_arrs = []
-        test_arrs = []
-        for tree in self.trees(
+        trees = self.trees(
                 category,
                 region,
                 cuts=cuts,
-                systematic=systematic):
-            arr_train, arr_test = Sample.tree_array_split(
-                    tree, branches, train_fraction,
-                    weight_branches)
-            train_arrs.append(arr_train)
-            test_arrs.append(arr_test)
-        arr_train, arr_test = np.hstack(train_arrs), np.hstack(test_arrs)
+                systematic=systematic)
+        # assume weight branches are all the same for all trees for a given
+        # systematic. This should be a safe assumption
+        weight_branches = trees[0].userdata.weight_branches
+        arr = r2a.tree_to_recarray(
+            trees,
+            branches=branches + weight_branches,
+            include_weight=True,
+            weight_name='weight')
+        if weight_branches:
+            # merge the three weight columns
+            arr['weight'] *= reduce(np.multiply,
+                    [arr[br] for br in weight_branches])
+            # remove the separate weight branches
+            arr = recfunctions.rec_drop_fields(
+                arr, weight_branches)
+        split_idx = int(train_fraction * arr.shape[0])
+        arr_train, arr_test = arr[:split_idx], arr[split_idx:]
+        # scale the weights to account for train_fraction
+        arr_train['weight'] *= 1. / train_fraction
+        arr_test['weight'] *= 1. / (1. - train_fraction)
         return arr_train, arr_test
 
     def recarray(self,
@@ -361,7 +339,9 @@ class Data(Sample):
 
         self.check_systematic(systematic)
         TEMPFILE.cd()
-        return [asrootpy(self.data.CopyTree(self.cuts(category, region) & cuts))]
+        tree = asrootpy(self.data.CopyTree(self.cuts(category, region) & cuts))
+        tree.userdata.weight_branches = []
+        return [tree]
 
 
 class Signal:
@@ -691,6 +671,33 @@ class MC(Sample):
         if scores_dict is None:
             scores_dict = {}
 
+        for systematic in systematics.iter_systematics(True):
+
+            if not self.systematics and systematic != 'NOMINAL':
+                continue
+
+            arr_train, arr_test = self.train_test(
+                    category,
+                    region,
+                    branches,
+                    train_fraction,
+                    cuts=cuts,
+                    systematic=systematic)
+
+            sample = np.vstack(arr_test[branch] for branch in branches).T
+            scores = clf.predict_proba(sample)[:,-1]
+            weights = arr_test['weight']
+
+            if systematic not in scores_dict:
+                scores_dict[systematic] = (scores, weights)
+            else:
+                prev_scores, prev_weights = scores_dict[systematic]
+                scores_dict[systematic] = (
+                        np.concatenate((prev_scores, scores)),
+                        np.concatenate((prev_weights, weights)))
+
+
+        """
         selection = self.cuts(category, region) & cuts
         TEMPFILE.cd()
 
@@ -787,6 +794,7 @@ class MC(Sample):
                     scores_dict[_term].append((
                         np.copy(nominal_scores),
                         np.copy(nominal_weights)))
+        """
         return scores_dict
 
     def trees(self, category, region, cuts=None, systematic='NOMINAL'):
@@ -1129,15 +1137,19 @@ class QCD(Sample):
                     cuts=cuts,
                     scores_dict=scores_dict)
 
-        for sys_term, sys_list in scores_dict.items():
+        for sys_term in scores_dict.keys():
+            sys_scores, sys_weights = scores_dict[sys_term]
             scale = self.scale
             if sys_term == ('FIT_UP',):
-                scale = self.scale + self.scale_error
+                scale += self.scale_error
             elif sys_term == ('FIT_DOWN',):
-                scale = self.scale - self.scale_error
-            for scores, weights in sys_list:
-                weights *= -1 * scale
-            sys_list.append((np.copy(data_scores), data_weights * scale))
+                scale -= self.scale_error
+            # subtract SS MC
+            sys_weights *= -1 * scale
+            # add SS data
+            sys_scores = np.concatenate((sys_scores, np.copy(data_scores)))
+            sys_weights = np.concatenate((sys_weights, data_weights * scale))
+            scores_dict[sys_term] = (sys_scores, sys_weights)
         return scores_dict
 
     def trees(self, category, region, cuts=None,

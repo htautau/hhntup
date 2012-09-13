@@ -203,22 +203,6 @@ def draw(model,
                     histtype='stepfilled',
                     axes=hist_ax, ypadding=ypadding)
 
-    if show_ratio:
-        ratio_ax = plt.axes(rect_ratio)
-        ratio_ax.axhline(y=0, color='black')
-        ratio_ax.axhline(y=50, color='black', linestyle='--')
-        ratio_ax.axhline(y=-50, color='black', linestyle='--')
-        total_model = sum(model)
-        rplt.errorbar(
-                Hist.divide(data - total_model, total_model, option='B') * 100,
-                fmt='o', axes=ratio_ax,
-                barsabove=True,
-                emptybins=False)
-        ratio_ax.set_ylim((-100., 100.))
-        ratio_ax.set_xlim(hist_ax.get_xlim())
-        #ratio_ax.yaxis.tick_right()
-        ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
-                fontsize=20, position=(0., 1.), va='top')
     if show_qq:
         qq_ax = plt.axes(rect_qq)
         gg_graph = qqplot(data, sum(model))
@@ -329,7 +313,8 @@ def draw(model,
             ratio_ax.axhline(y=50, color='black', linestyle='--')
             ratio_ax.axhline(y=-50, color='black', linestyle='--')
             total_model = sum(model)
-            error = Hist.divide(data - total_model, total_model, option='B')
+            numerator = data - total_model
+            error = Hist.divide(numerator, total_model, option='B')
             error.linecolor = 'black'
             error.linewidth = 1
             error.fillstyle = 'hollow'
@@ -343,24 +328,43 @@ def draw(model,
             #ratio_ax.yaxis.tick_right()
             ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
                     fontsize=20, position=(0., 1.), va='top')
-            """
             if systematics is not None:
                 # plot band on ratio plot
-                # TODO correct this...
-                high_band += total_model
-                low_band = total_model - low_band
-                high_ratio = Hist.divide(
-                        high_band - total_model, total_model, option='B') * 100
-                low_ratio = Hist.divide(
-                        low_band - total_model, total_model, option='B') * 100
+                # uncertainty on top is data + model
+                high_band_top = high_band.Clone()
+                low_band_top = low_band.Clone()
+                # quadrature sum of model uncert + data stat uncert in numerator
+                for i in xrange(len(high_band_top)):
+                    high_band_top[i] = math.sqrt(
+                            high_band[i]**2 +
+                            data.yerrh(i)**2)
+                    low_band_top[i] = math.sqrt(
+                            low_band[i]**2 +
+                            data.yerrl(i)**2)
+                # full uncert
+                high_band_full = high_band.Clone()
+                low_band_full = low_band.Clone()
+                # quadrature sum of numerator and denominator
+                for i in xrange(len(high_band_full)):
+                    if numerator[i] == 0 or total_model[i] == 0:
+                        high_band_full[i] = 0.
+                        low_band_full[i] = 0.
+                    else:
+                        high_band_full[i] = abs(error[i]) * math.sqrt(
+                                (high_band_top[i] / numerator[i])**2 +
+                                (high_band[i] / total_model[i])**2)
+                        low_band_full[i] = abs(error[i]) * math.sqrt(
+                                (low_band_top[i] / numerator[i])**2 +
+                                (low_band[i] / total_model[i])**2)
 
-                rplt.fill_between(high_ratio, low_ratio,
+                rplt.fill_between(
+                        error + high_band_full,
+                        error - low_band_full,
                         edgecolor='yellow',
                         linewidth=0,
                         facecolor=(0,0,0,0),
                         hatch='////',
                         axes=ratio_ax)
-            """
 
     model_legend = hist_ax.legend(
             reversed(model_bars), [h.title for h in reversed(model)],

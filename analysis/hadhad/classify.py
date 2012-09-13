@@ -135,8 +135,7 @@ def plot_clf(
         draw_histograms=True,
         draw_data=False,
         save_histograms=False,
-        bins=10,
-        systematic='NOMINAL'):
+        bins=10):
 
     max_score = 0.
     min_score = 1.
@@ -150,8 +149,7 @@ def plot_clf(
             region=region,
             branches=branches,
             cuts=cuts,
-            train_fraction=train_fraction,
-            systematic=systematic)
+            train_fraction=train_fraction)['NOMINAL']
         _min = scores.min()
         _max = scores.max()
         if _min < min_score:
@@ -170,8 +168,7 @@ def plot_clf(
                 region=region,
                 branches=branches,
                 cuts=cuts,
-                train_fraction=train_fraction,
-                systematic=systematic)
+                train_fraction=train_fraction)['NOMINAL']
             _min = scores.min()
             _max = scores.max()
             if _min < min_score:

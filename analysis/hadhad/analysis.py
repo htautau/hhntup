@@ -234,38 +234,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         # define training and test samples
         branches = cat_info['features']
 
-        if args.cor:
-            branches = branches + ['mass_mmc_tau1_tau2']
-
-        # split into testing and training samples
-        sample_train, sample_test,\
-        sample_weight_train, sample_weight_test,\
-        labels_train, labels_test = make_classification(
-            signals_train, backgrounds,
-            category=category,
-            region=target_region,
-            branches=branches,
-            train_fraction=args.train_fraction,
-            max_sig_train=None,
-            max_bkg_train=None,
-            max_sig_test=None,
-            max_bkg_test=None,
-            norm_sig_to_bkg_train=True,
-            norm_sig_to_bkg_test=False,
-            same_size_train=True,
-            same_size_test=False,
-            standardize=False)
-
-        if args.cor:
-            # draw a linear correlation matrix
-            samples.correlations(
-                signal=sample_test[labels_test==1],
-                signal_weight=sample_weight_test[labels_test==1],
-                background=sample_test[labels_test==0],
-                background_weight=sample_weight_test[labels_test==0],
-                branches=branches,
-                category=category)
-            continue
 
         # train a classifier
         if args.use_clf_cache and os.path.isfile('clf_%s.pickle' % category):
@@ -274,6 +242,39 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 clf = pickle.load(f)
             print clf
         else:
+            if args.cor:
+                branches = branches + ['mass_mmc_tau1_tau2']
+
+            # split into testing and training samples
+            sample_train, sample_test,\
+            sample_weight_train, sample_weight_test,\
+            labels_train, labels_test = make_classification(
+                signals_train, backgrounds,
+                category=category,
+                region=target_region,
+                branches=branches,
+                train_fraction=args.train_fraction,
+                max_sig_train=None,
+                max_bkg_train=None,
+                max_sig_test=None,
+                max_bkg_test=None,
+                norm_sig_to_bkg_train=True,
+                norm_sig_to_bkg_test=False,
+                same_size_train=True,
+                same_size_test=False,
+                standardize=False)
+
+            if args.cor:
+                # draw a linear correlation matrix
+                samples.correlations(
+                    signal=sample_test[labels_test==1],
+                    signal_weight=sample_weight_test[labels_test==1],
+                    background=sample_test[labels_test==0],
+                    background_weight=sample_weight_test[labels_test==0],
+                    branches=branches,
+                    category=category)
+                continue
+
             # train a new BDT
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(),
@@ -373,7 +374,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             with open('clf_%s.pickle' % category, 'w') as f:
                 pickle.dump(clf, f)
 
-        """
         # compare data and the model in a low mass control region
         cuts = Cut('mass_mmc_tau1_tau2 < 110')
         plot_clf(
@@ -404,8 +404,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             cuts=cuts,
             train_fraction=args.train_fraction,
             name='ROI')
-        """
 
+        continue
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
 
