@@ -1,3 +1,4 @@
+# std lib imports
 import os
 import sys
 import atexit
@@ -10,14 +11,13 @@ from numpy.lib import recfunctions
 # for reproducibilty
 np.random.seed(1987) # my birth year ;)
 
+# higgstautau imports
 from higgstautau.hadhad.periods import total_lumi
 from higgstautau import datasets
 from higgstautau.decorators import cached_property, memoize_method
 from higgstautau import samples as samples_db
 
-# Higgs cross sections
-import yellowhiggs
-
+# rootpy imports
 from rootpy.plotting import Hist, Canvas, HistStack
 from rootpy.io import open as ropen
 from rootpy.tree import Tree, Cut
@@ -25,8 +25,13 @@ from rootpy.utils import asrootpy
 from rootpy import root2array as r2a
 from rootpy.math.stats.correlation import correlation_plot
 
+# local imports
 import categories
 import variables
+import systematics
+
+# Higgs cross sections
+import yellowhiggs
 
 
 NTUPLE_PATH = os.getenv('HIGGSTAUTAU_NTUPLE_DIR')
@@ -181,8 +186,12 @@ class Sample(object):
         if systematic == 'NOMINAL':
             systerm = None
             variation = 'NOMINAL'
+        elif len(systematic) > 1:
+            # no support for this yet...
+            systerm = None
+            variation = 'NOMINAL'
         else:
-            systerm, variation = systematic.split('_')
+            systerm, variation = systematic[0].split('_')
         for term, variations in Sample.WEIGHT_SYSTEMATICS.items():
             if term == systerm:
                 weight_branches += variations[variation]
@@ -196,8 +205,8 @@ class Sample(object):
             for variation in variations:
                 if variation == 'NOMINAL':
                     continue
-                term = '%s_%s' % (type, variation)
-                yield self.get_weight_branches(term), tuple([term])
+                term = ('%s_%s' % (type, variation),)
+                yield self.get_weight_branches(term), term
 
     def cuts(self, category, region):
 
@@ -434,6 +443,7 @@ class MC(Sample):
                 if systematics_terms:
                     for sys_term in systematics_terms:
 
+                        print sys_term
                         # merge terms such as JES_UP,TES_UP (embedding) and TES_UP (MC)
                         actual_sys_term = sys_term
                         for term in unused_terms:
@@ -531,7 +541,6 @@ class MC(Sample):
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 
-        selection = self.cuts(category, region) & cuts
         if isinstance(expr, (list, tuple)):
             exprs = expr
         else:
@@ -542,6 +551,34 @@ class MC(Sample):
         else:
             sys_hists = {}
 
+        for systematic in systematics.iter_systematics(True):
+
+            if not self.systematics and systematic != 'NOMINAL':
+                continue
+
+            if systematic == 'NOMINAL':
+                local_hist = hist
+            elif systematic in sys_hists:
+                local_hist = sys_hists[systematic]
+            else:
+                local_hist = hist.Clone()
+                local_hist.Reset()
+
+            trees = self.trees(category, region, cuts=cuts,
+                    systematic=systematic)
+
+            for tree in trees:
+                weight_expression = ' * '.join(tree.userdata.weight_branches)
+                for expr in exprs:
+                    tree.Draw(expr, weight_expression,
+                            hist=local_hist)
+
+            if systematic not in sys_hists:
+                sys_hists[systematic] = local_hist
+            else:
+                sys_hists[systematic] += local_hist
+
+        """
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
 
             nominal_tree = sys_trees['NOMINAL']
@@ -643,7 +680,7 @@ class MC(Sample):
                         sys_hists[_term] = current_hist.Clone()
                     else:
                         sys_hists[_term] += current_hist.Clone()
-
+        """
         # set the systematics
         hist.systematics = sys_hists
 
@@ -752,17 +789,28 @@ class MC(Sample):
         return scores_dict
 
     def trees(self, category, region, cuts=None, systematic='NOMINAL'):
-
+        """
+        This is where all the magic happens...
+        """
         TEMPFILE.cd()
         selection = self.cuts(category, region) & cuts
+        weight_banches = self.get_weight_branches(systematic)
+        if systematic in MC.SYSTEMATICS_BY_WEIGHT:
+            systematic = 'NOMINAL'
+
         trees = []
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
-            tree = sys_trees[systematic]
-            events = sys_events[systematic]
 
-            if tree is None:
+            if systematic in (('FIT_UP',), ('FIT_DOWN',)):
                 tree = sys_trees['NOMINAL']
                 events = sys_events['NOMINAL']
+            else:
+                tree = sys_trees[systematic]
+                events = sys_events[systematic]
+
+                if tree is None:
+                    tree = sys_trees['NOMINAL']
+                    events = sys_events['NOMINAL']
 
             scale = self.scale
             if isinstance(self, Ztautau):
@@ -774,6 +822,8 @@ class MC(Sample):
 
             selected_tree = asrootpy(tree.CopyTree(selection))
             selected_tree.SetWeight(weight)
+            selected_tree.userdata.weight_branches = weight_banches
+            #print self.name, selected_tree.GetEntries(), selected_tree.GetWeight()
             trees.append(selected_tree)
         return trees
 
@@ -1029,15 +1079,21 @@ class QCD(Sample):
                             category, self.shape_region, cuts=cuts)
 
         hist += (data_hist - MC_bkg_notOS) * self.scale
+
         if hasattr(MC_bkg_notOS, 'systematics'):
-            hist.systematics = {}
+            if not hasattr(hist, 'systematics'):
+                hist.systematics = {}
             for sys_term, sys_hist in MC_bkg_notOS.systematics.items():
                 scale = self.scale
                 if sys_term == ('FIT_UP',):
                     scale = self.scale + self.scale_error
                 elif sys_term == ('FIT_DOWN',):
                     scale = self.scale - self.scale_error
-                hist.systematics[sys_term] = (data_hist - sys_hist) * scale
+                qcd_hist = (data_hist - sys_hist) * scale
+                if sys_term not in hist.systematics:
+                    hist.systematics[sys_term] = qcd_hist
+                else:
+                    hist.systematics[sys_term] += qcd_hist
 
         hist.SetTitle(self.label)
 
@@ -1087,9 +1143,13 @@ class QCD(Sample):
               systematic='NOMINAL'):
 
         TEMPFILE.cd()
-        trees = [asrootpy(self.data.data.CopyTree(
-                    self.data.cuts(category,
-                                   region=self.shape_region) & cuts))]
+        data_tree = asrootpy(
+                self.data.data.CopyTree(
+                    self.data.cuts(
+                        category,
+                        region=self.shape_region) & cuts))
+        data_tree.userdata.weight_branches = []
+        trees = [data_tree]
         for mc in self.mc:
             _trees = mc.trees(
                     category,
@@ -1100,8 +1160,14 @@ class QCD(Sample):
                 tree.Scale(-1)
             trees += _trees
 
+        scale = self.scale
+        if systematic == ('FIT_UP',):
+            scale += self.scale_error
+        elif systematic == ('FIT_DOWN',):
+            scale -= self.scale_error
+
         for tree in trees:
-            tree.Scale(self.scale)
+            tree.Scale(scale)
         return trees
 
 

@@ -9,6 +9,16 @@ SYSTEMATICS = [
     (('FIT_UP',), ('FIT_DOWN',)),
 ]
 
+
+def iter_systematics(include_nominal=False):
+
+    if include_nominal:
+        yield 'NOMINAL'
+    for variations in SYSTEMATICS:
+        for var in variations:
+            yield var
+
+
 if __name__ == '__main__':
 
     for variations in SYSTEMATICS:

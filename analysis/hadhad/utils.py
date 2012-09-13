@@ -226,13 +226,14 @@ def draw(model,
         y = np.array(list(gg_graph.y()))
         y_up = y + np.array(list(gg_graph.yerrh()))
         y_low = y - np.array(list(gg_graph.yerrl()))
-        f = qq_ax.fill_between(list(gg_graph.x()),
-                               y_low,
-                               y_up,
-                               interpolate=True,
-                               facecolor='green',
-                               linewidth=0,
-                               label='68% CL band')
+        f = qq_ax.fill_between(
+                list(gg_graph.x()),
+                y_low,
+                y_up,
+                interpolate=True,
+                facecolor='green',
+                linewidth=0,
+                label='68% CL band')
         #l = qq_ax.plot(xrange(-10, 10), xrange(-10, 10), 'b--')[0]
         diag = [max(gg_graph.xedgesl(0), min(y)),
                 max(gg_graph.xedgesh(-1), max(y))]
