@@ -1,0 +1,84 @@
+% Copyright 2004 by Madhusudan Singh <madhusudan.singh@gmail.com>
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/color/beamercolorthemeSimonFraser.sty,v 1.2 2007/01/28 20:48:24 tantau Exp $
+
+
+\mode<presentation>
+
+\definecolor{darkred}{rgb}{0.75,0,0}
+\definecolor{brightred}{rgb}{0.95,0,0}
+\definecolor{darkblue}{rgb}{0,0,0.8}
+%\definecolor{darkblue}{rgb}{0,0,0.95}
+
+%\setbeamercolor{section in toc}{fg=black,bg=white}
+%\setbeamercolor{section in toc}{fg=black,bg=green}
+\setbeamercolor{alerted text}{fg=brightred!70!black} %controls colour of alert boxes
+\setbeamercolor{example text}{fg=darkblue!70!black} %controls colour of example boxes
+\setbeamercolor{structure}{fg=darkblue!40!black} %controls main colour (bullets, block, etc)
+%\setbeamercolor*{palette primary}{fg=darkred!60!black,bg=gray!30!white}
+\setbeamercolor*{palette secondary}{fg=white,bg=darkred!60!black} %Controls bottom middle Title
+\setbeamercolor*{palette primary}{fg=darkred!50!black,bg=white}%top
+                                %right and bottom right date title
+\setbeamercolor*{palette tertiary}{bg=darkblue!70!black,fg=gray!10!white}%Controls top and bottom left
+\setbeamercolor*{palette quaternary}{fg=darkred,bg=gray!5!white}
+%\setbeamercolor*{palette quaternary}{fg=darkred,bg=gray!5!blue}
+
+%\setbeamercolor*{sidebar}{fg=darkred,bg=gray!15!white}
+
+\setbeamercolor*{palette sidebar primary}{fg=darkred!90!black} 
+%\setbeamercolor*{palette sidebar secondary}{fg=white}
+%\setbeamercolor*{palette sidebar tertiary}{fg=darkblue!50!black}
+%\setbeamercolor*{palette sidebar quaternary}{fg=gray!10!white}
+%\setbeamercolor*{palette sidebar quaternary}{fg=gray!10!blue}
+
+%\setbeamercolor*{titlelike}{parent=palette primary}
+\setbeamercolor{titlelike}{parent=pallette primary,fg=white}%Colour of title text
+\setbeamercolor{frametitle}{bg=darkred!75!gray}%Main title strip on frame
+
+
+\setbeamercolor{frametitle right}{bg=gray!40!blue, fg=white}
+
+\setbeamercolor*{separation line}{}
+%\setbeamercolor*{fine separation line}{}
+
+%%%%%%%%%%%%%%%
+\definecolor{lightred}{rgb}{0.99,0.95,0.95}
+\setbeamercolor{altitle}{fg=white,bg=darkred}
+\setbeamercolor{albody}{fg=black,bg=lightred}
+
+\newcommand{\aboxstart}[1]
+{
+\setbeamercolor{structure}{fg=red!40!black}
+\begin{beamerboxesrounded}[shadow=true,upper=altitle, lower=albody]{{#1}}
+}
+
+\newcommand{\aboxend}
+{
+\end{beamerboxesrounded}
+}
+%%%
+\definecolor{lightblue}{rgb}{0.8,0.8,0.99}
+\setbeamercolor{extitle}{fg=white,bg=darkblue}
+\setbeamercolor{exbody}{fg=black,bg=lightblue}
+
+\newcommand{\eboxstart}[1]
+{
+\setbeamercolor{structure}{fg=blue!40!black}
+\begin{beamerboxesrounded}[shadow=true,upper=extitle, lower=exbody]{{#1}}
+}
+
+\newcommand{\eboxend}
+{
+\end{beamerboxesrounded}
+}
+%%%%%%%%%%%%%
+
+\mode
+<all>
