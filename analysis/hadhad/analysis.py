@@ -429,7 +429,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category_name=cat_info['name'],
             signal_scores=None,
             data_scores=(data, data_scores),
-            cuts=cuts,
             draw_data=True,
             name='control',
             bins=args.bins,
@@ -508,7 +507,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category_name=cat_info['name'],
             signal_scores=(signal_eval, signal_scores_eval),
             signal_scale=50,
-            cuts=cuts,
             name='ROI',
             bins=args.bins,
             min_score=min_score,
@@ -556,8 +554,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
 
             bkg_scores = dict([(bkg.name, (bkg, scores_dict))
                 for (bkg, scores_dict) in bkg_scores])
-
-            print bkg_scores
 
             for d in (bkg_scores, sig_scores):
                 for name, (samp, scores_dict) in d.items():

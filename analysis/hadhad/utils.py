@@ -360,10 +360,10 @@ def draw(model,
                 rplt.fill_between(
                         error + high_band_full,
                         error - low_band_full,
-                        edgecolor='yellow',
+                        edgecolor='black',
                         linewidth=0,
                         facecolor=(0,0,0,0),
-                        hatch='////',
+                        hatch='\\\\\\\\',
                         axes=ratio_ax)
 
     model_legend = hist_ax.legend(
