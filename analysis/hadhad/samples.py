@@ -47,9 +47,9 @@ DB_HH = datasets.Database(name='datasets_hh', verbose=VERBOSE)
 DB_TAUID = datasets.Database(name='datasets_tauid', verbose=VERBOSE)
 FILES = {}
 WORKING_POINT = 'Tight'
-ID = Cut('tau1_JetBDTSig%s==1 && tau2_JetBDTSig%s==1' %
+ID = Cut('(tau1_JetBDTSig%s==1) && (tau2_JetBDTSig%s==1)' %
          (WORKING_POINT, WORKING_POINT))
-NOID = Cut('tau1_JetBDTSig%s!=1 && tau2_JetBDTSig%s!=1' %
+NOID = Cut('(tau1_JetBDTSig%s!=1) && (tau2_JetBDTSig%s!=1)' %
            (WORKING_POINT, WORKING_POINT))
 OS = Cut('tau1_charge * tau2_charge == -1')
 NOT_OS = Cut('tau1_charge * tau2_charge != -1')
@@ -443,7 +443,6 @@ class MC(Sample):
                 if systematics_terms:
                     for sys_term in systematics_terms:
 
-                        print sys_term
                         # merge terms such as JES_UP,TES_UP (embedding) and TES_UP (MC)
                         actual_sys_term = sys_term
                         for term in unused_terms:
@@ -551,6 +550,7 @@ class MC(Sample):
         else:
             sys_hists = {}
 
+        """
         for systematic in systematics.iter_systematics(True):
 
             if not self.systematics and systematic != 'NOMINAL':
@@ -579,6 +579,8 @@ class MC(Sample):
                 sys_hists[systematic] += local_hist
 
         """
+        selection = self.cuts(category, region) & cuts
+
         for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
 
             nominal_tree = sys_trees['NOMINAL']
@@ -680,7 +682,6 @@ class MC(Sample):
                         sys_hists[_term] = current_hist.Clone()
                     else:
                         sys_hists[_term] += current_hist.Clone()
-        """
         # set the systematics
         hist.systematics = sys_hists
 
