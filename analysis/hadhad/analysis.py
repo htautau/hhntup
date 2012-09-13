@@ -378,14 +378,13 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         # Include all systematic variations
 
         # data scores
-        data_scores, _ = apply_clf(
-            clf,
-            data,
-            category=category,
-            region=target_region,
-            branches=branches,
-            train_fraction=args.train_fraction,
-            cuts=cuts)
+        data_sample = data.ndarray(
+                category=category,
+                region=target_region,
+                branches=branches,
+                include_weight=False,
+                cuts=cuts)
+        data_scores = clf.predict_proba(data_sample)[:,-1]
 
         # determine min and max scores
         min_score = 1.
@@ -429,7 +428,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category=category,
             category_name=cat_info['name'],
             signal_scores=None,
-            data_scores=data_scores,
+            data_scores=(data, data_scores),
             cuts=cuts,
             draw_data=True,
             name='control',

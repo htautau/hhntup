@@ -175,7 +175,8 @@ def plot_clf(
     else:
         sig_hist = None
 
-    if data is not None and draw_data:
+    if data_scores is not None and draw_data:
+        data, data_scores = data_scores
         data_hist = hist_template.Clone(title=data.label)
         map(data_hist.Fill, data_scores)
         print "Data events: %d" % sum(data_hist)
