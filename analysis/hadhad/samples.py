@@ -246,11 +246,14 @@ class Sample(object):
             # remove the separate weight branches
             arr = recfunctions.rec_drop_fields(
                 arr, weight_branches)
+        # random shuffle
+        arr = arr[np.random.permutation(arr.shape[0])]
+        # split into test and train samples
         split_idx = int(train_fraction * arr.shape[0])
         arr_train, arr_test = arr[:split_idx], arr[split_idx:]
         # scale the weights to account for train_fraction
-        arr_train['weight'] *= 1. / train_fraction
-        arr_test['weight'] *= 1. / (1. - train_fraction)
+        arr_train['weight'] *= (1. / train_fraction)
+        arr_test['weight'] *= (1. / (1. - train_fraction))
         return arr_train, arr_test
 
     def recarray(self,
@@ -566,8 +569,11 @@ class MC(Sample):
             nominal_tree = sys_trees['NOMINAL']
             nominal_events = sys_events['NOMINAL']
 
+
             nominal_weight = (TOTAL_LUMI * self.scale *
                     xs * kfact * effic / nominal_events)
+
+            #print nominal_tree.GetEntries(selection), nominal_weight, nominal_tree.GetWeight()
 
             nominal_weighted_selection = (
                 '%f * %s * (%s)' %
@@ -830,6 +836,7 @@ class MC(Sample):
             weight = scale * TOTAL_LUMI * xs * kfact * effic / events
 
             selected_tree = asrootpy(tree.CopyTree(selection))
+            #print selected_tree.GetEntries(), weight
             selected_tree.SetWeight(weight)
             selected_tree.userdata.weight_branches = weight_banches
             #print self.name, selected_tree.GetEntries(), selected_tree.GetWeight()
@@ -1133,7 +1140,7 @@ class QCD(Sample):
                     branches,
                     train_fraction,
                     category,
-                    region,
+                    region=self.shape_region,
                     cuts=cuts,
                     scores_dict=scores_dict)
 
@@ -1227,26 +1234,27 @@ if __name__ == '__main__':
     expr = 'tau1_BDTJetScore'
     cuts = None
     bins = 20
-    min, max = 0, 1
+    min, max = -0.5, 1.5
 
+    print '--- Others'
     other_hist = others.draw(
             expr,
             category, target_region,
             bins, min, max,
             cuts=cuts)
-
+    print "--- QCD"
     qcd_hist = qcd.draw(
             expr,
             category, target_region,
             bins, min, max,
             cuts=cuts)
-
+    print '--- Z'
     ztautau_hist = ztautau.draw(
             expr,
             category, target_region,
             bins, min, max,
             cuts=cuts)
-
+    print '--- Data'
     data_hist = data.draw(
             expr,
             category, target_region,
@@ -1272,25 +1280,25 @@ if __name__ == '__main__':
     with open('clf_%s.pickle' % category, 'r') as f:
         clf = pickle.load(f)
         print clf
-
+    print '--- Others'
     other_scores, other_weights = others.scores(
             clf, branches,
             train_frac,
             category, target_region,
             cuts=cuts)['NOMINAL']
-
+    print '--- QCD'
     qcd_scores, qcd_weights = qcd.scores(
             clf, branches,
             train_frac,
             category, target_region,
             cuts=cuts)['NOMINAL']
-
+    print '--- Z'
     ztautau_scores, ztautau_weights = ztautau.scores(
             clf, branches,
             train_frac,
             category, target_region,
             cuts=cuts)['NOMINAL']
-
+    print '--- Data'
     data_sample = data.ndarray(
             category=category,
             region=target_region,
