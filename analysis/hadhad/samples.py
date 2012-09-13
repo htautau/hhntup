@@ -9,6 +9,7 @@ import numpy as np
 from numpy.lib import recfunctions
 
 # for reproducibilty
+# especially for test/train set selection
 np.random.seed(1987) # my birth year ;)
 
 # higgstautau imports
@@ -231,26 +232,32 @@ class Sample(object):
                 region,
                 cuts=cuts,
                 systematic=systematic)
-        # assume weight branches are all the same for all trees for a given
-        # systematic. This should be a safe assumption
-        weight_branches = trees[0].userdata.weight_branches
-        arr = r2a.tree_to_recarray(
-            trees,
-            branches=branches + weight_branches,
-            include_weight=True,
-            weight_name='weight')
-        if weight_branches:
-            # merge the three weight columns
-            arr['weight'] *= reduce(np.multiply,
-                    [arr[br] for br in weight_branches])
-            # remove the separate weight branches
-            arr = recfunctions.rec_drop_fields(
-                arr, weight_branches)
-        # random shuffle
-        arr = arr[np.random.permutation(arr.shape[0])]
-        # split into test and train samples
-        split_idx = int(train_fraction * arr.shape[0])
-        arr_train, arr_test = arr[:split_idx], arr[split_idx:]
+        test_arrs = []
+        train_arrs = []
+        for tree in trees:
+            weight_branches = tree.userdata.weight_branches
+            arr = r2a.tree_to_recarray(
+                tree,
+                branches=branches + weight_branches,
+                include_weight=True,
+                weight_name='weight')
+            if weight_branches:
+                # merge the three weight columns
+                arr['weight'] *= reduce(np.multiply,
+                        [arr[br] for br in weight_branches])
+                # remove the separate weight branches
+                arr = recfunctions.rec_drop_fields(
+                    arr, weight_branches)
+            # random shuffle
+            # be sure to set a constant random seed so this is stable
+            #arr = arr[np.random.permutation(arr.shape[0])]
+            # split into test and train samples
+            split_idx = int(train_fraction * arr.shape[0])
+            arr_train, arr_test = arr[:split_idx], arr[split_idx:]
+            test_arrs.append(arr_test)
+            train_arrs.append(arr_train)
+        arr_train = np.concatenate(train_arrs)
+        arr_test = np.concatenate(test_arrs)
         # scale the weights to account for train_fraction
         arr_train['weight'] *= (1. / train_fraction)
         arr_test['weight'] *= (1. / (1. - train_fraction))

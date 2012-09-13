@@ -377,6 +377,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
 
+        cuts = Cut('mass_mmc_tau1_tau2 < 110')
+        print "plotting classifier output in control region..."
+        print cuts
         # data scores
         data_sample = data.ndarray(
                 category=category,
@@ -420,9 +423,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             bkg_scores.append((bkg, scores_dict))
 
         # compare data and the model in a low mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 < 110')
-        print "plotting classifier output in control region..."
-        print cuts
         plot_clf(
             background_scores=bkg_scores,
             category=category,
@@ -436,6 +436,52 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             min_score=min_score,
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
+
+        # show the background model and 125 GeV signal above mass control region
+        cuts = Cut('mass_mmc_tau1_tau2 > 110')
+        print "Plotting classifier output in signal region..."
+        print cuts
+        # data scores
+        data_sample = data.ndarray(
+                category=category,
+                region=target_region,
+                branches=branches,
+                include_weight=False,
+                cuts=cuts)
+        data_scores = clf.predict_proba(data_sample)[:,-1]
+
+        # determine min and max scores
+        min_score = 1.
+        max_score = 0.
+        _min = data_scores.min()
+        _max = data_scores.max()
+        if _min < min_score:
+            min_score = _min
+        if _max > max_score:
+            max_score = _max
+
+        # background model scores
+        bkg_scores = []
+        for bkg in backgrounds:
+            scores_dict = bkg.scores(clf,
+                    branches,
+                    train_fraction=args.train_fraction,
+                    category=category,
+                    region=target_region,
+                    cuts=cuts)
+
+            for sys_term, (scores, weights) in scores_dict.items():
+                assert len(scores) == len(weights)
+                if len(scores) == 0:
+                    continue
+                _min = np.min(scores)
+                _max = np.max(scores)
+                if _min < min_score:
+                    min_score = _min
+                if _max > max_score:
+                    max_score = _max
+
+            bkg_scores.append((bkg, scores_dict))
 
         # signal scores for M=125
         signal_scores_eval = signal_eval.scores(clf,
@@ -456,10 +502,6 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             if _max > max_score:
                 max_score = _max
 
-        # show the background model and 125 GeV signal above mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 > 110')
-        print "Plotting classifier output in signal region..."
-        print cuts
         plot_clf(
             background_scores=bkg_scores,
             category=category,
