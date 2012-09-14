@@ -15,7 +15,7 @@ PRESELECTION_CUTS = ID_MEDIUM
 
 CATEGORIES = {
     'vbf': {
-        'name': r'$\tau_{had}\tau_{had}$: VBF Category',
+        'name': r'$\tau_{\mathrm{had}}\tau_{\mathrm{had}}$: VBF Category',
         'code': categories.CATEGORY_VBF,
         'cuts': COMMON_CATEGORY_CUTS,
         'fitbins': 5,

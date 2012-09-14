@@ -905,13 +905,13 @@ class Higgs(MC, Signal):
 
         str_mass = ''
         if len(masses) == 1:
-            str_mass = str(masses[0])
+            str_mass = '(%s)' % str(masses[0])
 
         str_mode = ''
         if len(modes) == 1:
             str_mode = str(modes[0]) + ' '
 
-        self._label = r'%s$H%s\rightarrow\tau_{h}\tau_{h}$' % (
+        self._label = r'%s$H%s\rightarrow\tau_{\mathrm{had}}\tau_{\mathrm{had}}$' % (
                 str_mode, str_mass)
 
         self.name = '{mode}Signal{mass}'.format(
