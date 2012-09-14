@@ -60,6 +60,7 @@ class TauTriggerMatchIndex(EventFilter):
         Matching performed during trigger emulation with CoEPPTrigTool
         """
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
+        self.match_sanity(event)
         return len(event.taus) >= 2
 
     def passes_data11(self, event):
@@ -72,18 +73,21 @@ class TauTriggerMatchIndex(EventFilter):
             raise ValueError("No trigger defined for run %i" % event.RunNumber)
         self.match_index(event, trigger)
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
+        self.match_sanity(event)
         return len(event.taus) >= 2
 
     def passes_mc12(self, event):
 
         self.match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
+        self.match_sanity(event)
         return len(event.taus) >= 2
 
     def passes_data12(self, event):
 
         self.match_index(event, 'EF_tau29Ti_medium1_tau20Ti_medium1')
         event.taus.select(lambda tau: tau.trigger_match_index > -1)
+        self.match_sanity(event)
         return len(event.taus) >= 2
 
     def match_index(self, event, trigger):
@@ -120,6 +124,25 @@ class TauTriggerMatchIndex(EventFilter):
                 # remove match from future matches (greedy match)
                 taus.remove(closest_tau)
 
+    def match_sanity(self, event):
+
+        # sanity check
+        if len(event.taus) < 3:
+            return
+        print '-' * 20
+        print "Run: %d, Event %d" % (event.RunNumber, event.EventNumber)
+        fmt = "%d:   match index: %d    reco pT: %f    EF pT: %f"
+        for i, tau in enumerate(event.taus):
+            print fmt % (i, tau.trigger_match_index, tau.pt,
+                    event.taus_EF.getitem(tau.trigger_match_index).pt)
+            print "dR with all other taus:"
+            for j, tau2 in enumerate(event.taus):
+                if tau2 != tau:
+                    print j, utils.dR(
+                            tau.eta, tau.phi,
+                            tau2.eta, tau2.phi)
+            print '='
+
 
 class TauTriggerMatchThreshold(EventFilter):
     """
@@ -135,7 +158,7 @@ class TauTriggerMatchThreshold(EventFilter):
 
     def passes(self, event):
 
-        match_threshold(event, (29, 20))
+        self.match_threshold(event, (29, 20))
         return True
 
     def match_threshold(self, event, thresholds):
@@ -143,6 +166,7 @@ class TauTriggerMatchThreshold(EventFilter):
         thresholds must be in descending order
         """
         assert len(event.taus) == 2
+        assert len(thresholds) == 2
 
         # assume only matched taus remain in event.taus
         taus = [(tau, event.taus_EF.getitem(tau.trigger_match_index)) for
@@ -150,12 +174,6 @@ class TauTriggerMatchThreshold(EventFilter):
 
         # sort by pT of EF tau
         taus = sorted(taus, key=lambda tau: tau[1].pt, reverse=True)
-
-        # sanity check
-        for tau in taus:
-            print tau[0].trigger_match_index, tau[1].pt, tau[0].pt
-        print "===="
-        assert len(thresholds) == len(taus)
 
         # assign thresholds in descending order
         for i in xrange(len(taus)):

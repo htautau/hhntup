@@ -21,7 +21,7 @@ from higgstautau import mass
 from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
-from higgstautau.trigger.matching import TauTriggerMatch
+from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
@@ -208,6 +208,12 @@ class hhskim(ATLASStudent):
                 passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             # select two leading taus at this point
+            # 25/35 for data
+            # 20/30 for MC for TES
+            TauLeadSublead(
+                lead=35 * GeV if datatype == datasets.DATA else 30 * GeV,
+                sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
+                count_funcs=count_funcs),
             TauTriggerMatchThreshold(
                 passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
@@ -263,15 +269,9 @@ class hhskim(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
+            assert len(event.taus) == 2
 
             tree.number_of_good_vertices = len(event.vertices)
-
-            if datatype == datasets.EMBED:
-                # select two leading taus by pT for embedding samples
-                event.taus.sort(key=lambda tau: tau.pt, reverse=True)
-                event.taus.slice(stop=2)
-
-            assert len(event.taus) == 2
 
             tau1, tau2 = event.taus
             selected_idx = [tau.index for tau in event.taus]
