@@ -27,6 +27,7 @@ parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
 parser.add_argument('--train-fraction', type=float, default=.5)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
+parser.add_argument('--train-categories', nargs='*', default=[])
 parser.add_argument('--plots', nargs='*')
 args = parser.parse_args()
 
@@ -236,7 +237,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         branches = cat_info['features']
 
         # train a classifier
-        if args.use_clf_cache and os.path.isfile('clf_%s.pickle' % category):
+        if (args.use_clf_cache
+                and category not in args.train_categories
+                and os.path.isfile('clf_%s.pickle' % category)):
             # use a previously trained classifier
             with open('clf_%s.pickle' % category, 'r') as f:
                 clf = pickle.load(f)
