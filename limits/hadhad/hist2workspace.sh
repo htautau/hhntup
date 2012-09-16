@@ -2,7 +2,7 @@
 
 source /atlas/software/bleedingedge/root-5.32-patches-64/bin/thisroot.sh
 
-for mass in $(seq 100 5 150)
+for mass in $(seq 125 5 125)
 do
     hist2workspace config/hh_combination_${mass}.xml
     for category in ggf boosted vbf

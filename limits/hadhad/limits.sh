@@ -17,7 +17,7 @@ rm -f bandPlotData_ggf.txt
 rm -f bandPlotData_boosted.txt
 rm -f bandPlotData_vbf.txt
 
-for mass in $(seq 120 5 130)
+for mass in $(seq 125 5 125)
 do
     echo "*************************************"
     echo "Calculating limits for mass point ${mass}"
@@ -34,7 +34,7 @@ do
             \"asimovData_0\",\
             \"hadhad\",\
             \"${mass}\",\
-            0.95)" > log${mass}_${category}.txt
+            0.95)" | tee log${mass}_${category}.txt
         echo ${mass} >> bandPlotData_${category}.txt
         grep -A 6 -h "Correct bands" log${mass}_${category}.txt >> bandPlotData_${category}.txt
     done
@@ -49,7 +49,7 @@ do
         \"asimovData_0\",\
         \"hadhad\",\
         \"${mass}\",\
-        0.95)" > log${mass}_combined.txt
+        0.95)" | tee log${mass}_combined.txt
     echo ${mass} >> bandPlotData_combined.txt
     grep -A 6 -h "Correct bands" log${mass}_combined.txt >> bandPlotData_combined.txt
 done

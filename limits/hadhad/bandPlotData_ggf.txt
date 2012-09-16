@@ -1,24 +1,8 @@
-120
-Correct bands
-+2sigma:  80.7656
-+1sigma:  59.4519
--1sigma:  30.9794
--2sigma:  23.0758
-Median:   42.9937
-Observed: 42.9935
 125
 Correct bands
-+2sigma:  74.162
-+1sigma:  53.4164
--1sigma:  27.013
--2sigma:  20.1214
-Median:   37.4891
-Observed: 37.4802
-130
-Correct bands
-+2sigma:  65.7205
-+1sigma:  46.0377
--1sigma:  23.0159
--2sigma:  17.144
-Median:   31.9419
-Observed: 31.9406
++2sigma:  39.532
++1sigma:  29.4356
+-1sigma:  15.2376
+-2sigma:  11.3501
+Median:   21.147
+Observed: 21.1496
