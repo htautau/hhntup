@@ -9,3 +9,4 @@ clean:
 	rm -f TPileupReweighting.prw.root
 	rm -f nohup.out
 	rm -f supervisor*.log
+	rm -f grid-setup.sh

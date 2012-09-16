@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('--test', action='store_true', default=False)
-parser.add_argument('skim', help='skim name', nargs='?', default=None)
+parser.add_argument('skim', help='skim name', nargs='*')
 args = parser.parse_args()
 
 from subprocess import call
@@ -49,31 +49,33 @@ if result != True:
         print section_string, ' = ', error
     sys.exit(1)
 
-if args.skim is None:
+if not args.skim:
     for skim, info in metadata.items():
         print "%s (version %d)" % (skim, info['version'])
     sys.exit(0)
 
-skim = metadata[args.skim]
-dataset = skim['dataset']
-student = skim['student']
-testinput = skim['testinput']
-version = skim['version']
-options = skim['options']
+for skim_name in args.skim:
 
-if args.test:
-    cmd = TEST_CMD % locals()
-else:
-    cmd = SUBMIT_CMD % locals()
+    skim = metadata[skim_name]
+    dataset = skim['dataset']
+    student = skim['student']
+    testinput = skim['testinput']
+    version = skim['version']
+    options = skim['options']
 
-cmd = cmd.replace('\n', ' ')
+    if args.test:
+        cmd = TEST_CMD % locals()
+    else:
+        cmd = SUBMIT_CMD % locals()
 
-print "executing:"
-print
-print cmd
-print
-if raw_input("Is this OK? Y/[n] ") == 'Y':
-    try:
-        call(cmd, shell=True)
-    except KeyboardInterrupt:
-        pass
+    cmd = cmd.replace('\n', ' ')
+
+    print "executing:"
+    print
+    print cmd
+    print
+    if raw_input("Is this OK? Y/[n] ") == 'Y':
+        try:
+            call(cmd, shell=True)
+        except KeyboardInterrupt:
+            pass
