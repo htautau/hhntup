@@ -395,22 +395,22 @@ class Systematics(EventFilter):
     EES_DOWN = METUtil.EESDown
     EER_UP = METUtil.EERUp
     EER_DOWN = METUtil.EERDown
-    ELECTRON_TERMS = {EES_UP, EES_DOWN, EER_UP, EER_DOWN}
+    ELECTRON_TERMS = set([EES_UP, EES_DOWN, EER_UP, EER_DOWN])
 
     # photons
     PES_UP = METUtil.PESUp
     PES_DOWN = METUtil.PESDown
     PER_UP = METUtil.PERUp
     PER_DOWN = METUtil.PERDown
-    PHOTON_TERMS = {PES_UP, PES_DOWN, PER_UP, PER_DOWN}
+    PHOTON_TERMS = set([PES_UP, PES_DOWN, PER_UP, PER_DOWN])
 
     # taus
     TES_UP = METUtil.TESUp
     TES_DOWN = METUtil.TESDown
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
-    TES_TERMS = {TES_UP, TES_DOWN}
-    TAU_TERMS = {TES_UP, TES_DOWN, TER_UP, TER_DOWN}
+    TES_TERMS = set([TES_UP, TES_DOWN])
+    TAU_TERMS = set([TES_UP, TES_DOWN, TER_UP, TER_DOWN])
     TAUBDT_UP = -100
     TAUBDT_DOWN = -101
 
@@ -419,7 +419,7 @@ class Systematics(EventFilter):
     JES_DOWN = METUtil.JESDown
     JER_UP = METUtil.JERUp
     JER_DOWN = METUtil.JERDown # NOT USED!
-    JET_TERMS = {JES_UP, JES_DOWN, JER_UP, JER_DOWN}
+    JET_TERMS = set([JES_UP, JES_DOWN, JER_UP, JER_DOWN])
 
     # muons
     MERID_UP = METUtil.MERIDUp
@@ -428,7 +428,10 @@ class Systematics(EventFilter):
     MERMS_DOWN = METUtil.MERMSDown
     MES_UP = METUtil.MESUp
     MES_DOWN = METUtil.MESDown
-    MUON_TERMS = {MERID_UP, MERID_DOWN, MERMS_UP, MERMS_DOWN, MES_UP, MES_DOWN}
+    MUON_TERMS = set([
+        MERID_UP, MERID_DOWN,
+        MERMS_UP, MERMS_DOWN,
+        MES_UP, MES_DOWN])
 
     # tracks
     TRKES_UP = METUtil.TrkESUp
