@@ -856,11 +856,11 @@ class Systematics(EventFilter):
                 event.MET_RefTau_STVF_ety,
                 event.MET_RefTau_STVF_sumet)
 
-        self.met_utility.setMETTerm(
-            METUtil.SoftJets,
-            event.MET_SoftJets_STVF_etx,
-            event.MET_SoftJets_STVF_ety,
-            event.MET_SoftJets_STVF_sumet)
+        #self.met_utility.setMETTerm(
+        #    METUtil.SoftJets,
+        #    event.MET_SoftJets_STVF_etx,
+        #    event.MET_SoftJets_STVF_ety,
+        #    event.MET_SoftJets_STVF_sumet) NOT NEEDED??
 
         self.met_utility.setMETTerm(
             METUtil.CellOutEflow,

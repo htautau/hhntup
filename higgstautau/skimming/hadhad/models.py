@@ -20,13 +20,13 @@ class TriggerMatching(TreeModel):
 
 class MassModel(TreeModel):
 
-    MMC_mass = FloatCol()
-    MMC_resonance = LorentzVector
-    MMC_resonance_pt = FloatCol()
-    MMC_MET = FloatCol()
-    MMC_MET_x = FloatCol()
-    MMC_MET_y = FloatCol()
-    MMC_MET_phi = FloatCol()
+    tau_MMC_mass = FloatCol()
+    tau_MMC_resonance = LorentzVector
+    tau_MMC_resonance_pt = FloatCol()
+    tau_MMC_MET = FloatCol()
+    tau_MMC_MET_x = FloatCol()
+    tau_MMC_MET_y = FloatCol()
+    tau_MMC_MET_phi = FloatCol()
 
     tau_collinear_mass = FloatCol()
     tau_collinear_momentum_fraction = ROOT.vector('float')
@@ -36,14 +36,14 @@ class MassModel(TreeModel):
 
 class TauCorrections(TreeModel):
 
-    efficiency_scale_factor = ROOT.vector('float')
-    efficiency_scale_factor_high = ROOT.vector('float')
-    efficiency_scale_factor_low = ROOT.vector('float')
+    tau_efficiency_scale_factor = ROOT.vector('float')
+    tau_efficiency_scale_factor_high = ROOT.vector('float')
+    tau_efficiency_scale_factor_low = ROOT.vector('float')
 
-    fakerate_scale_factor = ROOT.vector('float')
-    fakerate_scale_factor_high = ROOT.vector('float')
-    fakerate_scale_factor_low = ROOT.vector('float')
+    tau_fakerate_scale_factor = ROOT.vector('float')
+    tau_fakerate_scale_factor_high = ROOT.vector('float')
+    tau_fakerate_scale_factor_low = ROOT.vector('float')
 
-    trigger_scale_factor = ROOT.vector('float')
-    trigger_scale_factor_high = ROOT.vector('float')
-    trigger_scale_factor_low = ROOT.vector('float')
+    tau_trigger_scale_factor = ROOT.vector('float')
+    tau_trigger_scale_factor_high = ROOT.vector('float')
+    tau_trigger_scale_factor_low = ROOT.vector('float')

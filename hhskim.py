@@ -217,12 +217,12 @@ class hhskim(ATLASStudent):
             TauTriggerMatchThreshold(
                 passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
-            TauTriggerEfficiency(
-                year=year,
-                datatype=datatype,
-                tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
-                    self.args.syst_terms),
-                passthrough=datatype == datasets.DATA or year == 2012),
+            #TauTriggerEfficiency(
+            #    year=year,
+            #    datatype=datatype,
+            #    tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
+            #        self.args.syst_terms),
+            #    passthrough=datatype == datasets.DATA or year == 2012),
             PileupReweight(
                 year=year,
                 tree=tree,
@@ -296,14 +296,14 @@ class hhskim(ATLASStudent):
                     tau1, tau2, METx, METy, sumET,
                     year=year)
 
-            tree.MMC_mass = mmc_mass
-            tree.MMC_resonance.set_from(mmc_resonance)
+            tree.tau_MMC_mass = mmc_mass
+            tree.tau_MMC_resonance.set_from(mmc_resonance)
             if mmc_mass > 0:
-                tree.MMC_resonance_pt = mmc_resonance.Pt()
-            tree.MMC_MET = mmc_met.Mod()
-            tree.MMC_MET_x = mmc_met.X()
-            tree.MMC_MET_y = mmc_met.Y()
-            tree.MMC_MET_phi = math.pi - mmc_met.Phi()
+                tree.tau_MMC_resonance_pt = mmc_resonance.Pt()
+            tree.tau_MMC_MET = mmc_met.Mod()
+            tree.tau_MMC_MET_x = mmc_met.X()
+            tree.tau_MMC_MET_y = mmc_met.Y()
+            tree.tau_MMC_MET_phi = math.pi - mmc_met.Phi()
 
             # collinear mass
             collin_mass, tau1_x, tau2_x = mass.collinearmass(
@@ -323,15 +323,51 @@ class hhskim(ATLASStudent):
             tree.tau_trigger_match_thresh.clear()
             tree.tau_collinear_momentum_fraction.clear()
 
+            tree.tau_efficiency_scale_factor.clear()
+            tree.tau_efficiency_scale_factor_high.clear()
+            tree.tau_efficiency_scale_factor_low.clear()
+
+            tree.tau_fakerate_scale_factor.clear()
+            tree.tau_fakerate_scale_factor_high.clear()
+            tree.tau_fakerate_scale_factor_low.clear()
+
+            tree.tau_trigger_scale_factor.clear()
+            tree.tau_trigger_scale_factor_high.clear()
+            tree.tau_trigger_scale_factor_low.clear()
+
             # set the skim-defined variables in the output tree
             for i in xrange(event.tau_n):
+                tau = event.taus.getitem(i)
+
                 tree.tau_selected.push_back(i in selected_idx)
+
                 tree.tau_trigger_match_index.push_back(
                         tau.trigger_match_index)
                 tree.tau_trigger_match_thresh.push_back(
                         tau.trigger_match_thresh)
                 tree.tau_collinear_momentum_fraction.push_back(
                         tau.collinear_momentum_fraction)
+
+                tree.tau_efficiency_scale_factor.push_back(
+                        tau.efficiency_scale_factor)
+                tree.tau_efficiency_scale_factor_high.push_back(
+                        tau.efficiency_scale_factor_high)
+                tree.tau_efficiency_scale_factor_low.push_back(
+                        tau.efficiency_scale_factor_low)
+
+                tree.tau_fakerate_scale_factor.push_back(
+                        tau.fakerate_scale_factor)
+                tree.tau_fakerate_scale_factor_high.push_back(
+                        tau.fakerate_scale_factor_high)
+                tree.tau_fakerate_scale_factor_low.push_back(
+                        tau.fakerate_scale_factor_low)
+
+                tree.tau_trigger_scale_factor.push_back(
+                        tau.trigger_scale_factor)
+                tree.tau_trigger_scale_factor_high.push_back(
+                        tau.trigger_scale_factor_high)
+                tree.tau_trigger_scale_factor_low.push_back(
+                        tau.trigger_scale_factor_low)
 
             # fill the output tree
             tree.Fill()
