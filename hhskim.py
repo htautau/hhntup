@@ -140,6 +140,7 @@ class hhskim(ATLASStudent):
             trigger_emulation,
             Triggers(
                 year=year,
+                passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PriVertex(
                 count_funcs=count_funcs),
