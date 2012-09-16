@@ -139,29 +139,6 @@ class JER(JetSystematic):
 
     @JetSystematic.set
     def run(self, jet, event):
-
-        shift = 0.
-        # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
-        if jet.pt > 20e3 and jet.pt < 5000e3:
-            pt = jet.pt
-            eta = jet.eta
-            if abs(eta) > 4.5:
-                eta = 4.49 if eta > 0 else -4.49
-
-            S = self.jer_tool.getRelResolutionMC(pt/1e3,eta)
-            U = self.jer_tool.getResolutionUncert(pt/1e3,eta)
-            smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
-
-            # You can set the seed however you like, but if reproducibility
-            # is required, setting it to something like object phi ensures
-            # a good mix of randomness and reproducibility.
-            self.jetrandom.SetSeed(int(1.e5 * abs(jet.phi)))
-            shift = self.jetrandom.Gaus(0, smearingFactorSyst)
-
-        if not self.is_up:
-            shift *= -1
-        jet.pt *= 1. + shift
-
         """
         Note: The JERDown shift is essentially meaningless.
         If one is smearing central values, then there is an alternate
@@ -186,6 +163,28 @@ class JER(JetSystematic):
         for central values, or the resolution +/- uncertainty.
         The standard practice is only to use res + uncertainty.
         """
+        shift = 0.
+        # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
+        if jet.pt > 20e3 and jet.pt < 5000e3:
+            pt = jet.pt
+            eta = jet.eta
+            if abs(eta) > 4.5:
+                eta = 4.49 if eta > 0 else -4.49
+
+            S = self.jer_tool.getRelResolutionMC(pt/1e3,eta)
+            U = self.jer_tool.getResolutionUncert(pt/1e3,eta)
+            smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
+
+            # You can set the seed however you like, but if reproducibility
+            # is required, setting it to something like object phi ensures
+            # a good mix of randomness and reproducibility.
+            self.jetrandom.SetSeed(int(1.e5 * abs(jet.phi)))
+            shift = self.jetrandom.Gaus(0, smearingFactorSyst)
+
+        if not self.is_up:
+            shift *= -1
+        jet.pt *= 1. + shift
+
 
 class TauIDSystematic(ObjectSystematic):
 
@@ -519,8 +518,10 @@ class Systematics(EventFilter):
         # Initialise your METUtility object
         self.met_utility = METUtility()
 
-        # *** Demonstration of the configuration here  ***
-        # *** All values that are set are the defaults ***
+        # configure
+        self.met_utility.configMissingET(
+                year == 2012, # is 2012
+                year == 2012) # is STVF
 
         # Turn on (off) the relevant MET terms
         # These are the terms required for MET_RefFinal(_BDTMedium)
@@ -546,16 +547,14 @@ class Systematics(EventFilter):
         self.met_utility.setVerbosity(self.very_verbose)
 
         # Tag assumed: MuonMomentumCorrections-00-05-03
+        # TODO: set the proper year here...
         self.muonTool = MuonSmear.SmearingClass(
                 "Data11","staco","pT","Rel17",
                 MuonMomentumCorrections.RESOURCE_PATH)
         self.muonTool.UseScale(1)
         self.muonTool.UseImprovedCombine()
 
-        if year == 2011:
-            self.passes = self.passes_11
-
-    def passes_11(self, event):
+    def passes(self, event):
 
         # reset the METUtility
         self.met_utility.reset()
@@ -595,9 +594,16 @@ class Systematics(EventFilter):
         for systematic in self.systematics:
             systematic.run(event)
 
+        if self.year == 2012:
+            return self.passes_12(event)
+        elif self.year == 2011:
+            return seld.passes_11(event)
+        else:
+            raise ValueError("No MET defined for year %d" % self.year)
+
+    def passes_11(self, event):
         """
         JETS
-
         Always use setJetParameters since they may be recalibrated upstream
         """
         self.met_utility.setJetParameters(
@@ -733,6 +739,147 @@ class Systematics(EventFilter):
         event.MET_RefFinal_BDTMedium_et = MET.et()
         event.MET_RefFinal_BDTMedium_sumet = MET.sumet()
         event.MET_RefFinal_BDTMedium_phi = MET.phi()
+
+        return True
+
+    def passes_12(self, event):
+        """
+        JETS
+        Always use setJetParameters since they may be recalibrated upstream
+        """
+        self.met_utility.setJetParameters(
+            event.jet_pt,
+            event.jet_eta,
+            event.jet_phi,
+            event.jet_E,
+            event.jet_AntiKt4LCTopo_MET_STVF_wet,
+            event.jet_AntiKt4LCTopo_MET_STVF_wpx,
+            event.jet_AntiKt4LCTopo_MET_STVF_wpy,
+            event.jet_AntiKt4LCTopo_MET_STVF_statusWord)
+
+        self.met_utility.setOriJetParameters(event.jet_pt)
+
+        """ NEVER USE THIS since jets may be recalibrated upstream
+        self.met_utility.setMETTerm(
+            METUtil.RefJet,
+            event.MET_RefJet_STVF_etx,
+            event.MET_RefJet_STVF_ety,
+            event.MET_RefJet_STVF_sumet)
+        """
+
+        """
+        ELECTRONS
+        """
+        if self.terms & Systematics.ELECTRON_TERMS:
+            self.met_utility.setElectronParameters(
+                event.el_pt,
+                event.el_eta,
+                event.el_phi,
+                event.el_MET_STVF_wet,
+                event.el_MET_STVF_wpx,
+                event.el_MET_STVF_wpy,
+                event.el_MET_STVF_statusWord)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.RefEle,
+                event.MET_RefEle_STVF_etx,
+                event.MET_RefEle_STVF_ety,
+                event.MET_RefEle_STVF_sumet)
+
+
+        if self.terms & Systematics.PHOTON_TERMS:
+            self.met_utility.setPhotonParameters(
+                event.ph_pt,
+                event.ph_eta,
+                event.ph_phi,
+                event.ph_MET_STVF_wet,
+                event.ph_MET_STVF_wpx,
+                event.ph_MET_STVF_wpy,
+                event.ph_MET_STVF_statusWord)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.RefGamma,
+                event.MET_RefGamma_STVF_etx,
+                event.MET_RefGamma_STVF_ety,
+                event.MET_RefGamma_STVF_sumet)
+
+        """
+        MUONS
+        """
+        if self.terms & Systematics.MUON_TERMS:
+            self.met_utility.setMuonParameters(
+                event.mu_staco_pt, # or smeared pT
+                event.mu_staco_eta,
+                event.mu_staco_phi,
+                event.mu_staco_MET_STVF_wet,
+                event.mu_staco_MET_STVF_wpx,
+                event.mu_staco_MET_STVF_wpy,
+                event.mu_staco_MET_STVF_statusWord)
+
+            # In this instance there is an overloaded version of
+            # setExtraMuonParameters that accepts smeared pTs for spectro
+            self.met_utility.setExtraMuonParameters(
+                event.mu_staco_ms_pt, # or smeared pT
+                event.mu_staco_ms_theta,
+                event.mu_staco_ms_phi)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.MuonTotal,
+                event.MET_Muon_Total_Staco_STVF_etx,
+                event.MET_Muon_Total_Staco_STVF_ety,
+                event.MET_Muon_Total_Staco_STVF_sumet)
+
+        # Note that RefMuon is not rebuilt from muons
+        # -- it is a calorimeter term.
+        self.met_utility.setMETTerm(
+            METUtil.RefMuon,
+            event.MET_RefMuon_Staco_STVF_etx,
+            event.MET_RefMuon_Staco_STVF_ety,
+            event.MET_RefMuon_Staco_STVF_sumet)
+
+        """
+        TAUS
+        """
+        if self.terms & Systematics.TAU_TERMS:
+            self.met_utility.setTauParameters(
+                event.tau_pt,
+                event.tau_eta,
+                event.tau_phi,
+                event.tau_MET_STVF_wet,
+                event.tau_MET_STVF_wpx,
+                event.tau_MET_STVF_wpy,
+                event.tau_MET_STVF_statusWord)
+        else:
+            self.met_utility.setMETTerm(
+                METUtil.RefTau,
+                event.MET_RefTau_STVF_etx,
+                event.MET_RefTau_STVF_ety,
+                event.MET_RefTau_STVF_sumet)
+
+        self.met_utility.setMETTerm(
+            METUtil.SoftJets,
+            event.MET_SoftJets_STVF_etx,
+            event.MET_SoftJets_STVF_ety,
+            event.MET_SoftJets_STVF_sumet)
+
+        self.met_utility.setMETTerm(
+            METUtil.CellOutEflow,
+            event.MET_CellOutCorr_STVF_etx,
+            event.MET_CellOutCorr_STVF_ety,
+            event.MET_CellOutCorr_STVF_sumet)
+
+        MET = self.met_utility.getMissingET(METUtil.RefFinal)
+
+        if self.verbose:
+            print "Recalculated MET: %.3f (original: %.3f)" % (
+                    MET.et(), event.MET_RefFinal_STVF_et)
+
+        # update the MET with the shifted value
+        event.MET_RefFinal_STVF_etx = MET.etx()
+        event.MET_RefFinal_STVF_ety = MET.ety()
+        event.MET_RefFinal_STVF_et = MET.et()
+        event.MET_RefFinal_STVF_sumet = MET.sumet()
+        event.MET_RefFinal_STVF_phi = MET.phi()
 
         return True
 

@@ -93,7 +93,7 @@ def draw(model,
          systematics=None):
 
     if output_formats is None:
-        output_formats = ('png', 'eps', 'pdf')
+        output_formats = ('png',)
     elif isinstance(output_formats, str):
         output_formats = output_formats.split(',')
     if data is None:

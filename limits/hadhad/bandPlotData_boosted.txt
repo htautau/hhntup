@@ -1,24 +1,24 @@
 120
 Correct bands
-+2sigma:  57.8861
-+1sigma:  42.144
--1sigma:  22.0022
--2sigma:  16.389
-Median:   30.5351
-Observed: 30.5385
++2sigma:  28.7378
++1sigma:  17.7139
+-1sigma:  8.2469
+-2sigma:  6.14293
+Median:   11.4452
+Observed: 11.4585
 125
 Correct bands
-+2sigma:  65.0627
-+1sigma:  48.0649
--1sigma:  25.0683
--2sigma:  18.6729
-Median:   34.7903
-Observed: 34.7809
++2sigma:  30.2466
++1sigma:  20.0275
+-1sigma:  9.77605
+-2sigma:  7.28196
+Median:   13.5674
+Observed: 13.5766
 130
 Correct bands
-+2sigma:  78.6057
-+1sigma:  57.1244
--1sigma:  29.7705
--2sigma:  22.1754
-Median:   41.3161
-Observed: 41.3051
++2sigma:  27.1248
++1sigma:  17.4588
+-1sigma:  8.38867
+-2sigma:  6.24854
+Median:   11.642
+Observed: 11.6825
