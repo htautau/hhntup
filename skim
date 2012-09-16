@@ -7,7 +7,8 @@ The master skim launcher and tester
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
-parser.add_argument('--test', action='store_true', default=False)
+parser.add_argument('--local-test', action='store_true', default=False)
+parser.add_argument('--grid-test', action='store_true', default=False)
 parser.add_argument('skim', help='skim name', nargs='*')
 args = parser.parse_args()
 
@@ -25,6 +26,7 @@ source setup.sh && grid-batch --dataset %(dataset)s --metadata datasets.cfg
 
 SUBMIT_CMD = """\
 grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
+%(opts)s
 %(dataset)s
 --official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
 """
@@ -63,9 +65,13 @@ for skim_name in args.skim:
     version = skim['version']
     options = skim['options']
 
-    if args.test:
+    if args.local_test:
         cmd = TEST_CMD % locals()
     else:
+        if args.grid_test:
+            opts = '--test'
+        else:
+            opts = ''
         cmd = SUBMIT_CMD % locals()
 
     cmd = cmd.replace('\n', ' ')
