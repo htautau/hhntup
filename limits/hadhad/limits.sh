@@ -26,7 +26,9 @@ do
     do
         echo "--------------------------------------"
         echo "Category: ${category}"
-        root -l -b -q runAsymptoticsCLs.C+"(\
+        echo "--------------------------------------"
+
+        (root -l -b -q runAsymptoticsCLs.C+"(\
             \"./results/hh_${category}_${mass}_combined_STATONLY_model.root\",\
             \"combined\",\
             \"ModelConfig\",\
@@ -34,14 +36,16 @@ do
             \"asimovData_0\",\
             \"hadhad\",\
             \"${mass}\",\
-            0.95)" | tee log${mass}_${category}.txt
+            0.95)" 2>&1) | tee log${mass}_${category}.txt
         echo ${mass} >> bandPlotData_${category}.txt
         grep -A 6 -h "Correct bands" log${mass}_${category}.txt >> bandPlotData_${category}.txt
     done
     
     echo "--------------------------------------"
     echo "Combination"
-    root -l -b -q runAsymptoticsCLs.C+"(\
+    echo "--------------------------------------"
+
+    (root -l -b -q runAsymptoticsCLs.C+"(\
         \"./results/hh_${mass}_combined_STATONLY_model.root\",\
         \"combined\",\
         \"ModelConfig\",\
@@ -49,7 +53,7 @@ do
         \"asimovData_0\",\
         \"hadhad\",\
         \"${mass}\",\
-        0.95)" | tee log${mass}_combined.txt
+        0.95)" 2>&1) | tee log${mass}_combined.txt
     echo ${mass} >> bandPlotData_combined.txt
     grep -A 6 -h "Correct bands" log${mass}_combined.txt >> bandPlotData_combined.txt
 done
