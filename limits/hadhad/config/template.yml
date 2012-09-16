@@ -1,0 +1,77 @@
+systematics:
+    JES_TES: [JES_UP_TES_UP, JES_DOWN_TES_DOWN]
+    JER: [JER_UP]
+    FAKERATE: [FAKERATE_UP, FAKERATE_DOWN]
+    TRIGGER: [TRIGGER_UP, TRIGGER_DOWN]
+    TAUBDT: [TAUBDT_UP, TAUBDT_DOWN]
+    FIT: [FIT_UP, FITF_DOWN]
+    ISOL: [ISOL_UP, ISOL_DOWN]
+    MFS: [MFS_UP, MFS_DOWN]
+samples:
+    signal:
+        ggf:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
+            norm_sys:
+                pdf_gg: [1.079, 0.923]
+                QCDscale_ggH1in: [1.133, 0.914]
+        vbf:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
+            norm_sys:
+               pdf_qqbar: [1.027, 0.979]
+               QCDscale_qqH: [1.004, 0.996]
+        zh:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
+            norm_sys:
+                pdf_qqbar: [1.039, 0.961]
+                QCDscale_VH: [1.007, 0.992]
+        wh:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
+            norm_sys:
+                pdf_qqbar: [1.039, 0.961]
+                QCDscale_VH: [1.007, 0.992]
+    background:
+        Ztautau:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
+                - FIT
+                - ISOL
+                - MFS
+        QCD:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
+                - FIT
+        Others:
+            shape_sys:
+                - JES_TES
+                - JER
+                - FAKERATE
+                - TRIGGER
+                - TAUBDT
