@@ -70,14 +70,13 @@ if __name__ == '__main__':
     else:
         read_scales()
     for category in SCALES.keys():
-        for embedding in SCALES[category]:
-            for (qcd_scale, qcd_scale_error,
-                ztautau_scale, ztautau_scale_error) in SCALES[category][embedding]:
-                print "scale factors for embedding: %s" % str(embedding)
-                print "scale factors for %s category" % category
-                print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
-                print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
-                print
+        for embedding, (qcd_scale, qcd_scale_error,
+                ztautau_scale, ztautau_scale_error) in SCALES[category].items():
+            print "scale factors for embedding: %s" % str(embedding)
+            print "scale factors for %s category" % category
+            print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+            print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
+            print
 else:
     import atexit
 
