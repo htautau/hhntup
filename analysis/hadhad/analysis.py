@@ -25,8 +25,7 @@ parser.add_argument('--nfold', type=int, default=5)
 parser.add_argument('--clf-bins', dest='bins', type=int, default=20)
 parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
-parser.add_argument('--no-embedding', dest='embedding',
-        action='store_false', default=True)
+parser.add_argument('--embedding', action='store_true', default=False)
 parser.add_argument('--train-fraction', type=float, default=.5)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
 parser.add_argument('--train-categories', nargs='*', default=[])
@@ -243,12 +242,17 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         # define training and test samples
         branches = cat_info['features']
 
+        if args.embedding:
+            clf_filename = 'clf_%s.pickle' % category
+        else:
+            clf_filename = 'clf_%s_embedding.pickle' % category
+
         # train a classifier
         if (args.use_clf_cache
                 and category not in args.train_categories
-                and os.path.isfile('clf_%s.pickle' % category)):
+                and os.path.isfile(clf_filename)):
             # use a previously trained classifier
-            with open('clf_%s.pickle' % category, 'r') as f:
+            with open(clf_filename, 'r') as f:
                 clf = pickle.load(f)
             print clf
         else:
@@ -387,7 +391,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
 
-        cuts = Cut('mass_mmc_tau1_tau2 < 110')
+        cuts = Cut('mass_mmc_tau1_tau2 < 100')
         print "plotting classifier output in control region..."
         print cuts
         # data scores
@@ -440,14 +444,14 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             signal_scores=None,
             data_scores=(data, data_scores),
             draw_data=True,
-            name='control',
+            name='control_embedding' if args.embedding else 'control',
             bins=args.bins,
             min_score=min_score,
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
 
         # show the background model and 125 GeV signal above mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 > 110')
+        cuts = Cut('mass_mmc_tau1_tau2 > 100')
         print "Plotting classifier output in signal region..."
         print cuts
         # data scores
@@ -517,7 +521,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             category_name=cat_info['name'],
             signal_scores=(signal_eval, signal_scores_eval),
             signal_scale=50,
-            name='ROI',
+            name='ROI_embedding' if args.embedding else 'ROI',
             bins=args.bins,
             min_score=min_score,
             max_score=max_score,
@@ -554,7 +558,12 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         max_score += padding
         hist_template = Hist(args.bins, min_score, max_score)
 
-        with ropen(os.path.join(LIMITS_DIR, '%s.root' % category),
+        if args.embedding:
+            root_filename = '%s_embedding.root' % category
+        else:
+            root_filename = '%s.root' % category
+
+        with ropen(os.path.join(LIMITS_DIR, root_filename),
                    'recreate') as f:
 
             data_hist = hist_template.Clone(name=data.name)
