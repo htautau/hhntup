@@ -207,12 +207,16 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 print hist.GetTitle(), sum(hist)
             print "Data / Model: %f" % (sum(data_hist) / sum(sum(bkg_hists)))
 
+            output_name = var_info['filename']
+            if args.embedding:
+                output_name += '_embedding'
+
             fig = draw(
                     data=data_hist,
                     model=bkg_hists,
                     signal=signal_hist,
                     name=var_info['title'],
-                    output_name=var_info['filename'],
+                    output_name=output_name,
                     category_name=cat_info['name'],
                     category=category,
                     units=var_info.get('units', None),

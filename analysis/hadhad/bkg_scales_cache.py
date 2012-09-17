@@ -26,7 +26,7 @@ def get_scales(category, embedded):
 
     if has_category(category, embedded):
         qcd_scale, qcd_scale_error, \
-        ztautau_scale, ztautau_scale_error = SCALES[category][embedding]
+        ztautau_scale, ztautau_scale_error = SCALES[category][embedded]
         print "using the embedding scale factors: %s" % str(embedded)
         print "scale factors for %s category" % category
         print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
