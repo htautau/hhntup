@@ -5,12 +5,16 @@ import atexit
 from operator import add
 import math
 
+# numpy imports
 import numpy as np
 from numpy.lib import recfunctions
 
 # for reproducibilty
 # especially for test/train set selection
 np.random.seed(1987) # my birth year ;)
+
+# pytables imports
+import tables
 
 # higgstautau imports
 from higgstautau.hadhad.periods import total_lumi
@@ -58,13 +62,22 @@ SS = Cut('tau1_charge * tau2_charge == 1')
 TEMPFILE = ropen('tempfile.root', 'recreate')
 
 
-def get_file(student):
+def get_file(student, hdf=False):
 
-    if student in FILES:
-        return FILES[student]
-    student_file = ropen(os.path.join(NTUPLE_PATH, student,
-        student + '.root'), 'READ')
-    FILES[student] = student_file
+    if hdf:
+        ext = '.h5'
+    else:
+        ext = '.root'
+    filename = student + ext
+    if filename in FILES:
+        return FILES[filename]
+    if hdf:
+        student_file = tables.openFile(
+                os.path.join(NTUPLE_PATH, student, filename))
+    else:
+        student_file = ropen(
+                os.path.join(NTUPLE_PATH, student, filename), 'READ')
+    FILES[filename] = student_file
     return student_file
 
 
@@ -331,8 +344,10 @@ class Data(Sample):
 
         super(Data, self).__init__(scale=1., **kwargs)
 
-        self.DATA_FILE = get_file(self.student)
-        self.data = self.DATA_FILE.Get('data_JetTauEtmiss')
+        rfile = get_file(self.student)
+        h5file = get_file(self.student, hdf=True)
+        self.data = rfile.data_JetTauEtmiss
+        self.h5data = h5file.root.data_JetTauEtmiss
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
         self.name = 'Data'
@@ -402,6 +417,7 @@ class MC(Sample):
         self.datasets = []
         self.systematics = systematics
         rfile = get_file(self.student)
+        h5file = get_file(self.student, hdf=True)
 
         for i, name in enumerate(self.samples):
 
@@ -410,10 +426,8 @@ class MC(Sample):
             treename = treename.replace('-', '_')
 
             trees = {}
+            tables = {}
             weighted_events = {}
-
-            trees['NOMINAL'] = None
-            weighted_events['NOMINAL'] = None
 
             if isinstance(self, Embedded_Ztautau):
                 events_bin = 0
@@ -423,8 +437,8 @@ class MC(Sample):
                 events_hist_suffix = '_cutflow'
 
             trees['NOMINAL'] = rfile.Get(treename)
-            weighted_events['NOMINAL'] = getattr(rfile,
-                    treename + events_hist_suffix)[events_bin]
+            tables['NOMINAL'] = getattr(h5file.root, treename)
+            weighted_events['NOMINAL'] = rfile.Get(treename + events_hist_suffix)[events_bin]
 
             if self.systematics:
 
@@ -442,13 +456,10 @@ class MC(Sample):
                                     sys_term = term
                                 break
 
-                        trees[sys_term] = None
-                        weighted_events[sys_term] = None
-
                         sys_name = treename + '_' + '_'.join(actual_sys_term)
                         trees[sys_term] = rfile.Get(sys_name)
-                        weighted_events[sys_term] = getattr(rfile,
-                                sys_name + events_hist_suffix)[events_bin]
+                        tables[sys_term] = getattr(h5file.root, sys_name)
+                        weighted_events[sys_term] = rfile.Get(sys_name + events_hist_suffix)[events_bin]
 
                         unused_terms.remove(sys_term)
 
@@ -462,10 +473,8 @@ class MC(Sample):
                         sample_name = sample_name.replace('.', '_')
                         sample_name = sample_name.replace('-', '_')
 
-                        trees[sys_term] = None
-                        weighted_events[sys_term] = None
-
                         trees[sys_term] = rfile.Get(sample_name)
+                        tables[sys_term] = getattr(h5file.root, sample_name)
                         weighted_events[sys_term] = getattr(rfile,
                                 sample_name + events_hist_suffix)[events_bin]
 
@@ -477,6 +486,7 @@ class MC(Sample):
 
                     for term in unused_terms:
                         trees[term] = None # flag to use NOMINAL
+                        tables[term] = None
                         weighted_events[term] = None # flag to use NOMINAL
 
             if isinstance(self, Higgs):
@@ -492,7 +502,7 @@ class MC(Sample):
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
                 print ds.name, xs, kfact, effic,
-            self.datasets.append((ds, trees, weighted_events, xs, kfact, effic))
+            self.datasets.append((ds, trees, tables, weighted_events, xs, kfact, effic))
 
     @property
     def label(self):
@@ -524,7 +534,7 @@ class MC(Sample):
 
         selection = self.cuts(category, region) & cuts
 
-        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+        for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
             nominal_tree = sys_trees['NOMINAL']
             nominal_events = sys_events['NOMINAL']
@@ -674,7 +684,7 @@ class MC(Sample):
             systematic = 'NOMINAL'
 
         trees = []
-        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+        for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
             if systematic in (('FIT_UP',), ('FIT_DOWN',)):
                 tree = sys_trees['NOMINAL']
@@ -706,7 +716,7 @@ class MC(Sample):
     def events(self, selection='', systematic='NOMINAL'):
 
         total = 0.
-        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+        for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
 
@@ -718,7 +728,7 @@ class MC(Sample):
     def iter(self, selection='', systematic='NOMINAL'):
 
         TEMPFILE.cd()
-        for ds, sys_trees, sys_events, xs, kfact, effic in self.datasets:
+        for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
             tree = sys_trees[systematic]
             events = sys_events[systematic]
 
