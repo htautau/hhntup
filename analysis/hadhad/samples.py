@@ -406,8 +406,8 @@ class MC(Sample):
         for i, name in enumerate(self.samples):
 
             ds = self.db[name]
-            name = name.replace('.', '_')
-            name = name.replace('-', '_')
+            treename = name.replace('.', '_')
+            treename = treename.replace('-', '_')
 
             trees = {}
             weighted_events = {}
@@ -422,9 +422,9 @@ class MC(Sample):
                 events_bin = 1
                 events_hist_suffix = '_cutflow'
 
-            trees['NOMINAL'] = rfile.Get(name)
+            trees['NOMINAL'] = rfile.Get(treename)
             weighted_events['NOMINAL'] = getattr(rfile,
-                    name + events_hist_suffix)[events_bin]
+                    treename + events_hist_suffix)[events_bin]
 
             if self.systematics:
 
@@ -445,7 +445,7 @@ class MC(Sample):
                         trees[sys_term] = None
                         weighted_events[sys_term] = None
 
-                        sys_name = name + '_' + '_'.join(actual_sys_term)
+                        sys_name = treename + '_' + '_'.join(actual_sys_term)
                         trees[sys_term] = rfile.Get(sys_name)
                         weighted_events[sys_term] = getattr(rfile,
                                 sys_name + events_hist_suffix)[events_bin]
@@ -454,6 +454,8 @@ class MC(Sample):
 
                 if systematics_samples and name in systematics_samples:
                     for sample_name, sys_term in systematics_samples[name].items():
+
+                        print "%s -> %s %s" % (name, sample_name, sys_term)
 
                         sys_term = tuple(sys_term.split(','))
                         sys_ds = self.db[sample_name]
