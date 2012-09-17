@@ -1,4 +1,5 @@
 import os
+import sys
 import math
 
 import numpy as np
@@ -15,6 +16,20 @@ from matplotlib.patches import Patch
 from rootpy.plotting import Hist
 import rootpy.root2matplotlib as rplt
 from rootpy.math.stats.qqplot import qqplot
+
+
+#http://stackoverflow.com/questions/616645/how-do-i-duplicate-sys-stdout-to-a-log-file-in-python/3423392#3423392
+class Tee(object):
+    def __init__(self, name, mode):
+        self.file = open(name, mode)
+        self.stdout = sys.stdout
+        sys.stdout = self
+    def __del__(self):
+        sys.stdout = self.stdout
+        self.file.close()
+    def write(self, data):
+        self.file.write(data)
+        self.stdout.write(data)
 
 
 def package_path(name):

@@ -25,6 +25,8 @@ parser.add_argument('--nfold', type=int, default=5)
 parser.add_argument('--clf-bins', dest='bins', type=int, default=20)
 parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
+parser.add_argument('--no-embedding', dest='embedding',
+        action='store_false', default=True)
 parser.add_argument('--train-fraction', type=float, default=.5)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
 parser.add_argument('--train-categories', nargs='*', default=[])
@@ -40,7 +42,6 @@ from utils import *
 from matplotlib import cm
 from samples import *
 import samples
-import bkg_scales_cache
 from background_estimation import qcd_ztautau_norm
 from classify import *
 from config import plots_dir
@@ -84,8 +85,10 @@ LIMITS_DIR = os.path.join(LIMITS_DIR, 'hadhad', 'data')
 
 PLOTS_DIR = plots_dir(__file__)
 
-#ztautau   = MC_Ztautau(systematics=args.systematics)
-ztautau = Embedded_Ztautau(systematics=args.systematics)
+if args.embedding:
+    ztautau = Embedded_Ztautau(systematics=args.systematics)
+else:
+    ztautau = MC_Ztautau(systematics=args.systematics)
 others = Others(systematics=args.systematics)
 data = Data(markersize=1.2)
 

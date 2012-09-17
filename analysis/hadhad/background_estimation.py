@@ -1,16 +1,21 @@
 import os
+from array import array
+
 import ROOT
 ROOT.gROOT.SetBatch(True)
+from ROOT import TF1, TF2, TLatex
+
 from rootpy.tree import Cut
 from rootpy.plotting import Hist, Hist2D, HistStack, Legend, Canvas
+
 import numpy as np
 from scipy.optimize import fmin_l_bfgs_b
+
 from utils import set_colours
 import categories
-from ROOT import TF1, TF2, TLatex
-from array import array
 import bkg_scales_cache
 from config import plots_dir
+import samples
 
 
 class FitError(Exception):
@@ -133,9 +138,12 @@ def qcd_ztautau_norm(ztautau,
                      cuts=None,
                      use_cache=True):
 
-    if use_cache and bkg_scales_cache.has_category(category):
-        return bkg_scales_cache.get_scales(category)
+    is_embedded = isinstance(ztautau, samples.Embedded_Ztautau)
 
+    if use_cache and bkg_scales_cache.has_category(category, is_embedded):
+        return bkg_scales_cache.get_scales(category, is_embedded)
+
+    print "fitting scale factors for embedding: %s" % str(is_embedding)
     print "fitting scale factors for %s category" % category
     min, max = .55, 1
     bins = categories.CATEGORIES[category]['fitbins']
@@ -157,7 +165,7 @@ def qcd_ztautau_norm(ztautau,
     print "performing %d-dimensional fit using %s" % (ndim, expr)
 
     assert(ndim in (1, 2))
-    control = Cut('mass_mmc_tau1_tau2 < 110')
+    control = Cut('mass_mmc_tau1_tau2 < 100')
     control &= cuts
 
     print "fitting scale factors in control region: %s" % control
@@ -287,7 +295,8 @@ def qcd_ztautau_norm(ztautau,
              ztautau_scale=ztautau_scale)
 
     bkg_scales_cache.set_scales(
-            category,
+            category, is_embedding,
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
+
     return qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error

@@ -22,10 +22,12 @@ def read_scales(name='background_scales.cache'):
             SCALES = pickle.load(cache)
 
 
-def get_scales(category):
+def get_scales(category, embedded):
 
-    if category in SCALES:
-        qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = SCALES[category]
+    if has_category(category, embedded):
+        qcd_scale, qcd_scale_error, \
+        ztautau_scale, ztautau_scale_error = SCALES[category][embedding]
+        print "using the embedding scale factors: %s" % str(embedded)
         print "scale factors for %s category" % category
         print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
         print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
@@ -35,21 +37,22 @@ def get_scales(category):
         return None
 
 
-def has_category(category):
+def has_category(category, embedded):
 
-    return category in SCALES
+    return category in SCALES and embedded in SCALES[category]
 
 
-def set_scales(category,
+def set_scales(category, embedding,
         qcd_scale, qcd_scale_error,
         ztautau_scale, ztautau_scale_error):
 
     global MODIFIED
+    print "setting the embedding scale factors: %s" % str(embedding)
     print "setting scale factors for %s category" % category
     print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
     print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
     print
-    SCALES[category] = (
+    SCALES[category][embedding] = (
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
     MODIFIED = True
@@ -62,12 +65,15 @@ if __name__ == '__main__':
         read_scales(sys.argv[1])
     else:
         read_scales()
-    for category, (qcd_scale, qcd_scale_error,
-            ztautau_scale, ztautau_scale_error) in SCALES.items():
-        print "scale factors for %s category" % category
-        print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
-        print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
-        print
+    for category in SCALES.keys():
+        for embedding in SCALES[category]:
+            for (qcd_scale, qcd_scale_error,
+                ztautau_scale, ztautau_scale_error) in SCALES[category][embedding]:
+                print "scale factors for embedding: %s" % str(embedding)
+                print "scale factors for %s category" % category
+                print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+                print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
+                print
 else:
     import atexit
 

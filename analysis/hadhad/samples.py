@@ -40,7 +40,6 @@ if not NTUPLE_PATH:
     sys.exit("You did not source setup.sh")
 NTUPLE_PATH = os.path.join(NTUPLE_PATH, 'hadhad')
 DEFAULT_STUDENT = 'HHProcessor'
-DEFAULT_TREENAME = 'higgstautauhh'
 TOTAL_LUMI = total_lumi()
 TAUTAUHADHADBR = 0.412997
 VERBOSE = False
@@ -57,6 +56,16 @@ NOT_OS = Cut('tau1_charge * tau2_charge != -1')
 SS = Cut('tau1_charge * tau2_charge == 1')
 # mass_jet1_jet2 > 100000
 TEMPFILE = ropen('tempfile.root', 'recreate')
+
+
+def get_file(student):
+
+    if student in FILES:
+        return FILES[student]
+    student_file = ropen(os.path.join(NTUPLE_PATH, student,
+        student + '.root'), 'READ')
+    FILES[student] = student_file
+    return student_file
 
 
 #@atexit.register
@@ -159,7 +168,6 @@ class Sample(object):
 
     def __init__(self, scale=1., cuts=None,
                  student=DEFAULT_STUDENT,
-                 treename=DEFAULT_TREENAME,
                  **hist_decor):
 
         self.scale = scale
@@ -168,7 +176,6 @@ class Sample(object):
         else:
             self._cuts = cuts
         self.student = student
-        self.treename = treename
         self.hist_decor = hist_decor
         if isinstance(self, Higgs):
             self.hist_decor['fillstyle'] = 'hollow'
@@ -323,9 +330,9 @@ class Data(Sample):
     def __init__(self, **kwargs):
 
         super(Data, self).__init__(scale=1., **kwargs)
-        self.DATA_FILE = ropen('.'.join([os.path.join(NTUPLE_PATH, self.student, self.student),
-                                'data-JetTauEtmiss.root']))
-        self.data = self.DATA_FILE.Get(self.treename)
+
+        self.DATA_FILE = get_file(self.student)
+        self.data = self.DATA_FILE.Get('data_JetTauEtmiss')
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
         self.name = 'Data'
@@ -394,10 +401,14 @@ class MC(Sample):
         self.db = db
         self.datasets = []
         self.systematics = systematics
+        rfile = get_file(self.student)
 
         for i, name in enumerate(self.samples):
 
             ds = self.db[name]
+            name = name.replace('.', '_')
+            name = name.replace('-', '_')
+
             trees = {}
             weighted_events = {}
 
@@ -406,25 +417,14 @@ class MC(Sample):
 
             if isinstance(self, Embedded_Ztautau):
                 events_bin = 0
-                events_hist = 'cutflow_event'
+                events_hist_suffix = '_cutflow_event'
             else:
                 events_bin = 1
-                events_hist = 'cutflow'
+                events_hist_suffix = '_cutflow'
 
-            if ds.name in FILES and 'NOMINAL' in FILES[ds.name]:
-                rfile = FILES[ds.name]['NOMINAL']
-                trees['NOMINAL'] = rfile.Get(self.treename)
-                weighted_events['NOMINAL'] = getattr(rfile,
-                        events_hist)[events_bin]
-            else:
-                rfile = ropen('.'.join([
-                    os.path.join(NTUPLE_PATH, self.student, self.student), ds.name, 'root']))
-                trees['NOMINAL'] = rfile.Get(self.treename)
-                weighted_events['NOMINAL'] = getattr(rfile,
-                        events_hist)[events_bin]
-                if ds.name not in FILES:
-                    FILES[ds.name] = {}
-                FILES[ds.name]['NOMINAL'] = rfile
+            trees['NOMINAL'] = rfile.Get(name)
+            weighted_events['NOMINAL'] = getattr(rfile,
+                    name + events_hist_suffix)[events_bin]
 
             if self.systematics:
 
@@ -445,21 +445,10 @@ class MC(Sample):
                         trees[sys_term] = None
                         weighted_events[sys_term] = None
 
-                        if ds.name in FILES and sys_term in FILES[ds.name]:
-                            rfile = FILES[ds.name][sys_term]
-                            trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = getattr(rfile,
-                                    events_hist)[events_bin]
-                        else:
-                            rfile = ropen('.'.join([
-                                os.path.join(NTUPLE_PATH, self.student, self.student),
-                                '_'.join([ds.name, '_'.join(actual_sys_term)]), 'root']))
-                            trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = getattr(rfile,
-                                    events_hist)[events_bin]
-                            if ds.name not in FILES:
-                                FILES[ds.name] = {}
-                            FILES[ds.name][sys_term] = rfile
+                        sys_name = name + '_' + '_'.join(actual_sys_term)
+                        trees[sys_term] = rfile.Get(sys_name)
+                        weighted_events[sys_term] = getattr(rfile,
+                                sys_name + events_hist_suffix)[events_bin]
 
                         unused_terms.remove(sys_term)
 
@@ -468,24 +457,15 @@ class MC(Sample):
 
                         sys_term = tuple(sys_term.split(','))
                         sys_ds = self.db[sample_name]
+                        sample_name = sample_name.replace('.', '_')
+                        sample_name = sample_name.replace('-', '_')
+
                         trees[sys_term] = None
                         weighted_events[sys_term] = None
 
-                        if sys_ds.name in FILES and sys_term in FILES[sys_ds.name]:
-                            rfile = FILES[sys_ds.name][sys_term]
-                            trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = getattr(rfile,
-                                    events_hist)[events_bin]
-                        else:
-                            rfile = ropen('.'.join([
-                                os.path.join(NTUPLE_PATH, self.student, self.student),
-                                sys_ds.name, 'root']))
-                            trees[sys_term] = rfile.Get(self.treename)
-                            weighted_events[sys_term] = getattr(rfile,
-                                    events_hist)[events_bin]
-                            if sys_ds.name not in FILES:
-                                FILES[sys_ds.name] = {}
-                            FILES[sys_ds.name][sys_term] = rfile
+                        trees[sys_term] = rfile.Get(sample_name)
+                        weighted_events[sys_term] = getattr(rfile,
+                                sample_name + events_hist_suffix)[events_bin]
 
                         unused_terms.remove(sys_term)
 

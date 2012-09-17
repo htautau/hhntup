@@ -20,7 +20,7 @@ ztautau:
 embedded_ztautau:
     name: Ztautau
     systematics: embedded
-    latex: '$Z/\gamma^{*}$'
+    latex: '$Z/\gamma^{*}$ (embedded)'
     math: 'Z/\gamma^{*}'
     samples:
         - 'embed-hh-isol-mfsim'
