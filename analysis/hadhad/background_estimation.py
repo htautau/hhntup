@@ -143,7 +143,7 @@ def qcd_ztautau_norm(ztautau,
     if use_cache and bkg_scales_cache.has_category(category, is_embedded):
         return bkg_scales_cache.get_scales(category, is_embedded)
 
-    print "fitting scale factors for embedding: %s" % str(is_embedding)
+    print "fitting scale factors for embedding: %s" % str(is_embedded)
     print "fitting scale factors for %s category" % category
     min, max = .55, 1
     bins = categories.CATEGORIES[category]['fitbins']
@@ -295,7 +295,7 @@ def qcd_ztautau_norm(ztautau,
              ztautau_scale=ztautau_scale)
 
     bkg_scales_cache.set_scales(
-            category, is_embedding,
+            category, is_embedded,
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
 

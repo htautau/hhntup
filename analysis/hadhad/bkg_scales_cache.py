@@ -52,6 +52,10 @@ def set_scales(category, embedding,
     print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
     print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
     print
+    if category not in SCALES:
+        SCALES[category] = {}
+    if embedding not in SCALES[category]:
+        SCALES[category][embedding] = {}
     SCALES[category][embedding] = (
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
