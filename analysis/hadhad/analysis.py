@@ -119,6 +119,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
     if category not in args.categories:
         continue
 
+    print
     print "=" * 40
     print "%s category" % category
     print "=" * 40
@@ -536,7 +537,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         sig_scores = {}
         for mass in Higgs.MASS_POINTS:
             for mode in Higgs.MODES.keys():
-                sig = Higgs(mode=mode, mass=mass)
+                sig = Higgs(mode=mode, mass=mass,
+                        systematics=args.systematics)
                 scores_dict = sig.scores(clf,
                         branches,
                         train_fraction=args.train_fraction,
