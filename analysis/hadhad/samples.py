@@ -231,6 +231,7 @@ class Sample(object):
                 Sample.REGIONS[region] & self._cuts)
 
     def train_test(self,
+                   branches,
                    category,
                    region,
                    train_fraction,
@@ -242,6 +243,7 @@ class Sample(object):
         self.check_systematic(systematic)
         assert 0 < train_fraction < 1, "Train fraction must be between 0 and 1"
         arrays = self.tables(
+                branches,
                 category,
                 region,
                 include_weight=True,
@@ -263,6 +265,7 @@ class Sample(object):
         return arr_train, arr_test
 
     def recarray(self,
+                 branches,
                  category,
                  region,
                  include_weight=True,
@@ -271,6 +274,7 @@ class Sample(object):
 
         self.check_systematic(systematic)
         arrays = self.tables(
+                branches,
                 category,
                 region,
                 include_weight=include_weight,
@@ -310,6 +314,7 @@ class Data(Sample):
         if region == 'OS':
             # target region. Not trained on, so use all of it
             data_recarray = data.recarray(
+                    branches=branches,
                     category=category,
                     region=target_region,
                     include_weight=True,
@@ -318,6 +323,7 @@ class Data(Sample):
         else:
             # ignore training sample
             _, data_recarray = self.train_test(
+                    branches=branches,
                     category=category,
                     region=region,
                     train_fraction=train_fraction,
@@ -340,6 +346,7 @@ class Data(Sample):
         return [tree]
 
     def tables(self,
+              branches,
               category,
               region,
               cuts=None,
@@ -357,6 +364,9 @@ class Data(Sample):
             table = recfunctions.rec_append_fields(table, names='weight',
                     data=weights,
                     dtypes='f4')
+            branches = branches + ['weight']
+        # drop all branches except branches (+ weight)
+        table = table[branches]
         return [table]
 
 
@@ -637,9 +647,10 @@ class MC(Sample):
                 continue
 
             arr_train, arr_test = self.train_test(
-                    category,
-                    region,
-                    train_fraction,
+                    branches=branches,
+                    category=category,
+                    region=region,
+                    train_fraction=train_fraction,
                     cuts=cuts,
                     systematic=systematic)
 
@@ -696,7 +707,7 @@ class MC(Sample):
             trees.append(selected_tree)
         return trees
 
-    def tables(self, category, region, cuts=None,
+    def tables(self, branches, category, region, cuts=None,
             include_weight=True, systematic='NOMINAL'):
         """
         This is where all the magic happens...
@@ -706,7 +717,8 @@ class MC(Sample):
         weight_branches = self.get_weight_branches(systematic)
         if systematic in MC.SYSTEMATICS_BY_WEIGHT:
             systematic = 'NOMINAL'
-
+        if include_weight:
+            branches = branches + ['weight']
         tables = []
         for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
@@ -734,12 +746,15 @@ class MC(Sample):
             # add weight field
             if include_weight:
                 weights = np.ones(table.shape[0], dtype='f4') * weight
-                table = recfunctions.rec_append_fields(table, names='weight',
+                table = recfunctions.rec_append_fields(table,
+                        names='weight',
                         data=weights,
                         dtypes='f4')
                 # merge the weight columns
                 table['weight'] *= reduce(np.multiply,
                         [table[br] for br in weight_branches])
+            # drop all branches except branches (+ weight)
+            table = table[branches]
             tables.append(table)
         return tables
 
@@ -1088,13 +1103,14 @@ class QCD(Sample):
             tree.Scale(scale)
         return trees
 
-    def tables(self, category, region, cuts=None,
+    def tables(self, branches, category, region, cuts=None,
             include_weight=True, systematic='NOMINAL'):
 
         assert include_weight == True
 
         data_table = self.data.table(
-                category,
+                branches=branches,
+                category=category,
                 region=self.shape_region,
                 cuts=cuts,
                 include_weight=include_weight,
@@ -1103,7 +1119,8 @@ class QCD(Sample):
 
         for mc in self.mc:
             _arrays = mc.tables(
-                    category,
+                    branches=branches,
+                    category=category,
                     region=self.shape_region,
                     cuts=cuts,
                     include_weight=include_weight,

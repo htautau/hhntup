@@ -395,13 +395,12 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         print "plotting classifier output in control region..."
         print cuts
         # data scores
-        data_sample = data.ndarray(
+        data_scores, _ = data.scores(clf,
+                branches,
+                train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                branches=branches,
-                include_weight=False,
                 cuts=cuts)
-        data_scores = clf.predict_proba(data_sample)[:,-1]
 
         # determine min and max scores
         min_score = 1.
@@ -451,17 +450,16 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             systematics=SYSTEMATICS if args.systematics else None)
 
         # show the background model and 125 GeV signal above mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 > 100')
+        cuts = Cut('mass_mmc_tau1_tau2 > 110')
         print "Plotting classifier output in signal region..."
         print cuts
         # data scores
-        data_sample = data.ndarray(
+        data_scores, _ = data.scores(clf,
+                branches,
+                train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                branches=branches,
-                include_weight=False,
                 cuts=cuts)
-        data_scores = clf.predict_proba(data_sample)[:,-1]
 
         # determine min and max scores
         min_score = 1.

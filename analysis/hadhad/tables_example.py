@@ -10,6 +10,7 @@ t = f.root.data_JetTauEtmiss
 arr = t.readWhere('MET_x > 0')
 
 print arr
+print arr[['MET_x', 'category']]
 
 #ex = tables.Expr('MET_x * 3', uservars=t.colinstances)
 

@@ -79,7 +79,7 @@ CATEGORIES = {
     'ggf': {
         'name': r'$\tau_{had}\tau_{had}$: Non-Boosted Category',
         'code': categories.CATEGORY_GGF,
-        'cuts': COMMON_CATEGORY_CUTS & ID_MEDIUM_TIGHT & MASS_FIX_GGF,
+        'cuts': COMMON_CATEGORY_CUTS & ID_MEDIUM & MASS_FIX_GGF,
         'fitbins': 8,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
