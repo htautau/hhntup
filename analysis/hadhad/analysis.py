@@ -243,13 +243,13 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         branches = cat_info['features']
 
         if args.embedding:
-            clf_filename = 'clf_%s.pickle' % category
-        else:
             clf_filename = 'clf_%s_embedding.pickle' % category
+        else:
+            clf_filename = 'clf_%s.pickle' % category
 
         # train a classifier
         if (args.use_clf_cache
-                and category not in args.train_categories
+                and (category not in args.train_categories)
                 and os.path.isfile(clf_filename)):
             # use a previously trained classifier
             print "using a previously trained classifier..."

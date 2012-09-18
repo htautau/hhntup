@@ -1108,14 +1108,14 @@ class QCD(Sample):
 
         assert include_weight == True
 
-        data_table = self.data.table(
+        data_table = self.data.tables(
                 branches=branches,
                 category=category,
                 region=self.shape_region,
                 cuts=cuts,
                 include_weight=include_weight,
                 systematic='NOMINAL')
-        arrays = [data_tree]
+        arrays = [data_table]
 
         for mc in self.mc:
             _arrays = mc.tables(
