@@ -313,10 +313,10 @@ class Data(Sample):
 
         if region == 'OS':
             # target region. Not trained on, so use all of it
-            data_recarray = data.recarray(
+            data_recarray = self.recarray(
                     branches=branches,
                     category=category,
-                    region=target_region,
+                    region=region,
                     include_weight=True,
                     cuts=cuts,
                     systematic='NOMINAL')
