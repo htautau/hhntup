@@ -35,6 +35,13 @@ class PriVertex(EventFilter):
         return any(ifilter(primary_vertex_selection, event.vertices))
 
 
+class CoreFlags(EventFilter):
+
+    def passes(self, event):
+
+        return (event.coreFlags & 0x40000) == 0
+
+
 class JetCleaning(EventFilter):
 
     def __init__(self,
@@ -60,20 +67,23 @@ class JetCleaning(EventFilter):
             if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max: continue
             LArQmean = jet.AverageLArQF / 65535.0
             chf = jet.sumPtTrk / jet.pt
-            if jetcleaning.is_bad(level=self.level,
-                                  quality=jet.LArQuality,
-                                  NegE=jet.NegativeE,
-                                  emf=jet.emfrac,
-                                  hecf=jet.hecf,
-                                  time=jet.Timing,
-                                  fmax=jet.fracSamplingMax,
-                                  eta=jet.emscale_eta,
-                                  chf=chf,
-                                  HecQ=jet.HECQuality,
-                                  LArQmean=LArQmean
-                                 ): return False
+            if jetcleaning.is_bad(
+                    level=self.level,
+                    quality=jet.LArQuality,
+                    NegE=jet.NegativeE,
+                    emf=jet.emfrac,
+                    hecf=jet.hecf,
+                    time=jet.Timing,
+                    fmax=jet.fracSamplingMax,
+                    eta=jet.emscale_eta,
+                    chf=chf,
+                    HecQ=jet.HECQuality,
+                    LArQmean=LArQmean):
+                return False
 
         if self.datatype == datasets.DATA and self.year == 2012:
+            # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
+            # Hot Tile calorimeter in period B1 and B2
             if 202660 <= event.RunNumber <= 203027:
                 # recommendation is to use EM jets
                 for jet in event.jets_EM:
@@ -81,6 +91,13 @@ class JetCleaning(EventFilter):
                         -0.2 < jet.eta < -0.1 and
                         2.65 < jet.phi < 2.75)
                     if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
+                        return False
+            # Bad FCAL response in periods C1-C8
+            if 206248 <= event.RunNumber <= 207332:
+                for jet in event.jets_EM:
+                    if (jet.pt > 20 * GeV and
+                        abs(jet.eta) > 3.2 and
+                        1.6 < jet.phi < 3.1):
                         return False
         return True
 
