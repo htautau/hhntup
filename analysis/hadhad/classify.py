@@ -175,6 +175,11 @@ def plot_clf(
              systematics=systematics)
 
 
+def std(X):
+
+    return (X - X.mean(axis=0)) / X.std(axis=0, ddof=1)
+
+
 def make_classification(
         signals,
         backgrounds,

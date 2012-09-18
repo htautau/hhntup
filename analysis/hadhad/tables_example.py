@@ -1,18 +1,18 @@
-
+#!/usr/bin/env python
 
 import tables
 
+f = tables.openFile('../../ntuples/hadhad/HHProcessor/HHProcessor.h5')
+t = f.root.data_JetTauEtmiss
 
-f = tables.openFile('asd.h5')
+#arr = np.array([row[:] for row in f.root.higgstautauhh.where('MET_x > 0')])
 
-t = tables.root.higgstautauhh
+arr = t.readWhere('MET_x > 0')
 
+print arr
 
-np.array([row[:] for row in f.root.higgstautauhh.where('MET_x > 0')])
+#ex = tables.Expr('MET_x * 3', uservars=t.colinstances)
 
-ex = tables.Expr('MET_x * 3', uservars=t.colinstances)
-
-see the readWhere method
-
-numexpr.evaluate('MET_x * 2', local_dict=dict([(name, arr[name]) for name in
-    arr.dtype.names]))
+# see the readWhere method
+#numexpr.evaluate('MET_x * 2', local_dict=dict([(name, arr[name]) for name in
+#    arr.dtype.names]))

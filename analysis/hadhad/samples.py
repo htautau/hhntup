@@ -88,11 +88,6 @@ def cleanup():
     os.unlink(TEMPFILE.GetName())
 
 
-def std(X):
-
-    return (X - X.mean(axis=0)) / X.std(axis=0, ddof=1)
-
-
 def correlations(signal, signal_weight,
                  background, background_weight,
                  branches, channel):
@@ -238,7 +233,6 @@ class Sample(object):
     def train_test(self,
                    category,
                    region,
-                   branches,
                    train_fraction,
                    cuts=None,
                    systematic='NOMINAL'):
@@ -247,30 +241,15 @@ class Sample(object):
         """
         self.check_systematic(systematic)
         assert 0 < train_fraction < 1, "Train fraction must be between 0 and 1"
-        trees = self.trees(
+        arrays = self.tables(
                 category,
                 region,
+                include_weight=True,
                 cuts=cuts,
                 systematic=systematic)
         test_arrs = []
         train_arrs = []
-        for tree in trees:
-            weight_branches = tree.userdata.weight_branches
-            arr = r2a.tree_to_recarray(
-                tree,
-                branches=branches + weight_branches,
-                include_weight=True,
-                weight_name='weight')
-            if weight_branches:
-                # merge the three weight columns
-                arr['weight'] *= reduce(np.multiply,
-                        [arr[br] for br in weight_branches])
-                # remove the separate weight branches
-                arr = recfunctions.rec_drop_fields(
-                    arr, weight_branches)
-            # random shuffle
-            # be sure to set a constant random seed so this is stable
-            #arr = arr[np.random.permutation(arr.shape[0])]
+        for arr in arrays:
             # split into test and train samples
             split_idx = int(train_fraction * arr.shape[0])
             arr_train, arr_test = arr[:split_idx], arr[split_idx:]
@@ -286,56 +265,18 @@ class Sample(object):
     def recarray(self,
                  category,
                  region,
-                 branches,
                  include_weight=True,
                  cuts=None,
                  systematic='NOMINAL'):
 
         self.check_systematic(systematic)
-
-        weight_branches = self.get_weight_branches(systematic)
-        if include_weight and isinstance(self, MC):
-            branches = branches + weight_branches
-
-        try:
-            arr = r2a.tree_to_recarray(
-                self.trees(
-                    category,
-                    region,
-                    cuts=cuts,
-                    systematic=systematic),
-                branches=branches,
-                include_weight=include_weight,
-                weight_name='weight')
-        except IOError, e:
-            raise IOError("%s: %s" % (self.__class__.__name__, e))
-
-        if include_weight and isinstance(self, MC):
-            # merge the three weight columns
-            arr['weight'] *= reduce(np.multiply,
-                    [arr[br] for br in weight_branches])
-            # remove the mc_weight and pileup_weight fields
-            arr = recfunctions.rec_drop_fields(
-                arr, weight_branches)
-        return arr
-
-    def ndarray(self,
+        arrays = self.tables(
                 category,
                 region,
-                branches,
-                include_weight=True,
-                cuts=None,
-                systematic='NOMINAL'):
-
-        self.check_systematic(systematic)
-        return r2a.recarray_to_ndarray(
-                   self.recarray(
-                       category,
-                       region,
-                       branches=branches,
-                       include_weight=include_weight,
-                       cuts=cuts,
-                       systematic=systematic))
+                include_weight=include_weight,
+                cuts=cuts,
+                systematic=systematic)
+        return np.concatenate(arrays)
 
 
 class Data(Sample):
@@ -363,6 +304,29 @@ class Data(Sample):
 
         self.data.draw(expr, self.cuts(category, region) & cuts, hist=hist)
 
+    def scores(self, clf, branches, train_fraction,
+            category, region, cuts=None):
+
+        if region == 'OS':
+            # target region. Not trained on, so use all of it
+            data_recarray = data.recarray(
+                    category=category,
+                    region=target_region,
+                    include_weight=True,
+                    cuts=cuts,
+                    systematic='NOMINAL')
+        else:
+            # ignore training sample
+            _, data_recarray = self.train_test(
+                    category=category,
+                    region=region,
+                    train_fraction=train_fraction,
+                    cuts=cuts)
+        data_weights = data_recarray['weight']
+        data_sample = np.vstack(data_recarray[branch] for branch in branches).T
+        data_scores = clf.predict_proba(data_sample)[:,-1]
+        return data_scores, data_weights
+
     def trees(self,
               category,
               region,
@@ -374,6 +338,26 @@ class Data(Sample):
         tree = asrootpy(self.data.CopyTree(self.cuts(category, region) & cuts))
         tree.userdata.weight_branches = []
         return [tree]
+
+    def tables(self,
+              category,
+              region,
+              cuts=None,
+              include_weight=True,
+              systematic='NOMINAL'):
+
+        self.check_systematic(systematic)
+        selection = self.cuts(category, region) & cuts
+        # read the table with a selection
+        table = self.h5data.readWhere(selection.where())
+        # add weight field
+        if include_weight:
+            # data is not weighted
+            weights = np.ones(table.shape[0], dtype='f4')
+            table = recfunctions.rec_append_fields(table, names='weight',
+                    data=weights,
+                    dtypes='f4')
+        return [table]
 
 
 class Signal:
@@ -655,7 +639,6 @@ class MC(Sample):
             arr_train, arr_test = self.train_test(
                     category,
                     region,
-                    branches,
                     train_fraction,
                     cuts=cuts,
                     systematic=systematic)
@@ -679,7 +662,7 @@ class MC(Sample):
         """
         TEMPFILE.cd()
         selection = self.cuts(category, region) & cuts
-        weight_banches = self.get_weight_branches(systematic)
+        weight_branches = self.get_weight_branches(systematic)
         if systematic in MC.SYSTEMATICS_BY_WEIGHT:
             systematic = 'NOMINAL'
 
@@ -708,10 +691,57 @@ class MC(Sample):
             selected_tree = asrootpy(tree.CopyTree(selection))
             #print selected_tree.GetEntries(), weight
             selected_tree.SetWeight(weight)
-            selected_tree.userdata.weight_branches = weight_banches
+            selected_tree.userdata.weight_branches = weight_branches
             #print self.name, selected_tree.GetEntries(), selected_tree.GetWeight()
             trees.append(selected_tree)
         return trees
+
+    def tables(self, category, region, cuts=None,
+            include_weight=True, systematic='NOMINAL'):
+        """
+        This is where all the magic happens...
+        """
+        TEMPFILE.cd()
+        selection = self.cuts(category, region) & cuts
+        weight_branches = self.get_weight_branches(systematic)
+        if systematic in MC.SYSTEMATICS_BY_WEIGHT:
+            systematic = 'NOMINAL'
+
+        tables = []
+        for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
+
+            if systematic in (('FIT_UP',), ('FIT_DOWN',)):
+                table = sys_tables['NOMINAL']
+                events = sys_events['NOMINAL']
+            else:
+                table = sys_tables[systematic]
+                events = sys_events[systematic]
+
+                if table is None:
+                    table = sys_tables['NOMINAL']
+                    events = sys_events['NOMINAL']
+
+            scale = self.scale
+            if isinstance(self, Ztautau):
+                if systematic == ('FIT_UP',):
+                    scale = self.scale + self.scale_error
+                elif systematic == ('FIT_DOWN',):
+                    scale = self.scale - self.scale_error
+            weight = scale * TOTAL_LUMI * xs * kfact * effic / events
+
+            # read the table with a selection
+            table = table.readWhere(selection.where())
+            # add weight field
+            if include_weight:
+                weights = np.ones(table.shape[0], dtype='f4') * weight
+                table = recfunctions.rec_append_fields(table, names='weight',
+                        data=weights,
+                        dtypes='f4')
+                # merge the weight columns
+                table['weight'] *= reduce(np.multiply,
+                        [table[br] for br in weight_branches])
+            tables.append(table)
+        return tables
 
     def events(self, selection='', systematic='NOMINAL'):
 
@@ -992,15 +1022,13 @@ class QCD(Sample):
                cuts=None):
 
         # SS data
-        train, test = self.data.train_test(
-                category=category,
+        data_scores, data_weights = self.data.scores(
+                clf,
+                branches,
+                train_fraction,
+                category,
                 region=self.shape_region,
-                branches=branches,
-                train_fraction=train_fraction,
                 cuts=cuts)
-        data_weights = test['weight']
-        data_sample = np.vstack(test[branch] for branch in branches).T
-        data_scores = clf.predict_proba(data_sample)[:,-1]
 
         scores_dict = {}
         # subtract SS MC
@@ -1060,6 +1088,40 @@ class QCD(Sample):
             tree.Scale(scale)
         return trees
 
+    def tables(self, category, region, cuts=None,
+            include_weight=True, systematic='NOMINAL'):
+
+        assert include_weight == True
+
+        data_table = self.data.table(
+                category,
+                region=self.shape_region,
+                cuts=cuts,
+                include_weight=include_weight,
+                systematic='NOMINAL')
+        arrays = [data_tree]
+
+        for mc in self.mc:
+            _arrays = mc.tables(
+                    category,
+                    region=self.shape_region,
+                    cuts=cuts,
+                    include_weight=include_weight,
+                    systematic=systematic)
+            for array in _arrays:
+                array['weight'] *= -1
+            arrays += _arrays
+
+        scale = self.scale
+        if systematic == ('FIT_UP',):
+            scale += self.scale_error
+        elif systematic == ('FIT_DOWN',):
+            scale -= self.scale_error
+
+        for array in arrays:
+            array['weight'] *= scale
+        return arrays
+
 
 class MC_TauID(MC):
 
@@ -1078,14 +1140,14 @@ if __name__ == '__main__':
 
     # tests
     category='boosted'
-    shape_region = 'SS'
+    shape_region = '!OS'
     target_region = 'OS'
 
-    ztautau = Embedded_Ztautau(systematics=False)
+    ztautau = MC_Ztautau(systematics=False)
     others = Others(systematics=False)
     data = Data()
     qcd = QCD(data=data, mc=[others, ztautau],
-          shape_region='SS')
+          shape_region=shape_region)
 
     qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = qcd_ztautau_norm(
         ztautau=ztautau,
@@ -1169,14 +1231,11 @@ if __name__ == '__main__':
             category, target_region,
             cuts=cuts)['NOMINAL']
     print '--- Data'
-    data_sample = data.ndarray(
-            category=category,
-            region=target_region,
-            branches=branches,
-            include_weight=False,
+    data_scores, data_weights = data.scores(
+            clf, branches,
+            train_frac,
+            category, target_region,
             cuts=cuts)
-
-    data_scores = clf.predict_proba(data_sample)[:,-1]
 
     print "Data: %d" % (len(data_scores))
     print "QCD: %f" % np.sum(qcd_weights)
