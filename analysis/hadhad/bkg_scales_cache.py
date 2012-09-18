@@ -22,16 +22,18 @@ def read_scales(name='background_scales.cache'):
             SCALES = pickle.load(cache)
 
 
-def get_scales(category, embedded):
+def get_scales(category, embedded, verbose=True):
 
     if has_category(category, embedded):
         qcd_scale, qcd_scale_error, \
         ztautau_scale, ztautau_scale_error = SCALES[category][embedded]
-        print "using the embedding scale factors: %s" % str(embedded)
-        print "scale factors for %s category" % category
-        print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
-        print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
-        print
+        if verbose:
+            print "using the embedding scale factors: %s" % str(embedded)
+            print "scale factors for %s category" % category
+            print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+            print "    ztautau scale: %.3f +/- %.4f" % (
+                    ztautau_scale, ztautau_scale_error)
+            print
         return qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error
     else:
         return None
@@ -42,21 +44,33 @@ def has_category(category, embedded):
     return category in SCALES and embedded in SCALES[category]
 
 
-def set_scales(category, embedding,
+def set_scales(category, embedded,
         qcd_scale, qcd_scale_error,
         ztautau_scale, ztautau_scale_error):
 
     global MODIFIED
-    print "setting the embedding scale factors: %s" % str(embedding)
+    print "setting the embedding scale factors: %s" % str(embedded)
     print "setting scale factors for %s category" % category
     print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
     print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
     print
+    if has_category(category, embedded):
+        qcd_scale_old, qcd_scale_error_old, \
+        ztautau_scale_old, ztautau_scale_error_old = get_scales(
+                category, embedded, verbose=False)
+        print "scale factors were previously:"
+        print "    qcd scale: %.3f +/- %.4f" % (
+                qcd_scale_old,
+                qcd_scale_error_old)
+        print "    ztautau scale: %.3f +/- %.4f" % (
+                ztautau_scale_old,
+                ztautau_scale_error_old)
+        print
     if category not in SCALES:
         SCALES[category] = {}
-    if embedding not in SCALES[category]:
-        SCALES[category][embedding] = {}
-    SCALES[category][embedding] = (
+    if embedded not in SCALES[category]:
+        SCALES[category][embedded] = {}
+    SCALES[category][embedded] = (
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
     MODIFIED = True

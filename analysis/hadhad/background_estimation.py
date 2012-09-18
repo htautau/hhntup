@@ -132,10 +132,12 @@ def draw_fit(
 def qcd_ztautau_norm(ztautau,
                      backgrounds,
                      data,
-                     category='preselection',
-                     target_region='OS',
-                     qcd_shape_region='SS',
+                     category,
+                     target_region,
+                     qcd_shape_region,
                      cuts=None,
+                     mass_cut=110,
+                     draw_fit=False,
                      use_cache=True):
 
     is_embedded = isinstance(ztautau, samples.Embedded_Ztautau)
@@ -165,7 +167,7 @@ def qcd_ztautau_norm(ztautau,
     print "performing %d-dimensional fit using %s" % (ndim, expr)
 
     assert(ndim in (1, 2))
-    control = Cut('mass_mmc_tau1_tau2 < 100')
+    control = Cut('mass_mmc_tau1_tau2 < %d' % mass_cut)
     control &= cuts
 
     print "fitting scale factors in control region: %s" % control
@@ -218,17 +220,18 @@ def qcd_ztautau_norm(ztautau,
             category, qcd_shape_region,
             cuts=control)
 
-    draw_fit(data_hist,
-             data_hist_control,
-             ztautau_hist,
-             ztautau_hist_control,
-             bkg_hist,
-             bkg_hist_control,
-             category,
-             name=name,
-             xlabel=xlabel,
-             ylabel=ylabel,
-             ndim=ndim)
+    if draw_fit:
+        draw_fit(data_hist,
+                 data_hist_control,
+                 ztautau_hist,
+                 ztautau_hist_control,
+                 bkg_hist,
+                 bkg_hist_control,
+                 category,
+                 name=name,
+                 xlabel=xlabel,
+                 ylabel=ylabel,
+                 ndim=ndim)
 
     class Model(object):
 
@@ -279,20 +282,21 @@ def qcd_ztautau_norm(ztautau,
     qcd_scale *= factor
     ztautau_scale *= factor
 
-    draw_fit(data_hist,
-             data_hist_control,
-             ztautau_hist,
-             ztautau_hist_control,
-             bkg_hist,
-             bkg_hist_control,
-             category,
-             name=name,
-             xlabel=xlabel,
-             ylabel=ylabel,
-             model_func=model_func,
-             ndim=ndim,
-             qcd_scale=qcd_scale,
-             ztautau_scale=ztautau_scale)
+    if draw_fit:
+        draw_fit(data_hist,
+                 data_hist_control,
+                 ztautau_hist,
+                 ztautau_hist_control,
+                 bkg_hist,
+                 bkg_hist_control,
+                 category,
+                 name=name,
+                 xlabel=xlabel,
+                 ylabel=ylabel,
+                 model_func=model_func,
+                 ndim=ndim,
+                 qcd_scale=qcd_scale,
+                 ztautau_scale=ztautau_scale)
 
     bkg_scales_cache.set_scales(
             category, is_embedded,

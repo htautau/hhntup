@@ -81,11 +81,13 @@ def get_file(student, hdf=False):
     return student_file
 
 
-#@atexit.register
+@atexit.register
 def cleanup():
 
     TEMPFILE.Close()
     os.unlink(TEMPFILE.GetName())
+    for filehandle in FILES.values():
+        filehandle.close()
 
 
 def correlations(signal, signal_weight,
@@ -299,8 +301,7 @@ class Data(Sample):
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name,
-                **self.hist_decor)
+        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
         return hist
 
@@ -509,8 +510,7 @@ class MC(Sample):
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name,
-                **self.hist_decor)
+        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
         return hist
 
@@ -993,8 +993,7 @@ class QCD(Sample):
 
     def draw(self, expr, category, region, bins, min, max, cuts=None):
 
-        hist = Hist(bins, min, max, title=self.label, name=self.name,
-                **self.hist_decor)
+        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
         self.draw_into(hist, expr, category, region, cuts=cuts)
         return hist
 
