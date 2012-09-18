@@ -1108,14 +1108,14 @@ class QCD(Sample):
 
         assert include_weight == True
 
-        data_table = self.data.tables(
+        data_tables = self.data.tables(
                 branches=branches,
                 category=category,
                 region=self.shape_region,
                 cuts=cuts,
                 include_weight=include_weight,
                 systematic='NOMINAL')
-        arrays = [data_table]
+        arrays = data_tables
 
         for mc in self.mc:
             _arrays = mc.tables(
@@ -1127,7 +1127,7 @@ class QCD(Sample):
                     systematic=systematic)
             for array in _arrays:
                 array['weight'] *= -1
-            arrays += _arrays
+            arrays.extend(_arrays)
 
         scale = self.scale
         if systematic == ('FIT_UP',):

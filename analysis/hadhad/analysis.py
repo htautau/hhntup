@@ -306,8 +306,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 # full search
                 max_min_leaf = int((sample_train.shape[0] / 2.) *
                         (args.nfold - 1.) / args.nfold)
-                MIN_SAMPLES_LEAF = range(50, max_min_leaf, max_min_leaf / 10)
-                N_ESTIMATORS = range(1, 2001, 100)
+                MIN_SAMPLES_LEAF = range(
+                        50, max_min_leaf, max(max_min_leaf / 30, 1))
+                N_ESTIMATORS = range(1, 2001, 50)
 
             # see top of file for grid search param constants
             grid_params = {
