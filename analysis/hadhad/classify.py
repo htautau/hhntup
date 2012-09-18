@@ -206,7 +206,8 @@ def make_classification(
 
     for signal in signals:
         train, test = signal.train_test(
-            category, region,
+            category=category,
+            region=region,
             branches=branches,
             train_fraction=train_fraction,
             cuts=cuts,
@@ -226,7 +227,8 @@ def make_classification(
 
     for background in backgrounds:
         train, test = background.train_test(
-            category, region,
+            category=category,
+            region=region,
             branches=branches,
             train_fraction=train_fraction,
             cuts=cuts,

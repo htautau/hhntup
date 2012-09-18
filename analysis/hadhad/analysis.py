@@ -252,10 +252,12 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 and category not in args.train_categories
                 and os.path.isfile(clf_filename)):
             # use a previously trained classifier
+            print "using a previously trained classifier..."
             with open(clf_filename, 'r') as f:
                 clf = pickle.load(f)
             print clf
         else:
+            print "training a new classifier..."
             if args.cor:
                 branches = branches + ['mass_mmc_tau1_tau2']
 
