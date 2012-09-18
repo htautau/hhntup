@@ -9,7 +9,7 @@
     <Sample Name="Signal_%(mass)d_ggf"
         InputFile="./data/%(category)s.root"
         HistoName="Signal_%(mass)d_ggf" NormalizeByTheory="True" >
-        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
+        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_ggf_JES_UP_TES_UP"
@@ -33,7 +33,7 @@
     <Sample Name="Signal_%(mass)d_vbf"
         InputFile="./data/%(category)s.root"
         HistoName="Signal_%(mass)d_vbf" NormalizeByTheory="True" >
-        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
+        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_vbf_JES_UP_TES_UP"
@@ -57,7 +57,7 @@
     <Sample Name="Signal_%(mass)d_zh"
         InputFile="./data/%(category)s.root"
         HistoName="Signal_%(mass)d_zh" NormalizeByTheory="True" >
-        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
+        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_zh_JES_UP_TES_UP"
@@ -81,7 +81,7 @@
     <Sample Name="Signal_%(mass)d_wh"
         InputFile="./data/%(category)s.root"
         HistoName="Signal_%(mass)d_wh" NormalizeByTheory="True" >
-        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40." Const="True" />
+        <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_wh_JES_UP_TES_UP"

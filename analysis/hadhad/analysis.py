@@ -119,6 +119,10 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
     if category not in args.categories:
         continue
 
+    print "=" * 40
+    print "%s category" % category
+    print "=" * 40
+
     # QCD shape region SS or !OS
     qcd_shape_region = cat_info['qcd_shape_region']
     target_region = cat_info['target_region']
@@ -564,8 +568,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         else:
             root_filename = '%s.root' % category
 
-        with ropen(os.path.join(LIMITS_DIR, root_filename),
-                   'recreate') as f:
+        with ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate') as f:
 
             data_hist = hist_template.Clone(name=data.name)
             map(data_hist.Fill, data_scores)
