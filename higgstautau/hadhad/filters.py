@@ -101,3 +101,17 @@ class MuonVeto(EventFilter):
                continue
            return False
        return True
+
+
+class TaudR(EventFilter):
+
+    def __init__(self, dr=3.2, **kwargs):
+
+        super(TaudR, self).__init__(**kwargs)
+        self.dr = dr
+
+    def passes(self, event):
+
+        assert len(event.taus) == 2
+        tau1, tau2 = event.taus
+        return utils.dR(tau1.eta, tau1.phi, tau2.eta, tau2.phi) < self.dr

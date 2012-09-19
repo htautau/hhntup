@@ -93,12 +93,15 @@ class JetCleaning(EventFilter):
                     if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
                         return False
             # Bad FCAL response in periods C1-C8
-            if 206248 <= event.RunNumber <= 207332:
-                for jet in event.jets_EM:
-                    if (jet.pt > 20 * GeV and
-                        abs(jet.eta) > 3.2 and
-                        1.6 < jet.phi < 3.1):
-                        return False
+            # not applied in the skim for now.
+            # Need to also apply on MC and choose a random run number with the
+            # PileupReweighting tool
+            #if 206248 <= event.RunNumber <= 207332:
+            #    for jet in event.jets_EM:
+            #        if (jet.pt > 20 * GeV and
+            #            abs(jet.eta) > 3.2 and
+            #            1.6 < jet.phi < 3.1):
+            #            return False
         return True
 
 

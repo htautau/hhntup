@@ -123,8 +123,8 @@ class hhskim(ATLASStudent):
 
         # define the list of event filters
         event_filters = EventFilterList([
-            CoreFlags(
-                count_funcs=count_funcs),
+            #CoreFlags(
+            #    count_funcs=count_funcs),
             GRLFilter(
                 self.grl,
                 passthrough=(datatype != datasets.DATA
@@ -226,6 +226,8 @@ class hhskim(ATLASStudent):
             #    tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
             #        self.args.syst_terms),
             #    passthrough=datatype == datasets.DATA or year == 2012),
+            TaudR(3.2,
+                count_funcs=count_funcs),
             PileupReweight(
                 year=year,
                 tree=tree,
