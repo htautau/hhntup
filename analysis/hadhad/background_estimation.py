@@ -136,6 +136,7 @@ def qcd_ztautau_norm(ztautau,
                      target_region,
                      qcd_shape_region,
                      cuts=None,
+                     bins=10,
                      mass_cut=110,
                      draw_fit=False,
                      use_cache=True):
@@ -148,7 +149,6 @@ def qcd_ztautau_norm(ztautau,
     print "fitting scale factors for embedding: %s" % str(is_embedded)
     print "fitting scale factors for %s category" % category
     min, max = .55, 1
-    bins = categories.CATEGORIES[category]['fitbins']
     expr = 'tau2_BDTJetScore:tau1_BDTJetScore'
     fit_name = 'bdt'
     xlabel = '#tau_{1} BDT Score'
@@ -165,6 +165,7 @@ def qcd_ztautau_norm(ztautau,
     name = "%dd_%s_fit_%s" % (ndim, fit_name, category)
 
     print "performing %d-dimensional fit using %s" % (ndim, expr)
+    print "using %d bins on each axis" % bins
 
     assert(ndim in (1, 2))
     control = Cut('mass_mmc_tau1_tau2 < %d' % mass_cut)

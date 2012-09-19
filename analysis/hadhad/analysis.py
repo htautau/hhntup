@@ -21,12 +21,14 @@ parser.add_argument('--no-systematics', action='store_false',
         dest='systematics',
         help="turn off systematics",
         default=True)
+parser.add_argument('--mass-cut', type=int, default=110)
 parser.add_argument('--nfold', type=int, default=5)
-parser.add_argument('--clf-bins', dest='bins', type=int, default=20)
+parser.add_argument('--clf-bins', dest='bins', type=int, default=10)
 parser.add_argument('--cor', action='store_true', default=False)
 parser.add_argument('--unblind', action='store_true', default=False)
 parser.add_argument('--embedding', action='store_true', default=False)
 parser.add_argument('--train-fraction', type=float, default=.5)
+parser.add_argument('--quick-train', action='store_true', default=False)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
 parser.add_argument('--train-categories', nargs='*', default=[])
 parser.add_argument('--plots', nargs='*')
@@ -72,9 +74,6 @@ from matplotlib.ticker import IndexLocator, FuncFormatter
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 from rootpy.extern.tabulartext import PrettyTable
-
-
-QUICK = False
 
 
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
@@ -133,7 +132,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
 
     figures[category] = {}
 
-    #cuts = Cut('80 < mass_mmc_tau1_tau2 < 110')
+    #cuts = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
     cuts = Cut()
 
     qcd.scale = 1.
@@ -148,6 +147,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         category=category,
         target_region=target_region,
         qcd_shape_region=qcd_shape_region,
+        mass_cut=args.mass_cut,
+        bins=cat_info['fitbins'],
         use_cache=args.use_fit_cache)
 
     qcd.scale = qcd_scale
@@ -299,21 +300,24 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             # train a new BDT
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(),
-                    learn_rate=.5,
                     compute_importances=True)
 
             # grid search params
-            if QUICK:
+            if args.quick_train:
                 # quick search for testing
                 MIN_SAMPLES_LEAF = range(100, 120, 10)
                 N_ESTIMATORS = range(10, 15, 2)
             else:
                 # full search
-                max_min_leaf = int((sample_train.shape[0] / 2.) *
-                        (args.nfold - 1.) / args.nfold)
-                MIN_SAMPLES_LEAF = range(
-                        50, max_min_leaf, max(max_min_leaf / 30, 1))
-                N_ESTIMATORS = range(1, 2001, 50)
+                #max_min_leaf = int((sample_train.shape[0] / 2.) *
+                #        (args.nfold - 1.) / args.nfold)
+                #MIN_SAMPLES_LEAF = range(
+                #        50, max_min_leaf, max(max_min_leaf / 30, 1))
+                #N_ESTIMATORS = range(1, 1001, 30)
+
+                # values
+                N_ESTIMATORS = [2, 4, 8, 16]
+                MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
 
             # see top of file for grid search param constants
             grid_params = {
@@ -324,8 +328,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             # first grid search min_samples_leaf for the maximum n_estimators
             grid_clf = GridSearchCV(
                     clf, grid_params,
-                    # use default ClassifierMixin score
-                    #score_func=precision_score,
+                    # can use default ClassifierMixin score
+                    score_func=precision_score,
                     cv = StratifiedKFold(labels_train, args.nfold),
                     n_jobs=-1)
             grid_clf.fit(
@@ -366,7 +370,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                         DecisionTreeClassifier(
                             min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
                         n_estimators=n_estimators,
-                        learn_rate=.5, compute_importances=True)
+                        compute_importances=True)
                 clf.fit(sample_train, labels_train,
                         sample_weight=sample_weight_train)
                 print
@@ -399,7 +403,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
 
-        cuts = Cut('mass_mmc_tau1_tau2 < 100')
+        cuts = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
         print "plotting classifier output in control region..."
         print cuts
         # data scores
@@ -457,8 +461,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
 
-        # show the background model and 125 GeV signal above mass control region
-        cuts = Cut('mass_mmc_tau1_tau2 > 110')
+        # show the background model and 125 GeV signal in the signal region
+        cuts = Cut('mass_mmc_tau1_tau2 > %d' % args.mass_cut)
         print "Plotting classifier output in signal region..."
         print cuts
         # data scores
@@ -560,9 +564,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 name = 'Signal_%d_%s' % (mass, mode)
                 sig_scores[name] = (sig, scores_dict)
 
-        padding = (max_score - min_score) / (2 * args.bins)
-        min_score -= padding
-        max_score += padding
+        #padding = (max_score - min_score) / (2 * args.bins)
+        min_score -= 0.00001
+        max_score += 0.00001
         hist_template = Hist(args.bins, min_score, max_score)
 
         if args.embedding:

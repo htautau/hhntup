@@ -1,0 +1,36 @@
+This is a repository of common statistical scripts specific 
+to the ATLAS statistical recommendations.  The scripts might be updated, which
+is why we are using SVN to keep track of versioning.
+
+Several scripts need ROOT 5.30 or greater to run.
+
+To use the scripts, you can either download them from the web page or 
+   svn co svn+ssh://svn.cern.ch/reps/atlasgrp/Physics/StatForum/RooStatsTools/
+
+More information on the recommendations can be found here:
+   https://twiki.cern.ch/twiki/bin/view/AtlasProtected/StatisticsTools
+   https://twiki.cern.ch/twiki/bin/view/AtlasProtected/FrequentistLimitRecommendationImplementation
+   https://twiki.cern.ch/twiki/bin/view/AtlasProtected/BayesianLimitRecommendationImplementation
+
+In addition, there are standard scripts in the ROOT release tutorials directory.  See:
+   $ROOTSYS/tutorials/roostats/
+or
+   http://root.cern.ch/root/html/tutorials/roostats/index.html
+The could be copied here, but that might lead to version control issues.
+
+In particular, you are encouraged to use the diagnostic tools:
+   StandardTestStatDistributionDemo.C 
+   StandardProfileInspectorDemo.C
+
+For support, you are encouraged to write:
+   <atlas-phys-stat-root@cern.ch> 
+for ATLAS specific questions (particularly with ATLAS-sensitive information).
+For more technial RooFit/RooStats issues, you can write:
+   <roostats-development@cern.ch>
+For more general statistical questions, you can write:
+   <hn-atlas-physics-statistics@cern.ch>
+
+Additioanl documentation can be found here:
+   https://twiki.cern.ch/twiki/bin/view/RooStats/WebHome
+
+

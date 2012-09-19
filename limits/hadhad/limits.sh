@@ -17,6 +17,8 @@ rm -f bandPlotData_ggf.txt
 rm -f bandPlotData_boosted.txt
 rm -f bandPlotData_vbf.txt
 
+TAG=00-01-02
+
 for mass in $(seq 125 5 125)
 do
     echo "*************************************"
@@ -28,7 +30,7 @@ do
         echo "Category: ${category}"
         echo "--------------------------------------"
 
-        (root -l -b -q runAsymptoticsCLs.C+"(\
+        (root -l -b -q ../common/runAsymptoticsCLs-${TAG}/runAsymptoticsCLs.C+"(\
             \"./results/hh_${category}_${mass}_combined_STATONLY_model.root\",\
             \"combined\",\
             \"ModelConfig\",\
@@ -45,7 +47,7 @@ do
     echo "Combination"
     echo "--------------------------------------"
 
-    (root -l -b -q runAsymptoticsCLs.C+"(\
+    (root -l -b -q ../common/runAsymptoticsCLs-${TAG}/runAsymptoticsCLs.C+"(\
         \"./results/hh_${mass}_combined_STATONLY_model.root\",\
         \"combined\",\
         \"ModelConfig\",\

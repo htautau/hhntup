@@ -106,7 +106,7 @@ def plot_clf(
         max_score=1,
         systematics=None):
 
-    hist_template = Hist(bins, min_score, max_score)
+    hist_template = Hist(bins, min_score - 0.00001, max_score + 0.00001)
 
     bkg_hists = []
     for bkg, scores_dict in background_scores:
@@ -148,6 +148,7 @@ def plot_clf(
     if data_scores is not None and draw_data:
         data, data_scores = data_scores
         data_hist = hist_template.Clone(title=data.label)
+        data_hist.decorate(**data.hist_decor)
         map(data_hist.Fill, data_scores)
         print "Data events: %d" % sum(data_hist)
         print "Model events: %f" % sum(sum(bkg_hists))
