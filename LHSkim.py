@@ -102,6 +102,7 @@ class LHSkim(ATLASStudent):
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
         intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
+        intree.define_object(name='isLTT', prefix='')
 
         # set the event filters
 
@@ -109,7 +110,7 @@ class LHSkim(ATLASStudent):
 
         if YEAR == 2012:
             eventFilterList.append(ElectronIDpatch())
-            eventFilterList.append(TauIDpatch('ParametrizedBDTSelection.root'))
+            eventFilterList.append(TauIDpatch(YEAR))
         
         event_filters = EventFilterList(eventFilterList)
 
