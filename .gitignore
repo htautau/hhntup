@@ -19,6 +19,7 @@ grid-setup.sh
 *.png
 *.eps
 *.pickle
+*.so
 .svn
 grid-merge
 xsec_cache
