@@ -6,7 +6,8 @@ SYSTEMATICS = [
     (('ISOL_UP',), ('ISOL_DOWN',)),
     (('TRIGGER_UP',), ('TRIGGER_DOWN',)),
     (('FAKERATE_UP',), ('FAKERATE_DOWN',)),
-    (('FIT_UP',), ('FIT_DOWN',)),
+    (('QCD_FIT_UP',), ('QCD_FIT_DOWN',)),
+    (('Z_FIT_UP',), ('Z_FIT_DOWN',)),
 ]
 
 
