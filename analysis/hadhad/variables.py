@@ -238,14 +238,14 @@ VARIABLES = {
         'title': r'$\tau_{1}$ BDT Score',
         'filename': 'tau1_BDTJetScore',
         'bins': 20,
-        'range': (.55, 1.05),
+        'range': (.55, 1.0001),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'tau2_BDTJetScore': {
         'title': r'$\tau_{2}$ BDT Score',
         'filename': 'tau2_BDTJetScore',
         'bins': 20,
-        'range': (.55, 1.05),
+        'range': (.55, 1.0001),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'cos_theta_tau1_tau2': {
@@ -266,7 +266,7 @@ VARIABLES = {
         'title': r'$\Delta R_{\tau_{1},\/\tau_{2}}$',
         'filename': 'dr_tau1_tau2',
         'bins': 20,
-        'range': (0.8, 3.2),
+        'range': (0., 6.),
         'cats': ['VBF', 'GGF', 'BOOSTED', 'PRESELECTION']
     },
     'fabs(dPhi_tau1_tau2)': {

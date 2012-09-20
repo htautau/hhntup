@@ -123,6 +123,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
     print "%s category" % category
     print "=" * 40
 
+    print "Cuts: %s" % cat_info['cuts']
+
     # QCD shape region SS or !OS
     qcd_shape_region = cat_info['qcd_shape_region']
     target_region = cat_info['target_region']
@@ -264,6 +266,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             print clf
         else:
             print "training a new classifier..."
+            print "using these features:"
+            for branch in branches:
+                print branch
             if args.cor:
                 branches = branches + ['mass_mmc_tau1_tau2']
 
@@ -316,7 +321,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 #N_ESTIMATORS = range(1, 1001, 30)
 
                 # values
-                N_ESTIMATORS = [2, 4, 8, 16]
+                N_ESTIMATORS = [2, 4, 8, 16, 32]
                 MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
 
             # see top of file for grid search param constants

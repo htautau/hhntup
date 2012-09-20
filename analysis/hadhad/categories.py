@@ -12,11 +12,11 @@ ID_MEDIUM_TIGHT = (TAU1_MEDIUM & TAU2_TIGHT) | (TAU1_TIGHT & TAU2_MEDIUM)
 
 # low cut fixes mass, high cut removes QCD
 DR_FIX = Cut('1.0 < dR_tau1_tau2 < 3.0')
-MASS_FIX = Cut('mass_mmc_tau1_tau2 > 70')
+MASS_FIX = Cut('mass_mmc_tau1_tau2 > 80')
 MAX_NJET = Cut('numJets <= 3')
 MET = Cut('MET > 20000')
 
-COMMON_CUTS = MET & DR_FIX & MAX_NJET & MASS_FIX & ID_MEDIUM
+COMMON_CUTS = MET & MASS_FIX & ID_MEDIUM # & DR_FIX & MAX_NJET
 
 CATEGORIES = {
     'vbf': {
@@ -55,7 +55,7 @@ CATEGORIES = {
         'name': r'$\tau_{had}\tau_{had}$: Boosted Category',
         'code': categories.CATEGORY_BOOSTED,
         'cuts': COMMON_CUTS,
-        'fitbins': 8,
+        'fitbins': 10,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [

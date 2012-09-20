@@ -103,7 +103,7 @@
     </Sample>
     
     <Sample Name="Ztautau" InputFile="./data/%(category)s.root"
-        HistoName="Ztautau" NormalizeByTheory="True" >
+        HistoName="Ztautau" NormalizeByTheory="False" >
         <StatError Activate="True" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Ztautau_JES_UP_TES_UP"
@@ -132,7 +132,7 @@
     </Sample>
 
     <Sample Name="QCD" InputFile="./data/%(category)s.root"
-        HistoName="QCD" NormalizeByTheory="True" >
+        HistoName="QCD" NormalizeByTheory="False" >
         <StatError Activate="True" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="QCD_JES_UP_TES_UP"
