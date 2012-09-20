@@ -146,7 +146,7 @@ class Sample(object):
     WEIGHT_BRANCHES = [
         'mc_weight',
         'pileup_weight',
-        #'ggf_weight',
+        'ggf_weight', # <= affects limits a lot!
         # effic high and low already accounted for in TAUBDT_UP/DOWN
         'tau1_efficiency_scale_factor',
         'tau2_efficiency_scale_factor',
