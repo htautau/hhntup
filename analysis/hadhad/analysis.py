@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from argparse import ArgumentParser
-from categories import CATEGORIES
+from categories import CATEGORIES, CONTROLS
 from variables import VARIABLES
 
 parser = ArgumentParser()
@@ -30,6 +30,8 @@ parser.add_argument('--embedding', action='store_true', default=False)
 parser.add_argument('--train-fraction', type=float, default=.5)
 parser.add_argument('--quick-train', action='store_true', default=False)
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
+parser.add_argument('--controls', nargs='*', default=CONTROLS.keys())
+parser.add_argument('--only-controls', action='store_true', default=False)
 parser.add_argument('--train-categories', nargs='*', default=[])
 parser.add_argument('--plots', nargs='*')
 args = parser.parse_args()
@@ -113,14 +115,24 @@ if 'train' in args.actions:
 
 figures = {}
 
-for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
+categories_controls = (
+        sorted(CATEGORIES.items(), key=lambda item: item[0]) +
+        sorted(CONTROLS.items(), key=lambda item: item[0]))
 
-    if category not in args.categories:
+for category, cat_info in categories_controls:
+
+    if category not in args.categories and category not in args.controls:
+        continue
+
+    if args.only_controls and category not in args.controls:
         continue
 
     print
     print "=" * 40
-    print "%s category" % category
+    if category in args.categories:
+        print "%s category" % category
+    else:
+        print "%s control region" % category
     print "=" * 40
 
     print "Cuts: %s" % cat_info['cuts']
@@ -161,10 +173,11 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
     if 'plot' in args.actions:
         for expr, var_info in VARIABLES.items():
 
-            if category.upper() not in var_info['cats']:
+            if category in args.controls and 'GGF' not in var_info['cats']:
                 continue
-
-            if args.plots and expr not in args.plots:
+            elif category in args.categories and category.upper() not in var_info['cats']:
+                continue
+            elif args.plots and expr not in args.plots:
                 continue
 
             print
@@ -235,8 +248,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     systematics=SYSTEMATICS if args.systematics else None)
             figures[category][expr] = fig
 
-    if category == 'preselection':
-        # don't train a classifier at preselection
+    if category not in args.categories:
+        # don't train a classifier in a control region
         continue
 
     if 'train' in args.actions:

@@ -16,13 +16,13 @@ MASS_FIX = Cut('mass_mmc_tau1_tau2 > 80')
 MAX_NJET = Cut('numJets <= 3')
 MET = Cut('MET > 20000')
 
-COMMON_CUTS = MET & MASS_FIX & ID_MEDIUM # & DR_FIX & MAX_NJET
+COMMON_CUTS = MET & MASS_FIX # & DR_FIX & MAX_NJET
 
 CATEGORIES = {
     'vbf': {
         'name': r'$\tau_{had}\tau_{had}$: VBF Category',
         'code': categories.CATEGORY_VBF,
-        'cuts': COMMON_CUTS,
+        'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 5,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
@@ -54,7 +54,7 @@ CATEGORIES = {
     'boosted': {
         'name': r'$\tau_{had}\tau_{had}$: Boosted Category',
         'code': categories.CATEGORY_BOOSTED,
-        'cuts': COMMON_CUTS,
+        'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 10,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
@@ -75,7 +75,7 @@ CATEGORIES = {
     'ggf': {
         'name': r'$\tau_{had}\tau_{had}$: Non-Boosted Category',
         'code': categories.CATEGORY_GGF,
-        'cuts': COMMON_CUTS,
+        'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 10,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
@@ -96,7 +96,7 @@ CONTROLS = {
     'preselection': {
         'name': r'$\tau_{had}\tau_{had}$: At Preselection',
         'code': None,
-        'cuts': COMMON_CUTS,
+        'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 10,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
@@ -104,7 +104,7 @@ CONTROLS = {
     'z': {
         'name': r'$\tau_{had}\tau_{had}$: Z Control Region',
         'code': None,
-        'cuts': COMMON_CUTS & ID_MEDIUM_TIGHT,
+        'cuts': COMMON_CUTS & Cut('dR_tau1_tau2<2.8') & ID_MEDIUM_TIGHT,
         'fitbins': 10,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',

@@ -137,11 +137,11 @@ class Sample(object):
         '!OS-NOID': NOT_OS & NOID,
         'SS-NOID': SS & NOID}
 
-    CATEGORIES = dict([
-        (name, Cut('category==%d' % info['code']))
-        if info['code'] is not None
-        else (name, Cut(''))
-        for name, info in categories.CATEGORIES.items()])
+    CATEGORIES = dict(
+        [(name, Cut('category==%d' % info['code']))
+         for name, info in categories.CATEGORIES.items()] +
+        [(name, Cut(''))
+         for name, info in categories.CONTROLS.items()])
 
     WEIGHT_BRANCHES = [
         'mc_weight',
@@ -228,9 +228,17 @@ class Sample(object):
 
     def cuts(self, category, region):
 
-        return (Sample.CATEGORIES[category] &
-                categories.CATEGORIES[category]['cuts'] &
-                Sample.REGIONS[region] & self._cuts)
+        if category in categories.CATEGORIES:
+            return (Sample.CATEGORIES[category] &
+                    categories.CATEGORIES[category]['cuts'] &
+                    Sample.REGIONS[region] & self._cuts)
+        elif category in categories.CONTROLS:
+            return (Sample.CATEGORIES[category] &
+                    categories.CONTROLS[category]['cuts'] &
+                    Sample.REGIONS[region] & self._cuts)
+        else:
+            raise ValueError(
+                    'no such category or control region: %s' % category)
 
     def train_test(self,
                    branches,
