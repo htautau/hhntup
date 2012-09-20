@@ -269,6 +269,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             print "using these features:"
             for branch in branches:
                 print branch
+
             if args.cor:
                 branches = branches + ['mass_mmc_tau1_tau2']
 
@@ -383,6 +384,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 print "Tuned for 'precision' with optimal value: %0.3f" % precision_score(y_true, y_pred)
                 print classification_report(y_true, y_pred)
             """
+            print sample_train
+            print labels_train
+            print sample_weight_train
 
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(

@@ -90,10 +90,21 @@ CATEGORIES = {
             #'mmc_resonance_pt',
         ]
     },
+}
+
+CONTROLS = {
     'preselection': {
         'name': r'$\tau_{had}\tau_{had}$: At Preselection',
         'code': None,
         'cuts': COMMON_CUTS,
+        'fitbins': 10,
+        'qcd_shape_region': 'SS',
+        'target_region': 'OS',
+    },
+    'z': {
+        'name': r'$\tau_{had}\tau_{had}$: Z Control Region',
+        'code': None,
+        'cuts': COMMON_CUTS & ID_MEDIUM_TIGHT,
         'fitbins': 10,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
