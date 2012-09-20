@@ -620,20 +620,20 @@ class MC(Sample):
                 up_fit *= ((self.scale + self.scale_error) / self.scale)
                 down_fit = current_hist.Clone()
                 down_fit *= ((self.scale - self.scale_error) / self.scale)
-                if ('Z_FIT_UP',) not in sys_hists:
-                    sys_hists[('Z_FIT_UP',)] = up_fit
-                    sys_hists[('Z_FIT_DOWN',)] = down_fit
+                if ('ZFIT_UP',) not in sys_hists:
+                    sys_hists[('ZFIT_UP',)] = up_fit
+                    sys_hists[('ZFIT_DOWN',)] = down_fit
                 else:
-                    sys_hists[('Z_FIT_UP',)] += up_fit
-                    sys_hists[('Z_FIT_DOWN',)] += down_fit
+                    sys_hists[('ZFIT_UP',)] += up_fit
+                    sys_hists[('ZFIT_DOWN',)] += down_fit
             else:
-                for _term in [('Z_FIT_UP',), ('Z_FIT_DOWN',)]:
+                for _term in [('ZFIT_UP',), ('ZFIT_DOWN',)]:
                     if _term not in sys_hists:
                         sys_hists[_term] = current_hist.Clone()
                     else:
                         sys_hists[_term] += current_hist.Clone()
 
-            for _term in [('QCD_FIT_UP',), ('QCD_FIT_DOWN',)]:
+            for _term in [('QCDFIT_UP',), ('QCDFIT_DOWN',)]:
                 if _term not in sys_hists:
                     sys_hists[_term] = current_hist.Clone()
                 else:
@@ -687,8 +687,8 @@ class MC(Sample):
         trees = []
         for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
-            if systematic in (('Z_FIT_UP',), ('Z_FIT_DOWN',),
-                              ('QCD_FIT_UP',), ('QCD_FIT_DOWN',)):
+            if systematic in (('ZFIT_UP',), ('ZFIT_DOWN',),
+                              ('QCDFIT_UP',), ('QCDFIT_DOWN',)):
                 tree = sys_trees['NOMINAL']
                 events = sys_events['NOMINAL']
             else:
@@ -701,9 +701,9 @@ class MC(Sample):
 
             scale = self.scale
             if isinstance(self, Ztautau):
-                if systematic == ('Z_FIT_UP',):
+                if systematic == ('ZFIT_UP',):
                     scale = self.scale + self.scale_error
-                elif systematic == ('Z_FIT_DOWN',):
+                elif systematic == ('ZFIT_DOWN',):
                     scale = self.scale - self.scale_error
             weight = scale * TOTAL_LUMI * xs * kfact * effic / events
 
@@ -730,8 +730,8 @@ class MC(Sample):
         tables = []
         for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
-            if systematic in (('Z_FIT_UP',), ('Z_FIT_DOWN',),
-                              ('QCD_FIT_UP',), ('QCD_FIT_DOWN',)):
+            if systematic in (('ZFIT_UP',), ('ZFIT_DOWN',),
+                              ('QCDFIT_UP',), ('QCDFIT_DOWN',)):
                 table = sys_tables['NOMINAL']
                 events = sys_events['NOMINAL']
             else:
@@ -744,9 +744,9 @@ class MC(Sample):
 
             scale = self.scale
             if isinstance(self, Ztautau):
-                if systematic == ('Z_FIT_UP',):
+                if systematic == ('ZFIT_UP',):
                     scale = self.scale + self.scale_error
-                elif systematic == ('Z_FIT_DOWN',):
+                elif systematic == ('ZFIT_DOWN',):
                     scale = self.scale - self.scale_error
             weight = scale * TOTAL_LUMI * xs * kfact * effic / events
 
@@ -1068,9 +1068,9 @@ class QCD(Sample):
         for sys_term in scores_dict.keys():
             sys_scores, sys_weights = scores_dict[sys_term]
             scale = self.scale
-            if sys_term == ('QCD_FIT_UP',):
+            if sys_term == ('QCDFIT_UP',):
                 scale += self.scale_error
-            elif sys_term == ('QCD_FIT_DOWN',):
+            elif sys_term == ('QCDFIT_DOWN',):
                 scale -= self.scale_error
             # subtract SS MC
             sys_weights *= -1 * scale
@@ -1102,9 +1102,9 @@ class QCD(Sample):
             trees += _trees
 
         scale = self.scale
-        if systematic == ('QCD_FIT_UP',):
+        if systematic == ('QCDFIT_UP',):
             scale += self.scale_error
-        elif systematic == ('QCD_FIT_DOWN',):
+        elif systematic == ('QCDFIT_DOWN',):
             scale -= self.scale_error
 
         for tree in trees:
@@ -1138,9 +1138,9 @@ class QCD(Sample):
             arrays.extend(_arrays)
 
         scale = self.scale
-        if systematic == ('QCD_FIT_UP',):
+        if systematic == ('QCDFIT_UP',):
             scale += self.scale_error
-        elif systematic == ('QCD_FIT_DOWN',):
+        elif systematic == ('QCDFIT_DOWN',):
             scale -= self.scale_error
 
         for array in arrays:

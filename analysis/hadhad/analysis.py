@@ -303,6 +303,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 continue
 
             # train a new BDT
+            """
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(),
                     compute_importances=True)
@@ -321,8 +322,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 #N_ESTIMATORS = range(1, 1001, 30)
 
                 # values
-                N_ESTIMATORS = [2, 4, 8, 16, 32]
-                MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
+                N_ESTIMATORS = [16]
+                MIN_SAMPLES_LEAF = [200]
 
             # see top of file for grid search param constants
             grid_params = {
@@ -342,11 +343,7 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     sample_weight=sample_weight_train)
             clf = grid_clf.best_estimator_
             grid_scores = grid_clf.grid_scores_
-            """
-            for
-                for limit in xrange(1, clf.n_estimators):
-                    for train, test in cv:
-            """
+
             print "Classification report for the best estimator: "
             print clf
             y_true, y_pred = labels_test, clf.predict(sample_test)
@@ -385,6 +382,15 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                 print "Classification report: "
                 print "Tuned for 'precision' with optimal value: %0.3f" % precision_score(y_true, y_pred)
                 print classification_report(y_true, y_pred)
+            """
+
+            clf = AdaBoostClassifier(
+                    DecisionTreeClassifier(
+                        min_samples_leaf=200),
+                    n_estimators=100,
+                    compute_importances=True)
+            clf.fit(sample_train, labels_train,
+                    sample_weight=sample_weight_train)
 
             if hasattr(clf, 'feature_importances_'):
                 importances = clf.feature_importances_
@@ -451,6 +457,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
                     max_score = _max
 
             bkg_scores.append((bkg, scores_dict))
+
+        print "minimum score: %f" % min_score
+        print "maximum score: %f" % max_score
 
         # compare data and the model in a low mass control region
         plot_clf(
@@ -530,6 +539,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             if _max > max_score:
                 max_score = _max
 
+        print "minimum score: %f" % min_score
+        print "maximum score: %f" % max_score
+
         plot_clf(
             background_scores=bkg_scores,
             category=category,
@@ -541,6 +553,8 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
             min_score=min_score,
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
+
+        print "creating histograms for limits"
 
         # signal scores for all masses and modes
         sig_scores = {}
@@ -568,6 +582,9 @@ for category, cat_info in sorted(CATEGORIES.items(), key=lambda item: item[0]):
 
                 name = 'Signal_%d_%s' % (mass, mode)
                 sig_scores[name] = (sig, scores_dict)
+
+        print "minimum score: %f" % min_score
+        print "maximum score: %f" % max_score
 
         #padding = (max_score - min_score) / (2 * args.bins)
         min_score -= 0.00001
