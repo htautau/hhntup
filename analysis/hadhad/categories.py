@@ -47,7 +47,7 @@ CATEGORIES = {
             'tau1_x',
             'tau2_x',
             'MET_centrality',
-            #'higgs_pt',
+            #'mmc_resonance_pt',
             #'sum_pt'
         ]
     },
@@ -69,7 +69,7 @@ CATEGORIES = {
             'tau2_x',
             'MET_centrality',
             #'sum_pt',
-            #'higgs_pt'
+            #'mmc_resonance_pt'
         ]
     },
     'ggf': {
@@ -86,7 +86,8 @@ CATEGORIES = {
             'tau2_BDTJetScore',
             'tau1_x',
             'tau2_x',
-            'MET_centrality'
+            'MET_centrality',
+            #'mmc_resonance_pt',
         ]
     },
     'preselection': {
