@@ -78,14 +78,19 @@ def set_scales(category, embedded,
 
 if __name__ == '__main__':
     import sys
+    from argparse import ArgumentParser
 
-    if len(sys.argv) > 1:
-        read_scales(sys.argv[1])
-    else:
-        read_scales()
+    parser = ArgumentParser()
+    parser.add_argument('--embedding', action='store_true', default=False)
+    parser.add_argument('cache', default='background_scales.cache', nargs='?')
+    args = parser.parse_args()
+
+    read_scales(args.cache)
     for category in SCALES.keys():
         for embedding, (qcd_scale, qcd_scale_error,
                 ztautau_scale, ztautau_scale_error) in SCALES[category].items():
+            if embedding != args.embedding:
+                continue
             print "scale factors for embedding: %s" % str(embedding)
             print "scale factors for %s category" % category
             print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
