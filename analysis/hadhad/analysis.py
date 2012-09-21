@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
-from argparse import ArgumentParser
+import argparse
 from categories import CATEGORIES, CONTROLS
 from variables import VARIABLES
 
-parser = ArgumentParser()
+
+class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
+                      argparse.RawTextHelpFormatter):
+    pass
+
+
+parser = argparse.ArgumentParser(formatter_class=formatter_class)
 parser.add_argument('--no-fit-cache',
         action='store_false', dest='use_fit_cache',
         help="do not use cached background scale factors "
@@ -16,24 +22,43 @@ parser.add_argument('--no-clf-cache',
         "and instead train a new one",
         default=True)
 parser.add_argument('--actions', nargs='*', choices=['plot', 'train'],
-        default=[])
+        default=[],
+        help='only perform these actions')
 parser.add_argument('--no-systematics', action='store_false',
         dest='systematics',
         help="turn off systematics",
         default=True)
-parser.add_argument('--mass-cut', type=int, default=110)
-parser.add_argument('--nfold', type=int, default=5)
-parser.add_argument('--clf-bins', dest='bins', type=int, default=10)
-parser.add_argument('--cor', action='store_true', default=False)
-parser.add_argument('--unblind', action='store_true', default=False)
-parser.add_argument('--embedding', action='store_true', default=False)
-parser.add_argument('--train-fraction', type=float, default=.5)
-parser.add_argument('--quick-train', action='store_true', default=False)
-parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys())
-parser.add_argument('--controls', nargs='*', default=CONTROLS.keys())
-parser.add_argument('--only-controls', action='store_true', default=False)
-parser.add_argument('--train-categories', nargs='*', default=[])
-parser.add_argument('--plots', nargs='*')
+parser.add_argument('--mass-cut', type=int, default=110,
+        help='the mass window cut. norms of Z and QCD are fit below this and '
+        'the signal region of the classifier output is above this')
+parser.add_argument('--nfold', type=int, default=5,
+        help='the number of folds in the cross-validation')
+parser.add_argument('--clf-bins', dest='bins', type=int, default=10,
+        help='the number of bins to use in the limit histograms and plots of '
+        'the final classifier output')
+parser.add_argument('--cor', action='store_true', default=False,
+        help='draw correlation plots')
+parser.add_argument('--unblind', action='store_true', default=False,
+        help='plot the data in the signal region of the classifier output')
+parser.add_argument('--embedding', action='store_true', default=False,
+        help='use embedding instead of ALPGEN')
+parser.add_argument('--train-fraction', type=float, default=.5,
+        help='the fraction of events used for training and excluded from the '
+        'final limit histograms')
+parser.add_argument('--quick-train', action='store_true', default=False,
+        help='perform a very small grid search for testing purposes')
+parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys(),
+        help='which categories to draw plot or train in')
+parser.add_argument('--controls', nargs='*', default=CONTROLS.keys(),
+        help='which controls to draw plots in')
+parser.add_argument('--only-controls', action='store_true', default=False,
+        help='only draw control plots. no category plots.')
+parser.add_argument('--train-categories', nargs='*', default=[],
+        help='only train in these categories')
+parser.add_argument('--plots', nargs='*',
+        help='only draw these plots. see the keys in variables.py')
+parser.add_argument('--cut', default=None, nargs='?',
+        help='extra cut to be applied globally')
 args = parser.parse_args()
 
 # root imports
