@@ -342,7 +342,6 @@ for category, cat_info in categories_controls:
                 continue
 
             # train a new BDT
-            """
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(),
                     compute_importances=True)
@@ -354,15 +353,15 @@ for category, cat_info in categories_controls:
                 N_ESTIMATORS = range(10, 15, 2)
             else:
                 # full search
-                #max_min_leaf = int((sample_train.shape[0] / 2.) *
-                #        (args.nfold - 1.) / args.nfold)
-                #MIN_SAMPLES_LEAF = range(
-                #        50, max_min_leaf, max(max_min_leaf / 30, 1))
-                #N_ESTIMATORS = range(1, 1001, 30)
+                max_min_leaf = int((sample_train.shape[0] / 2.) *
+                        (args.nfold - 1.) / args.nfold)
+                MIN_SAMPLES_LEAF = range(
+                        50, max_min_leaf, max(max_min_leaf / 30, 1))
+                N_ESTIMATORS = range(1, 1001, 30)
 
                 # values
-                N_ESTIMATORS = [16]
-                MIN_SAMPLES_LEAF = [200]
+                #N_ESTIMATORS = [1, 2, 4, 8, 16, 32, 64]
+                #MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
 
             # see top of file for grid search param constants
             grid_params = {
@@ -421,18 +420,6 @@ for category, cat_info in categories_controls:
                 print "Classification report: "
                 print "Tuned for 'precision' with optimal value: %0.3f" % precision_score(y_true, y_pred)
                 print classification_report(y_true, y_pred)
-            """
-            print sample_train
-            print labels_train
-            print sample_weight_train
-
-            clf = AdaBoostClassifier(
-                    DecisionTreeClassifier(
-                        min_samples_leaf=200),
-                    n_estimators=100,
-                    compute_importances=True)
-            clf.fit(sample_train, labels_train,
-                    sample_weight=sample_weight_train)
 
             if hasattr(clf, 'feature_importances_'):
                 importances = clf.feature_importances_
