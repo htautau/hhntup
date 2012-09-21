@@ -42,13 +42,13 @@ ROOT.gROOT.SetBatch(True)
 
 # local imports
 from utils import *
-from matplotlib import cm
 from samples import *
 import samples
 from background_estimation import qcd_ztautau_norm
 from classify import *
 from config import plots_dir
 from utils import *
+import variables
 from systematics import SYSTEMATICS
 
 # stdlib imports
@@ -56,21 +56,11 @@ import pickle
 import os
 from pprint import pprint
 
-# scikit-learn imports
-from sklearn.cross_validation import StratifiedKFold
-from sklearn.grid_search import GridSearchCV
-from sklearn.metrics import classification_report
-from sklearn.metrics import precision_score
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-
 # numpy imports
 import numpy as np
 
 # matplotlib imports
-from matplotlib import cm
 from matplotlib import pyplot as plt
-from matplotlib.ticker import IndexLocator, FuncFormatter
 
 # rootpy imports
 from rootpy.plotting import Hist
@@ -254,6 +244,14 @@ for category, cat_info in categories_controls:
 
     if 'train' in args.actions:
 
+        # scikit-learn imports
+        from sklearn.cross_validation import StratifiedKFold
+        from sklearn.grid_search import GridSearchCV
+        from sklearn.metrics import classification_report
+        from sklearn.metrics import precision_score
+        from sklearn.ensemble import AdaBoostClassifier
+        from sklearn.tree import DecisionTreeClassifier
+
         backgrounds = [
             qcd,
             others,
@@ -280,6 +278,7 @@ for category, cat_info in categories_controls:
         else:
             print "training a new classifier..."
             print "using these features:"
+            print
             for branch in branches:
                 print branch
 
@@ -304,6 +303,32 @@ for category, cat_info in categories_controls:
                 same_size_train=True,
                 same_size_test=False,
                 standardize=False)
+
+            print
+            print "plotting input variables as they are given to the BDT"
+            # draw plots of the input variables
+            for i, branch in enumerate(branches):
+                print "plotting %s ..." % branch
+                branch_data = sample_train[:,i]
+                if 'scale' in variables.VARIABLES[branch]:
+                    branch_data *= variables.VARIABLES[branch]['scale']
+                _min, _max = branch_data.min(), branch_data.max()
+                plt.figure()
+                plt.hist(branch_data[labels_train==0],
+                        bins=20, range=(_min, _max),
+                        weights=sample_weight_train[labels_train==0],
+                        label='Background', histtype='stepfilled',
+                        alpha=.5)
+                plt.hist(branch_data[labels_train==1],
+                        bins=20, range=(_min, _max),
+                        weights=sample_weight_train[labels_train==1],
+                        label='Signal', histtype='stepfilled', alpha=.5)
+                label = variables.VARIABLES[branch]['title']
+                if 'units' in variables.VARIABLES[branch]:
+                    label += ' [%s]' % variables.VARIABLES[branch]['units']
+                plt.xlabel(label)
+                plt.legend()
+                plt.savefig('train_var_%s_%s.png' % (category, branch))
 
             if args.cor:
                 # draw a linear correlation matrix

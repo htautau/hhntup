@@ -92,14 +92,14 @@ def cleanup():
 
 def correlations(signal, signal_weight,
                  background, background_weight,
-                 branches, channel):
+                 branches, category):
 
     # draw correlation plots
     names = [variables.VARIABLES[branch]['title'] for branch in branches]
     correlation_plot(signal, signal_weight, names,
-                     "correlation_signal_%s" % channel)
+                     "correlation_signal_%s" % category)
     correlation_plot(background, background_weight, names,
-                     "correlation_background_%s" % channel)
+                     "correlation_background_%s" % category)
 
 
 def get_samples(masses=None, modes=None, embedding=True):
