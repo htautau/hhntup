@@ -57,8 +57,9 @@ parser.add_argument('--train-categories', nargs='*', default=[],
         help='only train in these categories')
 parser.add_argument('--plots', nargs='*',
         help='only draw these plots. see the keys in variables.py')
-parser.add_argument('--cut', default=None, nargs='?',
-        help='extra cut to be applied globally')
+parser.add_argument('--plot-cut', default=None, nargs='?',
+        help='extra cut to be applied on the plots, but excluded from the '
+        'QCD/Z normaliation and training and classifier output')
 args = parser.parse_args()
 
 # root imports
@@ -161,9 +162,6 @@ for category, cat_info in categories_controls:
 
     figures[category] = {}
 
-    #cuts = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
-    cuts = Cut()
-
     qcd.scale = 1.
     ztautau.scale = 1.
 
@@ -186,6 +184,8 @@ for category, cat_info in categories_controls:
     ztautau.scale_error = ztautau_scale_error
 
     if 'plot' in args.actions:
+        cuts = Cut(args.plot_cut)
+
         for expr, var_info in VARIABLES.items():
 
             if category in args.controls and 'GGF' not in var_info['cats']:
@@ -197,6 +197,7 @@ for category, cat_info in categories_controls:
 
             print
             print "plotting %s in %s category" % (expr, category)
+            print cat_info['cuts'] & cuts
 
             bins = var_info['bins']
             min, max = var_info['range']
@@ -251,7 +252,7 @@ for category, cat_info in categories_controls:
                     model=bkg_hists,
                     signal=signal_hist,
                     name=var_info['title'],
-                    output_name=output_name,
+                    output_name=output_name + '_' + cuts.safe() if cuts else output_name,
                     category_name=cat_info['name'],
                     category=category,
                     units=var_info.get('units', None),
