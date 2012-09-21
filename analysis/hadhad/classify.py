@@ -1,4 +1,7 @@
 import numpy as np
+# for reproducibilty
+# especially for test/train set selection
+np.random.seed(1987) # my birth year ;)
 
 from matplotlib import cm
 from matplotlib import pyplot as plt
@@ -198,6 +201,7 @@ def make_classification(
         same_size_train=True,
         same_size_test=False,
         standardize=False,
+        remove_negative_train_weights=False,
         systematic='NOMINAL'):
 
     signal_train_arrs = []
@@ -251,6 +255,14 @@ def make_classification(
     background_weight_train = np.concatenate(background_weight_train_arrs)
     background_test = np.concatenate(background_test_arrs)
     background_weight_test = np.concatenate(background_weight_test_arrs)
+
+    if remove_negative_train_weights:
+        # remove samples from the training sample with a negative weight
+        signal_train = signal_train[signal_weight_train >= 0]
+        background_train = background_train[background_weight_train >= 0]
+
+        signal_weight_train = signal_weight_train[signal_weight_train >= 0]
+        background_weight_train = background_weight_train[background_weight_train >= 0]
 
     if max_sig_train is not None and max_sig_train < len(signal_train):
         subsample = np.random.permutation(max_sig_train)[:len(signal_train)]
@@ -351,4 +363,3 @@ def make_classification(
     return sample_train, sample_test,\
         sample_weight_train, sample_weight_test,\
         labels_train, labels_test
-

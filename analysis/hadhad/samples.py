@@ -9,10 +9,6 @@ import math
 import numpy as np
 from numpy.lib import recfunctions
 
-# for reproducibilty
-# especially for test/train set selection
-np.random.seed(1987) # my birth year ;)
-
 # pytables imports
 import tables
 
@@ -146,7 +142,7 @@ class Sample(object):
     WEIGHT_BRANCHES = [
         'mc_weight',
         'pileup_weight',
-        #'ggf_weight', # <= affects limits a lot!
+        'ggf_weight', # <= affects limits a lot!
         # effic high and low already accounted for in TAUBDT_UP/DOWN
         'tau1_efficiency_scale_factor',
         'tau2_efficiency_scale_factor',

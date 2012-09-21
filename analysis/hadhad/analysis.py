@@ -328,6 +328,7 @@ for category, cat_info in categories_controls:
                 norm_sig_to_bkg_test=False,
                 same_size_train=True,
                 same_size_test=False,
+                remove_negative_train_weights=True,
                 standardize=False)
 
             print
@@ -375,8 +376,9 @@ for category, cat_info in categories_controls:
             # grid search params
             if args.quick_train:
                 # quick search for testing
-                MIN_SAMPLES_LEAF = range(100, 120, 10)
-                N_ESTIMATORS = range(10, 15, 2)
+                N_ESTIMATORS = [1, 2, 4, 8, 16, 32, 64]
+                MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
+
             else:
                 # full search
                 max_min_leaf = int((sample_train.shape[0] / 2.) *
@@ -384,10 +386,6 @@ for category, cat_info in categories_controls:
                 MIN_SAMPLES_LEAF = range(
                         50, max_min_leaf, max(max_min_leaf / 30, 1))
                 N_ESTIMATORS = range(1, 1001, 30)
-
-                # values
-                #N_ESTIMATORS = [1, 2, 4, 8, 16, 32, 64]
-                #MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
 
             # see top of file for grid search param constants
             grid_params = {
