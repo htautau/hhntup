@@ -6,17 +6,14 @@ def count_tracks(tau, event):
     """
     2011 track recounting
     """
-    track = 0
-    track_core = 0
-
     nOuterKtTrack = 0
     threshold = 4.
 
     for trk in event.tracks:
 
-        dR = usilt.dR(tau.eta, tau.phi, trk.eta, trk.phi)
+        dR = utils.dR(tau.eta, tau.phi, trk.eta, trk.phi)
 
-        if (dR > 0.2 and dR < 0.6 and track.pt / 1000.0 > 0.5
+        if (dR > 0.2 and dR < 0.6 and trk.pt / 1000.0 > 0.5
             and abs(trk.d0_wrtPV) < 1.0
             and abs(trk.z0_wrtPV * sin(trk.theta)) < 1.5
             and (trk.nPixHits + trk.nPixHoles) > 1

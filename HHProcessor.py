@@ -46,7 +46,8 @@ from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.corrections import reweight_ggf
-
+from higgstautau.pileup import PileupReweight
+from higgstautau.hadhad.objects import define_objects
 from higgstautau.hadhad import track_counting
 
 from goodruns import GRL
@@ -194,7 +195,7 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             Triggers(
                 year=year,
-                old_skim=True,
+                old_skim=datatype == datasets.MC,
                 passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PriVertex(

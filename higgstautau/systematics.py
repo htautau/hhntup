@@ -601,7 +601,7 @@ class Systematics(EventFilter):
         if self.year == 2012:
             return self.passes_12(event)
         elif self.year == 2011:
-            return seld.passes_11(event)
+            return self.passes_11(event)
         else:
             raise ValueError("No MET defined for year %d" % self.year)
 
