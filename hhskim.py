@@ -81,7 +81,6 @@ class hhskim(ATLASStudent):
             xml_string.Write(self.metadata.treename)
             self.output.cd()
 
-
         # define the model of the output tree
         Model = SkimModel + TriggerMatching + MassModel + TauCorrections
 
@@ -320,7 +319,7 @@ class hhskim(ATLASStudent):
             # visible mass
             tree.tau_visible_mass = (tau1.fourvect + tau2.fourvect).M()
 
-            if year == 2011:
+            if datatype == datasets.MC and year == 2011:
                 tree.ggf_weight = reweight_ggf(event, self.metadata.name)
 
             tree.tau_selected.clear()
