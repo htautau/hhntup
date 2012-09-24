@@ -22,14 +22,17 @@ def read_scales(name='background_scales.cache'):
             SCALES = pickle.load(cache)
 
 
-def get_scales(category, embedded, verbose=True):
+def get_scales(category, embedded, param, verbose=True):
 
-    if has_category(category, embedded):
+    category = category.upper()
+    param = param.upper()
+    if has_category(category, embedded, param):
         qcd_scale, qcd_scale_error, \
-        ztautau_scale, ztautau_scale_error = SCALES[category][embedded]
+        ztautau_scale, ztautau_scale_error = SCALES[category][embedded][param]
         if verbose:
             print "using the embedding scale factors: %s" % str(embedded)
             print "scale factors for %s category" % category
+            print "fits were derived via %s parameters" % param
             print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
             print "    ztautau scale: %.3f +/- %.4f" % (
                     ztautau_scale, ztautau_scale_error)
@@ -39,25 +42,32 @@ def get_scales(category, embedded, verbose=True):
         return None
 
 
-def has_category(category, embedded):
+def has_category(category, embedded, param):
 
-    return category in SCALES and embedded in SCALES[category]
+    category = category.upper()
+    param = param.upper()
+    return (category in SCALES and
+            embedded in SCALES[category] and
+            param in SCALES[category][embedded])
 
 
-def set_scales(category, embedded,
+def set_scales(category, embedded, param,
         qcd_scale, qcd_scale_error,
         ztautau_scale, ztautau_scale_error):
 
     global MODIFIED
+    param = param.upper()
+    category = category.upper()
     print "setting the embedding scale factors: %s" % str(embedded)
     print "setting scale factors for %s category" % category
+    print "fits were derived via %s parameters" % param
     print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
     print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
     print
-    if has_category(category, embedded):
+    if has_category(category, embedded, param):
         qcd_scale_old, qcd_scale_error_old, \
         ztautau_scale_old, ztautau_scale_error_old = get_scales(
-                category, embedded, verbose=False)
+                category, embedded, param, verbose=False)
         print "scale factors were previously:"
         print "    qcd scale: %.3f +/- %.4f" % (
                 qcd_scale_old,
@@ -70,7 +80,7 @@ def set_scales(category, embedded,
         SCALES[category] = {}
     if embedded not in SCALES[category]:
         SCALES[category][embedded] = {}
-    SCALES[category][embedded] = (
+    SCALES[category][embedded][param] = (
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
     MODIFIED = True
@@ -87,15 +97,18 @@ if __name__ == '__main__':
 
     read_scales(args.cache)
     for category in SCALES.keys():
-        for embedding, (qcd_scale, qcd_scale_error,
-                ztautau_scale, ztautau_scale_error) in SCALES[category].items():
+        for embedding in SCALES[category].keys():
             if embedding != args.embedding:
-                continue
-            print "scale factors for embedding: %s" % str(embedding)
-            print "scale factors for %s category" % category
-            print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
-            print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
-            print
+                    continue
+            for param, (qcd_scale, qcd_scale_error,
+                    ztautau_scale, ztautau_scale_error) in \
+                    SCALES[category][embedding].items():
+                print "scale factors for embedding: %s" % str(embedding)
+                print "scale factors for %s category" % category
+                print "fits were derived via %s parameters" % param
+                print "    qcd scale: %.3f +/- %.4f" % (qcd_scale, qcd_scale_error)
+                print "    ztautau scale: %.3f +/- %.4f" % (ztautau_scale, ztautau_scale_error)
+                print
 else:
     import atexit
 

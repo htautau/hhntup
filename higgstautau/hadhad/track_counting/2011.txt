@@ -1,0 +1,38 @@
+//=========================
+// Track Counting
+//=========================
+
+int lead_track=0;
+int sublead_track=0;
+int lead_track_core=0;
+int sublead_track_core=0;
+
+for(int tau=0;tau<tau_index.size();tau++){
+    //START TRACK RECOUNTING
+    int index = tau_index.at(tau);
+    int nOuterKtTrack = 0;
+    float threshold = 4.;
+    for (int out=0; out<trk_phi->size(); out++) {
+        double dR = deltaR((*tau_phi)[index],(*trk_phi)[out],(*tau_eta)[index],(*trk_eta)[out]);
+        if (dR>0.2 && dR<0.6 && (*trk_pt)[out]/1000.0>0.5
+            && TMath::Abs((*trk_d0_wrtPV)[out])<1.0
+            && TMath::Abs((*trk_z0_wrtPV)[out]*TMath::Sin((*trk_theta)[out]))<1.5 
+            && ((*trk_nPixHits)[out] + (*trk_nPixHoles)[out])>1
+            && ((*trk_nPixHits)[out] + (*trk_nPixHoles)[out] +(*trk_nSCTHits)[out] + (*trk_nSCTHoles)[out])>6)
+        {
+            float iCheckKtTrack=0;		
+            for (int j=0; j<(*tau_track_atTJVA_n)[index]; j++) {
+                double dR1 = deltaR((*tau_track_atTJVA_phi)[index][j],(*trk_phi)[out],(*tau_track_atTJVA_eta)[index][j],(*trk_eta)[out]);
+                double ptdR1 = (*tau_track_atTJVA_pt)[index][j]*dR1/(*trk_pt)[out];
+                
+                if(ptdR1>iCheckKtTrack) iCheckKtTrack = ptdR1;
+            }
+            if(iCheckKtTrack < threshold ) nOuterKtTrack++;
+        }
+    }
+    int ntrack = nOuterKtTrack + tau_track_atTJVA_n->at(index);
+    if(tau==0) lead_track=ntrack;
+    if(tau==1) sublead_track=ntrack;
+    if(tau==0) lead_track_core=tau_track_atTJVA_n->at(index);
+    if(tau==1) sublead_track_core=tau_track_atTJVA_n->at(index);
+}	//END RECOUNTING

@@ -63,7 +63,7 @@ def draw_fit(
     stack.Add(bkg_hist)
     stack.Add(ztautau_hist)
     legend = Legend(4, leftmargin=.6)
-    legend.SetHeader(categories.CATEGORIES[category]['name'])
+    #legend.SetHeader(categories.CATEGORIES[category]['name'])
     legend.SetBorderSize(0)
     legend.AddEntry(qcd_hist, 'F')
     legend.AddEntry(bkg_hist, 'F')
@@ -138,31 +138,37 @@ def qcd_ztautau_norm(ztautau,
                      cuts=None,
                      bins=10,
                      mass_cut=110,
-                     draw_fit=False,
-                     use_cache=True):
+                     draw=False,
+                     use_cache=True,
+                     param='BDT'):
 
     is_embedded = isinstance(ztautau, samples.Embedded_Ztautau)
+    param = param.upper()
 
-    if use_cache and bkg_scales_cache.has_category(category, is_embedded):
-        return bkg_scales_cache.get_scales(category, is_embedded)
+    if use_cache and bkg_scales_cache.has_category(
+            category, is_embedded, param):
+        return bkg_scales_cache.get_scales(category, is_embedded, param)
 
     print "fitting scale factors for embedding: %s" % str(is_embedded)
     print "fitting scale factors for %s category" % category
-    min, max = .55, 1
-    expr = 'tau2_BDTJetScore:tau1_BDTJetScore'
-    fit_name = 'bdt'
-    xlabel = '#tau_{1} BDT Score'
-    ylabel = '#tau_{2} BDT Score'
 
-    #bins, min, max = 6, -0.5, 5.5
-    #expr = 'tau2_numTrack:tau1_numTrack'
-    #fit_name = 'track'
-    #xlabel = '#tau_{1} Number of Tracks'
-    #ylabel = '#tau_{2} Number of Tracks'
+    if param == 'BDT':
+        min, max = .55, 1
+        expr = 'tau2_BDTJetScore:tau1_BDTJetScore'
+        xlabel = '#tau_{1} BDT Score'
+        ylabel = '#tau_{2} BDT Score'
+    elif param == 'TRACK':
+        min, max = -0.5, 4.5
+        bins = 5 # ignore bins args above
+        expr = 'tau2_numTrack:tau1_numTrack'
+        xlabel = '#tau_{1} Number of Tracks'
+        ylabel = '#tau_{2} Number of Tracks'
+    else:
+        raise ValueError('No fit defined for %s parameters.' % param)
 
     ndim = 2
 
-    name = "%dd_%s_fit_%s" % (ndim, fit_name, category)
+    name = "%dd_%s_fit_%s" % (ndim, param, category)
 
     print "performing %d-dimensional fit using %s" % (ndim, expr)
     print "using %d bins on each axis" % bins
@@ -221,7 +227,7 @@ def qcd_ztautau_norm(ztautau,
             category, qcd_shape_region,
             cuts=control)
 
-    if draw_fit:
+    if draw:
         draw_fit(data_hist,
                  data_hist_control,
                  ztautau_hist,
@@ -283,7 +289,7 @@ def qcd_ztautau_norm(ztautau,
     qcd_scale *= factor
     ztautau_scale *= factor
 
-    if draw_fit:
+    if draw:
         draw_fit(data_hist,
                  data_hist_control,
                  ztautau_hist,
@@ -300,7 +306,7 @@ def qcd_ztautau_norm(ztautau,
                  ztautau_scale=ztautau_scale)
 
     bkg_scales_cache.set_scales(
-            category, is_embedded,
+            category, is_embedded, param,
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
 

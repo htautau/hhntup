@@ -31,6 +31,10 @@ parser.add_argument('--no-systematics', action='store_false',
 parser.add_argument('--mass-cut', type=int, default=110,
         help='the mass window cut. norms of Z and QCD are fit below this and '
         'the signal region of the classifier output is above this')
+parser.add_argument('--fit-param', choices=('bdt', 'track'), default='bdt',
+        help='parameters used to determine normalization of QCD and Z')
+parser.add_argument('--draw-fit', action='store_true', default=False,
+        help='draw the QCD/Z norm fit results')
 parser.add_argument('--nfold', type=int, default=5,
         help='the number of folds in the cross-validation')
 parser.add_argument('--clf-bins', dest='bins', type=int, default=10,
@@ -63,7 +67,6 @@ parser.add_argument('--plots', nargs='*',
 parser.add_argument('--plot-cut', default=None, nargs='?',
         help='extra cut to be applied on the plots, but excluded from the '
         'QCD/Z normaliation and training and classifier output')
-
 parser.add_argument('--plot-expr', default=None, nargs='?',
         help='expression to plot, instead of predefined ones in variables.py')
 parser.add_argument('--plot-name', default=None, nargs='?',
@@ -74,7 +77,6 @@ parser.add_argument('--plot-max', type=float, default=1, nargs='?',
         help='maximum of expr')
 parser.add_argument('--plot-bins', type=int, default=20, nargs='?',
         help='number of bins to plot expr in')
-
 parser.add_argument('--root', action='store_true', default=False,
         help='draw plots with ROOT. default is matplotlib')
 
@@ -194,7 +196,9 @@ for category, cat_info in categories_controls:
         qcd_shape_region=qcd_shape_region,
         mass_cut=args.mass_cut,
         bins=cat_info['fitbins'],
-        use_cache=args.use_fit_cache)
+        draw=args.draw_fit,
+        use_cache=args.use_fit_cache,
+        param=args.fit_param)
 
     qcd.scale = qcd_scale
     qcd.scale_error = qcd_scale_error
