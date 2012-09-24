@@ -56,6 +56,10 @@ class RecoTau(TreeModel):
     # overlap checking
     min_dr_jet = FloatCol(default=9999)
 
+    # track recounting
+    ntrack_core = IntCol()
+    ntrack_full = IntCol()
+
 
 class EventVariables(TreeModel):
 
@@ -213,6 +217,10 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)
             setattr(tree, 'tau%i_matched_collision' % i, tau.matched_collision)
             setattr(tree, 'tau%i_min_dr_jet' % i, tau.min_dr_jet)
+
+            # track recounting
+            setattr(tree, 'tau%i_ntrack_core' % i, tau.ntrack_core)
+            setattr(tree, 'tau%i_ntrack_full' % i, tau.ntrack_full)
 
 
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):

@@ -73,6 +73,10 @@ class TauFourMomentum(FourMomentum):
         self.matched_dR = 9999.
         self.matched_collision = False
 
+        # track recounting
+        ntrack_core = 0
+        ntrack_full = 0
+
         # overlap checking
         self.min_dr_jet = 9999.
 

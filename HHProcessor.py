@@ -42,6 +42,7 @@ from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.corrections import reweight_ggf
 from higgstautau.hadhad.corrections import TauTriggerEfficiency
+from higgstautau.hadhad import track_counting
 
 from goodruns import GRL
 import subprocess
@@ -132,24 +133,26 @@ class HHProcessor(ATLASStudent):
         onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
-        chain = TreeChain(self.metadata.treename,
-                         files=self.files,
-                         events=self.events,
-                         cache=True,
-                         cache_size=10000000,
-                         learn_entries=30,
-                         onfilechange=onfilechange)
+        chain = TreeChain(
+                self.metadata.treename,
+                files=self.files,
+                events=self.events,
+                cache=True,
+                cache_size=10000000,
+                learn_entries=30,
+                onfilechange=onfilechange)
 
         # create output tree
         self.output.cd()
         tree = Tree(name='higgstautauhh', model=OutputModel)
 
-        copied_variables = ['actualIntPerXing',
-                            'averageIntPerXing',
-                            'number_of_good_vertices',
-                            'RunNumber',
-                            'EventNumber',
-                            'lbn']
+        copied_variables = [
+                'actualIntPerXing',
+                'averageIntPerXing',
+                'number_of_good_vertices',
+                'RunNumber',
+                'EventNumber',
+                'lbn']
 
         tree.set_buffer(
                 chain.buffer,
@@ -172,7 +175,6 @@ class HHProcessor(ATLASStudent):
                 year=YEAR,
                 datatype=self.metadata.datatype,
                 verbose=VERBOSE),
-            TauIDLoose(2),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
@@ -241,10 +243,10 @@ class HHProcessor(ATLASStudent):
         chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
 
         # define tree objects
-        tree.define_object(name='tau1', prefix='tau1_')
-        tree.define_object(name='tau2', prefix='tau2_')
-        tree.define_object(name='jet1', prefix='jet1_')
-        tree.define_object(name='jet2', prefix='jet2_')
+        #tree.define_object(name='tau1', prefix='tau1_')
+        #tree.define_object(name='tau2', prefix='tau2_')
+        #tree.define_object(name='jet1', prefix='jet1_')
+        #tree.define_object(name='jet2', prefix='jet2_')
 
         """ Associations not currently implemented in rootpy
         chain.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
@@ -571,6 +573,12 @@ class HHProcessor(ATLASStudent):
                                 fakerate_tool.getScaleFactorUncertainty(
                                     tau.pt, wp,
                                     trig % tau.trigger_match_thresh, False))
+
+            # track recounting
+            tau1.ntrack_core, tau1.ntrack_full = track_counting.count_tracks(
+                    tau1, event)
+            tau2.ntrack_core, tau2.ntrack_full = track_counting.count_tracks(
+                    tau2, event)
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
