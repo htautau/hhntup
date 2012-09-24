@@ -53,6 +53,9 @@ parser.add_argument('--controls', nargs='*', default=CONTROLS.keys(),
         help='which controls to draw plots in')
 parser.add_argument('--only-controls', action='store_true', default=False,
         help='only draw control plots. no category plots.')
+parser.add_argument('--forest-feature-ranking',
+        action='store_true', default=False,
+        help='Use a random forest to perform a feature ranking.')
 parser.add_argument('--train-categories', nargs='*', default=[],
         help='only train in these categories')
 parser.add_argument('--plots', nargs='*',
@@ -60,6 +63,18 @@ parser.add_argument('--plots', nargs='*',
 parser.add_argument('--plot-cut', default=None, nargs='?',
         help='extra cut to be applied on the plots, but excluded from the '
         'QCD/Z normaliation and training and classifier output')
+
+parser.add_argument('--plot-expr', default=None, nargs='?',
+        help='expression to plot, instead of predefined ones in variables.py')
+parser.add_argument('--plot-name', default=None, nargs='?',
+        help='name of expr')
+parser.add_argument('--plot-min', type=float, default=0, nargs='?',
+        help='minimum of expr')
+parser.add_argument('--plot-max', type=float, default=1, nargs='?',
+        help='maximum of expr')
+parser.add_argument('--plot-bins', type=int, default=20, nargs='?',
+        help='number of bins to plot expr in')
+
 args = parser.parse_args()
 
 # root imports
@@ -186,7 +201,17 @@ for category, cat_info in categories_controls:
     if 'plot' in args.actions:
         cuts = Cut(args.plot_cut)
 
-        for expr, var_info in VARIABLES.items():
+        if args.plot_expr is not None:
+            VARS = {tuple(args.plot_expr.split(',')):
+                    {'title': args.plot_name,
+                     'range': (args.plot_min, args.plot_max),
+                     'bins': args.plot_bins,
+                     'cats': ['GGF'],
+                     'filename': 'expr_' + args.plot_name.replace(' ', '_')}}
+        else:
+            VARS = VARIABLES
+
+        for expr, var_info in VARS.items():
 
             if category in args.controls and 'GGF' not in var_info['cats']:
                 continue
@@ -273,9 +298,10 @@ for category, cat_info in categories_controls:
         # scikit-learn imports
         from sklearn.cross_validation import StratifiedKFold
         from sklearn.grid_search import GridSearchCV
+        from sklearn.ensemble.grid_search import BoostGridSearchCV
         from sklearn.metrics import classification_report
         from sklearn.metrics import precision_score
-        from sklearn.ensemble import AdaBoostClassifier
+        from sklearn.ensemble import AdaBoostClassifier, ExtraTreesClassifier
         from sklearn.tree import DecisionTreeClassifier
 
         backgrounds = [
@@ -331,6 +357,18 @@ for category, cat_info in categories_controls:
                 remove_negative_train_weights=True,
                 standardize=False)
 
+
+            if args.cor:
+                # draw a linear correlation matrix
+                samples.correlations(
+                    signal=sample_test[labels_test==1],
+                    signal_weight=sample_weight_test[labels_test==1],
+                    background=sample_test[labels_test==0],
+                    background_weight=sample_weight_test[labels_test==0],
+                    branches=branches,
+                    category=category)
+                continue
+
             print
             print "plotting input variables as they are given to the BDT"
             # draw plots of the input variables
@@ -357,60 +395,115 @@ for category, cat_info in categories_controls:
                 plt.legend()
                 plt.savefig('train_var_%s_%s.png' % (category, branch))
 
-            if args.cor:
-                # draw a linear correlation matrix
-                samples.correlations(
-                    signal=sample_test[labels_test==1],
-                    signal_weight=sample_weight_test[labels_test==1],
-                    background=sample_test[labels_test==0],
-                    background_weight=sample_weight_test[labels_test==0],
-                    branches=branches,
-                    category=category)
+            print "plotting sample weights ..."
+            _min, _max = sample_weight_train.min(), sample_weight_train.max()
+            plt.figure()
+            plt.hist(sample_weight_train[labels_train==0],
+                    bins=20, range=(_min, _max),
+                    label='Background', histtype='stepfilled',
+                    alpha=.5)
+            plt.hist(sample_weight_train[labels_train==1],
+                    bins=20, range=(_min, _max),
+                    label='Signal', histtype='stepfilled', alpha=.5)
+            plt.xlabel('sample weight')
+            plt.legend()
+            plt.savefig('train_sample_weight_%s.png' % category)
+
+            if args.forest_feature_ranking:
+                # perform a feature ranking with random forests
+                # Build a forest and compute the feature importances
+                forest = ExtraTreesClassifier(
+                        n_estimators=100,
+                        n_jobs=-1,
+                        max_depth=3,
+                        min_samples_leaf=10,
+                        compute_importances=True,
+                        random_state=0)
+
+                forest.fit(sample_train, labels_train,
+                        sample_weight=sample_weight_train)
+                importances = forest.feature_importances_
+                indices = np.argsort(importances)[::-1]
+
+                latex_names = [variables.VARIABLES[branch]['title']
+                        for branch in branches]
+
+                # Print the feature ranking
+                print "random forest feature ranking:"
+
+                n_features = len(branches)
+
+                for f in xrange(n_features):
+                    print "%d. %s (%f)" % (
+                            f + 1, branches[f], importances[indices[f]])
+
+                # plot the feature importances of the trees and of the forest
+                plt.figure()
+                plt.title("Feature importances")
+
+                for tree in forest.estimators_:
+                    plt.plot(xrange(n_features),
+                            tree.feature_importances_[indices], "r")
+
+                plt.plot(xrange(n_features), importances[indices], "b")
+                plt.xticks(range(len(latex_names)), latex_names, rotation=-30,
+                          rotation_mode='anchor', ha='left', va='top')
+                plt.savefig('ranking_random_forest_%s.png' % category,
+                        bbox_inches='tight')
                 continue
 
             # train a new BDT
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(),
-                    compute_importances=True)
+                    compute_importances=True,
+                    learn_rate=.5)
 
             # grid search params
             if args.quick_train:
                 # quick search for testing
-                N_ESTIMATORS = [1, 2, 4, 8, 16, 32, 64]
-                MIN_SAMPLES_LEAF = [10, 20, 50, 100, 200, 500, 1000]
-
+                MIN_SAMPLES_LEAF = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+                N_ESTIMATORS = [
+                        1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
+                grid_params = {
+                    'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
+                    'n_estimators': N_ESTIMATORS
+                }
+                grid_clf = GridSearchCV(
+                        clf, grid_params,
+                        # can use default ClassifierMixin score
+                        #score_func=precision_score,
+                        cv = StratifiedKFold(labels_train, args.nfold),
+                        n_jobs=-1)
             else:
                 # full search
-                max_min_leaf = int((sample_train.shape[0] / 2.) *
+                min_leaf_high = int((sample_train.shape[0] / 2.) *
                         (args.nfold - 1.) / args.nfold)
+                min_leaf_low = max(10, int(min_leaf_high / 30.))
+                min_leaf_step = max((min_leaf_high - min_leaf_low) / 100, 1)
                 MIN_SAMPLES_LEAF = range(
-                        50, max_min_leaf, max(max_min_leaf / 30, 1))
-                N_ESTIMATORS = range(1, 1001, 30)
+                        min_leaf_low, min_leaf_high, min_leaf_step)
+                MAX_N_ESTIMATORS = 1000
+                grid_params = {
+                    'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
+                }
+                grid_clf = BoostGridSearchCV(
+                        clf, grid_params,
+                        max_n_estimators=MAX_N_ESTIMATORS,
+                        # can use default ClassifierMixin score
+                        #score_func=precision_score,
+                        cv = StratifiedKFold(labels_train, args.nfold),
+                        n_jobs=-1)
 
-            # see top of file for grid search param constants
-            grid_params = {
-                'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
-                'n_estimators': N_ESTIMATORS
-            }
-            #clf = SVC(probability=True, scale_C=True)
-            # first grid search min_samples_leaf for the maximum n_estimators
-            grid_clf = GridSearchCV(
-                    clf, grid_params,
-                    # can use default ClassifierMixin score
-                    score_func=precision_score,
-                    cv = StratifiedKFold(labels_train, args.nfold),
-                    n_jobs=-1)
             grid_clf.fit(
                     sample_train, labels_train,
                     sample_weight=sample_weight_train)
             clf = grid_clf.best_estimator_
             grid_scores = grid_clf.grid_scores_
 
-            print "Classification report for the best estimator: "
-            print clf
-            y_true, y_pred = labels_test, clf.predict(sample_test)
-            print "Tuned for 'precision' with optimal value: %0.3f" % precision_score(y_true, y_pred)
-            print classification_report(y_true, y_pred)
+            print "Best score: %f" % grid_clf.best_score_
+            print "Best Parameters:"
+            print grid_clf.best_params_
+
             # plot a grid of the scores
             plot_grid_scores(
                 grid_scores,
@@ -426,6 +519,7 @@ for category, cat_info in categories_controls:
                     'trees'},
                 name=category)
 
+            """
             if 'base_estimator__min_samples_leaf' in grid_params:
                 # scale up the min-leaf and retrain on the whole set
                 min_samples_leaf = grid_clf.best_estimator_.base_estimator.min_samples_leaf
@@ -440,10 +534,7 @@ for category, cat_info in categories_controls:
                 print
                 print "After scaling up min_leaf"
                 print clf
-                y_true, y_pred = labels_test, clf.predict(sample_test)
-                print "Classification report: "
-                print "Tuned for 'precision' with optimal value: %0.3f" % precision_score(y_true, y_pred)
-                print classification_report(y_true, y_pred)
+            """
 
             if hasattr(clf, 'feature_importances_'):
                 importances = clf.feature_importances_
