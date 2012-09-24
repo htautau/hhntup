@@ -96,7 +96,6 @@ class HHProcessor(ATLASStudent):
         This is the one function that all "ATLASStudent"s must implement.
         """
         datatype = self.metadata.datatype
-        year = self.metadata.year
 
         # fake rate scale factor tool
         fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
@@ -195,8 +194,8 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             Triggers(
                 year=year,
-                passthrough=datatype == datasets.EMBED,
                 old_skim=True,
+                passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PriVertex(
                 count_funcs=count_funcs),
