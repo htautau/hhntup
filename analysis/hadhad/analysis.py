@@ -75,6 +75,9 @@ parser.add_argument('--plot-max', type=float, default=1, nargs='?',
 parser.add_argument('--plot-bins', type=int, default=20, nargs='?',
         help='number of bins to plot expr in')
 
+parser.add_argument('--root', action='store_true', default=False,
+        help='draw plots with ROOT. default is matplotlib')
+
 args = parser.parse_args()
 
 # root imports
@@ -286,7 +289,8 @@ for category, cat_info in categories_controls:
                     show_qq=False,
                     model_colour_map=None,
                     dir=PLOTS_DIR,
-                    systematics=SYSTEMATICS if args.systematics else None)
+                    systematics=SYSTEMATICS if args.systematics else None,
+                    root=args.root)
             figures[category][expr] = fig
 
     if category not in args.categories:
