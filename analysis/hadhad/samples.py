@@ -69,10 +69,11 @@ def get_file(student, hdf=False):
         return FILES[filename]
     if hdf:
         student_file = tables.openFile(
-                os.path.join(NTUPLE_PATH, student, filename))
+                os.path.join(NTUPLE_PATH, student + '-current', filename))
     else:
         student_file = ropen(
-                os.path.join(NTUPLE_PATH, student, filename), 'READ')
+                os.path.join(NTUPLE_PATH, student + '-current', filename),
+                'READ')
     FILES[filename] = student_file
     return student_file
 
