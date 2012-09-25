@@ -158,9 +158,9 @@ def qcd_ztautau_norm(ztautau,
         xlabel = '#tau_{1} BDT Score'
         ylabel = '#tau_{2} BDT Score'
     elif param == 'TRACK':
-        min, max = -0.5, 4.5
-        bins = 5 # ignore bins args above
-        expr = 'tau2_numTrack:tau1_numTrack'
+        min, max = -0.5, 5.5
+        bins = 6 # ignore bins args above
+        expr = 'tau2_ntrack_full:tau1_ntrack_full'
         xlabel = '#tau_{1} Number of Tracks'
         ylabel = '#tau_{2} Number of Tracks'
     else:

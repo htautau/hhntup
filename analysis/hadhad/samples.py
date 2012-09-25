@@ -58,7 +58,7 @@ SS = Cut('tau1_charge * tau2_charge == 1')
 TEMPFILE = ropen('tempfile.root', 'recreate')
 
 
-def get_file(student, hdf=False):
+def get_file(student, hdf=False, suffix='-current'):
 
     if hdf:
         ext = '.h5'
@@ -69,10 +69,10 @@ def get_file(student, hdf=False):
         return FILES[filename]
     if hdf:
         student_file = tables.openFile(
-                os.path.join(NTUPLE_PATH, student + '-current', filename))
+                os.path.join(NTUPLE_PATH, student + suffix, filename))
     else:
         student_file = ropen(
-                os.path.join(NTUPLE_PATH, student + '-current', filename),
+                os.path.join(NTUPLE_PATH, student + suffix, filename),
                 'READ')
     FILES[filename] = student_file
     return student_file
