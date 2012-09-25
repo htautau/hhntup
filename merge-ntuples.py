@@ -4,18 +4,20 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('-s', '--student', required=True)
-parser.add_argument('files', nargs='+')
+parser.add_argument('path')
 args = parser.parse_args()
 
 import re
-import sys
+import os
+from glob import glob
 from rootpy.io import open as ropen
 from rootpy.tree import Tree
 
 ds_pattern = re.compile('%s\.(?P<name>.+)\.root$' % (args.student))
 
-with ropen(args.student + '.root', 'RECREATE') as outfile:
-    for filename in args.files:
+with ropen(os.path.join(args.path, args.student) + '.root',
+        'RECREATE') as outfile:
+    for filename in glob(os.path.join(args.path, '*.root')):
         match = re.search(ds_pattern, filename)
         if not match:
             print "%s is not a valid filename" % filename
@@ -31,6 +33,7 @@ with ropen(args.student + '.root', 'RECREATE') as outfile:
             outtree.OptimizeBaskets()
             outtree.SetName(name)
             outtree.Write()
+            # will need to be upated for the next skim
             outcutflow = infile.cutflow.Clone(name=name + '_cutflow')
             outcutflow_event = infile.cutflow_event.Clone(name=name + '_cutflow_event')
             outfile.cd()
