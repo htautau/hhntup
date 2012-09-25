@@ -283,7 +283,7 @@ for category, cat_info in categories_controls:
                     data=data_hist,
                     model=bkg_hists,
                     signal=signal_hist,
-                    name=var_info['title'],
+                    name=var_info['root'] if args.root else var_info['title'],
                     output_name=output_name + '_' + cuts.safe() if cuts else output_name,
                     category_name=cat_info['name'],
                     category=category,

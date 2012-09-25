@@ -60,12 +60,13 @@ class MCTauProcessor(ATLASStudent):
     def work(self):
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
-        tree = TreeChain(self.metadata.treename,
-                         files=self.files,
-                         events=self.events,
-                         cache=True,
-                         cache_size=10000000,
-                         learn_entries=30)
+        tree = TreeChain(
+                self.metadata.treename,
+                files=self.files,
+                events=self.events,
+                cache=True,
+                cache_size=10000000,
+                learn_entries=30)
 
         self.output.cd()
 
@@ -78,12 +79,15 @@ class MCTauProcessor(ATLASStudent):
                        RecoTau.prefix('tau2_') +
                        Event))
 
-        tree.define_collection(name="mc", prefix="mc_", size="mc_n",
-                               mix=MCParticle)
-        tree.define_collection(name="taus", prefix="tau_", size="tau_n",
-                               mix=TauFourMomentum)
+        tree.define_collection(
+                name="mc", prefix="mc_", size="mc_n",
+                mix=MCParticle)
+        tree.define_collection(
+                name="taus", prefix="tau_", size="tau_n",
+                mix=TauFourMomentum)
 
-        is_visible = lambda fourvect: fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5
+        is_visible = lambda fourvect: (
+                fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
 
         def closest_reco_tau(taus, mctau, dR=0.2):
 

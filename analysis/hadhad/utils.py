@@ -18,8 +18,11 @@ import rootpy.root2matplotlib as rplt
 from rootpy.math.stats.qqplot import qqplot
 
 
-#http://stackoverflow.com/questions/616645/how-do-i-duplicate-sys-stdout-to-a-log-file-in-python/3423392#3423392
 class Tee(object):
+    """
+    http://stackoverflow.com/questions/616645/
+    how-do-i-duplicate-sys-stdout-to-a-log-file-in-python/3423392#3423392
+    """
     def __init__(self, name, mode):
         self.file = open(name, mode)
         self.stdout = sys.stdout
@@ -210,12 +213,12 @@ def draw(model,
     if root:
         # plot model stack with ROOT
         hist_pad.cd()
-        stack = HistStack()
+        model_stack = HistStack()
         for hist in model:
             hist.SetLineWidth(0)
             hist.format = 'hist'
-            stack.Add(hist)
-        stack.Draw()
+            model_stack.Add(hist)
+        model_stack.Draw()
     else:
         model_bars = rplt.bar(model, linewidth=0,
                 stacked=True, axes=hist_ax,
@@ -363,20 +366,35 @@ def draw(model,
         if show_ratio:
             total_model = sum(model)
             numerator = data - total_model
-            error = Hist.divide(numerator, total_model, option='B')
-            error.linecolor = 'black'
-            error.linewidth = 1
-            error.fillstyle = 'hollow'
-            error *= 100
+            error_hist = Hist.divide(numerator, total_model, option='B')
+            error_hist.linecolor = 'black'
+            error_hist.linewidth = 1
+            error_hist.fillstyle = 'hollow'
+            error_hist *= 100
             if root:
-                pass
+                fig.cd()
+                ratio_pad = Pad("ratio", "ratio",
+                    0, 0, 1, rect_ratio[1] + rect_ratio[3])
+                ratio_pad.SetBottomMargin(rect_ratio[1])
+                ratio_pad.SetLeftMargin(rect_ratio[0])
+                ratio_pad.SetRightMargin(1. - rect_ratio[2] - rect_ratio[0])
+                ratio_pad.SetTopMargin(0)
+                ratio_pad.Draw()
+                ratio_pad.cd()
+                error_hist.Draw('hist')
+                error_hist.yaxis.SetLimits(-100, 100)
+                error_hist.yaxis.SetRangeUser(-100, 100)
+                xmin = model_stack.xaxis.GetXmin()
+                xmax = model_stack.xaxis.GetXmax()
+                error_hist.xaxis.SetLimits(xmin, xmax)
+                error_hist.xaxis.SetRangeUser(xmin, xmax)
             else:
                 ratio_ax = plt.axes(rect_ratio)
                 ratio_ax.axhline(y=0, color='black')
                 ratio_ax.axhline(y=50, color='black', linestyle='--')
                 ratio_ax.axhline(y=-50, color='black', linestyle='--')
                 rplt.hist(
-                        error,
+                        error_hist,
                         axes=ratio_ax,
                         histtype='stepfilled')
                 ratio_ax.set_ylim((-100., 100.))
@@ -406,25 +424,31 @@ def draw(model,
                         high_band_full[i] = 0.
                         low_band_full[i] = 0.
                     else:
-                        high_band_full[i] = abs(error[i]) * math.sqrt(
+                        high_band_full[i] = abs(error_hist[i]) * math.sqrt(
                                 (high_band_top[i] / numerator[i])**2 +
                                 (high_band[i] / total_model[i])**2)
-                        low_band_full[i] = abs(error[i]) * math.sqrt(
+                        low_band_full[i] = abs(error_hist[i]) * math.sqrt(
                                 (low_band_top[i] / numerator[i])**2 +
                                 (low_band[i] / total_model[i])**2)
                 if root:
                     pass
                 else:
                     rplt.fill_between(
-                        error + high_band_full,
-                        error - low_band_full,
+                        error_hist + high_band_full,
+                        error_hist - low_band_full,
                         edgecolor='black',
                         linewidth=0,
                         facecolor=(0,0,0,0),
                         hatch='\\\\\\\\',
                         axes=ratio_ax)
     if root:
-        pass
+        hist_pad.cd()
+        model_legend = Legend(len(model), pad=hist_pad,
+                leftmargin=0.05, rightmargin=0.5)
+        for hist in model:
+            model_legend.AddEntry(hist, 'F')
+        model_legend.SetHeader(category_name)
+        model_legend.Draw()
     else:
         model_legend = hist_ax.legend(
                 reversed(model_bars), [h.title for h in reversed(model)],
@@ -434,7 +458,13 @@ def draw(model,
         format_legend(model_legend)
 
     if root:
-        pass
+        hist_pad.cd()
+        right_legend = Legend(2 if signal is not None else 1, pad=hist_pad)
+        right_legend.AddEntry(data, 'lep')
+        if signal is not None:
+            # TODO support list of signal
+            right_legend.AddEntry(signal, 'F')
+        right_legend.Draw()
     else:
         right_legend_bars = []
         right_legend_titles =[]
@@ -473,24 +503,33 @@ def draw(model,
         ylabel = 'Events'
 
     if root:
-        pass
+        model_stack.yaxis.SetTitle('Events')
+        base_hist = model_stack
+        if show_ratio:
+            base_hist = error_hist
+        base_hist.xaxis.SetTitle(label)
     else:
         hist_ax.set_ylabel(ylabel, fontsize=20, position=(0., 1.), va='top')
-
         base_ax = hist_ax
         if show_ratio:
             base_ax = ratio_ax
         base_ax.set_xlabel(label, fontsize=20, position=(1., 0.), ha='right')
-
         root_axes(hist_ax, no_xlabels=show_ratio)
         if show_ratio:
             root_axes(ratio_ax, vscale=1 if show_qq else vscale * .4)
         if show_qq:
             root_axes(qq_ax, vscale=vscale)
 
-        if range is not None:
+    if range is not None:
+        if root:
+            model_stack.xaxis.SetLimits(*range)
+            model_stack.xaxis.SetRangeUser(*range)
+        else:
             hist_ax.set_xlim(range)
-            if show_ratio:
+        if show_ratio:
+            if root:
+                pass
+            else:
                 ratio_ax.set_xlim(range)
 
     filename = os.path.join(dir,

@@ -116,7 +116,7 @@ CONTROLS = {
         'code': None,
         'cuts': MET & Cut('dR_tau1_tau2<2.8') & Z_PEAK & ID_MEDIUM_TIGHT,
         'fitbins': 10,
-        'qcd_shape_region': '!OS',
+        'qcd_shape_region': 'SS',
         'target_region': 'OS',
     }
 }
