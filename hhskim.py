@@ -161,7 +161,8 @@ class hhskim(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
-                verbose=VERBOSE),
+                verbose=VERBOSE,
+                count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
