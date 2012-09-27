@@ -144,7 +144,8 @@ def get_systematics(channel, year, sample):
     sys_samples = None
     for sample_type, sample_info in SAMPLES[channel][year].items():
         if sample in sample_info['samples']:
-            terms = sample_info['systematics']
+            terms = [tuple(term.split(',')) for term in
+                    sample_info['systematics']]
         else:
             continue
         if 'systematics_samples' in sample_info and sample in \
@@ -158,6 +159,7 @@ def get_sample(channel, year, sample_class, name):
 
     channel = channel.lower()
     year = year % 1000
+    sample_class = sample_class.lower()
     if sample_class == 'signal':
         sample_class = SIGNALS[channel][year]
     elif sample_class == 'background':

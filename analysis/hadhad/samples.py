@@ -406,25 +406,33 @@ class MC(Sample):
     ]
 
     def __init__(self,
+            year=2011,
             db=DB_HH,
             systematics=True,
             **kwargs):
 
         super(MC, self).__init__(**kwargs)
+        self.year = year
 
         if isinstance(self, Background):
             sample_key = self.__class__.__name__.lower()
+            sample_info = samples_db.get_sample(
+                    'hadhad', year, 'background', sample_key)
+            self.name = sample_info['name']
+            self._label = sample_info['latex']
+            self._label_root = sample_info['root']
+            self.color = sample_info['color']
+            self.samples = sample_info['samples']
 
         elif isinstance(self, Signal):
             # samples already defined in Signal subclass
             # see Higgs class below
+            assert len(self.samples) > 0
+
         else:
             raise TypeError(
                 'MC sample %s does not inherit from Signal or Background' %
                 self.__class__.__name__)
-        self.name
-        self._label
-        self.samples
 
         self.db = db
         self.datasets = []
@@ -455,6 +463,9 @@ class MC(Sample):
 
             if self.systematics:
 
+                systematics_terms, systematics_samples = \
+                    samples_db.get_systematics('hadhad', self.year, name)
+
                 unused_terms = MC.SYSTEMATICS[:]
 
                 if systematics_terms:
@@ -476,8 +487,8 @@ class MC(Sample):
 
                         unused_terms.remove(sys_term)
 
-                if systematics_samples and name in systematics_samples:
-                    for sample_name, sys_term in systematics_samples[name].items():
+                if systematics_samples:
+                    for sample_name, sys_term in systematics_samples.items():
 
                         print "%s -> %s %s" % (name, sample_name, sys_term)
 
@@ -873,7 +884,7 @@ class Higgs(MC, Signal):
         'wh': ('WH', 'Pythia'),
     }
 
-    def __init__(self,
+    def __init__(self, year=2011,
             mode=None, modes=None,
             mass=None, masses=None, **kwargs):
 
@@ -928,7 +939,7 @@ class Higgs(MC, Signal):
                 self.masses.append(mass)
                 self.modes.append(mode)
 
-        super(Higgs, self).__init__(**kwargs)
+        super(Higgs, self).__init__(year=year, **kwargs)
 
 
 class QCD(Sample):
