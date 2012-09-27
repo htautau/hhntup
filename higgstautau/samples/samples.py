@@ -13,7 +13,7 @@ except ImportError:
     # it's available on PyPI
     from ordereddict import OrderedDict
 
-from fnmatch import fnmatch
+import fnmatch
 import itertools
 
 
@@ -76,49 +76,58 @@ for channel in [o for o in os.listdir(__HERE) if
         BACKGROUNDS[channel] = {}
         SAMPLES[channel] = {}
 
-    for year in [int(o) % 1000
+    for year in [o
             for o in os.listdir(os.path.join(__HERE, channel)) if
             os.path.isdir(os.path.join(__HERE, channel, o))]:
 
-        SIGNALS_YML[channel][year] = os.path.join(__HERE, channel, year,
+        _year = int(year) % 1000
+        SIGNALS_YML[channel][_year] = os.path.join(__HERE, channel, year,
                 'signals.yml')
-        BACKGROUNDS_YML[channel][year] = os.path.join(__HERE, channel, year,
+        BACKGROUNDS_YML[channel][_year] = os.path.join(__HERE, channel, year,
                 'backgrounds.yml')
-        SAMPLES_YML[channel][year] = os.path.join(__HERE, channel, year,
+        SAMPLES_YML[channel][_year] = os.path.join(__HERE, channel, year,
                 'samples.yml')
 
-        SIGNALS[channel][year] = yaml.load(open(SIGNALS_YML[channel]),
+        SIGNALS[channel][_year] = yaml.load(
+                open(SIGNALS_YML[channel][_year]),
                 OrderedDictYAMLLoader)
-        BACKGROUNDS[channel][year] = yaml.load(open(BACKGROUNDS_YML[channel]),
+        BACKGROUNDS[channel][_year] = yaml.load(
+                open(BACKGROUNDS_YML[channel][_year]),
                 OrderedDictYAMLLoader)
-        SAMPLES[channel][year] = yaml.load(open(SAMPLES_YML[channel]))
+        SAMPLES[channel][_year] = yaml.load(
+                open(SAMPLES_YML[channel][_year]))
+
+
+def filter_with_patterns(samples, patterns):
+
+    if not patterns:
+        return samples
+    if not isinstance(patterns, (list, tuple)):
+        patterns = [patterns]
+    matches = [fnmatch.filter(samples, pattern) for pattern in patterns]
+    return list(set(itertools.chain(*matches)))
 
 
 def iter_samples(channel, year, patterns=None, systematics=False):
 
     channel = channel.lower()
     year = year % 1000
-    for sample_class in (SIGNALS[channel][year], BACKGROUNDS[channel][year]):
-        for sample_type, sample_info in sample_class.items():
-            if patterns:
-                match = False
-                for pattern in patterns:
-                    if fnmatch(sample_type, pattern):
-                        match=True
-                        break
-                if not match:
-                    continue
-            if systematics:
-                if 'systematics' not in sample_info:
-                    continue
-                syst = SYSTEMATICS[channel][sample_info['systematics']]
-                yield sample_info['samples'][:], [tuple(var.split(',')) for var in syst]
-            else:
-                samp = sample_info['samples'][:]
-                if 'systematics_samples' in sample_info:
-                    for sample, sys_samp in sample_info['systematics_samples'].items():
-                        samp += sys_samp.keys()
-                yield samp
+    for sample_type, sample_info in SAMPLES[channel][year].items():
+        if systematics:
+            samples = filter_with_patterns(sample_info['samples'][:], patterns)
+            if not samples:
+                continue
+            yield (samples,
+                   [tuple(var.split(',')) for var in
+                    sample_info['systematics']])
+        else:
+            samples = sample_info['samples'][:]
+            if 'systematics_samples' in sample_info:
+                for sample, sys_samp in sample_info['systematics_samples'].items():
+                    samples += sys_samp.keys()
+            samples = filter_with_patterns(samples, patterns)
+            if samples:
+                yield samples
 
 
 def samples(channel, year, patterns=None):
