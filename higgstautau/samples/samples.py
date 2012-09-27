@@ -59,30 +59,46 @@ class OrderedDictYAMLLoader(yaml.Loader):
 
 SIGNALS_YML = {}
 BACKGROUNDS_YML = {}
-SYSTEMATICS_YML = {}
+SAMPLES_YML = {}
 
 SIGNALS = {}
 BACKGROUNDS = {}
-SYSTEMATICS = {}
+SAMPLES = {}
 
 for channel in [o for o in os.listdir(__HERE) if
         os.path.isdir(os.path.join(__HERE, o))]:
 
-    SIGNALS_YML[channel] = os.path.join(__HERE, channel, 'signals.yml')
-    BACKGROUNDS_YML[channel] = os.path.join(__HERE, channel, 'backgrounds.yml')
-    SYSTEMATICS_YML[channel] = os.path.join(__HERE, channel, 'systematics.yml')
+    if channel not in SIGNALS_YML:
+        SIGNALS_YML[channel] = {}
+        BACKGROUNDS_YML[channel] = {}
+        SAMPLES_YML[channel] = {}
+        SIGNALS[channel] = {}
+        BACKGROUNDS[channel] = {}
+        SAMPLES[channel] = {}
 
-    SIGNALS[channel] = yaml.load(open(SIGNALS_YML[channel]),
-            OrderedDictYAMLLoader)
-    BACKGROUNDS[channel] = yaml.load(open(BACKGROUNDS_YML[channel]),
-            OrderedDictYAMLLoader)
-    SYSTEMATICS[channel] = yaml.load(open(SYSTEMATICS_YML[channel]))
+    for year in [int(o) % 1000
+            for o in os.listdir(os.path.join(__HERE, channel)) if
+            os.path.isdir(os.path.join(__HERE, channel, o))]:
+
+        SIGNALS_YML[channel][year] = os.path.join(__HERE, channel, year,
+                'signals.yml')
+        BACKGROUNDS_YML[channel][year] = os.path.join(__HERE, channel, year,
+                'backgrounds.yml')
+        SAMPLES_YML[channel][year] = os.path.join(__HERE, channel, year,
+                'samples.yml')
+
+        SIGNALS[channel][year] = yaml.load(open(SIGNALS_YML[channel]),
+                OrderedDictYAMLLoader)
+        BACKGROUNDS[channel][year] = yaml.load(open(BACKGROUNDS_YML[channel]),
+                OrderedDictYAMLLoader)
+        SAMPLES[channel][year] = yaml.load(open(SAMPLES_YML[channel]))
 
 
-def iter_samples(channel, patterns=None, systematics=False):
+def iter_samples(channel, year, patterns=None, systematics=False):
 
     channel = channel.lower()
-    for sample_class in (SIGNALS[channel], BACKGROUNDS[channel]):
+    year = year % 1000
+    for sample_class in (SIGNALS[channel][year], BACKGROUNDS[channel][year]):
         for sample_type, sample_info in sample_class.items():
             if patterns:
                 match = False
@@ -105,9 +121,10 @@ def iter_samples(channel, patterns=None, systematics=False):
                 yield samp
 
 
-def samples(channel, patterns=None):
+def samples(channel, year, patterns=None):
 
-    return list(itertools.chain.from_iterable(iter_samples(channel, patterns, False)))
+    return list(itertools.chain.from_iterable(
+        iter_samples(channel, year, patterns, False)))
 
 
 if __name__ == '__main__':

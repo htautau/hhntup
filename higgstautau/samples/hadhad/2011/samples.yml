@@ -6,6 +6,12 @@ embedded:
         - TAUBDT_DOWN
     samples:
         - 'embed-hh-isol-mfsim'
+    systematics_samples:
+        'embed-hh-isol-mfsim':
+            'embed-hh-isol-mfsup': MFS_UP
+            'embed-hh-isol-mfsdn': MFS_DOWN
+            'embed-hh-noisol-mfsim': ISOL_DOWN
+            'embed-hh-tightisol-mfsim': ISOL_UP
 mc:
     systematics:
         - JES_UP,TES_UP

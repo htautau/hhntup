@@ -29,12 +29,6 @@ embedded_ztautau:
         - 'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
-    systematics_samples:
-        'embed-hh-isol-mfsim':
-            'embed-hh-isol-mfsup': MFS_UP
-            'embed-hh-isol-mfsdn': MFS_DOWN
-            'embed-hh-noisol-mfsim': ISOL_DOWN
-            'embed-hh-tightisol-mfsim': ISOL_UP
 ewk:
     name: EW
     latex: EW
