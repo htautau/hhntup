@@ -104,7 +104,7 @@ class HHProcessor(ATLASStudent):
 
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
-        if self.metadata.datatype == datasets.MC:
+        if datatype == datasets.MC:
             # only create truth branches for MC
             OutputModel += TrueTauBlock
 
@@ -133,7 +133,7 @@ class HHProcessor(ATLASStudent):
             # update the trigger config maps on every file change
             onfilechange.append((update_trigger_config, (trigger_config,)))
 
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             merged_grl = GRL()
 
             def update_grl(student, grl, name, file, tree):
@@ -142,7 +142,7 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
         else:
             merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
@@ -508,7 +508,7 @@ class HHProcessor(ATLASStudent):
             tree.tau2_x = tau2_x
 
             # Match jets to VBF partons
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 if 'VBF' in self.metadata.name:
                     # get partons (already sorted by eta in hepmc)
                     parton1, parton2 = hepmc.get_VBF_partons(event)
@@ -524,7 +524,7 @@ class HHProcessor(ATLASStudent):
                                     setattr(tree, 'jet%i_matched' % i, True)
 
             # Truth-matching
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 # match only with visible true taus
                 event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
@@ -616,11 +616,17 @@ class HHProcessor(ATLASStudent):
             RecoTauBlock.set(event, tree, tau1, tau2)
 
             # set the event weights
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 tree.mc_weight = event.mc_event_weight
                 if YEAR == 2011:
                     tree.ggf_weight = reweight_ggf(event, self.metadata.name)
                     # no ggf reweighting for 2012 MC
+            elif datatype == datasets.EMBED:
+                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
+                # correct truth filter efficiency
+                tree.mc_weight = event.mcevt_weight[0][0]
+                # In 2011 mc_event_weight == mcevt_weight[0][0]
+                # for embedding. But not so in 2012...
 
             # fill output ntuple
             tree.Fill()
@@ -629,7 +635,7 @@ class HHProcessor(ATLASStudent):
         tree.FlushBaskets()
         tree.Write()
 
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
             xml_string.Write('lumi')
         merged_cutflow.Write()

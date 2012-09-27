@@ -1,8 +1,7 @@
 ztautau:
     name: Ztautau
-    systematics: mc
     latex: '$Z/\gamma^{*}$'
-    math: 'Z/\gamma^{*}'
+    root: 'Z/#gamma^{*}'
     samples:
         - 'AlpgenJimmyZtautauNp0_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp1_pt20.mc11c'
@@ -19,9 +18,8 @@ ztautau:
         - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
 embedded_ztautau:
     name: Ztautau
-    systematics: embedded
     latex: '$Z/\gamma^{*}$ (embedded)'
-    math: 'Z/\gamma^{*}'
+    root: 'Z/#gamma^{*} (embedded)'
     samples:
         - 'embed-hh-isol-mfsim'
         
@@ -39,9 +37,8 @@ embedded_ztautau:
             'embed-hh-tightisol-mfsim': ISOL_UP
 ewk:
     name: EW
-    systematics: mc
     latex: EW
-    math: EW
+    root: EW
     samples:
         - 'AlpgenJimmyZmumuNp0_pt20.mc11c'
         - 'AlpgenJimmyZmumuNp1_pt20.mc11c'
@@ -93,9 +90,8 @@ ewk:
         - 'AlpgenJimmyWenuNp5_pt20.mc11c'
 top:
     name: Top
-    systematics: mc
     latex: Top
-    math: Top
+    root: Top
     samples:
         - 'st_schan_enu_AcerMC.mc11c'
         - 'st_schan_munu_AcerMC.mc11c'
@@ -108,9 +104,8 @@ top:
         - 'AcerMC_Wt.mc11c'
 diboson:
     name: Diboson
-    systematics: mc
     latex: Diboson
-    math: Diboson
+    root: Diboson
     samples:
         - 'gg2WW0240_JIMMY_WW_enuenu.mc11c'
         - 'gg2WW0240_JIMMY_WW_enumunu.mc11c'
