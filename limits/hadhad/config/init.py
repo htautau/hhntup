@@ -3,7 +3,7 @@
 categories = ['ggf', 'boosted', 'vbf']
 masses = range(100, 155, 5)
 lumi = '1.'
-lumi_rel_err = '0.018'
+lumi_rel_err = '0.039'
 
 template_channel = ''.join(open('template_channel.xml', 'r').readlines())
 template_combination = ''.join(open('template_combination.xml', 'r').readlines())

@@ -58,7 +58,7 @@ SS = Cut('tau1_charge * tau2_charge == 1')
 TEMPFILE = ropen('tempfile.root', 'recreate')
 
 
-def get_file(student, hdf=False, suffix='-current'):
+def get_file(student, hdf=False, suffix=''):
 
     if hdf:
         ext = '.h5'
@@ -406,13 +406,26 @@ class MC(Sample):
     ]
 
     def __init__(self,
-            systematics=True,
-            systematics_terms=None,
-            systematics_samples=None,
             db=DB_HH,
+            systematics=True,
             **kwargs):
 
         super(MC, self).__init__(**kwargs)
+
+        if isinstance(self, Background):
+            sample_key = self.__class__.__name__.lower()
+
+        elif isinstance(self, Signal):
+            # samples already defined in Signal subclass
+            # see Higgs class below
+        else:
+            raise TypeError(
+                'MC sample %s does not inherit from Signal or Background' %
+                self.__class__.__name__)
+        self.name
+        self._label
+        self.samples
+
         self.db = db
         self.datasets = []
         self.systematics = systematics
@@ -802,118 +815,52 @@ class MC(Sample):
 
 
 class Ztautau:
+
     pass
 
 
 class MC_Ztautau(MC, Ztautau, Background):
 
-    def __init__(self, color='#00a4ff', **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['hadhad']['ztautau']
-        self.name = 'Ztautau'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
         self.scale_error = 0.
         super(MC_Ztautau, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+                *args, **kwargs)
 
 
 class Embedded_Ztautau(MC, Ztautau, Background):
 
-    def __init__(self, color='#00a4ff', **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['hadhad']['embedded_ztautau']
-        self.name = 'Ztautau'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        systematics_samples = yml['systematics_samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
         self.scale_error = 0.
         super(Embedded_Ztautau, self).__init__(
-                color=color,
-                systematics_samples=systematics_samples,
-                systematics_terms=systematics_terms,
-                **kwargs)
+                *args, **kwargs)
 
 
 class EWK(MC, Background):
 
-    def __init__(self, color='#ff9f71', **kwargs):
-
-        yml = samples_db.BACKGROUNDS['hadhad']['ewk']
-        self.name = 'EWK'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(EWK, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Top(MC, Background):
 
-    def __init__(self, color='#0000ff', **kwargs):
-
-        yml = samples_db.BACKGROUNDS['hadhad']['top']
-        self.name = 'Top'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Top, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Diboson(MC, Background):
 
-    def __init__(self, color='#ffd075', **kwargs):
-
-        yml = samples_db.BACKGROUNDS['hadhad']['diboson']
-        self.name = 'Diboson'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Diboson, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Others(MC, Background):
 
-    def __init__(self, color='#ff7700', **kwargs):
-
-        yml_diboson = samples_db.BACKGROUNDS['hadhad']['diboson']
-        yml_top = samples_db.BACKGROUNDS['hadhad']['top']
-        yml_ewk = samples_db.BACKGROUNDS['hadhad']['ewk']
-        self.samples = (yml_diboson['samples'] +
-                        yml_top['samples'] +
-                        yml_ewk['samples'])
-        self._label = 'Others'
-        self.name = 'Others'
-        syst = samples_db.SYSTEMATICS['hadhad']['mc']
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Others, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
-
+    pass
 
 class Higgs(MC, Signal):
 
@@ -981,11 +928,7 @@ class Higgs(MC, Signal):
                 self.masses.append(mass)
                 self.modes.append(mode)
 
-        syst = samples_db.SYSTEMATICS['hadhad']['mc']
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Higgs, self).__init__(
-                systematics_terms=systematics_terms,
-                **kwargs)
+        super(Higgs, self).__init__(**kwargs)
 
 
 class QCD(Sample):

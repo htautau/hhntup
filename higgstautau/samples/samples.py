@@ -136,6 +136,39 @@ def samples(channel, year, patterns=None):
         iter_samples(channel, year, patterns, False)))
 
 
+def get_systematics(channel, year, sample):
+
+    channel = channel.lower()
+    year = year % 1000
+    terms = None
+    sys_samples = None
+    for sample_type, sample_info in SAMPLES[channel][year].items():
+        if sample in sample_info['samples']:
+            terms = sample_info['systematics']
+        else:
+            continue
+        if 'systematics_samples' in sample_info and sample in \
+                sample_info['systematics_samples']:
+            sys_samples = sample_info['systematics_samples'][sample]
+        return terms, sys_samples
+    raise ValueError("sample %s is not listed in samples.yml" % sample)
+
+
+def get_sample(channel, year, sample_class, name):
+
+    channel = channel.lower()
+    year = year % 1000
+    if sample_class == 'signal':
+        sample_class = SIGNALS[channel][year]
+    elif sample_class == 'background':
+        sample_class = BACKGROUNDS[channel][year]
+    else:
+        raise ValueError('sample class %s is not defined' % sample_class)
+    if name in sample_class:
+        return sample_class[name]
+    raise ValueError('sample %s is not defined' % name)
+
+
 if __name__ == '__main__':
 
     from higgstautau.datasets import Database
