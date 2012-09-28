@@ -191,23 +191,20 @@ for category, cat_info in categories_controls:
 
     # determine normalization of QCD and Ztautau
     # in each category separately
-    qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = qcd_ztautau_norm(
+    qcd_ztautau_norm(
         ztautau=ztautau,
-        backgrounds=[others],
+        others=others,
+        qcd=qcd,
         data=data,
         category=category,
         target_region=target_region,
-        qcd_shape_region=qcd_shape_region,
         mass_cut=args.mass_cut,
         bins=cat_info['fitbins'],
         draw=args.draw_fit,
         use_cache=args.use_fit_cache,
-        param=args.fit_param)
-
-    qcd.scale = qcd_scale
-    qcd.scale_error = qcd_scale_error
-    ztautau.scale = ztautau_scale
-    ztautau.scale_error = ztautau_scale_error
+        param=args.fit_param,
+        systematics=SYSTEMATICS if args.systematics else None,
+        root=args.root)
 
     if 'plot' in args.actions:
         cuts = Cut(args.plot_cut)
@@ -295,7 +292,6 @@ for category, cat_info in categories_controls:
                     range=var_info['range'],
                     show_ratio=True,
                     show_qq=False,
-                    model_colour_map=None,
                     dir=PLOTS_DIR,
                     systematics=SYSTEMATICS if args.systematics else None,
                     root=args.root)

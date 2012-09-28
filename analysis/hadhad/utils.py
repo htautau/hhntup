@@ -102,8 +102,8 @@ def draw(model,
          signal_scale=1.,
          units=None,
          range=None,
-         model_colour_map=cm.winter,
-         signal_colour_map=cm.autumn,
+         model_colour_map=None,
+         signal_colour_map=None,
          show_ratio=False,
          show_qq=False,
          output_formats=None,
@@ -120,6 +120,9 @@ def draw(model,
         show_ratio=False
         show_qq=False
 
+    figheight = baseheight = 6.
+    figwidth = basewidth = width
+
     vscale = 1.
     left_margin = 0.16
     bottom_margin = 0.16
@@ -130,9 +133,6 @@ def draw(model,
 
     width = 1. - right_margin - left_margin
     height = 1. - top_margin - bottom_margin
-
-    figheight = baseheight = 6.
-    figwidth = basewidth = width
 
     ratio_abs_height = 1.975
     qq_abs_height = 6.
@@ -283,7 +283,7 @@ def draw(model,
         qq_ax.set_xlim((gg_graph.xedgesl(0), gg_graph.xedgesh(-1)))
         qq_ax.set_ylim((min(y_low), max(y_up)))
 
-    if systematics is not None:
+    if systematics:
         # draw systematics band
         # add separate variations in quadrature
         # also include stat error in quadrature
@@ -403,7 +403,7 @@ def draw(model,
                 #ratio_ax.yaxis.tick_right()
                 ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
                         fontsize=20, position=(0., 1.), va='top')
-            if systematics is not None:
+            if systematics:
                 # plot band on ratio plot
                 # uncertainty on top is data + model
                 high_band_top = high_band.Clone()

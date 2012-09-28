@@ -19,7 +19,7 @@ from higgstautau.decorators import cached_property, memoize_method
 from higgstautau import samples as samples_db
 
 # rootpy imports
-from rootpy.plotting import Hist, Canvas, HistStack
+from rootpy.plotting import Hist, Hist2D, Canvas, HistStack
 from rootpy.io import open as ropen
 from rootpy.tree import Tree, Cut
 from rootpy.utils import asrootpy
@@ -289,6 +289,22 @@ class Sample(object):
                 systematic=systematic)
         return np.concatenate(arrays)
 
+    def draw(self, expr, category, region, bins, min, max, cuts=None):
+
+        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
+        self.draw_into(hist, expr, category, region, cuts=cuts)
+        return hist
+
+    def draw2d(self, expr, category, region,
+            xbins, xmin, xmax,
+            ybins, ymin, ymax,
+            cuts=None):
+
+        hist = Hist2D(xbins, xmin, xmax, ybins, ymin, ymax,
+                title=self.label, **self.hist_decor)
+        self.draw_into(hist, expr, category, region, cuts=cuts)
+        return hist
+
 
 class Data(Sample):
 
@@ -303,12 +319,6 @@ class Data(Sample):
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
         self.name = 'Data'
-
-    def draw(self, expr, category, region, bins, min, max, cuts=None):
-
-        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
-        self.draw_into(hist, expr, category, region, cuts=cuts)
-        return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 
@@ -411,7 +421,6 @@ class MC(Sample):
             systematics=True,
             **kwargs):
 
-        super(MC, self).__init__(**kwargs)
         self.year = year
 
         if isinstance(self, Background):
@@ -421,7 +430,8 @@ class MC(Sample):
             self.name = sample_info['name']
             self._label = sample_info['latex']
             self._label_root = sample_info['root']
-            self.color = sample_info['color']
+            if 'color' in sample_info and 'color' not in kwargs:
+                kwargs['color'] = sample_info['color']
             self.samples = sample_info['samples']
 
         elif isinstance(self, Signal):
@@ -433,6 +443,8 @@ class MC(Sample):
             raise TypeError(
                 'MC sample %s does not inherit from Signal or Background' %
                 self.__class__.__name__)
+
+        super(MC, self).__init__(**kwargs)
 
         self.db = db
         self.datasets = []
@@ -536,12 +548,6 @@ class MC(Sample):
                 (MC_Ztautau, Embedded_Ztautau)):
             l += r' ($\sigma_{SM} \times %g$)' % self.scale
         return l
-
-    def draw(self, expr, category, region, bins, min, max, cuts=None):
-
-        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
-        self.draw_into(hist, expr, category, region, cuts=cuts)
-        return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 
@@ -873,6 +879,7 @@ class Others(MC, Background):
 
     pass
 
+
 class Higgs(MC, Signal):
 
     MASS_POINTS = range(100, 155, 5)
@@ -958,12 +965,6 @@ class QCD(Sample):
         self.scale = 1.
         self.scale_error = 0.
         self.shape_region = shape_region
-
-    def draw(self, expr, category, region, bins, min, max, cuts=None):
-
-        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
-        self.draw_into(hist, expr, category, region, cuts=cuts)
-        return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 

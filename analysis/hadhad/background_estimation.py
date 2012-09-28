@@ -11,7 +11,7 @@ from rootpy.plotting import Hist, Hist2D, HistStack, Legend, Canvas
 import numpy as np
 from scipy.optimize import fmin_l_bfgs_b
 
-from utils import set_colours
+from utils import set_colours, draw
 import categories
 import bkg_scales_cache
 from config import plots_dir
@@ -23,24 +23,24 @@ class FitError(Exception):
 
 
 def draw_fit(
-        data_hist,
-        data_control_hist,
-        ztautau_hist,
-        ztautau_control_hist,
-        bkg_hist,
-        bkg_control_hist,
+        expr, bins,
+        xmin, xmax,
+        ymin, ymax,
+        model,
+        data,
         category,
+        region,
         name,
-        ndim=1,
-        formats=('png', 'eps', 'pdf'),
-        xlabel=None,
-        ylabel=None,
-        model_func=None,
-        qcd_scale=1,
-        ztautau_scale=1):
+        output_name,
+        output_formats=('png', 'eps', 'pdf'),
+        root=False,
+        systematics=None,
+        cuts=None,
+        after=False):
 
     PLOTS_DIR = plots_dir(__file__)
 
+    """
     bkg_hist = bkg_hist.ravel()
     bkg_control_hist = bkg_control_hist.ravel()
 
@@ -56,8 +56,46 @@ def draw_fit(
     qcd_hist = (data_control_hist
                 - ztautau_control_hist
                 - bkg_control_hist) * qcd_scale
-    qcd_hist.title = 'QCD'
 
+    qcd_hist.title = 'QCD Multi-jet'
+    """
+
+    model_hists = []
+    for sample in model:
+        hist2d = sample.draw2d(expr, category, region,
+                bins, xmin, xmax, bins, ymin, ymax, cuts)
+        hist = hist2d.ravel()
+        if hasattr(hist2d, 'systematics'):
+            hist.systematics = {}
+            for term, _hist in hist2d.systematics.items():
+                hist.systematics[term] = _hist.ravel()
+        model_hists.append(hist)
+
+    data_hist2d = data.draw2d(expr, category, region,
+            bins, xmin, xmax, bins, ymin, ymax, cuts)
+    data_hist = data_hist2d.ravel()
+    if hasattr(data_hist2d, 'systematics'):
+        data_hist.systematics = {}
+        for term, hist in data_hist2d.systematics.items():
+            data_hist.systematics[term] = hist.ravel()
+
+    if after:
+        output_name += '_after'
+
+    draw(model=model_hists,
+        data=data_hist,
+        name=name,
+        category_name=category,
+        category=category,
+        show_ratio=True,
+        systematics=systematics,
+        root=root,
+        dir=PLOTS_DIR,
+        output_formats=output_formats,
+        output_name=output_name)
+
+
+    """
     c = Canvas()
     hists = [qcd_hist, bkg_hist, ztautau_hist]
     set_colours(hists)
@@ -133,27 +171,38 @@ def draw_fit(
     c.Draw()
     for format in formats:
         c.SaveAs(os.path.join(PLOTS_DIR, "%s.%s" % (name, format)))
+    """
 
-
-def qcd_ztautau_norm(ztautau,
-                     backgrounds,
-                     data,
-                     category,
-                     target_region,
-                     qcd_shape_region,
-                     cuts=None,
-                     bins=10,
-                     mass_cut=110,
-                     draw=False,
-                     use_cache=True,
-                     param='BDT'):
+def qcd_ztautau_norm(
+        ztautau,
+        others,
+        qcd,
+        data,
+        category,
+        target_region,
+        cuts=None,
+        bins=10,
+        mass_cut=110,
+        draw=False,
+        use_cache=True,
+        param='BDT',
+        systematics=None,
+        root=False):
 
     is_embedded = isinstance(ztautau, samples.Embedded_Ztautau)
     param = param.upper()
 
     if use_cache and bkg_scales_cache.has_category(
             category, is_embedded, param):
-        return bkg_scales_cache.get_scales(category, is_embedded, param)
+        qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error = \
+                 bkg_scales_cache.get_scales(category, is_embedded, param)
+        qcd.scale = qcd_scale
+        qcd.scale_error = qcd_scale_error
+        ztautau.scale = ztautau_scale
+        ztautau.scale_error = ztautau_scale_error
+        return
+
+    qcd_shape_region = qcd.shape_region
 
     print "fitting scale factors for embedding: %s" % str(is_embedded)
     print "fitting scale factors for %s category" % category
@@ -164,19 +213,21 @@ def qcd_ztautau_norm(ztautau,
         expr = 'tau2_BDTJetScore:tau1_BDTJetScore'
         xlabel = '#tau_{1} BDT Score'
         ylabel = '#tau_{2} BDT Score'
+        name = 'BDT Score Grid'
     elif param == 'TRACK':
-        xmin, xmax = -0.5, 5.5
-        ymin, ymax = -0.5, 5.5
-        bins = 6 # ignore bins args above
+        xmin, xmax = 1, 6
+        ymin, ymax = 1, 6
+        bins = 5 # ignore bins args above
         expr = 'tau2_ntrack_full:tau1_ntrack_full'
         xlabel = '#tau_{1} Number of Tracks'
         ylabel = '#tau_{2} Number of Tracks'
+        name = 'Number of Tracks Grid'
     else:
         raise ValueError('No fit defined for %s parameters.' % param)
 
     ndim = 2
 
-    name = "%dd_%s_fit_%s" % (ndim, param, category)
+    output_name = "%dd_%s_fit_%s" % (ndim, param, category)
 
     print "performing %d-dimensional fit using %s" % (ndim, expr)
     print "using %d bins on each axis" % bins
@@ -192,14 +243,14 @@ def qcd_ztautau_norm(ztautau,
     else:
         hist = Hist2D(bins, xmin, xmax, bins, ymin, ymax, name='fit_%s' % category)
 
-    ztautau_hist = hist.Clone(title='Ztautau')
-    ztautau_hist_control = hist.Clone(title='Ztautau')
+    ztautau_hist = hist.Clone(title=ztautau.label)
+    ztautau_hist_control = hist.Clone(title=ztautau.label)
 
-    bkg_hist = hist.Clone(title='Other Bkg')
-    bkg_hist_control = hist.Clone(title='Other Bkg')
+    bkg_hist = hist.Clone(title=others.label)
+    bkg_hist_control = hist.Clone(title=others.label)
 
-    data_hist = hist.Clone(title='Data')
-    data_hist_control = hist.Clone(title='Data')
+    data_hist = hist.Clone(title=data.label)
+    data_hist_control = hist.Clone(title=data.label)
 
     ztautau.draw_into(
             ztautau_hist,
@@ -213,15 +264,15 @@ def qcd_ztautau_norm(ztautau,
             category, qcd_shape_region,
             cuts=control)
 
-    for b in backgrounds:
-        b.draw_into(
-                bkg_hist, expr,
-                category, target_region,
-                cuts=control)
-        b.draw_into(
-                bkg_hist_control, expr,
-                category, qcd_shape_region,
-                cuts=control)
+    others.draw_into(
+            bkg_hist, expr,
+            category, target_region,
+            cuts=control)
+
+    others.draw_into(
+            bkg_hist_control, expr,
+            category, qcd_shape_region,
+            cuts=control)
 
     data.draw_into(
             data_hist,
@@ -236,17 +287,23 @@ def qcd_ztautau_norm(ztautau,
             cuts=control)
 
     if draw:
-        draw_fit(data_hist,
-                 data_hist_control,
-                 ztautau_hist,
-                 ztautau_hist_control,
-                 bkg_hist,
-                 bkg_hist_control,
-                 category,
-                 name=name,
-                 xlabel=xlabel,
-                 ylabel=ylabel,
-                 ndim=ndim)
+        draw_fit(
+                expr, bins,
+                xmin, xmax,
+                ymin, ymax,
+                model=[
+                    qcd,
+                    others,
+                    ztautau],
+                data=data,
+                category=category,
+                region=target_region,
+                output_name=output_name,
+                name=name,
+                after=False,
+                systematics=systematics,
+                cuts=control,
+                root=root)
 
     class Model(object):
 
@@ -297,25 +354,31 @@ def qcd_ztautau_norm(ztautau,
     qcd_scale *= factor
     ztautau_scale *= factor
 
+    qcd.scale = qcd_scale
+    qcd.scale_error = qcd_scale_error
+    ztautau.scale = ztautau_scale
+    ztautau.scale_error = ztautau_scale_error
+
     if draw:
-        draw_fit(data_hist,
-                 data_hist_control,
-                 ztautau_hist,
-                 ztautau_hist_control,
-                 bkg_hist,
-                 bkg_hist_control,
-                 category,
-                 name=name,
-                 xlabel=xlabel,
-                 ylabel=ylabel,
-                 model_func=model_func,
-                 ndim=ndim,
-                 qcd_scale=qcd_scale,
-                 ztautau_scale=ztautau_scale)
+        draw_fit(
+                expr, bins,
+                xmin, xmax,
+                ymin, ymax,
+                model=[
+                    qcd,
+                    others,
+                    ztautau],
+                data=data,
+                category=category,
+                region=target_region,
+                name=name,
+                output_name=output_name,
+                after=True,
+                systematics=systematics,
+                cuts=control,
+                root=root)
 
     bkg_scales_cache.set_scales(
             category, is_embedded, param,
             qcd_scale, qcd_scale_error,
             ztautau_scale, ztautau_scale_error)
-
-    return qcd_scale, qcd_scale_error, ztautau_scale, ztautau_scale_error
