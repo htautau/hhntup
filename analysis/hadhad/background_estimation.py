@@ -41,16 +41,22 @@ def draw_fit(
 
     PLOTS_DIR = plots_dir(__file__)
 
-    ztautau_hist = ztautau_hist.Clone()
+    bkg_hist = bkg_hist.ravel()
+    bkg_control_hist = bkg_control_hist.ravel()
+
+    ztautau_hist = ztautau_hist.ravel()
     ztautau_hist *= ztautau_scale
 
-    ztautau_control_hist = ztautau_control_hist.Clone()
+    ztautau_control_hist = ztautau_control_hist.ravel()
     ztautau_control_hist *= ztautau_scale
+
+    data_hist = data_hist.ravel()
+    data_control_hist = data_control_hist.ravel()
 
     qcd_hist = (data_control_hist
                 - ztautau_control_hist
                 - bkg_control_hist) * qcd_scale
-    qcd_hist.SetTitle('QCD')
+    qcd_hist.title = 'QCD'
 
     c = Canvas()
     hists = [qcd_hist, bkg_hist, ztautau_hist]
@@ -65,12 +71,12 @@ def draw_fit(
     legend = Legend(4, leftmargin=.6)
     #legend.SetHeader(categories.CATEGORIES[category]['name'])
     legend.SetBorderSize(0)
-    legend.AddEntry(qcd_hist, 'F')
-    legend.AddEntry(bkg_hist, 'F')
     legend.AddEntry(ztautau_hist, 'F')
-    legend.AddEntry(data_hist, 'F')
+    legend.AddEntry(bkg_hist, 'F')
+    legend.AddEntry(qcd_hist, 'F')
 
-    if ndim == 2:
+    if False:
+        legend.AddEntry(data_hist, 'F')
         stack.Draw('lego1 0')
         data_hist.Draw('lego 0 same')
 
@@ -85,9 +91,9 @@ def draw_fit(
             stack.GetYaxis().SetTitle(ylabel)
             stack.GetYaxis().SetTitleOffset(2.5)
     else:
-
+        legend.AddEntry(data_hist, 'LEP')
         stack.Draw('hist E1')
-        data_hist.Draw('E1 same')
+        data_hist.Draw('same E1')
 
         axis_max = max(stack.maximum(), data_hist.maximum())
 
@@ -113,9 +119,9 @@ def draw_fit(
         qcd_scale_error = model_func.GetParError(0)
         ztautau_scale = model_func.GetParameter('Ztautau_scale')
         ztautau_scale_error = model_func.GetParError(1)
-        fit_stats1 = TLatex(-.9, .8, '#frac{#chi^{2}}{dof} = %.3f' % (chi2 / ndf))
-        fit_stats2 = TLatex(-.9, .6, 'QCD Scale = %.3f #pm %.3f' % (qcd_scale, qcd_scale_error))
-        fit_stats3 = TLatex(-.9, .4, 'Ztautau Scale = %.3f #pm %.3f' % (ztautau_scale, ztautau_scale_error))
+        fit_stats1 = TLatex(.2, .8, '#frac{#chi^{2}}{dof} = %.3f' % (chi2 / ndf))
+        fit_stats2 = TLatex(.2, .6, 'QCD Scale = %.3f #pm %.3f' % (qcd_scale, qcd_scale_error))
+        fit_stats3 = TLatex(.2, .4, 'Ztautau Scale = %.3f #pm %.3f' % (ztautau_scale, ztautau_scale_error))
         fit_stats1.Draw()
         fit_stats2.Draw()
         fit_stats3.Draw()
@@ -153,12 +159,14 @@ def qcd_ztautau_norm(ztautau,
     print "fitting scale factors for %s category" % category
 
     if param == 'BDT':
-        min, max = .55, 1
+        xmin, xmax = .6, 1
+        ymin, ymax = .55, 1
         expr = 'tau2_BDTJetScore:tau1_BDTJetScore'
         xlabel = '#tau_{1} BDT Score'
         ylabel = '#tau_{2} BDT Score'
     elif param == 'TRACK':
-        min, max = -0.5, 5.5
+        xmin, xmax = -0.5, 5.5
+        ymin, ymax = -0.5, 5.5
         bins = 6 # ignore bins args above
         expr = 'tau2_ntrack_full:tau1_ntrack_full'
         xlabel = '#tau_{1} Number of Tracks'
@@ -182,7 +190,7 @@ def qcd_ztautau_norm(ztautau,
     if ndim == 1:
         hist = Hist(bins, min, max, name='fit_%s' % category)
     else:
-        hist = Hist2D(bins, min, max, bins, min, max, name='fit_%s' % category)
+        hist = Hist2D(bins, xmin, xmax, bins, ymin, ymax, name='fit_%s' % category)
 
     ztautau_hist = hist.Clone(title='Ztautau')
     ztautau_hist_control = hist.Clone(title='Ztautau')

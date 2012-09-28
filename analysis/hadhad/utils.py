@@ -109,7 +109,8 @@ def draw(model,
          output_formats=None,
          dir='.',
          systematics=None,
-         root=False):
+         root=False,
+         width=8.):
 
     if output_formats is None:
         output_formats = ('png', 'eps', 'pdf')
@@ -131,7 +132,7 @@ def draw(model,
     height = 1. - top_margin - bottom_margin
 
     figheight = baseheight = 6.
-    figwidth = basewidth = 8.
+    figwidth = basewidth = width
 
     ratio_abs_height = 1.975
     qq_abs_height = 6.

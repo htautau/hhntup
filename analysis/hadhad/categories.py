@@ -65,7 +65,7 @@ CATEGORIES = {
         'name': r'$\tau_{had}\tau_{had}$: Boosted Category',
         'code': categories.CATEGORY_BOOSTED,
         'cuts': COMMON_CUTS & ID_MEDIUM,
-        'fitbins': 10,
+        'fitbins': 5,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
@@ -86,7 +86,7 @@ CATEGORIES = {
         'name': r'$\tau_{had}\tau_{had}$: Non-Boosted Category',
         'code': categories.CATEGORY_GGF,
         'cuts': COMMON_CUTS & ID_MEDIUM,
-        'fitbins': 10,
+        'fitbins': 8,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
@@ -115,7 +115,7 @@ CONTROLS = {
         'name': r'$\tau_{had}\tau_{had}$: Z Control Region',
         'code': None,
         'cuts': MET & Cut('dR_tau1_tau2<2.8') & Z_PEAK & ID_MEDIUM_TIGHT,
-        'fitbins': 10,
+        'fitbins': 8,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
     }
