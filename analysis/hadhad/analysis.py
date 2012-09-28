@@ -155,6 +155,10 @@ categories_controls = (
         sorted(CATEGORIES.items(), key=lambda item: item[0]) +
         sorted(CONTROLS.items(), key=lambda item: item[0]))
 
+output_suffix = '_%sfit' % args.fit_param
+if args.embedding:
+    output_suffix += '_embedding'
+
 for category, cat_info in categories_controls:
 
     if category not in args.categories and category not in args.controls:
@@ -275,16 +279,16 @@ for category, cat_info in categories_controls:
                 print hist.GetTitle(), sum(hist)
             print "Data / Model: %f" % (sum(data_hist) / sum(sum(bkg_hists)))
 
-            output_name = var_info['filename']
-            if args.embedding:
-                output_name += '_embedding'
+            output_name = var_info['filename'] + output_suffix
+            if cuts:
+                output_name += '_' + cuts.safe()
 
             fig = draw(
                     data=data_hist,
                     model=bkg_hists,
                     signal=signal_hist,
                     name=var_info['root'] if args.root else var_info['title'],
-                    output_name=output_name + '_' + cuts.safe() if cuts else output_name,
+                    output_name=output_name,
                     category_name=cat_info['name'],
                     category=category,
                     units=var_info.get('units', None),
@@ -320,11 +324,7 @@ for category, cat_info in categories_controls:
 
         # define training and test samples
         branches = cat_info['features']
-
-        if args.embedding:
-            clf_filename = 'clf_%s_embedding.pickle' % category
-        else:
-            clf_filename = 'clf_%s.pickle' % category
+        clf_filename = 'clf_%s%s.pickle' % (category, output_suffix)
 
         # train a classifier
         if (args.use_clf_cache
@@ -560,7 +560,7 @@ for category, cat_info in categories_controls:
                 print
                 print table.get_string(hrules=1)
 
-            with open('clf_%s.pickle' % category, 'w') as f:
+            with open(clf_filename, 'w') as f:
                 pickle.dump(clf, f)
 
         # Create histograms for the limit setting with HistFactory
@@ -621,7 +621,7 @@ for category, cat_info in categories_controls:
             signal_scores=None,
             data_scores=(data, data_scores),
             draw_data=True,
-            name='control_embedding' if args.embedding else 'control',
+            name='control' + output_suffix,
             bins=args.bins,
             min_score=min_score,
             max_score=max_score,
@@ -700,7 +700,7 @@ for category, cat_info in categories_controls:
             category_name=cat_info['name'],
             signal_scores=(signal_eval, signal_scores_eval),
             signal_scale=50,
-            name='ROI_embedding' if args.embedding else 'ROI',
+            name='ROI' + output_suffix,
             bins=args.bins,
             min_score=min_score,
             max_score=max_score,
@@ -743,10 +743,7 @@ for category, cat_info in categories_controls:
         max_score += 0.00001
         hist_template = Hist(args.bins, min_score, max_score)
 
-        if args.embedding:
-            root_filename = '%s_embedding.root' % category
-        else:
-            root_filename = '%s.root' % category
+        root_filename = '%s%s.root' % (category, output_suffix)
 
         with ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate') as f:
 
@@ -780,7 +777,8 @@ if 'plot' in args.actions and set(args.categories) == set(CATEGORIES.keys()) and
     now = datetime.datetime.today()
     # put all plots in a multipage pdf
     for category, exprs in figures.items():
-        pdf = PdfPages(os.path.join(PLOTS_DIR, 'features_%s.pdf' % category))
+        pdf = PdfPages(os.path.join(
+            PLOTS_DIR, 'variables_%s%s.pdf' % (category, output_suffix)))
         for expr, fig in sorted(exprs.items(), key=lambda x: x[0]):
             pdf.savefig(fig)
         d = pdf.infodict()
