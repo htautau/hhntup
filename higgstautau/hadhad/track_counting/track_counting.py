@@ -31,6 +31,37 @@ def count_tracks(tau, event):
             if iCheckKtTrack < threshold:
                 nOuterKtTrack += 1
 
-    ntrack_core = tau.track_atTJVA_n
-    ntrack_full = ntrack_core + nOuterKtTrack
-    return ntrack_core, ntrack_full
+    return tau.track_atTJVA_n + nOuterKtTrack
+
+
+def count_tracks_new(tau, event):
+    """
+    New 2011/2012 track recounting
+    """
+
+    nOuterKtTrack1 = 0
+
+    """
+    for (int i=0; i<trk_n; i++) {
+        sinth  = TMath::Sin((*trk_atTJVA_theta)[i][indexTau]);
+        trkpt  = sinth/TMath::Abs((*trk_atTJVA_qoverp)[i][indexTau]);
+        trketa = -TMath::Log(TMath::Tan(0.5*(*trk_atTJVA_theta)[i][indexTau]));
+        trkphi = (*trk_atTJVA_phi)[i][indexTau];
+        dR = deltaR((*tau_phi)[indexTau],trkphi,(*tau_eta)[indexTau],trketa);
+        if dR > 0.6:
+            continue
+        if (trkpt/1000.0>0.5
+            && TMath::Abs((*trk_atTJVA_d0)[i][indexTau])<1.0
+            && TMath::Abs((*trk_atTJVA_z0)[i][indexTau]*sinth)<1.5
+            && (*trk_nPixHits)[i]>1 && (*trk_nBLHits)[i]>0 && (*trk_nPixHits)[i]+(*trk_nSCTHits)[i]>6)
+        {
+            iCheckKtTrack = 0;
+            for (int j=0; j<(*tau_track_atTJVA_n)[indexTau]; j++) {
+                double dR1 = deltaR((*tau_track_atTJVA_phi)[indexTau][j],trkphi,(*tau_track_atTJVA_eta)[indexTau][j],trketa);
+                double ptdR1 = (*tau_track_atTJVA_pt)[indexTau][j]*dR1/trkpt;
+                if (ptdR1<4.0 && dR>0.2)                     { iCheckKtTrack++; }
+                if (ptdR1<4.0 && dR<0.2 && trkpt/1000.0<1.0) { iCheckKtTrack++; }
+            if iCheckKtTrack > 0:
+                nOuterKtTrack1 += 1
+    """
+    return tau.track_atTJVA_n + nOuterKtTrack1
