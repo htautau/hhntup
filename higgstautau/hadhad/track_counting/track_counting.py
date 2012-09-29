@@ -40,9 +40,8 @@ def count_tracks_new(tau, event):
     """
 
     nOuterKtTrack1 = 0
-
     """
-    for (int i=0; i<trk_n; i++) {
+    for trk in event.tracks:
         sinth  = TMath::Sin((*trk_atTJVA_theta)[i][indexTau]);
         trkpt  = sinth/TMath::Abs((*trk_atTJVA_qoverp)[i][indexTau]);
         trketa = -TMath::Log(TMath::Tan(0.5*(*trk_atTJVA_theta)[i][indexTau]));
@@ -50,17 +49,19 @@ def count_tracks_new(tau, event):
         dR = deltaR((*tau_phi)[indexTau],trkphi,(*tau_eta)[indexTau],trketa);
         if dR > 0.6:
             continue
-        if (trkpt/1000.0>0.5
-            && TMath::Abs((*trk_atTJVA_d0)[i][indexTau])<1.0
-            && TMath::Abs((*trk_atTJVA_z0)[i][indexTau]*sinth)<1.5
-            && (*trk_nPixHits)[i]>1 && (*trk_nBLHits)[i]>0 && (*trk_nPixHits)[i]+(*trk_nSCTHits)[i]>6)
+        if (trkpt / 1000.0 > 0.5
+            and abs((tau.trk_atTJVA_d0)[i][indexTau])<1.0
+            and abs((*trk_atTJVA_z0)[i][indexTau]*sinth)<1.5
+            and (*trk_nPixHits)[i]>1 && (*trk_nBLHits)[i]>0 && (*trk_nPixHits)[i]+(*trk_nSCTHits)[i]>6)
         {
-            iCheckKtTrack = 0;
+            iCheckKtTrack = 0
             for (int j=0; j<(*tau_track_atTJVA_n)[indexTau]; j++) {
-                double dR1 = deltaR((*tau_track_atTJVA_phi)[indexTau][j],trkphi,(*tau_track_atTJVA_eta)[indexTau][j],trketa);
-                double ptdR1 = (*tau_track_atTJVA_pt)[indexTau][j]*dR1/trkpt;
-                if (ptdR1<4.0 && dR>0.2)                     { iCheckKtTrack++; }
-                if (ptdR1<4.0 && dR<0.2 && trkpt/1000.0<1.0) { iCheckKtTrack++; }
+                dR1 = deltaR((*tau_track_atTJVA_phi)[indexTau][j],trkphi,(*tau_track_atTJVA_eta)[indexTau][j],trketa);
+                ptdR1 = (*tau_track_atTJVA_pt)[indexTau][j]*dR1/trkpt;
+                if ptdR1 < 4.0 and dR > 0.2:
+                    iCheckKtTrack += 1
+                if ptdR1 < 4.0 and dR < 0.2 and trkpt / 1000.0 < 1.0:
+                    iCheckKtTrack += 1
             if iCheckKtTrack > 0:
                 nOuterKtTrack1 += 1
     """

@@ -157,8 +157,12 @@ if __name__ == '__main__':
         l2.get_frame().set_fill(False)
         l2.get_frame().set_linewidth(0)
 
-        plt.savefig('bkg_norms.png')
-        plt.savefig('bkg_norms.eps')
+        out_name = 'bkg_norms'
+        if args.embedding:
+            out_name += '_embedding'
+
+        for f in ('png', 'eps'):
+            plt.savefig('%s.%s' % (out_name, f))
 
 else:
     import atexit

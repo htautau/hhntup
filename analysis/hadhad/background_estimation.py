@@ -228,6 +228,8 @@ def qcd_ztautau_norm(
     ndim = 2
 
     output_name = "%dd_%s_fit_%s" % (ndim, param, category)
+    if is_embedded:
+        output_name += '_embedding'
 
     print "performing %d-dimensional fit using %s" % (ndim, expr)
     print "using %d bins on each axis" % bins
