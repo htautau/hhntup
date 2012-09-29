@@ -79,6 +79,8 @@ parser.add_argument('--plot-bins', type=int, default=20, nargs='?',
         help='number of bins to plot expr in')
 parser.add_argument('--root', action='store_true', default=False,
         help='draw plots with ROOT. default is matplotlib')
+parser.add_argument('--suffix', default=None, nargs='?',
+        help='suffix to add to any output files or plots')
 
 args = parser.parse_args()
 
@@ -158,6 +160,8 @@ categories_controls = (
 output_suffix = '_%sfit' % args.fit_param
 if args.embedding:
     output_suffix += '_embedding'
+if args.suffix:
+    output_suffix += '_%s' % args.suffix
 
 for category, cat_info in categories_controls:
 
