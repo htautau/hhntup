@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 categories = ['ggf', 'boosted', 'vbf']
+fitmethod = 'trackfit'
 masses = range(100, 155, 5)
 lumi = '1.'
 lumi_rel_err = '0.039'

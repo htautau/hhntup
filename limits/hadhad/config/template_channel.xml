@@ -2,13 +2,14 @@
 
 <Channel Name="hh_%(category)s_%(mass)d" >
     
-    <Data HistoName="Data" InputFile="./data/%(category)s.root" />
+    <Data HistoName="Data" InputFile="./data/%(category)s_%(fitmethod)s.root" />
     
     <StatErrorConfig RelErrorThreshold="0.05" ConstraintType="Poisson"/>
 
     <Sample Name="Signal_%(mass)d_ggf"
-        InputFile="./data/%(category)s.root"
-        HistoName="Signal_%(mass)d_ggf" NormalizeByTheory="True" >
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="Signal_%(mass)d_ggf"
+        NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
@@ -31,8 +32,9 @@
     </Sample>
     
     <Sample Name="Signal_%(mass)d_vbf"
-        InputFile="./data/%(category)s.root"
-        HistoName="Signal_%(mass)d_vbf" NormalizeByTheory="True" >
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="Signal_%(mass)d_vbf"
+        NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
@@ -55,8 +57,9 @@
     </Sample>
     
     <Sample Name="Signal_%(mass)d_zh"
-        InputFile="./data/%(category)s.root"
-        HistoName="Signal_%(mass)d_zh" NormalizeByTheory="True" >
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="Signal_%(mass)d_zh"
+        NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
@@ -79,8 +82,9 @@
     </Sample>
     
     <Sample Name="Signal_%(mass)d_wh"
-        InputFile="./data/%(category)s.root"
-        HistoName="Signal_%(mass)d_wh" NormalizeByTheory="True" >
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="Signal_%(mass)d_wh"
+        NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
         <!--<HistoSys Name="JES_TES"
@@ -102,8 +106,10 @@
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>-->
     </Sample>
     
-    <Sample Name="Ztautau" InputFile="./data/%(category)s.root"
-        HistoName="Ztautau" NormalizeByTheory="False" >
+    <Sample Name="Ztautau"
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="Ztautau"
+        NormalizeByTheory="False" >
         <StatError Activate="True" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Ztautau_JES_UP_TES_UP"
@@ -131,8 +137,10 @@
             HistoNameLow="Ztautau_MFS_DOWN" />-->
     </Sample>
 
-    <Sample Name="QCD" InputFile="./data/%(category)s.root"
-        HistoName="QCD" NormalizeByTheory="False" >
+    <Sample Name="QCD"
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="QCD"
+        NormalizeByTheory="False" >
         <StatError Activate="True" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="QCD_JES_UP_TES_UP"
@@ -154,8 +162,10 @@
             HistoNameLow="QCD_FIT_DOWN" />-->
     </Sample>
 
-    <Sample Name="Others" InputFile="./data/%(category)s.root"
-        HistoName="Others" NormalizeByTheory="True" >
+    <Sample Name="Others"
+        InputFile="./data/%(category)s_%(fitmethod)s.root"
+        HistoName="Others"
+        NormalizeByTheory="True" >
         <StatError Activate="True" />
         <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Others_JES_UP_TES_UP"
