@@ -31,7 +31,7 @@ parser.add_argument('--no-systematics', action='store_false',
 parser.add_argument('--mass-cut', type=int, default=110,
         help='the mass window cut. norms of Z and QCD are fit below this and '
         'the signal region of the classifier output is above this')
-parser.add_argument('--fit-param', choices=('bdt', 'track'), default='bdt',
+parser.add_argument('--fit-param', choices=('bdt', 'track'), default='track',
         help='parameters used to determine normalization of QCD and Z')
 parser.add_argument('--draw-fit', action='store_true', default=False,
         help='draw the QCD/Z norm fit results')
