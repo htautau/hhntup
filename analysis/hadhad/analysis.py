@@ -11,12 +11,12 @@ class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
 
 
 parser = argparse.ArgumentParser(formatter_class=formatter_class)
-parser.add_argument('--no-fit-cache',
+parser.add_argument('--refit',
         action='store_false', dest='use_fit_cache',
         help="do not use cached background scale factors "
         "and instead recalculate them",
         default=True)
-parser.add_argument('--no-clf-cache',
+parser.add_argument('--retrain',
         action='store_false', dest='use_clf_cache',
         help="do not use cached classifier "
         "and instead train a new one",

@@ -56,10 +56,14 @@ def plot_grid_scores(
     else:
         trees = param_values[param_names[1]]
         def tree_formatter(x, pos):
+            if x < 0 or x >= len(trees):
+                return ''
             return str(trees[int(x)])
 
         leaves = param_values[param_names[0]]
         def leaf_formatter(x, pos):
+            if x < 0 or x >= len(leaves):
+                return ''
             return str(leaves[int(x)])
 
         ax.xaxis.set_major_formatter(FuncFormatter(tree_formatter))
