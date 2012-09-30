@@ -34,14 +34,21 @@ from higgstautau.hadhad.filters import *
 from higgstautau.hadhad.categories import *
 from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
+from higgstautau.embedding import EmbeddingPileupPatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
+from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
+from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
+from higgstautau.trigger.efficiency import TauTriggerEfficiency
+
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.corrections import reweight_ggf
-from higgstautau.hadhad.corrections import TauTriggerEfficiency
+from higgstautau.pileup import PileupReweight
+from higgstautau.hadhad.objects import define_objects
+from higgstautau.hadhad import track_counting
 
 from goodruns import GRL
 import subprocess
@@ -51,6 +58,7 @@ from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 YEAR = 2011
+year = 2011
 VERBOSE = False
 
 
@@ -88,17 +96,15 @@ class HHProcessor(ATLASStudent):
         """
         This is the one function that all "ATLASStudent"s must implement.
         """
+        datatype = self.metadata.datatype
 
         # fake rate scale factor tool
         fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
         fakerate_tool = TFR.FakeRateScaler(fakerate_table)
 
-        # trigger config tool to read trigger info in the ntuples
-        trigger_config = get_trigger_config()
-
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
-        if self.metadata.datatype == datasets.MC:
+        if datatype == datasets.MC:
             # only create truth branches for MC
             OutputModel += TrueTauBlock
 
@@ -107,7 +113,27 @@ class HHProcessor(ATLASStudent):
                 OutputModel += PartonBlock
 
         onfilechange = []
-        if self.metadata.datatype == datasets.DATA:
+        count_funcs = {}
+
+        if datatype == datasets.MC:
+
+            def mc_weight_count(event):
+                return event.mc_event_weight
+
+            count_funcs = {
+                'mc_weight': mc_weight_count,
+            }
+
+        trigger_config = None
+
+        if datatype != datasets.EMBED:
+            # trigger config tool to read trigger info in the ntuples
+            trigger_config = get_trigger_config()
+
+            # update the trigger config maps on every file change
+            onfilechange.append((update_trigger_config, (trigger_config,)))
+
+        if datatype == datasets.DATA:
             merged_grl = GRL()
 
             def update_grl(student, grl, name, file, tree):
@@ -116,11 +142,7 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        if self.metadata.datatype != datasets.EMBED:
-            # update the trigger config maps on every file change
-            onfilechange.append((update_trigger_config, (trigger_config,)))
-
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
         else:
             merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
@@ -132,24 +154,27 @@ class HHProcessor(ATLASStudent):
         onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
-        chain = TreeChain(self.metadata.treename,
-                         files=self.files,
-                         events=self.events,
-                         cache=True,
-                         cache_size=10000000,
-                         learn_entries=30,
-                         onfilechange=onfilechange)
+        chain = TreeChain(
+                self.metadata.treename,
+                files=self.files,
+                events=self.events,
+                cache=True,
+                cache_size=10000000,
+                learn_entries=30,
+                onfilechange=onfilechange,
+                verbose=True)
 
         # create output tree
         self.output.cd()
         tree = Tree(name='higgstautauhh', model=OutputModel)
 
-        copied_variables = ['actualIntPerXing',
-                            'averageIntPerXing',
-                            'number_of_good_vertices',
-                            'RunNumber',
-                            'EventNumber',
-                            'lbn']
+        copied_variables = [
+                'actualIntPerXing',
+                'averageIntPerXing',
+                'number_of_good_vertices',
+                'RunNumber',
+                'EventNumber',
+                'lbn']
 
         tree.set_buffer(
                 chain.buffer,
@@ -160,65 +185,104 @@ class HHProcessor(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
+            CoreFlags(
+                count_funcs=count_funcs),
             GRLFilter(
                 self.grl,
-                passthrough=self.metadata.datatype != datasets.DATA),
+                passthrough=datatype != datasets.DATA,
+                count_funcs=count_funcs),
+            EmbeddingPileupPatch(
+                passthrough=datatype != datasets.EMBED,
+                count_funcs=count_funcs),
             Triggers(
-                datatype=self.metadata.datatype,
-                year=YEAR,
-                skim=False,
-                passthrough=self.metadata.datatype == datasets.EMBED),
+                year=year,
+                old_skim=datatype == datasets.MC,
+                passthrough=datatype == datasets.EMBED,
+                count_funcs=count_funcs),
+            PriVertex(
+                count_funcs=count_funcs),
+            LArError(
+                count_funcs=count_funcs),
+            # no need to recalibrate jets in 2012 (yet...)
             JetCalibration(
-                year=YEAR,
-                datatype=self.metadata.datatype,
-                verbose=VERBOSE),
-            TauIDLoose(2),
+                datatype=datatype,
+                year=year,
+                verbose=VERBOSE,
+                passthrough=year == 2012,
+                count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
             Systematics(
                 terms=self.args.syst_terms,
-                year=YEAR,
-                datatype=self.metadata.datatype,
+                year=year,
+                datatype=datatype,
                 verbose=VERBOSE),
-            # since the jet recalibration is applied the MET must be
-            # recalculated even if no other systematics are applied.
-            PriVertex(),
-            LArError(),
-            LArHole(datatype=self.metadata.datatype),
+            # the BDT bits are broken in the p1130 production, correct them
+            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
+            # PRODUCTION TAG!!!
+            TauIDpatch(
+                year=year,
+                count_funcs=count_funcs),
+            # patch electron ID for 2012
+            ElectronIDpatch(
+                passthrough=year != 2012,
+                count_funcs=count_funcs),
+            LArHole(
+                datatype=datatype,
+                count_funcs=count_funcs),
             JetCleaning(
-                datatype=self.metadata.datatype,
-                year=YEAR),
-            #JetCrackVeto(),
-            ElectronVeto(),
+                datatype=datatype,
+                year=year,
+                count_funcs=count_funcs),
+            ElectronVeto(
+                count_funcs=count_funcs),
             MuonVeto(
-                year=YEAR),
-            TauAuthor(2),
-            TauHasTrack(2),
-            TauMuonVeto(2),
-            TauElectronVeto(2),
-            TauPT(2),
-            TauEta(2),
-            TauCrack(2),
-            TauLArHole(2), # only veto taus, not entire event
-            TauIDpatch(year=YEAR),
-            TauIDMedium(2),
-            TauTriggerMatch(
+                year=year,
+                count_funcs=count_funcs),
+            TauElectronVeto(2,
+                count_funcs=count_funcs),
+            TauMuonVeto(2,
+                count_funcs=count_funcs),
+            TauAuthor(2,
+                count_funcs=count_funcs),
+            TauHasTrack(2,
+                count_funcs=count_funcs),
+            TauPT(2,
+                thresh=20 * GeV,
+                count_funcs=count_funcs),
+            TauEta(2,
+                count_funcs=count_funcs),
+            TauCrack(2,
+                count_funcs=count_funcs),
+            TauLArHole(2,
+                count_funcs=count_funcs),
+            TauIDMedium(2,
+                count_funcs=count_funcs),
+            TauTriggerMatchIndex(
                 config=trigger_config,
-                year=YEAR,
-                datatype=self.metadata.datatype,
-                skim=False,
-                tree=tree,
-                passthrough=self.metadata.datatype == datasets.EMBED),
+                year=year,
+                datatype=datatype,
+                passthrough=datatype == datasets.EMBED,
+                count_funcs=count_funcs),
             TauLeadSublead(
-                lead=35*GeV,
-                sublead=25*GeV),
+                lead=35 * GeV,
+                sublead=25 * GeV,
+                count_funcs=count_funcs),
+            TauTriggerMatchThreshold(
+                passthrough=datatype == datasets.EMBED,
+                count_funcs=count_funcs),
             TauTriggerEfficiency(
-                year=YEAR,
-                datatype=self.metadata.datatype,
+                year=year,
+                datatype=datatype,
                 tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
                     self.args.syst_terms),
-                passthrough=self.metadata.datatype == datasets.DATA),
+                passthrough=datatype == datasets.DATA or year == 2012),
+            PileupReweight(
+                year=year,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
             JetSelection(),
             TauJetOverlapRemoval(),
         ])
@@ -227,48 +291,18 @@ class HHProcessor(ATLASStudent):
 
         chain.filters += event_filters
 
-        # define tree collections
-        chain.define_collection(name="taus", prefix="tau_", size="tau_n", mix=TauFourMomentum)
-        chain.define_collection(name="taus_EF", prefix="trig_EF_tau_",
-                                size="trig_EF_tau_n", mix=TauFourMomentum)
-
-        # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
-        chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
-        chain.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n", mix=MCTauFourMomentum)
-        chain.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
-        chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
-        chain.define_collection(name="electrons", prefix="el_", size="el_n")
-        chain.define_collection(name="vertices", prefix="vxp_", size="vxp_n")
+        define_objects(chain, year)
 
         # define tree objects
-        tree.define_object(name='tau1', prefix='tau1_')
-        tree.define_object(name='tau2', prefix='tau2_')
-        tree.define_object(name='jet1', prefix='jet1_')
-        tree.define_object(name='jet2', prefix='jet2_')
+        #tree.define_object(name='tau1', prefix='tau1_')
+        #tree.define_object(name='tau2', prefix='tau2_')
+        #tree.define_object(name='jet1', prefix='jet1_')
+        #tree.define_object(name='jet2', prefix='jet2_')
 
         """ Associations not currently implemented in rootpy
         chain.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
         chain.define_association(origin='truetaus', target='taus', prefix='tauAssoc_', link='index')
         """
-
-        if self.metadata.datatype == datasets.MC:
-            from externaltools import PileupReweighting
-            from ROOT import Root
-            # Initialize the pileup reweighting tool
-            pileup_tool = Root.TPileupReweighting()
-            if YEAR == 2011:
-                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc11b_defaults.prw.root'))
-                pileup_tool.AddLumiCalcFile('lumi/2011/hadhad/ilumicalc_histograms_None_178044-191933.root')
-            elif YEAR == 2012:
-                pileup_tool.AddConfigFile(PileupReweighting.get_resource('mc12a_defaults.prw.root'))
-                pileup_tool.SetDataScaleFactors(1./1.11)
-                pileup_tool.AddLumiCalcFile('lumi/2012/hadhad/ilumicalc_histograms_None_200841-205113.root')
-            else:
-                raise ValueError('No pileup reweighting defined for year %d' %
-                        YEAR)
-            # discard unrepresented data (with mu not simulated in MC)
-            pileup_tool.SetUnrepresentedDataAction(2)
-            pileup_tool.Initialize()
 
         # entering the main event loop...
         for event in chain:
@@ -474,7 +508,7 @@ class HHProcessor(ATLASStudent):
             tree.tau2_x = tau2_x
 
             # Match jets to VBF partons
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 if 'VBF' in self.metadata.name:
                     # get partons (already sorted by eta in hepmc)
                     parton1, parton2 = hepmc.get_VBF_partons(event)
@@ -490,7 +524,7 @@ class HHProcessor(ATLASStudent):
                                     setattr(tree, 'jet%i_matched' % i, True)
 
             # Truth-matching
-            if self.metadata.datatype == datasets.MC:
+            if datatype == datasets.MC:
                 # match only with visible true taus
                 event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
@@ -572,20 +606,27 @@ class HHProcessor(ATLASStudent):
                                     tau.pt, wp,
                                     trig % tau.trigger_match_thresh, False))
 
+            # track recounting
+            tau1.ntrack_core, tau1.ntrack_full = track_counting.count_tracks(
+                    tau1, event)
+            tau2.ntrack_core, tau2.ntrack_full = track_counting.count_tracks(
+                    tau2, event)
+
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
 
             # set the event weights
-            if self.metadata.datatype == datasets.MC:
-                # set the event weight
-                tree.pileup_weight = pileup_tool.GetCombinedWeight(
-                        event.RunNumber,
-                        event.mc_channel_number,
-                        event.averageIntPerXing)
+            if datatype == datasets.MC:
                 tree.mc_weight = event.mc_event_weight
                 if YEAR == 2011:
                     tree.ggf_weight = reweight_ggf(event, self.metadata.name)
-                # no ggf reweighting for 2012 MC
+                    # no ggf reweighting for 2012 MC
+            elif datatype == datasets.EMBED:
+                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
+                # correct truth filter efficiency
+                tree.mc_weight = event.mcevt_weight[0][0]
+                # In 2011 mc_event_weight == mcevt_weight[0][0]
+                # for embedding. But not so in 2012...
 
             # fill output ntuple
             tree.Fill()
@@ -594,7 +635,7 @@ class HHProcessor(ATLASStudent):
         tree.FlushBaskets()
         tree.Write()
 
-        if self.metadata.datatype == datasets.DATA:
+        if datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
             xml_string.Write('lumi')
         merged_cutflow.Write()

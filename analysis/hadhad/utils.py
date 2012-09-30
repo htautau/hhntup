@@ -13,13 +13,16 @@ from matplotlib.ticker import AutoMinorLocator, NullFormatter
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
-from rootpy.plotting import Hist
+from rootpy.plotting import Canvas, Pad, Legend, Hist, HistStack
 import rootpy.root2matplotlib as rplt
 from rootpy.math.stats.qqplot import qqplot
 
 
-#http://stackoverflow.com/questions/616645/how-do-i-duplicate-sys-stdout-to-a-log-file-in-python/3423392#3423392
 class Tee(object):
+    """
+    http://stackoverflow.com/questions/616645/
+    how-do-i-duplicate-sys-stdout-to-a-log-file-in-python/3423392#3423392
+    """
     def __init__(self, name, mode):
         self.file = open(name, mode)
         self.stdout = sys.stdout
@@ -99,21 +102,26 @@ def draw(model,
          signal_scale=1.,
          units=None,
          range=None,
-         model_colour_map=cm.winter,
-         signal_colour_map=cm.autumn,
+         model_colour_map=None,
+         signal_colour_map=None,
          show_ratio=False,
          show_qq=False,
          output_formats=None,
          dir='.',
-         systematics=None):
+         systematics=None,
+         root=False,
+         width=8.):
 
     if output_formats is None:
-        output_formats = ('png',)
+        output_formats = ('png', 'eps', 'pdf')
     elif isinstance(output_formats, str):
         output_formats = output_formats.split(',')
     if data is None:
         show_ratio=False
         show_qq=False
+
+    figheight = baseheight = 6.
+    figwidth = basewidth = width
 
     vscale = 1.
     left_margin = 0.16
@@ -126,10 +134,7 @@ def draw(model,
     width = 1. - right_margin - left_margin
     height = 1. - top_margin - bottom_margin
 
-    figheight = baseheight = 6.
-    figwidth = basewidth = 8.
-
-    ratio_abs_height = 1.8
+    ratio_abs_height = 1.975
     qq_abs_height = 6.
     hist_abs_height = 6.
 
@@ -183,10 +188,22 @@ def draw(model,
     else:
         rect_hist = [left_margin, bottom_margin, width, height]
 
-    fig = plt.figure(figsize=(figwidth, figheight), dpi=100)
-    prop = fm.FontProperties(size=14)
-
-    hist_ax = plt.axes(rect_hist)
+    if root:
+        fig = Canvas(width=int(figwidth * 100), height=int(figheight * 100))
+        fig.SetLeftMargin(0)
+        fig.SetBottomMargin(0)
+        fig.SetRightMargin(0)
+        fig.SetTopMargin(0)
+        hist_pad = Pad("top", "top", 0, rect_hist[1], 1, 1)
+        hist_pad.SetBottomMargin(0)
+        hist_pad.SetLeftMargin(rect_hist[0])
+        hist_pad.SetRightMargin(1. - rect_hist[2] - rect_hist[0])
+        hist_pad.SetTopMargin(1. - rect_hist[3] - rect_hist[1])
+        hist_pad.Draw()
+    else:
+        fig = plt.figure(figsize=(figwidth, figheight), dpi=100)
+        prop = fm.FontProperties(size=14)
+        hist_ax = plt.axes(rect_hist)
 
     if model_colour_map is not None:
         set_colours(model, model_colour_map)
@@ -194,9 +211,19 @@ def draw(model,
     if isinstance(signal, (list, tuple)) and signal_colour_map is not None:
         set_colours(signal, signal_colour_map)
 
-    model_bars = rplt.bar(model, linewidth=0,
-            stacked=True, axes=hist_ax,
-            ypadding=ypadding)
+    if root:
+        # plot model stack with ROOT
+        hist_pad.cd()
+        model_stack = HistStack()
+        for hist in model:
+            hist.SetLineWidth(0)
+            hist.format = 'hist'
+            model_stack.Add(hist)
+        model_stack.Draw()
+    else:
+        model_bars = rplt.bar(model, linewidth=0,
+                stacked=True, axes=hist_ax,
+                ypadding=ypadding)
 
     if signal is not None:
         if signal_scale != 1.:
@@ -210,13 +237,19 @@ def draw(model,
                     signal_scale))
 
         if isinstance(signal, (list, tuple)):
-            signal_bars = rplt.bar(signal, linewidth=0,
-                    stacked=True, yerr='quadratic',
-                    axes=hist_ax, alpha=.8, ypadding=ypadding)
+            if root:
+                pass
+            else:
+                signal_bars = rplt.bar(signal, linewidth=0,
+                        stacked=True, yerr='quadratic',
+                        axes=hist_ax, alpha=.8, ypadding=ypadding)
         else:
-            _, _, signal_bars = rplt.hist(signal,
-                    histtype='stepfilled',
-                    axes=hist_ax, ypadding=ypadding)
+            if root:
+                pass
+            else:
+                _, _, signal_bars = rplt.hist(signal,
+                        histtype='stepfilled',
+                        axes=hist_ax, ypadding=ypadding)
 
     if show_qq:
         qq_ax = plt.axes(rect_qq)
@@ -250,7 +283,7 @@ def draw(model,
         qq_ax.set_xlim((gg_graph.xedgesl(0), gg_graph.xedgesh(-1)))
         qq_ax.set_ylim((min(y_low), max(y_up)))
 
-    if systematics is not None:
+    if systematics:
         # draw systematics band
         # add separate variations in quadrature
         # also include stat error in quadrature
@@ -304,46 +337,73 @@ def draw(model,
             high_band[i] = sum_high
             low_band[i] = sum_low
 
-        # draw band as hatched histogram with base of model - low_band
-        # and height of high_band + low_band
-        rplt.fill_between(total_model + high_band,
-                    total_model - low_band,
-                    edgecolor='yellow',
-                    linewidth=0,
-                    facecolor=(0,0,0,0),
-                    hatch='////',
-                    axes=hist_ax,
-                    zorder=100)
+        if root:
+            pass
+        else:
+            # draw band as hatched histogram with base of model - low_band
+            # and height of high_band + low_band
+            rplt.fill_between(total_model + high_band,
+                        total_model - low_band,
+                        edgecolor='yellow',
+                        linewidth=0,
+                        facecolor=(0,0,0,0),
+                        hatch='////',
+                        axes=hist_ax,
+                        zorder=100)
 
     if data is not None:
-        data_bars = rplt.errorbar(data,
-                fmt='o', axes=hist_ax,
-                ypadding=ypadding,
-                emptybins=False,
-                barsabove=True,
-                zorder=1000)
+        # draw data
+        if root:
+            hist_pad.cd()
+            data.Draw('same E1')
+        else:
+            data_bars = rplt.errorbar(data,
+                    fmt='o', axes=hist_ax,
+                    ypadding=ypadding,
+                    emptybins=False,
+                    barsabove=True,
+                    zorder=1000)
+        # draw ratio plot
         if show_ratio:
-            ratio_ax = plt.axes(rect_ratio)
-            ratio_ax.axhline(y=0, color='black')
-            ratio_ax.axhline(y=50, color='black', linestyle='--')
-            ratio_ax.axhline(y=-50, color='black', linestyle='--')
             total_model = sum(model)
             numerator = data - total_model
-            error = Hist.divide(numerator, total_model, option='B')
-            error.linecolor = 'black'
-            error.linewidth = 1
-            error.fillstyle = 'hollow'
-            error *= 100
-            rplt.hist(
-                    error,
-                    axes=ratio_ax,
-                    histtype='stepfilled')
-            ratio_ax.set_ylim((-100., 100.))
-            ratio_ax.set_xlim(hist_ax.get_xlim())
-            #ratio_ax.yaxis.tick_right()
-            ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
-                    fontsize=20, position=(0., 1.), va='top')
-            if systematics is not None:
+            error_hist = Hist.divide(numerator, total_model, option='B')
+            error_hist.linecolor = 'black'
+            error_hist.linewidth = 1
+            error_hist.fillstyle = 'hollow'
+            error_hist *= 100
+            if root:
+                fig.cd()
+                ratio_pad = Pad("ratio", "ratio",
+                    0, 0, 1, rect_ratio[1] + rect_ratio[3])
+                ratio_pad.SetBottomMargin(rect_ratio[1])
+                ratio_pad.SetLeftMargin(rect_ratio[0])
+                ratio_pad.SetRightMargin(1. - rect_ratio[2] - rect_ratio[0])
+                ratio_pad.SetTopMargin(0)
+                ratio_pad.Draw()
+                ratio_pad.cd()
+                error_hist.Draw('hist')
+                error_hist.yaxis.SetLimits(-100, 100)
+                error_hist.yaxis.SetRangeUser(-100, 100)
+                xmin = model_stack.xaxis.GetXmin()
+                xmax = model_stack.xaxis.GetXmax()
+                error_hist.xaxis.SetLimits(xmin, xmax)
+                error_hist.xaxis.SetRangeUser(xmin, xmax)
+            else:
+                ratio_ax = plt.axes(rect_ratio)
+                ratio_ax.axhline(y=0, color='black')
+                ratio_ax.axhline(y=50, color='black', linestyle='--')
+                ratio_ax.axhline(y=-50, color='black', linestyle='--')
+                rplt.hist(
+                        error_hist,
+                        axes=ratio_ax,
+                        histtype='stepfilled')
+                ratio_ax.set_ylim((-100., 100.))
+                ratio_ax.set_xlim(hist_ax.get_xlim())
+                #ratio_ax.yaxis.tick_right()
+                ratio_ax.set_ylabel(r'$\frac{\rm{Data - Model}}{\rm{Model}}$ [\%]',
+                        fontsize=20, position=(0., 1.), va='top')
+            if systematics:
                 # plot band on ratio plot
                 # uncertainty on top is data + model
                 high_band_top = high_band.Clone()
@@ -365,53 +425,71 @@ def draw(model,
                         high_band_full[i] = 0.
                         low_band_full[i] = 0.
                     else:
-                        high_band_full[i] = abs(error[i]) * math.sqrt(
+                        high_band_full[i] = abs(error_hist[i]) * math.sqrt(
                                 (high_band_top[i] / numerator[i])**2 +
                                 (high_band[i] / total_model[i])**2)
-                        low_band_full[i] = abs(error[i]) * math.sqrt(
+                        low_band_full[i] = abs(error_hist[i]) * math.sqrt(
                                 (low_band_top[i] / numerator[i])**2 +
                                 (low_band[i] / total_model[i])**2)
-
-                rplt.fill_between(
-                        error + high_band_full,
-                        error - low_band_full,
+                if root:
+                    pass
+                else:
+                    rplt.fill_between(
+                        error_hist + high_band_full,
+                        error_hist - low_band_full,
                         edgecolor='black',
                         linewidth=0,
                         facecolor=(0,0,0,0),
                         hatch='\\\\\\\\',
                         axes=ratio_ax)
-
-    model_legend = hist_ax.legend(
-            reversed(model_bars), [h.title for h in reversed(model)],
-            prop=prop, title=category_name,
-            loc='upper left',
-            numpoints=1)
-
-    format_legend(model_legend)
-
-    right_legend_bars = []
-    right_legend_titles =[]
-
-    if data is not None:
-        right_legend_bars.append(data_bars)
-        right_legend_titles.append(data.title)
-    if signal is not None:
-        if isinstance(signal, (list, tuple)):
-            right_legend_bars += signal_bars
-            right_legend_titles += [s.title for s in signal]
-        else:
-            right_legend_bars.append(signal_bars[0])
-            right_legend_titles.append(signal.title)
-
-    if right_legend_bars:
-        right_legend = hist_ax.legend(
-                right_legend_bars,
-                right_legend_titles,
-                prop=prop,
-                loc='upper right',
+    if root:
+        hist_pad.cd()
+        model_legend = Legend(len(model), pad=hist_pad,
+                leftmargin=0.05, rightmargin=0.5)
+        for hist in model:
+            model_legend.AddEntry(hist, 'F')
+        model_legend.SetHeader(category_name)
+        model_legend.Draw()
+    else:
+        model_legend = hist_ax.legend(
+                reversed(model_bars), [h.title for h in reversed(model)],
+                prop=prop, title=category_name,
+                loc='upper left',
                 numpoints=1)
-        format_legend(right_legend)
-        hist_ax.add_artist(model_legend)
+        format_legend(model_legend)
+
+    if root:
+        hist_pad.cd()
+        right_legend = Legend(2 if signal is not None else 1, pad=hist_pad)
+        right_legend.AddEntry(data, 'lep')
+        if signal is not None:
+            # TODO support list of signal
+            right_legend.AddEntry(signal, 'F')
+        right_legend.Draw()
+    else:
+        right_legend_bars = []
+        right_legend_titles =[]
+
+        if data is not None:
+            right_legend_bars.append(data_bars)
+            right_legend_titles.append(data.title)
+        if signal is not None:
+            if isinstance(signal, (list, tuple)):
+                right_legend_bars += signal_bars
+                right_legend_titles += [s.title for s in signal]
+            else:
+                right_legend_bars.append(signal_bars[0])
+                right_legend_titles.append(signal.title)
+
+        if right_legend_bars:
+            right_legend = hist_ax.legend(
+                    right_legend_bars,
+                    right_legend_titles,
+                    prop=prop,
+                    loc='upper right',
+                    numpoints=1)
+            format_legend(right_legend)
+            hist_ax.add_artist(model_legend)
 
     if units is not None:
         label = '%s [%s]' % (name, units)
@@ -424,32 +502,52 @@ def draw(model,
     else:
         label = name
         ylabel = 'Events'
-    hist_ax.set_ylabel(ylabel, fontsize=20, position=(0., 1.), va='top')
 
-    base_ax = hist_ax
-    if show_ratio:
-        base_ax = ratio_ax
-    base_ax.set_xlabel(label, fontsize=20, position=(1., 0.), ha='right')
-
-    root_axes(hist_ax, no_xlabels=show_ratio)
-    if show_ratio:
-        root_axes(ratio_ax, vscale=1 if show_qq else vscale * .4)
-    if show_qq:
-        root_axes(qq_ax, vscale=vscale)
+    if root:
+        model_stack.yaxis.SetTitle('Events')
+        base_hist = model_stack
+        if show_ratio:
+            base_hist = error_hist
+        base_hist.xaxis.SetTitle(label)
+    else:
+        hist_ax.set_ylabel(ylabel, fontsize=20, position=(0., 1.), va='top')
+        base_ax = hist_ax
+        if show_ratio:
+            base_ax = ratio_ax
+        base_ax.set_xlabel(label, fontsize=20, position=(1., 0.), ha='right')
+        root_axes(hist_ax, no_xlabels=show_ratio)
+        if show_ratio:
+            root_axes(ratio_ax, vscale=1 if show_qq else vscale * .4)
+        if show_qq:
+            root_axes(qq_ax, vscale=vscale)
 
     if range is not None:
-        hist_ax.set_xlim(range)
+        if root:
+            model_stack.xaxis.SetLimits(*range)
+            model_stack.xaxis.SetRangeUser(*range)
+        else:
+            hist_ax.set_xlim(range)
         if show_ratio:
-            ratio_ax.set_xlim(range)
+            if root:
+                pass
+            else:
+                ratio_ax.set_xlim(range)
 
-    for format in output_formats:
-        plt.savefig(
-            os.path.join(dir,
-            'var_%s_%s.%s' %
+    filename = os.path.join(dir,
+            'var_%s_%s' %
             (category,
-             output_name.lower().replace(' ', '_'),
-             format)))
-    plt.close(fig)
+             output_name.lower().replace(' ', '_')))
+    if root:
+        filename += '_root'
+    for format in output_formats:
+        if root:
+            fig.SaveAs('%s.%s' % (filename, format))
+        else:
+            plt.savefig('%s.%s' % (filename, format))
+    if not root:
+        plt.close(fig)
+    else:
+        fig.OwnMembers()
     return fig
 
 """

@@ -9,10 +9,6 @@ import math
 import numpy as np
 from numpy.lib import recfunctions
 
-# for reproducibilty
-# especially for test/train set selection
-np.random.seed(1987) # my birth year ;)
-
 # pytables imports
 import tables
 
@@ -23,7 +19,7 @@ from higgstautau.decorators import cached_property, memoize_method
 from higgstautau import samples as samples_db
 
 # rootpy imports
-from rootpy.plotting import Hist, Canvas, HistStack
+from rootpy.plotting import Hist, Hist2D, Canvas, HistStack
 from rootpy.io import open as ropen
 from rootpy.tree import Tree, Cut
 from rootpy.utils import asrootpy
@@ -62,7 +58,7 @@ SS = Cut('tau1_charge * tau2_charge == 1')
 TEMPFILE = ropen('tempfile.root', 'recreate')
 
 
-def get_file(student, hdf=False):
+def get_file(student, hdf=False, suffix=''):
 
     if hdf:
         ext = '.h5'
@@ -73,10 +69,11 @@ def get_file(student, hdf=False):
         return FILES[filename]
     if hdf:
         student_file = tables.openFile(
-                os.path.join(NTUPLE_PATH, student, filename))
+                os.path.join(NTUPLE_PATH, student + suffix, filename))
     else:
         student_file = ropen(
-                os.path.join(NTUPLE_PATH, student, filename), 'READ')
+                os.path.join(NTUPLE_PATH, student + suffix, filename),
+                'READ')
     FILES[filename] = student_file
     return student_file
 
@@ -92,14 +89,14 @@ def cleanup():
 
 def correlations(signal, signal_weight,
                  background, background_weight,
-                 branches, channel):
+                 branches, category):
 
     # draw correlation plots
     names = [variables.VARIABLES[branch]['title'] for branch in branches]
     correlation_plot(signal, signal_weight, names,
-                     "correlation_signal_%s" % channel)
+                     "correlation_signal_%s" % category)
     correlation_plot(background, background_weight, names,
-                     "correlation_background_%s" % channel)
+                     "correlation_background_%s" % category)
 
 
 def get_samples(masses=None, modes=None, embedding=True):
@@ -137,16 +134,16 @@ class Sample(object):
         '!OS-NOID': NOT_OS & NOID,
         'SS-NOID': SS & NOID}
 
-    CATEGORIES = dict([
-        (name, Cut('category==%d' % info['code']))
-        if info['code'] is not None
-        else (name, Cut(''))
-        for name, info in categories.CATEGORIES.items()])
+    CATEGORIES = dict(
+        [(name, Cut('category==%d' % info['code']))
+         for name, info in categories.CATEGORIES.items()] +
+        [(name, Cut(''))
+         for name, info in categories.CONTROLS.items()])
 
     WEIGHT_BRANCHES = [
         'mc_weight',
         'pileup_weight',
-        'ggf_weight',
+        'ggf_weight', # <= affects limits a lot!
         # effic high and low already accounted for in TAUBDT_UP/DOWN
         'tau1_efficiency_scale_factor',
         'tau2_efficiency_scale_factor',
@@ -228,9 +225,17 @@ class Sample(object):
 
     def cuts(self, category, region):
 
-        return (Sample.CATEGORIES[category] &
-                categories.CATEGORIES[category]['cuts'] &
-                Sample.REGIONS[region] & self._cuts)
+        if category in categories.CATEGORIES:
+            return (Sample.CATEGORIES[category] &
+                    categories.CATEGORIES[category]['cuts'] &
+                    Sample.REGIONS[region] & self._cuts)
+        elif category in categories.CONTROLS:
+            return (Sample.CATEGORIES[category] &
+                    categories.CONTROLS[category]['cuts'] &
+                    Sample.REGIONS[region] & self._cuts)
+        else:
+            raise ValueError(
+                    'no such category or control region: %s' % category)
 
     def train_test(self,
                    branches,
@@ -284,6 +289,22 @@ class Sample(object):
                 systematic=systematic)
         return np.concatenate(arrays)
 
+    def draw(self, expr, category, region, bins, min, max, cuts=None):
+
+        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
+        self.draw_into(hist, expr, category, region, cuts=cuts)
+        return hist
+
+    def draw2d(self, expr, category, region,
+            xbins, xmin, xmax,
+            ybins, ymin, ymax,
+            cuts=None):
+
+        hist = Hist2D(xbins, xmin, xmax, ybins, ymin, ymax,
+                title=self.label, **self.hist_decor)
+        self.draw_into(hist, expr, category, region, cuts=cuts)
+        return hist
+
 
 class Data(Sample):
 
@@ -298,12 +319,6 @@ class Data(Sample):
         self.label = ('2011 Data $\sqrt{s} = 7$ TeV\n'
                       '$\int L dt = %.2f$ fb$^{-1}$' % (TOTAL_LUMI / 1e3))
         self.name = 'Data'
-
-    def draw(self, expr, category, region, bins, min, max, cuts=None):
-
-        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
-        self.draw_into(hist, expr, category, region, cuts=cuts)
-        return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 
@@ -401,13 +416,36 @@ class MC(Sample):
     ]
 
     def __init__(self,
-            systematics=True,
-            systematics_terms=None,
-            systematics_samples=None,
+            year=2011,
             db=DB_HH,
+            systematics=True,
             **kwargs):
 
+        self.year = year
+
+        if isinstance(self, Background):
+            sample_key = self.__class__.__name__.lower()
+            sample_info = samples_db.get_sample(
+                    'hadhad', year, 'background', sample_key)
+            self.name = sample_info['name']
+            self._label = sample_info['latex']
+            self._label_root = sample_info['root']
+            if 'color' in sample_info and 'color' not in kwargs:
+                kwargs['color'] = sample_info['color']
+            self.samples = sample_info['samples']
+
+        elif isinstance(self, Signal):
+            # samples already defined in Signal subclass
+            # see Higgs class below
+            assert len(self.samples) > 0
+
+        else:
+            raise TypeError(
+                'MC sample %s does not inherit from Signal or Background' %
+                self.__class__.__name__)
+
         super(MC, self).__init__(**kwargs)
+
         self.db = db
         self.datasets = []
         self.systematics = systematics
@@ -437,6 +475,9 @@ class MC(Sample):
 
             if self.systematics:
 
+                systematics_terms, systematics_samples = \
+                    samples_db.get_systematics('hadhad', self.year, name)
+
                 unused_terms = MC.SYSTEMATICS[:]
 
                 if systematics_terms:
@@ -458,8 +499,8 @@ class MC(Sample):
 
                         unused_terms.remove(sys_term)
 
-                if systematics_samples and name in systematics_samples:
-                    for sample_name, sys_term in systematics_samples[name].items():
+                if systematics_samples:
+                    for sample_name, sys_term in systematics_samples.items():
 
                         print "%s -> %s %s" % (name, sample_name, sys_term)
 
@@ -507,12 +548,6 @@ class MC(Sample):
                 (MC_Ztautau, Embedded_Ztautau)):
             l += r' ($\sigma_{SM} \times %g$)' % self.scale
         return l
-
-    def draw(self, expr, category, region, bins, min, max, cuts=None):
-
-        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
-        self.draw_into(hist, expr, category, region, cuts=cuts)
-        return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 
@@ -620,18 +655,25 @@ class MC(Sample):
                 up_fit *= ((self.scale + self.scale_error) / self.scale)
                 down_fit = current_hist.Clone()
                 down_fit *= ((self.scale - self.scale_error) / self.scale)
-                if ('FIT_UP',) not in sys_hists:
-                    sys_hists[('FIT_UP',)] = up_fit
-                    sys_hists[('FIT_DOWN',)] = down_fit
+                if ('ZFIT_UP',) not in sys_hists:
+                    sys_hists[('ZFIT_UP',)] = up_fit
+                    sys_hists[('ZFIT_DOWN',)] = down_fit
                 else:
-                    sys_hists[('FIT_UP',)] += up_fit
-                    sys_hists[('FIT_DOWN',)] += down_fit
+                    sys_hists[('ZFIT_UP',)] += up_fit
+                    sys_hists[('ZFIT_DOWN',)] += down_fit
             else:
-                for _term in [('FIT_UP',), ('FIT_DOWN',)]:
+                for _term in [('ZFIT_UP',), ('ZFIT_DOWN',)]:
                     if _term not in sys_hists:
                         sys_hists[_term] = current_hist.Clone()
                     else:
                         sys_hists[_term] += current_hist.Clone()
+
+            for _term in [('QCDFIT_UP',), ('QCDFIT_DOWN',)]:
+                if _term not in sys_hists:
+                    sys_hists[_term] = current_hist.Clone()
+                else:
+                    sys_hists[_term] += current_hist.Clone()
+
         # set the systematics
         hist.systematics = sys_hists
 
@@ -680,7 +722,8 @@ class MC(Sample):
         trees = []
         for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
-            if systematic in (('FIT_UP',), ('FIT_DOWN',)):
+            if systematic in (('ZFIT_UP',), ('ZFIT_DOWN',),
+                              ('QCDFIT_UP',), ('QCDFIT_DOWN',)):
                 tree = sys_trees['NOMINAL']
                 events = sys_events['NOMINAL']
             else:
@@ -693,9 +736,9 @@ class MC(Sample):
 
             scale = self.scale
             if isinstance(self, Ztautau):
-                if systematic == ('FIT_UP',):
+                if systematic == ('ZFIT_UP',):
                     scale = self.scale + self.scale_error
-                elif systematic == ('FIT_DOWN',):
+                elif systematic == ('ZFIT_DOWN',):
                     scale = self.scale - self.scale_error
             weight = scale * TOTAL_LUMI * xs * kfact * effic / events
 
@@ -722,7 +765,8 @@ class MC(Sample):
         tables = []
         for ds, sys_trees, sys_tables, sys_events, xs, kfact, effic in self.datasets:
 
-            if systematic in (('FIT_UP',), ('FIT_DOWN',)):
+            if systematic in (('ZFIT_UP',), ('ZFIT_DOWN',),
+                              ('QCDFIT_UP',), ('QCDFIT_DOWN',)):
                 table = sys_tables['NOMINAL']
                 events = sys_events['NOMINAL']
             else:
@@ -735,9 +779,9 @@ class MC(Sample):
 
             scale = self.scale
             if isinstance(self, Ztautau):
-                if systematic == ('FIT_UP',):
+                if systematic == ('ZFIT_UP',):
                     scale = self.scale + self.scale_error
-                elif systematic == ('FIT_DOWN',):
+                elif systematic == ('ZFIT_DOWN',):
                     scale = self.scale - self.scale_error
             weight = scale * TOTAL_LUMI * xs * kfact * effic / events
 
@@ -788,117 +832,52 @@ class MC(Sample):
 
 
 class Ztautau:
+
     pass
 
 
 class MC_Ztautau(MC, Ztautau, Background):
 
-    def __init__(self, color='#00a4ff', **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['hadhad']['ztautau']
-        self.name = 'Ztautau'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
         self.scale_error = 0.
         super(MC_Ztautau, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+                *args, **kwargs)
 
 
 class Embedded_Ztautau(MC, Ztautau, Background):
 
-    def __init__(self, color='#00a4ff', **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Instead of setting the k factor here
         the normalization is determined by a fit to the data
         """
-        yml = samples_db.BACKGROUNDS['hadhad']['embedded_ztautau']
-        self.name = 'Ztautau'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        systematics_samples = yml['systematics_samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
         self.scale_error = 0.
         super(Embedded_Ztautau, self).__init__(
-                color=color,
-                systematics_samples=systematics_samples,
-                systematics_terms=systematics_terms,
-                **kwargs)
+                *args, **kwargs)
 
 
 class EWK(MC, Background):
 
-    def __init__(self, color='#ff9f71', **kwargs):
-
-        yml = samples_db.BACKGROUNDS['hadhad']['ewk']
-        self.name = 'EWK'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(EWK, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Top(MC, Background):
 
-    def __init__(self, color='#0000ff', **kwargs):
-
-        yml = samples_db.BACKGROUNDS['hadhad']['top']
-        self.name = 'Top'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Top, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Diboson(MC, Background):
 
-    def __init__(self, color='#ffd075', **kwargs):
-
-        yml = samples_db.BACKGROUNDS['hadhad']['diboson']
-        self.name = 'Diboson'
-        self._label = yml['latex']
-        self.samples = yml['samples']
-        syst = samples_db.SYSTEMATICS['hadhad'][yml['systematics']]
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Diboson, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Others(MC, Background):
 
-    def __init__(self, color='#ff7700', **kwargs):
-
-        yml_diboson = samples_db.BACKGROUNDS['hadhad']['diboson']
-        yml_top = samples_db.BACKGROUNDS['hadhad']['top']
-        yml_ewk = samples_db.BACKGROUNDS['hadhad']['ewk']
-        self.samples = (yml_diboson['samples'] +
-                        yml_top['samples'] +
-                        yml_ewk['samples'])
-        self._label = 'Others'
-        self.name = 'Others'
-        syst = samples_db.SYSTEMATICS['hadhad']['mc']
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Others, self).__init__(
-                color=color,
-                systematics_terms=systematics_terms,
-                **kwargs)
+    pass
 
 
 class Higgs(MC, Signal):
@@ -912,7 +891,7 @@ class Higgs(MC, Signal):
         'wh': ('WH', 'Pythia'),
     }
 
-    def __init__(self,
+    def __init__(self, year=2011,
             mode=None, modes=None,
             mass=None, masses=None, **kwargs):
 
@@ -967,11 +946,7 @@ class Higgs(MC, Signal):
                 self.masses.append(mass)
                 self.modes.append(mode)
 
-        syst = samples_db.SYSTEMATICS['hadhad']['mc']
-        systematics_terms = [tuple(term.split(',')) for term in syst]
-        super(Higgs, self).__init__(
-                systematics_terms=systematics_terms,
-                **kwargs)
+        super(Higgs, self).__init__(year=year, **kwargs)
 
 
 class QCD(Sample):
@@ -990,12 +965,6 @@ class QCD(Sample):
         self.scale = 1.
         self.scale_error = 0.
         self.shape_region = shape_region
-
-    def draw(self, expr, category, region, bins, min, max, cuts=None):
-
-        hist = Hist(bins, min, max, title=self.label, **self.hist_decor)
-        self.draw_into(hist, expr, category, region, cuts=cuts)
-        return hist
 
     def draw_into(self, hist, expr, category, region, cuts=None):
 
@@ -1059,9 +1028,9 @@ class QCD(Sample):
         for sys_term in scores_dict.keys():
             sys_scores, sys_weights = scores_dict[sys_term]
             scale = self.scale
-            if sys_term == ('FIT_UP',):
+            if sys_term == ('QCDFIT_UP',):
                 scale += self.scale_error
-            elif sys_term == ('FIT_DOWN',):
+            elif sys_term == ('QCDFIT_DOWN',):
                 scale -= self.scale_error
             # subtract SS MC
             sys_weights *= -1 * scale
@@ -1093,9 +1062,9 @@ class QCD(Sample):
             trees += _trees
 
         scale = self.scale
-        if systematic == ('FIT_UP',):
+        if systematic == ('QCDFIT_UP',):
             scale += self.scale_error
-        elif systematic == ('FIT_DOWN',):
+        elif systematic == ('QCDFIT_DOWN',):
             scale -= self.scale_error
 
         for tree in trees:
@@ -1129,9 +1098,9 @@ class QCD(Sample):
             arrays.extend(_arrays)
 
         scale = self.scale
-        if systematic == ('FIT_UP',):
+        if systematic == ('QCDFIT_UP',):
             scale += self.scale_error
-        elif systematic == ('FIT_DOWN',):
+        elif systematic == ('QCDFIT_DOWN',):
             scale -= self.scale_error
 
         for array in arrays:

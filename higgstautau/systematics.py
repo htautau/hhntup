@@ -445,8 +445,9 @@ class Systematics(EventFilter):
     CER_UP = METUtil.CERUp
     CER_DOWN = METUtil.CERDown
 
-    ALLCLUSTERS_UP = METUtil.AllClustersUp
-    ALLCLUSTERS_DOWN = METUtil.AllClustersDown
+    # deprecated 1.1.0
+    #ALLCLUSTERS_UP = METUtil.AllClustersUp
+    #ALLCLUSTERS_DOWN = METUtil.AllClustersDown
 
     # soft terms
     RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
@@ -464,9 +465,9 @@ class Systematics(EventFilter):
     SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
     SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
 
-    # pileup
-    PILEUP_UP = METUtil.PileupUp
-    PILEUP_DOWN = METUtil.PileupDown
+    # pileup (deprecated 1.1.0)
+    #PILEUP_UP = METUtil.PileupUp
+    #PILEUP_DOWN = METUtil.PileupDown
 
     def __init__(self,
             datatype,
@@ -600,7 +601,7 @@ class Systematics(EventFilter):
         if self.year == 2012:
             return self.passes_12(event)
         elif self.year == 2011:
-            return seld.passes_11(event)
+            return self.passes_11(event)
         else:
             raise ValueError("No MET defined for year %d" % self.year)
 

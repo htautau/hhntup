@@ -1,0 +1,94 @@
+//=========================
+// 2012 Track Counting
+//=========================
+
+int lead_track=0;
+int sublead_track=0;
+int lead_track_core=0;
+int sublead_track_core=0;
+int lead_new_track=0;
+int sublead_new_track=0;
+
+// 2011-style trk counting:
+
+for(int tau=0;tau<tau_index.size();tau++){
+    //START TRACK RECOUNTING
+    int index = tau_index.at(tau);
+    int nOuterKtTrack = 0;
+    float threshold = 4.;
+    //std::cout<<"debug track counting: "<<trk_phi->size()<<std::endl;
+    for (int out=0; out<trk_n; out++) {
+        double sinth  = TMath::Sin((*trk_atTJVA_theta)[out][index]);
+        double trkpt  = sinth/TMath::Abs((*trk_atTJVA_qoverp)[out][index]);
+        double trketa = -TMath::Log(TMath::Tan(0.5*(*trk_atTJVA_theta)[out][index]));
+        double trkphi = (*trk_atTJVA_phi)[out][index];
+        double dR = deltaR((*tau_phi)[index],trkphi,(*tau_eta)[index],trketa);
+        if(dR>0.6) continue;
+        if (dR>0.2 && dR<0.6 && trkpt/1000.0>0.5
+            && TMath::Abs((*trk_atTJVA_d0)[out][index])<1.0
+            && TMath::Abs((*trk_atTJVA_z0)[out][index]*sinth)<1.5
+            && (*trk_nPixHits)[out]>1 && (*trk_nBLHits)[out]>0 && (*trk_nPixHits)[out]+(*trk_nSCTHits)[out]>6)
+        {
+            //std::cout<<"debug good trk, core trk: "<<(*tau_track_atTJVA_n)[index]<<std::endl;
+            float iCheckKtTrack=0;		
+            for (int j=0; j<(*tau_track_atTJVA_n)[index]; j++) {
+                double dR1 = deltaR((*tau_track_atTJVA_phi)[index][j],(*trk_phi)[out],(*tau_track_atTJVA_eta)[index][j],(*trk_eta)[out]);
+                double ptdR1 = (*tau_track_atTJVA_pt)[index][j]*dR1/(*trk_pt)[out];
+                
+                if(ptdR1>iCheckKtTrack) iCheckKtTrack = ptdR1;
+                //std::cout<<"debug core loop"<<std::endl;
+            }
+            if(iCheckKtTrack < threshold ) nOuterKtTrack++;
+            //std::cout<<"debug core loop: "<<nOuterKtTrack<<std::endl;
+        }
+    }
+    //std::cout<<"debug after trl loop"<<std::endl;
+    int ntrack = nOuterKtTrack + tau_track_atTJVA_n->at(index);
+    if(tau==0) lead_track=ntrack;
+    if(tau==1) sublead_track=ntrack;
+    if(tau==0) lead_track_core=tau_track_atTJVA_n->at(index);
+    if(tau==1) sublead_track_core=tau_track_atTJVA_n->at(index);
+    //std::cout<<"debug end track counting"<<std::endl;
+}	//END RECOUNTING
+
+
+tree_out_ntrack_lead = lead_track;
+tree_out_ntrack_sublead = sublead_track;
+
+// 2012 NEW COUNTING:
+
+for(int tau=0;tau<tau_index.size();tau++){
+    //START TRACK RECOUNTING
+    
+    int nOuterKtTrack1 = 0;
+    int indexTau = tau_index.at(tau);   // index of tau candidate
+    
+    for (int i=0; i<trk_n; i++) {
+        double sinth  = TMath::Sin((*trk_atTJVA_theta)[i][indexTau]);
+        double trkpt  = sinth/TMath::Abs((*trk_atTJVA_qoverp)[i][indexTau]);
+        double trketa = -TMath::Log(TMath::Tan(0.5*(*trk_atTJVA_theta)[i][indexTau]));
+        double trkphi = (*trk_atTJVA_phi)[i][indexTau];
+        double dR = deltaR((*tau_phi)[indexTau],trkphi,(*tau_eta)[indexTau],trketa);
+        if(dR>0.6) continue;
+        if (trkpt/1000.0>0.5
+            && TMath::Abs((*trk_atTJVA_d0)[i][indexTau])<1.0
+            && TMath::Abs((*trk_atTJVA_z0)[i][indexTau]*sinth)<1.5
+            && (*trk_nPixHits)[i]>1 && (*trk_nBLHits)[i]>0 && (*trk_nPixHits)[i]+(*trk_nSCTHits)[i]>6)
+        {
+            int iCheckKtTrack = 0;
+            for (int j=0; j<(*tau_track_atTJVA_n)[indexTau]; j++) {
+                double dR1 = deltaR((*tau_track_atTJVA_phi)[indexTau][j],trkphi,(*tau_track_atTJVA_eta)[indexTau][j],trketa);
+                double ptdR1 = (*tau_track_atTJVA_pt)[indexTau][j]*dR1/trkpt;
+                if (ptdR1<4.0 && dR>0.2)                     { iCheckKtTrack++; }
+                if (ptdR1<4.0 && dR<0.2 && trkpt/1000.0<1.0) { iCheckKtTrack++; }
+            }
+            if (iCheckKtTrack>0) { nOuterKtTrack1++; }
+            
+        }
+    }
+    if(tau==0) lead_new_track=nOuterKtTrack1+tau_track_atTJVA_n->at(indexTau);
+    if(tau==1) sublead_new_track=nOuterKtTrack1+tau_track_atTJVA_n->at(indexTau);
+}
+
+tree_new_out_ntrack_lead = lead_new_track;
+tree_new_out_ntrack_sublead = sublead_new_track;

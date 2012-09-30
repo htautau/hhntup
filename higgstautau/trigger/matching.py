@@ -95,8 +95,6 @@ class TauTriggerMatchIndex(EventFilter):
         Use the info stored in the D3PD for 2012:
         trig_EF_tau_EF_tau29Ti_medium1_tau20Ti_medium1
         """
-        matched_taus = []
-        matches = {}
         # get indices of trigger taus associated with this trigger
         trigger_idx = triggerutils.get_tau_trigger_obj_idx(
             self.config,
@@ -120,7 +118,7 @@ class TauTriggerMatchIndex(EventFilter):
                     closest_dR = dR
                     closest_tau = tau
             if closest_tau is not None:
-                tau.trigger_match_index = EF_idx
+                closest_tau.trigger_match_index = EF_idx
                 # remove match from future matches (greedy match)
                 taus.remove(closest_tau)
 

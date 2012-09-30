@@ -6,6 +6,7 @@ import multiprocessing as mp
 from higgstautau.datasets import Database
 from higgstautau import samples
 from systematics import iter_systematics
+from pbs import qsub
 
 
 HOSTNAME = socket.gethostname()
@@ -79,29 +80,6 @@ def mkdir_p(path):
 def run_helper(cmd):
 
     subprocess.call(cmd, shell=True)
-
-
-def qsub(cmd,
-         queue='medium',
-         ncpus=1,
-         stderr_path=None,
-         stdout_path=None,
-         name=None,
-         dry_run=False):
-
-    kwargs = {}
-    if name is not None:
-        kwargs['-N'] = name
-    if stderr_path is not None:
-        kwargs['-e'] = stderr_path
-    if stdout_path is not None:
-        kwargs['-o'] = stdout_path
-    args = ' '.join(['%s %s' % arg for arg in kwargs.items()])
-    cmd = "echo '%s' | qsub -q %s %s -l ncpus=%d" % (
-           cmd, queue, args, ncpus)
-    print cmd
-    if not dry_run:
-        call(cmd, shell=True)
 
 
 def run(student,

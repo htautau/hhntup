@@ -1,8 +1,7 @@
 gg:
     name: gghtautau
-    systematics: mc
     latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
-    math: 'ggH\rightarrow\tau_{h}\tau_{h}'
+    root: 'ggH#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PowHegPythia_ggH100_tautauhh.mc11c'
         - 'PowHegPythia_ggH105_tautauhh.mc11c'
@@ -17,9 +16,8 @@ gg:
         - 'PowHegPythia_ggH150_tautauhh.mc11c'
 vbf:
     name: vbfhtautau
-    systematics: mc
     latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'
-    math: 'VBF H\rightarrow\tau_{h}\tau_{h}'
+    root: 'VBF H#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PowHegPythia_VBFH100_tautauhh.mc11c'
         - 'PowHegPythia_VBFH105_tautauhh.mc11c'
@@ -34,9 +32,8 @@ vbf:
         - 'PowHegPythia_VBFH150_tautauhh.mc11c'
 wh:
     name: whtautau
-    systematics: mc
     latex: '$WH\rightarrow\tau_{h}\tau_{h}$'
-    math: 'WH\rightarrow\tau_{h}\tau_{h}'
+    root: 'WH#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PythiaWH100_tautauhh.mc11c'
         - 'PythiaWH105_tautauhh.mc11c'
@@ -51,9 +48,8 @@ wh:
         - 'PythiaWH150_tautauhh.mc11c'
 zh:
     name: zhtautau
-    systematics: mc
     latex: '$ZH\rightarrow\tau_{h}\tau_{h}$'
-    math: 'ZH\rightarrow\tau_{h}\tau_{h}'
+    root: 'ZH#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PythiaZH100_tautauhh.mc11c'
         - 'PythiaZH105_tautauhh.mc11c'

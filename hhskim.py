@@ -81,7 +81,6 @@ class hhskim(ATLASStudent):
             xml_string.Write(self.metadata.treename)
             self.output.cd()
 
-
         # define the model of the output tree
         Model = SkimModel + TriggerMatching + MassModel + TauCorrections
 
@@ -162,7 +161,8 @@ class hhskim(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
-                verbose=VERBOSE),
+                verbose=VERBOSE,
+                count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
@@ -320,7 +320,7 @@ class hhskim(ATLASStudent):
             # visible mass
             tree.tau_visible_mass = (tau1.fourvect + tau2.fourvect).M()
 
-            if year == 2011:
+            if datatype == datasets.MC and year == 2011:
                 tree.ggf_weight = reweight_ggf(event, self.metadata.name)
 
             tree.tau_selected.clear()

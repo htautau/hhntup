@@ -46,6 +46,10 @@ def define_objects(tree, year):
             name="vertices",
             prefix="vxp_",
             size="vxp_n")
+    tree.define_collection(
+            name="tracks",
+            prefix="trk_",
+            size="trk_n")
 
     if year == 2011:
         met = 'MET_RefFinal_BDTMedium_'

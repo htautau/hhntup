@@ -37,7 +37,6 @@ channel = '2jet'
 data = Data(channel=channel)
 mc_ztautau = MC_Ztautau(channel=channel)
 mc_ewk = MC_EWK(channel=channel)
-#mc_dy = MC_DY(channel=channel)
 
 vbf = MC_VBF_125(channel=channel, scale=10. if not NORMED else 1.)
 ggf = MC_ggF_125(channel=channel, scale=10. if not NORMED else 1.)

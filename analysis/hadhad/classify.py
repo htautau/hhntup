@@ -1,8 +1,11 @@
 import numpy as np
+# for reproducibilty
+# especially for test/train set selection
+np.random.seed(1987) # my birth year ;)
 
 from matplotlib import cm
 from matplotlib import pyplot as plt
-from matplotlib.ticker import IndexLocator, FuncFormatter
+from matplotlib.ticker import MaxNLocator, FuncFormatter
 
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
@@ -10,10 +13,14 @@ from rootpy.io import open as ropen
 from samples import *
 from utils import draw
 
+
+
 def plot_grid_scores(
         grid_scores, best_point, params, name,
         label_all_bins=False,
         label_all_ticks=False,
+        n_ticks=10,
+        title=None,
         format='png'):
 
     param_names = sorted(grid_scores[0][0].keys())
@@ -22,6 +29,7 @@ def plot_grid_scores(
         for pname in param_names:
             param_values[pname].append(pvalues[pname])
 
+    # remove duplicates
     for pname in param_names:
         param_values[pname] = np.unique(param_values[pname]).tolist()
 
@@ -33,11 +41,12 @@ def plot_grid_scores(
             index.append(param_values[pname].index(pvalues[pname]))
         scores.itemset(tuple(index), score)
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    cmap = cm.get_cmap('jet', 100) # jet doesn't have white color
-    #cmap.set_bad('w') # default value is 'k'
-    ax.imshow(scores, interpolation="nearest", cmap=cmap)
+    fig = plt.figure(figsize=(7, 5), dpi=100)
+    ax = plt.axes([.12, .15, .8, .75])
+    cmap = cm.get_cmap('jet', 100)
+    img = ax.imshow(scores, interpolation="nearest", cmap=cmap,
+            aspect='auto',
+            origin='lower')
 
     if label_all_ticks:
         plt.xticks(range(len(param_values[param_names[1]])),
@@ -47,45 +56,54 @@ def plot_grid_scores(
     else:
         trees = param_values[param_names[1]]
         def tree_formatter(x, pos):
+            if x < 0 or x >= len(trees):
+                return ''
             return str(trees[int(x)])
 
         leaves = param_values[param_names[0]]
         def leaf_formatter(x, pos):
+            if x < 0 or x >= len(leaves):
+                return ''
             return str(leaves[int(x)])
 
         ax.xaxis.set_major_formatter(FuncFormatter(tree_formatter))
         ax.yaxis.set_major_formatter(FuncFormatter(leaf_formatter))
-        ax.xaxis.set_major_locator(IndexLocator(2, 0))
-        ax.yaxis.set_major_locator(IndexLocator(2, 0))
+        ax.xaxis.set_major_locator(MaxNLocator(n_ticks, integer=True,
+            prune='lower', steps=[1, 2, 5, 10]))
+        ax.yaxis.set_major_locator(MaxNLocator(n_ticks, integer=True,
+            steps=[1, 2, 5, 10]))
         xlabels = ax.get_xticklabels()
         for label in xlabels:
             label.set_rotation(45)
 
-    ax.set_xlabel(params[param_names[1]], fontsize=20, position=(1., 0.), ha='right')
-    ax.set_ylabel(params[param_names[0]], fontsize=20, position=(0., 1.), va='top')
+    ax.set_xlabel(params[param_names[1]], fontsize=12,
+            position=(1., 0.), ha='right')
+    ax.set_ylabel(params[param_names[0]], fontsize=12,
+            position=(0., 1.), va='top')
 
     ax.set_frame_on(False)
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
 
-    if label_all_bins:
-        for row in range(scores.shape[0]):
-            for col in range(scores.shape[1]):
-                decor={}
-                if ((param_values[param_names[0]].index(best_point[param_names[0]])
-                     == row) and
-                    (param_values[param_names[1]].index(best_point[param_names[1]])
-                     == col)):
-                    decor = dict(weight='bold',
-                                 bbox=dict(boxstyle="round,pad=0.5",
-                                           ec='black',
-                                           fill=False))
+    for row in range(scores.shape[0]):
+        for col in range(scores.shape[1]):
+            decor={}
+            if ((param_values[param_names[0]].index(best_point[param_names[0]])
+                 == row) and
+                (param_values[param_names[1]].index(best_point[param_names[1]])
+                 == col)):
+                decor = dict(weight='bold',
+                             bbox=dict(boxstyle="round,pad=0.5",
+                                       ec='black',
+                                       fill=False))
+            if label_all_bins or decor:
                 plt.text(col, row, "%.3f" % (scores[row][col]), ha='center',
                          va='center', **decor)
-    else:
-        # circle the best bin and label the parameters
-        pass
+    if title:
+        plt.suptitle(title)
 
+    plt.colorbar(img, fraction=.06, pad=0.03)
+    plt.axis("tight")
     plt.savefig("grid_scores_%s.%s" % (name, format), bbox_inches='tight')
     plt.clf()
 
@@ -106,7 +124,7 @@ def plot_clf(
         max_score=1,
         systematics=None):
 
-    hist_template = Hist(bins, min_score, max_score)
+    hist_template = Hist(bins, min_score - 0.00001, max_score + 0.00001)
 
     bkg_hists = []
     for bkg, scores_dict in background_scores:
@@ -148,6 +166,7 @@ def plot_clf(
     if data_scores is not None and draw_data:
         data, data_scores = data_scores
         data_hist = hist_template.Clone(title=data.label)
+        data_hist.decorate(**data.hist_decor)
         map(data_hist.Fill, data_scores)
         print "Data events: %d" % sum(data_hist)
         print "Model events: %f" % sum(sum(bkg_hists))
@@ -197,6 +216,7 @@ def make_classification(
         same_size_train=True,
         same_size_test=False,
         standardize=False,
+        remove_negative_train_weights=False,
         systematic='NOMINAL'):
 
     signal_train_arrs = []
@@ -250,6 +270,14 @@ def make_classification(
     background_weight_train = np.concatenate(background_weight_train_arrs)
     background_test = np.concatenate(background_test_arrs)
     background_weight_test = np.concatenate(background_weight_test_arrs)
+
+    if remove_negative_train_weights:
+        # remove samples from the training sample with a negative weight
+        signal_train = signal_train[signal_weight_train >= 0]
+        background_train = background_train[background_weight_train >= 0]
+
+        signal_weight_train = signal_weight_train[signal_weight_train >= 0]
+        background_weight_train = background_weight_train[background_weight_train >= 0]
 
     if max_sig_train is not None and max_sig_train < len(signal_train):
         subsample = np.random.permutation(max_sig_train)[:len(signal_train)]
@@ -345,9 +373,6 @@ def make_classification(
     sample_weight_train = sample_weight_train[perm]
     labels_train = labels_train[perm]
 
-    # split the dataset in two equal parts respecting label proportions
-    #train, test = iter(StratifiedKFold(labels, 2)).next()
     return sample_train, sample_test,\
         sample_weight_train, sample_weight_test,\
         labels_train, labels_test
-
