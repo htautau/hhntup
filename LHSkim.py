@@ -29,12 +29,36 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 YEAR = 2012
 
+REMOVE = [
+    'cl_*',
+    'trk_*',
+    'tau_otherTrk_*',
+    'jet_AntiKt6LCTopo_*',
+    'jet_AntiKt4TopoEM_*',
+    'mu_muid*',
+    'mu_calo*'
+]
+
+# override globs above
+KEEP = [
+    'trk_atTJVA_*',
+    'jet_AntiKt4TopoEM_n',
+    'jet_AntiKt4TopoEM_pt',
+    'jet_AntiKt4TopoEM_eta',
+    'jet_AntiKt4TopoEM_phi',
+    'jet_AntiKt4TopoEM_flavor_weight_JetFitterCOMBNN',
+    'jet_AntiKt4TopoEM_flavor_weight_SV1',
+    'jet_AntiKt4TopoEM_flavor_weight_IP3D',
+    'jet_AntiKt4TopoEM_flavor_truth_label'
+    ]
+
 class SkimExtraModel(TreeModel):
 
     number_of_good_taus = IntCol()
     number_of_good_muons = IntCol()
     number_of_good_electrons = IntCol()
-
+    el_trk_d3pdindex = ROOT.vector('int')
+    mu_staco_trk_d3pdindex = ROOT.vector('int')
 
 class LHSkim(ATLASStudent):
 
@@ -48,32 +72,14 @@ class LHSkim(ATLASStudent):
         outtree = Tree(name=self.metadata.treename,
                        file=self.output,
                        model=SkimExtraModel)
-        outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
+#        outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
 
-
-        # Slimming
-        blocks_to_remove= ['cl_*',
-                           'trk_*',
-                           'tau_otherTrk_*',
-                           'jet_AntiKt6LCTopo_*',
-        #'jet_AntiKt4TopoEM_*',
-                           'mu_muid*',
-                           'mu_calo*'
-                           ]
-
-        variables_to_keep = outtree.glob('*', prune=blocks_to_remove)
-        
-        # variables_to_keep += ['jet_AntiKt4TopoEM_n',
-        #                       'jet_AntiKt4TopoEM_pt',
-        #                       'jet_AntiKt4TopoEM_eta',
-        #                       'jet_AntiKt4TopoEM_phi',
-        #                       'jet_AntiKt4TopoEM_flavor_weight_JetFitterCOMBNN',
-        #                       'jet_AntiKt4TopoEM_flavor_weight_SV1',
-        #                       'jet_AntiKt4TopoEM_flavor_weight_IP3D',
-        #                       'jet_AntiKt4TopoEM_flavor_truth_label']
-        
-        outtree.activate(variables_to_keep, exclusive=True)
-
+        outtree.set_buffer(
+                intree.buffer,
+                ignore_branches=intree.glob(REMOVE,prune=KEEP),
+                create_branches=True,
+                transfer_objects=True,
+            visible=False)
 
         # Merge TrigConfTrees
         metadirname = '%sMeta' % self.metadata.treename
@@ -131,6 +137,34 @@ class LHSkim(ATLASStudent):
         # Entering the main event loop...
         for event in intree:
             nevents += 1
+
+            ## Findin the track index for the electron
+            outtree.el_trk_d3pdindex.clear()
+            for i_el in xrange(intree.el_n):
+                _el_trk_d3pdindex=-1
+                _el_trk_mindist = 999;
+                for i_trk in xrange(intree.trk_n):
+                    _trk_mindist  = math.pow(intree.trk_theta[i_trk] - intree.el_tracktheta[i_el],2)
+                    _trk_mindist += math.pow(intree.trk_phi[i_trk] - intree.el_trackphi[i_el],2)
+                    if _trk_mindist < _el_trk_mindist :
+                       _el_trk_mindist = _trk_mindist
+                       _el_trk_d3pdindex = i_trk
+                outtree.el_trk_d3pdindex.push_back(_el_trk_d3pdindex)
+
+
+            ## Finding the track index for the muon
+            outtree.mu_staco_trk_d3pdindex.clear()
+            for i_mu in xrange(intree.mu_staco_n):
+                _mu_staco_trk_d3pdindex=-1
+                _mu_staco_trk_mindist = 999;
+                for i_trk in xrange(intree.trk_n):
+                    _trk_mindist  = math.pow(intree.trk_theta[i_trk] - intree.mu_staco_tracktheta[i_mu],2)
+                    _trk_mindist += math.pow(intree.trk_phi[i_trk] - intree.mu_staco_trackphi[i_mu],2)
+                    if _trk_mindist < _mu_staco_trk_mindist :
+                       _mu_staco_trk_mindist = _trk_mindist
+                       _mu_staco_trk_d3pdindex = i_trk
+                outtree.mu_staco_trk_d3pdindex.push_back(_mu_staco_trk_d3pdindex)
+                
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weights += event.mc_event_weight
                 
