@@ -486,17 +486,19 @@ for category, cat_info in categories_controls:
                 # full search
                 min_leaf_high = int((sample_train.shape[0] / 2.) *
                         (args.nfold - 1.) / args.nfold)
-                min_leaf_low = max(10, int(min_leaf_high / 30.))
+                min_leaf_low = max(10, int(min_leaf_high / 50.))
                 min_leaf_step = max((min_leaf_high - min_leaf_low) / 100, 1)
                 MIN_SAMPLES_LEAF = range(
                         min_leaf_low, min_leaf_high, min_leaf_step)
                 MAX_N_ESTIMATORS = 1000
+                MIN_N_ESTIMATORS = 10
                 grid_params = {
                     'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
                 }
                 grid_clf = BoostGridSearchCV(
                         clf, grid_params,
                         max_n_estimators=MAX_N_ESTIMATORS,
+                        min_n_estimators=MIN_N_ESTIMATORS,
                         # can use default ClassifierMixin score
                         #score_func=precision_score,
                         cv = StratifiedKFold(labels_train, args.nfold),
@@ -552,10 +554,13 @@ for category, cat_info in categories_controls:
                 table = PrettyTable(["Rank", "Variable", "Importance"])
                 print r"\hline\hline"
                 print r"Rank & Variable & Importance\\"
-                for f, feature in enumerate(branches):
-                    table.add_row([f+1, feature, '%.3f' % importances[indices[f]]])
-                    print r"%d & %s & %.3f\\" % (f + 1, VARIABLES[feature]['title'], importances[indices[f]])
-                    #print "%d. %s (%f)" % (f + 1, feature, importances[indices[f]])
+                for f, idx in enumerate(indices):
+                    table.add_row([f + 1,
+                        branches[idx],
+                        '%.3f' % importances[idx]])
+                    print r"%d & %s & %.3f\\" % (f + 1,
+                        VARIABLES[branches[idx]]['title'],
+                        importances[idx])
                 print r"\end{tabular}"
                 print
                 print table.get_string(hrules=1)

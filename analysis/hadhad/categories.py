@@ -42,7 +42,7 @@ CATEGORIES = {
             'eta_product_jets',
             #'eta_product_jets_boosted',
             'mass_jet1_jet2',
-            'sphericity',
+            #'sphericity',
             #'aplanarity',
             'tau1_centrality',
             'tau2_centrality',
@@ -52,13 +52,13 @@ CATEGORIES = {
             #'tau2_centrality_boosted',
             #'cos_theta_tau1_tau2',
             'dR_tau1_tau2',
-            #'tau1_BDTJetScore',
-            #'tau2_BDTJetScore',
-            'tau1_x',
-            'tau2_x',
+            'tau1_BDTJetScore',
+            'tau2_BDTJetScore',
+            #'tau1_x',
+            #'tau2_x',
             'MET_centrality',
-            #'mmc_resonance_pt',
-            #'sum_pt'
+            'mmc_resonance_pt',
+            #'sum_pt',
         ]
     },
     'boosted': {
@@ -79,7 +79,7 @@ CATEGORIES = {
             'tau2_x',
             'MET_centrality',
             #'sum_pt',
-            #'mmc_resonance_pt'
+            'mmc_resonance_pt',
         ]
     },
     'ggf': {
