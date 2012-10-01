@@ -116,6 +116,45 @@ from rootpy.io import open as ropen
 from rootpy.extern.tabulartext import PrettyTable
 
 
+def staged_score(self, X, y, sample_weight, n_estimators=-1):
+    """
+    calculate maximum signal significance
+    """
+    bins = 20
+    for p in self.staged_predict_proba(X, n_estimators=n_estimators):
+
+        scores = p[:,-1]
+        min_score, max_score = scores.min(), scores.max()
+        b_hist = Hist(bins, min_score, max_score + 0.0001)
+        s_hist = b_hist.Clone()
+
+        scores_s, w_s = scores[y==1], sample_weight[y==1]
+        scores_b, w_b = scores[y==0], sample_weight[y==0]
+
+        # fill the histograms
+        for s, w in zip(scores_s, w_s):
+            s_hist.Fill(s, w)
+        for s, w in zip(scores_b, w_b):
+            b_hist.Fill(s, w)
+
+        # reverse cumsum
+        #bins = list(b_hist.xedges())[:-1]
+        s_counts = np.array(s_hist)
+        b_counts = np.array(b_hist)
+        S = s_counts[::-1].cumsum()[::-1]
+        B = b_counts[::-1].cumsum()[::-1]
+
+        # S / sqrt(S + B)
+        s_sig = np.divide(list(S), np.sqrt(list(S + B)))
+
+        #max_bin = np.argmax(np.ma.masked_invalid(significance)) #+ 1
+        #max_sig = significance[max_bin]
+        #max_cut = bins[max_bin]
+
+        s_sig_max = np.max(np.ma.masked_invalid(s_sig))
+        yield s_sig_max
+
+
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
 if not LIMITS_DIR:
     sys.exit('You did not source setup.sh!')
@@ -322,6 +361,9 @@ for category, cat_info in categories_controls:
             ztautau,
         ]
 
+        control_region = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
+        signal_region = Cut('mass_mmc_tau1_tau2 > %d' % args.mass_cut)
+
         # define training and test samples
         branches = cat_info['features']
         clf_filename = 'clf_%s%s.pickle' % (category, output_suffix)
@@ -341,6 +383,7 @@ for category, cat_info in categories_controls:
             print
             for branch in branches:
                 print branch
+            print
 
             if args.cor:
                 branches = branches + ['mass_mmc_tau1_tau2']
@@ -363,8 +406,8 @@ for category, cat_info in categories_controls:
                 same_size_train=True,
                 same_size_test=False,
                 remove_negative_train_weights=True,
-                standardize=False)
-
+                standardize=False,
+                cuts=signal_region)
 
             if args.cor:
                 # draw a linear correlation matrix
@@ -461,49 +504,56 @@ for category, cat_info in categories_controls:
                 continue
 
             # train a new BDT
+
+            #AdaBoostClassifier.staged_score = staged_score
+
             clf = AdaBoostClassifier(
                     DecisionTreeClassifier(),
                     compute_importances=True,
                     learn_rate=.5)
 
             # grid search params
+            min_leaf_high = int((sample_train.shape[0] / 2.) * 0.6 *
+                    (args.nfold - 1.) / args.nfold)
+            min_leaf_low = max(10, int(min_leaf_high / 100.))
+
             if args.quick_train:
                 # quick search for testing
-                MIN_SAMPLES_LEAF = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
-                N_ESTIMATORS = [
-                        1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
-                grid_params = {
-                    'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
-                    'n_estimators': N_ESTIMATORS
-                }
-                grid_clf = GridSearchCV(
-                        clf, grid_params,
-                        # can use default ClassifierMixin score
-                        #score_func=precision_score,
-                        cv = StratifiedKFold(labels_train, args.nfold),
-                        n_jobs=-1)
+                min_leaf_step = max((min_leaf_high - min_leaf_low) / 20, 1)
+                MAX_N_ESTIMATORS = 500
+                MIN_N_ESTIMATORS = 10
+
             else:
-                # full search
-                min_leaf_high = int((sample_train.shape[0] / 2.) *
-                        (args.nfold - 1.) / args.nfold)
-                min_leaf_low = max(10, int(min_leaf_high / 50.))
-                min_leaf_step = max((min_leaf_high - min_leaf_low) / 100, 1)
-                MIN_SAMPLES_LEAF = range(
-                        min_leaf_low, min_leaf_high, min_leaf_step)
+                # larger search
+                min_leaf_step = max((min_leaf_high - min_leaf_low) / 50, 1)
                 MAX_N_ESTIMATORS = 1000
                 MIN_N_ESTIMATORS = 10
-                grid_params = {
-                    'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
-                }
-                grid_clf = BoostGridSearchCV(
-                        clf, grid_params,
-                        max_n_estimators=MAX_N_ESTIMATORS,
-                        min_n_estimators=MIN_N_ESTIMATORS,
-                        # can use default ClassifierMixin score
-                        #score_func=precision_score,
-                        cv = StratifiedKFold(labels_train, args.nfold),
-                        n_jobs=-1)
 
+            MIN_SAMPLES_LEAF = range(
+                    min_leaf_low, min_leaf_high, min_leaf_step)
+
+            grid_params = {
+                'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
+            }
+
+            grid_clf = BoostGridSearchCV(
+                    clf, grid_params,
+                    max_n_estimators=MAX_N_ESTIMATORS,
+                    min_n_estimators=MIN_N_ESTIMATORS,
+                    # can use default ClassifierMixin score
+                    #score_func=precision_score,
+                    cv = StratifiedKFold(labels_train, args.nfold),
+                    n_jobs=-1)
+
+            print
+            print "performing a grid search over these parameter values:"
+            for param, values in grid_params.items():
+                print param.split('__')[-1], values
+                print '--'
+            print "Minimum number of classifiers: %d" % MIN_N_ESTIMATORS
+            print "Maximum number of classifiers: %d" % MAX_N_ESTIMATORS
+            print
+            print "training new classifiers ..."
             grid_clf.fit(
                     sample_train, labels_train,
                     sample_weight=sample_weight_train)
@@ -545,42 +595,40 @@ for category, cat_info in categories_controls:
                 print "After scaling up min_leaf"
                 print clf
             """
-
-            if hasattr(clf, 'feature_importances_'):
-                importances = clf.feature_importances_
-                indices = np.argsort(importances)[::-1]
-                print "Feature ranking:"
-                print r"\begin{tabular}{c|c|c}"
-                table = PrettyTable(["Rank", "Variable", "Importance"])
-                print r"\hline\hline"
-                print r"Rank & Variable & Importance\\"
-                for f, idx in enumerate(indices):
-                    table.add_row([f + 1,
-                        branches[idx],
-                        '%.3f' % importances[idx]])
-                    print r"%d & %s & %.3f\\" % (f + 1,
-                        VARIABLES[branches[idx]]['title'],
-                        importances[idx])
-                print r"\end{tabular}"
-                print
-                print table.get_string(hrules=1)
-
             with open(clf_filename, 'w') as f:
                 pickle.dump(clf, f)
+
+        if hasattr(clf, 'feature_importances_'):
+            importances = clf.feature_importances_
+            indices = np.argsort(importances)[::-1]
+            print "Feature ranking:"
+            print r"\begin{tabular}{c|c|c}"
+            table = PrettyTable(["Rank", "Variable", "Importance"])
+            print r"\hline\hline"
+            print r"Rank & Variable & Importance\\"
+            for f, idx in enumerate(indices):
+                table.add_row([f + 1,
+                    branches[idx],
+                    '%.3f' % importances[idx]])
+                print r"%d & %s & %.3f\\" % (f + 1,
+                    VARIABLES[branches[idx]]['title'],
+                    importances[idx])
+            print r"\end{tabular}"
+            print
+            print table.get_string(hrules=1)
 
         # Create histograms for the limit setting with HistFactory
         # Include all systematic variations
 
-        cuts = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
         print "plotting classifier output in control region..."
-        print cuts
+        print control_region
         # data scores
         data_scores, _ = data.scores(clf,
                 branches,
                 train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                cuts=cuts)
+                cuts=control_region)
 
         # determine min and max scores
         min_score = 1.
@@ -600,7 +648,7 @@ for category, cat_info in categories_controls:
                     train_fraction=args.train_fraction,
                     category=category,
                     region=target_region,
-                    cuts=cuts)
+                    cuts=control_region)
 
             for sys_term, (scores, weights) in scores_dict.items():
                 assert len(scores) == len(weights)
@@ -633,16 +681,15 @@ for category, cat_info in categories_controls:
             systematics=SYSTEMATICS if args.systematics else None)
 
         # show the background model and 125 GeV signal in the signal region
-        cuts = Cut('mass_mmc_tau1_tau2 > %d' % args.mass_cut)
         print "Plotting classifier output in signal region..."
-        print cuts
+        print signal_region
         # data scores
         data_scores, _ = data.scores(clf,
                 branches,
                 train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                cuts=cuts)
+                cuts=signal_region)
 
         # determine min and max scores
         min_score = 1.
@@ -662,7 +709,7 @@ for category, cat_info in categories_controls:
                     train_fraction=args.train_fraction,
                     category=category,
                     region=target_region,
-                    cuts=cuts)
+                    cuts=signal_region)
 
             for sys_term, (scores, weights) in scores_dict.items():
                 assert len(scores) == len(weights)
@@ -683,7 +730,7 @@ for category, cat_info in categories_controls:
                 train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                cuts=cuts)
+                cuts=signal_region)
 
         for sys_term, (scores, weights) in signal_scores_eval.items():
             assert len(scores) == len(weights)
@@ -724,7 +771,7 @@ for category, cat_info in categories_controls:
                         train_fraction=args.train_fraction,
                         category=category,
                         region=target_region,
-                        cuts=cuts)
+                        cuts=signal_region)
 
                 for sys_term, (scores, weights) in scores_dict.items():
                     assert len(scores) == len(weights)

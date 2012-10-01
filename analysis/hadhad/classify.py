@@ -280,22 +280,22 @@ def make_classification(
         background_weight_train = background_weight_train[background_weight_train >= 0]
 
     if max_sig_train is not None and max_sig_train < len(signal_train):
-        subsample = np.random.permutation(max_sig_train)[:len(signal_train)]
+        subsample = np.random.permutation(len(signal_train))[:max_sig_train]
         signal_train = signal_train[subsample]
         signal_weight_train = signal_weight_train[subsample]
 
     if max_bkg_train is not None and max_bkg_train < len(background_train):
-        subsample = np.random.permutation(max_bkg_train)[:len(background_train)]
+        subsample = np.random.permutation(len(background_train))[:max_bkg_train]
         background_train = background_train[subsample]
         background_weight_train = background_weight_train[subsample]
 
     if max_sig_test is not None and max_sig_test < len(signal_test):
-        subsample = np.random.permutation(max_sig_test)[:len(signal_test)]
+        subsample = np.random.permutation(len(signal_test))[:max_sig_test]
         signal_test = signal_test[subsample]
         signal_weight_test = signal_weight_test[subsample]
 
     if max_bkg_test is not None and max_bkg_test < len(background_test):
-        subsample = np.random.permutation(max_bkg_test)[:len(background_test)]
+        subsample = np.random.permutation(len(background_test))[:max_bkg_test]
         background_test = background_test[subsample]
         background_weight_test = background_weight_test[subsample]
 

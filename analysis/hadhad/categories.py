@@ -38,27 +38,29 @@ CATEGORIES = {
         'target_region': 'OS',
         'features': [
             'dEta_jets',
-            #'dEta_jets_boosted',
+            #'dEta_jets_boosted', #
             'eta_product_jets',
-            #'eta_product_jets_boosted',
+            #'eta_product_jets_boosted', #
             'mass_jet1_jet2',
-            #'sphericity',
-            #'aplanarity',
+            #'sphericity', #
+            #'sphericity_boosted', #
+            #'sphericity_full', #
+            #'aplanarity', #
+            #'aplanarity_boosted', #
+            #'aplanarity_full', #
             'tau1_centrality',
             'tau2_centrality',
-            #'sphericity_boosted',
-            #'aplanarity_boosted',
-            #'tau1_centrality_boosted',
-            #'tau2_centrality_boosted',
-            #'cos_theta_tau1_tau2',
+            #'tau1_centrality_boosted', #
+            #'tau2_centrality_boosted', #
+            #'cos_theta_tau1_tau2', #
             'dR_tau1_tau2',
             'tau1_BDTJetScore',
             'tau2_BDTJetScore',
-            #'tau1_x',
-            #'tau2_x',
+            #'tau1_x', #
+            #'tau2_x', #
             'MET_centrality',
             'mmc_resonance_pt',
-            #'sum_pt',
+            #'sum_pt', #
         ]
     },
     'boosted': {
@@ -70,7 +72,11 @@ CATEGORIES = {
         'target_region': 'OS',
         'features': [
             'sphericity',
-            #'aplanarity',
+            #'sphericity_boosted',
+            #'sphericity_full',
+            'aplanarity',
+            #'aplanarity_boosted',
+            #'aplanarity_full',
             #'cos_theta_tau1_tau2',
             'dR_tau1_tau2',
             'tau1_BDTJetScore',
@@ -78,7 +84,7 @@ CATEGORIES = {
             'tau1_x',
             'tau2_x',
             'MET_centrality',
-            #'sum_pt',
+            'sum_pt',
             'mmc_resonance_pt',
         ]
     },
@@ -97,7 +103,7 @@ CATEGORIES = {
             'tau1_x',
             'tau2_x',
             'MET_centrality',
-            #'mmc_resonance_pt',
+            'mmc_resonance_pt',
         ]
     },
 }

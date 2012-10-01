@@ -344,10 +344,26 @@ VARIABLES = {
         'range': (0, 1),
         'cats': ['VBF']
     },
+    'tau1_centrality_boosted': {
+        'title': r'Boosted $\tau_1$ Centrality',
+        'root': 'Boosted #tau_1 Centrality',
+        'filename': 'tau1_centrality_boosted',
+        'bins': 20,
+        'range': (0, 1),
+        'cats': ['VBF']
+    },
     'tau2_centrality': {
         'title': r'$\tau_2$ Centrality',
         'root': '#tau_2 Centrality',
         'filename': 'tau2_centrality',
+        'bins': 20,
+        'range': (0, 1),
+        'cats': ['VBF']
+    },
+    'tau2_centrality_boosted': {
+        'title': r'Boosted $\tau_2$ Centrality',
+        'root': 'Boosted #tau_2 Centrality',
+        'filename': 'tau2_centrality_boosted',
         'bins': 20,
         'range': (0, 1),
         'cats': ['VBF']
@@ -456,6 +472,14 @@ VARIABLES = {
         'title': r'$\eta_{jet_{1}} \times \/ \eta_{jet_{2}}$',
         'root': '#eta_{jet_{1}} #times #eta_{jet_{2}}',
         'filename': 'eta_product_jets',
+        'bins': 20,
+        'range': (-10, 10),
+        'cats': ['VBF']
+    },
+    'eta_product_jets_boosted': {
+        'title': r'Boosted $\eta_{jet_{1}} \times \/ \eta_{jet_{2}}$',
+        'root': 'Boosted #eta_{jet_{1}} #times #eta_{jet_{2}}',
+        'filename': 'eta_product_jets_boosted',
         'bins': 20,
         'range': (-10, 10),
         'cats': ['VBF']
