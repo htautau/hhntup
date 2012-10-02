@@ -216,6 +216,30 @@ VARIABLES = {
         'units': 'GeV',
         'cats': ['VBF', 'GGF', 'BOOSTED',]
     },
+    ('tau1_fourvect.Eta()', 'tau2_fourvect.Eta()'): {
+        'title': r'$\eta_{\tau_{1,\/2}}$',
+        'root': '#eta_{#tau_{1, 2}}',
+        'filename': 'tau_eta',
+        'bins': 20,
+        'range': (-3, 3),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
+    'tau1_fourvect.Eta()': {
+        'title': r'$\eta_{\tau_{1}}$',
+        'root': '#eta_{#tau_{1}}',
+        'filename': 'tau1_eta',
+        'bins': 20,
+        'range': (-3, 3),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
+    'tau2_fourvect.Eta()': {
+        'title': r'$\eta_{\tau_{2}}$',
+        'root': '#eta_{#tau_{2}}',
+        'filename': 'tau2_eta',
+        'bins': 20,
+        'range': (-3, 3),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
     'tau1_numTrack': {
         'title': r'$\tau_{1}$ Number of Tracks',
         'root': '#tau_{1} Number of Tracks',
@@ -230,6 +254,38 @@ VARIABLES = {
         'filename': 'tau2_numTrack',
         'bins': 5,
         'range': (-.5, 4.5),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
+    'tau1_ntrack_full': {
+        'title': r'$\tau_{1}$ Number of Recounted Tracks',
+        'root': '#tau_{1} Number of Recounted Tracks',
+        'filename': 'tau1_numTrack_recounted',
+        'bins': 6,
+        'range': (-.5, 5.5),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
+    'tau2_ntrack_full': {
+        'title': r'$\tau_{2}$ Number of Recounted Tracks',
+        'root': '#tau_{2} Number of Recounted Tracks',
+        'filename': 'tau2_numTrack_recounted',
+        'bins': 6,
+        'range': (-.5, 5.5),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
+    'tau1_nPi0': {
+        'title': r'$\tau_{1}$ Number of $\pi^0$s',
+        'root': '#tau_{1} Number of #pi^0s',
+        'filename': 'tau1_npi0',
+        'bins': 7,
+        'range': (-.5, 6.5),
+        'cats': ['VBF', 'GGF', 'BOOSTED',]
+    },
+    'tau2_nPi0': {
+        'title': r'$\tau_{2}$ Number of $\pi^0$s',
+        'root': '#tau_{2} Number of #pi^0s',
+        'filename': 'tau2_npi0',
+        'bins': 7,
+        'range': (-.5, 6.5),
         'cats': ['VBF', 'GGF', 'BOOSTED',]
     },
     'tau1_x': {
@@ -312,14 +368,6 @@ VARIABLES = {
         'range': (0., math.pi),
         'cats': ['VBF', 'GGF', 'BOOSTED',]
     },
-    ('tau1_fourvect.Eta()', 'tau2_fourvect.Eta()'): {
-        'title': r'$\eta_{\tau_{1,\/2}}$',
-        'root': '#eta_{#tau_{1, 2}}',
-        'filename': 'tau_eta',
-        'bins': 20,
-        'range': (-3, 3),
-        'cats': ['VBF', 'GGF', 'BOOSTED',]
-    },
     'tau1_charge': {
         'title': r'$\tau_1$ Charge',
         'root': '#tau_1 Charge',
@@ -367,22 +415,6 @@ VARIABLES = {
         'bins': 20,
         'range': (0, 1),
         'cats': ['VBF']
-    },
-    'tau1_fourvect.Eta()': {
-        'title': r'$\eta_{\tau_{1}}$',
-        'root': '#eta_{#tau_{1}}',
-        'filename': 'tau1_eta',
-        'bins': 20,
-        'range': (-3, 3),
-        'cats': ['VBF', 'GGF', 'BOOSTED',]
-    },
-    'tau2_fourvect.Eta()': {
-        'title': r'$\eta_{\tau_{2}}$',
-        'root': '#eta_{#tau_{2}}',
-        'filename': 'tau2_eta',
-        'bins': 20,
-        'range': (-3, 3),
-        'cats': ['VBF', 'GGF', 'BOOSTED',]
     },
     'jet1_fourvect.Eta()': {
         'title': r'$\eta_{jet_{1}}$',

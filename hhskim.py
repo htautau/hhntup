@@ -247,7 +247,7 @@ class hhskim(ATLASStudent):
                 filters=event_filters,
                 verbose=True)
 
-        define_objects(chain, year)
+        define_objects(chain, year, skim=True)
 
         # include the branches in the input chain in the output tree
         # set branches to be removed in ignore_branches

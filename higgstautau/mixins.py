@@ -61,9 +61,6 @@ class TauFourMomentum(FourMomentum):
         self.trigger_scale_factor_high = 1.
         self.trigger_scale_factor_low = 1.
 
-        self.trigger_match_thresh = 0
-        self.trigger_match_index = -1
-
         self.collinear_momentum_fraction = -9999.
 
         self.centrality = 0.
@@ -74,7 +71,6 @@ class TauFourMomentum(FourMomentum):
         self.matched_collision = False
 
         # track recounting
-        ntrack_core = 0
         ntrack_full = 0
 
         # vertex association
@@ -114,6 +110,16 @@ class TauFourMomentum(FourMomentum):
                 ldtrkindex = i
                 ldtrkpt = pt
         return ldtrkindex
+
+
+class TauFourMomentumSkim(TauFourMomentum):
+
+    def __init__(self):
+
+        super(TauFourMomentumSkim, self).__init__()
+
+        self.trigger_match_thresh = 0
+        self.trigger_match_index = -1
 
 
 class ElFourMomentum(FourMomentum):
