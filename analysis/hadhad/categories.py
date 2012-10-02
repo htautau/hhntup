@@ -21,12 +21,12 @@ ID_MEDIUM_FORWARD_TIGHT_CENTRAL = (
         (TAU1_TIGHT & TAU1_CENTRAL & TAU2_MEDIUM & TAU2_FORWARD))
 
 # low cut fixes mass, high cut removes QCD
-DR_FIX = Cut('1.0 < dR_tau1_tau2 < 3.0')
+DR_FIX = Cut('1.0 < dR_tau1_tau2 < 3.2')
 MASS_FIX = Cut('mass_mmc_tau1_tau2 > 80')
 MAX_NJET = Cut('numJets <= 3')
 MET = Cut('MET > 20000')
 
-COMMON_CUTS = MET & MASS_FIX & MAX_NJET # & DR_FIX
+COMMON_CUTS = MET & MASS_FIX & MAX_NJET #& DR_FIX
 
 CATEGORIES = {
     'vbf': {
@@ -74,7 +74,7 @@ CATEGORIES = {
             'sphericity',
             #'sphericity_boosted',
             #'sphericity_full',
-            'aplanarity',
+            #'aplanarity',
             #'aplanarity_boosted',
             #'aplanarity_full',
             #'cos_theta_tau1_tau2',
@@ -84,7 +84,7 @@ CATEGORIES = {
             'tau1_x',
             'tau2_x',
             'MET_centrality',
-            'sum_pt',
+            #'sum_pt',
             'mmc_resonance_pt',
         ]
     },

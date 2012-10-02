@@ -612,6 +612,20 @@ class HHProcessor(ATLASStudent):
             tau2.ntrack_core, tau2.ntrack_full = track_counting.count_tracks(
                     tau2, event)
 
+            # tau - vertex association
+            tree.tau_same_vertex = (
+                    tau1.privtx_x == tau2.privtx_x and
+                    tau1.privtx_y == tau2.privtx_y and
+                    tau1.privtx_z == tau2.privtx_z)
+
+            tau1.vertex_prob = ROOT.TMath.Prob(
+                    tau1.privtx_chiSquared,
+                    tau1.prrvtx_numberDoF)
+
+            tau2.vertex_prob = ROOT.TMath.Prob(
+                    tau2.privtx_chiSquared,
+                    tau2.prrvtx_numberDoF)
+
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
 

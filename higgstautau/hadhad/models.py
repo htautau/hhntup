@@ -60,6 +60,9 @@ class RecoTau(TreeModel):
     ntrack_core = IntCol()
     ntrack_full = IntCol()
 
+    # vertex association
+    vertex_prob = FloatCol()
+
 
 class EventVariables(TreeModel):
 
@@ -93,6 +96,9 @@ class EventVariables(TreeModel):
     mass_jet1_jet2 = FloatCol()
     mass_vis_true_tau1_tau2 = FloatCol()
     mass_true_quark1_quark2 = FloatCol()
+
+    # did both taus come from the same vertex?
+    tau_same_vertex = BoolCol()
 
     dR_quarks = FloatCol()
     dR_truetaus = FloatCol()
@@ -221,6 +227,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             # track recounting
             setattr(tree, 'tau%i_ntrack_core' % i, tau.ntrack_core)
             setattr(tree, 'tau%i_ntrack_full' % i, tau.ntrack_full)
+
+            # tau vertex association
+            setattr(tree, 'tau%i_vertex_prob' % i, tau.vertex_prob)
 
 
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):

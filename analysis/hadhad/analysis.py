@@ -81,6 +81,8 @@ parser.add_argument('--root', action='store_true', default=False,
         help='draw plots with ROOT. default is matplotlib')
 parser.add_argument('--suffix', default=None, nargs='?',
         help='suffix to add to any output files or plots')
+parser.add_argument('--grid-search', action='store_true', default=False,
+        help='perform a grid-searched cross validation')
 
 args = parser.parse_args()
 
@@ -120,10 +122,15 @@ def staged_score(self, X, y, sample_weight, n_estimators=-1):
     """
     calculate maximum signal significance
     """
-    bins = 20
+    bins = 50
     for p in self.staged_predict_proba(X, n_estimators=n_estimators):
 
         scores = p[:,-1]
+
+        # weighted mean accuracy
+        y_pred = scores >= .5
+        acc = np.average((y_pred == y), weights=sample_weight)
+
         min_score, max_score = scores.min(), scores.max()
         b_hist = Hist(bins, min_score, max_score + 0.0001)
         s_hist = b_hist.Clone()
@@ -152,7 +159,7 @@ def staged_score(self, X, y, sample_weight, n_estimators=-1):
         #max_cut = bins[max_bin]
 
         s_sig_max = np.max(np.ma.masked_invalid(s_sig))
-        yield s_sig_max
+        yield s_sig_max * acc
 
 
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
@@ -363,6 +370,7 @@ for category, cat_info in categories_controls:
 
         control_region = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
         signal_region = Cut('mass_mmc_tau1_tau2 > %d' % args.mass_cut)
+        train_region = Cut('')
 
         # define training and test samples
         branches = cat_info['features']
@@ -407,7 +415,7 @@ for category, cat_info in categories_controls:
                 same_size_test=False,
                 remove_negative_train_weights=True,
                 standardize=False,
-                cuts=signal_region)
+                cuts=train_region)
 
             if args.cor:
                 # draw a linear correlation matrix
@@ -460,14 +468,20 @@ for category, cat_info in categories_controls:
             plt.legend()
             plt.savefig('train_sample_weight_%s.png' % category)
 
+            # train a new BDT
+
+            # grid search params
+            min_leaf_high = int((sample_train.shape[0] / 4.) *
+                    (args.nfold - 1.) / args.nfold)
+            min_leaf_low = max(10, int(min_leaf_high / 100.))
+
             if args.forest_feature_ranking:
                 # perform a feature ranking with random forests
                 # Build a forest and compute the feature importances
                 forest = ExtraTreesClassifier(
-                        n_estimators=100,
+                        n_estimators=200,
                         n_jobs=-1,
-                        max_depth=3,
-                        min_samples_leaf=10,
+                        min_samples_leaf=(min_leaf_high + min_leaf_low) / 2,
                         compute_importances=True,
                         random_state=0)
 
@@ -484,9 +498,9 @@ for category, cat_info in categories_controls:
 
                 n_features = len(branches)
 
-                for f in xrange(n_features):
+                for i, idx in enumerate(indices):
                     print "%d. %s (%f)" % (
-                            f + 1, branches[f], importances[indices[f]])
+                            i + 1, branches[idx], importances[idx])
 
                 # plot the feature importances of the trees and of the forest
                 plt.figure()
@@ -497,104 +511,119 @@ for category, cat_info in categories_controls:
                             tree.feature_importances_[indices], "r")
 
                 plt.plot(xrange(n_features), importances[indices], "b")
-                plt.xticks(range(len(latex_names)), latex_names, rotation=-30,
+                plt.xticks(range(len(latex_names)),
+                        [latex_names[idx] for idx in indices], rotation=-30,
                           rotation_mode='anchor', ha='left', va='top')
                 plt.savefig('ranking_random_forest_%s.png' % category,
                         bbox_inches='tight')
                 continue
 
-            # train a new BDT
+            if args.grid_search:
+                if args.quick_train:
+                    # quick search for testing
+                    min_leaf_step = max((min_leaf_high - min_leaf_low) / 20, 1)
+                    MAX_N_ESTIMATORS = 500
+                    MIN_N_ESTIMATORS = 10
 
-            #AdaBoostClassifier.staged_score = staged_score
+                else:
+                    # larger search
+                    min_leaf_step = max((min_leaf_high - min_leaf_low) / 100, 1)
+                    MAX_N_ESTIMATORS = 1000
+                    MIN_N_ESTIMATORS = 10
 
-            clf = AdaBoostClassifier(
-                    DecisionTreeClassifier(),
-                    compute_importances=True,
-                    learn_rate=.5)
+                MIN_SAMPLES_LEAF = range(
+                        min_leaf_low, min_leaf_high, min_leaf_step)
 
-            # grid search params
-            min_leaf_high = int((sample_train.shape[0] / 2.) * 0.6 *
-                    (args.nfold - 1.) / args.nfold)
-            min_leaf_low = max(10, int(min_leaf_high / 100.))
+                grid_params = {
+                    'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
+                }
 
-            if args.quick_train:
-                # quick search for testing
-                min_leaf_step = max((min_leaf_high - min_leaf_low) / 20, 1)
-                MAX_N_ESTIMATORS = 500
-                MIN_N_ESTIMATORS = 10
+                #AdaBoostClassifier.staged_score = staged_score
 
-            else:
-                # larger search
-                min_leaf_step = max((min_leaf_high - min_leaf_low) / 50, 1)
-                MAX_N_ESTIMATORS = 1000
-                MIN_N_ESTIMATORS = 10
-
-            MIN_SAMPLES_LEAF = range(
-                    min_leaf_low, min_leaf_high, min_leaf_step)
-
-            grid_params = {
-                'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
-            }
-
-            grid_clf = BoostGridSearchCV(
-                    clf, grid_params,
-                    max_n_estimators=MAX_N_ESTIMATORS,
-                    min_n_estimators=MIN_N_ESTIMATORS,
-                    # can use default ClassifierMixin score
-                    #score_func=precision_score,
-                    cv = StratifiedKFold(labels_train, args.nfold),
-                    n_jobs=-1)
-
-            print
-            print "performing a grid search over these parameter values:"
-            for param, values in grid_params.items():
-                print param.split('__')[-1], values
-                print '--'
-            print "Minimum number of classifiers: %d" % MIN_N_ESTIMATORS
-            print "Maximum number of classifiers: %d" % MAX_N_ESTIMATORS
-            print
-            print "training new classifiers ..."
-            grid_clf.fit(
-                    sample_train, labels_train,
-                    sample_weight=sample_weight_train)
-            clf = grid_clf.best_estimator_
-            grid_scores = grid_clf.grid_scores_
-
-            print "Best score: %f" % grid_clf.best_score_
-            print "Best Parameters:"
-            print grid_clf.best_params_
-
-            # plot a grid of the scores
-            plot_grid_scores(
-                grid_scores,
-                best_point={
-                    'base_estimator__min_samples_leaf':
-                    clf.base_estimator.min_samples_leaf,
-                    'n_estimators':
-                    clf.n_estimators},
-                params={
-                    'base_estimator__min_samples_leaf':
-                    'min leaf',
-                    'n_estimators':
-                    'trees'},
-                name=category)
-
-            """
-            if 'base_estimator__min_samples_leaf' in grid_params:
-                # scale up the min-leaf and retrain on the whole set
-                min_samples_leaf = grid_clf.best_estimator_.base_estimator.min_samples_leaf
-                n_estimators=grid_clf.best_estimator_.n_estimators
                 clf = AdaBoostClassifier(
-                        DecisionTreeClassifier(
-                            min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
-                        n_estimators=n_estimators,
-                        compute_importances=True)
+                        DecisionTreeClassifier(),
+                        compute_importances=True,
+                        learn_rate=.5)
+
+                grid_clf = BoostGridSearchCV(
+                        clf, grid_params,
+                        max_n_estimators=MAX_N_ESTIMATORS,
+                        min_n_estimators=MIN_N_ESTIMATORS,
+                        # can use default ClassifierMixin score
+                        #score_func=precision_score,
+                        cv = StratifiedKFold(labels_train, args.nfold),
+                        n_jobs=-1)
+
+                print
+                print "performing a grid search over these parameter values:"
+                for param, values in grid_params.items():
+                    print param.split('__')[-1], values
+                    print '--'
+                print "Minimum number of classifiers: %d" % MIN_N_ESTIMATORS
+                print "Maximum number of classifiers: %d" % MAX_N_ESTIMATORS
+                print
+                print "training new classifiers ..."
+                grid_clf.fit(
+                        sample_train, labels_train,
+                        sample_weight=sample_weight_train)
+                clf = grid_clf.best_estimator_
+                grid_scores = grid_clf.grid_scores_
+
+                print "Best score: %f" % grid_clf.best_score_
+                print "Best Parameters:"
+                print grid_clf.best_params_
+
+                # plot a grid of the scores
+                plot_grid_scores(
+                    grid_scores,
+                    best_point={
+                        'base_estimator__min_samples_leaf':
+                        clf.base_estimator.min_samples_leaf,
+                        'n_estimators':
+                        clf.n_estimators},
+                    params={
+                        'base_estimator__min_samples_leaf':
+                        'min leaf',
+                        'n_estimators':
+                        'trees'},
+                    name=category)
+
+                """
+                if 'base_estimator__min_samples_leaf' in grid_params:
+                    # scale up the min-leaf and retrain on the whole set
+                    min_samples_leaf = grid_clf.best_estimator_.base_estimator.min_samples_leaf
+                    n_estimators=grid_clf.best_estimator_.n_estimators
+                    clf = AdaBoostClassifier(
+                            DecisionTreeClassifier(
+                                min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
+                            n_estimators=n_estimators,
+                            compute_importances=True)
+                    clf.fit(sample_train, labels_train,
+                            sample_weight=sample_weight_train)
+                    print
+                    print "After scaling up min_leaf"
+                    print clf
+                """
+            else:
+                print "training a new classifier ..."
+
+                if category == 'vbf':
+                    min_samples_leaf=200
+                    n_estimators=50
+                else:
+                    min_samples_leaf=150
+                    n_estimators=20
+
+                clf = AdaBoostClassifier(
+                    DecisionTreeClassifier(
+                        min_samples_leaf=min_samples_leaf),
+                    compute_importances=True,
+                    learn_rate=.5,
+                    n_estimators=n_estimators)
+
                 clf.fit(sample_train, labels_train,
                         sample_weight=sample_weight_train)
-                print
-                print "After scaling up min_leaf"
-                print clf
-            """
+
             with open(clf_filename, 'w') as f:
                 pickle.dump(clf, f)
 

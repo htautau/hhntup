@@ -77,6 +77,9 @@ class TauFourMomentum(FourMomentum):
         ntrack_core = 0
         ntrack_full = 0
 
+        # vertex association
+        vertex_prob = 0.
+
         # overlap checking
         self.min_dr_jet = 9999.
 
