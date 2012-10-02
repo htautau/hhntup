@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-from categories import CATEGORIES, CONTROLS, MassRegions
+from categories import CATEGORIES, CONTROLS, DEFAULT_LOW_MASS, DEFAULT_HIGH_MASS
 from variables import VARIABLES
 
 
@@ -38,12 +38,12 @@ parser.add_argument('--embedding', action='store_true', default=False,
 Mass Regions Options
 """
 parser.add_argument('--low-mass-cut', type=int,
-        default=MassRegions.DEFAULT_LOW,
+        default=DEFAULT_LOW_MASS,
         help='the low mass window cut. '
         'Norms of Z and QCD are fit below this and '
         'the signal region of the classifier output is above this')
 parser.add_argument('--high-mass-cut', type=int,
-        default=MassRegions.DEFAULT_HIGH,
+        default=DEFAULT_HIGH_MASS,
         help='the high mass window cut. '
         'Norms of Z and QCD are fit above this and '
         'the signal region of the classifier output is below this')
@@ -132,6 +132,7 @@ from config import plots_dir
 from utils import *
 import variables
 from systematics import SYSTEMATICS
+from categories import MassRegions
 
 # stdlib imports
 import pickle

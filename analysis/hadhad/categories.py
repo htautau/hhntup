@@ -128,15 +128,15 @@ CONTROLS = {
     }
 }
 
+DEFAULT_LOW_MASS = 110
+DEFAULT_HIGH_MASS = 180
+
 
 class MassRegions(object):
 
-    DEFAULT_LOW = 110
-    DEFAULT_HIGH = 180
-
     def __init__(self,
-            low=MassRegions.DEFAULT_LOW,
-            high=MassRegions.DEFAULT_HIGH,
+            low=DEFAULT_LOW_MASS,
+            high=DEFAULT_HIGH_MASS,
             high_sideband_in_control=False):
 
         assert low > BAD_MASS
