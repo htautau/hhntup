@@ -624,11 +624,11 @@ class HHProcessor(ATLASStudent):
 
             tau1.vertex_prob = ROOT.TMath.Prob(
                     tau1.privtx_chiSquared,
-                    tau1.privtx_numberDoF)
+                    int(tau1.privtx_numberDoF))
 
             tau2.vertex_prob = ROOT.TMath.Prob(
                     tau2.privtx_chiSquared,
-                    tau2.privtx_numberDoF)
+                    int(tau2.privtx_numberDoF))
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
