@@ -12,6 +12,7 @@ functionality to Tree objects ("decorating" them).
 __all__ = [
     'FourMomentum',
     'TauFourMomentum',
+    'TauFourMomentumSkim',
     'ElFourMomentum',
     'MCTauFourMomentum',
     'MCParticle',

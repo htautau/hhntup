@@ -180,9 +180,9 @@ def qcd_ztautau_norm(
         data,
         category,
         target_region,
+        mass_regions,
         cuts=None,
         bins=10,
-        mass_cut=110,
         draw=False,
         use_cache=True,
         param='BDT',
@@ -235,7 +235,7 @@ def qcd_ztautau_norm(
     print "using %d bins on each axis" % bins
 
     assert(ndim in (1, 2))
-    control = Cut('mass_mmc_tau1_tau2 < %d' % mass_cut)
+    control = mass_regions.control_region
     control &= cuts
 
     print "fitting scale factors in control region: %s" % control

@@ -22,7 +22,8 @@ ID_MEDIUM_FORWARD_TIGHT_CENTRAL = (
 
 # low cut fixes mass, high cut removes QCD
 DR_FIX = Cut('1.0 < dR_tau1_tau2 < 3.2')
-MASS_FIX = Cut('mass_mmc_tau1_tau2 > 70')
+BAD_MASS = 70
+MASS_FIX = Cut('mass_mmc_tau1_tau2 > %d' % BAD_MASS)
 MAX_NJET = Cut('numJets <= 3')
 MET = Cut('MET > 20000')
 
@@ -126,3 +127,46 @@ CONTROLS = {
         'target_region': 'OS',
     }
 }
+
+
+class MassRegions(object):
+
+    DEFAULT_LOW = 110
+    DEFAULT_HIGH = 180
+
+    def __init__(self,
+            low=MassRegions.DEFAULT_LOW,
+            high=MassRegions.DEFAULT_HIGH,
+            high_sideband_in_control=False):
+
+        assert low > BAD_MASS
+
+        # control region is low and high mass sidebands
+        self.__control_region = Cut('mass_mmc_tau1_tau2 < %d' % low)
+        if high_sideband_in_control:
+            assert high > low
+            self.__control_region |= Cut('mass_mmc_tau1_tau2 > %d' % high)
+
+        # signal region is the negation of the control region
+        self.__signal_region = -self.__control_region
+
+        # train on everything
+        self.__train_region = Cut('')
+
+    @property
+    def control_region(self):
+
+        # make a copy
+        return Cut(self.__control_region)
+
+    @property
+    def signal_region(self):
+
+        # make a copy
+        return Cut(self.__signal_region)
+
+    @property
+    def train_region(self):
+
+        # make a copy
+        return Cut(self.__train_region)

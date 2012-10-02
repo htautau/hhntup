@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-from categories import CATEGORIES, CONTROLS
+from categories import CATEGORIES, CONTROLS, MassRegions
 from variables import VARIABLES
 
 
@@ -11,16 +11,9 @@ class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
 
 
 parser = argparse.ArgumentParser(formatter_class=formatter_class)
-parser.add_argument('--refit',
-        action='store_false', dest='use_fit_cache',
-        help="do not use cached background scale factors "
-        "and instead recalculate them",
-        default=True)
-parser.add_argument('--retrain',
-        action='store_false', dest='use_clf_cache',
-        help="do not use cached classifier "
-        "and instead train a new one",
-        default=True)
+"""
+General Options
+"""
 parser.add_argument('--actions', nargs='*', choices=['plot', 'train'],
         default=[],
         help='only perform these actions')
@@ -28,29 +21,6 @@ parser.add_argument('--no-systematics', action='store_false',
         dest='systematics',
         help="turn off systematics",
         default=True)
-parser.add_argument('--mass-cut', type=int, default=110,
-        help='the mass window cut. norms of Z and QCD are fit below this and '
-        'the signal region of the classifier output is above this')
-parser.add_argument('--fit-param', choices=('bdt', 'track'), default='track',
-        help='parameters used to determine normalization of QCD and Z')
-parser.add_argument('--draw-fit', action='store_true', default=False,
-        help='draw the QCD/Z norm fit results')
-parser.add_argument('--nfold', type=int, default=5,
-        help='the number of folds in the cross-validation')
-parser.add_argument('--clf-bins', dest='bins', type=int, default=10,
-        help='the number of bins to use in the limit histograms and plots of '
-        'the final classifier output')
-parser.add_argument('--cor', action='store_true', default=False,
-        help='draw correlation plots')
-parser.add_argument('--unblind', action='store_true', default=False,
-        help='plot the data in the signal region of the classifier output')
-parser.add_argument('--embedding', action='store_true', default=False,
-        help='use embedding instead of ALPGEN')
-parser.add_argument('--train-fraction', type=float, default=.5,
-        help='the fraction of events used for training and excluded from the '
-        'final limit histograms')
-parser.add_argument('--quick-train', action='store_true', default=False,
-        help='perform a very small grid search for testing purposes')
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys(),
         help='which categories to draw plot or train in')
 parser.add_argument('--controls', nargs='*', default=CONTROLS.keys(),
@@ -59,11 +29,73 @@ parser.add_argument('--only-controls', action='store_true', default=False,
         help='only draw control plots. no category plots.')
 parser.add_argument('--no-controls', action='store_true', default=False,
         help='do not plot controls')
+parser.add_argument('--unblind', action='store_true', default=False,
+        help='plot the data in the signal region of the classifier output')
+parser.add_argument('--embedding', action='store_true', default=False,
+        help='use embedding instead of ALPGEN')
+
+"""
+Mass Regions Options
+"""
+parser.add_argument('--low-mass-cut', type=int,
+        default=MassRegions.DEFAULT_LOW,
+        help='the low mass window cut. '
+        'Norms of Z and QCD are fit below this and '
+        'the signal region of the classifier output is above this')
+parser.add_argument('--high-mass-cut', type=int,
+        default=MassRegions.DEFAULT_HIGH,
+        help='the high mass window cut. '
+        'Norms of Z and QCD are fit above this and '
+        'the signal region of the classifier output is below this')
+parser.add_argument('--high-sideband-in-control', action='store_true',
+        default=False,
+        help='Include the high mass sideband in the mass control and exclude '
+        'it from the signal region')
+
+"""
+Fitting Options
+"""
+parser.add_argument('--refit',
+        action='store_false', dest='use_fit_cache',
+        help="do not use cached background scale factors "
+        "and instead recalculate them",
+        default=True)
+parser.add_argument('--fit-param', choices=('bdt', 'track'), default='track',
+        help='parameters used to determine normalization of QCD and Z')
+parser.add_argument('--draw-fit', action='store_true', default=False,
+        help='draw the QCD/Z norm fit results')
+
+"""
+Training Options
+"""
+parser.add_argument('--retrain',
+        action='store_false', dest='use_clf_cache',
+        help="do not use cached classifier "
+        "and instead train a new one",
+        default=True)
+parser.add_argument('--nfold', type=int, default=5,
+        help='the number of folds in the cross-validation')
+parser.add_argument('--clf-bins', dest='bins', type=int, default=10,
+        help='the number of bins to use in the limit histograms and plots of '
+        'the final classifier output')
+parser.add_argument('--train-fraction', type=float, default=.5,
+        help='the fraction of events used for training and excluded from the '
+        'final limit histograms')
+parser.add_argument('--train-categories', nargs='*', default=[],
+        help='only train in these categories')
+parser.add_argument('--quick-train', action='store_true', default=False,
+        help='perform a very small grid search for testing purposes')
+parser.add_argument('--grid-search', action='store_true', default=False,
+        help='perform a grid-searched cross validation')
 parser.add_argument('--forest-feature-ranking',
         action='store_true', default=False,
         help='Use a random forest to perform a feature ranking.')
-parser.add_argument('--train-categories', nargs='*', default=[],
-        help='only train in these categories')
+parser.add_argument('--cor', action='store_true', default=False,
+        help='draw correlation plots')
+
+"""
+Plotting Options
+"""
 parser.add_argument('--plots', nargs='*',
         help='only draw these plots. see the keys in variables.py')
 parser.add_argument('--plot-cut', default=None, nargs='?',
@@ -83,8 +115,6 @@ parser.add_argument('--root', action='store_true', default=False,
         help='draw plots with ROOT. default is matplotlib')
 parser.add_argument('--suffix', default=None, nargs='?',
         help='suffix to add to any output files or plots')
-parser.add_argument('--grid-search', action='store_true', default=False,
-        help='perform a grid-searched cross validation')
 
 args = parser.parse_args()
 
@@ -211,6 +241,16 @@ if args.embedding:
 if args.suffix:
     output_suffix += '_%s' % args.suffix
 
+mass_regions = MassRegions(
+        low=args.low_mass_cut,
+        high=args.high_mass_cut,
+        high_sideband_in_control=args.high_sideband_in_control)
+
+control_region = mass_regions.control_region
+signal_region = mass_regions.signal_region
+train_region = mass_regions.train_region
+
+
 for category, cat_info in categories_controls:
 
     if category not in args.categories and category not in args.controls:
@@ -253,7 +293,7 @@ for category, cat_info in categories_controls:
         data=data,
         category=category,
         target_region=target_region,
-        mass_cut=args.mass_cut,
+        mass_regions=mass_regions,
         bins=cat_info['fitbins'],
         draw=args.draw_fit,
         use_cache=args.use_fit_cache,
@@ -372,10 +412,6 @@ for category, cat_info in categories_controls:
             others,
             ztautau,
         ]
-
-        control_region = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
-        signal_region = Cut('mass_mmc_tau1_tau2 > %d' % args.mass_cut)
-        train_region = Cut('')
 
         # define training and test samples
         branches = cat_info['features']
