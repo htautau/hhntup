@@ -267,12 +267,14 @@ def qcd_ztautau_norm(
             cuts=control)
 
     others.draw_into(
-            bkg_hist, expr,
+            bkg_hist,
+            expr,
             category, target_region,
             cuts=control)
 
     others.draw_into(
-            bkg_hist_control, expr,
+            bkg_hist_control,
+            expr,
             category, qcd_shape_region,
             cuts=control)
 
@@ -342,7 +344,7 @@ def qcd_ztautau_norm(
     ztautau_scale_error = model_func.GetParError(1)
     #data_hist.GetFunction('model_%s' % category).Delete()
 
-    # correct for scale
+    # check norm in control region
     qcd_hist = (data_hist_control
                 - ztautau_hist_control * ztautau_scale
                 - bkg_hist_control) * qcd_scale
@@ -350,11 +352,60 @@ def qcd_ztautau_norm(
     factor = data_hist.Integral() / (qcd_hist + ztautau_hist * ztautau_scale +
             bkg_hist).Integral()
 
+    # check norm overall
+    ztautau_hist_overall = hist.Clone(title=ztautau.label)
+    ztautau_hist_control_overall = hist.Clone(title=ztautau.label)
+
+    bkg_hist_overall = hist.Clone(title=others.label)
+    bkg_hist_control_overall = hist.Clone(title=others.label)
+
+    data_hist_overall = hist.Clone(title=data.label)
+    data_hist_control_overall = hist.Clone(title=data.label)
+
+    ztautau.draw_into(
+            ztautau_hist_overall,
+            expr,
+            category, target_region)
+
+    ztautau.draw_into(
+            ztautau_hist_control_overall,
+            expr,
+            category, qcd_shape_region)
+
+    others.draw_into(
+            bkg_hist_overall,
+            expr,
+            category, target_region)
+
+    others.draw_into(
+            bkg_hist_control_overall,
+            expr,
+            category, qcd_shape_region)
+
+    data.draw_into(
+            data_hist_overall,
+            expr,
+            category, target_region)
+
+    data.draw_into(
+            data_hist_control_overall,
+            expr,
+            category, qcd_shape_region)
+
+    qcd_hist_overall = (data_hist_control_overall
+                - ztautau_hist_control_overall * ztautau_scale
+                - bkg_hist_control_overall) * qcd_scale
+
+    overall_factor = data_hist_overall.Integral() / (qcd_hist_overall +
+            ztautau_hist_overall * ztautau_scale + bkg_hist_overall).Integral()
+
+    print
     print "data / model in this control region: %.3f" % factor
+    print "data / model overall: %.3f" % overall_factor
     print
 
-    qcd_scale *= factor
-    ztautau_scale *= factor
+    #qcd_scale *= factor
+    #ztautau_scale *= factor
 
     qcd.scale = qcd_scale
     qcd.scale_error = qcd_scale_error

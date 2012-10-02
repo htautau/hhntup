@@ -57,6 +57,8 @@ parser.add_argument('--controls', nargs='*', default=CONTROLS.keys(),
         help='which controls to draw plots in')
 parser.add_argument('--only-controls', action='store_true', default=False,
         help='only draw control plots. no category plots.')
+parser.add_argument('--no-controls', action='store_true', default=False,
+        help='do not plot controls')
 parser.add_argument('--forest-feature-ranking',
         action='store_true', default=False,
         help='Use a random forest to perform a feature ranking.')
@@ -215,6 +217,9 @@ for category, cat_info in categories_controls:
         continue
 
     if args.only_controls and category not in args.controls:
+        continue
+
+    if args.no_controls and category in args.controls:
         continue
 
     print

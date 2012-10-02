@@ -185,7 +185,7 @@ class TauIDProcessor(ATLASStudent):
                                                                event.mc_channel_number,
                                                                event.averageIntPerXing)
             tree.mc_weight = event.mc_event_weight
-            tree.Fill()
+            tree.Fill(reset=True)
 
         self.output.cd()
         tree.FlushBaskets()
