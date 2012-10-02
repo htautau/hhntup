@@ -310,8 +310,6 @@ class HHProcessor(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
-            tree.reset()
-
             # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
 
@@ -647,7 +645,7 @@ class HHProcessor(ATLASStudent):
                 # for embedding. But not so in 2012...
 
             # fill output ntuple
-            tree.Fill()
+            tree.Fill(reset=True)
 
         self.output.cd()
         tree.FlushBaskets()
