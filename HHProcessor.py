@@ -217,7 +217,8 @@ class HHProcessor(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
-                verbose=VERBOSE),
+                verbose=VERBOSE,
+                count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
@@ -277,14 +278,17 @@ class HHProcessor(ATLASStudent):
                 datatype=datatype,
                 tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
                     self.args.syst_terms),
-                passthrough=datatype == datasets.DATA or year == 2012),
+                passthrough=datatype == datasets.DATA or year == 2012,
+                count_funcs=count_funcs),
             PileupReweight(
                 year=year,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            JetSelection(),
-            TauJetOverlapRemoval(),
+            JetSelection(
+                count_funcs=count_funcs),
+            TauJetOverlapRemoval(
+                count_funcs=count_funcs),
         ])
 
         self.filters['event'] = event_filters
