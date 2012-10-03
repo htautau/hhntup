@@ -692,9 +692,7 @@ for category, cat_info in categories_controls:
             print
             print table.get_string(hrules=1)
 
-        # Create histograms for the limit setting with HistFactory
-        # Include all systematic variations
-
+        # show the background model and data in the control region
         print "plotting classifier output in control region..."
         print control_region
         # data scores
@@ -741,6 +739,16 @@ for category, cat_info in categories_controls:
         print "minimum score: %f" % min_score
         print "maximum score: %f" % max_score
 
+        # prevent bin threshold effects
+        min_score -= 0.00001
+        max_score += 0.00001
+
+        # add a bin above max score and below min score for extra beauty
+        score_width = max_score - min_score
+        bin_width = score_width / args.bins
+        min_score -= bin_width
+        max_score += bin_width
+
         # compare data and the model in a low mass control region
         plot_clf(
             background_scores=bkg_scores,
@@ -750,7 +758,7 @@ for category, cat_info in categories_controls:
             data_scores=(data, data_scores),
             draw_data=True,
             name='control' + output_suffix,
-            bins=args.bins,
+            bins=args.bins + 2,
             min_score=min_score,
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
@@ -807,6 +815,9 @@ for category, cat_info in categories_controls:
                 region=target_region,
                 cuts=signal_region)
 
+        min_score_signal = 1.
+        max_score_signal = 0.
+
         for sys_term, (scores, weights) in signal_scores_eval.items():
             assert len(scores) == len(weights)
             if len(scores) == 0:
@@ -817,9 +828,27 @@ for category, cat_info in categories_controls:
                 min_score = _min
             if _max > max_score:
                 max_score = _max
+            if _min < min_score_signal:
+                min_score_signal = _min
+            if _max > max_score_signal:
+                max_score_signal = _max
 
         print "minimum score: %f" % min_score
         print "maximum score: %f" % max_score
+        print "minimum signal score: %f" % min_score_signal
+        print "maximum signal score: %f" % max_score_signal
+
+        # prevent bin threshold effects
+        min_score -= 0.00001
+        max_score += 0.00001
+        min_score_signal -= 0.00001
+        max_score_signal += 0.00001
+
+        # add a bin above max score and below min score for extra beauty
+        score_width_signal = max_score_signal - min_score_signal
+        bin_width_signal = score_width_signal / args.bins
+        min_score_signal -= bin_width_signal
+        max_score_signal += bin_width_signal
 
         plot_clf(
             background_scores=bkg_scores,
@@ -828,12 +857,15 @@ for category, cat_info in categories_controls:
             signal_scores=(signal_eval, signal_scores_eval),
             signal_scale=50,
             name='ROI' + output_suffix,
-            bins=args.bins,
-            min_score=min_score,
-            max_score=max_score,
+            bins=args.bins + 2,
+            min_score=min_score_signal,
+            max_score=max_score_signal,
             systematics=SYSTEMATICS if args.systematics else None)
 
         print "creating histograms for limits"
+
+        min_score_signal = 1.
+        max_score_signal = 0.
 
         # signal scores for all masses and modes
         sig_scores = {}
@@ -858,17 +890,34 @@ for category, cat_info in categories_controls:
                         min_score = _min
                     if _max > max_score:
                         max_score = _max
+                    if _min < min_score_signal:
+                        min_score_signal = _min
+                    if _max > max_score_signal:
+                        max_score_signal = _max
 
                 name = 'Signal_%d_%s' % (mass, mode)
                 sig_scores[name] = (sig, scores_dict)
 
         print "minimum score: %f" % min_score
         print "maximum score: %f" % max_score
+        print "minimum signal score: %f" % min_score_signal
+        print "maximum signal score: %f" % max_score_signal
 
-        #padding = (max_score - min_score) / (2 * args.bins)
+        # prevent bin threshold effects
         min_score -= 0.00001
         max_score += 0.00001
-        hist_template = Hist(args.bins, min_score, max_score)
+        min_score_signal -= 0.00001
+        max_score_signal += 0.00001
+
+        # add a bin above max score and below min score for good luck
+        score_width_signal = max_score_signal - min_score_signal
+        bin_width_signal = score_width_signal / args.bins
+        min_score_signal -= bin_width_signal
+        max_score_signal += bin_width_signal
+
+        #hist_template = Hist(args.bins, min_score, max_score)
+        # don't waste bins on regions with only background
+        hist_template = Hist(args.bins + 2, min_score_signal, max_score_signal)
 
         root_filename = '%s%s.root' % (category, output_suffix)
 

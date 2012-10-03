@@ -124,7 +124,7 @@ def plot_clf(
         max_score=1,
         systematics=None):
 
-    hist_template = Hist(bins, min_score - 0.00001, max_score + 0.00001)
+    hist_template = Hist(bins, min_score, max_score)
 
     bkg_hists = []
     for bkg, scores_dict in background_scores:

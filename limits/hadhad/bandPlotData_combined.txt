@@ -1,8 +1,8 @@
 125
 Correct bands
-+2sigma:  6.85351
-+1sigma:  4.22627
--1sigma:  2.06263
--2sigma:  1.53641
-Median:   2.86256
-Observed: 2.90871
++2sigma:  4.98409
++1sigma:  3.18061
+-1sigma:  1.68509
+-2sigma:  1.25519
+Median:   2.3386
+Observed: 2.34457

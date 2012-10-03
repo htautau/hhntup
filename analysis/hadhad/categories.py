@@ -35,6 +35,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_VBF,
         'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 5,
+        'limitbins': 12,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
@@ -69,6 +70,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_BOOSTED,
         'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 5,
+        'limitbins': 12,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
@@ -94,6 +96,7 @@ CATEGORIES = {
         'code': categories.CATEGORY_GGF,
         'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 8,
+        'limitbins': 13,
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
