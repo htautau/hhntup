@@ -60,7 +60,8 @@ parser.add_argument('--refit',
         help="do not use cached background scale factors "
         "and instead recalculate them",
         default=True)
-parser.add_argument('--fit-param', choices=('bdt', 'track'), default='track',
+parser.add_argument('--fit-param', choices=('bdt', 'track', 'track1d'),
+        default='track',
         help='parameters used to determine normalization of QCD and Z')
 parser.add_argument('--draw-fit', action='store_true', default=False,
         help='draw the QCD/Z norm fit results')
@@ -115,6 +116,9 @@ parser.add_argument('--root', action='store_true', default=False,
         help='draw plots with ROOT. default is matplotlib')
 parser.add_argument('--suffix', default=None, nargs='?',
         help='suffix to add to any output files or plots')
+parser.add_argument('--output-formats', default=['png'], nargs='+',
+        choices=('png', 'eps', 'pdf'),
+        help='output formats')
 
 args = parser.parse_args()
 
@@ -250,7 +254,6 @@ mass_regions = MassRegions(
 control_region = mass_regions.control_region
 signal_region = mass_regions.signal_region
 train_region = mass_regions.train_region
-
 
 for category, cat_info in categories_controls:
 
@@ -390,7 +393,8 @@ for category, cat_info in categories_controls:
                     show_qq=False,
                     dir=PLOTS_DIR,
                     systematics=SYSTEMATICS if args.systematics else None,
-                    root=args.root)
+                    root=args.root,
+                    output_formats=args.output_formats)
             figures[category][expr] = fig
 
     if category not in args.categories:

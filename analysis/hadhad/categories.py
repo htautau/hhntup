@@ -22,7 +22,7 @@ ID_MEDIUM_FORWARD_TIGHT_CENTRAL = (
 
 # low cut fixes mass, high cut removes QCD
 DR_FIX = Cut('1.0 < dR_tau1_tau2 < 3.2')
-BAD_MASS = 70
+BAD_MASS = 80
 MASS_FIX = Cut('mass_mmc_tau1_tau2 > %d' % BAD_MASS)
 MAX_NJET = Cut('numJets <= 3')
 MET = Cut('MET > 20000')

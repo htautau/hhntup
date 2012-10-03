@@ -21,6 +21,46 @@ import samples
 class FitError(Exception):
     pass
 
+def draw_fit_1d(
+        expr, bins,
+        min, max,
+        model,
+        data,
+        category,
+        region,
+        name,
+        output_name,
+        output_formats=('png', 'eps', 'pdf'),
+        root=False,
+        systematics=None,
+        cuts=None,
+        after=False):
+
+    PLOTS_DIR = plots_dir(__file__)
+
+    model_hists = []
+    for sample in model:
+        hist = sample.draw(expr, category, region,
+                bins, min, max, cuts)
+        model_hists.append(hist)
+
+    data_hist = data.draw(expr, category, region,
+            bins, min, max, cuts)
+
+    if after:
+        output_name += '_after'
+
+    draw(model=model_hists,
+        data=data_hist,
+        name=name,
+        category_name=category,
+        category=category,
+        show_ratio=True,
+        systematics=systematics,
+        root=root,
+        dir=PLOTS_DIR,
+        output_formats=output_formats,
+        output_name=output_name)
 
 def draw_fit(
         expr, bins,
@@ -185,7 +225,7 @@ def qcd_ztautau_norm(
         bins=10,
         draw=False,
         use_cache=True,
-        param='BDT',
+        param='TRACK',
         systematics=None,
         root=False):
 
@@ -214,6 +254,7 @@ def qcd_ztautau_norm(
         xlabel = '#tau_{1} BDT Score'
         ylabel = '#tau_{2} BDT Score'
         name = 'BDT Score Grid'
+        ndim = 2
     elif param == 'TRACK':
         xmin, xmax = 1, 6
         ymin, ymax = 1, 6
@@ -222,10 +263,16 @@ def qcd_ztautau_norm(
         xlabel = '#tau_{1} Number of Tracks'
         ylabel = '#tau_{2} Number of Tracks'
         name = 'Number of Tracks Grid'
+        ndim = 2
+    elif param == 'TRACK1D':
+        min, max = 1, 6
+        bins = 5 # ignore bins args above
+        expr = 'tau1_ntrack_full'
+        xlabel = '#tau_{1} Number of Tracks'
+        name = 'Number of Tracks Grid'
+        ndim = 1
     else:
         raise ValueError('No fit defined for %s parameters.' % param)
-
-    ndim = 2
 
     output_name = "%dd_%s_fit_%s" % (ndim, param, category)
     if is_embedded:
@@ -291,23 +338,42 @@ def qcd_ztautau_norm(
             cuts=control)
 
     if draw:
-        draw_fit(
-                expr, bins,
-                xmin, xmax,
-                ymin, ymax,
-                model=[
-                    qcd,
-                    others,
-                    ztautau],
-                data=data,
-                category=category,
-                region=target_region,
-                output_name=output_name,
-                name=name,
-                after=False,
-                systematics=systematics,
-                cuts=control,
-                root=root)
+        if ndim == 1:
+            draw_fit_1d(
+                    expr, bins,
+                    min, max,
+                    model=[
+                        qcd,
+                        others,
+                        ztautau],
+                    data=data,
+                    category=category,
+                    region=target_region,
+                    output_name=output_name,
+                    name=name,
+                    after=False,
+                    systematics=systematics,
+                    cuts=control,
+                    root=root)
+
+        else:
+            draw_fit(
+                    expr, bins,
+                    xmin, xmax,
+                    ymin, ymax,
+                    model=[
+                        qcd,
+                        others,
+                        ztautau],
+                    data=data,
+                    category=category,
+                    region=target_region,
+                    output_name=output_name,
+                    name=name,
+                    after=False,
+                    systematics=systematics,
+                    cuts=control,
+                    root=root)
 
     class Model(object):
 
@@ -413,23 +479,42 @@ def qcd_ztautau_norm(
     ztautau.scale_error = ztautau_scale_error
 
     if draw:
-        draw_fit(
-                expr, bins,
-                xmin, xmax,
-                ymin, ymax,
-                model=[
-                    qcd,
-                    others,
-                    ztautau],
-                data=data,
-                category=category,
-                region=target_region,
-                name=name,
-                output_name=output_name,
-                after=True,
-                systematics=systematics,
-                cuts=control,
-                root=root)
+        if ndim == 1:
+            draw_fit_1d(
+                    expr, bins,
+                    min, max,
+                    model=[
+                        qcd,
+                        others,
+                        ztautau],
+                    data=data,
+                    category=category,
+                    region=target_region,
+                    name=name,
+                    output_name=output_name,
+                    after=True,
+                    systematics=systematics,
+                    cuts=control,
+                    root=root)
+
+        else:
+            draw_fit(
+                    expr, bins,
+                    xmin, xmax,
+                    ymin, ymax,
+                    model=[
+                        qcd,
+                        others,
+                        ztautau],
+                    data=data,
+                    category=category,
+                    region=target_region,
+                    name=name,
+                    output_name=output_name,
+                    after=True,
+                    systematics=systematics,
+                    cuts=control,
+                    root=root)
 
     bkg_scales_cache.set_scales(
             category, is_embedded, param,
