@@ -146,12 +146,12 @@ class TauDecay(object):
         return missing + sum([p.fourvect for p in self.neutrinos])
 
     @cached_property
-    def dR_tau_nu(self):
+    def dr_vistau_nu(self):
 
         return self.fourvect_visible.DeltaR(self.fourvect_missing)
 
     @cached_property
-    def dTheta3d_tau_nu(self):
+    def dtheta3d_vistau_nu(self):
 
         return self.fourvect_visible.Angle(self.fourvect_missing)
 
