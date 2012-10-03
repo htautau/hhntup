@@ -21,12 +21,13 @@ import os
 
 TEST_CMD = """\
 source setup.sh && grid-batch --dataset %(dataset)s --metadata datasets.cfg 
---student %(student)s %(testinput)s
+--student %(student)s %(student_args)s %(testinput)s
 """
 
 SUBMIT_CMD = """\
 grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
 %(opts)s
+%(student_args)s
 %(dataset)s
 --official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
 """
@@ -64,6 +65,9 @@ for skim_name in args.skim:
     testinput = skim['testinput']
     version = skim['version']
     options = skim['options']
+    student_args = skim['student_args']
+    if student_args:
+        student_args = '--student-args "%s"' % student_args
 
     if args.local_test:
         cmd = TEST_CMD % locals()

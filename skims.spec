@@ -4,3 +4,4 @@
     testinput = string()
     version = integer()
     options = string(default='')
+    student_args = string(default='')
