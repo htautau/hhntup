@@ -66,12 +66,12 @@ for skim_name in args.skim:
     version = skim['version']
     options = skim['options']
     student_args = skim['student_args']
-    if student_args:
-        student_args = '--student-args "%s"' % student_args
 
     if args.local_test:
         cmd = TEST_CMD % locals()
     else:
+        if student_args:
+            student_args = '--student-args="%s"' % student_args
         if args.grid_test:
             opts = '--test'
         else:
