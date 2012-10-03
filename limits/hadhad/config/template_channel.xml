@@ -12,7 +12,7 @@
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_ggf_JES_UP_TES_UP"
             HistoNameLow="Signal_%(mass)d_ggf_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -28,7 +28,7 @@
             HistoNameHigh="Signal_%(mass)d_ggf_TAUBDT_UP"
             HistoNameLow="Signal_%(mass)d_ggf_TAUBDT_DOWN" />
         <OverallSys Name="pdf_gg" High="1.079" Low="0.923"/>
-        <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>-->
+        <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>
     </Sample>
     
     <Sample Name="Signal_%(mass)d_vbf"
@@ -37,7 +37,7 @@
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_vbf_JES_UP_TES_UP"
             HistoNameLow="Signal_%(mass)d_vbf_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -53,7 +53,7 @@
             HistoNameHigh="Signal_%(mass)d_vbf_TAUBDT_UP"
             HistoNameLow="Signal_%(mass)d_vbf_TAUBDT_DOWN" />
         <OverallSys Name="pdf_qqbar" High="1.027" Low="0.979"/>
-        <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>-->
+        <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>
     </Sample>
     
     <Sample Name="Signal_%(mass)d_zh"
@@ -62,7 +62,7 @@
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_zh_JES_UP_TES_UP"
             HistoNameLow="Signal_%(mass)d_zh_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -78,7 +78,7 @@
             HistoNameHigh="Signal_%(mass)d_zh_TAUBDT_UP"
             HistoNameLow="Signal_%(mass)d_zh_TAUBDT_DOWN" />
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
-        <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>-->
+        <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
     
     <Sample Name="Signal_%(mass)d_wh"
@@ -87,7 +87,7 @@
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="Signal_%(mass)d_wh_JES_UP_TES_UP"
             HistoNameLow="Signal_%(mass)d_wh_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -103,7 +103,7 @@
             HistoNameHigh="Signal_%(mass)d_wh_TAUBDT_UP"
             HistoNameLow="Signal_%(mass)d_wh_TAUBDT_DOWN" />
         <OverallSys Name="pdf_qqbar" High="1.039" Low="0.961"/>
-        <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>-->
+        <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>
     </Sample>
     
     <Sample Name="Ztautau"
@@ -111,7 +111,7 @@
         HistoName="Ztautau"
         NormalizeByTheory="False" >
         <StatError Activate="True" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="Ztautau_JES_UP_TES_UP"
             HistoNameLow="Ztautau_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -127,9 +127,9 @@
             HistoNameHigh="Ztautau_TAUBDT_UP"
             HistoNameLow="Ztautau_TAUBDT_DOWN" />
         <HistoSys Name="FIT"
-            HistoNameHigh="Ztautau_FIT_UP"
-            HistoNameLow="Ztautau_FIT_DOWN" />
-        <HistoSys Name="ISOL"
+            HistoNameHigh="Ztautau_ZFIT_UP"
+            HistoNameLow="Ztautau_ZFIT_DOWN" />
+        <!--<HistoSys Name="ISOL"
             HistoNameHigh="Ztautau_ISOL_UP"
             HistoNameLow="Ztautau_ISOL_DOWN" />
         <HistoSys Name="MFS"
@@ -142,7 +142,7 @@
         HistoName="QCD"
         NormalizeByTheory="False" >
         <StatError Activate="True" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="QCD_JES_UP_TES_UP"
             HistoNameLow="QCD_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -158,8 +158,8 @@
             HistoNameHigh="QCD_TAUBDT_UP"
             HistoNameLow="QCD_TAUBDT_DOWN" />
         <HistoSys Name="FIT"
-            HistoNameHigh="QCD_FIT_UP"
-            HistoNameLow="QCD_FIT_DOWN" />-->
+            HistoNameHigh="QCD_QCDFIT_UP"
+            HistoNameLow="QCD_QCDFIT_DOWN" />
     </Sample>
 
     <Sample Name="Others"
@@ -167,7 +167,7 @@
         HistoName="Others"
         NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <!--<HistoSys Name="JES_TES"
+        <HistoSys Name="JES_TES"
             HistoNameHigh="Others_JES_UP_TES_UP"
             HistoNameLow="Others_JES_DOWN_TES_DOWN" />
         <HistoSys Name="JER"
@@ -181,7 +181,7 @@
             HistoNameLow="Others_TRIGGER_DOWN" />
         <HistoSys Name="TAUBDT"
             HistoNameHigh="Others_TAUBDT_UP"
-            HistoNameLow="Others_TAUBDT_DOWN" />-->
+            HistoNameLow="Others_TAUBDT_DOWN" />
     </Sample>
     
 </Channel>
