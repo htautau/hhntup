@@ -47,10 +47,12 @@ parser.add_argument('--high-mass-cut', type=int,
         help='the high mass window cut. '
         'Norms of Z and QCD are fit above this and '
         'the signal region of the classifier output is below this')
-parser.add_argument('--high-sideband-in-control', action='store_true',
-        default=False,
-        help='Include the high mass sideband in the mass control and exclude '
-        'it from the signal region')
+parser.add_argument('--no-sideband-in-control',
+        dest='high_sideband_in_control',
+        action='store_false',
+        default=True,
+        help='Exclude the high mass sideband in the mass control and include '
+        'it in the signal region')
 
 """
 Fitting Options

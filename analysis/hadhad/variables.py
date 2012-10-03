@@ -336,6 +336,14 @@ VARIABLES = {
         'range': (.55, 1.0001),
         'cats': ['VBF', 'GGF', 'BOOSTED',]
     },
+    #'tau1_vertex_prob': {
+    #    'title': r'$\tau_{1}$ Primary Vertex Quality',
+    #    'root': '#tau_{1} Primary Vertex Quality',
+    #    'filename': 'tau1_vertex_quality',
+    #    'bins': 20,
+    #    'range': (-0.0001, 1.0001),
+    #    'cats': ['VBF', 'GGF', 'BOOSTED',]
+    #},
     'cos_theta_tau1_tau2': {
         'title': r'$\cos(\alpha_{\tau_{1},\/\tau_{2}})$',
         'root': 'cos(#alpha_{#tau_{1}, #tau_{2}})',
