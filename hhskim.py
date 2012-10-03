@@ -47,6 +47,7 @@ class hhskim(ATLASStudent):
         super(hhskim, self).__init__(**kwargs)
         parser = ArgumentParser()
         parser.add_argument('--syst-terms', default=None)
+        parser.add_argument('--no-trigger', action='store_true', default=False)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = set([
@@ -57,6 +58,7 @@ class hhskim(ATLASStudent):
 
         datatype = self.metadata.datatype
         year = self.metadata.year
+        no_trigger = self.args.no_trigger
 
         if datatype != datasets.EMBED:
             # merge TrigConfTrees
@@ -104,7 +106,7 @@ class hhskim(ATLASStudent):
 
         trigger_emulation = TauTriggerEmulation(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=no_trigger or datatype != datasets.MC,
                 count_funcs=count_funcs)
 
         if datatype == datasets.MC:
@@ -130,7 +132,7 @@ class hhskim(ATLASStudent):
                              or year == 2012),
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
-                passthrough=datatype != datasets.EMBED,
+                passthrough=year > 2011 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
             PileupTemplates(
                 year=year,
@@ -141,7 +143,7 @@ class hhskim(ATLASStudent):
             trigger_emulation,
             Triggers(
                 year=year,
-                passthrough=datatype == datasets.EMBED,
+                passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PriVertex(
                 count_funcs=count_funcs),
@@ -208,7 +210,7 @@ class hhskim(ATLASStudent):
                 config=trigger_config,
                 year=year,
                 datatype=datatype,
-                passthrough=datatype == datasets.EMBED,
+                passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             # select two leading taus at this point
             # 25/35 for data
@@ -218,7 +220,7 @@ class hhskim(ATLASStudent):
                 sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
                 count_funcs=count_funcs),
             TauTriggerMatchThreshold(
-                passthrough=datatype == datasets.EMBED,
+                passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             #TauTriggerEfficiency(
             #    year=year,
