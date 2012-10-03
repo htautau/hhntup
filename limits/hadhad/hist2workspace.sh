@@ -5,7 +5,7 @@ cp $ROOTSYS/etc/HistFactorySchema.dtd ./config
 
 rm -f hist2workspace.log
 
-for mass in $(seq 125 5 125)
+for mass in $(seq 100 5 150)
 do
     (hist2workspace ./config/hh_combination_${mass}.xml 2>&1) | tee --append hist2workspace.log
     for category in ggf boosted vbf
