@@ -6,8 +6,12 @@
   <Input>./config/hh_channel_ggf_%(mass)d.xml</Input>
   <Input>./config/hh_channel_boosted_%(mass)d.xml</Input>
 
-  <Measurement Name="STATONLY" Lumi="%(lumi)s" LumiRelErr="%(lumi_rel_err)s" ExportOnly="True" Mode="comb">
+  <Measurement Name="FULL_SYSTEMATICS"
+      Lumi="%(lumi)s" LumiRelErr="%(lumi_rel_err)s"
+      ExportOnly="True" Mode="comb">
+      
       <POI>SigXsecOverSM</POI>
       <ParamSetting Const="True">SigXsecOverSM</ParamSetting>
   </Measurement>
+
 </Combination>

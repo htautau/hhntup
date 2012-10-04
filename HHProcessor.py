@@ -217,7 +217,8 @@ class HHProcessor(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
-                verbose=VERBOSE),
+                verbose=VERBOSE,
+                count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
@@ -277,21 +278,24 @@ class HHProcessor(ATLASStudent):
                 datatype=datatype,
                 tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
                     self.args.syst_terms),
-                passthrough=datatype == datasets.DATA or year == 2012),
+                passthrough=datatype == datasets.DATA or year == 2012,
+                count_funcs=count_funcs),
             PileupReweight(
                 year=year,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            JetSelection(),
-            TauJetOverlapRemoval(),
+            JetSelection(
+                count_funcs=count_funcs),
+            TauJetOverlapRemoval(
+                count_funcs=count_funcs),
         ])
 
         self.filters['event'] = event_filters
 
         chain.filters += event_filters
 
-        define_objects(chain, year)
+        define_objects(chain, year, skim=datatype == datasets.DATA)
 
         # define tree objects
         #tree.define_object(name='tau1', prefix='tau1_')
@@ -306,8 +310,6 @@ class HHProcessor(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
-            tree.reset()
-
             # taus are already sorted by pT in TauLeadSublead filter
             tau1, tau2 = event.taus
 
@@ -607,10 +609,24 @@ class HHProcessor(ATLASStudent):
                                     trig % tau.trigger_match_thresh, False))
 
             # track recounting
-            tau1.ntrack_core, tau1.ntrack_full = track_counting.count_tracks(
+            tau1.ntrack_full = track_counting.count_tracks(
                     tau1, event)
-            tau2.ntrack_core, tau2.ntrack_full = track_counting.count_tracks(
+            tau2.ntrack_full = track_counting.count_tracks(
                     tau2, event)
+
+            # tau - vertex association
+            tree.tau_same_vertex = (
+                    tau1.privtx_x == tau2.privtx_x and
+                    tau1.privtx_y == tau2.privtx_y and
+                    tau1.privtx_z == tau2.privtx_z)
+
+            tau1.vertex_prob = ROOT.TMath.Prob(
+                    tau1.privtx_chiSquared,
+                    int(tau1.privtx_numberDoF))
+
+            tau2.vertex_prob = ROOT.TMath.Prob(
+                    tau2.privtx_chiSquared,
+                    int(tau2.privtx_numberDoF))
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
@@ -629,7 +645,7 @@ class HHProcessor(ATLASStudent):
                 # for embedding. But not so in 2012...
 
             # fill output ntuple
-            tree.Fill()
+            tree.Fill(reset=True)
 
         self.output.cd()
         tree.FlushBaskets()

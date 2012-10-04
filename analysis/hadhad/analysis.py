@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-from categories import CATEGORIES, CONTROLS
+from categories import CATEGORIES, CONTROLS, DEFAULT_LOW_MASS, DEFAULT_HIGH_MASS
 from variables import VARIABLES
 
 
@@ -11,16 +11,9 @@ class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
 
 
 parser = argparse.ArgumentParser(formatter_class=formatter_class)
-parser.add_argument('--refit',
-        action='store_false', dest='use_fit_cache',
-        help="do not use cached background scale factors "
-        "and instead recalculate them",
-        default=True)
-parser.add_argument('--retrain',
-        action='store_false', dest='use_clf_cache',
-        help="do not use cached classifier "
-        "and instead train a new one",
-        default=True)
+"""
+General Options
+"""
 parser.add_argument('--actions', nargs='*', choices=['plot', 'train'],
         default=[],
         help='only perform these actions')
@@ -28,40 +21,84 @@ parser.add_argument('--no-systematics', action='store_false',
         dest='systematics',
         help="turn off systematics",
         default=True)
-parser.add_argument('--mass-cut', type=int, default=110,
-        help='the mass window cut. norms of Z and QCD are fit below this and '
-        'the signal region of the classifier output is above this')
-parser.add_argument('--fit-param', choices=('bdt', 'track'), default='track',
-        help='parameters used to determine normalization of QCD and Z')
-parser.add_argument('--draw-fit', action='store_true', default=False,
-        help='draw the QCD/Z norm fit results')
-parser.add_argument('--nfold', type=int, default=5,
-        help='the number of folds in the cross-validation')
-parser.add_argument('--clf-bins', dest='bins', type=int, default=10,
-        help='the number of bins to use in the limit histograms and plots of '
-        'the final classifier output')
-parser.add_argument('--cor', action='store_true', default=False,
-        help='draw correlation plots')
-parser.add_argument('--unblind', action='store_true', default=False,
-        help='plot the data in the signal region of the classifier output')
-parser.add_argument('--embedding', action='store_true', default=False,
-        help='use embedding instead of ALPGEN')
-parser.add_argument('--train-fraction', type=float, default=.5,
-        help='the fraction of events used for training and excluded from the '
-        'final limit histograms')
-parser.add_argument('--quick-train', action='store_true', default=False,
-        help='perform a very small grid search for testing purposes')
 parser.add_argument('--categories', nargs='*', default=CATEGORIES.keys(),
         help='which categories to draw plot or train in')
 parser.add_argument('--controls', nargs='*', default=CONTROLS.keys(),
         help='which controls to draw plots in')
 parser.add_argument('--only-controls', action='store_true', default=False,
         help='only draw control plots. no category plots.')
+parser.add_argument('--no-controls', action='store_true', default=False,
+        help='do not plot controls')
+parser.add_argument('--unblind', action='store_true', default=False,
+        help='plot the data in the signal region of the classifier output')
+parser.add_argument('--embedding', action='store_true', default=False,
+        help='use embedding instead of ALPGEN')
+
+"""
+Mass Regions Options
+"""
+parser.add_argument('--low-mass-cut', type=int,
+        default=DEFAULT_LOW_MASS,
+        help='the low mass window cut. '
+        'Norms of Z and QCD are fit below this and '
+        'the signal region of the classifier output is above this')
+parser.add_argument('--high-mass-cut', type=int,
+        default=DEFAULT_HIGH_MASS,
+        help='the high mass window cut. '
+        'Norms of Z and QCD are fit above this and '
+        'the signal region of the classifier output is below this')
+parser.add_argument('--no-sideband-in-control',
+        dest='high_sideband_in_control',
+        action='store_false',
+        default=True,
+        help='Exclude the high mass sideband in the mass control and include '
+        'it in the signal region')
+
+"""
+Fitting Options
+"""
+parser.add_argument('--refit',
+        action='store_false', dest='use_fit_cache',
+        help="do not use cached background scale factors "
+        "and instead recalculate them",
+        default=True)
+parser.add_argument('--fit-param', choices=('bdt', 'track', 'track1d'),
+        default='track',
+        help='parameters used to determine normalization of QCD and Z')
+parser.add_argument('--draw-fit', action='store_true', default=False,
+        help='draw the QCD/Z norm fit results')
+
+"""
+Training Options
+"""
+parser.add_argument('--retrain',
+        action='store_false', dest='use_clf_cache',
+        help="do not use cached classifier "
+        "and instead train a new one",
+        default=True)
+parser.add_argument('--nfold', type=int, default=5,
+        help='the number of folds in the cross-validation')
+parser.add_argument('--clf-bins', dest='bins', type=int, default=10,
+        help='the number of bins to use in the limit histograms and plots of '
+        'the final classifier output')
+parser.add_argument('--train-fraction', type=float, default=.5,
+        help='the fraction of events used for training and excluded from the '
+        'final limit histograms')
+parser.add_argument('--train-categories', nargs='*', default=[],
+        help='only train in these categories')
+parser.add_argument('--quick-train', action='store_true', default=False,
+        help='perform a very small grid search for testing purposes')
+parser.add_argument('--grid-search', action='store_true', default=False,
+        help='perform a grid-searched cross validation')
 parser.add_argument('--forest-feature-ranking',
         action='store_true', default=False,
         help='Use a random forest to perform a feature ranking.')
-parser.add_argument('--train-categories', nargs='*', default=[],
-        help='only train in these categories')
+parser.add_argument('--cor', action='store_true', default=False,
+        help='draw correlation plots')
+
+"""
+Plotting Options
+"""
 parser.add_argument('--plots', nargs='*',
         help='only draw these plots. see the keys in variables.py')
 parser.add_argument('--plot-cut', default=None, nargs='?',
@@ -81,6 +118,9 @@ parser.add_argument('--root', action='store_true', default=False,
         help='draw plots with ROOT. default is matplotlib')
 parser.add_argument('--suffix', default=None, nargs='?',
         help='suffix to add to any output files or plots')
+parser.add_argument('--output-formats', default=['png'], nargs='+',
+        choices=('png', 'eps', 'pdf'),
+        help='output formats')
 
 args = parser.parse_args()
 
@@ -98,6 +138,7 @@ from config import plots_dir
 from utils import *
 import variables
 from systematics import SYSTEMATICS
+from categories import MassRegions
 
 # stdlib imports
 import pickle
@@ -114,6 +155,50 @@ from matplotlib import pyplot as plt
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 from rootpy.extern.tabulartext import PrettyTable
+
+
+def staged_score(self, X, y, sample_weight, n_estimators=-1):
+    """
+    calculate maximum signal significance
+    """
+    bins = 50
+    for p in self.staged_predict_proba(X, n_estimators=n_estimators):
+
+        scores = p[:,-1]
+
+        # weighted mean accuracy
+        y_pred = scores >= .5
+        acc = np.average((y_pred == y), weights=sample_weight)
+
+        min_score, max_score = scores.min(), scores.max()
+        b_hist = Hist(bins, min_score, max_score + 0.0001)
+        s_hist = b_hist.Clone()
+
+        scores_s, w_s = scores[y==1], sample_weight[y==1]
+        scores_b, w_b = scores[y==0], sample_weight[y==0]
+
+        # fill the histograms
+        for s, w in zip(scores_s, w_s):
+            s_hist.Fill(s, w)
+        for s, w in zip(scores_b, w_b):
+            b_hist.Fill(s, w)
+
+        # reverse cumsum
+        #bins = list(b_hist.xedges())[:-1]
+        s_counts = np.array(s_hist)
+        b_counts = np.array(b_hist)
+        S = s_counts[::-1].cumsum()[::-1]
+        B = b_counts[::-1].cumsum()[::-1]
+
+        # S / sqrt(S + B)
+        s_sig = np.divide(list(S), np.sqrt(list(S + B)))
+
+        #max_bin = np.argmax(np.ma.masked_invalid(significance)) #+ 1
+        #max_sig = significance[max_bin]
+        #max_cut = bins[max_bin]
+
+        s_sig_max = np.max(np.ma.masked_invalid(s_sig))
+        yield s_sig_max * acc
 
 
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
@@ -163,12 +248,24 @@ if args.embedding:
 if args.suffix:
     output_suffix += '_%s' % args.suffix
 
+mass_regions = MassRegions(
+        low=args.low_mass_cut,
+        high=args.high_mass_cut,
+        high_sideband_in_control=args.high_sideband_in_control)
+
+control_region = mass_regions.control_region
+signal_region = mass_regions.signal_region
+train_region = mass_regions.train_region
+
 for category, cat_info in categories_controls:
 
     if category not in args.categories and category not in args.controls:
         continue
 
     if args.only_controls and category not in args.controls:
+        continue
+
+    if args.no_controls and category in args.controls:
         continue
 
     print
@@ -202,7 +299,7 @@ for category, cat_info in categories_controls:
         data=data,
         category=category,
         target_region=target_region,
-        mass_cut=args.mass_cut,
+        mass_regions=mass_regions,
         bins=cat_info['fitbins'],
         draw=args.draw_fit,
         use_cache=args.use_fit_cache,
@@ -298,7 +395,8 @@ for category, cat_info in categories_controls:
                     show_qq=False,
                     dir=PLOTS_DIR,
                     systematics=SYSTEMATICS if args.systematics else None,
-                    root=args.root)
+                    root=args.root,
+                    output_formats=args.output_formats)
             figures[category][expr] = fig
 
     if category not in args.categories:
@@ -341,6 +439,7 @@ for category, cat_info in categories_controls:
             print
             for branch in branches:
                 print branch
+            print
 
             if args.cor:
                 branches = branches + ['mass_mmc_tau1_tau2']
@@ -363,8 +462,8 @@ for category, cat_info in categories_controls:
                 same_size_train=True,
                 same_size_test=False,
                 remove_negative_train_weights=True,
-                standardize=False)
-
+                standardize=False,
+                cuts=train_region)
 
             if args.cor:
                 # draw a linear correlation matrix
@@ -417,14 +516,20 @@ for category, cat_info in categories_controls:
             plt.legend()
             plt.savefig('train_sample_weight_%s.png' % category)
 
+            # train a new BDT
+
+            # grid search params
+            min_leaf_high = int((sample_train.shape[0] / 4.) *
+                    (args.nfold - 1.) / args.nfold)
+            min_leaf_low = max(10, int(min_leaf_high / 100.))
+
             if args.forest_feature_ranking:
                 # perform a feature ranking with random forests
                 # Build a forest and compute the feature importances
                 forest = ExtraTreesClassifier(
-                        n_estimators=100,
+                        n_estimators=200,
                         n_jobs=-1,
-                        max_depth=3,
-                        min_samples_leaf=10,
+                        min_samples_leaf=(min_leaf_high + min_leaf_low) / 2,
                         compute_importances=True,
                         random_state=0)
 
@@ -441,9 +546,9 @@ for category, cat_info in categories_controls:
 
                 n_features = len(branches)
 
-                for f in xrange(n_features):
+                for i, idx in enumerate(indices):
                     print "%d. %s (%f)" % (
-                            f + 1, branches[f], importances[indices[f]])
+                            i + 1, branches[idx], importances[idx])
 
                 # plot the feature importances of the trees and of the forest
                 plt.figure()
@@ -454,128 +559,151 @@ for category, cat_info in categories_controls:
                             tree.feature_importances_[indices], "r")
 
                 plt.plot(xrange(n_features), importances[indices], "b")
-                plt.xticks(range(len(latex_names)), latex_names, rotation=-30,
+                plt.xticks(range(len(latex_names)),
+                        [latex_names[idx] for idx in indices], rotation=-30,
                           rotation_mode='anchor', ha='left', va='top')
                 plt.savefig('ranking_random_forest_%s.png' % category,
                         bbox_inches='tight')
                 continue
 
-            # train a new BDT
-            clf = AdaBoostClassifier(
-                    DecisionTreeClassifier(),
-                    compute_importances=True,
-                    learn_rate=.5)
+            if args.grid_search:
+                if args.quick_train:
+                    # quick search for testing
+                    min_leaf_step = max((min_leaf_high - min_leaf_low) / 20, 1)
+                    MAX_N_ESTIMATORS = 500
+                    MIN_N_ESTIMATORS = 10
 
-            # grid search params
-            if args.quick_train:
-                # quick search for testing
-                MIN_SAMPLES_LEAF = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
-                N_ESTIMATORS = [
-                        1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
-                grid_params = {
-                    'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
-                    'n_estimators': N_ESTIMATORS
-                }
-                grid_clf = GridSearchCV(
-                        clf, grid_params,
-                        # can use default ClassifierMixin score
-                        #score_func=precision_score,
-                        cv = StratifiedKFold(labels_train, args.nfold),
-                        n_jobs=-1)
-            else:
-                # full search
-                min_leaf_high = int((sample_train.shape[0] / 2.) *
-                        (args.nfold - 1.) / args.nfold)
-                min_leaf_low = max(10, int(min_leaf_high / 30.))
-                min_leaf_step = max((min_leaf_high - min_leaf_low) / 100, 1)
+                else:
+                    # larger search
+                    min_leaf_step = max((min_leaf_high - min_leaf_low) / 100, 1)
+                    MAX_N_ESTIMATORS = 1000
+                    MIN_N_ESTIMATORS = 10
+
                 MIN_SAMPLES_LEAF = range(
                         min_leaf_low, min_leaf_high, min_leaf_step)
-                MAX_N_ESTIMATORS = 1000
+
                 grid_params = {
                     'base_estimator__min_samples_leaf': MIN_SAMPLES_LEAF,
                 }
+
+                #AdaBoostClassifier.staged_score = staged_score
+
+                clf = AdaBoostClassifier(
+                        DecisionTreeClassifier(),
+                        compute_importances=True,
+                        learn_rate=.5)
+
                 grid_clf = BoostGridSearchCV(
                         clf, grid_params,
                         max_n_estimators=MAX_N_ESTIMATORS,
+                        min_n_estimators=MIN_N_ESTIMATORS,
                         # can use default ClassifierMixin score
                         #score_func=precision_score,
                         cv = StratifiedKFold(labels_train, args.nfold),
                         n_jobs=-1)
 
-            grid_clf.fit(
-                    sample_train, labels_train,
-                    sample_weight=sample_weight_train)
-            clf = grid_clf.best_estimator_
-            grid_scores = grid_clf.grid_scores_
+                print
+                print "performing a grid search over these parameter values:"
+                for param, values in grid_params.items():
+                    print param.split('__')[-1], values
+                    print '--'
+                print "Minimum number of classifiers: %d" % MIN_N_ESTIMATORS
+                print "Maximum number of classifiers: %d" % MAX_N_ESTIMATORS
+                print
+                print "training new classifiers ..."
+                grid_clf.fit(
+                        sample_train, labels_train,
+                        sample_weight=sample_weight_train)
+                clf = grid_clf.best_estimator_
+                grid_scores = grid_clf.grid_scores_
 
-            print "Best score: %f" % grid_clf.best_score_
-            print "Best Parameters:"
-            print grid_clf.best_params_
+                print "Best score: %f" % grid_clf.best_score_
+                print "Best Parameters:"
+                print grid_clf.best_params_
 
-            # plot a grid of the scores
-            plot_grid_scores(
-                grid_scores,
-                best_point={
-                    'base_estimator__min_samples_leaf':
-                    clf.base_estimator.min_samples_leaf,
-                    'n_estimators':
-                    clf.n_estimators},
-                params={
-                    'base_estimator__min_samples_leaf':
-                    'min leaf',
-                    'n_estimators':
-                    'trees'},
-                name=category)
+                # plot a grid of the scores
+                plot_grid_scores(
+                    grid_scores,
+                    best_point={
+                        'base_estimator__min_samples_leaf':
+                        clf.base_estimator.min_samples_leaf,
+                        'n_estimators':
+                        clf.n_estimators},
+                    params={
+                        'base_estimator__min_samples_leaf':
+                        'min leaf',
+                        'n_estimators':
+                        'trees'},
+                    name=category)
 
-            """
-            if 'base_estimator__min_samples_leaf' in grid_params:
-                # scale up the min-leaf and retrain on the whole set
-                min_samples_leaf = grid_clf.best_estimator_.base_estimator.min_samples_leaf
-                n_estimators=grid_clf.best_estimator_.n_estimators
+                """
+                if 'base_estimator__min_samples_leaf' in grid_params:
+                    # scale up the min-leaf and retrain on the whole set
+                    min_samples_leaf = grid_clf.best_estimator_.base_estimator.min_samples_leaf
+                    n_estimators=grid_clf.best_estimator_.n_estimators
+                    clf = AdaBoostClassifier(
+                            DecisionTreeClassifier(
+                                min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
+                            n_estimators=n_estimators,
+                            compute_importances=True)
+                    clf.fit(sample_train, labels_train,
+                            sample_weight=sample_weight_train)
+                    print
+                    print "After scaling up min_leaf"
+                    print clf
+                """
+            else:
+                print "training a new classifier ..."
+
+                if category == 'vbf':
+                    min_samples_leaf=200
+                    n_estimators=50
+                else:
+                    min_samples_leaf=150
+                    n_estimators=20
+
                 clf = AdaBoostClassifier(
-                        DecisionTreeClassifier(
-                            min_samples_leaf=int(min_samples_leaf * args.nfold / float(args.nfold - 1))),
-                        n_estimators=n_estimators,
-                        compute_importances=True)
+                    DecisionTreeClassifier(
+                        min_samples_leaf=min_samples_leaf),
+                    compute_importances=True,
+                    learn_rate=.5,
+                    n_estimators=n_estimators)
+
                 clf.fit(sample_train, labels_train,
                         sample_weight=sample_weight_train)
-                print
-                print "After scaling up min_leaf"
-                print clf
-            """
-
-            if hasattr(clf, 'feature_importances_'):
-                importances = clf.feature_importances_
-                indices = np.argsort(importances)[::-1]
-                print "Feature ranking:"
-                print r"\begin{tabular}{c|c|c}"
-                table = PrettyTable(["Rank", "Variable", "Importance"])
-                print r"\hline\hline"
-                print r"Rank & Variable & Importance\\"
-                for f, feature in enumerate(branches):
-                    table.add_row([f+1, feature, '%.3f' % importances[indices[f]]])
-                    print r"%d & %s & %.3f\\" % (f + 1, VARIABLES[feature]['title'], importances[indices[f]])
-                    #print "%d. %s (%f)" % (f + 1, feature, importances[indices[f]])
-                print r"\end{tabular}"
-                print
-                print table.get_string(hrules=1)
 
             with open(clf_filename, 'w') as f:
                 pickle.dump(clf, f)
 
-        # Create histograms for the limit setting with HistFactory
-        # Include all systematic variations
+        if hasattr(clf, 'feature_importances_'):
+            importances = clf.feature_importances_
+            indices = np.argsort(importances)[::-1]
+            print "Feature ranking:"
+            print r"\begin{tabular}{c|c|c}"
+            table = PrettyTable(["Rank", "Variable", "Importance"])
+            print r"\hline\hline"
+            print r"Rank & Variable & Importance\\"
+            for f, idx in enumerate(indices):
+                table.add_row([f + 1,
+                    branches[idx],
+                    '%.3f' % importances[idx]])
+                print r"%d & %s & %.3f\\" % (f + 1,
+                    VARIABLES[branches[idx]]['title'],
+                    importances[idx])
+            print r"\end{tabular}"
+            print
+            print table.get_string(hrules=1)
 
-        cuts = Cut('mass_mmc_tau1_tau2 < %d' % args.mass_cut)
+        # show the background model and data in the control region
         print "plotting classifier output in control region..."
-        print cuts
+        print control_region
         # data scores
         data_scores, _ = data.scores(clf,
                 branches,
                 train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                cuts=cuts)
+                cuts=control_region)
 
         # determine min and max scores
         min_score = 1.
@@ -595,7 +723,7 @@ for category, cat_info in categories_controls:
                     train_fraction=args.train_fraction,
                     category=category,
                     region=target_region,
-                    cuts=cuts)
+                    cuts=control_region)
 
             for sys_term, (scores, weights) in scores_dict.items():
                 assert len(scores) == len(weights)
@@ -613,6 +741,16 @@ for category, cat_info in categories_controls:
         print "minimum score: %f" % min_score
         print "maximum score: %f" % max_score
 
+        # prevent bin threshold effects
+        min_score -= 0.00001
+        max_score += 0.00001
+
+        # add a bin above max score and below min score for extra beauty
+        score_width = max_score - min_score
+        bin_width = score_width / args.bins
+        min_score -= bin_width
+        max_score += bin_width
+
         # compare data and the model in a low mass control region
         plot_clf(
             background_scores=bkg_scores,
@@ -622,22 +760,21 @@ for category, cat_info in categories_controls:
             data_scores=(data, data_scores),
             draw_data=True,
             name='control' + output_suffix,
-            bins=args.bins,
+            bins=args.bins + 2,
             min_score=min_score,
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
 
         # show the background model and 125 GeV signal in the signal region
-        cuts = Cut('mass_mmc_tau1_tau2 > %d' % args.mass_cut)
         print "Plotting classifier output in signal region..."
-        print cuts
+        print signal_region
         # data scores
         data_scores, _ = data.scores(clf,
                 branches,
                 train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                cuts=cuts)
+                cuts=signal_region)
 
         # determine min and max scores
         min_score = 1.
@@ -657,7 +794,7 @@ for category, cat_info in categories_controls:
                     train_fraction=args.train_fraction,
                     category=category,
                     region=target_region,
-                    cuts=cuts)
+                    cuts=signal_region)
 
             for sys_term, (scores, weights) in scores_dict.items():
                 assert len(scores) == len(weights)
@@ -678,7 +815,10 @@ for category, cat_info in categories_controls:
                 train_fraction=args.train_fraction,
                 category=category,
                 region=target_region,
-                cuts=cuts)
+                cuts=signal_region)
+
+        min_score_signal = 1.
+        max_score_signal = 0.
 
         for sys_term, (scores, weights) in signal_scores_eval.items():
             assert len(scores) == len(weights)
@@ -690,9 +830,27 @@ for category, cat_info in categories_controls:
                 min_score = _min
             if _max > max_score:
                 max_score = _max
+            if _min < min_score_signal:
+                min_score_signal = _min
+            if _max > max_score_signal:
+                max_score_signal = _max
 
         print "minimum score: %f" % min_score
         print "maximum score: %f" % max_score
+        print "minimum signal score: %f" % min_score_signal
+        print "maximum signal score: %f" % max_score_signal
+
+        # prevent bin threshold effects
+        min_score -= 0.00001
+        max_score += 0.00001
+        min_score_signal -= 0.00001
+        max_score_signal += 0.00001
+
+        # add a bin above max score and below min score for extra beauty
+        score_width_signal = max_score_signal - min_score_signal
+        bin_width_signal = score_width_signal / args.bins
+        min_score_signal -= bin_width_signal
+        max_score_signal += bin_width_signal
 
         plot_clf(
             background_scores=bkg_scores,
@@ -701,12 +859,15 @@ for category, cat_info in categories_controls:
             signal_scores=(signal_eval, signal_scores_eval),
             signal_scale=50,
             name='ROI' + output_suffix,
-            bins=args.bins,
-            min_score=min_score,
-            max_score=max_score,
+            bins=args.bins + 2,
+            min_score=min_score_signal,
+            max_score=max_score_signal,
             systematics=SYSTEMATICS if args.systematics else None)
 
         print "creating histograms for limits"
+
+        min_score_signal = 1.
+        max_score_signal = 0.
 
         # signal scores for all masses and modes
         sig_scores = {}
@@ -719,7 +880,7 @@ for category, cat_info in categories_controls:
                         train_fraction=args.train_fraction,
                         category=category,
                         region=target_region,
-                        cuts=cuts)
+                        cuts=signal_region)
 
                 for sys_term, (scores, weights) in scores_dict.items():
                     assert len(scores) == len(weights)
@@ -731,17 +892,34 @@ for category, cat_info in categories_controls:
                         min_score = _min
                     if _max > max_score:
                         max_score = _max
+                    if _min < min_score_signal:
+                        min_score_signal = _min
+                    if _max > max_score_signal:
+                        max_score_signal = _max
 
                 name = 'Signal_%d_%s' % (mass, mode)
                 sig_scores[name] = (sig, scores_dict)
 
         print "minimum score: %f" % min_score
         print "maximum score: %f" % max_score
+        print "minimum signal score: %f" % min_score_signal
+        print "maximum signal score: %f" % max_score_signal
 
-        #padding = (max_score - min_score) / (2 * args.bins)
+        # prevent bin threshold effects
         min_score -= 0.00001
         max_score += 0.00001
-        hist_template = Hist(args.bins, min_score, max_score)
+        min_score_signal -= 0.00001
+        max_score_signal += 0.00001
+
+        # add a bin above max score and below min score for good luck
+        score_width_signal = max_score_signal - min_score_signal
+        bin_width_signal = score_width_signal / args.bins
+        min_score_signal -= bin_width_signal
+        max_score_signal += bin_width_signal
+
+        #hist_template = Hist(args.bins, min_score, max_score)
+        # don't waste bins on regions with only background
+        hist_template = Hist(args.bins + 2, min_score_signal, max_score_signal)
 
         root_filename = '%s%s.root' % (category, output_suffix)
 

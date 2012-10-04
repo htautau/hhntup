@@ -7,33 +7,6 @@ from rootpy.math.physics.vector import LorentzRotation, LorentzVector, Vector3, 
 from rootpy.types import *
 
 
-class TrueTau_MCBlock(TreeModel):
-
-    visible = BoolCol(default=False)
-    hadronic = BoolCol(default=False)
-    electron = BoolCol(default=False)
-    muon = BoolCol(default=False)
-    nprong = IntCol(default=-1111)
-    npi0 = IntCol(default=-1111)
-    nneutrals = IntCol(default=-1111)
-    charge = IntCol()
-
-    fourvect = LorentzVector
-    fourvect_vis = LorentzVector
-    fourvect_miss = LorentzVector
-
-    fourvect_boosted = LorentzVector
-    fourvect_vis_boosted = LorentzVector
-    fourvect_miss_boosted = LorentzVector
-
-    prod_vertex = Vector3
-    decay_vertex = Vector3
-    decay_length = FloatCol(default=-1111)
-
-    dR_tau_nu = FloatCol(default=-1111)
-    dTheta3d_tau_nu = FloatCol(default=-1111)
-
-
 class TrueTau(TreeModel):
 
     nProng = IntCol(default=-1111)

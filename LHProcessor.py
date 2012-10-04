@@ -225,8 +225,8 @@ class LHProcessor(ATLASStudent):
         # entering the main event loop...
         for event in chain:
 
-            tree_train.reset()
-            tree_test.reset()
+            #tree_train.reset() Use reset=True in the Fill below
+            #tree_test.reset()
             cutflow.reset()
 
             #Select if the event goes into the training or the testing tree
@@ -417,7 +417,7 @@ class LHProcessor(ATLASStudent):
                     event_weight *= event.mc_weight[0]
                 except AttributeError:
                     pass
-                
+
                 # set the event pileup weight
                 event_weight = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                              event.mc_channel_number,
@@ -439,7 +439,7 @@ class LHProcessor(ATLASStudent):
                     event_weight *= MuonSF(event, self.metadata.datatype, pileup_tool)
                 if event.leptonType == 'e':
                     event_weight *= ElectronSF(event, self.metadata.datatype)
-                
+
                 #Lepton Trigger scale factors
                 if not event.isLTT:
                     event_weight *= LeptonSLTSF(event, self.metadata.datatype)
@@ -465,7 +465,7 @@ class LHProcessor(ATLASStudent):
                 muonlttsf_w     = 1.0
                 electronlttsf_w = 1.0
                 taulttsf_w      = 1.0
-                
+
                 ## Apply mc event weight:
                 try:
                     mc_w = event.mc_weight[0]
@@ -480,7 +480,7 @@ class LHProcessor(ATLASStudent):
                     muonsf_w = MuonSF(event, self.metadata.datatype, pileup_tool)
                 if event.leptonType == 'e':
                     electronsf_w = ElectronSF(event, self.metadata.datatype)
-                
+
                 #Lepton Trigger scale factors
                 if not event.isLTT:
                     leptonsltsf_w = LeptonSLTSF(event, self.metadata.datatype)
@@ -492,14 +492,14 @@ class LHProcessor(ATLASStudent):
 
                 #Tau trigger scale factors
                 taulttsf_w = EmbedTauTriggerCorr(Tau, npileup_vtx, event.RunNumber)
-                
+
                 event_weight = mc_w * muonsf_w * electronsf_w * leptonsltsf_w * muonlttsf_w * electronlttsf_w * taulttsf_w
-                
+
             tree.weight = event_weight
 
             # fill output ntuple
             tree.cutflow = cutflow.int()
-            tree.Fill()
+            tree.Fill(reset=True)
 
         self.output.cd()
         tree_train.FlushBaskets()

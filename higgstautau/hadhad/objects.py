@@ -1,18 +1,30 @@
 from ..mixins import *
 
 
-def define_objects(tree, year):
+def define_objects(tree, year, skim=False):
 
-    tree.define_collection(
-            name="taus",
-            prefix="tau_",
-            size="tau_n",
-            mix=TauFourMomentum)
-    tree.define_collection(
-            name="taus_EF",
-            prefix="trig_EF_tau_",
-            size="trig_EF_tau_n",
-            mix=TauFourMomentum)
+    if skim:
+        tree.define_collection(
+                name="taus",
+                prefix="tau_",
+                size="tau_n",
+                mix=TauFourMomentumSkim)
+        tree.define_collection(
+                name="taus_EF",
+                prefix="trig_EF_tau_",
+                size="trig_EF_tau_n",
+                mix=TauFourMomentumSkim)
+    else:
+        tree.define_collection(
+                name="taus",
+                prefix="tau_",
+                size="tau_n",
+                mix=TauFourMomentum)
+        tree.define_collection(
+                name="taus_EF",
+                prefix="trig_EF_tau_",
+                size="trig_EF_tau_n",
+                mix=TauFourMomentum)
     # jet_* etc. is AntiKt4LCTopo_* in tau-perf D3PDs
     tree.define_collection(
             name="jets",
@@ -37,11 +49,13 @@ def define_objects(tree, year):
     tree.define_collection(
             name="muons",
             prefix="mu_staco_",
-            size="mu_staco_n")
+            size="mu_staco_n",
+            mix=FourMomentum)
     tree.define_collection(
             name="electrons",
             prefix="el_",
-            size="el_n")
+            size="el_n",
+            mix=ElFourMomentum)
     tree.define_collection(
             name="vertices",
             prefix="vxp_",

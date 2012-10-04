@@ -113,19 +113,17 @@ def iter_samples(channel, year, patterns=None, systematics=False):
     channel = channel.lower()
     year = year % 1000
     for sample_type, sample_info in SAMPLES[channel][year].items():
+        samples = filter_with_patterns(sample_info['samples'][:], patterns)
         if systematics:
-            samples = filter_with_patterns(sample_info['samples'][:], patterns)
             if not samples:
                 continue
             yield (samples,
                    [tuple(var.split(',')) for var in
                     sample_info['systematics']])
         else:
-            samples = sample_info['samples'][:]
             if 'systematics_samples' in sample_info:
                 for sample, sys_samp in sample_info['systematics_samples'].items():
-                    samples += sys_samp.keys()
-            samples = filter_with_patterns(samples, patterns)
+                    samples += filter_with_patterns(sys_samp.keys(), patterns)
             if samples:
                 yield samples
 

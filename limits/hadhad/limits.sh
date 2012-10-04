@@ -18,6 +18,7 @@ rm -f bandPlotData_boosted.txt
 rm -f bandPlotData_vbf.txt
 
 TAG=00-01-02
+WORKSPACE=FULL_SYSTEMATICS
 
 echo "Using tag runAsymptoticsCLs-"${TAG}
 
@@ -36,7 +37,7 @@ do
         then
             echo "Running the old limit script"
             (root -l -b -q ../common/runAsymptoticsCLs-old/runAsymptoticsCLs.C+"(\
-                \"./results/hh_${category}_${mass}_combined_STATONLY_model.root\",\
+                \"./results/hh_${category}_${mass}_combined_${WORKSPACE}_model.root\",\
                 \"combined\",\
                 \"ModelConfig\",\
                 \"asimovData\",\
@@ -48,7 +49,7 @@ do
                 0.95)" 2>&1) | tee log${mass}_${category}.txt
         else
             (root -l -b -q ../common/runAsymptoticsCLs-${TAG}/runAsymptoticsCLs.C+"(\
-                \"./results/hh_${category}_${mass}_combined_STATONLY_model.root\",\
+                \"./results/hh_${category}_${mass}_combined_${WORKSPACE}_model.root\",\
                 \"combined\",\
                 \"ModelConfig\",\
                 \"asimovData\",\
@@ -69,7 +70,7 @@ do
     then
         echo "Running the old limit script"
         (root -l -b -q ../common/runAsymptoticsCLs-old/runAsymptoticsCLs.C+"(\
-            \"./results/hh_${mass}_combined_STATONLY_model.root\",\
+            \"./results/hh_${mass}_combined_${WORKSPACE}_model.root\",\
             \"combined\",\
             \"ModelConfig\",\
             \"asimovData\",\
@@ -81,7 +82,7 @@ do
             0.95)" 2>&1) | tee log${mass}_combined.txt
     else
         (root -l -b -q ../common/runAsymptoticsCLs-${TAG}/runAsymptoticsCLs.C+"(\
-            \"./results/hh_${mass}_combined_STATONLY_model.root\",\
+            \"./results/hh_${mass}_combined_${WORKSPACE}_model.root\",\
             \"combined\",\
             \"ModelConfig\",\
             \"asimovData\",\

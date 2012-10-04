@@ -41,7 +41,7 @@ if not NTUPLE_PATH:
 NTUPLE_PATH = os.path.join(NTUPLE_PATH, 'hadhad')
 DEFAULT_STUDENT = 'HHProcessor'
 TOTAL_LUMI = total_lumi()
-TAUTAUHADHADBR = 0.412997
+TAUTAUHADHADBR = 0.4197744 # (1. - 0.3521) ** 2
 VERBOSE = False
 DB_HH = datasets.Database(name='datasets_hh', verbose=VERBOSE)
 DB_TAUID = datasets.Database(name='datasets_tauid', verbose=VERBOSE)
@@ -58,7 +58,7 @@ SS = Cut('tau1_charge * tau2_charge == 1')
 TEMPFILE = ropen('tempfile.root', 'recreate')
 
 
-def get_file(student, hdf=False, suffix=''):
+def get_file(student, hdf=False, suffix='-current'):
 
     if hdf:
         ext = '.h5'
@@ -471,7 +471,8 @@ class MC(Sample):
 
             trees['NOMINAL'] = rfile.Get(treename)
             tables['NOMINAL'] = getattr(h5file.root, treename)
-            weighted_events['NOMINAL'] = rfile.Get(treename + events_hist_suffix)[events_bin]
+            weighted_events['NOMINAL'] = rfile.Get(
+                    treename + events_hist_suffix)[events_bin]
 
             if self.systematics:
 
@@ -483,7 +484,8 @@ class MC(Sample):
                 if systematics_terms:
                     for sys_term in systematics_terms:
 
-                        # merge terms such as JES_UP,TES_UP (embedding) and TES_UP (MC)
+                        # merge terms such as JES_UP,TES_UP (embedding)
+                        # and TES_UP (MC)
                         actual_sys_term = sys_term
                         for term in unused_terms:
                             if set(term) & set(sys_term):
@@ -495,7 +497,8 @@ class MC(Sample):
                         sys_name = treename + '_' + '_'.join(actual_sys_term)
                         trees[sys_term] = rfile.Get(sys_name)
                         tables[sys_term] = getattr(h5file.root, sys_name)
-                        weighted_events[sys_term] = rfile.Get(sys_name + events_hist_suffix)[events_bin]
+                        weighted_events[sys_term] = rfile.Get(
+                                sys_name + events_hist_suffix)[events_bin]
 
                         unused_terms.remove(sys_term)
 
@@ -527,9 +530,11 @@ class MC(Sample):
 
             if isinstance(self, Higgs):
                 # use yellowhiggs for cross sections
-                xs = yellowhiggs.xsbr(
+                xs, _ = yellowhiggs.xsbr(
                         7, self.masses[i],
-                        self.modes[i], 'tautau')[0] * TAUTAUHADHADBR
+                        self.modes[i], 'tautau')
+                #print name, self.masses[i], self.modes[i], xs
+                xs *= TAUTAUHADHADBR
                 kfact = 1.
                 effic = 1.
             elif isinstance(self, Embedded_Ztautau):
@@ -538,7 +543,8 @@ class MC(Sample):
                 xs, kfact, effic = ds.xsec_kfact_effic
             if VERBOSE:
                 print ds.name, xs, kfact, effic,
-            self.datasets.append((ds, trees, tables, weighted_events, xs, kfact, effic))
+            self.datasets.append(
+                    (ds, trees, tables, weighted_events, xs, kfact, effic))
 
     @property
     def label(self):

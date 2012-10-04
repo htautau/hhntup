@@ -380,15 +380,18 @@ class TauLArHole(EventFilter):
 def jet_selection(jet):
     """ Finalizes the jet selection """
 
-    if not (jet.pt > 25*GeV) : return False
+    if not (jet.pt > 25 * GeV):
+        return False
 
-    #Protection against bunny ear jets
-    if (2.5 < abs(jet.eta) < 3.5):
-        if not (jet.pt > 30*GeV) : return False
+    # Protection against bunny ear jets
+    if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
+        return False
 
-    if not (abs(jet.eta) < 4.5) : return False
-    if (abs(jet.eta) < 2.4):
-        if not (jet.jvtxf > 0.75) : return False
+    if not (abs(jet.eta) < 4.5):
+        return False
+
+    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
+        return False
 
     return True
 

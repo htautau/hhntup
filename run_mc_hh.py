@@ -30,9 +30,6 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 if not args.systematics_only:
     # nominal values
     datasets = samples.samples('hadhad', args.year, args.samples)
-    if not datasets:
-        # assume raw ds names are given
-        datasets = args.samples
     cluster.run(args.student,
                 db=args.db,
                 datasets=datasets,
@@ -54,8 +51,7 @@ if not args.nominal_only:
                 args.systematics.split(',')]
     # systematics
     for datasets, systematics in samples.iter_samples('hadhad', args.year,
-            args.samples,
-            systematics=True):
+            args.samples, systematics=True):
         cluster.run_systematics_new('HADHAD',
                     args.student,
                     db=args.db,

@@ -12,6 +12,7 @@ functionality to Tree objects ("decorating" them).
 __all__ = [
     'FourMomentum',
     'TauFourMomentum',
+    'TauFourMomentumSkim',
     'ElFourMomentum',
     'MCTauFourMomentum',
     'MCParticle',
@@ -61,9 +62,6 @@ class TauFourMomentum(FourMomentum):
         self.trigger_scale_factor_high = 1.
         self.trigger_scale_factor_low = 1.
 
-        self.trigger_match_thresh = 0
-        self.trigger_match_index = -1
-
         self.collinear_momentum_fraction = -9999.
 
         self.centrality = 0.
@@ -74,8 +72,10 @@ class TauFourMomentum(FourMomentum):
         self.matched_collision = False
 
         # track recounting
-        ntrack_core = 0
         ntrack_full = 0
+
+        # vertex association
+        vertex_prob = 0.
 
         # overlap checking
         self.min_dr_jet = 9999.
@@ -111,6 +111,16 @@ class TauFourMomentum(FourMomentum):
                 ldtrkindex = i
                 ldtrkpt = pt
         return ldtrkindex
+
+
+class TauFourMomentumSkim(TauFourMomentum):
+
+    def __init__(self):
+
+        super(TauFourMomentumSkim, self).__init__()
+
+        self.trigger_match_thresh = 0
+        self.trigger_match_index = -1
 
 
 class ElFourMomentum(FourMomentum):
@@ -229,7 +239,7 @@ class MCParticle(FourMomentum):
         return ("%s ("
                 "status: %d, "
                 "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f, "
-                "x: %.4f, y: %.4f, z: %.4f)") % \
+                "x: %.4f, y: %.4f, z: %.4f, charge: %d)") % \
             (self._particle.GetName(),
              self.status,
              self._particle.Mass() * GeV,
@@ -237,4 +247,5 @@ class MCParticle(FourMomentum):
              self.eta, self.phi,
              self.vx_x,
              self.vx_y,
-             self.vx_z)
+             self.vx_z,
+             self.charge)
