@@ -53,7 +53,8 @@ def define_objects(tree, year, skim=False):
     tree.define_collection(
             name="electrons",
             prefix="el_",
-            size="el_n")
+            size="el_n",
+            mix=ElFourMomentum)
     tree.define_collection(
             name="vertices",
             prefix="vxp_",

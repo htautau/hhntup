@@ -102,11 +102,25 @@ class TauDecay(object):
         return [p for p in self.final if abs(p.pdgId) == pdg.e_minus]
 
     @cached_property
+    def electron(self):
+        """
+        Return True if this is a decay to an electron
+        """
+        return len(self.electrons) > 0
+
+    @cached_property
     def muons(self):
         """
         Return all muons in final state
         """
         return [p for p in self.final if abs(p.pdgId) == pdg.mu_minus]
+
+    @cached_property
+    def muon(self):
+        """
+        Return True if this is a decay to a muon
+        """
+        return len(self.muons) > 0
 
     @cached_property
     def hadronic(self):
@@ -127,6 +141,11 @@ class TauDecay(object):
     def nneutrals(self):
 
         return self.npi0 + len(self.neutral_kaons)
+
+    @cached_property
+    def charge(self):
+
+        return self.init.charge
 
     @cached_property
     def fourvect(self):

@@ -19,6 +19,10 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 VERBOSE = False
 
 
+is_visible = lambda fourvect: (
+                fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
+
+
 class Event(TreeModel):
 
     match_collision = BoolCol(default=False)
@@ -38,8 +42,40 @@ class FourVectModel(TreeModel):
     p = FloatCol()
     fourvect = LorentzVector
 
+    @classmethod
+    def set(cls, this, other):
 
-class TrueTau_MCBlock(FourVectModel):
+        vect = other.fourvect
+        this.pt = vect.Pt()
+        this.phi = vect.Phi()
+        this.eta = vect.Eta()
+        this.p = vect.P()
+        this.fourvect.set_from(vect)
+
+    @classmethod
+    def set_vis(cls, this, other):
+
+        vect = other.fourvect_visible
+        this.pt_vis = vect.Pt()
+        this.phi_vis = vect.Phi()
+        this.eta_vis = vect.Eta()
+        this.p_vis = vect.P()
+        this.fourvect_vis.set_from(vect)
+
+    @classmethod
+    def set_miss(cls, this, other):
+
+        vect = other.fourvect_missing
+        this.pt_miss = vect.Pt()
+        this.phi_miss = vect.Phi()
+        this.eta_miss = vect.Eta()
+        this.p_miss = vect.P()
+        this.fourvect_miss.set_from(vect)
+
+
+class TrueTau(FourVectModel +
+        FourVectModel.suffix('_vis') +
+        FourVectModel.suffix('_miss')):
 
     visible = BoolCol(default=False)
     hadronic = BoolCol(default=False)
@@ -50,19 +86,46 @@ class TrueTau_MCBlock(FourVectModel):
     nneutrals = IntCol(default=-1111)
     charge = IntCol()
 
-    fourvect_vis = LorentzVector
-    fourvect_miss = LorentzVector
-
-    fourvect_boosted = LorentzVector
-    fourvect_vis_boosted = LorentzVector
-    fourvect_miss_boosted = LorentzVector
-
     prod_vertex = Vector3
     decay_vertex = Vector3
     decay_length = FloatCol(default=-1111)
 
     dR_vistau_nu = FloatCol(default=-1111)
     dTheta3d_vistau_nu = FloatCol(default=-1111)
+
+    @classmethod
+    def set(cls, mctau, decay):
+
+        mctau.visible = is_visible(decay.fourvect_visible)
+        mctau.electron = decay.electron
+        mctau.muon = decay.muon
+        mctau.hadronic = decay.hadronic
+        mctau.nprong = decay.nprong
+        mctau.npi0 = decay.npi0
+        mctau.nneutrals = decay.nneutrals
+        mctau.charge = decay.charge
+
+        FourVectModel.set(mctau, decay)
+        FourVectModel.set_vis(mctau, decay)
+        FourVectModel.set_miss(mctau, decay)
+
+        mctau.dr_vistau_nu = decay.dr_vistau_nu
+        mctau.dtheta3d_vistau_nu = decay.dtheta3d_vistau_nu
+
+        mctau.decay_length = decay.decay_length
+        mctau.prod_vertex.set_from(decay.prod_vertex)
+        mctau.decay_vertex.set_from(decay.decay_vertex)
+
+        # sanity check
+        if mctau.hadronic:
+            assert mctau.electron == False
+            assert mctau.muon == False
+
+        if VERBOSE:
+            print decay
+            print decay.decay_length
+            print "%s -> %s" % (decay.prod_vertex, decay.decay_vertex)
+            print "===="
 
 
 class RecoTau(FourVectModel):
@@ -83,6 +146,68 @@ class RecoTau(FourVectModel):
     ipSigLeadTrk = FloatCol()
     trFlightPathSig = FloatCol()
 
+    @classmethod
+    def set(cls, tau, recotau):
+
+        FourVectModel.set(tau, recotau)
+
+        tau.numTrack = recotau.numTrack
+        tau.nPi0 = recotau.nPi0
+        tau.privtx.set_from(
+           Vector3(recotau.privtx_x,
+                   recotau.privtx_y,
+                   recotau.privtx_z))
+        tau.privtx_chiSquared = recotau.privtx_chiSquared
+        tau.privtx_numberDoF = recotau.privtx_numberDoF
+        tau.privtx_jvf = recotau.privtx_jvf
+        tau.secvtx.set_from(
+           Vector3(recotau.secvtx_x,
+                   recotau.secvtx_y,
+                   recotau.secvtx_z))
+
+        tau.ipZ0SinThetaSigLeadTrk = recotau.ipZ0SinThetaSigLeadTrk
+        tau.ipSigLeadTrk = recotau.ipSigLeadTrk
+        tau.trFlightPathSig = recotau.trFlightPathSig
+
+        if VERBOSE:
+            print
+            print "tau1:"
+            print "privtx: ", (
+                    recotau.privtx_x,
+                    recotau.privtx_y,
+                    recotau.privtx_z)
+            print "secvtx: ", (
+                    recotau.secvtx_x,
+                    recotau.secvtx_y,
+                    recotau.secvtx_z)
+            print
+
+        """ Additional variables to add later if needed
+        tau_track_n
+        tau_track_d0
+        tau_track_z0
+        tau_track_phi
+        tau_track_theta
+        tau_track_qoverp
+        tau_track_pt
+        tau_track_eta
+        tau_track_atPV_d0
+        tau_track_atPV_z0
+        tau_track_atPV_phi
+        tau_track_atPV_theta
+        tau_track_atPV_qoverp
+        tau_track_atPV_pt
+        tau_track_atPV_eta
+        tau_track_atTJVA_n
+        tau_track_atTJVA_d0
+        tau_track_atTJVA_z0
+        tau_track_atTJVA_phi
+        tau_track_atTJVA_theta
+        tau_track_atTJVA_qoverp
+        tau_track_atTJVA_pt
+        tau_track_atTJVA_eta
+        """
+
 
 class RecoElectron(FourVectModel):
 
@@ -92,6 +217,18 @@ class RecoElectron(FourVectModel):
 class RecoMuon(FourVectModel):
 
     pass
+
+
+def closest_reco_object(objects, thing, dR=0.2):
+
+    closest_object = None
+    closest_dR = 10000
+    for other in objects:
+        dr = utils.dR(other.eta, other.phi, thing.Eta(), thing.Phi())
+        if dr < dR and dr < closest_dR:
+            closest_object = tau
+            closest_dR = dr
+    return closest_object
 
 
 class ditaumass(ATLASStudent):
@@ -119,8 +256,8 @@ class ditaumass(ATLASStudent):
         # this tree will contain info pertaining to true tau decays
         # for possible use in the optimization of a missing mass calculator
         tree = Tree(name="ditaumass",
-                model=(TrueTau_MCBlock.prefix('truetau1_') +
-                       TrueTau_MCBlock.prefix('truetau2_') +
+                model=(TrueTau.prefix('truetau1_') +
+                       TrueTau.prefix('truetau2_') +
                        RecoTau.prefix('tau1_') +
                        RecoTau.prefix('tau2_') +
                        RecoElectron.prefix('ele1_') +
@@ -129,34 +266,24 @@ class ditaumass(ATLASStudent):
                        RecoMuon.prefix('muon2_') +
                        Event))
 
-        tree.define_object(name='truetau1', prefix='truetau1_')
-        tree.define_object(name='truetau2', prefix='truetau2_')
-        tree.define_object(name='tau1', prefix='tau1_')
-        tree.define_object(name='tau2', prefix='tau2_')
-        tree.define_object(name='ele1', prefix='ele1_')
-        tree.define_object(name='ele2', prefix='ele2_')
-        tree.define_object(name='muon1', prefix='muon1_')
-        tree.define_object(name='muon2', prefix='muon2_')
+        truetaus = [
+            tree.define_object(name='truetau1', prefix='truetau1_'),
+            tree.define_object(name='truetau2', prefix='truetau2_')]
 
-        is_visible = lambda fourvect: (
-                fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
+        taus = [
+            tree.define_object(name='tau1', prefix='tau1_'),
+            tree.define_object(name='tau2', prefix='tau2_')]
 
-        def closest_reco_object(objects, thing, dR=0.2):
+        electrons = [
+            tree.define_object(name='ele1', prefix='ele1_'),
+            tree.define_object(name='ele2', prefix='ele2_')]
 
-            closest_object = None
-            closest_dR = 10000
-            for other in objects:
-                dr = utils.dR(other.eta, other.phi, thing.Eta(), thing.Phi())
-                if dr < dR and dr < closest_dR:
-                    closest_object = tau
-                    closest_dR = dr
-            return closest_object
+        muons = [
+            tree.define_object(name='muon1', prefix='muon1_'),
+            tree.define_object(name='muon2', prefix='muon2_')]
 
         for event in chain:
 
-            """
-            Need to get all MC tau final states to build ntuple for missing mass calculator pdfs
-            """
             # Only accept taus from a Z or Higgs
             tau_decays = tautools.get_tau_decays(event, parent_pdgid=(23, 25))
 
@@ -172,172 +299,54 @@ class ditaumass(ATLASStudent):
                 # skip this event
                 continue
 
-            decay1, decay2 = tau_decays
+            matched = True
+            matched_objects = []
 
-            if VERBOSE:
-                print decay1
-                print decay2
+            for decay, truetau, tau, electron, muon in zip(
+                    tau_decays, truetaus, taus, electrons, muons):
 
-                print decay1.decay_length
-                print decay2.decay_length
+                TrueTau.set(truetau, decay)
 
-                print "%s -> %s" % (decay1.prod_vertex, decay1.decay_vertex)
-                print "%s -> %s" % (decay2.prod_vertex, decay2.decay_vertex)
-                print "===="
+                # match to reco taus, electrons and muons
+                if decay.hadronic:
+                    recotau = closest_reco_object(
+                            event.taus, decay.fourvect_visible, dR=0.2)
+                    matched_objects.append(recotau)
+                    if recotau is not None:
+                        RecoTau.set(tau, recotau)
+                    else:
+                        matched = False
+                elif decay.electron:
+                    recoele = closest_reco_object(
+                            event.electrons, decay.fourvect_visible, dR=0.2)
+                    matched_objects.append(recoele)
+                    if recoele is not None:
+                        RecoElectron.set(electron, recoele)
+                    else:
+                        matched = False
+                elif decay.muon:
+                    recomuon = closest_reco_object(
+                            event.muons, decay.fourvect_visible, dR=0.2)
+                    matched_objects.append(recomuon)
+                    if recomuon is not None:
+                        RecoMuon.set(muon, recomuon)
+                    else:
+                        matched = False
+                else:
+                    raise TypeError("Invalid tau decay")
 
-            nele1 = len(decay1.electrons)
-            nmuon1 = len(decay1.muons)
+            # did both decays match a reco object?
+            tree.matched = matched
 
-            nele2 = len(decay2.electrons)
-            nmuon2 = len(decay2.muons)
+            # match collision: decays matched same reco object
+            tree.match_collision = matched_objects[0] == matched_objects[1]
 
-            tree.mctau1_visible = is_visible(decay1.fourvect_visible)
-            tree.mctau1_electron = nele1 > 0
-            tree.mctau1_muon = nmuon1 > 0
-            tree.mctau1_hadronic = decay1.hadronic
-            tree.mctau1_nprong = decay1.nprong
-            tree.mctau1_npi0 = decay1.npi0
-            tree.mctau1_nneutrals = decay1.nneutrals
-            tree.mctau1_fourvect.set_from(decay1.fourvect)
-            tree.mctau1_fourvect_vis.set_from(decay1.fourvect_visible)
-            tree.mctau1_fourvect_miss.set_from(decay1.fourvect_missing)
-            tree.mctau1_dr_vistau_nu = decay1.dr_vistau_nu
-            tree.mctau1_dtheta3d_vistau_nu = decay1.dtheta3d_vistau_nu
-            tree.mctau1_decay_length = decay1.decay_length
-            tree.mctau1_prod_vertex.set_from(decay1.prod_vertex)
-            tree.mctau1_decay_vertex.set_from(decay1.decay_vertex)
-
-            tree.mctau2_visible = is_visible(decay2.fourvect_visible)
-            tree.mctau2_electron = nele2 > 0
-            tree.mctau2_muon = nmuon2 > 0
-            tree.mctau2_hadronic = decay2.hadronic
-            tree.mctau2_nprong = decay2.nprong
-            tree.mctau2_npi0 = decay2.npi0
-            tree.mctau2_nneutrals = decay2.nneutrals
-            tree.mctau2_fourvect.set_from(decay2.fourvect)
-            tree.mctau2_fourvect_vis.set_from(decay2.fourvect_visible)
-            tree.mctau2_fourvect_miss.set_from(decay2.fourvect_missing)
-            tree.mctau2_dR_tau_nu = decay2.dR_tau_nu
-            tree.mctau2_dTheta3d_tau_nu = decay2.dTheta3d_tau_nu
-            tree.mctau2_decay_length = decay2.decay_length
-            tree.mctau2_prod_vertex.set_from(decay2.prod_vertex)
-            tree.mctau2_decay_vertex.set_from(decay2.decay_vertex)
-
-            # match to reco taus
-            tau1 = closest_reco_tau(event.taus, decay1.fourvect_visible,
-                                    dR=0.2)
-            tau2 = closest_reco_tau(event.taus, decay2.fourvect_visible,
-                                    dR=0.2)
-
-            if tau1 is None or tau2 is None:
-                # both taus not matched
-                tree.matched = False
-                tree.Fill()
-                continue
-            tree.matched = True
-
-            if tau1 == tau2:
-                # match collision
-                tree.match_collision = True
-                tree.Fill()
-                continue
-            tree.match_collision = False
-
-            tree.tau1_pt = tau1.pt
-            tree.tau1_phi = tau1.phi
-            tree.tau1_eta = tau1.eta
-            tree.tau1_fourvect.set_from(tau1.fourvect)
-            tree.tau1_numTrack = tau1.numTrack
-            tree.tau1_nPi0 = tau1.nPi0
-            tree.tau1_privtx.set_from(
-                    Vector3(tau1.privtx_x,
-                            tau1.privtx_y,
-                            tau1.privtx_z))
-            tree.tau1_privtx_chiSquared = tau1.privtx_chiSquared
-            tree.tau1_privtx_numberDoF = tau1.privtx_numberDoF
-            tree.tau1_privtx_jvf = tau1.privtx_jvf
-            tree.tau1_secvtx.set_from(
-                    Vector3(tau1.secvtx_x,
-                            tau1.secvtx_y,
-                            tau1.secvtx_z))
-
-            tree.tau1_ipZ0SinThetaSigLeadTrk = tau1.ipZ0SinThetaSigLeadTrk
-            tree.tau1_ipSigLeadTrk = tau1.ipSigLeadTrk
-            tree.tau1_trFlightPathSig = tau1.trFlightPathSig
-
-            tree.tau2_pt = tau2.pt
-            tree.tau2_phi = tau2.phi
-            tree.tau2_eta = tau2.eta
-            tree.tau2_fourvect.set_from(tau2.fourvect)
-            tree.tau2_numTrack = tau2.numTrack
-            tree.tau2_nPi0 = tau2.nPi0
-            tree.tau2_privtx.set_from(
-                    Vector3(tau2.privtx_x,
-                            tau2.privtx_y,
-                            tau2.privtx_z))
-            tree.tau2_privtx_chiSquared = tau2.privtx_chiSquared
-            tree.tau2_privtx_numberDoF = tau2.privtx_numberDoF
-            tree.tau2_secvtx.set_from(
-                    Vector3(tau2.secvtx_x,
-                            tau2.secvtx_y,
-                            tau2.secvtx_z))
-
-            tree.tau2_ipZ0SinThetaSigLeadTrk = tau2.ipZ0SinThetaSigLeadTrk
-            tree.tau2_ipSigLeadTrk = tau2.ipSigLeadTrk
-            tree.tau2_trFlightPathSig = tau2.trFlightPathSig
-
-            """ Additional variables to add later if needed
-            tau_track_n
-            tau_track_d0
-            tau_track_z0
-            tau_track_phi
-            tau_track_theta
-            tau_track_qoverp
-            tau_track_pt
-            tau_track_eta
-            tau_track_atPV_d0
-            tau_track_atPV_z0
-            tau_track_atPV_phi
-            tau_track_atPV_theta
-            tau_track_atPV_qoverp
-            tau_track_atPV_pt
-            tau_track_atPV_eta
-            tau_track_atTJVA_n
-            tau_track_atTJVA_d0
-            tau_track_atTJVA_z0
-            tau_track_atTJVA_phi
-            tau_track_atTJVA_theta
-            tau_track_atTJVA_qoverp
-            tau_track_atTJVA_pt
-            tau_track_atTJVA_eta
-            """
-
-            if VERBOSE:
-                print
-                print "tau1:"
-                print "privtx: ", (tau1.privtx_x, tau1.privtx_y, tau1.privtx_z)
-                print "secvtx: ", (tau1.secvtx_x, tau1.secvtx_y, tau1.secvtx_z)
-                print
-
-            if VERBOSE:
-                print
-                print "tau2:"
-                print "privtx: ", (tau2.privtx_x, tau2.privtx_y, tau2.privtx_z)
-                print "secvtx: ", (tau2.secvtx_x, tau2.secvtx_y, tau2.secvtx_z)
-                print
-
-            if year == 2011:
-                tree.MET_x = event.MET_RefFinal_BDTMedium_etx
-                tree.MET_y = event.MET_RefFinal_BDTMedium_ety
-                tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
-                tree.MET = event.MET_RefFinal_BDTMedium_et
-                tree.sumET = event.MET_RefFinal_BDTMedium_sumet
-            else:
-                tree.MET_x = event.MET_RefFinal_STVF_etx
-                tree.MET_y = event.MET_RefFinal_STVF_ety
-                tree.MET_phi = event.MET_RefFinal_STVF_phi
-                tree.MET = event.MET_RefFinal_STVF_et
-                tree.sumET = event.MET_RefFinal_STVF_sumet
+            # MET
+            tree.MET_x = event.MET.etx
+            tree.MET_y = event.MET.ety
+            tree.MET_phi = event.MET.phi
+            tree.MET = event.MET.et
+            tree.sumET = event.MET.sumet
 
             tree.Fill()
 
