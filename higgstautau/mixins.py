@@ -239,7 +239,7 @@ class MCParticle(FourMomentum):
         return ("%s ("
                 "status: %d, "
                 "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f, "
-                "x: %.4f, y: %.4f, z: %.4f)") % \
+                "x: %.4f, y: %.4f, z: %.4f, charge: %d)") % \
             (self._particle.GetName(),
              self.status,
              self._particle.Mass() * GeV,
@@ -247,4 +247,5 @@ class MCParticle(FourMomentum):
              self.eta, self.phi,
              self.vx_x,
              self.vx_y,
-             self.vx_z)
+             self.vx_z,
+             self.charge)

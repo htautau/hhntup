@@ -49,7 +49,8 @@ def define_objects(tree, year, skim=False):
     tree.define_collection(
             name="muons",
             prefix="mu_staco_",
-            size="mu_staco_n")
+            size="mu_staco_n",
+            mix=FourMomentum)
     tree.define_collection(
             name="electrons",
             prefix="el_",

@@ -16,7 +16,7 @@ from higgstautau.hadhad.objects import define_objects
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
-VERBOSE = False
+VERBOSE = True
 
 
 is_visible = lambda fourvect: (
@@ -226,7 +226,7 @@ def closest_reco_object(objects, thing, dR=0.2):
     for other in objects:
         dr = utils.dR(other.eta, other.phi, thing.Eta(), thing.Phi())
         if dr < dR and dr < closest_dR:
-            closest_object = tau
+            closest_object = other
             closest_dR = dr
     return closest_object
 
@@ -333,6 +333,7 @@ class ditaumass(ATLASStudent):
                     else:
                         matched = False
                 else:
+                    print decay
                     raise TypeError("Invalid tau decay")
 
             # did both decays match a reco object?
