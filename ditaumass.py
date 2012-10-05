@@ -1,6 +1,8 @@
 import ROOT
 import math
 
+from argparse import ArgumentParser
+
 from rootpy.tree import Tree, TreeBuffer, TreeChain, TreeModel
 from rootpy.math.physics.vector import LorentzVector, Vector3
 
@@ -232,9 +234,21 @@ def closest_reco_object(objects, thing, dR=0.2):
 
 
 class ditaumass(ATLASStudent):
-    """
-    This processor creates ntuples for missing mass calculator optimizations
-    """
+
+    def __init__(self, options, **kwargs):
+
+        super(ditaumass, self).__init__(**kwargs)
+        parser = ArgumentParser()
+        parser.add_argument('--student-verbose',
+            dest='verbose',
+            action='store_true', default=False)
+        parser.add_argument('--export-graphviz',
+            action='store_true', default=False)
+        self.args = parser.parse_args(options)
+        global VERBOSE
+        VERBOSE = self.args.verbose
+        global EXPORT_GRAPHVIZ
+        EXPORT_GRAPHVIZ = self.args.export_graphviz
 
     def work(self):
 
