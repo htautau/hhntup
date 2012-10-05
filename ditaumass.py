@@ -17,7 +17,7 @@ from higgstautau.hadhad.objects import define_objects
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 VERBOSE = True
-
+EXPORT_GRAPHVIZ = False
 
 is_visible = lambda fourvect: (
                 fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
@@ -247,7 +247,8 @@ class ditaumass(ATLASStudent):
                 events=self.events,
                 cache=True,
                 cache_size=10000000,
-                learn_entries=30)
+                learn_entries=30,
+                verbose=True)
 
         define_objects(chain, year)
 
@@ -294,7 +295,7 @@ class ditaumass(ATLASStudent):
                     print "status:"
                     print decay.init.status
                     print "parents:"
-                    for parent in decay.init.iparents():
+                    for parent in decay.init.iter_parents():
                         print parent.pdgId
                 # skip this event
                 continue
@@ -305,10 +306,10 @@ class ditaumass(ATLASStudent):
             for i, (decay, truetau, tau, electron, muon) in enumerate(zip(
                     tau_decays, truetaus, taus, electrons, muons)):
 
-                decay.init.export_graphvis('decay%d_%d.dot' % (
-                    i, event.EventNumber))
+                if EXPORT_GRAPHVIZ:
+                    decay.init.export_graphvis('decay%d_%d.dot' % (
+                        i, event.EventNumber))
 
-                """
                 TrueTau.set(truetau, decay)
 
                 # match to reco taus, electrons and muons
@@ -339,9 +340,7 @@ class ditaumass(ATLASStudent):
                 else:
                     print decay
                     raise TypeError("Invalid tau decay")
-                """
 
-            """
             # did both decays match a reco object?
             tree.matched = matched
 
@@ -356,7 +355,6 @@ class ditaumass(ATLASStudent):
             tree.sumET = event.MET.sumet
 
             tree.Fill()
-            """
 
         self.output.cd()
         tree.FlushBaskets()

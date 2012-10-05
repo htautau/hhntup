@@ -15,17 +15,31 @@ MC tau decays in the MC block of D3PDs.
 
 class TauDecay(object):
 
-    def __init__(self, initial_state, final_state):
-        """
-        A tau decay (for all intents and purposes here)
-        is composed of an initial and final state.
-        """
+    def __init__(self, initial_state):
+
         self.init = initial_state
-        self.final = final_state
+        # traverse to the final state while counting unique particles
+        # first build list of unique children
+        # (ignore copies in the event record)
+        children = list(set([
+            child.last_self for child in
+            self.init.traverse_children()]))
+        # count the frequency of each pdgId
+        child_pdgid_freq = {}
+        for child in children:
+            pdgid = abs(child.pdgId)
+            if pdgid not in child_pdgid_freq:
+                child_pdgid_freq[pdgid] = 1
+            else:
+                child_pdgid_freq[pdgid] += 1
+        self.children = children
+        self.child_pdgid_freq = child_pdgid_freq
+        # collect particles in the final state
+        self.final = [p for p in children if p.is_leaf()]
         # some decays are not fully stored in the D3PDs
         # flag them...
         self.complete = True
-        if len(final_state) == 1:
+        if len(self.final) == 1:
             self.complete = False
 
     @cached_property
@@ -41,7 +55,7 @@ class TauDecay(object):
         nu_tau = None
         # use production vertex of nu_tau
         last_tau = self.init.last_self
-        for child in last_tau.ichildren():
+        for child in last_tau.iter_children():
             if abs(child.pdgId) == pdg.nu_tau:
                 nu_tau = child
                 break
@@ -59,11 +73,9 @@ class TauDecay(object):
     @cached_property
     def npi0(self):
 
-        npi0 = 0
-        for child in self.init.traverse_children():
-            if child.pdgId == pdg.pi0:
-                npi0 += 1
-        return npi0
+        if pdg.pi0 in self.child_pdgid_freq:
+            return self.child_pdgid_freq[pdg.pi0]
+        return 0
 
     @cached_property
     def charged_pions(self):
@@ -155,7 +167,6 @@ class TauDecay(object):
     @cached_property
     def fourvect_visible(self):
 
-        #return sum([p.fourvect for p in self.charged_pions + self.photons + self.charged_kaons + self.neutral_kaons])
         return self.fourvect - self.fourvect_missing
 
     @cached_property
@@ -181,9 +192,13 @@ class TauDecay(object):
     def __repr__(self):
 
         output = StringIO.StringIO()
+        print >> output, "initial state:"
         print >> output, self.init
+        print >> output, 'npi0: %d' % self.npi0
+        print >> output, 'nprong: %d' % self.nprong
+        print >> output, "final state:"
         for thing in self.final:
-            print >> output, "\t%s" % thing
+            print >> output, " - %s" % thing
         rep = output.getvalue()
         output.close()
         return rep
@@ -206,18 +221,17 @@ def get_tau_decays(event, parent_pdgid=None, status=None):
         # 2 for Pythia, 11 for Herwig, 195 for AlpgenJimmy
         status=(2, 11, 195)
     decays = []
+    # TODO speed this up by recursing from primary interaction
     for mc in event.mc:
         if mc.pdgId in (pdg.tau_plus, pdg.tau_minus):
-            if status is None or mc.status in status:
-                init_state = mc
+            if mc.status in status:
                 if parent_pdgid is not None:
                     accept = False
-                    for parent in mc.first_self.iparents():
+                    for parent in mc.first_self.iter_parents():
                         if parent.pdgId in parent_pdgid:
                             accept = True
                             break
                     if not accept:
                         continue
-                final_state = mc.final_state
-                decays.append(TauDecay(init_state, final_state))
+                decays.append(TauDecay(mc))
     return decays
