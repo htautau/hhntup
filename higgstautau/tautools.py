@@ -41,6 +41,36 @@ class TauDecay(object):
         self.complete = True
         if len(self.final) == 1:
             self.complete = False
+        # classify final state particles
+        neutrinos = []
+        charged_pions = []
+        charged_kaons = []
+        neutral_kaons = []
+        electrons = []
+        muons = []
+        photons = []
+        for p in self.final:
+            if abs(p.pdgId) in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau):
+                neutrinos.append(p)
+            if p.pdgId in (pdg.pi_minus, pdg.pi_plus):
+                charged_pions.append(p)
+            elif p.pdgId == pdg.gamma:
+                photons.append(p)
+            elif abs(p.pdgId) == pdg.e_minus:
+                electrons.append(p)
+            elif abs(p.pdgId) == pdg.mu_minus:
+                muons.append(p)
+            elif p.pdgId in (pdg.K_minus, pdg.K_plus):
+                charged_kaons.append(p)
+            elif p.pdgId in (pdg.K_S0, pdg.K_L0):
+                neutral_kaons.append(p)
+        self.neutrinos = neutrinos
+        self.charged_pions = charged_pions
+        self.charged_kaons = charged_kaons
+        self.neutral_kaons = neutral_kaons
+        self.electrons = electrons
+        self.muons = muons
+        self.photons = photons
 
     @cached_property
     def prod_vertex(self):
@@ -78,54 +108,11 @@ class TauDecay(object):
         return 0
 
     @cached_property
-    def charged_pions(self):
-        """
-        Return all charged pions in final state
-        """
-        return [p for p in self.final if p.pdgId in (pdg.pi_minus, pdg.pi_plus)]
-
-    @cached_property
-    def charged_kaons(self):
-
-        return [p for p in self.final if p.pdgId in (pdg.K_minus, pdg.K_plus)]
-
-    @cached_property
-    def neutral_kaons(self):
-
-        return [p for p in self.final if p.pdgId in (pdg.K_S0, pdg.K_L0)]
-
-    @cached_property
-    def photons(self):
-
-        return [p for p in self.final if p.pdgId == pdg.gamma]
-
-    @cached_property
-    def neutrinos(self):
-        """
-        Return all neutrinos in final state
-        """
-        return [p for p in self.final if abs(p.pdgId) in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau)]
-
-    @cached_property
-    def electrons(self):
-        """
-        Return all electrons in final state
-        """
-        return [p for p in self.final if abs(p.pdgId) == pdg.e_minus]
-
-    @cached_property
     def electron(self):
         """
         Return True if this is a decay to an electron
         """
         return len(self.electrons) > 0
-
-    @cached_property
-    def muons(self):
-        """
-        Return all muons in final state
-        """
-        return [p for p in self.final if abs(p.pdgId) == pdg.mu_minus]
 
     @cached_property
     def muon(self):

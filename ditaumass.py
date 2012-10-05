@@ -171,7 +171,7 @@ class RecoTau(FourVectModel):
 
         if VERBOSE:
             print
-            print "tau1:"
+            print "reco tau:"
             print "privtx: ", (
                     recotau.privtx_x,
                     recotau.privtx_y,
@@ -240,10 +240,20 @@ class ditaumass(ATLASStudent):
 
         year = self.metadata.year
 
-        # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
+        # initialize the TreeChain of all input files
+        # only enable branches I need
         chain = TreeChain(
                 self.metadata.treename,
                 files=self.files,
+                branches=[
+                    'tau_*',
+                    'mc_*',
+                    'el_*',
+                    'mu_staco_*',
+                    'MET_RefFinal_BDTMedium_*',
+                    'MET_RefFinal_STVF_*',
+                    'EventNumber',
+                    ],
                 events=self.events,
                 cache=True,
                 cache_size=10000000,
