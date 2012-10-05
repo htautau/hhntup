@@ -399,7 +399,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigLoose == 1) : return False
+    #if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True
@@ -807,3 +807,36 @@ class HasTau(EventFilter):
 
     def passes(self, event):
         return len(event.taus) > 0
+
+
+class AntiVBFFilter(EventFilter):
+    """Keep events that don't pass the VBF filter"""
+
+    def passes(self, event):
+
+        jets = []
+        
+        for jet in event.truthjets:
+            if jet.fouvect.Pt() < 15*GeV: continue
+            if abs(jet.fourvect.Eta()) > 5.0: continue
+            jets.append(jet.fourvect)
+
+        njets =  len(jets)
+        if njets < 2 : return False
+
+        passMjj  = False
+        passdEta = False
+
+        for i in range(njets):
+            for j in range(njets):
+                if j > i:
+                    dEta = abs(jets[i].Eta() - jets[j].Eta())
+                    Mjj  = (jets[i] + jets[j]).M()
+
+                    if dEta > 2.0: passdEta = True
+                    if Mjj > 200*GeV: passMjj = True
+
+        if passMjj and passdEta:
+            return True
+        return False
+                        
