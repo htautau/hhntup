@@ -310,7 +310,9 @@ class ditaumass(ATLASStudent):
         for event in chain:
 
             # Only accept taus from a Z or Higgs
-            tau_decays = tautools.get_tau_decays(event, parent_pdgid=(23, 25))
+            tau_decays = tautools.get_tau_decays(event,
+                    parent_pdgid=(23, 25),
+                    num_expected=2)
 
             # There should be exactly two taus
             if len(tau_decays) != 2:

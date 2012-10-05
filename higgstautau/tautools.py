@@ -191,7 +191,7 @@ class TauDecay(object):
         return rep
 
 
-def get_tau_decays(event, parent_pdgid=None, status=None):
+def get_tau_decays(event, parent_pdgid=None, status=None, num_expected=None):
     """
     Get all taus and their decay products
 
@@ -210,15 +210,16 @@ def get_tau_decays(event, parent_pdgid=None, status=None):
     decays = []
     # TODO speed this up by recursing from primary interaction
     for mc in event.mc:
-        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus):
-            if mc.status in status:
-                if parent_pdgid is not None:
-                    accept = False
-                    for parent in mc.first_self.iter_parents():
-                        if parent.pdgId in parent_pdgid:
-                            accept = True
-                            break
-                    if not accept:
-                        continue
-                decays.append(TauDecay(mc))
+        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus) and mc.status in status:
+            if parent_pdgid is not None:
+                accept = False
+                for parent in mc.first_self.iter_parents():
+                    if parent.pdgId in parent_pdgid:
+                        accept = True
+                        break
+                if not accept:
+                    continue
+            decays.append(TauDecay(mc))
+            if num_expected is not None and len(decays) == num_expected:
+                break
     return decays
