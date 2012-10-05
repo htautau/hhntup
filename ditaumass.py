@@ -302,9 +302,13 @@ class ditaumass(ATLASStudent):
             matched = True
             matched_objects = []
 
-            for decay, truetau, tau, electron, muon in zip(
-                    tau_decays, truetaus, taus, electrons, muons):
+            for i, (decay, truetau, tau, electron, muon) in enumerate(zip(
+                    tau_decays, truetaus, taus, electrons, muons)):
 
+                decay.init.export_graphvis('decay%d_%d.dot' % (
+                    i, event.EventNumber))
+
+                """
                 TrueTau.set(truetau, decay)
 
                 # match to reco taus, electrons and muons
@@ -335,7 +339,9 @@ class ditaumass(ATLASStudent):
                 else:
                     print decay
                     raise TypeError("Invalid tau decay")
+                """
 
+            """
             # did both decays match a reco object?
             tree.matched = matched
 
@@ -350,6 +356,7 @@ class ditaumass(ATLASStudent):
             tree.sumET = event.MET.sumet
 
             tree.Fill()
+            """
 
         self.output.cd()
         tree.FlushBaskets()

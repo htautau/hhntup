@@ -230,6 +230,42 @@ class MCParticle(FourMomentum):
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self._particle.Mass() * GeV)
         return vect
 
+    def export_graphvis(self, out_file=None):
+
+        def particle_to_str(particle):
+
+            return '%s\\nmass = %.3f MeV\\nstatus = %d' % (
+                    particle._particle.GetName(),
+                    particle._particle.Mass(),
+                    particle.status)
+
+        def recurse(particle, parent=None):
+
+            out_file.write('%d [label="%s"] ;\n' % (
+                particle.barcode, particle_to_str(particle)))
+
+            if parent is not None:
+                # Add edge to parent
+                out_file.write('%d -> %d ;\n' % (
+                    parent.barcode,
+                    particle.barcode))
+
+            # recurse on children
+            for child in particle.ichildren():
+                recurse(child, particle)
+
+        if out_file is None:
+            out_file = open('event.dot', 'w')
+        elif isinstance(out_file, basestring):
+            out_file = open(out_file, 'w')
+
+        out_file.write('digraph Tree {\n')
+        out_file.write('size="7.5,10" ;\n')
+        out_file.write('orientation=landscape ;\n')
+        recurse(self, None)
+        out_file.write('}')
+        return out_file
+
     def __repr__(self):
 
         return self.__str__()
