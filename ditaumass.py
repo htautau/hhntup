@@ -29,11 +29,11 @@ class Event(TreeModel):
 
     match_collision = BoolCol(default=False)
     matched = BoolCol(False)
-    MET_x = FloatCol()
-    MET_y = FloatCol()
-    MET_phi = FloatCol()
-    MET = FloatCol()
-    sumET = FloatCol()
+    met_x = FloatCol()
+    met_y = FloatCol()
+    met_phi = FloatCol()
+    met = FloatCol()
+    sum_et = FloatCol()
 
 
 class FourVectModel(TreeModel):
@@ -82,31 +82,50 @@ class TrueTau(FourVectModel +
         FourVectModel.suffix('_miss')):
 
     visible = BoolCol(default=False)
+
+    inflight_decay = BoolCol(default=False)
+
     hadronic = BoolCol(default=False)
     electron = BoolCol(default=False)
     muon = BoolCol(default=False)
+
     nprong = IntCol(default=-1111)
-    npi0 = IntCol(default=-1111)
-    nneutrals = IntCol(default=-1111)
+    npi_zero = IntCol(default=-1111)
+    npi_ch = IntCol(default=-1111)
+    nk_zero = IntCol(default=-1111)
+    nk_ch = IntCol(default=-1111)
+    nneutral = IntCol(default=-1111)
+    nelectron = IntCol(default=-1111)
+    nmuon = IntCol(default=-1111)
+    nneutrino = IntCol(default=-1111)
+    ngamma = IntCol(default=-1111)
 
     prod_vertex = Vector3
     decay_vertex = Vector3
     decay_length = FloatCol(default=-1111)
 
-    dR_vistau_nu = FloatCol(default=-1111)
-    dTheta3d_vistau_nu = FloatCol(default=-1111)
+    dr_vistau_nu = FloatCol(default=-1111)
+    dtheta3d_vistau_nu = FloatCol(default=-1111)
 
     @classmethod
     def set(cls, mctau, decay):
 
         mctau.visible = is_visible(decay.fourvect_visible)
+
         mctau.electron = decay.electron
         mctau.muon = decay.muon
         mctau.hadronic = decay.hadronic
+
         mctau.nprong = decay.nprong
-        mctau.npi0 = decay.npi0
-        mctau.nneutrals = decay.nneutrals
-        mctau.charge = decay.charge
+        mctau.npi_zero = decay.npi0
+        mctau.npi_ch = len(decay.charged_pions)
+        mctau.nk_zero = len(decay.neutral_kaons)
+        mctau.nk_ch = len(decay.charged_kaons)
+        mctau.nneutral = decay.nneutrals
+        mctau.nelectron = len(decay.electrons)
+        mctau.nmuons = len(decay.muons)
+        mctau.nneutrino = len(decay.neutrinos)
+        mctau.ngamma = len(decay.photons)
 
         FourVectModel.set(mctau, decay)
         FourVectModel.set_vis(mctau, decay)
@@ -376,11 +395,11 @@ class ditaumass(ATLASStudent):
             tree.match_collision = matched_objects[0] == matched_objects[1]
 
             # MET
-            tree.MET_x = event.MET.etx
-            tree.MET_y = event.MET.ety
-            tree.MET_phi = event.MET.phi
-            tree.MET = event.MET.et
-            tree.sumET = event.MET.sumet
+            tree.met_x = event.MET.etx
+            tree.met_y = event.MET.ety
+            tree.met_phi = event.MET.phi
+            tree.met = event.MET.et
+            tree.sum_et = event.MET.sumet
 
             tree.Fill()
 
