@@ -74,13 +74,6 @@ class TauDecay(object):
         self.photons = photons
 
     @cached_property
-    def has_neutral_rho(self):
-
-        if pdg.rho0 in self.child_pdgid_freq:
-            return True
-        return False
-
-    @cached_property
     def has_charged_rho(self):
 
         if pdg.rho_plus in self.child_pdgid_freq:

@@ -89,16 +89,16 @@ class TrueTau(FourVectModel +
     electron = BoolCol(default=False)
     muon = BoolCol(default=False)
 
-    nprong = IntCol(default=-1111)
-    npi_zero = IntCol(default=-1111)
-    npi_ch = IntCol(default=-1111)
-    nk_zero = IntCol(default=-1111)
-    nk_ch = IntCol(default=-1111)
-    nneutral = IntCol(default=-1111)
-    nelectron = IntCol(default=-1111)
-    nmuon = IntCol(default=-1111)
-    nneutrino = IntCol(default=-1111)
-    ngamma = IntCol(default=-1111)
+    nprong = IntCol()
+    npi_zero = IntCol()
+    npi_ch = IntCol()
+    nk_zero = IntCol()
+    nk_ch = IntCol()
+    nneutral = IntCol()
+    nelectron = IntCol()
+    nmuon = IntCol()
+    nneutrino = IntCol()
+    ngamma = IntCol()
 
     has_neutral_rho = BoolCol()
     has_charged_rho = BoolCol()
@@ -132,7 +132,6 @@ class TrueTau(FourVectModel +
         mctau.nneutrino = len(decay.neutrinos)
         mctau.ngamma = len(decay.photons)
 
-        mctau.has_neutral_rho = decay.has_neutral_rho
         mctau.has_charged_rho = decay.has_charged_rho
         mctau.has_a1 = decay.has_a1
 
@@ -195,10 +194,13 @@ class RecoTau(FourVectModel):
         tau.privtx_chiSquared = recotau.privtx_chiSquared
         tau.privtx_numberDoF = recotau.privtx_numberDoF
         tau.privtx_jvf = recotau.privtx_jvf
+
         tau.secvtx.set_from(
            Vector3(recotau.secvtx_x,
                    recotau.secvtx_y,
                    recotau.secvtx_z))
+        tau.secvtx_chiSquared = recotau.secvtx_chiSquared
+        tau.secvtx_numberDoF = recotau.secvtx_numberDoF
 
         tau.ipZ0SinThetaSigLeadTrk = recotau.ipZ0SinThetaSigLeadTrk
         tau.ipSigLeadTrk = recotau.ipSigLeadTrk
@@ -467,7 +469,7 @@ class ditaumass(ATLASStudent):
             tree.met = event.MET.et
             tree.sum_et = event.MET.sumet
 
-            tree.Fill()
+            tree.Fill(reset=True)
 
         self.output.cd()
         tree.FlushBaskets()
