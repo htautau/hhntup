@@ -50,21 +50,37 @@ class TauDecay(object):
         electrons = []
         muons = []
         photons = []
+
+        hadronic = False
+        leptonic_electron = False
+        leptonic_muon = False
+        nprong = 0
+
         for p in self.final:
-            if abs(p.pdgId) in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau):
+            pdgid = abs(p.pdgId)
+            if pdgid in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau):
                 neutrinos.append(p)
-            if abs(p.pdgId) == pdg.pi_plus:
+                if pdgid == pdg.nu_mu:
+                    leptonic_muon = True
+                elif pdgid == pdg.nu_e:
+                    leptonic_electron = True
+            if pdgid == pdg.pi_plus:
+                hadronic = True
+                nprong += 1
                 charged_pions.append(p)
-            elif p.pdgId == pdg.gamma:
+            elif pdgid == pdg.gamma:
                 photons.append(p)
-            elif abs(p.pdgId) == pdg.e_minus:
+            elif pdgid == pdg.e_minus:
                 electrons.append(p)
-            elif abs(p.pdgId) == pdg.mu_minus:
+            elif pdgid == pdg.mu_minus:
                 muons.append(p)
-            elif abs(p.pdgId) == pdg.K_plus:
+            elif pdgid == pdg.K_plus:
+                hadronic = True
+                nprong += 1
                 charged_kaons.append(p)
-            elif p.pdgId in (pdg.K_S0, pdg.K_L0, pdg.K0):
+            elif pdgid in (pdg.K_S0, pdg.K_L0, pdg.K0):
                 neutral_kaons.append(p)
+
         self.neutrinos = neutrinos
         self.charged_pions = charged_pions
         self.charged_kaons = charged_kaons
@@ -72,6 +88,11 @@ class TauDecay(object):
         self.electrons = electrons
         self.muons = muons
         self.photons = photons
+
+        self.hadronic = hadronic
+        self.leptonic_electron = leptonic_electron
+        self.leptonic_muon = leptonic_muon
+        self.nprong = nprong
 
     @cached_property
     def has_charged_rho(self):
@@ -121,35 +142,6 @@ class TauDecay(object):
         if pdg.pi0 in self.child_pdgid_freq:
             return self.child_pdgid_freq[pdg.pi0]
         return 0
-
-    @cached_property
-    def electron(self):
-        """
-        Return True if this is a decay to an electron
-        """
-        return len(self.electrons) > 0
-
-    @cached_property
-    def muon(self):
-        """
-        Return True if this is a decay to a muon
-        """
-        return len(self.muons) > 0
-
-    @cached_property
-    def hadronic(self):
-        """
-        Return True if this is a hadronic decay else False for leptonic
-        """
-        return any(self.charged_pions + self.charged_kaons)
-
-    @cached_property
-    def nprong(self):
-        """
-        Return number of charged particles in final state
-        (for hadronic decays only)
-        """
-        return len(self.charged_pions + self.charged_kaons)
 
     @cached_property
     def nneutrals(self):

@@ -86,8 +86,8 @@ class TrueTau(FourVectModel +
     charge = IntCol()
 
     hadronic = BoolCol(default=False)
-    electron = BoolCol(default=False)
-    muon = BoolCol(default=False)
+    leptonic_electron = BoolCol(default=False)
+    leptonic_muon = BoolCol(default=False)
 
     nprong = IntCol()
     npi_zero = IntCol()
@@ -117,8 +117,8 @@ class TrueTau(FourVectModel +
         mctau.visible = is_visible(decay.fourvect_visible)
         mctau.charge = decay.charge
 
-        mctau.electron = decay.electron
-        mctau.muon = decay.muon
+        mctau.leptonic_electron = decay.leptonic_electron
+        mctau.leptonic_muon = decay.leptonic_muon
         mctau.hadronic = decay.hadronic
 
         mctau.nprong = decay.nprong
@@ -148,8 +148,8 @@ class TrueTau(FourVectModel +
 
         # sanity check
         if mctau.hadronic:
-            assert mctau.electron == False
-            assert mctau.muon == False
+            assert mctau.leptonic_electron == False
+            assert mctau.leptonic_muon == False
 
         if verbose:
             print decay
@@ -366,14 +366,12 @@ class ditaumass(ATLASStudent):
                     print "could not find resonance"
                     continue
 
-                resonance = resonance[0]
+                # get the resonance just before the decay
+                resonance = resonance[0].last_self
 
                 if draw_decays:
-                    resonance.last_self.export_graphvis('resonance_%d.dot' %
+                    resonance.export_graphvis('resonance_%d.dot' %
                             event.EventNumber)
-
-                # get the resonance just before the decay
-                resonance = resonance.last_self
 
                 FourVectModel.set(tree.resonance, resonance)
 
@@ -382,6 +380,11 @@ class ditaumass(ATLASStudent):
                 mc_photons = []
                 for child in resonance.iter_children():
                     if abs(child.pdgId) == pdg.tau_minus:
+                        # ignore status 3 taus in 2012 (something strange in the
+                        # MC record...)
+                        if year == 2012:
+                            if child.status == 3:
+                                continue
                         tau_decays.append(tautools.TauDecay(child))
                     elif child.pdgId == pdg.gamma:
                         mc_photons.append(child)
@@ -437,7 +440,7 @@ class ditaumass(ATLASStudent):
                             RecoTau.set(tau, recotau, verbose=verbose)
                         else:
                             matched = False
-                    elif decay.electron:
+                    elif decay.leptonic_electron:
                         recoele = closest_reco_object(
                                 event.electrons, decay.fourvect_visible, dR=0.2)
                         matched_objects.append(recoele)
@@ -445,7 +448,7 @@ class ditaumass(ATLASStudent):
                             RecoElectron.set(electron, recoele)
                         else:
                             matched = False
-                    elif decay.muon:
+                    elif decay.leptonic_muon:
                         recomuon = closest_reco_object(
                                 event.muons, decay.fourvect_visible, dR=0.2)
                         matched_objects.append(recomuon)
@@ -474,6 +477,7 @@ class ditaumass(ATLASStudent):
             except:
                 print "event index: %d" % event_index
                 print "event number: %d" % event.EventNumber
+                print "file: %s" % chain.file.GetName()
                 raise
 
         self.output.cd()
