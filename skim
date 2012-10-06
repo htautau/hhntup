@@ -65,7 +65,9 @@ for skim_name in args.skim:
     testinput = skim['testinput']
     version = skim['version']
     options = skim['options']
-    student_args = skim['student_args'] + ' '.join(user_args)
+    student_args = skim['student_args']
+    if user_args:
+        student_args += ' ' + ' '.join(user_args)
 
     if args.local_test:
         cmd = TEST_CMD % locals()

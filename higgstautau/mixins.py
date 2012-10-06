@@ -284,11 +284,16 @@ class MCParticle(FourMomentum):
 
         def particle_to_str(particle):
 
-            return '%s\\nmass = %.3f MeV\\npt = %.3f GeV\\nstatus = %d' % (
+            return ('%s\\n'
+                    'mass = %.3f MeV\\n'
+                    'pt = %.3f GeV\\n'
+                    'eta = %.2f\\n'
+                    'status = %d') % (
                     particle._particle.GetName(),
                     #particle._particle.Mass() * GeV,
                     particle.m,
                     particle.pt / GeV,
+                    particle.eta,
                     particle.status)
 
         def recurse(particle, parent=None):
