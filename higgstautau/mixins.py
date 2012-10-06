@@ -276,7 +276,8 @@ class MCParticle(FourMomentum):
                 self.pt,
                 self.eta,
                 self.phi,
-                self._particle.Mass() * GeV)
+                self.m)
+        #        self._particle.Mass() * GeV)
         return vect
 
     def export_graphvis(self, out_file=None):
@@ -285,7 +286,8 @@ class MCParticle(FourMomentum):
 
             return '%s\\nmass = %.3f MeV\\npt = %.3f GeV\\nstatus = %d' % (
                     particle._particle.GetName(),
-                    particle._particle.Mass() * GeV,
+                    #particle._particle.Mass() * GeV,
+                    particle.m,
                     particle.pt / GeV,
                     particle.status)
 
@@ -304,17 +306,24 @@ class MCParticle(FourMomentum):
             for child in particle.iter_children():
                 recurse(child, particle)
 
+        close_file = True
         if out_file is None:
             out_file = open('event.dot', 'w')
         elif isinstance(out_file, basestring):
             out_file = open(out_file, 'w')
+        else:
+            close_file = False
 
         out_file.write('digraph Tree {\n')
         out_file.write('size="7.5,10" ;\n')
         out_file.write('orientation=landscape ;\n')
         recurse(self, None)
         out_file.write('}')
-        return out_file
+
+        if close_file:
+            out_file.close()
+        else:
+            return out_file
 
     def __repr__(self):
 
@@ -328,7 +337,8 @@ class MCParticle(FourMomentum):
                 "x: %.4f, y: %.4f, z: %.4f)") % \
             (self._particle.GetName(),
              self.status,
-             self._particle.Mass() * GeV,
+             #self._particle.Mass() * GeV,
+             self.m,
              self.pt / GeV,
              self.eta, self.phi,
              self.vx_x,

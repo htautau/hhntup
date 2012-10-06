@@ -357,119 +357,124 @@ class ditaumass(ATLASStudent):
 
         for event_index, event in enumerate(chain):
 
-            # get the Z or Higgs
-            resonance = tautools.get_particles(event, (23, 25), num_expected=1)
+            try:
+                # get the Z or Higgs
+                resonance = tautools.get_particles(event, (23, 25),
+                        num_expected=1)
 
-            if not resonance:
-                print "could not find resonance"
-                continue
+                if not resonance:
+                    print "could not find resonance"
+                    continue
 
-            resonance = resonance[0]
-
-            if draw_decays:
-                resonance.first_self.export_graphvis('resonance_%d.dot' %
-                        event.EventNumber)
-
-            # get the resonance just before the decay
-            resonance = resonance.last_self
-
-            FourVectModel.set(tree.resonance, resonance)
-
-            # collect decay products (taus and photons)
-            tau_decays = []
-            mc_photons = []
-            for child in resonance.iter_children():
-                if abs(child.pdgId) == pdg.tau_minus:
-                    tau_decays.append(tautools.TauDecay(child))
-                elif child.pdgId == pdg.gamma:
-                    mc_photons.append(child)
-                else:
-                    raise TypeError('unexpected particle after resonance:\n%s' %
-                            child)
-
-            # There should be exactly two taus
-            if len(tau_decays) != 2:
-                print "found %i tau decays in MC record" % len(tau_decays)
-                for decay in tau_decays:
-                    print decay
-                # skip event
-                continue
-
-            # check for incomplete tau decays
-            incomplete = False
-            for decay in tau_decays:
-                if not decay.complete:
-                    print "found incomplete tau decay:\n%s" % decay
-                    incomplete = True
-            if incomplete:
-                # skip event
-                continue
-
-            radiative_fourvect = LorentzVector()
-            for photon in mc_photons:
-                radiative_fourvect += photon.fourvect
-
-            radiative_fourvect.fourvect = radiative_fourvect
-            FourVectModel.set(tree.radiative, radiative_fourvect)
-            tree.radiative_ngamma = len(mc_photons)
-
-            matched = True
-            matched_objects = []
-
-            for i, (decay, truetau, tau, electron, muon) in enumerate(zip(
-                    tau_decays, truetaus, taus, electrons, muons)):
+                resonance = resonance[0]
 
                 if draw_decays:
-                    decay.init.export_graphvis('decay%d_%d.dot' % (
-                        i, event.EventNumber))
+                    resonance.last_self.export_graphvis('resonance_%d.dot' %
+                            event.EventNumber)
 
-                TrueTau.set(truetau, decay, verbose=verbose)
+                # get the resonance just before the decay
+                resonance = resonance.last_self
 
-                # match to reco taus, electrons and muons
-                if decay.hadronic:
-                    recotau = closest_reco_object(
-                            event.taus, decay.fourvect_visible, dR=0.2)
-                    matched_objects.append(recotau)
-                    if recotau is not None:
-                        RecoTau.set(tau, recotau, verbose=verbose)
+                FourVectModel.set(tree.resonance, resonance)
+
+                # collect decay products (taus and photons)
+                tau_decays = []
+                mc_photons = []
+                for child in resonance.iter_children():
+                    if abs(child.pdgId) == pdg.tau_minus:
+                        tau_decays.append(tautools.TauDecay(child))
+                    elif child.pdgId == pdg.gamma:
+                        mc_photons.append(child)
                     else:
-                        matched = False
-                elif decay.electron:
-                    recoele = closest_reco_object(
-                            event.electrons, decay.fourvect_visible, dR=0.2)
-                    matched_objects.append(recoele)
-                    if recoele is not None:
-                        RecoElectron.set(electron, recoele)
+                        raise TypeError(
+                                'unexpected particle after resonance:\n%s' %
+                                child)
+
+                # There should be exactly two taus
+                if len(tau_decays) != 2:
+                    print "found %i tau decays in MC record" % len(tau_decays)
+                    for decay in tau_decays:
+                        print decay
+                    # skip event
+                    continue
+
+                # check for incomplete tau decays
+                incomplete = False
+                for decay in tau_decays:
+                    if not decay.complete:
+                        print "found incomplete tau decay:\n%s" % decay
+                        incomplete = True
+                if incomplete:
+                    # skip event
+                    continue
+
+                radiative_fourvect = LorentzVector()
+                for photon in mc_photons:
+                    radiative_fourvect += photon.fourvect
+
+                radiative_fourvect.fourvect = radiative_fourvect
+                FourVectModel.set(tree.radiative, radiative_fourvect)
+                tree.radiative_ngamma = len(mc_photons)
+
+                matched = True
+                matched_objects = []
+
+                for i, (decay, truetau, tau, electron, muon) in enumerate(zip(
+                        tau_decays, truetaus, taus, electrons, muons)):
+
+                    if draw_decays:
+                        decay.init.export_graphvis('decay%d_%d.dot' % (
+                            i, event.EventNumber))
+
+                    TrueTau.set(truetau, decay, verbose=verbose)
+
+                    # match to reco taus, electrons and muons
+                    if decay.hadronic:
+                        recotau = closest_reco_object(
+                                event.taus, decay.fourvect_visible, dR=0.2)
+                        matched_objects.append(recotau)
+                        if recotau is not None:
+                            RecoTau.set(tau, recotau, verbose=verbose)
+                        else:
+                            matched = False
+                    elif decay.electron:
+                        recoele = closest_reco_object(
+                                event.electrons, decay.fourvect_visible, dR=0.2)
+                        matched_objects.append(recoele)
+                        if recoele is not None:
+                            RecoElectron.set(electron, recoele)
+                        else:
+                            matched = False
+                    elif decay.muon:
+                        recomuon = closest_reco_object(
+                                event.muons, decay.fourvect_visible, dR=0.2)
+                        matched_objects.append(recomuon)
+                        if recomuon is not None:
+                            RecoMuon.set(muon, recomuon)
+                        else:
+                            matched = False
                     else:
-                        matched = False
-                elif decay.muon:
-                    recomuon = closest_reco_object(
-                            event.muons, decay.fourvect_visible, dR=0.2)
-                    matched_objects.append(recomuon)
-                    if recomuon is not None:
-                        RecoMuon.set(muon, recomuon)
-                    else:
-                        matched = False
-                else:
-                    print "event index: %d" % event_index
-                    print "event number: %d" % event.EventNumber
-                    print decay
-                    raise TypeError("Invalid tau decay")
+                        print decay
+                        raise TypeError("Invalid tau decay")
 
-            # did both decays match a reco object?
-            tree.matched = matched
+                # did both decays match a reco object?
+                tree.matched = matched
 
-            # match collision: decays matched same reco object
-            tree.match_collision = matched_objects[0] == matched_objects[1]
+                # match collision: decays matched same reco object
+                tree.match_collision = matched_objects[0] == matched_objects[1]
 
-            # MET
-            tree.met_x = event.MET.etx
-            tree.met_y = event.MET.ety
-            tree.met_phi = event.MET.phi
-            tree.met = event.MET.et
-            tree.sum_et = event.MET.sumet
+                # MET
+                tree.met_x = event.MET.etx
+                tree.met_y = event.MET.ety
+                tree.met_phi = event.MET.phi
+                tree.met = event.MET.et
+                tree.sum_et = event.MET.sumet
 
-            tree.Fill(reset=True)
+                tree.Fill(reset=True)
+            except:
+                print "event index: %d" % event_index
+                print "event number: %d" % event.EventNumber
+                raise
 
         self.output.cd()
         tree.FlushBaskets()
