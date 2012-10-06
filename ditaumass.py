@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 
 from rootpy.tree import Tree, TreeBuffer, TreeChain, TreeModel
 from rootpy.math.physics.vector import LorentzVector, Vector3
+from rootpy.hep import pdg
 
 from atlastools import datasets
 from atlastools import utils
@@ -22,20 +23,9 @@ is_visible = lambda fourvect: (
                 fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
 
 
-class Event(TreeModel):
-
-    match_collision = BoolCol(default=False)
-    matched = BoolCol(False)
-    met_x = FloatCol()
-    met_y = FloatCol()
-    met_phi = FloatCol()
-    met = FloatCol()
-    sum_et = FloatCol()
-
 
 class FourVectModel(TreeModel):
 
-    charge = IntCol()
     pt = FloatCol()
     phi = FloatCol()
     eta = FloatCol()
@@ -45,7 +35,6 @@ class FourVectModel(TreeModel):
     @classmethod
     def set(cls, this, other):
 
-        this.charge = other.charge
         vect = other.fourvect
         this.pt = vect.Pt()
         this.phi = vect.Phi()
@@ -74,13 +63,27 @@ class FourVectModel(TreeModel):
         this.fourvect_miss.set_from(vect)
 
 
+class Event(FourVectModel.prefix('resonance_') +
+            FourVectModel.prefix('radiative_')):
+
+    match_collision = BoolCol(default=False)
+    matched = BoolCol(False)
+
+    met_x = FloatCol()
+    met_y = FloatCol()
+    met_phi = FloatCol()
+    met = FloatCol()
+    sum_et = FloatCol()
+
+    radiative_ngamma = IntCol()
+
+
 class TrueTau(FourVectModel +
         FourVectModel.suffix('_vis') +
         FourVectModel.suffix('_miss')):
 
     visible = BoolCol(default=False)
-
-    inflight_decay = BoolCol(default=False)
+    charge = IntCol()
 
     hadronic = BoolCol(default=False)
     electron = BoolCol(default=False)
@@ -97,6 +100,10 @@ class TrueTau(FourVectModel +
     nneutrino = IntCol(default=-1111)
     ngamma = IntCol(default=-1111)
 
+    has_neutral_rho = BoolCol()
+    has_charged_rho = BoolCol()
+    has_a1 = BoolCol()
+
     prod_vertex = Vector3
     decay_vertex = Vector3
     decay_length = FloatCol(default=-1111)
@@ -108,6 +115,7 @@ class TrueTau(FourVectModel +
     def set(cls, mctau, decay, verbose=False):
 
         mctau.visible = is_visible(decay.fourvect_visible)
+        mctau.charge = decay.charge
 
         mctau.electron = decay.electron
         mctau.muon = decay.muon
@@ -123,6 +131,10 @@ class TrueTau(FourVectModel +
         mctau.nmuons = len(decay.muons)
         mctau.nneutrino = len(decay.neutrinos)
         mctau.ngamma = len(decay.photons)
+
+        mctau.has_neutral_rho = decay.has_neutral_rho
+        mctau.has_charged_rho = decay.has_charged_rho
+        mctau.has_a1 = decay.has_a1
 
         FourVectModel.set(mctau, decay)
         FourVectModel.set_vis(mctau, decay)
@@ -149,6 +161,7 @@ class TrueTau(FourVectModel +
 
 class RecoTau(FourVectModel):
 
+    charge = IntCol()
     numTrack = IntCol()
     nPi0 = IntCol()
 
@@ -170,6 +183,7 @@ class RecoTau(FourVectModel):
 
         FourVectModel.set(tau, recotau)
 
+        tau.charge = recotau.charge
         tau.numTrack = recotau.numTrack
         tau.nPi0 = recotau.nPi0
         tau.charge = recotau.charge
@@ -232,11 +246,24 @@ class RecoTau(FourVectModel):
 
 class RecoElectron(FourVectModel):
 
-    pass
+    charge = IntCol()
+
+    @classmethod
+    def set(cls, this, other):
+
+        this.charge = other.charge
+        FourVectModel.set(this, other)
+
 
 class RecoMuon(FourVectModel):
 
-    pass
+    charge = IntCol()
+
+    @classmethod
+    def set(cls, this, other):
+
+        this.charge = other.charge
+        FourVectModel.set(this, other)
 
 
 def closest_reco_object(objects, thing, dR=0.2):
@@ -307,6 +334,9 @@ class ditaumass(ATLASStudent):
                        RecoMuon.prefix('muon2_') +
                        Event))
 
+        tree.define_object(name='resonance', prefix='resonance_')
+        tree.define_object(name='radiative', prefix='radiative_')
+
         truetaus = [
             tree.define_object(name='truetau1', prefix='truetau1_'),
             tree.define_object(name='truetau2', prefix='truetau2_')]
@@ -323,24 +353,63 @@ class ditaumass(ATLASStudent):
             tree.define_object(name='muon1', prefix='muon1_'),
             tree.define_object(name='muon2', prefix='muon2_')]
 
-        for event in chain:
+        for event_index, event in enumerate(chain):
 
-            # Only accept taus from a Z or Higgs
-            tau_decays = tautools.get_tau_decays(event,
-                    parent_pdgid=(23, 25),
-                    num_expected=2)
+            # get the Z or Higgs
+            resonance = tautools.get_particles(event, (23, 25), num_expected=1)
+
+            if not resonance:
+                print "could not find resonance"
+                continue
+
+            resonance = resonance[0]
+
+            if draw_decays:
+                resonance.first_self.export_graphvis('resonance_%d.dot' %
+                        event.EventNumber)
+
+            # get the resonance just before the decay
+            resonance = resonance.last_self
+
+            FourVectModel.set(tree.resonance, resonance)
+
+            # collect decay products (taus and photons)
+            tau_decays = []
+            mc_photons = []
+            for child in resonance.iter_children():
+                if abs(child.pdgId) == pdg.tau_minus:
+                    tau_decays.append(tautools.TauDecay(child))
+                elif child.pdgId == pdg.gamma:
+                    mc_photons.append(child)
+                else:
+                    raise TypeError('unexpected particle after resonance:\n%s' %
+                            child)
 
             # There should be exactly two taus
             if len(tau_decays) != 2:
-                print "#MCTAUS != 2: %i" % len(tau_decays)
-                for decay in tautools.get_tau_decays(event, status=None):
-                    print "status:"
-                    print decay.init.status
-                    print "parents:"
-                    for parent in decay.init.iter_parents():
-                        print parent.pdgId
-                # skip this event
+                print "found %i tau decays in MC record" % len(tau_decays)
+                for decay in tau_decays:
+                    print decay
+                # skip event
                 continue
+
+            # check for incomplete tau decays
+            incomplete = False
+            for decay in tau_decays:
+                if not decay.complete:
+                    print "found incomplete tau decay:\n%s" % decay
+                    incomplete = True
+            if incomplete:
+                # skip event
+                continue
+
+            radiative_fourvect = LorentzVector()
+            for photon in mc_photons:
+                radiative_fourvect += photon.fourvect
+
+            radiative_fourvect.fourvect = radiative_fourvect
+            FourVectModel.set(tree.radiative, radiative_fourvect)
+            tree.radiative_ngamma = len(mc_photons)
 
             matched = True
             matched_objects = []
@@ -380,6 +449,8 @@ class ditaumass(ATLASStudent):
                     else:
                         matched = False
                 else:
+                    print "event index: %d" % event_index
+                    print "event number: %d" % event.EventNumber
                     print decay
                     raise TypeError("Invalid tau decay")
 

@@ -240,7 +240,7 @@ class MCParticle(FourMomentum):
 
     def is_leaf(self):
 
-        return (self.num_children == 0 or
+        return (self.num_children == 0 or self.status == 1 or
                 (self.num_children == 1 and
                  self.get_child(0).pdgId != self.pdgId))
 
@@ -285,7 +285,7 @@ class MCParticle(FourMomentum):
 
             return '%s\\nmass = %.3f MeV\\npt = %.3f GeV\\nstatus = %d' % (
                     particle._particle.GetName(),
-                    particle._particle.Mass(),
+                    particle._particle.Mass() * GeV,
                     particle.pt / GeV,
                     particle.status)
 

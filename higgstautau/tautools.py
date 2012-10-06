@@ -17,7 +17,8 @@ class TauDecay(object):
 
     def __init__(self, initial_state):
 
-        self.init = initial_state
+        # get tau just before decay
+        self.init = initial_state.last_self
         # traverse to the final state while counting unique particles
         # first build list of unique children
         # (ignore copies in the event record)
@@ -39,7 +40,7 @@ class TauDecay(object):
         # some decays are not fully stored in the D3PDs
         # flag them...
         self.complete = True
-        if len(self.final) == 1:
+        if len(self.final) <= 1:
             self.complete = False
         # classify final state particles
         neutrinos = []
@@ -52,7 +53,7 @@ class TauDecay(object):
         for p in self.final:
             if abs(p.pdgId) in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau):
                 neutrinos.append(p)
-            if p.pdgId in (pdg.pi_minus, pdg.pi_plus):
+            if abs(p.pdgId) == pdg.pi_plus:
                 charged_pions.append(p)
             elif p.pdgId == pdg.gamma:
                 photons.append(p)
@@ -60,9 +61,9 @@ class TauDecay(object):
                 electrons.append(p)
             elif abs(p.pdgId) == pdg.mu_minus:
                 muons.append(p)
-            elif p.pdgId in (pdg.K_minus, pdg.K_plus):
+            elif abs(p.pdgId) == pdg.K_plus:
                 charged_kaons.append(p)
-            elif p.pdgId in (pdg.K_S0, pdg.K_L0):
+            elif p.pdgId in (pdg.K_S0, pdg.K_L0, pdg.K0):
                 neutral_kaons.append(p)
         self.neutrinos = neutrinos
         self.charged_pions = charged_pions
@@ -71,6 +72,27 @@ class TauDecay(object):
         self.electrons = electrons
         self.muons = muons
         self.photons = photons
+
+    @cached_property
+    def has_neutral_rho(self):
+
+        if pdg.rho0 in self.child_pdgid_freq:
+            return True
+        return False
+
+    @cached_property
+    def has_charged_rho(self):
+
+        if pdg.rho_plus in self.child_pdgid_freq:
+            return True
+        return False
+
+    @cached_property
+    def has_a1(self):
+
+        if pdg.a_1_plus in self.child_pdgid_freq:
+            return True
+        return False
 
     @cached_property
     def prod_vertex(self):
@@ -189,6 +211,19 @@ class TauDecay(object):
         rep = output.getvalue()
         output.close()
         return rep
+
+
+def get_particles(event, pdgid, num_expected=None):
+
+    if not isinstance(pdgid, (list, tuple)):
+        pdgid = [pdgid]
+    particles = []
+    for mc in event.mc:
+        if mc.pdgId in pdgid:
+            particles.append(mc)
+            if num_expected is not None and len(particles) == num_expected:
+                break
+    return particles
 
 
 def get_tau_decays(event, parent_pdgid=None, status=None, num_expected=None):
