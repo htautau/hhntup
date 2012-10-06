@@ -38,6 +38,7 @@ class Event(TreeModel):
 
 class FourVectModel(TreeModel):
 
+    charge = IntCol()
     pt = FloatCol()
     phi = FloatCol()
     eta = FloatCol()
@@ -47,6 +48,7 @@ class FourVectModel(TreeModel):
     @classmethod
     def set(cls, this, other):
 
+        this.charge = other.charge
         vect = other.fourvect
         this.pt = vect.Pt()
         this.phi = vect.Phi()
@@ -86,7 +88,6 @@ class TrueTau(FourVectModel +
     nprong = IntCol(default=-1111)
     npi0 = IntCol(default=-1111)
     nneutrals = IntCol(default=-1111)
-    charge = IntCol()
 
     prod_vertex = Vector3
     decay_vertex = Vector3
@@ -155,6 +156,8 @@ class RecoTau(FourVectModel):
 
         tau.numTrack = recotau.numTrack
         tau.nPi0 = recotau.nPi0
+        tau.charge = recotau.charge
+
         tau.privtx.set_from(
            Vector3(recotau.privtx_x,
                    recotau.privtx_y,
@@ -214,7 +217,6 @@ class RecoTau(FourVectModel):
 class RecoElectron(FourVectModel):
 
     pass
-
 
 class RecoMuon(FourVectModel):
 
