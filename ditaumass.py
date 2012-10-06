@@ -18,9 +18,6 @@ from higgstautau.hadhad.objects import define_objects
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
-VERBOSE = True
-EXPORT_GRAPHVIZ = False
-
 is_visible = lambda fourvect: (
                 fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
 
@@ -108,7 +105,7 @@ class TrueTau(FourVectModel +
     dtheta3d_vistau_nu = FloatCol(default=-1111)
 
     @classmethod
-    def set(cls, mctau, decay):
+    def set(cls, mctau, decay, verbose=False):
 
         mctau.visible = is_visible(decay.fourvect_visible)
 
@@ -143,7 +140,7 @@ class TrueTau(FourVectModel +
             assert mctau.electron == False
             assert mctau.muon == False
 
-        if VERBOSE:
+        if verbose:
             print decay
             print decay.decay_length
             print "%s -> %s" % (decay.prod_vertex, decay.decay_vertex)
@@ -169,7 +166,7 @@ class RecoTau(FourVectModel):
     trFlightPathSig = FloatCol()
 
     @classmethod
-    def set(cls, tau, recotau):
+    def set(cls, tau, recotau, verbose=False):
 
         FourVectModel.set(tau, recotau)
 
@@ -193,7 +190,7 @@ class RecoTau(FourVectModel):
         tau.ipSigLeadTrk = recotau.ipSigLeadTrk
         tau.trFlightPathSig = recotau.trFlightPathSig
 
-        if VERBOSE:
+        if verbose:
             print
             print "reco tau:"
             print "privtx: ", (
@@ -263,17 +260,15 @@ class ditaumass(ATLASStudent):
         parser.add_argument('--student-verbose',
             dest='verbose',
             action='store_true', default=False)
-        parser.add_argument('--export-graphviz',
+        parser.add_argument('--draw-decays',
             action='store_true', default=False)
         self.args = parser.parse_args(options)
-        global VERBOSE
-        VERBOSE = self.args.verbose
-        global EXPORT_GRAPHVIZ
-        EXPORT_GRAPHVIZ = self.args.export_graphviz
 
     def work(self):
 
         year = self.metadata.year
+        verbose = self.args.verbose
+        draw_decays = self.args.draw_decays
 
         # initialize the TreeChain of all input files
         # only enable branches I need
@@ -353,11 +348,11 @@ class ditaumass(ATLASStudent):
             for i, (decay, truetau, tau, electron, muon) in enumerate(zip(
                     tau_decays, truetaus, taus, electrons, muons)):
 
-                if EXPORT_GRAPHVIZ:
+                if draw_decays:
                     decay.init.export_graphvis('decay%d_%d.dot' % (
                         i, event.EventNumber))
 
-                TrueTau.set(truetau, decay)
+                TrueTau.set(truetau, decay, verbose=verbose)
 
                 # match to reco taus, electrons and muons
                 if decay.hadronic:
@@ -365,7 +360,7 @@ class ditaumass(ATLASStudent):
                             event.taus, decay.fourvect_visible, dR=0.2)
                     matched_objects.append(recotau)
                     if recotau is not None:
-                        RecoTau.set(tau, recotau)
+                        RecoTau.set(tau, recotau, verbose=verbose)
                     else:
                         matched = False
                 elif decay.electron:
