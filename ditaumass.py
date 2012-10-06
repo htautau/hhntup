@@ -291,6 +291,8 @@ class ditaumass(ATLASStudent):
             action='store_true', default=False)
         parser.add_argument('--draw-decays',
             action='store_true', default=False)
+        parser.add_argument('--higgs',
+            action='store_true', default=False)
         self.args = parser.parse_args(options)
 
     def work(self):
@@ -298,6 +300,7 @@ class ditaumass(ATLASStudent):
         year = self.metadata.year
         verbose = self.args.verbose
         draw_decays = self.args.draw_decays
+        args = self.args
 
         # initialize the TreeChain of all input files
         # only enable branches I need
@@ -355,11 +358,17 @@ class ditaumass(ATLASStudent):
             tree.define_object(name='muon1', prefix='muon1_'),
             tree.define_object(name='muon2', prefix='muon2_')]
 
+        # get the Z or Higgs
+        if args.higgs:
+            resonance_pdgid = 25
+        else:
+            resonance_pdgid = 23
+
         for event_index, event in enumerate(chain):
 
             try:
                 # get the Z or Higgs
-                resonance = tautools.get_particles(event, (23, 25),
+                resonance = tautools.get_particles(event, resonance_pdgid,
                         num_expected=1)
 
                 if not resonance:
