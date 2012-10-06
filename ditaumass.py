@@ -30,6 +30,9 @@ class FourVectModel(TreeModel):
     phi = FloatCol()
     eta = FloatCol()
     p = FloatCol()
+    e = FloatCol()
+    et = FloatCol()
+    m = FloatCol()
     fourvect = LorentzVector
 
     @classmethod
@@ -37,9 +40,12 @@ class FourVectModel(TreeModel):
 
         vect = other.fourvect
         this.pt = vect.Pt()
+        this.p = vect.P()
+        this.et = vect.Et()
+        this.e = vect.E()
+        this.m = vect.M()
         this.phi = vect.Phi()
         this.eta = vect.Eta()
-        this.p = vect.P()
         this.fourvect.set_from(vect)
 
     @classmethod
@@ -47,9 +53,12 @@ class FourVectModel(TreeModel):
 
         vect = other.fourvect_visible
         this.pt_vis = vect.Pt()
+        this.p_vis = vect.P()
+        this.et_vis = vect.Et()
+        this.e_vis = vect.E()
+        this.m_vis = vect.M()
         this.phi_vis = vect.Phi()
         this.eta_vis = vect.Eta()
-        this.p_vis = vect.P()
         this.fourvect_vis.set_from(vect)
 
     @classmethod
@@ -57,9 +66,12 @@ class FourVectModel(TreeModel):
 
         vect = other.fourvect_missing
         this.pt_miss = vect.Pt()
+        this.p_miss = vect.P()
+        this.et_miss = vect.Et()
+        this.e_miss = vect.E()
+        this.m_miss = vect.M()
         this.phi_miss = vect.Phi()
         this.eta_miss = vect.Eta()
-        this.p_miss = vect.P()
         this.fourvect_miss.set_from(vect)
 
 
@@ -100,7 +112,6 @@ class TrueTau(FourVectModel +
     nneutrino = IntCol()
     ngamma = IntCol()
 
-    has_neutral_rho = BoolCol()
     has_charged_rho = BoolCol()
     has_a1 = BoolCol()
 
