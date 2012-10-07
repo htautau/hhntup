@@ -817,12 +817,14 @@ class AntiVBFFilter(EventFilter):
         jets = []
         
         for jet in event.truthjets:
-            if jet.fouvect.Pt() < 15*GeV: continue
+            if jet.fourvect.Pt() < 15*GeV: continue
             if abs(jet.fourvect.Eta()) > 5.0: continue
             jets.append(jet.fourvect)
 
+        passNjets = False
+
         njets =  len(jets)
-        if njets < 2 : return False
+        if njets < 2 : passNjets = True
 
         passMjj  = False
         passdEta = False
@@ -836,7 +838,7 @@ class AntiVBFFilter(EventFilter):
                     if dEta > 2.0: passdEta = True
                     if Mjj > 200*GeV: passMjj = True
 
-        if passMjj and passdEta:
-            return True
-        return False
+        if passMjj and passdEta and passNjets:
+            return False
+        return True
                         
