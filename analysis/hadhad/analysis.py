@@ -867,6 +867,8 @@ for category, cat_info in categories_controls:
         print "creating histograms for limits"
         bkg_scores = dict([(bkg.name, (bkg, scores_dict))
                 for (bkg, scores_dict) in bkg_scores])
+        root_filename = '%s%s.root' % (category, output_suffix)
+        f = ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate')
 
         for mass in Higgs.MASS_POINTS:
             print "%d GeV mass hypothesis" % mass
@@ -931,13 +933,10 @@ for category, cat_info in categories_controls:
             sig, max_sig, max_cut = significance(sig_hist, bkg_hist)
             print "maximum signal significance of %f at %f" % (max_sig, max_cut)
             # define one bin above max_cut and 5 below max_cut
-            trans_bins = list(np.linspace(min_score_signal, max_cut))
+            trans_bins = list(np.linspace(min_score_signal, max_cut, 5))
             trans_bins.append(max_score_signal)
 
             hist_template = Hist(trans_bins)
-
-            root_filename = '%s%s.root' % (category, output_suffix)
-            f = ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate')
 
             if args.unblind:
                 data_hist = hist_template.Clone(name=data.name + '_%s' % mass)
@@ -958,7 +957,7 @@ for category, cat_info in categories_controls:
                             hist.Fill(score, w)
                         f.cd()
                         hist.Write()
-            f.close()
+        f.close()
 
 # save all variable plots in one large multipage pdf
 if 'plot' in args.actions and set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
