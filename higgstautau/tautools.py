@@ -19,12 +19,14 @@ class TauDecay(object):
 
         # get tau just before decay
         self.init = initial_state.last_self
+
         # traverse to the final state while counting unique particles
         # first build list of unique children
         # (ignore copies in the event record)
         children = list(set([
             child.last_self for child in
             self.init.traverse_children()]))
+
         # count the frequency of each pdgId
         child_pdgid_freq = {}
         for child in children:
@@ -35,13 +37,16 @@ class TauDecay(object):
                 child_pdgid_freq[pdgid] += 1
         self.children = children
         self.child_pdgid_freq = child_pdgid_freq
+
         # collect particles in the final state
-        self.final = [p for p in children if p.is_leaf()]
+        self.final = [p for p in children if p.is_stable()]
+
         # some decays are not fully stored in the D3PDs
         # flag them...
-        self.complete = True
+        self.valid = True
         if len(self.final) <= 1:
-            self.complete = False
+            self.valid = False
+
         # classify final state particles
         neutrinos = []
         charged_pions = []
@@ -93,6 +98,11 @@ class TauDecay(object):
         self.leptonic_electron = leptonic_electron
         self.leptonic_muon = leptonic_muon
         self.nprong = nprong
+
+        # check charge conservation
+        if self.valid:
+            if self.init.charge != sum([p.charge for p in self.final]):
+                self.valid = False
 
     @cached_property
     def has_charged_rho(self):

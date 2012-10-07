@@ -238,11 +238,9 @@ class MCParticle(FourMomentum):
         except GeneratorExit:
             pass
 
-    def is_leaf(self):
+    def is_stable(self):
 
-        return (self.num_children == 0 or self.status == 1 or
-                (self.num_children == 1 and
-                 self.get_child(0).pdgId != self.pdgId))
+        return self.status == 1
 
     @cached_property
     def first_self(self):
@@ -263,10 +261,10 @@ class MCParticle(FourMomentum):
     @cached_property
     def final_state(self):
 
-        if self.is_leaf():
+        if self.is_stable():
             return [self]
         return [particle for particle in self.traverse_children()
-                if particle.is_leaf()]
+                if particle.is_stable()]
 
     @cached_property
     def fourvect(self):

@@ -422,12 +422,17 @@ class ditaumass(ATLASStudent):
                     continue
 
                 # check for incomplete tau decays
-                incomplete = False
+                invalid = False
                 for decay in tau_decays:
-                    if not decay.complete:
-                        print "found incomplete tau decay:\n%s" % decay
-                        incomplete = True
-                if incomplete:
+                    if not decay.valid:
+                        print "invalid tau decay:"
+                        print decay
+                        if draw_decays:
+                            decay.init.export_graphvis(
+                                    'decay_invalid_%d.dot' %
+                                    event.EventNumber)
+                        invalid = True
+                if invalid:
                     # skip event
                     continue
 
@@ -477,8 +482,11 @@ class ditaumass(ATLASStudent):
                         else:
                             matched = False
                     else:
+                        print "unhandled invalid tau decay:"
                         print decay
-                        raise TypeError("Invalid tau decay")
+                        if not draw_decays:
+                            decay.init.export_graphvis('decay%d_%d.dot' % (
+                                i, event.EventNumber))
 
                 # did both decays match a reco object?
                 tree.matched = matched
