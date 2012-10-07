@@ -13,7 +13,8 @@ __all__ = [
     'FourMomentum',
     'TauFourMomentum',
     'TauFourMomentumSkim',
-    'ElFourMomentum',
+    'ElFourMomentum', # this one is buggy...
+    'ElectronFourMomentum',
     'MCTauFourMomentum',
     'MCParticle',
 ]
@@ -123,6 +124,26 @@ class TauFourMomentumSkim(TauFourMomentum):
         self.trigger_match_index = -1
 
 
+class ElectronFourMomentum(FourMomentum):
+
+    @cached_property
+    def fourvect(self):
+
+        if ((self.nSCTHits + self.nPixHits) < 4):
+            # electron with low number of tracker hits
+            eta = self.cl_eta
+            phi = self.cl_phi
+            et  = self.cl_E / math.cosh(self.cl_eta)
+        else:
+            eta = self.tracketa
+            phi = self.trackphi
+            et  = self.cl_E / math.cosh(self.tracketa)
+
+        vect = LorentzVector()
+        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
+        return vect
+
+
 class ElFourMomentum(FourMomentum):
 
     @cached_property
@@ -132,7 +153,8 @@ class ElFourMomentum(FourMomentum):
             print 'Electron with low number of tracks'
             eta = self.cl_eta
             phi = self.cl_phi
-            et  = self.cl_et
+            et  = self.cl_et # this isn't in the NTUP_TAU ntuples
+            # see alternate ElectronFourMomentum above
         else:
             eta = self.tracketa
             phi = self.trackphi
@@ -160,7 +182,27 @@ class MCParticle(FourMomentum):
         self._particle = pdg.GetParticle(self.pdgId)
         FourMomentum.__init__(self)
 
-    def ichildren(self):
+    @cached_property
+    def num_children(self):
+
+        return len(self.child_index)
+
+    @cached_property
+    def num_parents(self):
+
+        return len(self.parent_index)
+
+    def get_child(self, index):
+
+        index = self.child_index[index]
+        return getattr(self.tree, self.name)[index]
+
+    def get_parent(self, index):
+
+        index = self.parent_index[index]
+        return getattr(self.tree, self.name)[index]
+
+    def iter_children(self):
 
         try:
             for child in self.child_index:
@@ -168,17 +210,7 @@ class MCParticle(FourMomentum):
         except GeneratorExit:
             pass
 
-    def traverse_children(self):
-
-        try:
-            for child in self.ichildren():
-                yield child
-                for desc in child.traverse_children():
-                    yield desc
-        except GeneratorExit:
-            pass
-
-    def iparents(self):
+    def iter_parents(self):
 
         try:
             for parent in self.parent_index:
@@ -186,24 +218,34 @@ class MCParticle(FourMomentum):
         except GeneratorExit:
             pass
 
+    def traverse_children(self):
+
+        try:
+            for child in self.iter_children():
+                yield child
+                for desc in child.traverse_children():
+                    yield desc
+        except GeneratorExit:
+            pass
+
     def traverse_parents(self):
 
         try:
-            for parent in self.iparents():
+            for parent in self.iter_parents():
                 yield parent
                 for ancestor in parent.traverse_parents():
                     yield ancestor
         except GeneratorExit:
             pass
 
-    def is_leaf(self):
+    def is_stable(self):
 
-        return not len(self.child_index)
+        return self.status == 1
 
     @cached_property
     def first_self(self):
 
-        for parent in self.iparents():
+        for parent in self.iter_parents():
             if parent.pdgId == self.pdgId:
                 return parent.first_self
         return self
@@ -211,7 +253,7 @@ class MCParticle(FourMomentum):
     @cached_property
     def last_self(self):
 
-        for child in self.ichildren():
+        for child in self.iter_children():
             if child.pdgId == self.pdgId:
                 return child.last_self
         return self
@@ -219,24 +261,37 @@ class MCParticle(FourMomentum):
     @cached_property
     def final_state(self):
 
-        if self.is_leaf():
+        if self.is_stable():
             return [self]
-        return [particle for particle in self.traverse_children() if particle.is_leaf()]
+        return [particle for particle in self.traverse_children()
+                if particle.is_stable()]
 
     @cached_property
     def fourvect(self):
 
         vect = LorentzVector()
-        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self._particle.Mass() * GeV)
+        vect.SetPtEtaPhiM(
+                self.pt,
+                self.eta,
+                self.phi,
+                self.m)
+        #        self._particle.Mass() * GeV)
         return vect
 
     def export_graphvis(self, out_file=None):
 
         def particle_to_str(particle):
 
-            return '%s\\nmass = %.3f MeV\\nstatus = %d' % (
+            return ('%s\\n'
+                    'mass = %.3f MeV\\n'
+                    'pt = %.3f GeV\\n'
+                    'eta = %.2f\\n'
+                    'status = %d') % (
                     particle._particle.GetName(),
-                    particle._particle.Mass(),
+                    #particle._particle.Mass() * GeV,
+                    particle.m,
+                    particle.pt / GeV,
+                    particle.eta,
                     particle.status)
 
         def recurse(particle, parent=None):
@@ -251,20 +306,27 @@ class MCParticle(FourMomentum):
                     particle.barcode))
 
             # recurse on children
-            for child in particle.ichildren():
+            for child in particle.iter_children():
                 recurse(child, particle)
 
+        close_file = True
         if out_file is None:
             out_file = open('event.dot', 'w')
         elif isinstance(out_file, basestring):
             out_file = open(out_file, 'w')
+        else:
+            close_file = False
 
         out_file.write('digraph Tree {\n')
         out_file.write('size="7.5,10" ;\n')
         out_file.write('orientation=landscape ;\n')
         recurse(self, None)
         out_file.write('}')
-        return out_file
+
+        if close_file:
+            out_file.close()
+        else:
+            return out_file
 
     def __repr__(self):
 
@@ -275,13 +337,13 @@ class MCParticle(FourMomentum):
         return ("%s ("
                 "status: %d, "
                 "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f, "
-                "x: %.4f, y: %.4f, z: %.4f, charge: %d)") % \
+                "x: %.4f, y: %.4f, z: %.4f)") % \
             (self._particle.GetName(),
              self.status,
-             self._particle.Mass() * GeV,
+             #self._particle.Mass() * GeV,
+             self.m,
              self.pt / GeV,
              self.eta, self.phi,
              self.vx_x,
              self.vx_y,
-             self.vx_z,
-             self.charge)
+             self.vx_z)

@@ -33,3 +33,4 @@ submitSmall.sh
 higgstautau/lephad/external
 panda.cfg
 *.dot
+*.h5

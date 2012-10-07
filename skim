@@ -10,7 +10,7 @@ parser = ArgumentParser()
 parser.add_argument('--local-test', action='store_true', default=False)
 parser.add_argument('--grid-test', action='store_true', default=False)
 parser.add_argument('skim', help='skim name', nargs='*')
-args = parser.parse_args()
+args, user_args = parser.parse_known_args()
 
 from subprocess import call
 from configobj import ConfigObj, flatten_errors
@@ -66,6 +66,8 @@ for skim_name in args.skim:
     version = skim['version']
     options = skim['options']
     student_args = skim['student_args']
+    if user_args:
+        student_args += ' ' + ' '.join(user_args)
 
     if args.local_test:
         cmd = TEST_CMD % locals()

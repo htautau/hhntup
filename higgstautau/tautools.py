@@ -15,18 +15,108 @@ MC tau decays in the MC block of D3PDs.
 
 class TauDecay(object):
 
-    def __init__(self, initial_state, final_state):
-        """
-        A tau decay (for all intents and purposes here)
-        is composed of an initial and final state.
-        """
-        self.init = initial_state
-        self.final = final_state
+    def __init__(self, initial_state):
+
+        # get tau just before decay
+        self.init = initial_state.last_self
+
+        # traverse to the final state while counting unique particles
+        # first build list of unique children
+        # (ignore copies in the event record)
+        children = list(set([
+            child.last_self for child in
+            self.init.traverse_children()]))
+
+        # count the frequency of each pdgId
+        child_pdgid_freq = {}
+        for child in children:
+            pdgid = abs(child.pdgId)
+            if pdgid not in child_pdgid_freq:
+                child_pdgid_freq[pdgid] = 1
+            else:
+                child_pdgid_freq[pdgid] += 1
+        self.children = children
+        self.child_pdgid_freq = child_pdgid_freq
+
+        # collect particles in the final state
+        self.final = [p for p in children if p.is_stable()]
+
         # some decays are not fully stored in the D3PDs
         # flag them...
-        self.complete = True
-        if len(final_state) == 1:
-            self.complete = False
+        self.valid = True
+        if len(self.final) <= 1:
+            self.valid = False
+
+        # classify final state particles
+        neutrinos = []
+        charged_pions = []
+        charged_kaons = []
+        neutral_kaons = []
+        electrons = []
+        muons = []
+        photons = []
+
+        hadronic = False
+        leptonic_electron = False
+        leptonic_muon = False
+        nprong = 0
+
+        for p in self.final:
+            pdgid = abs(p.pdgId)
+            if pdgid in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau):
+                neutrinos.append(p)
+                if pdgid == pdg.nu_mu:
+                    leptonic_muon = True
+                elif pdgid == pdg.nu_e:
+                    leptonic_electron = True
+            if pdgid == pdg.pi_plus:
+                hadronic = True
+                nprong += 1
+                charged_pions.append(p)
+            elif pdgid == pdg.gamma:
+                photons.append(p)
+            elif pdgid == pdg.e_minus:
+                electrons.append(p)
+            elif pdgid == pdg.mu_minus:
+                muons.append(p)
+            elif pdgid == pdg.K_plus:
+                hadronic = True
+                nprong += 1
+                charged_kaons.append(p)
+            elif pdgid in (pdg.K_S0, pdg.K_L0, pdg.K0):
+                neutral_kaons.append(p)
+
+        self.neutrinos = neutrinos
+        self.charged_pions = charged_pions
+        self.charged_kaons = charged_kaons
+        self.neutral_kaons = neutral_kaons
+        self.electrons = electrons
+        self.muons = muons
+        self.photons = photons
+
+        self.hadronic = hadronic
+        self.leptonic_electron = leptonic_electron
+        self.leptonic_muon = leptonic_muon
+        self.nprong = nprong
+
+        # check charge conservation
+        if self.valid:
+            if self.init.charge != sum([p.charge for p in self.final]):
+                self.valid = False
+
+    @cached_property
+    def has_charged_rho(self):
+
+        if pdg.rho_plus in self.child_pdgid_freq:
+            return True
+        return False
+
+    @cached_property
+    def has_a1(self):
+
+        if pdg.a_1_plus in self.child_pdgid_freq:
+            return True
+        return False
 
     @cached_property
     def prod_vertex(self):
@@ -41,7 +131,7 @@ class TauDecay(object):
         nu_tau = None
         # use production vertex of nu_tau
         last_tau = self.init.last_self
-        for child in last_tau.ichildren():
+        for child in last_tau.iter_children():
             if abs(child.pdgId) == pdg.nu_tau:
                 nu_tau = child
                 break
@@ -59,83 +149,9 @@ class TauDecay(object):
     @cached_property
     def npi0(self):
 
-        npi0 = 0
-        for child in self.init.traverse_children():
-            if child.pdgId == pdg.pi0:
-                npi0 += 1
-        return npi0
-
-    @cached_property
-    def charged_pions(self):
-        """
-        Return all charged pions in final state
-        """
-        return [p for p in self.final if p.pdgId in (pdg.pi_minus, pdg.pi_plus)]
-
-    @cached_property
-    def charged_kaons(self):
-
-        return [p for p in self.final if p.pdgId in (pdg.K_minus, pdg.K_plus)]
-
-    @cached_property
-    def neutral_kaons(self):
-
-        return [p for p in self.final if p.pdgId in (pdg.K_S0, pdg.K_L0)]
-
-    @cached_property
-    def photons(self):
-
-        return [p for p in self.final if p.pdgId == pdg.gamma]
-
-    @cached_property
-    def neutrinos(self):
-        """
-        Return all neutrinos in final state
-        """
-        return [p for p in self.final if abs(p.pdgId) in (pdg.nu_e, pdg.nu_mu, pdg.nu_tau)]
-
-    @cached_property
-    def electrons(self):
-        """
-        Return all electrons in final state
-        """
-        return [p for p in self.final if abs(p.pdgId) == pdg.e_minus]
-
-    @cached_property
-    def electron(self):
-        """
-        Return True if this is a decay to an electron
-        """
-        return len(self.electrons) > 0
-
-    @cached_property
-    def muons(self):
-        """
-        Return all muons in final state
-        """
-        return [p for p in self.final if abs(p.pdgId) == pdg.mu_minus]
-
-    @cached_property
-    def muon(self):
-        """
-        Return True if this is a decay to a muon
-        """
-        return len(self.muons) > 0
-
-    @cached_property
-    def hadronic(self):
-        """
-        Return True if this is a hadronic decay else False for leptonic
-        """
-        return any(self.charged_pions + self.charged_kaons)
-
-    @cached_property
-    def nprong(self):
-        """
-        Return number of charged particles in final state
-        (for hadronic decays only)
-        """
-        return len(self.charged_pions + self.charged_kaons)
+        if pdg.pi0 in self.child_pdgid_freq:
+            return self.child_pdgid_freq[pdg.pi0]
+        return 0
 
     @cached_property
     def nneutrals(self):
@@ -155,7 +171,6 @@ class TauDecay(object):
     @cached_property
     def fourvect_visible(self):
 
-        #return sum([p.fourvect for p in self.charged_pions + self.photons + self.charged_kaons + self.neutral_kaons])
         return self.fourvect - self.fourvect_missing
 
     @cached_property
@@ -181,15 +196,32 @@ class TauDecay(object):
     def __repr__(self):
 
         output = StringIO.StringIO()
+        print >> output, "initial state:"
         print >> output, self.init
+        print >> output, 'npi0: %d' % self.npi0
+        print >> output, 'nprong: %d' % self.nprong
+        print >> output, "final state:"
         for thing in self.final:
-            print >> output, "\t%s" % thing
+            print >> output, " - %s" % thing
         rep = output.getvalue()
         output.close()
         return rep
 
 
-def get_tau_decays(event, parent_pdgid=None, status=None):
+def get_particles(event, pdgid, num_expected=None):
+
+    if not isinstance(pdgid, (list, tuple)):
+        pdgid = [pdgid]
+    particles = []
+    for mc in event.mc:
+        if mc.pdgId in pdgid:
+            particles.append(mc)
+            if num_expected is not None and len(particles) == num_expected:
+                break
+    return particles
+
+
+def get_tau_decays(event, parent_pdgid=None, status=None, num_expected=None):
     """
     Get all taus and their decay products
 
@@ -206,18 +238,18 @@ def get_tau_decays(event, parent_pdgid=None, status=None):
         # 2 for Pythia, 11 for Herwig, 195 for AlpgenJimmy
         status=(2, 11, 195)
     decays = []
+    # TODO speed this up by recursing from primary interaction
     for mc in event.mc:
-        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus):
-            if status is None or mc.status in status:
-                init_state = mc
-                if parent_pdgid is not None:
-                    accept = False
-                    for parent in mc.first_self.iparents():
-                        if parent.pdgId in parent_pdgid:
-                            accept = True
-                            break
-                    if not accept:
-                        continue
-                final_state = mc.final_state
-                decays.append(TauDecay(init_state, final_state))
+        if mc.pdgId in (pdg.tau_plus, pdg.tau_minus) and mc.status in status:
+            if parent_pdgid is not None:
+                accept = False
+                for parent in mc.first_self.iter_parents():
+                    if parent.pdgId in parent_pdgid:
+                        accept = True
+                        break
+                if not accept:
+                    continue
+            decays.append(TauDecay(mc))
+            if num_expected is not None and len(decays) == num_expected:
+                break
     return decays
