@@ -378,6 +378,8 @@ class ditaumass(ATLASStudent):
         for event_index, event in enumerate(chain):
 
             try:
+                tree.reset_branch_values()
+
                 # get the Z or Higgs
                 resonance = tautools.get_particles(event, resonance_pdgid,
                         num_expected=1)
@@ -418,7 +420,7 @@ class ditaumass(ATLASStudent):
                     print "found %i tau decays in MC record" % len(tau_decays)
                     for decay in tau_decays:
                         print decay
-                    # skip event
+                    # skip this event
                     continue
 
                 # check for incomplete tau decays
@@ -433,7 +435,7 @@ class ditaumass(ATLASStudent):
                                     event.EventNumber)
                         invalid = True
                 if invalid:
-                    # skip event
+                    # skip this event
                     continue
 
                 radiative_fourvect = LorentzVector()
@@ -447,6 +449,7 @@ class ditaumass(ATLASStudent):
                 matched = True
                 matched_objects = []
 
+                skip = False
                 for i, (decay, truetau, tau, electron, muon) in enumerate(zip(
                         tau_decays, truetaus, taus, electrons, muons)):
 
@@ -460,24 +463,24 @@ class ditaumass(ATLASStudent):
                     if decay.hadronic:
                         recotau = closest_reco_object(
                                 event.taus, decay.fourvect_visible, dR=0.2)
-                        matched_objects.append(recotau)
                         if recotau is not None:
+                            matched_objects.append(recotau)
                             RecoTau.set(tau, recotau, verbose=verbose)
                         else:
                             matched = False
                     elif decay.leptonic_electron:
                         recoele = closest_reco_object(
                                 event.electrons, decay.fourvect_visible, dR=0.2)
-                        matched_objects.append(recoele)
                         if recoele is not None:
+                            matched_objects.append(recoele)
                             RecoElectron.set(electron, recoele)
                         else:
                             matched = False
                     elif decay.leptonic_muon:
                         recomuon = closest_reco_object(
                                 event.muons, decay.fourvect_visible, dR=0.2)
-                        matched_objects.append(recomuon)
                         if recomuon is not None:
+                            matched_objects.append(recomuon)
                             RecoMuon.set(muon, recomuon)
                         else:
                             matched = False
@@ -487,12 +490,20 @@ class ditaumass(ATLASStudent):
                         if not draw_decays:
                             decay.init.export_graphvis('decay%d_%d.dot' % (
                                 i, event.EventNumber))
+                        # skip this event
+                        skip = True
+                        break
+                if skip:
+                    # skip this event
+                    continue
 
                 # did both decays match a reco object?
                 tree.matched = matched
 
                 # match collision: decays matched same reco object
-                tree.match_collision = matched_objects[0] == matched_objects[1]
+                if matched:
+                    tree.match_collision = (
+                            matched_objects[0] == matched_objects[1])
 
                 # MET
                 tree.met_x = event.MET.etx
@@ -501,7 +512,7 @@ class ditaumass(ATLASStudent):
                 tree.met = event.MET.et
                 tree.sum_et = event.MET.sumet
 
-                tree.Fill(reset=True)
+                tree.Fill()
             except:
                 print "event index: %d" % event_index
                 print "event number: %d" % event.EventNumber
