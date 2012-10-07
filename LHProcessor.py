@@ -160,8 +160,8 @@ class LHProcessor(ATLASStudent):
             MuonPreSelection(),
             EgammaERescaling(datatype=self.metadata.datatype),
             ElectronPreSelection(),
-            JetOverlapRemoval(),
             ElectronEtaSelection(),
+            JetOverlapRemoval(),
             JetCleaning(self.metadata.datatype, YEAR),
             ElectronLArHole(),
             TauHasTrack(1),
@@ -175,7 +175,8 @@ class LHProcessor(ATLASStudent):
             TauSelection(),
             JetSelection(),
             FinalOverlapRemoval(),
-            ElectronIsoCorrection(datatype=self.metadata.datatype)
+            ElectronIsoCorrection(datatype=self.metadata.datatype),
+            AntiVBFFilter()
         ])
 
         self.filters['event'] = event_filters

@@ -83,10 +83,12 @@ class JES(JetSystematic):
 
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
+
         self.jes_tool = MultijetJESUncertaintyProvider(
-            JetUncertainties.get_resource("MultijetJES_Preliminary.config"),
-            JetUncertainties.get_resource("InsituJES2011_AllNuisanceParameters.config"),
-            "AntiKt4LCTopoJets","MC11c")
+            "MultijetJES_2011.config",
+            "InsituJES2011_AllNuisanceParameters.config",
+            "AntiKt4LCTopoJets","MC11c",
+            "externaltools/JetUncertainties/share/")
         super(JES, self).__init__(is_up, **kwargs)
 
     @JetSystematic.set

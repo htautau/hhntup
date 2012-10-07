@@ -191,3 +191,11 @@ data12_8TeV.00209736.physics_Muons.merge.NTUP_TAU.f475_m1218_p1130_p1174/
 data12_8TeV.00209776.physics_Muons.merge.NTUP_TAU.f475_m1218_p1130_p1174/
 data12_8TeV.00209787.physics_Muons.merge.NTUP_TAU.f475_m1218_p1130_p1174/
 data12_8TeV.00209812.physics_Muons.merge.NTUP_TAU.f475_m1218_p1130_p1174/
+data12_8TeV.00209864.physics_Muons.merge.NTUP_TAU.f475_m1223_p1130_p1174/
+data12_8TeV.00209866.physics_Muons.merge.NTUP_TAU.f475_m1223_p1130_p1174/
+data12_8TeV.00209899.physics_Muons.merge.NTUP_TAU.f475_m1223_p1130_p1174/
+data12_8TeV.00209909.physics_Muons.merge.NTUP_TAU.f475_m1223_p1130_p1174/
+data12_8TeV.00209980.physics_Muons.merge.NTUP_TAU.f476_m1223_p1130_p1174/
+data12_8TeV.00209994.physics_Muons.merge.NTUP_TAU.f476_m1223_p1130_p1174/
+data12_8TeV.00209995.physics_Muons.merge.NTUP_TAU.f476_m1223_p1130_p1174/
+data12_8TeV.00210302.physics_Muons.merge.NTUP_TAU.f476_m1223_p1130_p1174/
