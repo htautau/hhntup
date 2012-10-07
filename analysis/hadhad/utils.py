@@ -550,29 +550,17 @@ def draw(model,
         fig.OwnMembers()
     return fig
 
-"""
-def significance():
+
+def plot_significance(signal, background):
 
     # plot the signal significance on the same axis
     sig_ax = ax.twinx()
-    # reverse cumsum
-    bins = list(bkg_hists[0].xedges())[:-1]
-    sig_counts = np.array(list(sum(sig_hists)))
-    bkg_counts = np.array(list(sum(bkg_hists)))
-
-    S = (sig_counts/SIG_SCALE)[::-1].cumsum()[::-1]
-    B = bkg_counts[::-1].cumsum()[::-1]
-    # S / sqrt(B)
-    significance = np.divide(list(S), np.sqrt(list(B)))
-
-    max_bin = np.argmax(np.ma.masked_invalid(significance)) #+ 1
-    max_sig = significance[max_bin]
-    max_cut = bins[max_bin]
+    significance, max_sig, max_cut = significance(signal, background)
 
     print "Max signal significance %.2f at %.2f" % (max_sig, max_cut)
 
     sig_ax.plot(bins, significance, 'k--', label='Signal Significance')
-    sig_ax.set_ylabel(r'Significance: $S (\sigma=\sigma_{SM}) / \sqrt{B}$',
+    sig_ax.set_ylabel(r'Significance: $S (\sigma=\sigma_{SM}) / \sqrt{S + B}$',
             color='black', fontsize=20, position=(0., 1.), va='top')
     sig_ax.tick_params(axis='y', colors='red')
 
@@ -580,4 +568,20 @@ def significance():
             xytext=(max_cut + 0.1 * 1., max_sig),
                  arrowprops=dict(color='black', shrink=0.15),
                  ha='left', va='center', color='black')
-"""
+
+
+def significance(signal, background):
+
+    sig_counts = np.array(signal)
+    bkg_counts = np.array(background)
+    # reverse cumsum
+    S = sig_counts[::-1].cumsum()[::-1]
+    B = bkg_counts[::-1].cumsum()[::-1]
+    # S / sqrt(S + B)
+    sig = np.divide(S, np.sqrt(S + B))
+    bins = list(background.xedges())[:-1]
+    max_bin = np.argmax(np.ma.masked_invalid(sig))
+    max_sig = sig[max_bin]
+    max_cut = bins[max_bin]
+    return sig, max_sig, max_cut
+

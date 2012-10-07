@@ -865,13 +865,23 @@ for category, cat_info in categories_controls:
             systematics=SYSTEMATICS if args.systematics else None)
 
         print "creating histograms for limits"
+        bkg_scores = dict([(bkg.name, (bkg, scores_dict))
+                for (bkg, scores_dict) in bkg_scores])
 
-        min_score_signal = 1.
-        max_score_signal = 0.
-
-        # signal scores for all masses and modes
-        sig_scores = {}
         for mass in Higgs.MASS_POINTS:
+            print "%d GeV mass hypothesis" % mass
+            # create separate signal. background and data histograms for each
+            # mass hypothesis since the binning is optimized for each mass
+            # individually.
+            # The binning is determined by first locating the BDT cut value at
+            # which the signal significance is maximized (S / sqrt(B)).
+            # Everything above that cut is put in one bin. Everything below that
+            # cut is put into N variable width bins such that the background is
+            # flat.
+            min_score_signal = 1.
+            max_score_signal = 0.
+            sig_scores = {}
+            # signal scores
             for mode in Higgs.MODES.keys():
                 sig = Higgs(mode=mode, mass=mass,
                         systematics=args.systematics)
@@ -897,41 +907,43 @@ for category, cat_info in categories_controls:
                     if _max > max_score_signal:
                         max_score_signal = _max
 
-                name = 'Signal_%d_%s' % (mass, mode)
-                sig_scores[name] = (sig, scores_dict)
+                sig_scores['Signal_%s' % mode] = (sig, scores_dict)
 
-        print "minimum score: %f" % min_score
-        print "maximum score: %f" % max_score
-        print "minimum signal score: %f" % min_score_signal
-        print "maximum signal score: %f" % max_score_signal
+            print "minimum signal score: %f" % min_score_signal
+            print "maximum signal score: %f" % max_score_signal
+            # prevent bin threshold effects
+            min_score_signal -= 0.00001
+            max_score_signal += 0.00001
 
-        # prevent bin threshold effects
-        min_score -= 0.00001
-        max_score += 0.00001
-        min_score_signal -= 0.00001
-        max_score_signal += 0.00001
+            # using 50 bins determine location that maximizes signal
+            # significance
+            bkg_hist = Hist(50, min_score_signal, max_score_signal)
+            sig_hist = bkg_hist.Clone()
+            # fill background
+            for bkg_sample, scores_dict in bkg_scores.values():
+                for score, w in zip(*scores_dict['NOMINAL']):
+                    bkg_hist.Fill(score, w)
+            # fill signal
+            for sig_sample, scores_dict in sig_scores.values():
+                for score, w in zip(*scores_dict['NOMINAL']):
+                    sig_hist.Fill(score, w)
+            # determine maximum significance
+            sig, max_sig, max_cut = significance(sig_hist, bkg_hist)
+            print "maximum signal significance of %f at %f" % (max_sig, max_cut)
+            # define one bin above max_cut and 5 below max_cut
+            trans_bins = list(np.linspace(min_score_signal, max_cut))
+            trans_bins.append(max_score_signal)
 
-        # add a bin above max score and below min score for good luck
-        score_width_signal = max_score_signal - min_score_signal
-        bin_width_signal = score_width_signal / args.bins
-        min_score_signal -= bin_width_signal
-        max_score_signal += bin_width_signal
+            hist_template = Hist(trans_bins)
 
-        #hist_template = Hist(args.bins, min_score, max_score)
-        # don't waste bins on regions with only background
-        hist_template = Hist(args.bins + 2, min_score_signal, max_score_signal)
+            root_filename = '%s%s.root' % (category, output_suffix)
+            f = ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate')
 
-        root_filename = '%s%s.root' % (category, output_suffix)
-
-        with ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate') as f:
-
-            data_hist = hist_template.Clone(name=data.name)
-            map(data_hist.Fill, data_scores)
-            f.cd()
-            data_hist.Write()
-
-            bkg_scores = dict([(bkg.name, (bkg, scores_dict))
-                for (bkg, scores_dict) in bkg_scores])
+            if args.unblind:
+                data_hist = hist_template.Clone(name=data.name + '_%s' % mass)
+                map(data_hist.Fill, data_scores)
+                f.cd()
+                data_hist.Write()
 
             for d in (bkg_scores, sig_scores):
                 for name, (samp, scores_dict) in d.items():
@@ -939,13 +951,14 @@ for category, cat_info in categories_controls:
                         if sys_term == 'NOMINAL':
                             suffix = ''
                         else:
-                            sys_term = '_'.join(sys_term)
-                            suffix = '_' + sys_term
-                        hist = hist_template.Clone(name=name + suffix)
+                            suffix = '_' + '_'.join(sys_term)
+                        hist = hist_template.Clone(
+                                name=name + ('_%d' % mass) + suffix)
                         for score, w in zip(scores, weights):
                             hist.Fill(score, w)
                         f.cd()
                         hist.Write()
+            f.close()
 
 # save all variable plots in one large multipage pdf
 if 'plot' in args.actions and set(args.categories) == set(CATEGORIES.keys()) and not args.plots:
