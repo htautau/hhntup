@@ -578,6 +578,7 @@ def significance(signal, background):
     S = sig_counts[::-1].cumsum()[::-1]
     B = bkg_counts[::-1].cumsum()[::-1]
     # S / sqrt(S + B)
+    print S, B
     sig = np.divide(S, np.sqrt(S + B))
     bins = list(background.xedges())[:-1]
     max_bin = np.argmax(np.ma.masked_invalid(sig))

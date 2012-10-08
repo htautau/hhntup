@@ -768,23 +768,26 @@ for category, cat_info in categories_controls:
         # show the background model and 125 GeV signal in the signal region
         print "Plotting classifier output in signal region..."
         print signal_region
-        # data scores
-        data_scores, _ = data.scores(clf,
-                branches,
-                train_fraction=args.train_fraction,
-                category=category,
-                region=target_region,
-                cuts=signal_region)
 
         # determine min and max scores
         min_score = 1.
         max_score = 0.
-        _min = data_scores.min()
-        _max = data_scores.max()
-        if _min < min_score:
-            min_score = _min
-        if _max > max_score:
-            max_score = _max
+
+        if args.unblind:
+            # data scores
+            data_scores, _ = data.scores(clf,
+                    branches,
+                    train_fraction=args.train_fraction,
+                    category=category,
+                    region=target_region,
+                    cuts=signal_region)
+
+            _min = data_scores.min()
+            _max = data_scores.max()
+            if _min < min_score:
+                min_score = _min
+            if _max > max_score:
+                max_score = _max
 
         # background model scores
         bkg_scores = []
@@ -931,9 +934,10 @@ for category, cat_info in categories_controls:
                     sig_hist.Fill(score, w)
             # determine maximum significance
             sig, max_sig, max_cut = significance(sig_hist, bkg_hist)
-            print "maximum signal significance of %f at %f" % (max_sig, max_cut)
+            print "maximum signal significance of %f at score > %f" % (
+                    max_sig, max_cut)
             # define one bin above max_cut and 5 below max_cut
-            trans_bins = list(np.linspace(min_score_signal, max_cut, 5))
+            trans_bins = list(np.linspace(min_score_signal, max_cut, 6))
             trans_bins.append(max_score_signal)
 
             hist_template = Hist(trans_bins)
