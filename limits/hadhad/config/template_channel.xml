@@ -7,16 +7,15 @@
     
     <StatErrorConfig RelErrorThreshold="0.05" ConstraintType="Poisson"/>
 
-    <Sample Name="Signal_ggf_%(mass)d"
+    <Sample Name="Signal_gg_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_ggf_%(mass)d"
+        HistoName="Signal_gg_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_ggf_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="Signal_ggf_%(mass)d_JES_DOWN_TES_DOWN" />
-        <!--
         <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_ggf_JER_UP"
             HistoNameLow="Signal_%(mass)d_ggf" />
@@ -34,17 +33,15 @@
         <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>-->
     </Sample>
     
-    <Sample Name="Signal_vbf_%(mass)d"
+    <Sample Name="Signal_VBF_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_vbf_%(mass)d"
+        HistoName="Signal_VBF_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_vbf_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="Signal_vbf_%(mass)d_JES_DOWN_TES_DOWN" />
-
-        <!--
         <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_vbf_JER_UP"
             HistoNameLow="Signal_%(mass)d_vbf" />
@@ -62,17 +59,16 @@
         <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>-->
     </Sample>
     
-    <Sample Name="Signal_zh_%(mass)d"
+    <Sample Name="Signal_Z_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_zh_%(mass)d"
+        HistoName="Signal_Z_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_zh_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="Signal_zh_%(mass)d_JES_DOWN_TES_DOWN" />
-        
-        <!--<HistoSys Name="JER"
+        <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_zh_JER_UP"
             HistoNameLow="Signal_%(mass)d_zh" />
         <HistoSys Name="FAKERATE"
@@ -89,17 +85,16 @@
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>-->
     </Sample>
     
-    <Sample Name="Signal_wh_%(mass)d"
+    <Sample Name="Signal_W_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_wh_%(mass)d"
+        HistoName="Signal_W_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Signal_wh_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="Signal_wh_%(mass)d_JES_DOWN_TES_DOWN" />
-        
-        <!--<HistoSys Name="JER"
+        <HistoSys Name="JER"
             HistoNameHigh="Signal_%(mass)d_wh_JER_UP"
             HistoNameLow="Signal_%(mass)d_wh" />
         <HistoSys Name="FAKERATE"
@@ -121,11 +116,10 @@
         HistoName="Ztautau_%(mass)d"
         NormalizeByTheory="False" >
         <StatError Activate="True" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Ztautau_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="Ztautau_%(mass)d_JES_DOWN_TES_DOWN" />
-        
-        <!--<HistoSys Name="JER"
+        <HistoSys Name="JER"
             HistoNameHigh="Ztautau_JER_UP"
             HistoNameLow="Ztautau" />
         <HistoSys Name="FAKERATE"
@@ -154,11 +148,10 @@
         HistoName="QCD_%(mass)d"
         NormalizeByTheory="False" >
         <StatError Activate="True" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="QCD_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="QCD_%(mass)d_JES_DOWN_TES_DOWN" />
-        
-        <!--<HistoSys Name="JER"
+        <HistoSys Name="JER"
             HistoNameHigh="QCD_JER_UP"
             HistoNameLow="QCD" />
         <HistoSys Name="FAKERATE"
@@ -180,11 +173,10 @@
         HistoName="Others_%(mass)d"
         NormalizeByTheory="True" >
         <StatError Activate="True" />
-        <HistoSys Name="JES_TES"
+        <!--<HistoSys Name="JES_TES"
             HistoNameHigh="Others_%(mass)d_JES_UP_TES_UP"
             HistoNameLow="Others_%(mass)d_JES_DOWN_TES_DOWN" />
-        
-        <!--<HistoSys Name="JER"
+        <HistoSys Name="JER"
             HistoNameHigh="Others_JER_UP"
             HistoNameLow="Others" />
         <HistoSys Name="FAKERATE"

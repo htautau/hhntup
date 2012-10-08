@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source /atlas/software/bleedingedge/root-5.32-patches-64/bin/thisroot.sh
+source /cluster/data10/software/root-5.32-patches-64/bin/thisroot.sh
 cp $ROOTSYS/etc/HistFactorySchema.dtd ./config
 
 rm -f hist2workspace.log

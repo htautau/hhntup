@@ -124,7 +124,13 @@ def plot_clf(
         max_score=1,
         systematics=None):
 
-    hist_template = Hist(bins, min_score, max_score)
+    if hasattr(bins, '__iter__'):
+        # variable width bins
+        hist_template = Hist(bins)
+        min_score = min(bins)
+        max_score = max(bins)
+    else:
+        hist_template = Hist(bins, min_score, max_score)
 
     bkg_hists = []
     for bkg, scores_dict in background_scores:
@@ -145,23 +151,25 @@ def plot_clf(
         bkg_hists.append(hist)
 
     if signal_scores is not None:
-        signal, signal_scores = signal_scores
-        sig_hist = hist_template.Clone(title=signal.label)
-        scores, weight = signal_scores['NOMINAL']
-        for score, w in zip(scores, weight):
-            sig_hist.Fill(score, w)
-        sig_hist.decorate(**signal.hist_decor)
-        sig_hist.systematics = {}
-        for sys_term in signal_scores.keys():
-            if sys_term == 'NOMINAL':
-                continue
-            sys_hist = hist_template.Clone()
-            scores, weight = signal_scores[sys_term]
+        sig_hists = []
+        for sig, scores_dict in signal_scores:
+            sig_hist = hist_template.Clone(title=sig.label)
+            scores, weight = scores_dict['NOMINAL']
             for score, w in zip(scores, weight):
-                sys_hist.Fill(score, w)
-            sig_hist.systematics[sys_term] = sys_hist
+                sig_hist.Fill(score, w)
+            sig_hist.decorate(**sig.hist_decor)
+            sig_hist.systematics = {}
+            for sys_term in scores_dict.keys():
+                if sys_term == 'NOMINAL':
+                    continue
+                sys_hist = hist_template.Clone()
+                scores, weight = scores_dict[sys_term]
+                for score, w in zip(scores, weight):
+                    sys_hist.Fill(score, w)
+                sig_hist.systematics[sys_term] = sys_hist
+            sig_hists.append(sig_hist)
     else:
-        sig_hist = None
+        sig_hists = None
 
     if data_scores is not None and draw_data:
         data, data_scores = data_scores
@@ -182,7 +190,7 @@ def plot_clf(
             output_name += '_' + name
         draw(data=data_hist,
              model=bkg_hists,
-             signal=sig_hist,
+             signal=sig_hists,
              signal_scale=signal_scale,
              category=category,
              category_name=category_name,
@@ -192,6 +200,7 @@ def plot_clf(
              show_ratio=data_hist is not None,
              model_colour_map=None,
              systematics=systematics)
+    return bkg_hists, sig_hists, data_hist
 
 
 def std(X):
