@@ -7,9 +7,9 @@
     
     <StatErrorConfig RelErrorThreshold="0.05" ConstraintType="Poisson"/>
 
-    <Sample Name="Signal_ggf_%(mass)d"
+    <Sample Name="Signal_gg_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_ggf_%(mass)d"
+        HistoName="Signal_gg_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
@@ -33,9 +33,9 @@
         <OverallSys Name="QCDscale_ggH1in" High="1.133" Low="0.914"/>-->
     </Sample>
     
-    <Sample Name="Signal_vbf_%(mass)d"
+    <Sample Name="Signal_VBF_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_vbf_%(mass)d"
+        HistoName="Signal_VBF_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
@@ -59,9 +59,9 @@
         <OverallSys Name="QCDscale_qqH" High="1.004" Low="0.996"/>-->
     </Sample>
     
-    <Sample Name="Signal_zh_%(mass)d"
+    <Sample Name="Signal_Z_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_zh_%(mass)d"
+        HistoName="Signal_Z_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />
@@ -85,9 +85,9 @@
         <OverallSys Name="QCDscale_VH" High="1.007" Low="0.992"/>-->
     </Sample>
     
-    <Sample Name="Signal_wh_%(mass)d"
+    <Sample Name="Signal_W_%(mass)d"
         InputFile="./data/%(category)s_%(fitmethod)s.root"
-        HistoName="Signal_wh_%(mass)d"
+        HistoName="Signal_W_%(mass)d"
         NormalizeByTheory="True" >
         <NormFactor Name="SigXsecOverSM" Val="0" Low="0." High="40."/>
         <StatError Activate="False" />

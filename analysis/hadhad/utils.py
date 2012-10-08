@@ -92,6 +92,64 @@ def root_axes(ax, no_xlabels=False, vscale=1.):
     ax.tick_params(which='minor', length=4)
 
 
+def uncertainty_band(model, systematics):
+
+    if not isinstance(model, (list, tuple)):
+        model = [model]
+    # add separate variations in quadrature
+    # also include stat error in quadrature
+    total_model = sum(model)
+    var_high = []
+    var_low = []
+    for variations in systematics:
+        if len(variations) == 2:
+            high, low = variations
+        elif len(variations) == 1:
+            high = variations[0]
+            low = 'NOMINAL'
+        else:
+            raise ValueError(
+                    "only one or two variations per term are allowed")
+        total_high = model[0].Clone()
+        total_high.Reset()
+        total_low = total_high.Clone()
+        total_max = total_high.Clone()
+        total_min = total_high.Clone()
+        for m in model:
+            total_high += m.systematics[high]
+            if low == 'NOMINAL':
+                total_low += m.Clone()
+            else:
+                total_low += m.systematics[low]
+        for i in xrange(len(total_high)):
+            total_max[i] = max(total_high[i], total_low[i], total_model[i])
+            total_min[i] = min(total_high[i], total_low[i], total_model[i])
+        var_high.append(total_max)
+        var_low.append(total_min)
+
+    # include stat error variation
+    total_model_stat_high = total_model.Clone()
+    total_model_stat_low = total_model.Clone()
+    for i in xrange(len(total_model)):
+        total_model_stat_high[i] += total_model.yerrh(i)
+        total_model_stat_low[i] -= total_model.yerrl(i)
+    var_high.append(total_model_stat_high)
+    var_low.append(total_model_stat_low)
+
+    # sum variations in quadrature bin-by-bin
+    high_band = total_model.Clone()
+    high_band.Reset()
+    low_band = high_band.Clone()
+    for i in xrange(len(high_band)):
+        sum_high = math.sqrt(
+                sum([(v[i] - total_model[i])**2 for v in var_high]))
+        sum_low = math.sqrt(
+                sum([(v[i] - total_model[i])**2 for v in var_low]))
+        high_band[i] = sum_high
+        low_band[i] = sum_low
+    return total_model, high_band, low_band
+
+
 def draw(model,
          name,
          category_name,
@@ -100,10 +158,11 @@ def draw(model,
          data=None,
          signal=None,
          signal_scale=1.,
+         plot_signal_significance=True,
          units=None,
          range=None,
          model_colour_map=None,
-         signal_colour_map=None,
+         signal_colour_map=cm.spring,
          show_ratio=False,
          show_qq=False,
          output_formats=None,
@@ -127,9 +186,12 @@ def draw(model,
     left_margin = 0.16
     bottom_margin = 0.16
     top_margin = 0.05
-    right_margin = 0.05
+    if signal is not None and plot_signal_significance:
+        right_margin = 0.10
+    else:
+        right_margin = 0.05
     ratio_sep_margin = 0.025
-    ypadding = (.55, .1)
+    ypadding = (.6, .1)
 
     width = 1. - right_margin - left_margin
     height = 1. - top_margin - bottom_margin
@@ -208,9 +270,6 @@ def draw(model,
     if model_colour_map is not None:
         set_colours(model, model_colour_map)
 
-    if isinstance(signal, (list, tuple)) and signal_colour_map is not None:
-        set_colours(signal, signal_colour_map)
-
     if root:
         # plot model stack with ROOT
         hist_pad.cd()
@@ -228,28 +287,36 @@ def draw(model,
     if signal is not None:
         if signal_scale != 1.:
             if isinstance(signal, (list, tuple)):
+                scaled_signal = []
                 for sig in signal:
-                    sig *= signal_scale
-                    sig.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(), signal_scale))
+                    scaled_h = sig * signal_scale
+                    scaled_h.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(),
+                        signal_scale))
+                    scaled_signal.append(scaled_h)
             else:
-                signal *= signal_scale
-                signal.SetTitle(r'%s $\times\/%d$' % (signal.GetTitle(),
+                scaled_signal = signal * signal_scale
+                scaled_signal.SetTitle(r'%s $\times\/%d$' % (signal.GetTitle(),
                     signal_scale))
-
-        if isinstance(signal, (list, tuple)):
+        else:
+            scaled_signal = signal
+        if isinstance(scaled_signal, (list, tuple)):
+            if signal_colour_map is not None:
+                set_colours(scaled_signal, signal_colour_map)
             if root:
                 pass
             else:
-                signal_bars = rplt.bar(signal, linewidth=0,
-                        stacked=True, yerr='quadratic',
+                signal_bars = rplt.bar(scaled_signal, linewidth=0,
+                        stacked=True, #yerr='quadratic',
                         axes=hist_ax, alpha=.8, ypadding=ypadding)
         else:
             if root:
                 pass
             else:
-                _, _, signal_bars = rplt.hist(signal,
+                _, _, signal_bars = rplt.hist(scaled_signal,
                         histtype='stepfilled',
                         axes=hist_ax, ypadding=ypadding)
+        if plot_signal_significance:
+            plot_significance(signal, model, ax=hist_ax)
 
     if show_qq:
         qq_ax = plt.axes(rect_qq)
@@ -285,71 +352,36 @@ def draw(model,
 
     if systematics:
         # draw systematics band
-        # add separate variations in quadrature
-        # also include stat error in quadrature
-        total_model = sum(model)
-        var_high = []
-        var_low = []
-        for variations in systematics:
-            if len(variations) == 2:
-                high, low = variations
-            elif len(variations) == 1:
-                high = variations[0]
-                low = 'NOMINAL'
-            else:
-                raise ValueError(
-                        "only one or two variations per term are allowed")
-            total_high = model[0].Clone()
-            total_high.Reset()
-            total_low = total_high.Clone()
-            total_max = total_high.Clone()
-            total_min = total_high.Clone()
-            for m in model:
-                total_high += m.systematics[high]
-                if low == 'NOMINAL':
-                    total_low += m.Clone()
-                else:
-                    total_low += m.systematics[low]
-            for i in xrange(len(total_high)):
-                total_max[i] = max(total_high[i], total_low[i], total_model[i])
-                total_min[i] = min(total_high[i], total_low[i], total_model[i])
-            var_high.append(total_max)
-            var_low.append(total_min)
-
-        # include stat error variation
-        total_model_stat_high = total_model.Clone()
-        total_model_stat_low = total_model.Clone()
-        for i in xrange(len(total_model)):
-            total_model_stat_high[i] += total_model.yerrh(i)
-            total_model_stat_low[i] -= total_model.yerrl(i)
-        var_high.append(total_model_stat_high)
-        var_low.append(total_model_stat_low)
-
-        # sum variations in quadrature bin-by-bin
-        high_band = total_model.Clone()
-        high_band.Reset()
-        low_band = high_band.Clone()
-        for i in xrange(len(high_band)):
-            sum_high = math.sqrt(
-                    sum([(v[i] - total_model[i])**2 for v in var_high]))
-            sum_low = math.sqrt(
-                    sum([(v[i] - total_model[i])**2 for v in var_low]))
-            high_band[i] = sum_high
-            low_band[i] = sum_low
-
+        total_model, high_band_model, low_band_model = uncertainty_band(
+                model, systematics)
         if root:
             pass
         else:
             # draw band as hatched histogram with base of model - low_band
             # and height of high_band + low_band
-            rplt.fill_between(total_model + high_band,
-                        total_model - low_band,
+            rplt.fill_between(total_model + high_band_model,
+                        total_model - low_band_model,
                         edgecolor='yellow',
                         linewidth=0,
                         facecolor=(0,0,0,0),
                         hatch='////',
                         axes=hist_ax,
                         zorder=100)
+        if signal is not None:
+            total_signal, high_band_signal, low_band_signal = uncertainty_band(
+                    signal, systematics)
+            if root:
+                pass
+            else:
+                rplt.fill_between(
+                        (total_signal + high_band_signal) * signal_scale,
+                        (total_signal - low_band_signal) * signal_scale,
+                        edgecolor='green',
+                        linewidth=0,
+                        facecolor=(0,0,0,0),
+                        hatch=r'\\\\',
+                        axes=hist_ax,
+                        zorder=101)
 
     if data is not None:
         # draw data
@@ -406,19 +438,19 @@ def draw(model,
             if systematics:
                 # plot band on ratio plot
                 # uncertainty on top is data + model
-                high_band_top = high_band.Clone()
-                low_band_top = low_band.Clone()
+                high_band_top = high_band_model.Clone()
+                low_band_top = low_band_model.Clone()
                 # quadrature sum of model uncert + data stat uncert in numerator
                 for i in xrange(len(high_band_top)):
                     high_band_top[i] = math.sqrt(
-                            high_band[i]**2 +
+                            high_band_model[i]**2 +
                             data.yerrh(i)**2)
                     low_band_top[i] = math.sqrt(
-                            low_band[i]**2 +
+                            low_band_model[i]**2 +
                             data.yerrl(i)**2)
                 # full uncert
-                high_band_full = high_band.Clone()
-                low_band_full = low_band.Clone()
+                high_band_full = high_band_model.Clone()
+                low_band_full = low_band_model.Clone()
                 # quadrature sum of numerator and denominator
                 for i in xrange(len(high_band_full)):
                     if numerator[i] == 0 or total_model[i] == 0:
@@ -427,10 +459,10 @@ def draw(model,
                     else:
                         high_band_full[i] = abs(error_hist[i]) * math.sqrt(
                                 (high_band_top[i] / numerator[i])**2 +
-                                (high_band[i] / total_model[i])**2)
+                                (high_band_model[i] / total_model[i])**2)
                         low_band_full[i] = abs(error_hist[i]) * math.sqrt(
                                 (low_band_top[i] / numerator[i])**2 +
-                                (low_band[i] / total_model[i])**2)
+                                (low_band_model[i] / total_model[i])**2)
                 if root:
                     pass
                 else:
@@ -476,10 +508,10 @@ def draw(model,
         if signal is not None:
             if isinstance(signal, (list, tuple)):
                 right_legend_bars += signal_bars
-                right_legend_titles += [s.title for s in signal]
+                right_legend_titles += [s.title for s in scaled_signal]
             else:
                 right_legend_bars.append(signal_bars[0])
-                right_legend_titles.append(signal.title)
+                right_legend_titles.append(scaled_signal.title)
 
         if right_legend_bars:
             right_legend = hist_ax.legend(
@@ -551,37 +583,51 @@ def draw(model,
     return fig
 
 
-def plot_significance(signal, background):
+def plot_significance(signal, background, ax):
+
+    if isinstance(signal, (list, tuple)):
+        signal = sum(signal)
+    if isinstance(background, (list, tuple)):
+        background = sum(background)
 
     # plot the signal significance on the same axis
     sig_ax = ax.twinx()
-    significance, max_sig, max_cut = significance(signal, background)
+    sig, max_sig, max_cut = significance(signal, background)
+    bins = list(background.xedges())[:-1]
 
     print "Max signal significance %.2f at %.2f" % (max_sig, max_cut)
 
-    sig_ax.plot(bins, significance, 'k--', label='Signal Significance')
-    sig_ax.set_ylabel(r'Significance: $S (\sigma=\sigma_{SM}) / \sqrt{S + B}$',
-            color='black', fontsize=20, position=(0., 1.), va='top')
-    sig_ax.tick_params(axis='y', colors='red')
-
+    sig_ax.plot(bins, sig, 'k--', label='Signal Significance')
+    sig_ax.set_ylabel(r'$S / \sqrt{B}$',
+            color='black', fontsize=15, position=(0., 1.), va='top')
+    #sig_ax.tick_params(axis='y', colors='red')
+    sig_ax.set_ylim(0, max_sig * 2)
+    plt.text(max_cut + 0.02, max_sig, '(%.2f, %.2f)' % (max_cut, max_sig),
+            ha='left', va='center',
+            axes=sig_ax)
+    """
     plt.annotate('(%.2f, %.2f)' % (max_cut, max_sig), xy=(max_cut, max_sig),
-            xytext=(max_cut + 0.1 * 1., max_sig),
+            xytext=(max_cut + 0.05, max_sig),
                  arrowprops=dict(color='black', shrink=0.15),
                  ha='left', va='center', color='black')
+    """
 
 
 def significance(signal, background):
 
+    if isinstance(signal, (list, tuple)):
+        signal = sum(signal)
+    if isinstance(background, (list, tuple)):
+        background = sum(background)
     sig_counts = np.array(signal)
     bkg_counts = np.array(background)
     # reverse cumsum
     S = sig_counts[::-1].cumsum()[::-1]
     B = bkg_counts[::-1].cumsum()[::-1]
     # S / sqrt(S + B)
-    print S, B
-    sig = np.divide(S, np.sqrt(S + B))
+    sig = np.ma.fix_invalid(np.divide(S, np.sqrt(B)), fill_value=0.)
     bins = list(background.xedges())[:-1]
-    max_bin = np.argmax(np.ma.masked_invalid(sig))
+    max_bin = np.argmax(sig)
     max_sig = sig[max_bin]
     max_cut = bins[max_bin]
     return sig, max_sig, max_cut

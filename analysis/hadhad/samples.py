@@ -184,10 +184,10 @@ class Sample(object):
             self._cuts = cuts
         self.student = student
         self.hist_decor = hist_decor
-        if isinstance(self, Higgs):
-            self.hist_decor['fillstyle'] = 'hollow'
-        else:
-            self.hist_decor['fillstyle'] = 'solid'
+        #if isinstance(self, Higgs):
+        #    self.hist_decor['fillstyle'] = 'hollow'
+        #else:
+        self.hist_decor['fillstyle'] = 'solid'
 
     def check_systematic(self, systematic):
 
@@ -532,7 +532,7 @@ class MC(Sample):
                 # use yellowhiggs for cross sections
                 xs, _ = yellowhiggs.xsbr(
                         7, self.masses[i],
-                        self.modes[i], 'tautau')
+                        Higgs.MODES_DICT[self.modes[i]][0], 'tautau')
                 #print name, self.masses[i], self.modes[i], xs
                 xs *= TAUTAUHADHADBR
                 kfact = 1.
@@ -890,11 +890,13 @@ class Higgs(MC, Signal):
 
     MASS_POINTS = range(100, 155, 5)
 
-    MODES = {
-        'ggf': ('ggH', 'PowHegPythia_'),
-        'vbf': ('VBFH', 'PowHegPythia_'),
-        'zh': ('ZH', 'Pythia'),
-        'wh': ('WH', 'Pythia'),
+    MODES = ['gg', 'VBF', 'Z', 'W']
+
+    MODES_DICT = {
+        'gg': ('ggf', 'PowHegPythia_'),
+        'VBF': ('vbf', 'PowHegPythia_'),
+        'Z': ('zh', 'Pythia'),
+        'W': ('wh', 'Pythia'),
     }
 
     def __init__(self, year=2011,
@@ -918,7 +920,7 @@ class Higgs(MC, Signal):
                 assert mode in Higgs.MODES
                 modes = [mode]
             else:
-                modes = Higgs.MODES.keys()
+                modes = Higgs.MODES
         else:
             assert len(modes) > 0
             for mode in modes:
@@ -927,28 +929,27 @@ class Higgs(MC, Signal):
 
         str_mass = ''
         if len(masses) == 1:
-            str_mass = '(%s)' % str(masses[0])
+            str_mass = '(%d)' % masses[0]
 
         str_mode = ''
         if len(modes) == 1:
-            str_mode = str(modes[0]) + ' '
+            str_mode = modes[0]
+            self.name = 'Signal_%s' % modes[0]
+        else:
+            self.name = 'Signal'
 
-        self._label = r'%s$H%s\rightarrow\tau_{\mathrm{had}}\tau_{\mathrm{had}}$' % (
-                str_mode, str_mass)
-
-        self.name = '{mode}Signal{mass}'.format(
-                mass=str_mass,
-                mode=str_mode.strip())
+        #self._label = r'%s$H%s\rightarrow\tau_{\mathrm{had}}\tau_{\mathrm{had}}$' % (
+        #        str_mode, str_mass)
+        self._label = r'%sH%s' % (str_mode, str_mass)
 
         self.samples = []
         self.masses = []
         self.modes = []
         for mode in modes:
-            mode_str = Higgs.MODES[mode][0]
-            generator = Higgs.MODES[mode][1]
+            generator = Higgs.MODES_DICT[mode][1]
             for mass in masses:
-                self.samples.append('%s%s%d_tautauhh.mc11c' % (
-                    generator, mode_str, mass))
+                self.samples.append('%s%sH%d_tautauhh.mc11c' % (
+                    generator, mode, mass))
                 self.masses.append(mass)
                 self.modes.append(mode)
 

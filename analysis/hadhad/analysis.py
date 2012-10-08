@@ -229,13 +229,6 @@ if 'train' in args.actions:
         Higgs(systematics=args.systematics),
     ]
 
-    # all modes, 125GeV mass
-    signal_eval = Higgs(
-            mass=125,
-            systematics=args.systematics,
-            linecolor='red',
-            linestyle='dashed')
-
 figures = {}
 
 categories_controls = (
@@ -765,7 +758,7 @@ for category, cat_info in categories_controls:
             max_score=max_score,
             systematics=SYSTEMATICS if args.systematics else None)
 
-        # show the background model and 125 GeV signal in the signal region
+        # plot the signal region and save histograms for limit-setting
         print "Plotting classifier output in signal region..."
         print signal_region
 
@@ -812,64 +805,6 @@ for category, cat_info in categories_controls:
 
             bkg_scores.append((bkg, scores_dict))
 
-        # signal scores for M=125
-        signal_scores_eval = signal_eval.scores(clf,
-                branches,
-                train_fraction=args.train_fraction,
-                category=category,
-                region=target_region,
-                cuts=signal_region)
-
-        min_score_signal = 1.
-        max_score_signal = 0.
-
-        for sys_term, (scores, weights) in signal_scores_eval.items():
-            assert len(scores) == len(weights)
-            if len(scores) == 0:
-                continue
-            _min = np.min(scores)
-            _max = np.max(scores)
-            if _min < min_score:
-                min_score = _min
-            if _max > max_score:
-                max_score = _max
-            if _min < min_score_signal:
-                min_score_signal = _min
-            if _max > max_score_signal:
-                max_score_signal = _max
-
-        print "minimum score: %f" % min_score
-        print "maximum score: %f" % max_score
-        print "minimum signal score: %f" % min_score_signal
-        print "maximum signal score: %f" % max_score_signal
-
-        # prevent bin threshold effects
-        min_score -= 0.00001
-        max_score += 0.00001
-        min_score_signal -= 0.00001
-        max_score_signal += 0.00001
-
-        # add a bin above max score and below min score for extra beauty
-        score_width_signal = max_score_signal - min_score_signal
-        bin_width_signal = score_width_signal / args.bins
-        min_score_signal -= bin_width_signal
-        max_score_signal += bin_width_signal
-
-        plot_clf(
-            background_scores=bkg_scores,
-            category=category,
-            category_name=cat_info['name'],
-            signal_scores=(signal_eval, signal_scores_eval),
-            signal_scale=50,
-            name='ROI' + output_suffix,
-            bins=args.bins + 2,
-            min_score=min_score_signal,
-            max_score=max_score_signal,
-            systematics=SYSTEMATICS if args.systematics else None)
-
-        print "creating histograms for limits"
-        bkg_scores = dict([(bkg.name, (bkg, scores_dict))
-                for (bkg, scores_dict) in bkg_scores])
         root_filename = '%s%s.root' % (category, output_suffix)
         f = ropen(os.path.join(LIMITS_DIR, root_filename), 'recreate')
 
@@ -885,9 +820,9 @@ for category, cat_info in categories_controls:
             # flat.
             min_score_signal = 1.
             max_score_signal = 0.
-            sig_scores = {}
+            sig_scores = []
             # signal scores
-            for mode in Higgs.MODES.keys():
+            for mode in Higgs.MODES:
                 sig = Higgs(mode=mode, mass=mass,
                         systematics=args.systematics)
                 scores_dict = sig.scores(clf,
@@ -912,24 +847,41 @@ for category, cat_info in categories_controls:
                     if _max > max_score_signal:
                         max_score_signal = _max
 
-                sig_scores['Signal_%s' % mode] = (sig, scores_dict)
+                sig_scores.append((sig, scores_dict))
 
             print "minimum signal score: %f" % min_score_signal
             print "maximum signal score: %f" % max_score_signal
+
             # prevent bin threshold effects
             min_score_signal -= 0.00001
             max_score_signal += 0.00001
 
-            # using 50 bins determine location that maximizes signal
+            # add a bin above max score and below min score for extra beauty
+            score_width_signal = max_score_signal - min_score_signal
+            bin_width_signal = score_width_signal / args.bins
+
+            plot_clf(
+                background_scores=bkg_scores,
+                signal_scores=sig_scores,
+                category=category,
+                category_name=cat_info['name'],
+                signal_scale=50,
+                name='%d_ROI%s' % (mass, output_suffix),
+                bins=args.bins + 2,
+                min_score=min_score_signal - bin_width_signal,
+                max_score=max_score_signal + bin_width_signal,
+                systematics=SYSTEMATICS if args.systematics else None)
+
+            # using 40 bins determine location that maximizes signal
             # significance
-            bkg_hist = Hist(50, min_score_signal, max_score_signal)
+            bkg_hist = Hist(40, min_score_signal, max_score_signal)
             sig_hist = bkg_hist.Clone()
             # fill background
-            for bkg_sample, scores_dict in bkg_scores.values():
+            for bkg_sample, scores_dict in bkg_scores:
                 for score, w in zip(*scores_dict['NOMINAL']):
                     bkg_hist.Fill(score, w)
             # fill signal
-            for sig_sample, scores_dict in sig_scores.values():
+            for sig_sample, scores_dict in sig_scores:
                 for score, w in zip(*scores_dict['NOMINAL']):
                     sig_hist.Fill(score, w)
             # determine maximum significance
@@ -949,14 +901,14 @@ for category, cat_info in categories_controls:
                 data_hist.Write()
 
             for d in (bkg_scores, sig_scores):
-                for name, (samp, scores_dict) in d.items():
+                for samp, scores_dict in d:
                     for sys_term, (scores, weights) in scores_dict.items():
                         if sys_term == 'NOMINAL':
                             suffix = ''
                         else:
                             suffix = '_' + '_'.join(sys_term)
                         hist = hist_template.Clone(
-                                name=name + ('_%d' % mass) + suffix)
+                                name=samp.name + ('_%d' % mass) + suffix)
                         for score, w in zip(scores, weights):
                             hist.Fill(score, w)
                         f.cd()
