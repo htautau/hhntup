@@ -14,6 +14,41 @@ from samples import *
 from utils import draw
 
 
+def search_flat_bins(bkg_scores, min_score, max_score, bins):
+
+    scores = []
+    weights = []
+    for bkg, scores_dict in bkg_scores:
+        s, w = scores_dict['NOMINAL']
+        scores.append(s)
+        weights.append(w)
+    scores = np.concatenate(scores)
+    weights = np.concatenate(weights)
+
+    selection = (min_score <= scores) & (scores < max_score)
+    scores = scores[selection]
+    weights = weights[selection]
+
+    sort_idx = np.argsort(scores)
+    scores = scores[sort_idx]
+    weights = weights[sort_idx]
+
+    total_weight = weights.sum()
+    bin_width = total_weight / bins
+
+    # inefficient linear search for now
+    weights_cumsum = np.cumsum(weights)
+    boundaries = [min_score]
+    curr_total = bin_width
+    for i, cs in enumerate(weights_cumsum):
+        if cs >= curr_total:
+            boundaries.append((scores[i] + scores[i+1])/2)
+            curr_total += bin_width
+        if len(boundaries) == bins:
+            break
+    boundaries.append(max_score)
+    return boundaries
+
 
 def plot_grid_scores(
         grid_scores, best_point, params, name,
@@ -122,6 +157,7 @@ def plot_clf(
         bins=10,
         min_score=0,
         max_score=1,
+        plot_signal_significance=True,
         systematics=None):
 
     if hasattr(bins, '__iter__'):
@@ -192,6 +228,7 @@ def plot_clf(
              model=bkg_hists,
              signal=sig_hists,
              signal_scale=signal_scale,
+             plot_signal_significance=plot_signal_significance,
              category=category,
              category_name=category_name,
              name="BDT Score",

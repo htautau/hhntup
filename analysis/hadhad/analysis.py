@@ -888,11 +888,30 @@ for category, cat_info in categories_controls:
             sig, max_sig, max_cut = significance(sig_hist, bkg_hist)
             print "maximum signal significance of %f at score > %f" % (
                     max_sig, max_cut)
-            # define one bin above max_cut and 5 below max_cut
-            trans_bins = list(np.linspace(min_score_signal, max_cut, 6))
-            trans_bins.append(max_score_signal)
 
-            hist_template = Hist(trans_bins)
+            # determine 4 bins below max_cut such that the background is flat
+            # this will require a binary search for each bin boundary since the
+            # events are weighted.
+            flat_bins = search_flat_bins(
+                    bkg_scores, min_score_signal, max_cut, 4)
+            # one bin above max_cut
+            flat_bins.append(max_score_signal)
+            print flat_bins
+            #trans_bins = list(np.linspace(min_score_signal, max_cut, 6))
+            #trans_bins.append(max_score_signal)
+
+            plot_clf(
+                background_scores=bkg_scores,
+                signal_scores=sig_scores,
+                category=category,
+                category_name=cat_info['name'],
+                signal_scale=50,
+                name='%d_ROI_flat%s' % (mass, output_suffix),
+                bins=flat_bins,
+                plot_signal_significance=False,
+                systematics=SYSTEMATICS if args.systematics else None)
+
+            hist_template = Hist(flat_bins)
 
             if args.unblind:
                 data_hist = hist_template.Clone(name=data.name + '_%s' % mass)
