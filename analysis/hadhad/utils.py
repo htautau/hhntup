@@ -373,12 +373,17 @@ def draw(model,
         if signal is not None:
             total_signal, high_band_signal, low_band_signal = uncertainty_band(
                     signal, systematics)
+            high = (total_signal + high_band_signal) * signal_scale
+            low = (total_signal - low_band_signal) * signal_scale
+            if signal_on_top:
+                high += total_model
+                low += total_model
             if root:
                 pass
             else:
                 rplt.fill_between(
-                        (total_signal + high_band_signal) * signal_scale,
-                        (total_signal - low_band_signal) * signal_scale,
+                        high,
+                        low,
                         edgecolor='green',
                         linewidth=0,
                         facecolor=(0,0,0,0),
@@ -616,7 +621,7 @@ def plot_significance(signal, background, ax):
     """
 
 
-def significance(signal, background):
+def significance(signal, background, min_bkg=0):
 
     if isinstance(signal, (list, tuple)):
         signal = sum(signal)
@@ -627,10 +632,11 @@ def significance(signal, background):
     # reverse cumsum
     S = sig_counts[::-1].cumsum()[::-1]
     B = bkg_counts[::-1].cumsum()[::-1]
+    exclude = B < min_bkg
     # S / sqrt(S + B)
     sig = np.ma.fix_invalid(np.divide(S, np.sqrt(B)), fill_value=0.)
     bins = list(background.xedges())[:-1]
-    max_bin = np.argmax(sig)
+    max_bin = np.argmax(np.ma.masked_array(sig, mask=exclude))
     max_sig = sig[max_bin]
     max_cut = bins[max_bin]
     return sig, max_sig, max_cut

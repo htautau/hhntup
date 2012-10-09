@@ -872,9 +872,8 @@ for category, cat_info in categories_controls:
                 max_score=max_score_signal + bin_width_signal,
                 systematics=SYSTEMATICS if args.systematics else None)
 
-            # using 40 bins determine location that maximizes signal
-            # significance
-            bkg_hist = Hist(40, min_score_signal, max_score_signal)
+            # determine location that maximizes signal significance
+            bkg_hist = Hist(50, min_score_signal, max_score_signal)
             sig_hist = bkg_hist.Clone()
             # fill background
             for bkg_sample, scores_dict in bkg_scores:
@@ -885,20 +884,23 @@ for category, cat_info in categories_controls:
                 for score, w in zip(*scores_dict['NOMINAL']):
                     sig_hist.Fill(score, w)
             # determine maximum significance
-            sig, max_sig, max_cut = significance(sig_hist, bkg_hist)
+            sig, max_sig, max_cut = significance(sig_hist, bkg_hist, min_bkg=5)
             print "maximum signal significance of %f at score > %f" % (
                     max_sig, max_cut)
 
-            # determine 4 bins below max_cut such that the background is flat
+            # determine N bins below max_cut or N+1 bins over the whole signal
+            # score range such that the background is flat
             # this will require a binary search for each bin boundary since the
             # events are weighted.
+            """
             flat_bins = search_flat_bins(
-                    bkg_scores, min_score_signal, max_cut, 4)
+                    bkg_scores, min_score_signal, max_score_signal,
+                    int(sum(bkg_hist) / 20))
+            """
+            flat_bins = search_flat_bins(
+                    bkg_scores, min_score_signal, max_cut, 5)
             # one bin above max_cut
             flat_bins.append(max_score_signal)
-            print flat_bins
-            #trans_bins = list(np.linspace(min_score_signal, max_cut, 6))
-            #trans_bins.append(max_score_signal)
 
             plot_clf(
                 background_scores=bkg_scores,
