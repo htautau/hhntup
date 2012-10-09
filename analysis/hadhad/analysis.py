@@ -201,6 +201,43 @@ def staged_score(self, X, y, sample_weight, n_estimators=-1):
         yield s_sig_max * acc
 
 
+def write_score_hists(f, mass, scores_list, hist_template, no_neg_bins=True):
+
+    sys_hists = {}
+    for samp, scores_dict in scores_list:
+        for sys_term, (scores, weights) in scores_dict.items():
+            if sys_term == 'NOMINAL':
+                suffix = ''
+            else:
+                suffix = '_' + '_'.join(sys_term)
+            hist = hist_template.Clone(
+                    name=samp.name + ('_%d' % mass) + suffix)
+            for score, w in zip(scores, weights):
+                hist.Fill(score, w)
+            if sys_term not in sys_hists:
+                sys_hists[sys_term] = []
+            sys_hists[sys_term].append(hist)
+    f.cd()
+    for sys_term, hists in sys_hists.items():
+        bad_bins = []
+        if no_neg_bins:
+            # check for negative bins over all systematics and zero them out
+            # negative bins cause lots of problem in the limit setting
+            # negative bin contents effectively means
+            # the same as "no events here..."
+            total_hist = sum(hists)
+            for bin, content in enumerate(total_hist):
+                if content < 0:
+                    print "Found negative bin %d (%f) for systematic %s" % (
+                            bin, content, sys_term)
+                    bad_bins.append(bin)
+        for hist in hists:
+            for bin in bad_bins:
+                # zero out bad bins
+                hist[bin] = 0.
+            hist.Write()
+
+
 LIMITS_DIR = os.getenv('HIGGSTAUTAU_LIMITS_DIR')
 if not LIMITS_DIR:
     sys.exit('You did not source setup.sh!')
@@ -872,49 +909,56 @@ for category, cat_info in categories_controls:
                 max_score=max_score_signal + bin_width_signal,
                 systematics=SYSTEMATICS if args.systematics else None)
 
-            # determine location that maximizes signal significance
-            bkg_hist = Hist(100, min_score_signal, max_score_signal)
-            sig_hist = bkg_hist.Clone()
-            # fill background
-            for bkg_sample, scores_dict in bkg_scores:
-                for score, w in zip(*scores_dict['NOMINAL']):
-                    bkg_hist.Fill(score, w)
-            # fill signal
-            for sig_sample, scores_dict in sig_scores:
-                for score, w in zip(*scores_dict['NOMINAL']):
-                    sig_hist.Fill(score, w)
-            # determine maximum significance
-            sig, max_sig, max_cut = significance(sig_hist, bkg_hist, min_bkg=1)
-            print "maximum signal significance of %f at score > %f" % (
-                    max_sig, max_cut)
+            if cat_info['limitbinning'] == 'variable':
+                print "variable-width bins"
+                # determine location that maximizes signal significance
+                bkg_hist = Hist(100, min_score_signal, max_score_signal)
+                sig_hist = bkg_hist.Clone()
+                # fill background
+                for bkg_sample, scores_dict in bkg_scores:
+                    for score, w in zip(*scores_dict['NOMINAL']):
+                        bkg_hist.Fill(score, w)
+                # fill signal
+                for sig_sample, scores_dict in sig_scores:
+                    for score, w in zip(*scores_dict['NOMINAL']):
+                        sig_hist.Fill(score, w)
 
-            # determine N bins below max_cut or N+1 bins over the whole signal
-            # score range such that the background is flat
-            # this will require a binary search for each bin boundary since the
-            # events are weighted.
-            """
-            flat_bins = search_flat_bins(
-                    bkg_scores, min_score_signal, max_score_signal,
-                    int(sum(bkg_hist) / 20))
-            """
-            flat_bins = search_flat_bins(
-                    bkg_scores, min_score_signal, max_cut, 5)
-            # one bin above max_cut
-            flat_bins.append(max_score_signal)
+                # determine maximum significance
+                sig, max_sig, max_cut = significance(sig_hist, bkg_hist, min_bkg=1)
+                print "maximum signal significance of %f at score > %f" % (
+                        max_sig, max_cut)
 
-            plot_clf(
-                background_scores=bkg_scores,
-                signal_scores=sig_scores,
-                category=category,
-                category_name=cat_info['name'],
-                signal_scale=50,
-                name='%d_ROI_flat%s' % (mass, output_suffix),
-                bins=flat_bins,
-                plot_signal_significance=False,
-                signal_on_top=True,
-                systematics=SYSTEMATICS if args.systematics else None)
+                # determine N bins below max_cut or N+1 bins over the whole signal
+                # score range such that the background is flat
+                # this will require a binary search for each bin boundary since the
+                # events are weighted.
+                """
+                flat_bins = search_flat_bins(
+                        bkg_scores, min_score_signal, max_score_signal,
+                        int(sum(bkg_hist) / 20))
+                """
+                flat_bins = search_flat_bins(
+                        bkg_scores, min_score_signal, max_cut, 5)
+                # one bin above max_cut
+                flat_bins.append(max_score_signal)
 
-            hist_template = Hist(flat_bins)
+                plot_clf(
+                    background_scores=bkg_scores,
+                    signal_scores=sig_scores,
+                    category=category,
+                    category_name=cat_info['name'],
+                    signal_scale=50,
+                    name='%d_ROI_flat%s' % (mass, output_suffix),
+                    bins=flat_bins,
+                    plot_signal_significance=False,
+                    signal_on_top=True,
+                    systematics=SYSTEMATICS if args.systematics else None)
+
+                hist_template = Hist(flat_bins)
+            else:
+                print "constant-width bins"
+                hist_template = Hist(cat_info['limitbins'],
+                        min_score_signal, max_score_signal)
 
             if args.unblind:
                 data_hist = hist_template.Clone(name=data.name + '_%s' % mass)
@@ -922,19 +966,9 @@ for category, cat_info in categories_controls:
                 f.cd()
                 data_hist.Write()
 
-            for d in (bkg_scores, sig_scores):
-                for samp, scores_dict in d:
-                    for sys_term, (scores, weights) in scores_dict.items():
-                        if sys_term == 'NOMINAL':
-                            suffix = ''
-                        else:
-                            suffix = '_' + '_'.join(sys_term)
-                        hist = hist_template.Clone(
-                                name=samp.name + ('_%d' % mass) + suffix)
-                        for score, w in zip(scores, weights):
-                            hist.Fill(score, w)
-                        f.cd()
-                        hist.Write()
+            write_score_hists(f, mass, bkg_scores, hist_template, no_neg_bins=True)
+            write_score_hists(f, mass, sig_scores, hist_template, no_neg_bins=True)
+
         f.close()
 
 # save all variable plots in one large multipage pdf
