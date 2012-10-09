@@ -873,7 +873,7 @@ for category, cat_info in categories_controls:
                 systematics=SYSTEMATICS if args.systematics else None)
 
             # determine location that maximizes signal significance
-            bkg_hist = Hist(50, min_score_signal, max_score_signal)
+            bkg_hist = Hist(40, min_score_signal, max_score_signal)
             sig_hist = bkg_hist.Clone()
             # fill background
             for bkg_sample, scores_dict in bkg_scores:
@@ -884,7 +884,7 @@ for category, cat_info in categories_controls:
                 for score, w in zip(*scores_dict['NOMINAL']):
                     sig_hist.Fill(score, w)
             # determine maximum significance
-            sig, max_sig, max_cut = significance(sig_hist, bkg_hist, min_bkg=5)
+            sig, max_sig, max_cut = significance(sig_hist, bkg_hist, min_bkg=1)
             print "maximum signal significance of %f at score > %f" % (
                     max_sig, max_cut)
 

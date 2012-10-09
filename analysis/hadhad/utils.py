@@ -606,7 +606,7 @@ def plot_significance(signal, background, ax):
     print "Max signal significance %.2f at %.2f" % (max_sig, max_cut)
 
     sig_ax.plot(bins, sig, 'k--', label='Signal Significance')
-    sig_ax.set_ylabel(r'$S / \sqrt{B}$',
+    sig_ax.set_ylabel(r'$S / \sqrt{S + B}$',
             color='black', fontsize=15, position=(0., 1.), va='top')
     #sig_ax.tick_params(axis='y', colors='red')
     sig_ax.set_ylim(0, max_sig * 2)
@@ -634,7 +634,7 @@ def significance(signal, background, min_bkg=0):
     B = bkg_counts[::-1].cumsum()[::-1]
     exclude = B < min_bkg
     # S / sqrt(S + B)
-    sig = np.ma.fix_invalid(np.divide(S, np.sqrt(B)), fill_value=0.)
+    sig = np.ma.fix_invalid(np.divide(S, np.sqrt(S + B)), fill_value=0.)
     bins = list(background.xedges())[:-1]
     max_bin = np.argmax(np.ma.masked_array(sig, mask=exclude))
     max_sig = sig[max_bin]
