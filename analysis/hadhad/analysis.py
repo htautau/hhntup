@@ -799,10 +799,6 @@ for category, cat_info in categories_controls:
         print "Plotting classifier output in signal region..."
         print signal_region
 
-        # determine min and max scores
-        min_score = 1.
-        max_score = 0.
-
         if args.unblind:
             # data scores
             data_scores, _ = data.scores(clf,
@@ -811,13 +807,6 @@ for category, cat_info in categories_controls:
                     category=category,
                     region=target_region,
                     cuts=signal_region)
-
-            _min = data_scores.min()
-            _max = data_scores.max()
-            if _min < min_score:
-                min_score = _min
-            if _max > max_score:
-                max_score = _max
 
         # background model scores
         bkg_scores = []
@@ -831,14 +820,6 @@ for category, cat_info in categories_controls:
 
             for sys_term, (scores, weights) in scores_dict.items():
                 assert len(scores) == len(weights)
-                if len(scores) == 0:
-                    continue
-                _min = np.min(scores)
-                _max = np.max(scores)
-                if _min < min_score:
-                    min_score = _min
-                if _max > max_score:
-                    max_score = _max
 
             bkg_scores.append((bkg, scores_dict))
 
@@ -875,10 +856,6 @@ for category, cat_info in categories_controls:
                         continue
                     _min = np.min(scores)
                     _max = np.max(scores)
-                    if _min < min_score:
-                        min_score = _min
-                    if _max > max_score:
-                        max_score = _max
                     if _min < min_score_signal:
                         min_score_signal = _min
                     if _max > max_score_signal:
