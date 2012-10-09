@@ -158,6 +158,7 @@ def draw(model,
          data=None,
          signal=None,
          signal_scale=1.,
+         signal_on_top=False,
          plot_signal_significance=True,
          units=None,
          range=None,
@@ -270,6 +271,21 @@ def draw(model,
     if model_colour_map is not None:
         set_colours(model, model_colour_map)
 
+    if signal is not None:
+        if not isinstance(signal, (list, tuple)):
+            signal = [signal]
+        if signal_scale != 1.:
+            scaled_signal = []
+            for sig in signal:
+                scaled_h = sig * signal_scale
+                scaled_h.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(),
+                    signal_scale))
+                scaled_signal.append(scaled_h)
+        else:
+            scaled_signal = signal
+        if signal_colour_map is not None:
+            set_colours(scaled_signal, signal_colour_map)
+
     if root:
         # plot model stack with ROOT
         hist_pad.cd()
@@ -280,41 +296,28 @@ def draw(model,
             model_stack.Add(hist)
         model_stack.Draw()
     else:
-        model_bars = rplt.bar(model, linewidth=0,
-                stacked=True, axes=hist_ax,
+        model_bars = rplt.bar(
+                model + scaled_signal if (signal is not None and signal_on_top)
+                else model,
+                linewidth=0,
+                stacked=True,
+                axes=hist_ax,
                 ypadding=ypadding)
+        if signal is not None and signal_on_top:
+            signal_bars = model_bars[len(model):]
+            model_bars = model_bars[:len(model)]
 
-    if signal is not None:
-        if signal_scale != 1.:
-            if isinstance(signal, (list, tuple)):
-                scaled_signal = []
-                for sig in signal:
-                    scaled_h = sig * signal_scale
-                    scaled_h.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(),
-                        signal_scale))
-                    scaled_signal.append(scaled_h)
-            else:
-                scaled_signal = signal * signal_scale
-                scaled_signal.SetTitle(r'%s $\times\/%d$' % (signal.GetTitle(),
-                    signal_scale))
+    if signal is not None and not signal_on_top:
+        if root:
+            pass
+        elif len(signal) > 1:
+            signal_bars = rplt.bar(scaled_signal, linewidth=0,
+                    stacked=True, #yerr='quadratic',
+                    axes=hist_ax, alpha=.8, ypadding=ypadding)
         else:
-            scaled_signal = signal
-        if isinstance(scaled_signal, (list, tuple)):
-            if signal_colour_map is not None:
-                set_colours(scaled_signal, signal_colour_map)
-            if root:
-                pass
-            else:
-                signal_bars = rplt.bar(scaled_signal, linewidth=0,
-                        stacked=True, #yerr='quadratic',
-                        axes=hist_ax, alpha=.8, ypadding=ypadding)
-        else:
-            if root:
-                pass
-            else:
-                _, _, signal_bars = rplt.hist(scaled_signal,
-                        histtype='stepfilled',
-                        axes=hist_ax, ypadding=ypadding)
+            _, _, signal_bars = rplt.hist(scaled_signal[0],
+                    histtype='stepfilled',
+                    axes=hist_ax, ypadding=ypadding)
         if plot_signal_significance:
             plot_significance(signal, model, ax=hist_ax)
 

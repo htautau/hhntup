@@ -909,6 +909,7 @@ for category, cat_info in categories_controls:
                 name='%d_ROI_flat%s' % (mass, output_suffix),
                 bins=flat_bins,
                 plot_signal_significance=False,
+                signal_on_top=True,
                 systematics=SYSTEMATICS if args.systematics else None)
 
             hist_template = Hist(flat_bins)

@@ -157,6 +157,7 @@ def plot_clf(
         bins=10,
         min_score=0,
         max_score=1,
+        signal_on_top=False,
         plot_signal_significance=True,
         systematics=None):
 
@@ -236,6 +237,7 @@ def plot_clf(
              range=(min_score, max_score),
              show_ratio=data_hist is not None,
              model_colour_map=None,
+             signal_on_top=signal_on_top,
              systematics=systematics)
     return bkg_hists, sig_hists, data_hist
 
