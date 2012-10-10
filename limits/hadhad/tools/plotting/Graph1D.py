@@ -361,7 +361,7 @@ class Graph1D:
 
 
     #-----------------------------------------------------------
-    def draw(self, option=''):
+    def draw(self, option='', format='png'):
         """Print the histogram to file"""
 
         self.transferPoints()
@@ -404,7 +404,7 @@ class Graph1D:
                 TL.DrawLatex(self.__labelPositions[i][0], self.__labelPositions[i][1], self.__labels[i])
 
         #Print the canvas
-        self.__canvas.Print(self.__Name + '.png')
+        self.__canvas.Print(self.__Name + '.' + format)
 
         return
 

@@ -40,7 +40,8 @@ for category in ['ggf', 'boosted', 'vbf', 'combined']:
     g.add(palette.bandyellow, 'band', '#pm2#sigma')
     g.add(palette.bandgreen, 'band', '#pm1#sigma')
     g.add('#000000', 'dashline', 'Expected CLs')
-    g.addLine(97.7 , 1, 152.3, 1)
+    if category in ('combined', 'vbf'):
+        g.addLine(115 , 1, 150, 1)
     g.addLabel('ATLASPreliminary', 0.20, 0.87)
     g.addLabel('#tau_{h}#tau_{h} channel', 0.6, 0.87)
     g.addLabel('%s category' % category, 0.6, 0.79)
@@ -59,4 +60,4 @@ for category in ['ggf', 'boosted', 'vbf', 'combined']:
         g.fill(1, mass[i], median[i], 0, 0, sigminus1error, sigplus1error)
         g.fill(0, mass[i], median[i], 0, 0, sigminus2error, sigplus2error)
 
-    g.draw('L')
+    g.draw('L', format='eps')
