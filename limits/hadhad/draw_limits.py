@@ -8,7 +8,7 @@ from tools.plotting import palette
 
 for category in ['ggf', 'boosted', 'vbf', 'combined']:
     #Load data points
-    mass      = range(100, 155, 5)
+    mass      = range(115, 155, 5)
     sigminus2 = []
     sigminus1 = []
     median    = []

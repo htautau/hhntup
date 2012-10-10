@@ -78,6 +78,11 @@ class FourVectModel(TreeModel):
 class Event(FourVectModel.prefix('resonance_') +
             FourVectModel.prefix('radiative_')):
 
+    collision_energy = FloatCol()
+
+    event = IntCol()
+    channel = IntCol()
+
     match_collision = BoolCol(default=False)
     matched = BoolCol(False)
 
@@ -88,6 +93,9 @@ class Event(FourVectModel.prefix('resonance_') +
     sum_et = FloatCol()
 
     radiative_ngamma = IntCol()
+    radiative_ngamma_5 = IntCol()
+    radiative_ngamma_10 = IntCol()
+    radiative_et_scalarsum = FloatCol()
 
 
 class TrueTau(FourVectModel +
