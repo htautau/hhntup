@@ -195,3 +195,10 @@ data12_8TeV.00209980.physics_Egamma.merge.NTUP_TAU.f476_m1223_p1130_p1174/
 data12_8TeV.00209994.physics_Egamma.merge.NTUP_TAU.f476_m1223_p1130_p1174/
 data12_8TeV.00209995.physics_Egamma.merge.NTUP_TAU.f476_m1223_p1130_p1174/
 data12_8TeV.00210302.physics_Egamma.merge.NTUP_TAU.f476_m1223_p1130_p1174/
+data12_8TeV.00210308.physics_Egamma.merge.NTUP_TAU.f476_m1223_p1130_p1174/
+data12_8TeV.00211522.physics_Egamma.merge.NTUP_TAU.f479_m1228_p1130_p1174/
+data12_8TeV.00211620.physics_Egamma.merge.NTUP_TAU.f479_m1228_p1130_p1174/
+data12_8TeV.00211670.physics_Egamma.merge.NTUP_TAU.f479_m1228_p1130_p1174/
+data12_8TeV.00211697.physics_Egamma.merge.NTUP_TAU.f479_m1228_p1130_p1174/
+data12_8TeV.00211772.physics_Egamma.merge.NTUP_TAU.f479_m1228_p1130_p1174/
+data12_8TeV.00211787.physics_Egamma.merge.NTUP_TAU.f479_m1228_p1130_p1174/

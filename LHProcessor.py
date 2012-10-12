@@ -337,10 +337,10 @@ class LHProcessor(ATLASStudent):
             tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x  = tau_x
             tree.lep_x = lep_x
-            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Lep, METx, METy, sumET, leptype)
-            tree.mass_mmc_tau_lep = mmc_mass
-            tree.pt_mmc_tau_lep = mmc_pt.Pt()
-            tree.met_mmc_tau_lep = mmc_met.Mod()
+            #mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Lep, METx, METy, sumET, leptype)
+            tree.mass_mmc_tau_lep = 0#mmc_mass
+            tree.pt_mmc_tau_lep = 0#mmc_pt.Pt()
+            tree.met_mmc_tau_lep = 0#mmc_met.Mod()
 
 
 

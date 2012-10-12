@@ -399,7 +399,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigLoose == 1) : return False
+    #if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True
@@ -809,16 +809,89 @@ class HasTau(EventFilter):
         return len(event.taus) > 0
 
 
+############################################################
+# AntiVBF filter tools
+############################################################
+
+## Overlap removal tools
+def getPhotons(event):
+    """Returns the photons to be removed from the truth jets"""
+
+    truthPhotons = []
+
+    for p in event.mc:
+        if not p.pdgId == 22: continue
+        if not p.status == 1: continue
+        if not p.fourvect.Pt() > 15*GeV: continue
+        if not abs(p.fouvect.Eta()) < 2.5: continue
+        truthPhotons.append(p.fourvect)
+
+    return truthPhotons
+
+
+def getElectrons(event):
+    """Returns the electrons to be removed from the truth jets"""
+
+    truthElectrons = []
+
+    for p in event.mc:
+        if not abs(p.pdgId) == 11: continue
+        if not p.status == 1: continue
+        if not p.fourvect.Pt() > 15*GeV: continue
+        if not abs(p.fouvect.Eta()) < 2.5: continue
+        truthElectrons.append(p.fourvect)
+
+    return truthElectrons
+
+
+def getTaus(event):
+    """Returns the hadronic taus to be removed from the truth jets"""
+
+    truthTaus = []
+
+    n = event.trueTau_n
+
+    for i in range(n):
+        pt  = event.trueTau_vis_Et[i]
+        eta = event.trueTau_vis_eta[i]
+        
+        if not pt > 15*GeV: continue
+        if not eta < 2.5: continue
+
+        phi = event.trueTau_vis_phi[i]
+
+        vector = TLorentzVector()
+        vector.SetPtEtaPhiM(pt, eta, phi, 0)
+        truthTaus.append(vector)
+
+    return truthTaus
+
+
+def truthJetOverlap(truthJet, vectors):
+    """ Test the dR overlap of truthJet with all vectors """
+
+    for v in vectors:
+        dR = truthJet.DeltaR(v)
+        ptRatio = (truthJet.Pt() - v.Pt())/v.Pt()
+        if dR < 0.05 and ptRatio < 0.3:
+            return True
+
+    return False
+            
+
 class AntiVBFFilter(EventFilter):
     """Keep events that don't pass the VBF filter"""
 
     def passes(self, event):
 
         jets = []
+
+        overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
         
         for jet in event.truthjets:
             if jet.fourvect.Pt() < 15*GeV: continue
             if abs(jet.fourvect.Eta()) > 5.0: continue
+            if truthJetOverlap(jet.fourvect, overlapParticles): continue
             jets.append(jet.fourvect)
 
         passNjets = False
