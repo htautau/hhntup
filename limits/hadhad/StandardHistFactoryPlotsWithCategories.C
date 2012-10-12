@@ -1,1 +1,0 @@
-../common/RooStatsTools/StandardHistFactoryPlotsWithCategories.C

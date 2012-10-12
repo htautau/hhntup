@@ -158,6 +158,7 @@ def draw(model,
          data=None,
          signal=None,
          signal_scale=1.,
+         signal_on_top=False,
          plot_signal_significance=True,
          units=None,
          range=None,
@@ -270,6 +271,21 @@ def draw(model,
     if model_colour_map is not None:
         set_colours(model, model_colour_map)
 
+    if signal is not None:
+        if not isinstance(signal, (list, tuple)):
+            signal = [signal]
+        if signal_scale != 1.:
+            scaled_signal = []
+            for sig in signal:
+                scaled_h = sig * signal_scale
+                scaled_h.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(),
+                    signal_scale))
+                scaled_signal.append(scaled_h)
+        else:
+            scaled_signal = signal
+        if signal_colour_map is not None:
+            set_colours(scaled_signal, signal_colour_map)
+
     if root:
         # plot model stack with ROOT
         hist_pad.cd()
@@ -280,41 +296,28 @@ def draw(model,
             model_stack.Add(hist)
         model_stack.Draw()
     else:
-        model_bars = rplt.bar(model, linewidth=0,
-                stacked=True, axes=hist_ax,
+        model_bars = rplt.bar(
+                model + scaled_signal if (signal is not None and signal_on_top)
+                else model,
+                linewidth=0,
+                stacked=True,
+                axes=hist_ax,
                 ypadding=ypadding)
+        if signal is not None and signal_on_top:
+            signal_bars = model_bars[len(model):]
+            model_bars = model_bars[:len(model)]
 
-    if signal is not None:
-        if signal_scale != 1.:
-            if isinstance(signal, (list, tuple)):
-                scaled_signal = []
-                for sig in signal:
-                    scaled_h = sig * signal_scale
-                    scaled_h.SetTitle(r'%s $\times\/%d$' % (sig.GetTitle(),
-                        signal_scale))
-                    scaled_signal.append(scaled_h)
-            else:
-                scaled_signal = signal * signal_scale
-                scaled_signal.SetTitle(r'%s $\times\/%d$' % (signal.GetTitle(),
-                    signal_scale))
+    if signal is not None and not signal_on_top:
+        if root:
+            pass
+        elif len(signal) > 1:
+            signal_bars = rplt.bar(scaled_signal, linewidth=0,
+                    stacked=True, #yerr='quadratic',
+                    axes=hist_ax, alpha=.8, ypadding=ypadding)
         else:
-            scaled_signal = signal
-        if isinstance(scaled_signal, (list, tuple)):
-            if signal_colour_map is not None:
-                set_colours(scaled_signal, signal_colour_map)
-            if root:
-                pass
-            else:
-                signal_bars = rplt.bar(scaled_signal, linewidth=0,
-                        stacked=True, #yerr='quadratic',
-                        axes=hist_ax, alpha=.8, ypadding=ypadding)
-        else:
-            if root:
-                pass
-            else:
-                _, _, signal_bars = rplt.hist(scaled_signal,
-                        histtype='stepfilled',
-                        axes=hist_ax, ypadding=ypadding)
+            _, _, signal_bars = rplt.hist(scaled_signal[0],
+                    histtype='stepfilled',
+                    axes=hist_ax, ypadding=ypadding)
         if plot_signal_significance:
             plot_significance(signal, model, ax=hist_ax)
 
@@ -370,12 +373,17 @@ def draw(model,
         if signal is not None:
             total_signal, high_band_signal, low_band_signal = uncertainty_band(
                     signal, systematics)
+            high = (total_signal + high_band_signal) * signal_scale
+            low = (total_signal - low_band_signal) * signal_scale
+            if signal_on_top:
+                high += total_model
+                low += total_model
             if root:
                 pass
             else:
                 rplt.fill_between(
-                        (total_signal + high_band_signal) * signal_scale,
-                        (total_signal - low_band_signal) * signal_scale,
+                        high,
+                        low,
                         edgecolor='green',
                         linewidth=0,
                         facecolor=(0,0,0,0),
@@ -598,7 +606,7 @@ def plot_significance(signal, background, ax):
     print "Max signal significance %.2f at %.2f" % (max_sig, max_cut)
 
     sig_ax.plot(bins, sig, 'k--', label='Signal Significance')
-    sig_ax.set_ylabel(r'$S / \sqrt{B}$',
+    sig_ax.set_ylabel(r'$S / \sqrt{S + B}$',
             color='black', fontsize=15, position=(0., 1.), va='top')
     #sig_ax.tick_params(axis='y', colors='red')
     sig_ax.set_ylim(0, max_sig * 2)
@@ -613,7 +621,7 @@ def plot_significance(signal, background, ax):
     """
 
 
-def significance(signal, background):
+def significance(signal, background, min_bkg=0):
 
     if isinstance(signal, (list, tuple)):
         signal = sum(signal)
@@ -624,10 +632,11 @@ def significance(signal, background):
     # reverse cumsum
     S = sig_counts[::-1].cumsum()[::-1]
     B = bkg_counts[::-1].cumsum()[::-1]
+    exclude = B < min_bkg
     # S / sqrt(S + B)
-    sig = np.ma.fix_invalid(np.divide(S, np.sqrt(B)), fill_value=0.)
+    sig = np.ma.fix_invalid(np.divide(S, np.sqrt(S + B)), fill_value=0.)
     bins = list(background.xedges())[:-1]
-    max_bin = np.argmax(sig)
+    max_bin = np.argmax(np.ma.masked_array(sig, mask=exclude))
     max_sig = sig[max_bin]
     max_cut = bins[max_bin]
     return sig, max_sig, max_cut

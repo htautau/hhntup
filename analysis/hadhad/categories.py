@@ -36,6 +36,7 @@ CATEGORIES = {
         'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 5,
         'limitbins': 12,
+        'limitbinning': 'variable',
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
@@ -71,6 +72,7 @@ CATEGORIES = {
         'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 5,
         'limitbins': 12,
+        'limitbinning': 'constant',
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
@@ -97,6 +99,7 @@ CATEGORIES = {
         'cuts': COMMON_CUTS & ID_MEDIUM,
         'fitbins': 8,
         'limitbins': 13,
+        'limitbinning': 'variable',
         'qcd_shape_region': 'SS',
         'target_region': 'OS',
         'features': [
