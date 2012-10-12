@@ -63,6 +63,11 @@ class SkimExtraModel(TreeModel):
 class LHSkim(ATLASStudent):
 
     def work(self):
+        
+        # Determine year
+        YEAR = 2012
+        if self.metadata.year == 2011:
+            YEAR = 2011
 
         # Initialize the TreeChain of all input files
         intree = TreeChain(self.metadata.treename,
