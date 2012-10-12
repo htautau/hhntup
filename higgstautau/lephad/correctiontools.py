@@ -282,7 +282,7 @@ def MuonSF(event, datatype, pileup_tool):
     Apply Muon Efficiency correction for trigger and others
     """
     # Apply only on MC
-    if datatype != datasets.MC: return 1.0
+    if datatype == datasets.DATA: return 1.0
 
     # Weight
     w = 1.0
@@ -299,10 +299,17 @@ def MuonSF(event, datatype, pileup_tool):
 
 ## Scale factor for lephad triggers
 from ROOT import HSG4TriggerSF
-def MuonLTTSF(muon, runNumber):
+def MuonLTTSF(muon, runNumber, datatype):
 
     sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
-    return sfTool.getSFMuon(muon.fourvect, runNumber, 0)
+    w = 1.0
+
+    if datatype == datasets.MC:
+        w = sfTool.getSFMuon(muon.fourvect, runNumber, 0)
+    else:
+        w = sfTool.getDataEffMuon(muon.fourvect, runNumber, 0)
+
+    return w
         
 
 
@@ -390,15 +397,21 @@ def LeptonSLTSF(event, datatype):
         elTLV.SetPtEtaPhiE(pt,eta,phi,E)
         v_elTLVs.push_back(elTLV)
     
-    trigSF = (leptonTriggerSF.GetTriggerSF(event.RunNumber, False, v_muTLVs, 1, v_elTLVs, 2)).first
+    trigSF = (leptonTriggerSF.GetTriggerSF(event.RunNumber, False, v_muTLVs, 1, v_elTLVs, 2, 0)).first
 
     return trigSF
 
 ## Scale factor for lephad triggers
-def ElectronLTTSF(electron, runNumber):
+def ElectronLTTSF(electron, runNumber, datatype):
 
+    w = 1.0
     sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
-    return sfTool.getSFElec(electron.fourvect, runNumber, 0)
+    
+    if datatype == datasets.MC:
+        w = sfTool.getSFElec(electron.fourvect, runNumber, 0)
+    else:
+        w = sfTool.getDataEffElec(electron.fourvect, runNumber, 0)
+    return w
 
 
 

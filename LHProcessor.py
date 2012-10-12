@@ -487,9 +487,9 @@ class LHProcessor(ATLASStudent):
                     leptonsltsf_w = LeptonSLTSF(event, self.metadata.datatype)
                 else:
                     if event.leptonType == 'mu':
-                        muonlltsf_w = MuonLTTSF(Lep, event.RunNumber)
+                        muonlltsf_w = MuonLTTSF(Lep, event.RunNumber, self.metadata.datatype)
                     if event.leptonType == 'e':
-                        electronlltsf_w = ElectronLTTSF(Lep, event.RunNumber)
+                        electronlltsf_w = ElectronLTTSF(Lep, event.RunNumber, self.metadata.datatype)
 
                 #Tau trigger scale factors
                 taulttsf_w = EmbedTauTriggerCorr(Tau, npileup_vtx, event.RunNumber)
