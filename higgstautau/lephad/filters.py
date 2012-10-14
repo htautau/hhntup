@@ -823,7 +823,7 @@ def getPhotons(event):
         if not p.pdgId == 22: continue
         if not p.status == 1: continue
         if not p.fourvect.Pt() > 15*GeV: continue
-        if not abs(p.fouvect.Eta()) < 2.5: continue
+        if not abs(p.fourvect.Eta()) < 2.5: continue
         truthPhotons.append(p.fourvect)
 
     return truthPhotons
@@ -838,7 +838,7 @@ def getElectrons(event):
         if not abs(p.pdgId) == 11: continue
         if not p.status == 1: continue
         if not p.fourvect.Pt() > 15*GeV: continue
-        if not abs(p.fouvect.Eta()) < 2.5: continue
+        if not abs(p.fourvect.Eta()) < 2.5: continue
         truthElectrons.append(p.fourvect)
 
     return truthElectrons
@@ -860,7 +860,7 @@ def getTaus(event):
 
         phi = event.trueTau_vis_phi[i]
 
-        vector = TLorentzVector()
+        vector = LorentzVector()
         vector.SetPtEtaPhiM(pt, eta, phi, 0)
         truthTaus.append(vector)
 
