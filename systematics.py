@@ -3,8 +3,10 @@ import copy
 
 # common systematics
 SYSTEMATICS_COMMON = [
-    ('JES_UP', 'TES_UP'),
-    ('JES_DOWN', 'TES_DOWN'),
+    ('JES_UP',),
+    ('TES_UP',),
+    ('JES_DOWN',),
+    ('TES_DOWN',),
     ('JER_UP',),
 ] # ADD MORE HERE
 
