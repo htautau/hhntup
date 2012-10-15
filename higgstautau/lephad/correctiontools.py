@@ -236,7 +236,7 @@ def TauEfficiencySF(event, datatype):
     """
 
     # Apply only on MC
-    if datatype != datasets.MC: return 1.0
+    if datatype == datasets.DATA: return 1.0
 
     for tau in event.taus:
         #Correct 1p taus/ electron fake rate
@@ -400,6 +400,7 @@ def LeptonSLTSF(event, datatype):
     trigSF = (leptonTriggerSF.GetTriggerSF(event.RunNumber, False, v_muTLVs, 1, v_elTLVs, 2, 0)).first
 
     return trigSF
+
 
 ## Scale factor for lephad triggers
 def ElectronLTTSF(electron, runNumber, datatype):

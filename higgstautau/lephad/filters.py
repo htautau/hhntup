@@ -593,12 +593,16 @@ class LeptonSelection(EventFilter):
                  
             if event.leptonType == 'e':
                 if Pt > 17*GeV:
+                    if Pt <= 25*GeV:
+                        event.isLTT = True
                     return True
                 else:
                     return False
 
             if event.leptonType == 'mu':
                 if Pt > 17*GeV:
+                    if Pt <= 22*GeV:
+                        event.isLTT = True
                     return True
                 else:
                     return False
@@ -822,8 +826,8 @@ def getPhotons(event):
     for p in event.mc:
         if not p.pdgId == 22: continue
         if not p.status == 1: continue
-        if not p.fourvect.Pt() > 15*GeV: continue
-        if not abs(p.fourvect.Eta()) < 2.5: continue
+        if not p.fourvect.Pt() >= 15*GeV: continue
+        if not abs(p.fourvect.Eta()) <= 2.5: continue
         truthPhotons.append(p.fourvect)
 
     return truthPhotons
@@ -837,8 +841,8 @@ def getElectrons(event):
     for p in event.mc:
         if not abs(p.pdgId) == 11: continue
         if not p.status == 1: continue
-        if not p.fourvect.Pt() > 15*GeV: continue
-        if not abs(p.fourvect.Eta()) < 2.5: continue
+        if not p.fourvect.Pt() >= 15*GeV: continue
+        if not abs(p.fourvect.Eta()) <= 2.5: continue
         truthElectrons.append(p.fourvect)
 
     return truthElectrons
@@ -849,20 +853,28 @@ def getTaus(event):
 
     truthTaus = []
 
-    n = event.trueTau_n
+    for p in event.mc:
+        if not abs(p.pdgId) == 15: continue
+        if p.status == 3: continue
 
-    for i in range(n):
-        pt  = event.trueTau_vis_Et[i]
-        eta = event.trueTau_vis_eta[i]
+        leptonic = False
+
+        tauNeutrino = LorentzVector()
         
-        if not pt > 15*GeV: continue
-        if not eta < 2.5: continue
+        for c in p.iter_children():
+            if abs(c.pdgId) == 12: leptonic = True
+            if abs(c.pdgId) == 14: leptonic = True
+            if abs(c.pdgId) == 15: leptonic = True
+            if abs(c.pdgId) == 16: tauNeutrino = c.fourvect
 
-        phi = event.trueTau_vis_phi[i]
+        if leptonic: continue
 
-        vector = LorentzVector()
-        vector.SetPtEtaPhiM(pt, eta, phi, 0)
-        truthTaus.append(vector)
+        visTau = p.fourvect - tauNeutrino
+
+        if not visTau.Pt() >= 15*GeV: continue
+        if not abs(visTau.Eta()) <= 2.5: continue
+
+        truthTaus.append(visTau)
 
     return truthTaus
 
@@ -872,8 +884,8 @@ def truthJetOverlap(truthJet, vectors):
 
     for v in vectors:
         dR = truthJet.DeltaR(v)
-        ptRatio = (truthJet.Pt() - v.Pt())/v.Pt()
-        if dR < 0.05 and ptRatio < 0.3:
+        ptRatio = abs(truthJet.Pt() - v.Pt())/v.Pt()
+        if dR <= 0.05 and ptRatio <= 0.3:
             return True
 
     return False
