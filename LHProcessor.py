@@ -465,7 +465,7 @@ class LHProcessor(ATLASStudent):
 
                 ## Apply mc event weight:
                 try:
-                    mc_w = event.mc_weight[0]
+                    mc_w = event.mcevt_weight[0][0]
                 except AttributeError:
                     pass
 
