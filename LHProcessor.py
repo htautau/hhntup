@@ -32,6 +32,7 @@ from higgstautau.pileup import TPileupReweighting
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.corrections import reweight_ggf
+from higgstautau.embedding import EmbeddingPileupPatch
 
 from goodruns import GRL
 import subprocess
@@ -144,38 +145,32 @@ class LHProcessor(ATLASStudent):
         event_filters = EventFilterList([
             PrepareInputTree(),
             Trigger(),
-            GRLFilter(self.grl, passthrough=self.metadata.datatype != datasets.DATA),
-            JetCalibration(
-                year=YEAR,
-                datatype=self.metadata.datatype,
-                verbose=False),
+            GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),
+            EmbeddingPileupPatch( passthrough=datatype != datasets.EMBED ),
+            JetCalibration( year=YEAR, datatype=self.metadata.datatype, verbose=False ),
             PriVertex(),
-            Systematics(
-                terms=self.args.syst_terms,
-                year=YEAR,
-                datatype=self.metadata.datatype,
-                verbose=VERBOSE),
+            Systematics( terms=self.args.syst_terms, year=YEAR, datatype=self.metadata.datatype, verbose=VERBOSE ),
             JetPreSelection(),
-            MuonPtSmearing(datatype=self.metadata.datatype),
+            MuonPtSmearing( datatype=self.metadata.datatype ),
             MuonPreSelection(),
-            EgammaERescaling(datatype=self.metadata.datatype),
+            EgammaERescaling( datatype=self.metadata.datatype ),
             ElectronPreSelection(),
             ElectronEtaSelection(),
             JetOverlapRemoval(),
-            JetCleaning(self.metadata.datatype, YEAR),
+            JetCleaning( self.metadata.datatype, YEAR ),
             ElectronLArHole(),
             TauHasTrack(1),
             TauLArHole(1),
-            LArHole(datatype=self.metadata.datatype),
+            LArHole( datatype=self.metadata.datatype ),
             LArError(),
             LeptonOverlapRemoval(),
             DileptonVeto(),
-            LeptonSelection(datatype=self.metadata.datatype, stream=self.metadata.stream),
+            LeptonSelection( datatype=self.metadata.datatype, stream=self.metadata.stream ),
             TauPreSelection(),
             TauSelection(),
             JetSelection(),
             FinalOverlapRemoval(),
-            ElectronIsoCorrection(datatype=self.metadata.datatype),
+            ElectronIsoCorrection( datatype=self.metadata.datatype ),
         #AntiVBFFilter()
         ])
 
@@ -415,7 +410,7 @@ class LHProcessor(ATLASStudent):
             if self.metadata.datatype == datasets.MC:
                 ## Apply mc event weight:
                 try:
-                    event_weight *= event.mc_weight[0]
+                    event_weight *= event.mcevt_weight[0][0]
                 except AttributeError:
                     pass
 

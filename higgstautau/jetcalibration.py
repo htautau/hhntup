@@ -47,6 +47,7 @@ class JetCalibration(EventFilter):
 
         # For the pile-up correction, we need mu and NPV(2+ tracks)
         mu = event.averageIntPerXing
+                
         NPV = 0 # count the number of vertices with 2 or more tracks
         for vertex in event.vertices:
             if vertex.nTracks >= 2:
