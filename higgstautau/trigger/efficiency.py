@@ -3,7 +3,6 @@ from operator import itemgetter
 import ROOT
 from rootpy.tree.filtering import *
 from atlastools.units import GeV
-from externaltools import TauTriggerCorrections
 from atlastools import datasets
 
 from ..filters import pileup_vertex_selection
@@ -26,9 +25,10 @@ class TauTriggerEfficiency(EventFilter):
             self.year = year % 1000
             self.datatype = datatype
             self.tes_systematic = tes_systematic
-            base = TauTriggerCorrections.RESOURCE_PATH
 
             if self.year == 11:
+                from externaltools.bundle_2011 import TauTriggerCorrections
+                base = TauTriggerCorrections.RESOURCE_PATH
                 if datatype == datasets.MC:
                     self.correct_20 = ROOT.TauTriggerCorrections(os.path.join(base,
                         'triggerSF_EF_tau20_medium1.root'))
