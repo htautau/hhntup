@@ -60,8 +60,7 @@ class PileupReweight(EventFilter):
                 self.pileup_tool.SetDataScaleFactors(1./1.11)
                 self.pileup_tool.AddLumiCalcFile(
                         'lumi/2012/hadhad/'
-                        'ilumicalc_histograms_None_200841-205113.root')
-                # UPDATE THIS TEMPLATE FILE!!
+                        'ilumicalc_histograms_EF_tau29Ti_medium1_tau20Ti_medium1_200842-210308.root')
             else:
                 raise ValueError('No pileup reweighting defined for year %d' %
                         year)

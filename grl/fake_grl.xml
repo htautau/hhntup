@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">
+<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on 2012-10-18 at 16:15:20 -->
+<LumiRangeCollection>
+  <NamedLumiRange>
+    <Name>All_Good</Name>
+    <Version>2.1</Version>
+  </NamedLumiRange>
+</LumiRangeCollection>

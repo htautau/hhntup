@@ -48,6 +48,7 @@ class hhskim(ATLASStudent):
         parser = ArgumentParser()
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--no-trigger', action='store_true', default=False)
+        parser.add_argument('--no-grl', action='store_true', default=False)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = set([
@@ -59,6 +60,7 @@ class hhskim(ATLASStudent):
         datatype = self.metadata.datatype
         year = self.metadata.year
         no_trigger = self.args.no_trigger
+        no_grl = self.args.no_grl
 
         if datatype != datasets.EMBED:
             # merge TrigConfTrees
@@ -128,8 +130,7 @@ class hhskim(ATLASStudent):
             #    count_funcs=count_funcs),
             GRLFilter(
                 self.grl,
-                passthrough=(datatype != datasets.DATA
-                             or year == 2012),
+                passthrough=(no_grl or datatype != datasets.DATA),
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
                 passthrough=year > 2011 or datatype != datasets.EMBED,
