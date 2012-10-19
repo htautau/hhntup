@@ -7,7 +7,7 @@ parser.add_argument('--student', default='LHProcessor.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=12)
 parser.add_argument('--queue', default='medium')
-parser.add_argument('--output-path', default='ntuples/lephadTotal')
+parser.add_argument('--output-path', default='ntuples/lephadComposite')
 parser.add_argument('--db', default='datasets_lh')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
@@ -26,7 +26,6 @@ hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.michel.sfu.txt')
 
 datasets = [
-    'T1_McAtNlo_Jimmy.mc11c',
     'AlpgenJimmyZeeNp0_pt20.mc11c',
     'AlpgenJimmyZtautauNp0_pt20.mc11c',
     ]

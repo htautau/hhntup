@@ -146,7 +146,7 @@ class LHProcessor(ATLASStudent):
             PrepareInputTree(),
             Trigger(),
             GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),
-            EmbeddingPileupPatch( passthrough=datatype != datasets.EMBED ),
+            EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
             JetCalibration( year=YEAR, datatype=self.metadata.datatype, verbose=False ),
             PriVertex(),
             Systematics( terms=self.args.syst_terms, year=YEAR, datatype=self.metadata.datatype, verbose=VERBOSE ),
@@ -155,8 +155,8 @@ class LHProcessor(ATLASStudent):
             MuonPreSelection(),
             EgammaERescaling( datatype=self.metadata.datatype ),
             ElectronPreSelection(),
-            ElectronEtaSelection(),
             JetOverlapRemoval(),
+            ElectronEtaSelection(),
             JetCleaning( self.metadata.datatype, YEAR ),
             ElectronLArHole(),
             TauHasTrack(1),
@@ -226,8 +226,6 @@ class LHProcessor(ATLASStudent):
             cutflow.reset()
 
             #Select if the event goes into the training or the testing tree
-
-
             tree = None
             if event.EventNumber % 2:
                 tree = tree_train

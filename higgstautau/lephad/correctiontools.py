@@ -299,9 +299,10 @@ def MuonSF(event, datatype, pileup_tool):
 
 ## Scale factor for lephad triggers
 from ROOT import HSG4TriggerSF
+sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
+
 def MuonLTTSF(muon, runNumber, datatype):
 
-    sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
     w = 1.0
 
     if datatype == datasets.MC:
@@ -406,7 +407,6 @@ def LeptonSLTSF(event, datatype):
 def ElectronLTTSF(electron, runNumber, datatype):
 
     w = 1.0
-    sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
     
     if datatype == datasets.MC:
         w = sfTool.getSFElec(electron.fourvect, runNumber, 0)
@@ -420,9 +420,9 @@ def ElectronLTTSF(electron, runNumber, datatype):
 # Special LTT corrections for embedded
 #################################################
 from ROOT import TauTriggerCorrections
+ttc = TauTriggerCorrections()
 
 def EmbedTauTriggerCorr(Tau, nvtx, runNumber):
-    ttc = TauTriggerCorrections()
     weight = 1.0
     ttcPath = TTC.RESOURCE_PATH
     tauPt  = Tau.fourvect.Pt()
