@@ -58,8 +58,8 @@ DATA_LEPHAD_PATH = '/global/oneil/lephad/skims/data11'
 DATA_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
 DATA_LEPHAD_FILE_PATTERN = '*.root*'
 
-EMBD_LEPHAD_PATH = '/global/oneil/lephad/skims/Ztautau_embedded11'
-EMBD_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
+EMBD_LEPHAD_PATH = '/global/oneil/lephad/skims/Ztautau_embedded11_D3PD'
+EMBD_LEPHAD_PREFIX = 'group.phys-higgs'
 EMBD_LEPHAD_FILE_PATTERN = '*.root*'
 
 """
@@ -117,8 +117,9 @@ EMBED_PATTERN = re.compile(
         '(?P<channel>(lh)|(hh))_'
         '(?P<isol>[a-z]+)_'
         '(?P<mfs>[a-z]+)_'
-        'rereco_p(?P<tag>\d+)'
-        '_EXT0\.(small\.)?(?P<skimtag>\S+)\.(?P<suffix>\S+)$')
+        'rereco_p(?P<tag>\d+)\.'
+        '(?P<number>\S+)?'
+        '_EXT0$')
 
 """
 MC11a/b/c categories are defined here

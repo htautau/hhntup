@@ -55,11 +55,13 @@ def phi_centrality(vec_a, vec_b, vec_c):
     aPhi = vec_a.Phi()
     bPhi = vec_b.Phi()
     cPhi = vec_c.Phi()
-
-    A = math.sin(cPhi - aPhi)/math.sin(bPhi - aPhi)
-    B = math.sin(bPhi - cPhi)/math.sin(bPhi - aPhi)
-
-    return (A+B)/math.sqrt(A**2 + B**2)
+    
+    if math.sin(bPhi - aPhi) != 0:
+        A = math.sin(cPhi - aPhi)/math.sin(bPhi - aPhi)
+        B = math.sin(bPhi - cPhi)/math.sin(bPhi - aPhi)
+        return (A+B)/math.sqrt(A**2 + B**2)
+    else:
+        return -5
 
 
 def DeltaDeltaR(tau_4vec, lep_4vec, MET_2vec):

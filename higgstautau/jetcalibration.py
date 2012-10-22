@@ -46,8 +46,20 @@ class JetCalibration(EventFilter):
     def passes(self, event):
 
         # For the pile-up correction, we need mu and NPV(2+ tracks)
-        mu = event.averageIntPerXing
-                
+        mu = None
+        if datatype == datasets.EMBED:
+            for p in event.mc:
+                if p.pdgId == 39:
+                    averageIntPerXing = p.fourvect.Pz()
+                    print p.fourvect.Pz()
+                    break
+        
+            if mu == None:
+                return False
+
+        else:
+            mu = event.averageIntPerXing
+
         NPV = 0 # count the number of vertices with 2 or more tracks
         for vertex in event.vertices:
             if vertex.nTracks >= 2:

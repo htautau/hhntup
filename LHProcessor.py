@@ -94,12 +94,13 @@ class LHProcessor(ATLASStudent):
         # update the trigger config maps on every file change
         # onfilechange.append((update_trigger_config, (trigger_config,)))
 
-        merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
+        if self.metadata.datatype != datasets.EMBED:
+            merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
 
-        def update_cutflow(student, cutflow, name, file, tree):
-            cutflow += file.cutflow
+            def update_cutflow(student, cutflow, name, file, tree):
+                cutflow += file.cutflow
 
-        onfilechange.append((update_cutflow, (self, merged_cutflow,)))
+                onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
         chain = TreeChain(self.metadata.treename,
@@ -146,7 +147,7 @@ class LHProcessor(ATLASStudent):
             PrepareInputTree(),
             Trigger(),
             GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),
-            EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
+            #EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
             JetCalibration( year=YEAR, datatype=self.metadata.datatype, verbose=False ),
             PriVertex(),
             Systematics( terms=self.args.syst_terms, year=YEAR, datatype=self.metadata.datatype, verbose=VERBOSE ),
@@ -178,7 +179,8 @@ class LHProcessor(ATLASStudent):
 
         chain.filters += event_filters
 
-        cutflow = Cutflow()
+        if self.metadata.datatype != datasets.EMBED:
+            cutflow = Cutflow()
 
         # define tree collections
         chain.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n", mix=FourMomentum)
@@ -223,7 +225,8 @@ class LHProcessor(ATLASStudent):
 
             #tree_train.reset() Use reset=True in the Fill below
             #tree_test.reset()
-            cutflow.reset()
+            if self.metadata.datatype != datasets.EMBED:
+                cutflow.reset()
 
             #Select if the event goes into the training or the testing tree
             tree = None
@@ -233,15 +236,18 @@ class LHProcessor(ATLASStudent):
                 tree = tree_test
 
             # Select tau with highest BDT score and surviving lepton
-            Tau = event.taus[0]
-            Lep = None
-            leptype = None
-            if event.leptonType == 'mu':
-                Lep = event.muons[0]
-                leptype = 0
-            if event.leptonType == 'e':
-                Lep = event.electrons[0]
-                leptype = 1
+            try:
+                Tau = event.taus[0]
+                Lep = None
+                leptype = None
+                if event.leptonType == 'mu':
+                    Lep = event.muons[0]
+                    leptype = 0
+                if event.leptonType == 'e':
+                    Lep = event.electrons[0]
+                    leptype = 1
+            except IndexError:
+                continue
 
             """
             RecoTauLepBlock filling
@@ -492,7 +498,8 @@ class LHProcessor(ATLASStudent):
             tree.weight = event_weight
 
             # fill output ntuple
-            tree.cutflow = cutflow.int()
+            if self.metadata.datatype != datasets.EMBED:
+                tree.cutflow = cutflow.int()
             tree.Fill(reset=True)
 
         self.output.cd()
@@ -504,4 +511,5 @@ class LHProcessor(ATLASStudent):
         if self.metadata.datatype == datasets.DATA:
             xml_string = ROOT.TObjString(merged_grl.str())
             xml_string.Write('lumi')
-        merged_cutflow.Write()
+        if self.metadata.datatype != datasets.EMBED:
+            merged_cutflow.Write()

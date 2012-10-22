@@ -6,8 +6,8 @@ import cluster
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
-parser.add_argument('--nproc', type=int, default=9)
-parser.add_argument('--nsplit', type=int, default=12)
+parser.add_argument('--nproc', type=int, default=6)
+parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--dry', action='store_true', default=False)
@@ -18,7 +18,8 @@ setup = cluster.get_setup('setup.michel.sfu.txt')
 datasets = [#'data-Egamma',
             #'data-JetTauEtmiss',
             #'data-Muons',
-            'embed-lh-isol-mfsim']
+            'embed-lh-isol-mfsim'
+            ]
 
 CWD = os.getcwd()
 

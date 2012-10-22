@@ -27,7 +27,7 @@ import goodruns
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
-YEAR = 2012
+YEAR = 2011
 
 REMOVE = [
     'cl_*',
@@ -202,7 +202,7 @@ class LHSkim(ATLASStudent):
                               (number_of_good_electrons > 0 and OverlapCheck(event, DoElectronCheck = True))
                 isLepTau = self.metadata.title == datasets.TAU
                 isData = self.metadata.datatype == datasets.DATA
-                isMC = self.metadata.datatype == datasets.MC
+                isMC = self.metadata.datatype == datasets.MC or self.metadata.datatype == datasets.EMBED
 
                 # Fill the event
                 if (isData and hasTau and hasLeptonData) or (isMC and hasTau and hasLeptonMC) or (isData and hasTau and hasLeptonMC and isLepTau):

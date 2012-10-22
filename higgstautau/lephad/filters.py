@@ -34,6 +34,9 @@ class PrepareInputTree(EventFilter):
         ## Append the isLTT (is Lepton-Tau trigger event) flag
         event.isLTT = False
 
+        ## Default value for the leptonType
+        event.leptonType = 'mu'
+
         return True
 
 
@@ -883,41 +886,52 @@ def truthJetOverlap(truthJet, vectors):
             return True
 
     return False
+
+def vbfFilter(event):
+    jets = []
+
+    overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
+        
+    for jet in event.truthjets:
+        if jet.fourvect.Pt() < 15*GeV: continue
+        if abs(jet.fourvect.Eta()) > 5.0: continue
+        if truthJetOverlap(jet.fourvect, overlapParticles): continue
+        jets.append(jet.fourvect)
+
+    passNjets = False
+
+    njets =  len(jets)
+    if njets >= 2 : passNjets = True
+
+    passMjj  = False
+    passdEta = False
+
+    for i in range(njets):
+        for j in range(njets):
+            if j > i:
+                dEta = abs(jets[i].Eta() - jets[j].Eta())
+                Mjj  = (jets[i] + jets[j]).M()
+                
+                if dEta > 2.0: passdEta = True
+                if Mjj > 200*GeV: passMjj = True
+
+    if passMjj and passdEta and passNjets:
+        return True
+    return False
+
+
+class VBFFilter(EventFilter):
+    """Keep events that don't pass the VBF filter"""
+
+    def passes(self, event):
+        return vbfFilter(event)
             
 
 class AntiVBFFilter(EventFilter):
     """Keep events that don't pass the VBF filter"""
 
     def passes(self, event):
+        return not vbfFilter(event)
 
-        jets = []
 
-        overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
-        
-        for jet in event.truthjets:
-            if jet.fourvect.Pt() < 15*GeV: continue
-            if abs(jet.fourvect.Eta()) > 5.0: continue
-            if truthJetOverlap(jet.fourvect, overlapParticles): continue
-            jets.append(jet.fourvect)
-
-        passNjets = False
-
-        njets =  len(jets)
-        if njets >= 2 : passNjets = True
-
-        passMjj  = False
-        passdEta = False
-
-        for i in range(njets):
-            for j in range(njets):
-                if j > i:
-                    dEta = abs(jets[i].Eta() - jets[j].Eta())
-                    Mjj  = (jets[i] + jets[j]).M()
-
-                    if dEta > 2.0: passdEta = True
-                    if Mjj > 200*GeV: passMjj = True
-
-        if passMjj and passdEta and passNjets:
-            return False
-        return True
                         

@@ -5,6 +5,7 @@
 grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=TOKYO-LCG2_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 6 -m datasets.cfg mc12_p1130_lephad
 
 grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=TOKYO-LCG2_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 6 -m datasets.cfg embedded_p1130_lephad
+grid-submit -s LHSkim.py -u group.phys-higgs -l small --official -v 6 -m datasets.cfg embedded_p851_lephad
 
 grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=TOKYO-LCG2_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 6 -m datasets.cfg data12_p1130_muhad
 grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=TOKYO-LCG2_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS -v 6 -m datasets.cfg data12_p1130_ehad
