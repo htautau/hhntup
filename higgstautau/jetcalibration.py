@@ -47,11 +47,10 @@ class JetCalibration(EventFilter):
 
         # For the pile-up correction, we need mu and NPV(2+ tracks)
         mu = None
-        if datatype == datasets.EMBED:
+        if self.datatype == datasets.EMBED:
             for p in event.mc:
                 if p.pdgId == 39:
-                    averageIntPerXing = p.fourvect.Pz()
-                    print p.fourvect.Pz()
+                    mu = p.fourvect.Pz()
                     break
         
             if mu == None:
