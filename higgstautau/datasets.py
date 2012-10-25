@@ -209,7 +209,7 @@ class Database(dict):
              mc_treename=None,
              data_path=None,
              data_prefix=None,
-             data_pattern=None
+             data_pattern=None,
              data_treename=None,
              data_grl=None,
              embed_path=None,
@@ -223,6 +223,7 @@ class Database(dict):
         """
         if self.verbose: print "Updating '%s' dataset database..." % self.name
         self.modified = True
+        year = year % 1000
 
         if mc_path is not None:
             if versioned:
@@ -282,7 +283,7 @@ class Database(dict):
                         MC_TAG_PATTERN = MC_TAG_PATTERN2
 
                     if not tag_match:
-                        print "Dataset not tag-matched: %s" % basename
+                        print "not tag-matched: %s" % basename
                         continue
                     cat = None
                     for cat_name, cat_params in MC_CATEGORIES.items():
@@ -290,7 +291,7 @@ class Database(dict):
                             cat = cat_name
                             break
                     if cat is None:
-                        print "Dataset does not match a category: %s" % basename
+                        print "does not match a category: %s" % basename
                         continue
                     name += '.' + cat
                     dataset = self.get(name, None)
@@ -359,7 +360,7 @@ class Database(dict):
                             dirs=[dir],
                             file_pattern=mc_pattern)
                 else:
-                    print "Dataset not matched: %s" % basename
+                    print "not matched: %s" % basename
 
         #######################################################################
 
@@ -383,9 +384,9 @@ class Database(dict):
                             channels[channel] = []
                         channels[channel].append(dir)
                     else:
-                        print "this dir does not match valid ds name: %s" % dir
+                        print "not a valid dataset name: %s" % dir
                 else:
-                    print "this is not a dir: %s" % dir
+                    print "skipping file: %s" % dir
 
             for channel, channel_dirs in channels.items():
 
@@ -399,7 +400,7 @@ class Database(dict):
                             isols[isol] = []
                         isols[isol].append(dir)
                     else:
-                        print "this dir does not match valid ds name: %s" % dir
+                        print "not a valid dataset name: %s" % dir
 
                 for isol, isol_dirs in isols.items():
 
@@ -413,11 +414,11 @@ class Database(dict):
                                 mfss[mfs] = []
                             mfss[mfs].append(dir)
                         else:
-                            print "this dir does not match valid ds name: %s" % dir
+                            print "not a valid dataset name: %s" % dir
 
                     for mfs, mfs_dirs in mfss.items():
 
-                        name = 'embed-%s-%s-%s' % (channel, isol, mfs)
+                        name = 'embed%d-%s-%s-%s' % (year, channel, isol, mfs)
                         self[name] = Dataset(name,
                             datatype=EMBED,
                             treename=embed_treename,
@@ -444,9 +445,7 @@ class Database(dict):
                                             'different tags: %s' %
                                             periods[period]['dirs'])
                             else:
-                                print (
-                                    "this dir does not match a "
-                                    "valid ds name: %s" % dir)
+                                print "not a valid dataset name: %s" % dir
 
                         for period, info in periods.items():
                             period_name = '%s-%s' % (name, period)
@@ -476,10 +475,10 @@ class Database(dict):
                         streams[stream] = []
                     streams[stream].append(dir)
                 else:
-                    print "this dir does not match valid ds name: %s" % dir
+                    print "not a valid dataset name: %s" % dir
 
             for stream, dirs in streams.items():
-                name = 'data-%s' % stream
+                name = 'data%d-%s' % (year, stream)
                 self[name] = Dataset(name=name,
                     datatype=DATA,
                     treename=data_treename,
@@ -507,9 +506,9 @@ class Database(dict):
                                     'multiple copies of run with different '
                                     'tags: %s' % runs[run]['dirs'])
                     else:
-                        print "this dir does not match valid ds name: %s" % dir
+                        print "not a valid dataset name: %s" % dir
                 for run, info in runs.items():
-                    name = 'data-%s-%d' % (stream, run)
+                    name = 'data%d-%s-%d' % (year, stream, run)
                     self[name] = Dataset(name=name,
                         datatype=DATA,
                         treename=data_treename,
@@ -542,7 +541,7 @@ class Database(dict):
                         else:
                             periods[_period] = info['dirs'][:]
                     for period, dirs in periods.items():
-                        name = 'data-%s-%s' % (stream, period)
+                        name = 'data%d-%s-%s' % (year, stream, period)
                         self[name] = Dataset(name=name,
                             datatype=DATA,
                             treename=data_treename,
