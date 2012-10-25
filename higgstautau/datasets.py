@@ -44,51 +44,13 @@ import yaml
 from atlastools.datasets import DATA, MC, EMBED
 import xsec
 
-YEAR = 11
-GRL = 'grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml'
-
-"""
-LepHad constants
-"""
-MC_LEPHAD_PATH = '/global/oneil/lephad/skims/mc11_samples_used_for_analysis'
-MC_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
-MC_LEPHAD_FILE_PATTERN = '*.root*'
-
-DATA_LEPHAD_PATH = '/global/oneil/lephad/skims/data11'
-DATA_LEPHAD_PREFIX = 'group.phys-higgs.LHSkim'
-DATA_LEPHAD_FILE_PATTERN = '*.root*'
-
-EMBD_LEPHAD_PATH = '/global/oneil/lephad/skims/Ztautau_embedded11_D3PD'
-EMBD_LEPHAD_PREFIX = 'group.phys-higgs'
-EMBD_LEPHAD_FILE_PATTERN = '*.root*'
-
-"""
-HadHad constants
-"""
-MC_HADHAD_PATH = '/global/common/higgstautau/skims/hadhad/mc11_7TeV/p851/skim1'
-MC_HADHAD_PREFIX = 'group.phys-higgs.HHSkim'
-MC_HADHAD_FILE_PATTERN = '*HHSkim*.root*'
-
-DATA_HADHAD_PATH = '/global/common/higgstautau/skims/hadhad/data11_7TeV/p851/skim1'
-DATA_HADHAD_PREFIX = 'user.NoelDawe.HTauSkim'
-DATA_HADHAD_FILE_PATTERN = '*HTauSkim*.root*'
-
-EMBD_HADHAD_PATH = '/global/common/higgstautau/skims/hadhad/embedding11_7TeV/p851-2.41/skim1'
-EMBD_HADHAD_PREFIX = 'group.phys-higgs.HHSkim'
-EMBD_HADHAD_FILE_PATTERN = '*.root*'
-
-"""
-Common constants
-"""
-MC_TREENAME = 'tau'
-DATA_TREENAME = 'tau'
-EMBED_TREENAME = 'tau'
 
 DATA_PATTERN = re.compile(
-        '^(?P<prefix>\S+\.)?data11_7TeV\.'
+        '^(?P<prefix>\S+\.)?'
+        'data(?P<year>\d+)_(?P<energy>\d+)TeV\.'
         '(?P<run>\d+)\.physics_'
         '(?P<stream>\S+)?'
-        '\.merge\.NTUP_TAUMEDIUM\.(?P<tag>\w+)'
+        '\.merge\.NTUP_TAU(MEDIUM)?\.(?P<tag>\w+)'
         '(\.(?P<suffix>\S+))?$')
 
 MC_TAG_PATTERN1 = re.compile(
@@ -111,18 +73,19 @@ MC_TAG_PATTERN2 = re.compile(
 EMBED_PATTERN = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
-        '\.DESD_SGLMU\.pro10\.'
+        '\.DESD_(SGLMU|ZMUMU)\.pro(?P<prod>\d+)\.'
         'embedding-(?P<embedtag>\S+)?'
         '\.Ztautau_'
         '(?P<channel>(lh)|(hh))_'
+        '((high|low)pt_)?'
         '(?P<isol>[a-z]+)_'
         '(?P<mfs>[a-z]+)_'
-        'rereco_p(?P<tag>\d+)\.'
+        '(re|tau)reco_p(?P<tag>\d+)\.'
         '(?P<number>\S+)?'
         '_EXT0$')
 
 """
-MC11a/b/c categories are defined here
+MC[11|12][a|b|c|...] categories are defined here
 Each MC dataset is automatically classified
 acccording to these categories by matching the reco
 and merge tags of the dataset name
@@ -135,7 +98,8 @@ MC_CATEGORIES = {
               'merge': (3063, 2993, 2900)},
     'mc11c': {'reco':  (3043, 3060),
               'merge': (3109, 3063, 2993)},
-}
+    'mc12a': {'reco':  (3753, 3752, 3605, 3542),
+              'merge': (3549,)}}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -176,7 +140,8 @@ class Database(dict):
         self.filepath = os.path.join(HERE, '%s.yml' % self.name)
         if os.path.isfile(self.filepath):
             with open(self.filepath) as db:
-                if self.verbose: print "Loading '%s' dataset database..." % self.name
+                if self.verbose:
+                    print "Loading '%s' dataset database..." % self.name
                 d = yaml.load(db)
                 if d:
                     self.update(d)
@@ -186,7 +151,8 @@ class Database(dict):
 
         if self.modified:
             with open(self.filepath, 'w') as db:
-                if self.verbose: print "Saving '%s' dataset database to disk..." % self.name
+                if self.verbose:
+                    print "Saving '%s' dataset database to disk..." % self.name
                 yaml.dump(dict(self), db)
 
     def reset(self):
@@ -219,7 +185,8 @@ class Database(dict):
                 incomplete.append(info.ds)
         """
         pool = Pool(processes=cpu_count())
-        for result, complete in pool.map(validate_single, sorted(ds.items(), key=itemgetter(0))):
+        for result, complete in pool.map(
+                validate_single, sorted(ds.items(), key=itemgetter(0))):
             print result
             print "Complete: %s" % complete
             print '-'*50
@@ -235,15 +202,20 @@ class Database(dict):
                 print ds
 
     def scan(self,
+             year,
              mc_path=None,
              mc_prefix=None,
              mc_pattern=None,
+             mc_treename=None,
              data_path=None,
              data_prefix=None,
-             data_pattern=None,
-             embd_path=None,
-             embd_prefix=None,
-             embd_pattern=None,
+             data_pattern=None
+             data_treename=None,
+             data_grl=None,
+             embed_path=None,
+             embed_prefix=None,
+             embed_pattern=None,
+             embed_treename=None,
              versioned=False,
              deep=False):
         """
@@ -254,21 +226,21 @@ class Database(dict):
 
         if mc_path is not None:
             if versioned:
-                pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                pattern1 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
                             '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
-                pattern2 = ('^mc11_7TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                pattern2 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
                             '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
             else:
-                pattern1 = ('^mc11_7TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                pattern1 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
                             '_(?P<suffix>\S+)$')
-                pattern2 = ('^mc11_7TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAUMEDIUM)?'
+                pattern2 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
+                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
                             '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
                             '_(?P<suffix>\S+)$')
 
@@ -325,13 +297,15 @@ class Database(dict):
                     if dataset is not None and version == dataset.version:
                         if tag != dataset.tag:
                             this_reco = int(tag_match.group('reco'))
-                            other_reco = int(re.match(dataset.tag_pattern,
-                                                      dataset.tag).group('reco'))
+                            other_reco = int(
+                                re.match(dataset.tag_pattern,
+                                         dataset.tag).group('reco'))
                             use_mergetag = True
                             try:
                                 this_merge = int(tag_match.group('recomerge'))
-                                other_merge = int(re.match(dataset.tag_pattern,
-                                                           dataset.tag).group('recomerge'))
+                                other_merge = int(
+                                    re.match(dataset.tag_pattern,
+                                             dataset.tag).group('recomerge'))
                             except IndexError:
                                 use_mergetag = False
 
@@ -342,15 +316,17 @@ class Database(dict):
                             take_this = False
                             if reco_tags.index(this_reco) < reco_tags.index(other_reco):
                                 take_this = True
-                            elif use_mergetag and this_reco == other_reco and \
-                                    merge_tags.index(this_merge) < merge_tags.index(other_merge):
+                            elif (use_mergetag and this_reco == other_reco and
+                                  (merge_tags.index(this_merge) <
+                                   merge_tags.index(other_merge))):
                                 take_this = True
 
                             if take_this:
-                                print "taking %s over %s" % (basename, dataset.ds)
+                                print "taking %s over %s" % (
+                                        basename, dataset.ds)
                                 DATASETS[name] = Dataset(name=name,
                                     datatype=MC,
-                                    treename=MC_TREENAME,
+                                    treename=mc_treename,
                                     ds='mc11_7TeV.' +
                                     match.group('id') + '.' +
                                     match.group('name') +
@@ -365,10 +341,11 @@ class Database(dict):
                                     file_pattern=mc_pattern)
                         else:
                             dataset.dirs.append(dir)
-                    elif dataset is None or (dataset is not None and version > dataset.version):
+                    elif dataset is None or (
+                            dataset is not None and version > dataset.version):
                         self[name] = Dataset(name=name,
                             datatype=MC,
-                            treename=MC_TREENAME,
+                            treename=mc_treename,
                             ds='mc11_7TeV.' +
                             match.group('id') + '.' +
                             match.group('name') +
@@ -386,16 +363,18 @@ class Database(dict):
 
         #######################################################################
 
-        if embd_path is not None:
+        if embed_path is not None:
 
-            if embd_prefix:
-                embd_dirs = glob.glob(os.path.join(embd_path, embd_prefix) + '*')
+            if embed_prefix:
+                embed_dirs = glob.glob(
+                        os.path.join(embed_path, embed_prefix) + '*')
             else:
-                embd_dirs = glob.glob(os.path.join(embd_path, '*'))
+                embed_dirs = glob.glob(
+                        os.path.join(embed_path, '*'))
 
             # determine what channels are available
             channels = {}
-            for dir in embd_dirs:
+            for dir in embed_dirs:
                 if os.path.isdir(dir):
                     match = re.match(EMBED_PATTERN, dir)
                     if match:
@@ -441,13 +420,13 @@ class Database(dict):
                         name = 'embed-%s-%s-%s' % (channel, isol, mfs)
                         self[name] = Dataset(name,
                             datatype=EMBED,
-                            treename=EMBED_TREENAME,
+                            treename=embed_treename,
                             ds=name,
                             id=1,
                             # The GRL is the same for both lephad and hadhad analyses
-                            grl=GRL,
+                            grl=None,
                             dirs=mfs_dirs,
-                            file_pattern=embd_pattern)
+                            file_pattern=embed_pattern)
 
                         periods = {}
                         for dir in mfs_dirs:
@@ -460,20 +439,25 @@ class Database(dict):
                                 else:
                                     periods[period]['dirs'].append(dir)
                                     if tag != periods[period]['tag']:
-                                        print 'multiple copies of run with different tags: %s' % periods[period]['dirs']
+                                        print (
+                                            'multiple copies of run with '
+                                            'different tags: %s' %
+                                            periods[period]['dirs'])
                             else:
-                                print "this dir does not match valid ds name: %s" % dir
+                                print (
+                                    "this dir does not match a "
+                                    "valid ds name: %s" % dir)
 
                         for period, info in periods.items():
                             period_name = '%s-%s' % (name, period)
                             self[period_name] = Dataset(name=period_name,
                                 datatype=EMBED,
-                                treename=EMBED_TREENAME,
+                                treename=embed_treename,
                                 ds=period_name,
                                 id=1,
-                                grl=GRL,
+                                grl=None,
                                 dirs=info['dirs'],
-                                file_pattern=embd_pattern)
+                                file_pattern=embed_pattern)
 
         #######################################################################
 
@@ -498,11 +482,11 @@ class Database(dict):
                 name = 'data-%s' % stream
                 self[name] = Dataset(name=name,
                     datatype=DATA,
-                    treename=DATA_TREENAME,
+                    treename=data_treename,
                     ds=name,
                     id=1,
                     # The GRL is the same for both lephad and hadhad analyses
-                    grl=GRL,
+                    grl=data_grl,
                     dirs=dirs,
                     stream=stream,
                     file_pattern=data_pattern)
@@ -519,29 +503,31 @@ class Database(dict):
                         else:
                             runs[run]['dirs'].append(dir)
                             if tag != runs[run]['tag']:
-                                print 'multiple copies of run with different tags: %s' % runs[run]['dirs']
+                                print (
+                                    'multiple copies of run with different '
+                                    'tags: %s' % runs[run]['dirs'])
                     else:
                         print "this dir does not match valid ds name: %s" % dir
                 for run, info in runs.items():
                     name = 'data-%s-%d' % (stream, run)
                     self[name] = Dataset(name=name,
                         datatype=DATA,
-                        treename=DATA_TREENAME,
+                        treename=data_treename,
                         ds=name,
                         id=1,
-                        grl=GRL,
+                        grl=data_grl,
                         dirs=info['dirs'],
                         stream=stream,
                         file_pattern=data_pattern)
                 if USE_PYAMI:
                     # in each stream create a separate dataset for each period
-                    run_periods = get_periods(amiclient, year=YEAR, level=2)
+                    run_periods = get_periods(amiclient, year=year, level=2)
                     run_periods = [p.name for p in run_periods]
                     period_runs = {}
                     for period in run_periods:
                         if period == 'VdM':
                             continue
-                        _runs = get_runs(amiclient, periods=period, year=YEAR)
+                        _runs = get_runs(amiclient, periods=period, year=year)
                         for run in _runs:
                             period_runs[run] = period
                     periods = {}
@@ -559,10 +545,10 @@ class Database(dict):
                         name = 'data-%s-%s' % (stream, period)
                         self[name] = Dataset(name=name,
                             datatype=DATA,
-                            treename=DATA_TREENAME,
+                            treename=data_treename,
                             ds=name,
                             id=1,
-                            grl=GRL,
+                            grl=data_grl,
                             dirs=dirs,
                             stream=stream,
                             file_pattern=data_pattern)
@@ -796,6 +782,7 @@ if __name__ == '__main__':
     parser.add_argument('--validate-pattern', default=None)
     parser.add_argument('--info', action='store_true', default=False)
 
+    """
     parser.add_argument('--year', type=int, default=None)
     parser.add_argument('--grl', default=None)
 
@@ -810,71 +797,34 @@ if __name__ == '__main__':
     parser.add_argument('--embed-path', default=None)
     parser.add_argument('--embed-prefix', default=None)
     parser.add_argument('--embed-pattern', default='*.root*')
-
+    """
     parser.add_argument('--name', default='datasets')
-
-    parser.add_argument('analysis',
-                        choices=('lh', 'hh', 'custom'),
-                        default='custom', nargs='?')
+    parser.add_argument('--config', default='datasets_config.yml')
+    parser.add_argument('analysis', choices=('lh', 'hh'))
     args = parser.parse_args()
 
-    if args.year is not None:
-        YEAR = args.year
-    if args.grl is not None:
-        GRL = args.grl
-
     if args.analysis == 'hh':
-        mc_path = MC_HADHAD_PATH
-        mc_prefix = MC_HADHAD_PREFIX
-        mc_pattern = MC_HADHAD_FILE_PATTERN
-        data_path = DATA_HADHAD_PATH
-        data_prefix = DATA_HADHAD_PREFIX
-        data_pattern = DATA_HADHAD_FILE_PATTERN
-        embd_path = EMBD_HADHAD_PATH
-        embd_prefix = EMBD_HADHAD_PREFIX
-        embd_pattern = EMBD_HADHAD_FILE_PATTERN
         args.versioned = True
         args.name = 'datasets_hh'
     elif args.analysis == 'lh':
-        mc_path = MC_LEPHAD_PATH
-        mc_prefix = MC_LEPHAD_PREFIX
-        mc_pattern = MC_LEPHAD_FILE_PATTERN
-        data_path = DATA_LEPHAD_PATH
-        data_prefix = DATA_LEPHAD_PREFIX
-        data_pattern = DATA_LEPHAD_FILE_PATTERN
-        embd_path = EMBD_LEPHAD_PATH
-        embd_prefix = EMBD_LEPHAD_PREFIX
-        embd_pattern = EMBD_LEPHAD_FILE_PATTERN
         args.versioned = True
         args.name = 'datasets_lh'
-    else: # custom
-        mc_path = args.mc_path
-        mc_prefix = args.mc_prefix
-        mc_pattern = args.mc_pattern
-        data_path = args.data_path
-        data_prefix = args.data_prefix
-        data_pattern = args.data_pattern
-        embd_path = args.embed_path
-        embd_prefix = args.embed_prefix
-        embd_pattern = args.embed_pattern
 
     db = Database(name=args.name, verbose=True)
 
     if args.reset:
         db.clear()
 
-    if mc_path is not None or data_path is not None or embd_path is not None:
-        db.scan(mc_path=mc_path,
-                mc_prefix=mc_prefix,
-                mc_pattern=mc_pattern,
-                data_path=data_path,
-                data_prefix=data_prefix,
-                data_pattern=data_pattern,
-                embd_path=embd_path,
-                embd_prefix=embd_prefix,
-                embd_pattern=embd_pattern,
-                deep=args.deep,
-                versioned=args.versioned)
+    with open(args.config) as config:
+        config_dict = yaml.load(config)
+        for year, year_config in config_dict.items():
+            params = {}
+            params['data_grl'] = year_config['common'].get('grl', None)
+            params.update(year_config[args.analysis])
+            db.scan(year=year,
+                    deep=args.deep,
+                    versioned=args.versioned,
+                    **params)
 
     if args.validate or args.validate_pattern is not None:
         # check for missing events etc...
