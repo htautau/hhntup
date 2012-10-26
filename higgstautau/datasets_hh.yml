@@ -7861,7 +7861,7 @@ data12-JetTauEtmiss: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164247,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206962.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1186_p1130.v8.121018164250]
   ds: data12-JetTauEtmiss
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss
@@ -7876,7 +7876,7 @@ data12-JetTauEtmiss-200842: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200842.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164309]
   ds: data12-JetTauEtmiss-200842
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200842
@@ -7891,7 +7891,7 @@ data12-JetTauEtmiss-200863: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200863.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164431]
   ds: data12-JetTauEtmiss-200863
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200863
@@ -7906,7 +7906,7 @@ data12-JetTauEtmiss-200913: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164513]
   ds: data12-JetTauEtmiss-200913
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200913
@@ -7921,7 +7921,7 @@ data12-JetTauEtmiss-200926: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200926.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164131]
   ds: data12-JetTauEtmiss-200926
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200926
@@ -7936,7 +7936,7 @@ data12-JetTauEtmiss-200965: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200965.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164110]
   ds: data12-JetTauEtmiss-200965
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200965
@@ -7951,7 +7951,7 @@ data12-JetTauEtmiss-200967: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200967.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164216]
   ds: data12-JetTauEtmiss-200967
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200967
@@ -7966,7 +7966,7 @@ data12-JetTauEtmiss-200982: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200982.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164253]
   ds: data12-JetTauEtmiss-200982
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200982
@@ -7981,7 +7981,7 @@ data12-JetTauEtmiss-200987: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00200987.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164122]
   ds: data12-JetTauEtmiss-200987
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-200987
@@ -7996,7 +7996,7 @@ data12-JetTauEtmiss-201006: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201006.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164528]
   ds: data12-JetTauEtmiss-201006
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201006
@@ -8011,7 +8011,7 @@ data12-JetTauEtmiss-201052: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201052.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164206]
   ds: data12-JetTauEtmiss-201052
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201052
@@ -8026,7 +8026,7 @@ data12-JetTauEtmiss-201113: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201113.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164555]
   ds: data12-JetTauEtmiss-201113
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201113
@@ -8041,7 +8041,7 @@ data12-JetTauEtmiss-201120: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201120.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164311]
   ds: data12-JetTauEtmiss-201120
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201120
@@ -8056,7 +8056,7 @@ data12-JetTauEtmiss-201138: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201138.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164038]
   ds: data12-JetTauEtmiss-201138
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201138
@@ -8071,7 +8071,7 @@ data12-JetTauEtmiss-201190: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201190.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164141]
   ds: data12-JetTauEtmiss-201190
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201190
@@ -8086,7 +8086,7 @@ data12-JetTauEtmiss-201257: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201257.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164336]
   ds: data12-JetTauEtmiss-201257
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201257
@@ -8101,7 +8101,7 @@ data12-JetTauEtmiss-201269: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201269.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164349]
   ds: data12-JetTauEtmiss-201269
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201269
@@ -8117,7 +8117,7 @@ data12-JetTauEtmiss-201280: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201280.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164338,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201280.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018235621]
   ds: data12-JetTauEtmiss-201280
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201280
@@ -8132,7 +8132,7 @@ data12-JetTauEtmiss-201289: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201289.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164238]
   ds: data12-JetTauEtmiss-201289
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201289
@@ -8147,7 +8147,7 @@ data12-JetTauEtmiss-201489: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201489.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164442]
   ds: data12-JetTauEtmiss-201489
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201489
@@ -8162,7 +8162,7 @@ data12-JetTauEtmiss-201494: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201494.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164613]
   ds: data12-JetTauEtmiss-201494
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201494
@@ -8177,7 +8177,7 @@ data12-JetTauEtmiss-201555: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164426]
   ds: data12-JetTauEtmiss-201555
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201555
@@ -8192,7 +8192,7 @@ data12-JetTauEtmiss-201556: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201556.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164353]
   ds: data12-JetTauEtmiss-201556
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-201556
@@ -8207,7 +8207,7 @@ data12-JetTauEtmiss-202660: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202660.physics_JetTauEtmiss.merge.NTUP_TAU.f442_m1136_p1130.v8.121018164433]
   ds: data12-JetTauEtmiss-202660
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202660
@@ -8222,7 +8222,7 @@ data12-JetTauEtmiss-202668: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202668.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164431]
   ds: data12-JetTauEtmiss-202668
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202668
@@ -8237,7 +8237,7 @@ data12-JetTauEtmiss-202712: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202712.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164356]
   ds: data12-JetTauEtmiss-202712
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202712
@@ -8252,7 +8252,7 @@ data12-JetTauEtmiss-202740: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202740.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164547]
   ds: data12-JetTauEtmiss-202740
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202740
@@ -8268,7 +8268,7 @@ data12-JetTauEtmiss-202798: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202798.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164515,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202798.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018235707]
   ds: data12-JetTauEtmiss-202798
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202798
@@ -8283,7 +8283,7 @@ data12-JetTauEtmiss-202965: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202965.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164509]
   ds: data12-JetTauEtmiss-202965
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202965
@@ -8298,7 +8298,7 @@ data12-JetTauEtmiss-202991: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202991.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164517]
   ds: data12-JetTauEtmiss-202991
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-202991
@@ -8313,7 +8313,7 @@ data12-JetTauEtmiss-203027: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203027.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1143_p1130.v8.121018164255]
   ds: data12-JetTauEtmiss-203027
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203027
@@ -8328,7 +8328,7 @@ data12-JetTauEtmiss-203169: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203169.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164441]
   ds: data12-JetTauEtmiss-203169
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203169
@@ -8343,7 +8343,7 @@ data12-JetTauEtmiss-203191: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203191.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164206]
   ds: data12-JetTauEtmiss-203191
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203191
@@ -8358,7 +8358,7 @@ data12-JetTauEtmiss-203195: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203195.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164422]
   ds: data12-JetTauEtmiss-203195
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203195
@@ -8373,7 +8373,7 @@ data12-JetTauEtmiss-203228: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203228.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164352]
   ds: data12-JetTauEtmiss-203228
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203228
@@ -8388,7 +8388,7 @@ data12-JetTauEtmiss-203256: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203256.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164413]
   ds: data12-JetTauEtmiss-203256
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203256
@@ -8403,7 +8403,7 @@ data12-JetTauEtmiss-203258: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203258.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164131]
   ds: data12-JetTauEtmiss-203258
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203258
@@ -8418,7 +8418,7 @@ data12-JetTauEtmiss-203277: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1148_p1130.v8.121018164612]
   ds: data12-JetTauEtmiss-203277
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203277
@@ -8433,7 +8433,7 @@ data12-JetTauEtmiss-203335: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203335.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164204]
   ds: data12-JetTauEtmiss-203335
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203335
@@ -8449,7 +8449,7 @@ data12-JetTauEtmiss-203336: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203336.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121019225259,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203336.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164150]
   ds: data12-JetTauEtmiss-203336
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203336
@@ -8464,7 +8464,7 @@ data12-JetTauEtmiss-203353: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203353.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164557]
   ds: data12-JetTauEtmiss-203353
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203353
@@ -8479,7 +8479,7 @@ data12-JetTauEtmiss-203432: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203432.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164203]
   ds: data12-JetTauEtmiss-203432
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203432
@@ -8494,7 +8494,7 @@ data12-JetTauEtmiss-203454: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203454.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164420]
   ds: data12-JetTauEtmiss-203454
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203454
@@ -8509,7 +8509,7 @@ data12-JetTauEtmiss-203456: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203456.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164124]
   ds: data12-JetTauEtmiss-203456
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203456
@@ -8524,7 +8524,7 @@ data12-JetTauEtmiss-203523: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203523.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164453]
   ds: data12-JetTauEtmiss-203523
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203523
@@ -8539,7 +8539,7 @@ data12-JetTauEtmiss-203524: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203524.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164210]
   ds: data12-JetTauEtmiss-203524
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203524
@@ -8554,7 +8554,7 @@ data12-JetTauEtmiss-203602: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203602.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164238]
   ds: data12-JetTauEtmiss-203602
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203602
@@ -8569,7 +8569,7 @@ data12-JetTauEtmiss-203605: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203605.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164233]
   ds: data12-JetTauEtmiss-203605
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203605
@@ -8584,7 +8584,7 @@ data12-JetTauEtmiss-203636: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203636.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164343]
   ds: data12-JetTauEtmiss-203636
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203636
@@ -8599,7 +8599,7 @@ data12-JetTauEtmiss-203680: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203680.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164529]
   ds: data12-JetTauEtmiss-203680
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203680
@@ -8615,7 +8615,7 @@ data12-JetTauEtmiss-203719: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018235700,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164209]
   ds: data12-JetTauEtmiss-203719
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203719
@@ -8630,7 +8630,7 @@ data12-JetTauEtmiss-203739: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203739.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164104]
   ds: data12-JetTauEtmiss-203739
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203739
@@ -8645,7 +8645,7 @@ data12-JetTauEtmiss-203745: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203745.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164403]
   ds: data12-JetTauEtmiss-203745
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203745
@@ -8660,7 +8660,7 @@ data12-JetTauEtmiss-203760: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203760.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164450]
   ds: data12-JetTauEtmiss-203760
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203760
@@ -8675,7 +8675,7 @@ data12-JetTauEtmiss-203779: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164053]
   ds: data12-JetTauEtmiss-203779
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203779
@@ -8690,7 +8690,7 @@ data12-JetTauEtmiss-203792: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203792.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164328]
   ds: data12-JetTauEtmiss-203792
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203792
@@ -8705,7 +8705,7 @@ data12-JetTauEtmiss-203875: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203875.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164413]
   ds: data12-JetTauEtmiss-203875
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203875
@@ -8720,7 +8720,7 @@ data12-JetTauEtmiss-203876: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203876.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164256]
   ds: data12-JetTauEtmiss-203876
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203876
@@ -8735,7 +8735,7 @@ data12-JetTauEtmiss-203934: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203934.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164502]
   ds: data12-JetTauEtmiss-203934
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-203934
@@ -8750,7 +8750,7 @@ data12-JetTauEtmiss-204025: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204025.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164603]
   ds: data12-JetTauEtmiss-204025
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204025
@@ -8765,7 +8765,7 @@ data12-JetTauEtmiss-204026: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204026.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164151]
   ds: data12-JetTauEtmiss-204026
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204026
@@ -8780,7 +8780,7 @@ data12-JetTauEtmiss-204071: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204071.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164439]
   ds: data12-JetTauEtmiss-204071
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204071
@@ -8795,7 +8795,7 @@ data12-JetTauEtmiss-204073: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204073.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164542]
   ds: data12-JetTauEtmiss-204073
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204073
@@ -8810,7 +8810,7 @@ data12-JetTauEtmiss-204134: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204134.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164246]
   ds: data12-JetTauEtmiss-204134
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204134
@@ -8825,7 +8825,7 @@ data12-JetTauEtmiss-204153: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204153.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164402]
   ds: data12-JetTauEtmiss-204153
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204153
@@ -8840,7 +8840,7 @@ data12-JetTauEtmiss-204158: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204158.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164510]
   ds: data12-JetTauEtmiss-204158
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204158
@@ -8855,7 +8855,7 @@ data12-JetTauEtmiss-204240: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1158_p1130.v8.121018164524]
   ds: data12-JetTauEtmiss-204240
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204240
@@ -8870,7 +8870,7 @@ data12-JetTauEtmiss-204265: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204265.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1158_p1130.v8.121018164058]
   ds: data12-JetTauEtmiss-204265
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204265
@@ -8885,7 +8885,7 @@ data12-JetTauEtmiss-204416: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204416.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164530]
   ds: data12-JetTauEtmiss-204416
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204416
@@ -8900,7 +8900,7 @@ data12-JetTauEtmiss-204442: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204442.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164125]
   ds: data12-JetTauEtmiss-204442
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204442
@@ -8915,7 +8915,7 @@ data12-JetTauEtmiss-204474: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204474.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164228]
   ds: data12-JetTauEtmiss-204474
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204474
@@ -8930,7 +8930,7 @@ data12-JetTauEtmiss-204564: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204564.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164325]
   ds: data12-JetTauEtmiss-204564
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204564
@@ -8945,7 +8945,7 @@ data12-JetTauEtmiss-204633: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204633.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164452]
   ds: data12-JetTauEtmiss-204633
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204633
@@ -8960,7 +8960,7 @@ data12-JetTauEtmiss-204668: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204668.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164208]
   ds: data12-JetTauEtmiss-204668
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204668
@@ -8975,7 +8975,7 @@ data12-JetTauEtmiss-204726: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204726.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164118]
   ds: data12-JetTauEtmiss-204726
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204726
@@ -8990,7 +8990,7 @@ data12-JetTauEtmiss-204763: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204763.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164513]
   ds: data12-JetTauEtmiss-204763
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204763
@@ -9005,7 +9005,7 @@ data12-JetTauEtmiss-204769: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204769.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164115]
   ds: data12-JetTauEtmiss-204769
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204769
@@ -9020,7 +9020,7 @@ data12-JetTauEtmiss-204772: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204772.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164338]
   ds: data12-JetTauEtmiss-204772
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204772
@@ -9035,7 +9035,7 @@ data12-JetTauEtmiss-204796: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204796.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164322]
   ds: data12-JetTauEtmiss-204796
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204796
@@ -9050,7 +9050,7 @@ data12-JetTauEtmiss-204853: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204853.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164046]
   ds: data12-JetTauEtmiss-204853
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204853
@@ -9065,7 +9065,7 @@ data12-JetTauEtmiss-204857: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204857.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164428]
   ds: data12-JetTauEtmiss-204857
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204857
@@ -9080,7 +9080,7 @@ data12-JetTauEtmiss-204910: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164607]
   ds: data12-JetTauEtmiss-204910
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204910
@@ -9096,7 +9096,7 @@ data12-JetTauEtmiss-204932: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164138,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121019225254]
   ds: data12-JetTauEtmiss-204932
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204932
@@ -9111,7 +9111,7 @@ data12-JetTauEtmiss-204954: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204954.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164226]
   ds: data12-JetTauEtmiss-204954
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204954
@@ -9126,7 +9126,7 @@ data12-JetTauEtmiss-204955: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204955.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164313]
   ds: data12-JetTauEtmiss-204955
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204955
@@ -9141,7 +9141,7 @@ data12-JetTauEtmiss-204976: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204976.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164400]
   ds: data12-JetTauEtmiss-204976
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-204976
@@ -9156,7 +9156,7 @@ data12-JetTauEtmiss-205010: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205010.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164540]
   ds: data12-JetTauEtmiss-205010
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205010
@@ -9171,7 +9171,7 @@ data12-JetTauEtmiss-205016: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164244]
   ds: data12-JetTauEtmiss-205016
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205016
@@ -9186,7 +9186,7 @@ data12-JetTauEtmiss-205017: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205017.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164318]
   ds: data12-JetTauEtmiss-205017
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205017
@@ -9202,7 +9202,7 @@ data12-JetTauEtmiss-205055: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164424,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121019225428]
   ds: data12-JetTauEtmiss-205055
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205055
@@ -9217,7 +9217,7 @@ data12-JetTauEtmiss-205071: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164247]
   ds: data12-JetTauEtmiss-205071
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205071
@@ -9232,7 +9232,7 @@ data12-JetTauEtmiss-205112: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205112.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164045]
   ds: data12-JetTauEtmiss-205112
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205112
@@ -9248,7 +9248,7 @@ data12-JetTauEtmiss-205113: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164549,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018235721]
   ds: data12-JetTauEtmiss-205113
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-205113
@@ -9263,7 +9263,7 @@ data12-JetTauEtmiss-206368: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206368.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1170_p1130.v8.121018164619]
   ds: data12-JetTauEtmiss-206368
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206368
@@ -9278,7 +9278,7 @@ data12-JetTauEtmiss-206369: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206369.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130.v8.121018164443]
   ds: data12-JetTauEtmiss-206369
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206369
@@ -9294,7 +9294,7 @@ data12-JetTauEtmiss-206409: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206409.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130.v8.121018164226,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206409.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130.v8.121018235736]
   ds: data12-JetTauEtmiss-206409
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206409
@@ -9309,7 +9309,7 @@ data12-JetTauEtmiss-206497: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206497.physics_JetTauEtmiss.merge.NTUP_TAU.f453_m1175_p1130.v8.121018164532]
   ds: data12-JetTauEtmiss-206497
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206497
@@ -9324,7 +9324,7 @@ data12-JetTauEtmiss-206573: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206573.physics_JetTauEtmiss.merge.NTUP_TAU.f458_m1180_p1130.v8.121018164524]
   ds: data12-JetTauEtmiss-206573
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206573
@@ -9339,7 +9339,7 @@ data12-JetTauEtmiss-206614: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206614.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1180_p1130.v8.121018164610]
   ds: data12-JetTauEtmiss-206614
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206614
@@ -9354,7 +9354,7 @@ data12-JetTauEtmiss-206955: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206955.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1180_p1130.v8.121018164439]
   ds: data12-JetTauEtmiss-206955
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206955
@@ -9369,7 +9369,7 @@ data12-JetTauEtmiss-206962: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206962.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1186_p1130.v8.121018164250]
   ds: data12-JetTauEtmiss-206962
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206962
@@ -9384,7 +9384,7 @@ data12-JetTauEtmiss-206971: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00206971.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1186_p1130.v8.121018164602]
   ds: data12-JetTauEtmiss-206971
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-206971
@@ -9399,7 +9399,7 @@ data12-JetTauEtmiss-207044: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207044.physics_JetTauEtmiss.merge.NTUP_TAU.f462_m1186_p1130.v8.121018164459]
   ds: data12-JetTauEtmiss-207044
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207044
@@ -9414,7 +9414,7 @@ data12-JetTauEtmiss-207046: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207046.physics_JetTauEtmiss.merge.NTUP_TAU.f462_m1186_p1130.v8.121018164610]
   ds: data12-JetTauEtmiss-207046
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207046
@@ -9429,7 +9429,7 @@ data12-JetTauEtmiss-207221: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207221.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130.v8.121018164617]
   ds: data12-JetTauEtmiss-207221
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207221
@@ -9444,7 +9444,7 @@ data12-JetTauEtmiss-207262: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207262.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130.v8.121018164534]
   ds: data12-JetTauEtmiss-207262
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207262
@@ -9459,7 +9459,7 @@ data12-JetTauEtmiss-207304: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207304.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130.v8.121018164118]
   ds: data12-JetTauEtmiss-207304
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207304
@@ -9474,7 +9474,7 @@ data12-JetTauEtmiss-207332: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207332.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1191_p1130.v8.121018164336]
   ds: data12-JetTauEtmiss-207332
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207332
@@ -9489,7 +9489,7 @@ data12-JetTauEtmiss-207397: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207397.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1191_p1130.v8.121018164612]
   ds: data12-JetTauEtmiss-207397
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207397
@@ -9504,7 +9504,7 @@ data12-JetTauEtmiss-207447: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207447.physics_JetTauEtmiss.merge.NTUP_TAU.f466_m1191_p1130.v8.121018164131]
   ds: data12-JetTauEtmiss-207447
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207447
@@ -9519,7 +9519,7 @@ data12-JetTauEtmiss-207490: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207490.physics_JetTauEtmiss.merge.NTUP_TAU.f466_m1191_p1130.v8.121018164304]
   ds: data12-JetTauEtmiss-207490
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207490
@@ -9534,7 +9534,7 @@ data12-JetTauEtmiss-207528: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207528.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130.v8.121018164237]
   ds: data12-JetTauEtmiss-207528
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207528
@@ -9549,7 +9549,7 @@ data12-JetTauEtmiss-207531: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207531.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130.v8.121018164355]
   ds: data12-JetTauEtmiss-207531
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207531
@@ -9564,7 +9564,7 @@ data12-JetTauEtmiss-207532: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207532.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130.v8.121018164423]
   ds: data12-JetTauEtmiss-207532
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207532
@@ -9579,7 +9579,7 @@ data12-JetTauEtmiss-207582: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207582.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130.v8.121018164123]
   ds: data12-JetTauEtmiss-207582
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207582
@@ -9594,7 +9594,7 @@ data12-JetTauEtmiss-207589: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207589.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130.v8.121018164208]
   ds: data12-JetTauEtmiss-207589
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207589
@@ -9609,7 +9609,7 @@ data12-JetTauEtmiss-207620: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207620.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1197_p1130.v8.121018164043]
   ds: data12-JetTauEtmiss-207620
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207620
@@ -9624,7 +9624,7 @@ data12-JetTauEtmiss-207664: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_JetTauEtmiss.merge.NTUP_TAU.f468_m1202_p1130.v8.121018164534]
   ds: data12-JetTauEtmiss-207664
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207664
@@ -9639,7 +9639,7 @@ data12-JetTauEtmiss-207696: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207696.physics_JetTauEtmiss.merge.NTUP_TAU.f468_m1202_p1130.v8.121018164625]
   ds: data12-JetTauEtmiss-207696
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207696
@@ -9654,7 +9654,7 @@ data12-JetTauEtmiss-207749: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207749.physics_JetTauEtmiss.merge.NTUP_TAU.f469_m1202_p1130.v8.121018164345]
   ds: data12-JetTauEtmiss-207749
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207749
@@ -9669,7 +9669,7 @@ data12-JetTauEtmiss-207772: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207772.physics_JetTauEtmiss.merge.NTUP_TAU.f469_m1202_p1130.v8.121018164318]
   ds: data12-JetTauEtmiss-207772
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207772
@@ -9684,7 +9684,7 @@ data12-JetTauEtmiss-207800: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207800.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164112]
   ds: data12-JetTauEtmiss-207800
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207800
@@ -9699,7 +9699,7 @@ data12-JetTauEtmiss-207809: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164250]
   ds: data12-JetTauEtmiss-207809
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207809
@@ -9714,7 +9714,7 @@ data12-JetTauEtmiss-207845: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207845.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164155]
   ds: data12-JetTauEtmiss-207845
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207845
@@ -9729,7 +9729,7 @@ data12-JetTauEtmiss-207864: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207864.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164614]
   ds: data12-JetTauEtmiss-207864
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207864
@@ -9744,7 +9744,7 @@ data12-JetTauEtmiss-207865: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207865.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164527]
   ds: data12-JetTauEtmiss-207865
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207865
@@ -9759,7 +9759,7 @@ data12-JetTauEtmiss-207929: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207929.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164559]
   ds: data12-JetTauEtmiss-207929
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207929
@@ -9774,7 +9774,7 @@ data12-JetTauEtmiss-207931: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207931.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164512]
   ds: data12-JetTauEtmiss-207931
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207931
@@ -9789,7 +9789,7 @@ data12-JetTauEtmiss-207934: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207934.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164141]
   ds: data12-JetTauEtmiss-207934
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207934
@@ -9804,7 +9804,7 @@ data12-JetTauEtmiss-207975: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164559]
   ds: data12-JetTauEtmiss-207975
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207975
@@ -9819,7 +9819,7 @@ data12-JetTauEtmiss-207982: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207982.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164327]
   ds: data12-JetTauEtmiss-207982
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-207982
@@ -9834,7 +9834,7 @@ data12-JetTauEtmiss-208123: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208123.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164154]
   ds: data12-JetTauEtmiss-208123
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208123
@@ -9849,7 +9849,7 @@ data12-JetTauEtmiss-208126: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208126.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164231]
   ds: data12-JetTauEtmiss-208126
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208126
@@ -9864,7 +9864,7 @@ data12-JetTauEtmiss-208179: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208179.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164316]
   ds: data12-JetTauEtmiss-208179
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208179
@@ -9879,7 +9879,7 @@ data12-JetTauEtmiss-208184: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1208_p1130.v8.121018164122]
   ds: data12-JetTauEtmiss-208184
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208184
@@ -9894,7 +9894,7 @@ data12-JetTauEtmiss-208189: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208189.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1208_p1130.v8.121018164415]
   ds: data12-JetTauEtmiss-208189
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208189
@@ -9909,7 +9909,7 @@ data12-JetTauEtmiss-208258: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208258.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1208_p1130.v8.121018164251]
   ds: data12-JetTauEtmiss-208258
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208258
@@ -9924,7 +9924,7 @@ data12-JetTauEtmiss-208261: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164030]
   ds: data12-JetTauEtmiss-208261
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208261
@@ -9939,7 +9939,7 @@ data12-JetTauEtmiss-208354: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208354.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164522]
   ds: data12-JetTauEtmiss-208354
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208354
@@ -9954,7 +9954,7 @@ data12-JetTauEtmiss-208485: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208485.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164306]
   ds: data12-JetTauEtmiss-208485
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208485
@@ -9969,7 +9969,7 @@ data12-JetTauEtmiss-208631: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164317]
   ds: data12-JetTauEtmiss-208631
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208631
@@ -9984,7 +9984,7 @@ data12-JetTauEtmiss-208642: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208642.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164336]
   ds: data12-JetTauEtmiss-208642
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208642
@@ -9999,7 +9999,7 @@ data12-JetTauEtmiss-208662: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208662.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164430]
   ds: data12-JetTauEtmiss-208662
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208662
@@ -10014,7 +10014,7 @@ data12-JetTauEtmiss-208705: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164125]
   ds: data12-JetTauEtmiss-208705
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208705
@@ -10029,7 +10029,7 @@ data12-JetTauEtmiss-208717: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208717.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164205]
   ds: data12-JetTauEtmiss-208717
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208717
@@ -10044,7 +10044,7 @@ data12-JetTauEtmiss-208720: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208720.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164347]
   ds: data12-JetTauEtmiss-208720
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208720
@@ -10059,7 +10059,7 @@ data12-JetTauEtmiss-208780: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164056]
   ds: data12-JetTauEtmiss-208780
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208780
@@ -10074,7 +10074,7 @@ data12-JetTauEtmiss-208781: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208781.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164302]
   ds: data12-JetTauEtmiss-208781
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208781
@@ -10089,7 +10089,7 @@ data12-JetTauEtmiss-208811: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208811.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130.v8.121018164447]
   ds: data12-JetTauEtmiss-208811
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208811
@@ -10104,7 +10104,7 @@ data12-JetTauEtmiss-208870: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130.v8.121018164429]
   ds: data12-JetTauEtmiss-208870
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208870
@@ -10119,7 +10119,7 @@ data12-JetTauEtmiss-208930: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208930.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164106]
   ds: data12-JetTauEtmiss-208930
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208930
@@ -10134,7 +10134,7 @@ data12-JetTauEtmiss-208931: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208931.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130.v8.121018164203]
   ds: data12-JetTauEtmiss-208931
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208931
@@ -10149,7 +10149,7 @@ data12-JetTauEtmiss-208970: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208970.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130.v8.121018164345]
   ds: data12-JetTauEtmiss-208970
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208970
@@ -10164,7 +10164,7 @@ data12-JetTauEtmiss-208982: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00208982.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130.v8.121018164510]
   ds: data12-JetTauEtmiss-208982
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-208982
@@ -10179,7 +10179,7 @@ data12-JetTauEtmiss-209024: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209024.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018164158]
   ds: data12-JetTauEtmiss-209024
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209024
@@ -10194,7 +10194,7 @@ data12-JetTauEtmiss-209025: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209025.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018164347]
   ds: data12-JetTauEtmiss-209025
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209025
@@ -10209,7 +10209,7 @@ data12-JetTauEtmiss-209074: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018164338]
   ds: data12-JetTauEtmiss-209074
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209074
@@ -10225,7 +10225,7 @@ data12-JetTauEtmiss-209084: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018164447,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018235656]
   ds: data12-JetTauEtmiss-209084
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209084
@@ -10240,7 +10240,7 @@ data12-JetTauEtmiss-209109: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209109.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018164017]
   ds: data12-JetTauEtmiss-209109
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209109
@@ -10255,7 +10255,7 @@ data12-JetTauEtmiss-209161: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209161.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130.v8.121018164547]
   ds: data12-JetTauEtmiss-209161
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209161
@@ -10270,7 +10270,7 @@ data12-JetTauEtmiss-209183: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209183.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164026]
   ds: data12-JetTauEtmiss-209183
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209183
@@ -10286,7 +10286,7 @@ data12-JetTauEtmiss-209214: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209214.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164314,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209214.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018235608]
   ds: data12-JetTauEtmiss-209214
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209214
@@ -10301,7 +10301,7 @@ data12-JetTauEtmiss-209254: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209254.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164556]
   ds: data12-JetTauEtmiss-209254
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209254
@@ -10316,7 +10316,7 @@ data12-JetTauEtmiss-209265: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209265.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164238]
   ds: data12-JetTauEtmiss-209265
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209265
@@ -10331,7 +10331,7 @@ data12-JetTauEtmiss-209269: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209269.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164217]
   ds: data12-JetTauEtmiss-209269
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209269
@@ -10346,7 +10346,7 @@ data12-JetTauEtmiss-209353: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164130]
   ds: data12-JetTauEtmiss-209353
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209353
@@ -10361,7 +10361,7 @@ data12-JetTauEtmiss-209381: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209381.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130.v8.121018164023]
   ds: data12-JetTauEtmiss-209381
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209381
@@ -10376,7 +10376,7 @@ data12-JetTauEtmiss-209550: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209550.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164618]
   ds: data12-JetTauEtmiss-209550
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209550
@@ -10391,7 +10391,7 @@ data12-JetTauEtmiss-209580: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209580.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164219]
   ds: data12-JetTauEtmiss-209580
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209580
@@ -10406,7 +10406,7 @@ data12-JetTauEtmiss-209608: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209608.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164458]
   ds: data12-JetTauEtmiss-209608
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209608
@@ -10421,7 +10421,7 @@ data12-JetTauEtmiss-209628: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209628.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164507]
   ds: data12-JetTauEtmiss-209628
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209628
@@ -10436,7 +10436,7 @@ data12-JetTauEtmiss-209629: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209629.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164404]
   ds: data12-JetTauEtmiss-209629
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209629
@@ -10451,7 +10451,7 @@ data12-JetTauEtmiss-209736: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209736.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164152]
   ds: data12-JetTauEtmiss-209736
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209736
@@ -10466,7 +10466,7 @@ data12-JetTauEtmiss-209776: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164522]
   ds: data12-JetTauEtmiss-209776
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209776
@@ -10481,7 +10481,7 @@ data12-JetTauEtmiss-209787: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209787.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164625]
   ds: data12-JetTauEtmiss-209787
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209787
@@ -10496,7 +10496,7 @@ data12-JetTauEtmiss-209812: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209812.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130.v8.121018164156]
   ds: data12-JetTauEtmiss-209812
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209812
@@ -10511,7 +10511,7 @@ data12-JetTauEtmiss-209864: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130.v8.121018164613]
   ds: data12-JetTauEtmiss-209864
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209864
@@ -10526,7 +10526,7 @@ data12-JetTauEtmiss-209866: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209866.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130.v8.121018164414]
   ds: data12-JetTauEtmiss-209866
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209866
@@ -10542,7 +10542,7 @@ data12-JetTauEtmiss-209899: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130.v8.121018164256,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130.v8.121018235607]
   ds: data12-JetTauEtmiss-209899
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209899
@@ -10557,7 +10557,7 @@ data12-JetTauEtmiss-209980: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209980.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130.v8.121018164439]
   ds: data12-JetTauEtmiss-209980
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209980
@@ -10573,7 +10573,7 @@ data12-JetTauEtmiss-209995: !Dataset
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209995.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130.v8.121018164146,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209995.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130.v8.121018235600]
   ds: data12-JetTauEtmiss-209995
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-209995
@@ -10588,7 +10588,7 @@ data12-JetTauEtmiss-210302: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00210302.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130.v8.121018164356]
   ds: data12-JetTauEtmiss-210302
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-210302
@@ -10603,7 +10603,7 @@ data12-JetTauEtmiss-210308: !Dataset
   datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00210308.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130.v8.121018164249]
   ds: data12-JetTauEtmiss-210308
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-210308
@@ -10640,7 +10640,7 @@ data12-JetTauEtmiss-A: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201138.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164038,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00201120.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130.v8.121018164311]
   ds: data12-JetTauEtmiss-A
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-A
@@ -10676,7 +10676,7 @@ data12-JetTauEtmiss-B: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204772.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164338,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204796.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164322]
   ds: data12-JetTauEtmiss-B
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-B
@@ -10744,7 +10744,7 @@ data12-JetTauEtmiss-Ba: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202740.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164547,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203258.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164131]
   ds: data12-JetTauEtmiss-Ba
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-Ba
@@ -10775,7 +10775,7 @@ data12-JetTauEtmiss-C: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207304.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130.v8.121018164118,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207332.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1191_p1130.v8.121018164336]
   ds: data12-JetTauEtmiss-C
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-C
@@ -10836,7 +10836,7 @@ data12-JetTauEtmiss-D: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207864.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164614,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00207865.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130.v8.121018164527]
   ds: data12-JetTauEtmiss-D
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-D
@@ -10881,7 +10881,7 @@ data12-JetTauEtmiss-E: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130.v8.121018164256,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130.v8.121018235607]
   ds: data12-JetTauEtmiss-E
-  file_pattern: hadhad.root*
+  file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
   name: data12-JetTauEtmiss-E

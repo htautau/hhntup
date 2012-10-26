@@ -41,7 +41,7 @@
         mc_treename: 'tau'
         data_path: '/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8'
         data_prefix: 'group.phys-higgs.hhskim'
-        data_pattern: 'hadhad.root*'
+        data_pattern: '*hadhad.root*'
         data_treename: 'tau'
         embed_path: '/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7'
         embed_prefix: 'group.phys-higgs.hhskim'
