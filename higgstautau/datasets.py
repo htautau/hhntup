@@ -73,16 +73,18 @@ MC_TAG_PATTERN2 = re.compile(
 EMBED_PATTERN = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
-        '\.DESD_(SGLMU|ZMUMU)\.pro(?P<prod>\d+)\.'
-        'embedding-(?P<embedtag>\S+)?'
+        '\.DESD_((SGLMU)|(ZMUMU))'
+        '\.pro(?P<prod>\d+)'
+        '\.embedding-(?P<embedtag>\S+)?'
         '\.Ztautau_'
         '(?P<channel>(lh)|(hh))_'
-        '((high|low)pt_)?'
+        '(((high)|(low))pt_)?'
         '(?P<isol>[a-z]+)_'
         '(?P<mfs>[a-z]+)_'
-        '(re|tau)reco_p(?P<tag>\d+)\.'
-        '(?P<number>\S+)?'
-        '_EXT0$')
+        '((re)|(tau))reco_'
+        'p(?P<tag>\d+)_'
+        'EXT0'
+        '(\.(?P<suffix>\S+))?$')
 
 """
 MC[11|12][a|b|c|...] categories are defined here
@@ -98,7 +100,7 @@ MC_CATEGORIES = {
               'merge': (3063, 2993, 2900)},
     'mc11c': {'reco':  (3043, 3060),
               'merge': (3109, 3063, 2993)},
-    'mc12a': {'reco':  (3753, 3752, 3605, 3542),
+    'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542),
               'merge': (3549,)}}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -377,14 +379,15 @@ class Database(dict):
             channels = {}
             for dir in embed_dirs:
                 if os.path.isdir(dir):
-                    match = re.match(EMBED_PATTERN, dir)
+                    dirname, basename = os.path.split(dir)
+                    match = re.match(EMBED_PATTERN, basename)
                     if match:
                         channel = match.group('channel')
                         if channel not in channels:
                             channels[channel] = []
                         channels[channel].append(dir)
                     else:
-                        print "not a valid dataset name: %s" % dir
+                        print "not a valid dataset name: %s" % basename
                 else:
                     print "skipping file: %s" % dir
 
@@ -393,28 +396,30 @@ class Database(dict):
                 # group dirs by isolation
                 isols = {}
                 for dir in channel_dirs:
-                    match = re.match(EMBED_PATTERN, dir)
+                    dirname, basename = os.path.split(dir)
+                    match = re.match(EMBED_PATTERN, basename)
                     if match:
                         isol = match.group('isol')
                         if isol not in isols:
                             isols[isol] = []
                         isols[isol].append(dir)
                     else:
-                        print "not a valid dataset name: %s" % dir
+                        print "not a valid dataset name: %s" % basename
 
                 for isol, isol_dirs in isols.items():
 
                     # group dirs by mfs
                     mfss = {}
                     for dir in isol_dirs:
-                        match = re.match(EMBED_PATTERN, dir)
+                        dirname, basename = os.path.split(dir)
+                        match = re.match(EMBED_PATTERN, basename)
                         if match:
                             mfs = match.group('mfs')
                             if mfs not in mfss:
                                 mfss[mfs] = []
                             mfss[mfs].append(dir)
                         else:
-                            print "not a valid dataset name: %s" % dir
+                            print "not a valid dataset name: %s" % basename
 
                     for mfs, mfs_dirs in mfss.items():
 
@@ -431,7 +436,8 @@ class Database(dict):
 
                         periods = {}
                         for dir in mfs_dirs:
-                            match = re.match(EMBED_PATTERN, dir)
+                            dirname, basename = os.path.split(dir)
+                            match = re.match(EMBED_PATTERN, basename)
                             if match:
                                 period = match.group('period')
                                 tag = match.group('tag')
@@ -445,7 +451,7 @@ class Database(dict):
                                             'different tags: %s' %
                                             periods[period]['dirs'])
                             else:
-                                print "not a valid dataset name: %s" % dir
+                                print "not a valid dataset name: %s" % basename
 
                         for period, info in periods.items():
                             period_name = '%s-%s' % (name, period)
