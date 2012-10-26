@@ -527,7 +527,9 @@ class Database(dict):
                 if USE_PYAMI:
                     # in each stream create a separate dataset for each period
                     run_periods = get_periods(amiclient, year=year, level=2)
-                    run_periods = [p.name for p in run_periods]
+                    # ignore subset periods like Ba in 2012
+                    run_periods = [
+                            p.name for p in run_periods if len(p.name) == 1]
                     period_runs = {}
                     for period in run_periods:
                         if period == 'VdM':

@@ -10653,73 +10653,56 @@ data12-JetTauEtmiss-A: !Dataset
 data12-JetTauEtmiss-B: !Dataset
   category: null
   datatype: 0
-  dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204857.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164428,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164607,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164138,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121019225254,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204954.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164226,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204955.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164313,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204976.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164400,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205010.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164540,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164244,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205017.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164318,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164424,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121019225428,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164247,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204763.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164513,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164549,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018235721,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204853.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164046,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205112.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164045,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204769.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164115,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204726.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164118,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204772.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164338,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204796.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164322]
-  ds: data12-JetTauEtmiss-B
-  file_pattern: '*hadhad.root*'
-  grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
-  id: 1
-  name: data12-JetTauEtmiss-B
-  stream: JetTauEtmiss
-  tag: null
-  tag_pattern: null
-  treename: tau
-  version: null
-  year: null
-data12-JetTauEtmiss-Ba: !Dataset
-  category: null
-  datatype: 0
   dirs: [/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164053,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1148_p1130.v8.121018164612,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203792.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164328,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202798.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164515,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202798.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018235707,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204857.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164428,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203335.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164204,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203336.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121019225259,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203336.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164150,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203353.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164557,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203875.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164413,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203876.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164256,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164607,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164138,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121019225254,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204954.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164226,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204955.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164313,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203934.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164502,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203432.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164203,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204976.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164400,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204474.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164228,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203454.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164420,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203456.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164124,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205010.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164540,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202965.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164509,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164244,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205017.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164318,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202991.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164517,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204025.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164603,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204026.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164151,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164424,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121019225428,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204416.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164530,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203523.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164453,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203524.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164210,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164247,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203027.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1143_p1130.v8.121018164255,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204564.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164325,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204763.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164513,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204071.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164439,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204073.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164542,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164549,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018235721,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204853.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164046,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203745.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164403,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00205112.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164045,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203602.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164238,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203605.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164233,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204633.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130.v8.121018164452,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204769.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164115,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204134.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164246,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203636.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164343,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204153.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130.v8.121018164402,
@@ -10730,8 +10713,10 @@ data12-JetTauEtmiss-Ba: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203169.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164441,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202660.physics_JetTauEtmiss.merge.NTUP_TAU.f442_m1136_p1130.v8.121018164433,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202668.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164431,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204726.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130.v8.121018164118,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203191.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164206,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203195.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164422,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204772.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164338,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018235700,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130.v8.121018164209,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1158_p1130.v8.121018164524,
@@ -10742,12 +10727,13 @@ data12-JetTauEtmiss-Ba: !Dataset
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204265.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1158_p1130.v8.121018164058,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203760.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130.v8.121018164450,
     /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00202740.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130.v8.121018164547,
-    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203258.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164131]
-  ds: data12-JetTauEtmiss-Ba
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00203258.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130.v8.121018164131,
+    /global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8/group.phys-higgs.hhskim.data12_8TeV.00204796.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130.v8.121018164322]
+  ds: data12-JetTauEtmiss-B
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml
   id: 1
-  name: data12-JetTauEtmiss-Ba
+  name: data12-JetTauEtmiss-B
   stream: JetTauEtmiss
   tag: null
   tag_pattern: null
