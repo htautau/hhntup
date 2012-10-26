@@ -12517,7 +12517,7 @@ embed11-hh-tightisol-mfsim-M: !Dataset
   treename: tau
   version: null
   year: null
-embed12-hh-mfsdn-filter: !Dataset
+embed12-hh-mfsdn: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018021208,
@@ -12563,18 +12563,18 @@ embed12-hh-mfsdn-filter: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020400,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018022036,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020233]
-  ds: embed12-hh-mfsdn-filter
+  ds: embed12-hh-mfsdn
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsdn-filter
+  name: embed12-hh-mfsdn
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsdn-filter-A: !Dataset
+embed12-hh-mfsdn-A: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020006,
@@ -12583,18 +12583,18 @@ embed12-hh-mfsdn-filter-A: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015443,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015840,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020250]
-  ds: embed12-hh-mfsdn-filter-A
+  ds: embed12-hh-mfsdn-A
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsdn-filter-A
+  name: embed12-hh-mfsdn-A
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsdn-filter-B: !Dataset
+embed12-hh-mfsdn-B: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015538,
@@ -12607,18 +12607,18 @@ embed12-hh-mfsdn-filter-B: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020106,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018021750,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018022036]
-  ds: embed12-hh-mfsdn-filter-B
+  ds: embed12-hh-mfsdn-B
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsdn-filter-B
+  name: embed12-hh-mfsdn-B
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsdn-filter-C: !Dataset
+embed12-hh-mfsdn-C: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015929,
@@ -12628,18 +12628,18 @@ embed12-hh-mfsdn-filter-C: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015551,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020400,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020233]
-  ds: embed12-hh-mfsdn-filter-C
+  ds: embed12-hh-mfsdn-C
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsdn-filter-C
+  name: embed12-hh-mfsdn-C
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsdn-filter-D: !Dataset
+embed12-hh-mfsdn-D: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018021208,
@@ -12656,18 +12656,18 @@ embed12-hh-mfsdn-filter-D: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015915,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015720,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020950]
-  ds: embed12-hh-mfsdn-filter-D
+  ds: embed12-hh-mfsdn-D
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsdn-filter-D
+  name: embed12-hh-mfsdn-D
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsdn-filter-E: !Dataset
+embed12-hh-mfsdn-E: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015830,
@@ -12676,18 +12676,18 @@ embed12-hh-mfsdn-filter-E: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015954,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018015436,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsdn_filter_taureco_p1131_EXT0.v7.121018020256]
-  ds: embed12-hh-mfsdn-filter-E
+  ds: embed12-hh-mfsdn-E
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsdn-filter-E
+  name: embed12-hh-mfsdn-E
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsim-filter: !Dataset
+embed12-hh-mfsim: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015438,
@@ -12722,18 +12722,18 @@ embed12-hh-mfsim-filter: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018021216,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020300,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020559]
-  ds: embed12-hh-mfsim-filter
+  ds: embed12-hh-mfsim
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsim-filter
+  name: embed12-hh-mfsim
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsim-filter-A: !Dataset
+embed12-hh-mfsim-A: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015438,
@@ -12742,18 +12742,18 @@ embed12-hh-mfsim-filter-A: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015611,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015933,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020112]
-  ds: embed12-hh-mfsim-filter-A
+  ds: embed12-hh-mfsim-A
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsim-filter-A
+  name: embed12-hh-mfsim-A
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsim-filter-B: !Dataset
+embed12-hh-mfsim-B: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018021428,
@@ -12763,18 +12763,18 @@ embed12-hh-mfsim-filter-B: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018021139,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020300,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020559]
-  ds: embed12-hh-mfsim-filter-B
+  ds: embed12-hh-mfsim-B
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsim-filter-B
+  name: embed12-hh-mfsim-B
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsim-filter-C: !Dataset
+embed12-hh-mfsim-C: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015558,
@@ -12783,18 +12783,18 @@ embed12-hh-mfsim-filter-C: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020317,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020136,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015434]
-  ds: embed12-hh-mfsim-filter-C
+  ds: embed12-hh-mfsim-C
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsim-filter-C
+  name: embed12-hh-mfsim-C
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsim-filter-D: !Dataset
+embed12-hh-mfsim-D: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020748,
@@ -12804,18 +12804,18 @@ embed12-hh-mfsim-filter-D: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020318,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018021006,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018021216]
-  ds: embed12-hh-mfsim-filter-D
+  ds: embed12-hh-mfsim-D
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsim-filter-D
+  name: embed12-hh-mfsim-D
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsim-filter-E: !Dataset
+embed12-hh-mfsim-E: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015958,
@@ -12824,18 +12824,18 @@ embed12-hh-mfsim-filter-E: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020547,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018015814,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsim_filter_taureco_p1131_EXT0.v7.121018020144]
-  ds: embed12-hh-mfsim-filter-E
+  ds: embed12-hh-mfsim-E
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsim-filter-E
+  name: embed12-hh-mfsim-E
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsup-filter: !Dataset
+embed12-hh-mfsup: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020345,
@@ -12888,18 +12888,18 @@ embed12-hh-mfsup-filter: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015442,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015721,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018023235]
-  ds: embed12-hh-mfsup-filter
+  ds: embed12-hh-mfsup
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsup-filter
+  name: embed12-hh-mfsup
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsup-filter-A: !Dataset
+embed12-hh-mfsup-A: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020149,
@@ -12907,18 +12907,18 @@ embed12-hh-mfsup-filter-A: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015716,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015450,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodA.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020021]
-  ds: embed12-hh-mfsup-filter-A
+  ds: embed12-hh-mfsup-A
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsup-filter-A
+  name: embed12-hh-mfsup-A
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsup-filter-B: !Dataset
+embed12-hh-mfsup-B: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020001,
@@ -12937,18 +12937,18 @@ embed12-hh-mfsup-filter-B: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020210,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018021400,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodB.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018023235]
-  ds: embed12-hh-mfsup-filter-B
+  ds: embed12-hh-mfsup-B
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsup-filter-B
+  name: embed12-hh-mfsup-B
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsup-filter-C: !Dataset
+embed12-hh-mfsup-C: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015559,
@@ -12957,18 +12957,18 @@ embed12-hh-mfsup-filter-C: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020008,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015833,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodC.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020343]
-  ds: embed12-hh-mfsup-filter-C
+  ds: embed12-hh-mfsup-C
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsup-filter-C
+  name: embed12-hh-mfsup-C
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsup-filter-D: !Dataset
+embed12-hh-mfsup-D: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020345,
@@ -12987,18 +12987,18 @@ embed12-hh-mfsup-filter-D: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015923,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018022026,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodD.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015721]
-  ds: embed12-hh-mfsup-filter-D
+  ds: embed12-hh-mfsup-D
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsup-filter-D
+  name: embed12-hh-mfsup-D
   stream: null
   tag: null
   tag_pattern: null
   treename: tau
   version: null
   year: null
-embed12-hh-mfsup-filter-E: !Dataset
+embed12-hh-mfsup-E: !Dataset
   category: null
   datatype: 2
   dirs: [/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015845,
@@ -13008,11 +13008,11 @@ embed12-hh-mfsup-filter-E: !Dataset
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018020451,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015606,
     /global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7/group.phys-higgs.hhskim.data12_8TeV.periodE.DESD_ZMUMU.pro13.embedding-02-48.Ztautau_hh_highpt_mfsup_filter_taureco_p1131_EXT0.v7.121018015442]
-  ds: embed12-hh-mfsup-filter-E
+  ds: embed12-hh-mfsup-E
   file_pattern: '*embedding12_ztautau_hh_p1131.root*'
   grl: null
   id: 1
-  name: embed12-hh-mfsup-filter-E
+  name: embed12-hh-mfsup-E
   stream: null
   tag: null
   tag_pattern: null

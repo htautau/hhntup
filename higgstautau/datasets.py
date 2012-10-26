@@ -70,7 +70,7 @@ MC_TAG_PATTERN2 = re.compile(
         'p(?P<ntup>\d+)$')
 
 # Embedded sample pattern
-EMBED_PATTERN = re.compile(
+EMBED_PATTERN11 = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
         '\.DESD_((SGLMU)|(ZMUMU))'
@@ -81,6 +81,22 @@ EMBED_PATTERN = re.compile(
         '(((high)|(low))pt_)?'
         '(?P<isol>[a-z]+)_'
         '(?P<mfs>[a-z]+)_'
+        '((re)|(tau))reco_'
+        'p(?P<tag>\d+)_'
+        'EXT0'
+        '(\.(?P<suffix>\S+))?$')
+
+EMBED_PATTERN12 = re.compile(
+        '^(?P<prefix>\S+)?'
+        'period(?P<period>[A-Z])'
+        '\.DESD_((SGLMU)|(ZMUMU))'
+        '\.pro(?P<prod>\d+)'
+        '\.embedding-(?P<embedtag>\S+)?'
+        '\.Ztautau_'
+        '(?P<channel>(lh)|(hh))_'
+        '(((high)|(low))pt_)?'
+        '(?P<mfs>[a-z]+)_'
+        'filter_'
         '((re)|(tau))reco_'
         'p(?P<tag>\d+)_'
         'EXT0'
@@ -375,6 +391,11 @@ class Database(dict):
                 embed_dirs = glob.glob(
                         os.path.join(embed_path, '*'))
 
+            if year == 11:
+                EMBED_PATTERN = EMBED_PATTERN11
+            else:
+                EMBED_PATTERN = EMBED_PATTERN12
+
             # determine what channels are available
             channels = {}
             for dir in embed_dirs:
@@ -393,24 +414,81 @@ class Database(dict):
 
             for channel, channel_dirs in channels.items():
 
-                # group dirs by isolation
-                isols = {}
-                for dir in channel_dirs:
-                    dirname, basename = os.path.split(dir)
-                    match = re.match(EMBED_PATTERN, basename)
-                    if match:
-                        isol = match.group('isol')
-                        if isol not in isols:
-                            isols[isol] = []
-                        isols[isol].append(dir)
-                    else:
-                        print "not a valid dataset name: %s" % basename
+                if year == 11:
+                    # group dirs by isolation
+                    isols = {}
+                    for dir in channel_dirs:
+                        dirname, basename = os.path.split(dir)
+                        match = re.match(EMBED_PATTERN, basename)
+                        if match:
+                            isol = match.group('isol')
+                            if isol not in isols:
+                                isols[isol] = []
+                            isols[isol].append(dir)
+                        else:
+                            print "not a valid dataset name: %s" % basename
 
-                for isol, isol_dirs in isols.items():
+                    for isol, isol_dirs in isols.items():
 
+                        # group dirs by mfs
+                        mfss = {}
+                        for dir in isol_dirs:
+                            dirname, basename = os.path.split(dir)
+                            match = re.match(EMBED_PATTERN, basename)
+                            if match:
+                                mfs = match.group('mfs')
+                                if mfs not in mfss:
+                                    mfss[mfs] = []
+                                mfss[mfs].append(dir)
+                            else:
+                                print "not a valid dataset name: %s" % basename
+
+                        for mfs, mfs_dirs in mfss.items():
+
+                            name = 'embed%d-%s-%s-%s' % (year, channel, isol, mfs)
+                            self[name] = Dataset(name,
+                                datatype=EMBED,
+                                treename=embed_treename,
+                                ds=name,
+                                id=1,
+                                # The GRL is the same for both lephad and hadhad analyses
+                                grl=None,
+                                dirs=mfs_dirs,
+                                file_pattern=embed_pattern)
+
+                            periods = {}
+                            for dir in mfs_dirs:
+                                dirname, basename = os.path.split(dir)
+                                match = re.match(EMBED_PATTERN, basename)
+                                if match:
+                                    period = match.group('period')
+                                    tag = match.group('tag')
+                                    if period not in periods:
+                                        periods[period] = {'tag': tag, 'dirs': [dir]}
+                                    else:
+                                        periods[period]['dirs'].append(dir)
+                                        if tag != periods[period]['tag']:
+                                            print (
+                                                'multiple copies of run with '
+                                                'different tags: %s' %
+                                                periods[period]['dirs'])
+                                else:
+                                    print "not a valid dataset name: %s" % basename
+
+                            for period, info in periods.items():
+                                period_name = '%s-%s' % (name, period)
+                                self[period_name] = Dataset(name=period_name,
+                                    datatype=EMBED,
+                                    treename=embed_treename,
+                                    ds=period_name,
+                                    id=1,
+                                    grl=None,
+                                    dirs=info['dirs'],
+                                    file_pattern=embed_pattern)
+                else:
                     # group dirs by mfs
                     mfss = {}
-                    for dir in isol_dirs:
+                    for dir in channel_dirs:
                         dirname, basename = os.path.split(dir)
                         match = re.match(EMBED_PATTERN, basename)
                         if match:
@@ -423,7 +501,7 @@ class Database(dict):
 
                     for mfs, mfs_dirs in mfss.items():
 
-                        name = 'embed%d-%s-%s-%s' % (year, channel, isol, mfs)
+                        name = 'embed%d-%s-%s' % (year, channel, mfs)
                         self[name] = Dataset(name,
                             datatype=EMBED,
                             treename=embed_treename,
