@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
+parser.add_argument('--year', type=int, choices=(11, 12), default=11)
 parser.add_argument('--student', default='HHProcessor.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=5)
@@ -15,7 +16,6 @@ parser.add_argument('--systematics-only', action='store_true', default=False)
 parser.add_argument('--dry', action='store_true', default=False)
 parser.add_argument('--use-ssh', dest='use_qsub', action='store_false', default=True)
 parser.add_argument('--warnings-as-errors', action='store_true', default=False)
-parser.add_argument('--year', type=int, default=2011)
 parser.add_argument('samples', nargs='*', default=None)
 
 args = parser.parse_args()

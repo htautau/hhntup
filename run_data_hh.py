@@ -6,6 +6,7 @@ import cluster
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
+parser.add_argument('--year', type=int, choices=(11, 12), default=11)
 parser.add_argument('--nproc', type=int, default=3)
 parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
@@ -19,8 +20,8 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 CWD = os.getcwd()
 CMD = ("%s && ./run --output-path ntuples/hadhad/HHProcessor "
        "-s HHProcessor.py -n %d --db datasets_hh "
-       "--nice %d --split %d:%%d data-JetTauEtmiss") % (
-               setup, args.nproc, args.nice, args.nsplit)
+       "--nice %d --split %d:%%d data%d-JetTauEtmiss") % (
+               setup, args.nproc, args.nice, args.nsplit, args.year)
 
 for i in xrange(args.nsplit):
     if args.splits and (i + 1) not in args.splits:
@@ -29,7 +30,7 @@ for i in xrange(args.nsplit):
     cluster.qsub(
         cmd,
         ncpus=args.nproc,
-        name='HHProcessor.data_%d' % (i + 1),
+        name='HHProcessor.data%d_%d' % (args.year, i + 1),
         stderr_path='ntuples/hadhad/HHProcessor',
         stdout_path='ntuples/hadhad/HHProcessor',
         queue=args.queue,

@@ -23,15 +23,7 @@ embedded_ztautau:
     root: 'Z/#gamma^{*} (embedded)'
     color: '#00a4ff'
     samples:
-        - 'embed-hh-isol-mfsim'
-        
-        # need to determine how to normalize low mass ALPGEN wrt embedded
-        #- 'AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c'
-        #- 'AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c'
-        #- 'AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c'
-        #- 'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c'
-        #- 'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c'
-        #- 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
+        - 'embed11-hh-isol-mfsim'
 ewk:
     name: EW
     latex: EW

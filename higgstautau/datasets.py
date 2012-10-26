@@ -819,6 +819,11 @@ if __name__ == '__main__':
 
     db = Database(name=args.name, verbose=True)
 
+    if args.info:
+        for name in sorted(db.keys()):
+            print "%s => %s" % (name, db[name].ds)
+        sys.exit()
+
     if args.reset:
         db.clear()
 

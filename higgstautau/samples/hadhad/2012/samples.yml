@@ -5,13 +5,13 @@ embedded:
         - TAUBDT_UP
         - TAUBDT_DOWN
     samples:
-        - 'embed11-hh-isol-mfsim'
+        - 'embed12-hh-isol-mfsim'
     systematics_samples:
-        'embed11-hh-isol-mfsim':
-            'embed11-hh-isol-mfsup': MFS_UP
-            'embed11-hh-isol-mfsdn': MFS_DOWN
-            'embed11-hh-noisol-mfsim': ISOL_DOWN
-            'embed11-hh-tightisol-mfsim': ISOL_UP
+        'embed12-hh-isol-mfsim':
+            'embed12-hh-isol-mfsup': MFS_UP
+            'embed12-hh-isol-mfsdn': MFS_DOWN
+            'embed12-hh-noisol-mfsim': ISOL_DOWN
+            'embed12-hh-tightisol-mfsim': ISOL_UP
 mc:
     systematics:
         - JES_UP,TES_UP
