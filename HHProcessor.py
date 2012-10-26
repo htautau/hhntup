@@ -57,8 +57,6 @@ from externaltools import TauFakeRates
 from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-YEAR = 2011
-year = 2011
 VERBOSE = False
 
 
@@ -97,6 +95,7 @@ class HHProcessor(ATLASStudent):
         This is the one function that all "ATLASStudent"s must implement.
         """
         datatype = self.metadata.datatype
+        year = self.metadata.year
 
         # fake rate scale factor tool
         fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
@@ -453,18 +452,18 @@ class HHProcessor(ATLASStudent):
                                    [jet.pt for jet in jets])
 
             # MET
-            METx = event.MET_RefFinal_BDTMedium_etx
-            METy = event.MET_RefFinal_BDTMedium_ety
+            METx = event.MET.etx
+            METy = event.MET.ety
             MET_vect = Vector2(METx, METy)
-            MET = event.MET_RefFinal_BDTMedium_et
+            MET = event.MET.et
 
             tree.MET = MET
             tree.MET_x = METx
             tree.MET_y = METy
-            tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
+            tree.MET_phi = event.MET.phi
             tree.MET_vec.set_from(MET_vect)
 
-            sumET = event.MET_RefFinal_BDTMedium_sumet
+            sumET = event.MET.sumet
             tree.sumET = sumET
             tree.MET_sig = (2. * MET / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
             MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
@@ -474,7 +473,9 @@ class HHProcessor(ATLASStudent):
                                                              MET_vect)
 
             # Mass
-            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
+                    tau1, tau2, METx, METy, sumET,
+                    year=year)
 
             tree.mass_mmc_tau1_tau2 = mmc_mass
             tree.mmc_resonance.set_from(mmc_resonance)
@@ -610,9 +611,9 @@ class HHProcessor(ATLASStudent):
 
             # track recounting
             tau1.ntrack_full = track_counting.count_tracks(
-                    tau1, event)
+                    tau1, event, year)
             tau2.ntrack_full = track_counting.count_tracks(
-                    tau2, event)
+                    tau2, event, year)
 
             # tau - vertex association
             tree.tau_same_vertex = (
@@ -634,7 +635,7 @@ class HHProcessor(ATLASStudent):
             # set the event weights
             if datatype == datasets.MC:
                 tree.mc_weight = event.mc_event_weight
-                if YEAR == 2011:
+                if year == 2011:
                     tree.ggf_weight = reweight_ggf(event, self.metadata.name)
                     # no ggf reweighting for 2012 MC
             elif datatype == datasets.EMBED:

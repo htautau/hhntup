@@ -3,6 +3,7 @@ from ..mixins import *
 
 def define_objects(tree, year, skim=False):
 
+    year = year % 1000
     if skim:
         tree.define_collection(
                 name="taus",
@@ -64,11 +65,10 @@ def define_objects(tree, year, skim=False):
             name="tracks",
             prefix="trk_",
             size="trk_n")
-
-    if year == 2011:
-        met = 'MET_RefFinal_BDTMedium_'
-    else:
+    if year == 12:
         met = 'MET_RefFinal_STVF_'
+    else:
+        met = 'MET_RefFinal_BDTMedium_'
     print "Using %s*" % met
     tree.define_object(
             name='MET',
