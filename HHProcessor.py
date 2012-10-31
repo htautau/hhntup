@@ -43,17 +43,13 @@ from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
-from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.corrections import reweight_ggf
 from higgstautau.pileup import PileupReweight
 from higgstautau.hadhad.objects import define_objects
 
 from goodruns import GRL
 import subprocess
 
-from externaltools import TauFakeRates
-from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
 VERBOSE = False
@@ -95,10 +91,6 @@ class HHProcessor(ATLASStudent):
         """
         datatype = self.metadata.datatype
         year = self.metadata.year
-
-        # fake rate scale factor tool
-        fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
-        fakerate_tool = TFR.FakeRateScaler(fakerate_table)
 
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
@@ -298,10 +290,14 @@ class HHProcessor(ATLASStudent):
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             ggFReweighting(
+                dsname=self.metadata.name,
+                tree=tree,
+                # no ggf reweighting for 2012 MC
                 passthrough=datatype != datasets.MC or year != 2011,
                 count_funcs=count_funcs),
             MCWeight(
                 datatype=datatype,
+                tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             TauTrackRecounting(
@@ -545,40 +541,6 @@ class HHProcessor(ATLASStudent):
                                 if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
                                     setattr(tree, 'jet%i_matched' % i, True)
 
-                for tau in (tau1, tau2):
-
-                    # factors and corrections are currently
-                    # only valid for 2011 data/MC
-
-                    if tau.matched:
-                        # efficiency scale factor
-                        effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
-                        tau.efficiency_scale_factor = effic_sf
-                        # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
-                        tau.efficiency_scale_factor_high = effic_sf + err
-                        tau.efficiency_scale_factor_low = effic_sf - err
-                    else:
-                        # fake rate scale factor
-                        if event.RunNumber >= 188902:
-                            trig = "EF_tau%dT_medium1"
-                        else:
-                            trig = "EF_tau%d_medium1"
-                        wp = "Medium"
-                        if tau.JetBDTSigTight:
-                            wp = "Tight"
-                        sf = fakerate_tool.getScaleFactor(
-                                tau.pt, wp,
-                                trig % tau.trigger_match_thresh)
-                        tau.fakerate_scale_factor = sf
-                        tau.fakerate_scale_factor_high = (sf +
-                                fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, wp,
-                                    trig % tau.trigger_match_thresh, True))
-                        tau.fakerate_scale_factor_low = (sf -
-                                fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, wp,
-                                    trig % tau.trigger_match_thresh, False))
-
             # tau - vertex association
             tree.tau_same_vertex = (
                     tau1.privtx_x == tau2.privtx_x and
@@ -595,19 +557,6 @@ class HHProcessor(ATLASStudent):
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
-
-            # set the event weights
-            if datatype == datasets.MC:
-                tree.mc_weight = event.mc_event_weight
-                if year == 2011:
-                    tree.ggf_weight = reweight_ggf(event, self.metadata.name)
-                    # no ggf reweighting for 2012 MC
-            elif datatype == datasets.EMBED:
-                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
-                # correct truth filter efficiency
-                tree.mc_weight = event.mcevt_weight[0][0]
-                # In 2011 mc_event_weight == mcevt_weight[0][0]
-                # for embedding. But not so in 2012...
 
             # fill output ntuple
             tree.Fill(reset=True)

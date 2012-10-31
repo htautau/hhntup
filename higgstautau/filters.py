@@ -1,7 +1,6 @@
 """
 Event filters common to both hadhad and lephad go here
 """
-
 from rootpy.tree.filtering import *
 from itertools import ifilter
 from atlastools import utils
@@ -9,6 +8,7 @@ from atlastools.units import GeV
 from atlastools import datasets
 from math import *
 
+from .corrections import reweight_ggf
 from . import jetcleaning
 
 
@@ -402,4 +402,39 @@ class JetSelection(EventFilter):
     def passes(self, event):
 
         event.jets.select(jet_selection)
+        return True
+
+
+class MCWeight(EventFilter):
+
+    def __init__(self, datatype, tree, **kwargs):
+
+        self.datatype = datatype
+        self.tree = tree
+
+    def passes(self, event):
+
+        # set the event weights
+        if self.datatype == datasets.MC:
+            tree.mc_weight = event.mc_event_weight
+        elif self.datatype == datasets.EMBED:
+            # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
+            # correct truth filter efficiency
+            tree.mc_weight = event.mcevt_weight[0][0]
+            # In 2011 mc_event_weight == mcevt_weight[0][0]
+            # for embedding. But not so in 2012...
+        return True
+
+
+class ggFReweighting(EventFilter):
+
+    def __init__(self, dsname, tree, **kwargs):
+
+        self.dsname = dsname
+        self.tree = tree
+        super(ggFReweighting, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        self.tree.ggf_weight = reweight_ggf(event, self.dsname)
         return True
