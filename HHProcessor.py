@@ -143,9 +143,9 @@ class HHProcessor(ATLASStudent):
 
         def update_cutflow(student, cutflow, name, file, tree):
 
-            year = student.metadata.year % 1000
+            year = student.metadata.year
             datatype = student.metadata.datatype
-            if year == 11:
+            if year == 2011:
                 cutflow += file.cutflow
             elif datatype == datasets.MC:
                 cutflow[0] += file.cutflow_event[0]

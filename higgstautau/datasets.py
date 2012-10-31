@@ -241,7 +241,6 @@ class Database(dict):
         """
         if self.verbose: print "Updating '%s' dataset database..." % self.name
         self.modified = True
-        year = year % 1000
 
         if mc_path is not None:
             if versioned:
@@ -357,7 +356,8 @@ class Database(dict):
                                     tag_pattern=MC_TAG_PATTERN.pattern,
                                     tag=tag,
                                     dirs=[dir],
-                                    file_pattern=mc_pattern)
+                                    file_pattern=mc_pattern,
+                                    year=year)
                         else:
                             dataset.dirs.append(dir)
                     elif dataset is None or (
@@ -376,7 +376,8 @@ class Database(dict):
                             tag_pattern=MC_TAG_PATTERN.pattern,
                             tag=tag,
                             dirs=[dir],
-                            file_pattern=mc_pattern)
+                            file_pattern=mc_pattern,
+                            year=year)
                 else:
                     print "not matched: %s" % basename
 
@@ -391,7 +392,7 @@ class Database(dict):
                 embed_dirs = glob.glob(
                         os.path.join(embed_path, '*'))
 
-            if year == 11:
+            if year == 2011:
                 EMBED_PATTERN = EMBED_PATTERN11
             else:
                 EMBED_PATTERN = EMBED_PATTERN12
@@ -414,7 +415,7 @@ class Database(dict):
 
             for channel, channel_dirs in channels.items():
 
-                if year == 11:
+                if year == 2011:
                     # group dirs by isolation
                     isols = {}
                     for dir in channel_dirs:
@@ -445,7 +446,8 @@ class Database(dict):
 
                         for mfs, mfs_dirs in mfss.items():
 
-                            name = 'embed%d-%s-%s-%s' % (year, channel, isol, mfs)
+                            name = 'embed%d-%s-%s-%s' % (
+                                    year % 1000, channel, isol, mfs)
                             self[name] = Dataset(name,
                                 datatype=EMBED,
                                 treename=embed_treename,
@@ -454,7 +456,8 @@ class Database(dict):
                                 # The GRL is the same for both lephad and hadhad analyses
                                 grl=None,
                                 dirs=mfs_dirs,
-                                file_pattern=embed_pattern)
+                                file_pattern=embed_pattern,
+                                year=year)
 
                             periods = {}
                             for dir in mfs_dirs:
@@ -484,7 +487,8 @@ class Database(dict):
                                     id=1,
                                     grl=None,
                                     dirs=info['dirs'],
-                                    file_pattern=embed_pattern)
+                                    file_pattern=embed_pattern,
+                                    year=year)
                 else:
                     # group dirs by mfs
                     mfss = {}
@@ -501,7 +505,8 @@ class Database(dict):
 
                     for mfs, mfs_dirs in mfss.items():
 
-                        name = 'embed%d-%s-%s' % (year, channel, mfs)
+                        name = 'embed%d-%s-%s' % (
+                                year % 1000, channel, mfs)
                         self[name] = Dataset(name,
                             datatype=EMBED,
                             treename=embed_treename,
@@ -510,7 +515,8 @@ class Database(dict):
                             # The GRL is the same for both lephad and hadhad analyses
                             grl=None,
                             dirs=mfs_dirs,
-                            file_pattern=embed_pattern)
+                            file_pattern=embed_pattern,
+                            year=year)
 
                         periods = {}
                         for dir in mfs_dirs:
@@ -540,7 +546,8 @@ class Database(dict):
                                 id=1,
                                 grl=None,
                                 dirs=info['dirs'],
-                                file_pattern=embed_pattern)
+                                file_pattern=embed_pattern,
+                                year=year)
 
         #######################################################################
 
@@ -562,7 +569,7 @@ class Database(dict):
                     print "not a valid dataset name: %s" % dir
 
             for stream, dirs in streams.items():
-                name = 'data%d-%s' % (year, stream)
+                name = 'data%d-%s' % (year % 1000, stream)
                 self[name] = Dataset(name=name,
                     datatype=DATA,
                     treename=data_treename,
@@ -572,7 +579,8 @@ class Database(dict):
                     grl=data_grl,
                     dirs=dirs,
                     stream=stream,
-                    file_pattern=data_pattern)
+                    file_pattern=data_pattern,
+                    year=year)
 
                 # in each stream create a separate dataset for each run
                 runs = {}
@@ -592,7 +600,7 @@ class Database(dict):
                     else:
                         print "not a valid dataset name: %s" % dir
                 for run, info in runs.items():
-                    name = 'data%d-%s-%d' % (year, stream, run)
+                    name = 'data%d-%s-%d' % (year % 1000, stream, run)
                     self[name] = Dataset(name=name,
                         datatype=DATA,
                         treename=data_treename,
@@ -601,7 +609,8 @@ class Database(dict):
                         grl=data_grl,
                         dirs=info['dirs'],
                         stream=stream,
-                        file_pattern=data_pattern)
+                        file_pattern=data_pattern,
+                        year=year)
                 if USE_PYAMI:
                     # in each stream create a separate dataset for each period
                     run_periods = get_periods(amiclient, year=year, level=2)
@@ -627,7 +636,7 @@ class Database(dict):
                         else:
                             periods[_period] = info['dirs'][:]
                     for period, dirs in periods.items():
-                        name = 'data%d-%s-%s' % (year, stream, period)
+                        name = 'data%d-%s-%s' % (year % 1000, stream, period)
                         self[name] = Dataset(name=name,
                             datatype=DATA,
                             treename=data_treename,
@@ -636,7 +645,8 @@ class Database(dict):
                             grl=data_grl,
                             dirs=dirs,
                             stream=stream,
-                            file_pattern=data_pattern)
+                            file_pattern=data_pattern,
+                            year=year)
 
     def search(self, pattern):
 
