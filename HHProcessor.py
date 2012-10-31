@@ -296,9 +296,11 @@ class HHProcessor(ATLASStudent):
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
+                year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
+                year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             ggFReweighting(
