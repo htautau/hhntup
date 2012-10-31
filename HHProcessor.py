@@ -194,7 +194,7 @@ class HHProcessor(ATLASStudent):
                 passthrough=datatype != datasets.DATA,
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
-                passthrough=datatype != datasets.EMBED,
+                passthrough=year > 2011 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
             Triggers(
                 year=year,

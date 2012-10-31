@@ -411,16 +411,17 @@ class MCWeight(EventFilter):
 
         self.datatype = datatype
         self.tree = tree
+        super(MCWeight, self).__init__(**kwargs)
 
     def passes(self, event):
 
         # set the event weights
         if self.datatype == datasets.MC:
-            tree.mc_weight = event.mc_event_weight
+            self.tree.mc_weight = event.mc_event_weight
         elif self.datatype == datasets.EMBED:
             # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
             # correct truth filter efficiency
-            tree.mc_weight = event.mcevt_weight[0][0]
+            self.tree.mc_weight = event.mcevt_weight[0][0]
             # In 2011 mc_event_weight == mcevt_weight[0][0]
             # for embedding. But not so in 2012...
         return True
