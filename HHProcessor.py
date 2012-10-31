@@ -145,12 +145,13 @@ class HHProcessor(ATLASStudent):
 
             year = student.metadata.year % 1000
             datatype = student.metadata.datatype
-            if year = 11:
+            if year == 11:
                 cutflow += file.cutflow
             elif datatype == datasets.MC:
-                cutflow += file.cutflow_event_mc_weight
+                cutflow[0] += file.cutflow_event[0]
+                cutflow[1] += file.cutflow_event_mc_weight[0]
             else:
-                cutflow += file.cutflow_event
+                cutflow[0] += file.cutflow_event[0]
 
         onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
