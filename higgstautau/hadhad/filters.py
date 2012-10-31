@@ -5,7 +5,7 @@ from atlastools import datasets
 from math import *
 from .models import TrueTauBlock
 from . import track_counting
-from . import tauid
+from .. import tauid
 
 
 class TauLeadSublead(EventFilter):
@@ -207,7 +207,7 @@ class TauTrackRecounting(EventFilter):
         self.year = year
         super(TauTrackRecounting, self).__init__(**kwargs)
 
-   def passes(self, event):
+    def passes(self, event):
 
         for tau in event.taus:
             tau.ntrack_full = track_counting.count_tracks(
