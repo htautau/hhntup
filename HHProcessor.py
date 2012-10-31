@@ -132,14 +132,25 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        if datatype == datasets.DATA:
-            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        if year == 2011:
+            if datatype == datasets.DATA:
+                merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+            else:
+                merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
         else:
-            merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
+            # need to know how many bins...
+            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
 
         def update_cutflow(student, cutflow, name, file, tree):
 
-            cutflow += file.cutflow
+            year = student.metadata.year % 1000
+            datatype = student.metadata.datatype
+            if year = 11:
+                cutflow += file.cutflow
+            elif datatype == datasets.MC:
+                cutflow += file.cutflow_event_mc_weight
+            else:
+                cutflow += file.cutflow_event
 
         onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
