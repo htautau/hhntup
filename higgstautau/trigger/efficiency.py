@@ -55,6 +55,37 @@ class TauTriggerEfficiency(EventFilter):
                                     "1P3P", bdt_label)
                                 self.corrections[thresh][tight][is_late] = tool
                     self.passes = self.passes_11_embed
+            elif year == 12:
+                from externaltools.bundle_2012 import TauTriggerCorrections
+                base = TauTriggerCorrections.RESOURCE_PATH
+                self.ttc_20 = ROOT.TauTriggerCorrections()
+                status = self.ttc_20.loadInputFile(os.path.join(base,
+                    'triggerSF_EF_tau20Ti_medium1.root'))
+                if status != 0:
+                    raise RuntimeError(
+                        'could not load triggerSF_EF_tau20Ti_medium1.root')
+                self.ttc_29 = ROOT.TauTriggerCorrections()
+                status = self.ttc_29.loadInputFile(os.path.join(base,
+                    'triggerSF_EF_tau29Ti_medium1.root'))
+                if status != 0:
+                    raise RuntimeError(
+                        'could not load triggerSF_EF_tau29Ti_medium1.root')
+                self.ttp_20 = ROOT.TauTriggerParameterisation()
+                status = self.ttp_20.loadInputFile(os.path.join(base,
+                    'triggerSF_wmcpara_EF_tau20Ti_medium1.root'))
+                if status != 0:
+                    raise RuntimeError(
+                        'could not load triggerSF_wmcpara_EF_tau20Ti_medium1.root')
+                self.ttp_29 = ROOT.TauTriggerParameterisation()
+                status = self.ttp_29.loadInputFile(os.path.join(base,
+                    'triggerSF_wmcpara_EF_tau29Ti_medium1.root'))
+                if status != 0:
+                    raise RuntimeError(
+                        'could not load triggerSF_wmcpara_EF_tau29Ti_medium1.root')
+                if datatype == datasets.MC:
+                    self.passes = self.passes_12_mc
+                elif datatype == datasets.EMBED:
+                    self.passes = self.passes_12_embed
             else:
                 raise ValueError(
                     "No trigger efficiency corrections defined for year %d" % year)
@@ -110,7 +141,6 @@ class TauTriggerEfficiency(EventFilter):
             else:
                 raise ValueError("trigger match thresh of %d is not understood"
                         % tau.trigger_match_thresh)
-
             # correct for TES variations (only on nominal)
             # pt_nominal should equal pt when TES is not applied
             if self.tes_systematic:
@@ -136,7 +166,6 @@ class TauTriggerEfficiency(EventFilter):
                            if pileup_vertex_selection(vtx)])
 
         for tau, thresh in zip(event.taus, (29, 20)):
-
             corr = self.corrections[thresh][tau.JetBDTSigTight][event.RunNumber >= 188902]
             tau.trigger_scale_factor = corr.get3DMCEff(
                         tau.pt, tau.eta,
@@ -148,3 +177,35 @@ class TauTriggerEfficiency(EventFilter):
                         tau.pt, tau.eta,
                         npileup_vtx, -1)
         return True
+
+    def passes_12_mc(self, event):
+
+        thresh = []
+        for tau in event.taus:
+            if tau.trigger_match_thresh == 20:
+                ttc = self.ttc_20
+                ttp = self.ttp_20
+                thresh.append(20)
+            elif tau.trigger_match_thresh == 29:
+                ttc = self.ttc_29
+                ttp = self.ttp_29
+                thresh.append(29)
+            else:
+                raise ValueError("trigger match thresh of %d is not understood"
+                        % tau.trigger_match_thresh)
+            # correct for TES variations (only on nominal)
+            # pt_nominal should equal pt when TES is not applied
+            if self.tes_systematic:
+                #print "%f %f" % (tau.pt, tau.pt_nominal)
+                tau.trigger_scale_factor = (ttc.getSF(tau.pt, 0) *
+                    ttc.getMCEff(tau.pt, 0) / ttc.getMCEff(tau.pt_nominal, 0))
+            else:
+                tau.trigger_scale_factor = ttc.getSF(tau.pt, 0)
+            tau.trigger_scale_factor_high = ttc.getSF(tau.pt, 1)
+            tau.trigger_scale_factor_low = ttc.getSF(tau.pt, -1)
+
+        if len(set(thresh)) != 2 or len(thresh) != 2:
+            raise Exception("there must be exactly two unique trigger match"
+                    " thresholds (29, 20). Got: %s" % str(thresh))
+        return True
+
