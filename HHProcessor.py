@@ -48,8 +48,6 @@ from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.corrections import reweight_ggf
 from higgstautau.pileup import PileupReweight
 from higgstautau.hadhad.objects import define_objects
-from higgstautau.hadhad import track_counting
-from higgstautau.hadhad.truth import TruthMatching
 
 from goodruns import GRL
 import subprocess
@@ -580,12 +578,6 @@ class HHProcessor(ATLASStudent):
                                 fakerate_tool.getScaleFactorUncertainty(
                                     tau.pt, wp,
                                     trig % tau.trigger_match_thresh, False))
-
-            # track recounting
-            tau1.ntrack_full = track_counting.count_tracks(
-                    tau1, event, year)
-            tau2.ntrack_full = track_counting.count_tracks(
-                    tau2, event, year)
 
             # tau - vertex association
             tree.tau_same_vertex = (
