@@ -540,20 +540,19 @@ class HHProcessor(ATLASStudent):
             tree.tau2_x = tau2_x
 
             # Match jets to VBF partons
-            if datatype == datasets.MC:
-                if 'VBF' in self.metadata.name:
-                    # get partons (already sorted by eta in hepmc)
-                    parton1, parton2 = hepmc.get_VBF_partons(event)
-                    tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
+            if datatype == datasets.MC and 'VBF' in self.metadata.name and year == 2011:
+                # get partons (already sorted by eta in hepmc) FIXME!!!
+                parton1, parton2 = hepmc.get_VBF_partons(event)
+                tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
 
-                    # order here needs to be revised since jets are no longer
-                    # sorted by eta but instead by pT
-                    PartonBlock.set(tree, parton1, parton2)
-                    if current_channel == CATEGORY_VBF:
-                        for i, jet in zip((1, 2), (jet1, jet2)):
-                            for parton in (parton1, parton2):
-                                if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
-                                    setattr(tree, 'jet%i_matched' % i, True)
+                # order here needs to be revised since jets are no longer
+                # sorted by eta but instead by pT
+                PartonBlock.set(tree, parton1, parton2)
+                if current_channel == CATEGORY_VBF:
+                    for i, jet in zip((1, 2), (jet1, jet2)):
+                        for parton in (parton1, parton2):
+                            if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
+                                setattr(tree, 'jet%i_matched' % i, True)
 
             # tau - vertex association
             tree.tau_same_vertex = (

@@ -229,7 +229,6 @@ class EfficiencyScaleFactors(EventFilter):
     def passes_2011(self, event):
 
         for tau in event.taus:
-
             if tau.matched:
                 # efficiency scale factor
                 effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
@@ -267,7 +266,6 @@ class FakeRateScaleFactors(EventFilter):
     def passes_2011(self, event):
 
         for tau in event.taus:
-
             if not tau.matched:
                 # fake rate scale factor
                 if event.RunNumber >= 188902:
