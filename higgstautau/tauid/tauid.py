@@ -42,6 +42,10 @@ EFFIC_SF_2011 = {
     },
 }
 
+"""
+https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsSummerConf2012#Systematics_for_Tau_identificati
+"""
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # uncertainty currently only valid for 2011 MC
