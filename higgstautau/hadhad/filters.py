@@ -160,7 +160,7 @@ class TruthMatching(EventFilter):
                     print "dR = %.4f" % truetau.tauAssoc_dr
                 else:
                     print ""
-            tree.error = True
+            self.tree.error = True
 
         tau1, tau2 = event.taus
         unmatched_reco = range(2)
