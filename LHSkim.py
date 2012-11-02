@@ -34,22 +34,13 @@ REMOVE = [
     'trk_*',
     'tau_otherTrk_*',
     'jet_AntiKt6LCTopo_*',
-    'jet_AntiKt4TopoEM_*',
     'mu_muid*',
     'mu_calo*'
 ]
 
 # override globs above
 KEEP = [
-    'trk_atTJVA_*',
-    'jet_AntiKt4TopoEM_n',
-    'jet_AntiKt4TopoEM_pt',
-    'jet_AntiKt4TopoEM_eta',
-    'jet_AntiKt4TopoEM_phi',
-    'jet_AntiKt4TopoEM_flavor_weight_JetFitterCOMBNN',
-    'jet_AntiKt4TopoEM_flavor_weight_SV1',
-    'jet_AntiKt4TopoEM_flavor_weight_IP3D',
-    'jet_AntiKt4TopoEM_flavor_truth_label'
+    'trk_atTJVA_*'
     ]
 
 class SkimExtraModel(TreeModel):
