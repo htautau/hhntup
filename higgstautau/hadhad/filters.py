@@ -1,8 +1,11 @@
-from rootpy.tree.filtering import *
+from rootpy.tree.filtering import EventFilter
 from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
+from .models import TrueTauBlock
+from . import track_counting
+from .. import tauid
 
 
 class TauLeadSublead(EventFilter):
@@ -129,3 +132,163 @@ class TaudR(EventFilter):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         return utils.dR(tau1.eta, tau1.phi, tau2.eta, tau2.phi) < self.dr
+
+
+class TruthMatching(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+
+        self.tree = tree
+        super(TruthMatching, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        # Truth-matching
+        # match only with visible true taus
+        event.truetaus.select(
+                lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
+
+        if len(event.truetaus) > 2:
+            print "ERROR: too many true taus: %i" % len(event.truetaus)
+            for truetau in event.truetaus:
+                print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (
+                        truetau.pt, truetau.eta, truetau.phi),
+                if truetau.tauAssoc_index >= 0:
+                    matched_tau = event.taus.getitem(truetau.tauAssoc_index)
+                    print " ==> reco (pT: %.4f, eta: %.4f, phi: %.4f)" % (
+                            matched_tau.pt, matched_tau.eta, matched_tau.phi),
+                    print "dR = %.4f" % truetau.tauAssoc_dr
+                else:
+                    print ""
+            self.tree.error = True
+
+        tau1, tau2 = event.taus
+        unmatched_reco = range(2)
+        unmatched_truth = range(event.truetaus.len())
+        matched_truth = []
+        for i, tau in enumerate((tau1, tau2)):
+            matching_truth_index = tau.trueTauAssoc_index
+            if matching_truth_index >= 0:
+                unmatched_reco.remove(i)
+                # check that this tau / true tau was not previously matched
+                if matching_truth_index not in unmatched_truth or \
+                   matching_truth_index in matched_truth:
+                    print "ERROR: match collision!"
+                    tau1.matched_collision = True
+                    tau2.matched_collision = True
+                    self.tree.trueTau1_matched_collision = True
+                    self.tree.trueTau2_matched_collision = True
+                    self.tree.error = True
+                else:
+                    unmatched_truth.remove(matching_truth_index)
+                    matched_truth.append(matching_truth_index)
+                    tau.matched = True
+                    tau.matched_dR = tau.trueTauAssoc_dr
+                    setattr(self.tree, "trueTau%i_matched" % (i+1), 1)
+                    setattr(self.tree, "trueTau%i_matched_dR" % (i+1),
+                            event.truetaus.getitem(
+                                matching_truth_index).tauAssoc_dr)
+                    TrueTauBlock.set(self.tree, i+1,
+                            event.truetaus.getitem(matching_truth_index))
+
+        for i, j in zip(unmatched_reco, unmatched_truth):
+            TrueTauBlock.set(self.tree, i+1, event.truetaus.getitem(j))
+
+        self.tree.mass_vis_true_tau1_tau2 = (
+                self.tree.trueTau1_fourvect_vis +
+                self.tree.trueTau2_fourvect_vis).M()
+        return True
+
+
+class TauTrackRecounting(EventFilter):
+
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(TauTrackRecounting, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        for tau in event.taus:
+            tau.ntrack_full = track_counting.count_tracks(
+                    tau, event, self.year)
+        return True
+
+
+class EfficiencyScaleFactors(EventFilter):
+
+    def __init__(self, year, **kwargs):
+
+        self.year = year % 1000
+        if self.year == 11:
+            self.passes = self.passes_2011
+        elif self.year == 12:
+            self.passes = self.passes_2012
+        super(EfficiencyScaleFactors, self).__init__(**kwargs)
+
+    def passes_2011(self, event):
+
+        for tau in event.taus:
+            if tau.matched:
+                # efficiency scale factor
+                effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
+                tau.efficiency_scale_factor = effic_sf
+                # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
+                tau.efficiency_scale_factor_high = effic_sf + err
+                tau.efficiency_scale_factor_low = effic_sf - err
+        return True
+
+    def passes_2012(self, event):
+
+        return True
+
+
+class FakeRateScaleFactors(EventFilter):
+
+    def __init__(self, year, **kwargs):
+
+        self.year = year % 1000
+        if self.year == 11:
+            from externaltools.bundle_2011 import TauFakeRates
+            from ROOT import TauFakeRates as TFR
+            # fake rate scale factor tool
+            fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
+            self.fakerate_tool = TFR.FakeRateScaler(fakerate_table)
+            self.passes = self.passes_2011
+        elif self.year == 12:
+            from externaltools.bundle_2012 import TauFakeRates
+            self.passes = self.passes_2012
+        else:
+            raise ValueError("No fakerates defined for year %d" % year)
+
+        super(FakeRateScaleFactors, self).__init__(**kwargs)
+
+    def passes_2011(self, event):
+
+        for tau in event.taus:
+            if not tau.matched:
+                # fake rate scale factor
+                if event.RunNumber >= 188902:
+                    trig = "EF_tau%dT_medium1"
+                else:
+                    trig = "EF_tau%d_medium1"
+                wp = "Medium"
+                if tau.JetBDTSigTight:
+                    wp = "Tight"
+                sf = self.fakerate_tool.getScaleFactor(
+                        tau.pt, wp,
+                        trig % tau.trigger_match_thresh)
+                tau.fakerate_scale_factor = sf
+                tau.fakerate_scale_factor_high = (sf +
+                        self.fakerate_tool.getScaleFactorUncertainty(
+                            tau.pt, wp,
+                            trig % tau.trigger_match_thresh, True))
+                tau.fakerate_scale_factor_low = (sf -
+                        self.fakerate_tool.getScaleFactorUncertainty(
+                            tau.pt, wp,
+                            trig % tau.trigger_match_thresh, False))
+        return True
+
+    def passes_2012(self, event):
+
+        return True

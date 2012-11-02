@@ -43,22 +43,15 @@ from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
-from higgstautau import tauid
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.corrections import reweight_ggf
 from higgstautau.pileup import PileupReweight
 from higgstautau.hadhad.objects import define_objects
-from higgstautau.hadhad import track_counting
 
 from goodruns import GRL
 import subprocess
 
-from externaltools import TauFakeRates
-from ROOT import TauFakeRates as TFR
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-YEAR = 2011
-year = 2011
 VERBOSE = False
 
 
@@ -97,10 +90,7 @@ class HHProcessor(ATLASStudent):
         This is the one function that all "ATLASStudent"s must implement.
         """
         datatype = self.metadata.datatype
-
-        # fake rate scale factor tool
-        fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
-        fakerate_tool = TFR.FakeRateScaler(fakerate_table)
+        year = self.metadata.year
 
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
@@ -142,14 +132,26 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        if datatype == datasets.DATA:
-            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        if year == 2011:
+            if datatype == datasets.DATA:
+                merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+            else:
+                merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
         else:
-            merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
+            # need to know how many bins...
+            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
 
         def update_cutflow(student, cutflow, name, file, tree):
 
-            cutflow += file.cutflow
+            year = student.metadata.year
+            datatype = student.metadata.datatype
+            if year == 2011:
+                cutflow += file.cutflow
+            elif datatype == datasets.MC:
+                cutflow[0] += file.cutflow_event[0]
+                cutflow[1] += file.cutflow_event_mc_weight[0]
+            else:
+                cutflow[0] += file.cutflow_event[0]
 
         onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
@@ -192,7 +194,7 @@ class HHProcessor(ATLASStudent):
                 passthrough=datatype != datasets.DATA,
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
-                passthrough=datatype != datasets.EMBED,
+                passthrough=year > 2011 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
             Triggers(
                 year=year,
@@ -288,6 +290,32 @@ class HHProcessor(ATLASStudent):
             JetSelection(
                 count_funcs=count_funcs),
             TauJetOverlapRemoval(
+                count_funcs=count_funcs),
+            TruthMatching(
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            EfficiencyScaleFactors(
+                year=year,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            FakeRateScaleFactors(
+                year=year,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            ggFReweighting(
+                dsname=self.metadata.name,
+                tree=tree,
+                # no ggf reweighting for 2012 MC
+                passthrough=datatype != datasets.MC or year != 2011,
+                count_funcs=count_funcs),
+            MCWeight(
+                datatype=datatype,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            TauTrackRecounting(
+                year=year,
                 count_funcs=count_funcs),
         ])
 
@@ -453,18 +481,18 @@ class HHProcessor(ATLASStudent):
                                    [jet.pt for jet in jets])
 
             # MET
-            METx = event.MET_RefFinal_BDTMedium_etx
-            METy = event.MET_RefFinal_BDTMedium_ety
+            METx = event.MET.etx
+            METy = event.MET.ety
             MET_vect = Vector2(METx, METy)
-            MET = event.MET_RefFinal_BDTMedium_et
+            MET = event.MET.et
 
             tree.MET = MET
             tree.MET_x = METx
             tree.MET_y = METy
-            tree.MET_phi = event.MET_RefFinal_BDTMedium_phi
+            tree.MET_phi = event.MET.phi
             tree.MET_vec.set_from(MET_vect)
 
-            sumET = event.MET_RefFinal_BDTMedium_sumet
+            sumET = event.MET.sumet
             tree.sumET = sumET
             tree.MET_sig = (2. * MET / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
             MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
@@ -474,7 +502,9 @@ class HHProcessor(ATLASStudent):
                                                              MET_vect)
 
             # Mass
-            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(tau1, tau2, METx, METy, sumET)
+            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
+                    tau1, tau2, METx, METy, sumET,
+                    year=year)
 
             tree.mass_mmc_tau1_tau2 = mmc_mass
             tree.mmc_resonance.set_from(mmc_resonance)
@@ -510,109 +540,19 @@ class HHProcessor(ATLASStudent):
             tree.tau2_x = tau2_x
 
             # Match jets to VBF partons
-            if datatype == datasets.MC:
-                if 'VBF' in self.metadata.name:
-                    # get partons (already sorted by eta in hepmc)
-                    parton1, parton2 = hepmc.get_VBF_partons(event)
-                    tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
+            if datatype == datasets.MC and 'VBF' in self.metadata.name and year == 2011:
+                # get partons (already sorted by eta in hepmc) FIXME!!!
+                parton1, parton2 = hepmc.get_VBF_partons(event)
+                tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
 
-                    # order here needs to be revised since jets are no longer
-                    # sorted by eta but instead by pT
-                    PartonBlock.set(tree, parton1, parton2)
-                    if current_channel == CATEGORY_VBF:
-                        for i, jet in zip((1, 2), (jet1, jet2)):
-                            for parton in (parton1, parton2):
-                                if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
-                                    setattr(tree, 'jet%i_matched' % i, True)
-
-            # Truth-matching
-            if datatype == datasets.MC:
-                # match only with visible true taus
-                event.truetaus.select(lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
-
-                if len(event.truetaus) > 2:
-                    print "ERROR: too many true taus: %i" % len(event.truetaus)
-                    for truetau in event.truetaus:
-                        print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (truetau.pt, truetau.eta, truetau.phi),
-                        if truetau.tauAssoc_index >= 0:
-                            matched_tau = event.taus.getitem(truetau.tauAssoc_index)
-                            print " ==> reco (pT: %.4f, eta: %.4f, phi: %.4f)" % (matched_tau.pt, matched_tau.eta, matched_tau.phi),
-                            print "dR = %.4f" % truetau.tauAssoc_dr
-                        else:
-                            print ""
-                    tree.error = True
-
-                unmatched_reco = range(2)
-                unmatched_truth = range(event.truetaus.len())
-                matched_truth = []
-                for i, tau in enumerate((tau1, tau2)):
-                    matching_truth_index = tau.trueTauAssoc_index
-                    if matching_truth_index >= 0:
-                        unmatched_reco.remove(i)
-                        # check that this tau / true tau was not previously matched
-                        if matching_truth_index not in unmatched_truth or \
-                           matching_truth_index in matched_truth:
-                            print "ERROR: match collision!"
-                            tau1.matched_collision = True
-                            tau2.matched_collision = True
-                            tree.trueTau1_matched_collision = True
-                            tree.trueTau2_matched_collision = True
-                            tree.error = True
-                        else:
-                            unmatched_truth.remove(matching_truth_index)
-                            matched_truth.append(matching_truth_index)
-                            tau.matched = True
-                            tau.matched_dR = tau.trueTauAssoc_dr
-                            setattr(tree, "trueTau%i_matched" % (i+1), 1)
-                            setattr(tree, "trueTau%i_matched_dR" % (i+1), event.truetaus.getitem(matching_truth_index).tauAssoc_dr)
-                            TrueTauBlock.set(tree, i+1, event.truetaus.getitem(matching_truth_index))
-
-                for i, j in zip(unmatched_reco, unmatched_truth):
-                    TrueTauBlock.set(tree, i+1, event.truetaus.getitem(j))
-
-                tree.mass_vis_true_tau1_tau2 = (tree.trueTau1_fourvect_vis + tree.trueTau2_fourvect_vis).M()
-
-                # fix trigger_match_thresh in the skims
-
-                for tau in (tau1, tau2):
-
-                    # factors and corrections are currently
-                    # only valid for 2011 data/MC
-
-                    if tau.matched:
-                        # efficiency scale factor
-                        effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
-                        tau.efficiency_scale_factor = effic_sf
-                        # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
-                        tau.efficiency_scale_factor_high = effic_sf + err
-                        tau.efficiency_scale_factor_low = effic_sf - err
-                    else:
-                        # fake rate scale factor
-                        if event.RunNumber >= 188902:
-                            trig = "EF_tau%dT_medium1"
-                        else:
-                            trig = "EF_tau%d_medium1"
-                        wp = "Medium"
-                        if tau.JetBDTSigTight:
-                            wp = "Tight"
-                        sf = fakerate_tool.getScaleFactor(
-                                tau.pt, wp,
-                                trig % tau.trigger_match_thresh)
-                        tau.fakerate_scale_factor = sf
-                        tau.fakerate_scale_factor_high = (sf +
-                                fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, wp,
-                                    trig % tau.trigger_match_thresh, True))
-                        tau.fakerate_scale_factor_low = (sf -
-                                fakerate_tool.getScaleFactorUncertainty(
-                                    tau.pt, wp,
-                                    trig % tau.trigger_match_thresh, False))
-
-            # track recounting
-            tau1.ntrack_full = track_counting.count_tracks(
-                    tau1, event)
-            tau2.ntrack_full = track_counting.count_tracks(
-                    tau2, event)
+                # order here needs to be revised since jets are no longer
+                # sorted by eta but instead by pT
+                PartonBlock.set(tree, parton1, parton2)
+                if current_channel == CATEGORY_VBF:
+                    for i, jet in zip((1, 2), (jet1, jet2)):
+                        for parton in (parton1, parton2):
+                            if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
+                                setattr(tree, 'jet%i_matched' % i, True)
 
             # tau - vertex association
             tree.tau_same_vertex = (
@@ -630,19 +570,6 @@ class HHProcessor(ATLASStudent):
 
             # fill tau block
             RecoTauBlock.set(event, tree, tau1, tau2)
-
-            # set the event weights
-            if datatype == datasets.MC:
-                tree.mc_weight = event.mc_event_weight
-                if YEAR == 2011:
-                    tree.ggf_weight = reweight_ggf(event, self.metadata.name)
-                    # no ggf reweighting for 2012 MC
-            elif datatype == datasets.EMBED:
-                # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
-                # correct truth filter efficiency
-                tree.mc_weight = event.mcevt_weight[0][0]
-                # In 2011 mc_event_weight == mcevt_weight[0][0]
-                # for embedding. But not so in 2012...
 
             # fill output ntuple
             tree.Fill(reset=True)

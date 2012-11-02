@@ -1,0 +1,49 @@
+2011:
+    # common config
+    common:
+        grl: 'grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml'
+    # lephad config
+    lh:
+        mc_path: '/global/oneil/lephad/skims/mc11_samples_used_for_analysis'
+        mc_prefix: 'group.phys-higgs.LHSkim'
+        mc_pattern: '*.root*'
+        mc_treename: 'tau'
+        data_path: '/global/oneil/lephad/skims/data11'
+        data_prefix: 'group.phys-higgs.LHSkim'
+        data_pattern: '*.root*'
+        data_treename: 'tau'
+        embed_path: '/global/oneil/lephad/skims/Ztautau_embedded11_D3PD'
+        embed_prefix: 'group.phys-higgs'
+        embed_pattern: '*.root*'
+        embed_treename: 'tau'
+    # hadhad config
+    hh:
+        mc_path: '/global/common/higgstautau/skims/hadhad/mc11_7TeV/p851/skim1'
+        mc_prefix: 'group.phys-higgs.HHSkim'
+        mc_pattern: '*HHSkim*.root*'
+        mc_treename: 'tau'
+        data_path: '/global/common/higgstautau/skims/hadhad/data11_7TeV/p851/skim1'
+        data_prefix: 'user.NoelDawe.HTauSkim'
+        data_pattern: '*HTauSkim*.root*'
+        data_treename: 'tau'
+        embed_path: '/global/common/higgstautau/skims/hadhad/embedding11_7TeV/p851-2.41/skim1'
+        embed_prefix: 'group.phys-higgs.HHSkim'
+        embed_pattern: '*.root*'
+        embed_treename: 'tau'
+2012:
+    # common config
+    common:
+        grl: 'grl/2012/data12_8TeV.periodAllYear_DetStatus-v53-pro13-04_CoolRunQuery-00-04-08_All_Good.xml'
+    hh:
+        mc_path: '/global/common/higgstautau/skims/hadhad/mc12_8TeV/p1130/v7'
+        mc_prefix: 'group.phys-higgs.hhskim'
+        mc_pattern: '*hadhad.root*'
+        mc_treename: 'tau'
+        data_path: '/global/common/higgstautau/skims/hadhad/data12_8TeV/p1130/v8'
+        data_prefix: 'group.phys-higgs.hhskim'
+        data_pattern: '*hadhad.root*'
+        data_treename: 'tau'
+        embed_path: '/global/common/higgstautau/skims/hadhad/embedding12_8TeV/p1131/v7'
+        embed_prefix: 'group.phys-higgs.hhskim'
+        embed_pattern: '*embedding12_ztautau_hh_p1131.root*'
+        embed_treename: 'tau'

@@ -1,0 +1,192 @@
+mc_ztautau:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$'
+    root: 'Z/#gamma^{*}'
+    color: '#00a4ff'
+    samples:
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp5.mc12a'
+       
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
+embedded_ztautau:
+    name: Ztautau
+    latex: '$Z/\gamma^{*}$ (embedded)'
+    root: 'Z/#gamma^{*} (embedded)'
+    color: '#00a4ff'
+    samples:
+        - 'embed12-hh-mfsim'
+ewk:
+    name: EW
+    latex: EW
+    root: EW
+    color: '#ff9f71'
+    samples:
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp5.mc12a'
+
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp0Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp1Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp2Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp3Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp4Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp5Incl_Mll10to60.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp5.mc12a'
+
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp3Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp4Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp5Incl_Mll10to60.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp5.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp5.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp5.mc12a'
+top:
+    name: Top
+    latex: Top
+    root: Top
+    color: '#0000ff'
+    samples:
+        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
+        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
+        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWenu.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWmunu.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWtaunu.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopWtChanIncl.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_ttbar_allhad.mc12a'
+        - 'McAtNloJimmy_CT10_ttbar_LeptonFilter.mc12a'
+diboson:
+    name: Diboson
+    latex: Diboson
+    root: Diboson
+    color: '#ffd075'
+    samples:
+        - 'Herwig_AUET2CTEQ6L1_WW.mc12a'
+        - 'Herwig_AUET2CTEQ6L1_WZ.mc12a'
+        - 'Herwig_AUET2CTEQ6L1_ZZ.mc12a'
+        
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenuenu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenumunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenutaunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunuenu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunumunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunutaunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunuenu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunumunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunutaunu.mc12a'
+others:
+    name: Others
+    latex: Others
+    root: Others
+    color: '#ff7700'
+    samples:
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp5.mc12a'
+
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp0Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp1Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp2Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp3Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp4Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp5Incl_Mll10to60.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp5.mc12a'
+
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp3Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp4Excl_Mll10to60.mc12a'
+        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp5Incl_Mll10to60.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp5.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp5.mc12a'
+
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp0.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp1.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp2.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp3.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp4.mc12a'
+        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp5.mc12a'
+    
+        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
+        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
+        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWenu.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWmunu.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWtaunu.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_SingleTopWtChanIncl.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_ttbar_allhad.mc12a'
+        - 'McAtNloJimmy_CT10_ttbar_LeptonFilter.mc12a'
+        
+        - 'Herwig_AUET2CTEQ6L1_WW.mc12a'
+        - 'Herwig_AUET2CTEQ6L1_WZ.mc12a'
+        - 'Herwig_AUET2CTEQ6L1_ZZ.mc12a'
+        
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenuenu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenumunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenutaunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunuenu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunumunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunutaunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunuenu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunumunu.mc12a'
+        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunutaunu.mc12a'

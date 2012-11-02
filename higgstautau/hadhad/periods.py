@@ -31,9 +31,10 @@ PERIODS = {
              'lumi': 4617.}, #4661.2},
 }
 
-# 2012
-# https://atlas-lumicalc.cern.ch/results/aaa2b2/result.html
-# 13018.3 pb-1
+LUMI = { # pb-1
+    2011: 4617., # B2-M
+    2012: 13018.3, # A3-E no run 200841
+}
 
 def total_lumi():
 

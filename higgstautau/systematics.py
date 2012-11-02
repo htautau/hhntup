@@ -554,11 +554,11 @@ class Systematics(EventFilter):
 
         # Tag assumed: MuonMomentumCorrections-00-05-03
         # TODO: set the proper year here...
-        self.muonTool = MuonSmear.SmearingClass(
-                "Data11","staco","pT","Rel17",
-                MuonMomentumCorrections.RESOURCE_PATH)
-        self.muonTool.UseScale(1)
-        self.muonTool.UseImprovedCombine()
+        #self.muonTool = MuonSmear.SmearingClass(
+        #        "Data11","staco","pT","Rel17",
+        #        MuonMomentumCorrections.RESOURCE_PATH)
+        #self.muonTool.UseScale(1)
+        #self.muonTool.UseImprovedCombine()
 
     def passes(self, event):
 
