@@ -38,7 +38,8 @@ class JetCalibration(EventFilter):
                 config = 'JES_August2012.config'
                 # use JES_August2012_AFII.config for fastsim MC
             else:
-                raise ValueError("No JES calibration defined for year %d" % year)
+                raise ValueError(
+                        "No JES calibration defined for year %d" % year)
             print "Using JES config %s" % config
             self.config_file = ApplyJetCalibration.get_resource(
                     'CalibrationConfigs/%s' % config)
