@@ -17,8 +17,8 @@ class EmbeddingPileupPatch(EventFilter):
 
             #print 'Current value %f' % event.averageIntPerXing
             event.averageIntPerXing = averageIntPerXing
-            print 'Proposed value %f' % averageIntPerXing
-            print 'Accept value %f' % event.averageIntPerXing
+            #print 'Proposed value %f' % averageIntPerXing
+            #print 'Accepted value %f' % event.averageIntPerXing
 
         else:
             print "pdgID 39 not found! Skipping event..."
