@@ -14,7 +14,12 @@ class EmbeddingPileupPatch(EventFilter):
                 averageIntPerXing = p.fourvect.Pz()
                 break
         if averageIntPerXing is not None:
+
+            #print 'Current value %f' % event.averageIntPerXing
             event.averageIntPerXing = averageIntPerXing
+            print 'Proposed value %f' % averageIntPerXing
+            print 'Accept value %f' % event.averageIntPerXing
+
         else:
             print "pdgID 39 not found! Skipping event..."
             return None

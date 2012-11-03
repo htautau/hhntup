@@ -856,22 +856,28 @@ def getTaus(event):
 
     truthTaus = []
 
-    n = event.trueTau_n
+    for p in event.mc:
+        if not abs(p.pdgId) == 15: continue
+        if p.status == 3: continue
 
-    for i in range(n):
-        pt  = event.trueTau_vis_Et[i]
-        eta = event.trueTau_vis_eta[i]
+        leptonic = False
+
+        tauNeutrino = LorentzVector()
         
-        if not pt > 15*GeV: continue
-        if not eta < 2.5: continue
+        for c in p.iter_children():
+            if abs(c.pdgId) == 12: leptonic = True
+            if abs(c.pdgId) == 14: leptonic = True
+            if abs(c.pdgId) == 15: leptonic = True
+            if abs(c.pdgId) == 16: tauNeutrino = c.fourvect
 
-        phi = event.trueTau_vis_phi[i]
+        if leptonic: continue
 
-        vector = LorentzVector()
-        vector.SetPtEtaPhiM(pt, eta, phi, 0)
-        truthTaus.append(vector)
+        visTau = p.fourvect - tauNeutrino
 
-    return truthTaus
+        if not visTau.Pt() >= 15*GeV: continue
+        if not abs(visTau.Eta()) <= 2.5: continue
+
+        truthTaus.append(visTau)
 
     return truthTaus
 

@@ -172,7 +172,7 @@ class LHProcessor(ATLASStudent):
             JetSelection(),
             FinalOverlapRemoval(),
             ElectronIsoCorrection( datatype=self.metadata.datatype ),
-        #AntiVBFFilter()
+            AntiVBFFilter()
         ])
 
         self.filters['event'] = event_filters
