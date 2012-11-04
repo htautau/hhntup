@@ -265,13 +265,13 @@ class FakeRateScaleFactors(EventFilter):
 
     def passes_2011(self, event):
 
+        if event.RunNumber >= 188902:
+            trig = "EF_tau%dT_medium1"
+        else:
+            trig = "EF_tau%d_medium1"
+
         for tau in event.taus:
             if not tau.matched:
-                # fake rate scale factor
-                if event.RunNumber >= 188902:
-                    trig = "EF_tau%dT_medium1"
-                else:
-                    trig = "EF_tau%d_medium1"
                 wp = "Medium"
                 if tau.JetBDTSigTight:
                     wp = "Tight"
