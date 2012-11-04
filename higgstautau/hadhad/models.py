@@ -57,7 +57,7 @@ class RecoTau(TreeModel):
     min_dr_jet = FloatCol(default=9999)
 
     # track recounting
-    numTrack_recounted = IntCol()
+    numTrack_recounted = IntCol(default=-1)
 
     # vertex association
     vertex_prob = FloatCol()

@@ -73,7 +73,7 @@ class TauFourMomentum(FourMomentum):
         self.matched_collision = False
 
         # track recounting
-        self.numTrack_recounted = 0
+        self.numTrack_recounted = -1
 
         # vertex association
         self.vertex_prob = 0.
