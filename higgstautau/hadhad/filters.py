@@ -243,12 +243,13 @@ class FakeRateScaleFactors(EventFilter):
         if self.year == 11:
             from externaltools.bundle_2011 import TauFakeRates
             from ROOT import TauFakeRates as TFR
-            # fake rate scale factor tool
             fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
             self.fakerate_tool = TFR.FakeRateScaler(fakerate_table)
             self.passes = self.passes_2011
         elif self.year == 12:
             from externaltools.bundle_2012 import TauFakeRates
+            from ROOT import TauFakeRates as TFR
+            self.fakerate_tool = TFR.FakeRateScaler(TauFakeRates.RESOURCE_PATH)
             self.passes = self.passes_2012
         else:
             raise ValueError("No fakerates defined for year %d" % year)
@@ -263,10 +264,12 @@ class FakeRateScaleFactors(EventFilter):
             trig = "EF_tau%d_medium1"
 
         for tau in event.taus:
+            # fakerate only applies to taus that don't match truth
             if not tau.matched:
-                wp = "Medium"
                 if tau.JetBDTSigTight:
-                    wp = "Tight"
+                    wp = 'tight'
+                else:
+                    wp = 'medium'
                 sf = self.fakerate_tool.getScaleFactor(
                         tau.pt, wp,
                         trig % tau.trigger_match_thresh)
@@ -283,4 +286,23 @@ class FakeRateScaleFactors(EventFilter):
 
     def passes_2012(self, event):
 
+        trig = 'EF_tau%dTi_medium1'
+
+        for tau in event.taus:
+            # fakerate only applies to taus that don't match truth
+            if not tau.matched:
+                if tau.JetBDTSigTight:
+                    wp = 'tight'
+                else:
+                    wp = 'medium'
+                # last arg is lepton veto
+                sf = self.fakerate_tool.getScaleFactor(
+                        tau.pt, tau.numTrack, 'BDT', wp,
+                        trig % tau.trigger_match_thresh, True)
+                tau.fakerate_scale_factor = sf
+                uncert = self.fakerate_tool.getScaleFactorUncertainty(
+                        tau.pt, tau.numTrack, 'BDT', wp,
+                        trig % tau.trigger_match_thresh, True)
+                tau.fakerate_scale_factor_high = sf + uncert
+                tau.fakerate_scale_factor_low = sf - uncert
         return True
