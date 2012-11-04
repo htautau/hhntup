@@ -72,7 +72,7 @@ class TauTriggerEfficiency(EventFilter):
                 else:
                     raise ValueError("datatype is not EMBED or MC")
 
-            elif year == 12:
+            elif self.year == 12:
                 from externaltools.bundle_2012 import TauTriggerCorrections
                 base = TauTriggerCorrections.RESOURCE_PATH
 
