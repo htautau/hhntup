@@ -231,7 +231,7 @@ class EfficiencyScaleFactors(EventFilter):
         for tau in event.taus:
             if tau.matched:
                 # efficiency scale factor
-                effic_sf, err = tauid.EFFIC_SF_2011['medium'][tauid.nprong(tau.numTrack)]
+                effic_sf, err = tauid.effic_sf_uncert(tau, self.year)
                 tau.efficiency_scale_factor = effic_sf
                 # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
                 tau.efficiency_scale_factor_high = effic_sf + err
