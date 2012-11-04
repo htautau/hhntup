@@ -1,8 +1,5 @@
 from rootpy.tree.filtering import EventFilter
 
-from externaltools import CoEPPTrigTool
-from ROOT import CoEPP
-
 
 def update_trigger_trees(student, tool, name, file, tree):
     """
@@ -25,6 +22,8 @@ class TauTriggerEmulation(EventFilter):
             self.year = year
 
             if year == 2011:
+                from externaltools.bundle_2011 import CoEPPTrigTool
+                from ROOT import CoEPP
                 # emulation not required in 2012 yet since the SFs are wrt
                 # the default triggers
                 # initialize the trigger emulation tool
