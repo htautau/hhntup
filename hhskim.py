@@ -229,7 +229,8 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
-                passthrough=datatype == datasets.DATA),
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
             PileupReweight(
                 year=year,
                 tree=tree,

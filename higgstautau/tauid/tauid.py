@@ -77,7 +77,9 @@ def effic_sf_uncert(tau, year):
     elif tau.JetBDTSigLoose:
         wp = 'loose'
     else:
-        raise ValueError('no efficiency scale factors for taus below loose')
+        wp = 'loose'
+        print ("Warning: requested efficiency for tau below BDT loose. "
+               "Using BDT loose.")
     np = nprong(tau.numTrack)
     if year == 11:
         sf, sf_uncert = EFFIC_SF_2011[wp][np]
