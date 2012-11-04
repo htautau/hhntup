@@ -277,8 +277,8 @@ class HHProcessor(ATLASStudent):
             TauTriggerEfficiency(
                 year=year,
                 datatype=datatype,
-                tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
-                    self.args.syst_terms),
+                tes_systematic=self.args.syst_terms and (
+                    Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=datatype == datasets.DATA or year == 2012,
                 count_funcs=count_funcs),
             PileupReweight(
