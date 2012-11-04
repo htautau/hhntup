@@ -297,12 +297,18 @@ class FakeRateScaleFactors(EventFilter):
                     wp = 'medium'
                 # last arg is lepton veto
                 sf = self.fakerate_tool.getScaleFactor(
-                        tau.pt, tau.numTrack, 'BDT', wp,
+                        tau.pt, tau.numTrack, event.RunNumber,
+                        'BDT', wp,
                         trig % tau.trigger_match_thresh, True)
                 tau.fakerate_scale_factor = sf
-                uncert = self.fakerate_tool.getScaleFactorUncertainty(
-                        tau.pt, tau.numTrack, 'BDT', wp,
-                        trig % tau.trigger_match_thresh, True)
-                tau.fakerate_scale_factor_high = sf + uncert
-                tau.fakerate_scale_factor_low = sf - uncert
+                tau.fakerate_scale_factor_high = (sf +
+                        self.fakerate_tool.getScaleFactorUncertainty(
+                        tau.pt, tau.numTrack, event.RunNumber,
+                        'BDT', wp,
+                        trig % tau.trigger_match_thresh, True, True))
+                tau.fakerate_scale_factor_low = (sf -
+                        self.fakerate_tool.getScaleFactorUncertainty(
+                        tau.pt, tau.numTrack, event.RunNumber,
+                        'BDT', wp,
+                        trig % tau.trigger_match_thresh, True, False))
         return True
