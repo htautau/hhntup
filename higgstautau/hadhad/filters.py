@@ -219,14 +219,10 @@ class EfficiencyScaleFactors(EventFilter):
 
     def __init__(self, year, **kwargs):
 
-        self.year = year % 1000
-        if self.year == 11:
-            self.passes = self.passes_2011
-        elif self.year == 12:
-            self.passes = self.passes_2012
+        self.year = year
         super(EfficiencyScaleFactors, self).__init__(**kwargs)
 
-    def passes_2011(self, event):
+    def passes(self, event):
 
         for tau in event.taus:
             if tau.matched:
@@ -236,10 +232,6 @@ class EfficiencyScaleFactors(EventFilter):
                 # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
                 tau.efficiency_scale_factor_high = effic_sf + err
                 tau.efficiency_scale_factor_low = effic_sf - err
-        return True
-
-    def passes_2012(self, event):
-
         return True
 
 
