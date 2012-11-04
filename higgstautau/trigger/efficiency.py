@@ -16,13 +16,14 @@ class TauTriggerEfficiency(EventFilter):
     @classmethod
     def get_period(cls, run):
 
-        if 200804 <= run <= 201556:
+        if run <= 201556:
             return 'periodA'
-        elif 202660 <= run <= 209025:
+        elif run <= 209025:
             return 'periodBD'
-        elif 209074 <= run <= 210308:
+        elif run <= 210308:
             return 'periodE'
-        raise ValueError('No trigger SF defined for run %d' % run)
+        else:
+            return 'periodE'
 
     def __init__(self,
             year,
@@ -100,7 +101,7 @@ class TauTriggerEfficiency(EventFilter):
                             self.corrections[thresh][tight] = {}
                             for prong in (1, 3):
                                 self.corrections[thresh][tight][prong] = {}
-                                tool = ROOT.TauTriggerCorrections()
+                                tool = ROOT.TauTriggerParameterisation()
                                 tool.loadInputFile(
                                     os.path.join(base,
                                         "triggerSF_wmcpara_EF_tau%dTi_medium1.root" %
