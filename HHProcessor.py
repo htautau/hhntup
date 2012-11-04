@@ -210,7 +210,6 @@ class HHProcessor(ATLASStudent):
                 datatype=datatype,
                 year=year,
                 verbose=VERBOSE,
-                passthrough=year == 2012,
                 count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
@@ -494,7 +493,10 @@ class HHProcessor(ATLASStudent):
 
             sumET = event.MET.sumet
             tree.sumET = sumET
-            tree.MET_sig = (2. * MET / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
+            if sumET != 0:
+                tree.MET_sig = (2. * MET / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
+            else:
+                tree.MET_sig = -1.
             MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
 
             tree.MET_centrality = eventshapes.phi_centrality(tau1.fourvect,

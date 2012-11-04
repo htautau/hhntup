@@ -155,7 +155,6 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 year=year,
                 verbose=VERBOSE,
-                passthrough=year == 2012,
                 count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
