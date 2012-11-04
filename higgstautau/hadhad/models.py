@@ -57,7 +57,7 @@ class RecoTau(TreeModel):
     min_dr_jet = FloatCol(default=9999)
 
     # track recounting
-    ntrack_full = IntCol()
+    numTrack_recounted = IntCol()
 
     # vertex association
     vertex_prob = FloatCol()
@@ -224,7 +224,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
             setattr(tree, 'tau%i_min_dr_jet' % i, tau.min_dr_jet)
 
             # track recounting
-            setattr(tree, 'tau%i_ntrack_full' % i, tau.ntrack_full)
+            setattr(tree, 'tau%i_numTrack_recounted' % i, tau.numTrack_recounted)
 
             # tau vertex association
             setattr(tree, 'tau%i_vertex_prob' % i, tau.vertex_prob)

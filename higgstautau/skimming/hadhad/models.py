@@ -8,6 +8,7 @@ class SkimModel(TreeModel):
 
     number_of_good_vertices = IntCol()
     tau_selected = ROOT.vector('bool')
+    tau_numTrack_recounted = ROOT.vector('int')
     pileup_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 

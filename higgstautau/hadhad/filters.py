@@ -154,7 +154,7 @@ class TauTrackRecounting(EventFilter):
     def passes(self, event):
 
         for tau in event.taus:
-            tau.ntrack_full = track_counting.count_tracks(
+            tau.numTrack_recounted = track_counting.count_tracks(
                     tau, event, self.year)
         return True
 
