@@ -30,7 +30,9 @@ Outstanding Problems
 Ideas
 -----
 
-* Use Higgs pT (see Michel's analysis).
+* Use Higgs pT as an input variable to the BDT.
+* Use Higgs pT to define the boosted category instead of #jet
+* Need theory uncert based on Higgs pT
 * Use sum pT.
 * Require "Higgs pT" > 100 GeV or X in the boosted category.
 * Try defining separate categories on final BDT output and calculating limits in
@@ -40,6 +42,9 @@ Ideas
 * Look at sideband above 180GeV to check shape and norm
 * Use SS for VBF norm but !OS for QCD in plots after norm to smooth it out
   Check that BDTJetScore is still well modeled.
+* Next skims: use baseline trigger and make separate skim with new triggers
+  E- and H7-
+* Add new runs to skim
 
 
 Notes
