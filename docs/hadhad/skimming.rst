@@ -76,6 +76,15 @@ Issues / Ideas
 
 * Separate skims for systematics?
 
+2011 Package Versions
+---------------------
+
+.. literalinclude:: ../../../externaltools/bundles/2011.lst
+
+2012 Package Versions
+---------------------
+
+.. literalinclude:: ../../../externaltools/bundles/2012.lst
 
 Skimmer Source
 --------------
