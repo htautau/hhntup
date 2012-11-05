@@ -65,9 +65,6 @@ class RecoTau(TreeModel):
 
 class EventVariables(TreeModel):
 
-    # the category (2jet or 01jet)
-    category = IntCol()
-
     # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)
     mc_weight = FloatCol(default=1.)
@@ -141,9 +138,6 @@ class EventVariables(TreeModel):
 
     sphericity = FloatCol()
     aplanarity = FloatCol()
-
-    sphericity_full = FloatCol()
-    aplanarity_full = FloatCol()
 
     sphericity_boosted = FloatCol()
     aplanarity_boosted = FloatCol()

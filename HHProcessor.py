@@ -342,21 +342,9 @@ class HHProcessor(ATLASStudent):
             jets = list(event.jets)
             # sort by decreasing pT
             jets.sort(key=lambda jet: jet.pt, reverse=True)
-            leading_jets = []
 
-            current_channel = CATEGORY_GGF
-            # leading jet above 50 GeV
-            if jets and jets[0].pt > 50 * GeV:
-                leading_jets.append(jets[0])
-                current_channel = CATEGORY_BOOSTED
-                # subleading jet above 30
-                if len(jets) >= 2 and jets[1].pt > 30 * GeV:
-                    leading_jets.append(jets[1])
-                    current_channel = CATEGORY_VBF
-            tree.category = current_channel
-
-            if current_channel == CATEGORY_VBF: # VBF optimized
-                jet1, jet2 = leading_jets
+            if len(jets) >= 2:
+                jet1, jet2 = jets[:2]
 
                 # determine boost of system
                 # determine jet CoM frame
@@ -398,25 +386,16 @@ class HHProcessor(ATLASStudent):
                 # aplanarity
                 tree.aplanarity = aplanarity
 
-                sphericity_full, aplanarity_full = eventshapes.sphericity_aplanarity(
-                        [tau1.fourvect,
-                         tau2.fourvect] + [jet.fourvect for jet in jets])
-
-                # boosted sphericity
-                tree.sphericity_full = sphericity_full
-                # boosted aplanarity
-                tree.aplanarity_full = aplanarity_full
-
-                sphericity_b, aplanarity_b = eventshapes.sphericity_aplanarity(
+                sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                         [tau1.fourvect_boosted,
                          tau2.fourvect_boosted,
                          jet1.fourvect_boosted,
                          jet2.fourvect_boosted])
 
-                # boosted sphericity
-                tree.sphericity_boosted = sphericity_b
-                # boosted aplanarity
-                tree.aplanarity_boosted = aplanarity_b
+                # sphericity
+                tree.sphericity_boosted = sphericity
+                # aplanarity
+                tree.aplanarity_boosted = aplanarity
 
                 # tau centrality (degree to which they are between the two jets)
                 tau1.centrality = eventshapes.eta_centrality(
@@ -440,8 +419,8 @@ class HHProcessor(ATLASStudent):
                         jet1.fourvect_boosted.Eta(),
                         jet2.fourvect_boosted.Eta())
 
-            elif current_channel == CATEGORY_BOOSTED:
-                jet1 = leading_jets[0]
+            elif len(jets) >= 1:
+                jet1 = jets[0]
                 RecoJetBlock.set(tree, jet1)
 
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
@@ -461,15 +440,6 @@ class HHProcessor(ATLASStudent):
                 tree.sphericity = sphericity
                 # aplanarity
                 tree.aplanarity = aplanarity
-
-                sphericity_full, aplanarity_full = eventshapes.sphericity_aplanarity(
-                        [tau1.fourvect,
-                         tau2.fourvect] + [jet.fourvect for jet in jets])
-
-                # boosted sphericity
-                tree.sphericity_full = sphericity_full
-                # boosted aplanarity
-                tree.aplanarity_full = aplanarity_full
 
             # Jet variables
             tree.numJets = len(event.jets)
@@ -549,7 +519,8 @@ class HHProcessor(ATLASStudent):
                 # order here needs to be revised since jets are no longer
                 # sorted by eta but instead by pT
                 PartonBlock.set(tree, parton1, parton2)
-                if current_channel == CATEGORY_VBF:
+                if len(jets) >= 2:
+                    jet1, jet2 = jets[:2]
                     for i, jet in zip((1, 2), (jet1, jet2)):
                         for parton in (parton1, parton2):
                             if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
