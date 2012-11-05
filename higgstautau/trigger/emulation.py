@@ -5,7 +5,8 @@ def update_trigger_trees(student, tool, name, file, tree):
     """
     This method must be called when each new tree is loaded in the chain
     """
-    if not tool.passthrough and tool.year == 2011:
+    if not tool.passthrough:
+        print "Loading current tree in the TriggerTool ..."
         tool.trigger_tool_wrapper.loadMainTree(tree)
         tool.trigger_tool_wrapper.loadMetaTree(
                 file.Get('%sMeta/TrigConfTree' % name))

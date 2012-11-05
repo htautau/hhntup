@@ -111,7 +111,7 @@ class hhskim(ATLASStudent):
                 passthrough=no_trigger or datatype != datasets.MC or year > 2011,
                 count_funcs=count_funcs)
 
-        if datatype == datasets.MC:
+        if not trigger_emulation.passthrough:
             onfilechange.append(
                 (update_trigger_trees, (self, trigger_emulation,)))
 
