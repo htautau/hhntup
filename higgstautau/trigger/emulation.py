@@ -18,19 +18,19 @@ class TauTriggerEmulation(EventFilter):
     def __init__(self, year, passthrough=False, **kwargs):
 
         if not passthrough:
+            from externaltools import TauTriggerEmulation as TTE
+            from ROOT import CoEPP
 
             self.year = year
 
             if year == 2011:
-                from externaltools.bundle_2011 import CoEPPTrigTool
-                from ROOT import CoEPP
                 # emulation not required in 2012 yet since the SFs are wrt
                 # the default triggers
                 # initialize the trigger emulation tool
                 self.trigger_tool_wrapper = CoEPP.OfficialWrapper()
                 self.trigger_tool = CoEPP.TriggerTool()
                 self.trigger_tool.setWrapper(self.trigger_tool_wrapper)
-                trigger_config = CoEPPTrigTool.get_resource(
+                trigger_config = TTE.get_resource(
                         'config_EF_DiTau.xml')
                 self.trigger_tool.setXMLFile(trigger_config)
                 self.trigger_tool.initializeFromXML()
