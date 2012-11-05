@@ -42,7 +42,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Higgs->tau_h+tau_h: A Multivariate Analysis'
+project = u'MVA Higgs->tau_h+tau_h'
 copyright = u'2012, Noel Dawe'
 
 # The version info for the project you're documenting, acts as replacement for
