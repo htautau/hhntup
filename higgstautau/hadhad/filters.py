@@ -211,9 +211,9 @@ class FakeRateScaleFactors(EventFilter):
             # fakerate only applies to taus that don't match truth
             if not tau.matched:
                 if tau.JetBDTSigTight:
-                    wp = 'tight'
+                    wp = 'Tight'
                 else:
-                    wp = 'medium'
+                    wp = 'Medium'
                 sf = self.fakerate_tool.getScaleFactor(
                         tau.pt, wp,
                         trig % tau.trigger_match_thresh)
