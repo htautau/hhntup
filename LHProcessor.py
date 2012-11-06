@@ -145,7 +145,6 @@ class LHProcessor(ATLASStudent):
         ## Setting event filters
         event_filters = EventFilterList([
             PrepareInputTree(),
-            PrepareSysWeights(),
             Trigger(),
             GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),
             #EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
@@ -170,10 +169,10 @@ class LHProcessor(ATLASStudent):
             LeptonSelection( datatype=self.metadata.datatype, stream=self.metadata.stream, year=YEAR ),
             TauPreSelection(),
             TauSelection(),
-            JetSelection(year=YEAR),
+            JetSelection( year=YEAR ),
             FinalOverlapRemoval(),
             ElectronIsoCorrection( datatype=self.metadata.datatype, year=YEAR ),
-            MuonIsoCorrection(datatype=self.metadata.datatype, year=YEAR)
+            MuonIsoCorrection(datatype=self.metadata.datatype, year=YEAR )
         #AntiVBFFilter()
         ])
 

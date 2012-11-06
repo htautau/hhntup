@@ -413,11 +413,16 @@ def jet_selection_2012(jet):
 class JetSelection(EventFilter):
     """Selects jets of good quality, keep event in any case"""
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(JetSelection, self).__init__(**kwargs)
+
     def passes(self, event, year):
 
-        if year == 2011:
+        if self.year == 2011:
             event.jets.select(jet_selection_2011)
-        if year == 2012:
+        if self.year == 2012:
             event.jets.select(jet_selection_2012)
         return True
 

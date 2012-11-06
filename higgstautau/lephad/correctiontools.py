@@ -8,13 +8,12 @@ import os
 
 from externaltools import MuonMomentumCorrections
 from externaltools import MuonEfficiencyCorrections
-from externaltools import MuonIsolationCorrection
+from externaltools.bundle_2012 import MuonIsolationCorrection
 from externaltools import TrigMuonEfficiency
 
 from externaltools import egammaAnalysisUtils
 
 from externaltools import HSG4TriggerSF as HSG4
-from externaltools import TauTriggerCorrections as TTC
 
 from ROOT import std, TLorentzVector, TFile
 from higgstautau.mixins import *
@@ -31,44 +30,44 @@ class MuonPtSmearing(EventFilter):
     Smears the Muon Pt using the official ATLAS tool
     """
 
-    def __init__(self, datatype, **kwargs):
+    def __init__(self, datatype, year, **kwargs):
 
         super(MuonPtSmearing, self).__init__(**kwargs)
         self.datatype = datatype
 
-        ## Prepare 2011 muon pt smearing tool
-        self.tool2011 = MuonSmear.SmearingClass('Data11',
-                                                'staco',
-                                                'pT',
-                                                'Rel17',
-                                                MuonMomentumCorrections.RESOURCE_PATH)
-        self.tool2011.UseScale(1)
-        self.tool2011.UseImprovedCombine()
-        self.tool2011.RestrictCurvatureCorrections(2.5)
-        self.tool2011.FillScales('KC')
+        self.year = year
+        self.tool = None
 
-        ## Prepare 2012 muon pt smearing tool
-        self.tool2012 = MuonSmear.SmearingClass('Data12',
-                                                'staco',
-                                                'pT',
-                                                'Rel17.2_preliminary',
-                                                MuonMomentumCorrections.RESOURCE_PATH)
-        self.tool2012.UseScale(1)
-        self.tool2012.UseImprovedCombine()
+        if self.year == 2011:
+            ## Prepare 2011 muon pt smearing tool
+            self.tool = MuonSmear.SmearingClass('Data11',
+                                                    'staco',
+                                                    'pT',
+                                                    'Rel17',
+                                                    MuonMomentumCorrections.RESOURCE_PATH)
+            self.tool.UseScale(1)
+            self.tool.UseImprovedCombine()
+            self.tool.RestrictCurvatureCorrections(2.5)
+            self.tool.FillScales('KC')
+
+        if self.year == 2012:
+            ## Prepare 2012 muon pt smearing tool
+            self.tool = MuonSmear.SmearingClass('Data12',
+                                                    'staco',
+                                                    'pT',
+                                                    'Rel17.2_preliminary',
+                                                    MuonMomentumCorrections.RESOURCE_PATH)
+            self.tool.UseScale(1)
+            self.tool.UseImprovedCombine()
 
 
         
-    def passes(self, event, year):
+    def passes(self, event):
 
         ## No smearing applied on data muons
         if self.datatype == datasets.DATA: return True
 
         ## Select correct smearing tool configuration
-        muonSmear = None
-        if year == 2011:
-            muonSmear = self.tool2011
-        if year == 2012:
-            muonSmear = self.tool2012
         
         for i, mu in enumerate(event.muons):
 
@@ -87,37 +86,37 @@ class MuonPtSmearing(EventFilter):
 
             
             ## Seed with event number, reproducible smear for different analyses
-            muonSmear.SetSeed(event.EventNumber, i)
+            self.tool.SetSeed(event.EventNumber, i)
 
             ## Pass parameters, get smeared Pt
             pt_smear = -1
 
             if mu.isCombinedMuon:
-                muonSmear.Event(pt_ms, pt_id, pt, eta, charge)
-                pt_smear = muonSmear.pTCB()
-                if year == 2012:
-                    muonSmear.Event(pt_standalone_forMET, eta, 'MS', charge)
-                    pt_standalone_forMET = muonSmear.pTMS()
-                if year == 2011:
+                self.tool.Event(pt_ms, pt_id, pt, eta, charge)
+                pt_smear = self.tool.pTCB()
+                if self.year == 2012:
+                    self.tool.Event(pt_standalone_forMET, eta, 'MS', charge)
+                    pt_standalone_forMET = self.tool.pTMS()
+                if self.year == 2011:
                     pt_standalone_forMET = pt_smear
                 
             elif mu.isSegmentTaggedMuon:
-                muonSmear.Event(pt_id, eta, 'ID', charge)
-                pt_smear = muonSmear.pTID()
-                if year == 2012:
-                    muonSmear.Event(pt_standalone_forMET, eta, 'MS', charge)
-                    pt_standalone_forMET = muonSmear.pTMS()
-                if year == 2011:
+                self.tool.Event(pt_id, eta, 'ID', charge)
+                pt_smear = self.tool.pTID()
+                if self.year == 2012:
+                    self.tool.Event(pt_standalone_forMET, eta, 'MS', charge)
+                    pt_standalone_forMET = self.tool.pTMS()
+                if self.year == 2011:
                     pt_standalone_forMET = pt_smear
 
             else:
-                muonSmear.Event(pt_ms, eta, 'MS', charge)
-                pt_smear = muonSmear.pTMS()
-                if year == 2012:
+                self.tool.Event(pt_ms, eta, 'MS', charge)
+                pt_smear = self.tool.pTMS()
+                if self.year == 2012:
                     pt_standalone_forMET = pt_smear
-                if year == 2011:
-                    muonSmear.Event(pt_standalone_forMET, eta, 'MS', charge)
-                    pt_standalone_forMET = muonSmear.pTMS()
+                if self.year == 2011:
+                    self.tool.Event(pt_standalone_forMET, eta, 'MS', charge)
+                    pt_standalone_forMET = self.tool.pTMS()
 
             ## Adjust Pt in transient D3PD
             mu.pt = pt_smear
@@ -131,7 +130,7 @@ class MuonPtSmearing(EventFilter):
             px = pt*cos(mu.phi)
             py = pt*sin(mu.phi)
             
-            if year == 2011:
+            if self.year == 2011:
                 px_smear = pt_standalone_forMET*cos(mu.phi)
                 py_smear = pt_standalone_forMET*sin(mu.phi)
 
@@ -139,7 +138,7 @@ class MuonPtSmearing(EventFilter):
                 event.MET_RefFinal_BDTMedium_ety += (py-py_smear)*mu.MET_BDTMedium_wpy[0]
                 event.MET_RefFinal_BDTMedium_sumet -= (pt-pt_smear)*mu.MET_BDTMedium_wet[0]
 
-            if year == 2012:
+            if self.year == 2012:
                 px_smear = pt_standalone_forMET*cos(mu.phi)
                 py_smear = pt_standalone_forMET*sin(mu.phi)
 
@@ -753,14 +752,31 @@ def ElectronLTTSF(electron, runNumber, datatype):
 #################################################
 # Special LTT corrections for embedded
 #################################################
-from ROOT import TauTriggerCorrections
-ttc = TauTriggerCorrections()
+
+__ttc_cached__  = False
+__path_cached__ = False
+
+def getTTC(year):
+    global __ttc_cached__
+    global __path_cached__
+    if not (__ttc_cached__ or __path_cached__):
+        if year == 2011:
+            from externaltools.bundle_2011 import TauTriggerCorrections as TTC2011
+            __path_cached__ = TTC2011.RESOURCE_PATH
+        if year == 2012:
+            from externaltools.bundle_2012 import TauTriggerCorrections as TTC2012
+            __path_cached__ = TTC2012.RESOURCE_PATH
+
+    from ROOT import TauTriggerCorrections
+    __ttc_cached__ = TauTriggerCorrections()
+    return __ttc_cached__, __path_cached__
+
 
 def EmbedTauTriggerCorr(Tau, nvtx, runNumber, year, lep, pileup_tool):
     weight = 1.0
     errup = 0.0
     errdown = 0.0
-    ttcPath = TTC.RESOURCE_PATH
+    ttc, ttcPath = getTTC(year)
     tauPt  = Tau.fourvect.Pt()
     tauEta = Tau.fourvect.Eta()
 
