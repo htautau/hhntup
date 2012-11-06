@@ -30,7 +30,7 @@ grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
 %(student_args)s
 %(dataset)s
 --official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
---destSE=TOKYO-LCG2_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS
+%(dest)s
 """
 
 configspec = 'skims.spec'
@@ -66,6 +66,9 @@ for skim_name in args.skim:
     testinput = skim['testinput']
     version = skim['version']
     options = skim['options']
+    dest = skim['dest'].strip()
+    if dest:
+        dest = '--destSE=%s' % dest
     student_args = skim['student_args']
     if user_args:
         student_args += ' ' + ' '.join(user_args)
