@@ -112,10 +112,44 @@ class EventVariables(TreeModel):
     nvtx = IntCol()
 
 
+class SysWeights(TreeModel):
+
+    sys_tau_ESF_UP = FloatCol()
+    sys_tau_ESF_DOWN = FloatCol()
+    sys_tau_IDSF_UP = FloatCol()
+    sys_tau_IDSF_DOWN = FloatCol()
+    sys_tau_TRIGSF_UP = FloatCol()
+    sys_tau_TRIGSF_DOWN = FloatCol()
+
+    sys_mu_IDSF_UP = FloatCol()
+    sys_mu_IDSF_DOWN = FloatCol()
+    sys_mu_TRIGSF_UP = FloatCol()
+    sys_mu_TRIGSF_DOWN = FloatCol()
+    sys_mu_ISOSF_UP = FloatCol()
+    sys_mu_ISOSF_DOWN = FloatCol()
+    sys_mu_EFFSF_UP = FloatCol()
+    sys_mu_EFFSF_DOWN = FloatCol()
+    sys_mu_SLTSF_UP = FloatCol()
+    sys_mu_SLTSF_DOWN = FloatCol()
+    sys_mu_LTTSF_UP = FloatCol()
+    sys_mu_LTTSF_DOWN = FloatCol()
+
+    sys_e_IDSF_UP = FloatCol()
+    sys_e_IDSF_DOWN = FloatCol()
+    sys_e_TRIGSF_UP = FloatCol()
+    sys_e_TRIGSF_DOWN = FloatCol()
+    sys_e_EFFSF_UP = FloatCol()
+    sys_e_EFFSF_DOWN = FloatCol()
+    sys_e_SLTSF_UP = FloatCol()
+    sys_e_SLTSF_DOWN = FloatCol()
+    sys_e_LTTSF_UP = FloatCol()
+    sys_e_LTTSF_DOWN = FloatCol()
+
+
 class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
 
     @classmethod
-    def set(cls, event, tree, tau, lep, leptype, isMC = True):
+    def set(cls, event, tree, tau, lep, leptype, isMC=True, year=2011):
         """
         Misc variables
         """
@@ -146,12 +180,21 @@ class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
         if leptype == 0: # Is a muon
             muon_pt = lep.fourvect.Pt()
             track_iso = lep.ptcone40/muon_pt <= 0.06
-            calo_iso  = lep.etcone20/muon_pt <= 0.04
+            calo_iso = False
+            if year == 2011:
+                calo_iso  = lep.etcone20/muon_pt <= 0.04
+            if year == 2012:
+                calo_iso  = lep.etcone20/muon_pt <= 0.06
             setattr(tree, 'lep_isolated', (track_iso and calo_iso))
 
+        #Calculate electron isolation
         if leptype == 1: # Is an electron
             track_iso = ( lep.ptcone40 / lep.cl_et < 0.06 )
-            calo_iso  = ( lep.Etcone20 / lep.cl_et < 0.08 )
+            calo_iso = False
+            if year == 2011:
+                calo_iso  = ( lep.Etcone20 / lep.cl_et < 0.08 )
+            if year == 2012:
+                calo_iso  = lep.topoEtcone20 / lep.cl_et < 0.06
             setattr(tree, 'lep_isolated', (track_iso and calo_iso))
             
 

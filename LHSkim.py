@@ -105,6 +105,7 @@ class LHSkim(ATLASStudent):
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
         intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
         intree.define_object(name='isLTT', prefix='')
+        intree.define_object(name='leptonType', prefix='')
 
         # set the event filters
 
