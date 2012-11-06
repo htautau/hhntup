@@ -5,4 +5,4 @@
     version = integer()
     options = string(default='')
     student_args = string(default='')
-    dest = string(default='')
+    dest = string_list(default=list('',))
