@@ -23,7 +23,6 @@ is_visible = lambda fourvect: (
                 fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
 
 
-
 class FourVectModel(TreeModel):
 
     pt = FloatCol()
@@ -81,7 +80,9 @@ class Event(FourVectModel.prefix('resonance_') +
     collision_energy = FloatCol()
 
     event = IntCol()
+    run = IntCol()
     channel = IntCol()
+    mu = FloatCol()
 
     match_collision = BoolCol(default=False)
     matched = BoolCol(False)
@@ -383,6 +384,12 @@ class ditaumass(ATLASStudent):
         else:
             resonance_pdgid = 23
 
+        # set constant event branches
+        if '7TeV' in self.metadata.name:
+            tree.collision_energy = 7
+        else:
+            tree.collision_energy = 8
+
         for event_index, event in enumerate(chain):
 
             try:
@@ -453,6 +460,12 @@ class ditaumass(ATLASStudent):
                 radiative_fourvect.fourvect = radiative_fourvect
                 FourVectModel.set(tree.radiative, radiative_fourvect)
                 tree.radiative_ngamma = len(mc_photons)
+                tree.radiative_ngamma_5 = len([
+                    ph for ph in mc_photons if ph.pt > 5])
+                tree.radiative_ngamma_10 = len([
+                    ph for ph in mc_photons if ph.pt > 10])
+                tree.radiative_et_scalarsum = sum([
+                    ph.pt for ph in mc_photons] + [0])
 
                 matched = True
                 matched_objects = []
@@ -519,6 +532,12 @@ class ditaumass(ATLASStudent):
                 tree.met_phi = event.MET.phi
                 tree.met = event.MET.et
                 tree.sum_et = event.MET.sumet
+
+                # set extra event variables
+                tree.channel = event.mc_channel_number
+                tree.event = event.EventNumber
+                tree.run = event.RunNumber
+                tree.mu = event.averageIntPerXing
 
                 tree.Fill()
             except:
