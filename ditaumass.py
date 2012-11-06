@@ -335,6 +335,8 @@ class ditaumass(ATLASStudent):
                     'MET_RefFinal_BDTMedium_*',
                     'MET_RefFinal_STVF_*',
                     'EventNumber',
+                    'RunNumber',
+                    'averageIntPerXing',
                     ],
                 events=self.events,
                 cache=True,
@@ -384,11 +386,10 @@ class ditaumass(ATLASStudent):
         else:
             resonance_pdgid = 23
 
-        # set constant event branches
         if '7TeV' in self.metadata.name:
-            tree.collision_energy = 7
+            collision_energy = 7
         else:
-            tree.collision_energy = 8
+            collision_energy = 8
 
         for event_index, event in enumerate(chain):
 
@@ -538,6 +539,7 @@ class ditaumass(ATLASStudent):
                 tree.event = event.EventNumber
                 tree.run = event.RunNumber
                 tree.mu = event.averageIntPerXing
+                tree.collision_energy = collision_energy
 
                 tree.Fill()
             except:
