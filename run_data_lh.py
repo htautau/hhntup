@@ -15,11 +15,21 @@ args = parser.parse_args()
 
 setup = cluster.get_setup('setup.michel.sfu.txt')
 
-datasets = [#'data-Egamma',
-            #'data-JetTauEtmiss',
-            #'data-Muons',
-            'embed-lh-isol-mfsim'
-            ]
+datasets2011 = [
+    'data11-Egamma',
+    'data11-JetTauEtmiss',
+    'data11-Muons',
+    'embed11-lh-isol-mfsim'
+    ]
+
+datasets2011 = [
+    'data12-Egamma',
+    'data12-JetTauEtmiss',
+    'data12-Muons',
+    'embed12-lh-isol-mfsim'
+    ]
+
+datasets = datasets2011
 
 CWD = os.getcwd()
 

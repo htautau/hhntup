@@ -25,10 +25,17 @@ from higgstautau import samples
 hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.michel.sfu.txt')
 
-datasets = [
+datasets2011 = [
     #'AlpgenJimmyZeeNp0_pt20.mc11c',
     'AlpgenJimmyZtautauNp0_pt20.mc11c',
     ]
+
+datasets2012 = [
+    'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a',
+    #'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a',
+]
+
+datasets = datasets2012
 
 if not args.systematics_only:
     # nominal values
