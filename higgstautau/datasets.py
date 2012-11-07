@@ -219,8 +219,7 @@ class Database(dict):
             for ds in incomplete:
                 print ds
 
-    def scan(self,
-             year,
+    def scan(self, year,
              mc_path=None,
              mc_prefix=None,
              mc_pattern=None,
@@ -918,13 +917,12 @@ if __name__ == '__main__':
     with open(args.config) as config:
         config_dict = yaml.load(config)
         for year, year_config in config_dict.items():
+            if args.analysis not in year_config:
+                continue
             params = {}
             params['data_grl'] = year_config['common'].get('grl', None)
             params.update(year_config[args.analysis])
-
-            print year
-            
-            db.scan(year=year,
+            db.scan(year,
                     deep=args.deep,
                     versioned=args.versioned,
                     **params)

@@ -287,6 +287,7 @@ class HHProcessor(ATLASStudent):
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             JetSelection(
+                year=year,
                 count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
