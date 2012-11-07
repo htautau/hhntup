@@ -921,6 +921,9 @@ if __name__ == '__main__':
             params = {}
             params['data_grl'] = year_config['common'].get('grl', None)
             params.update(year_config[args.analysis])
+
+            print year
+            
             db.scan(year=year,
                     deep=args.deep,
                     versioned=args.versioned,

@@ -12,8 +12,8 @@
         data_prefix: 'group.phys-higgs.LHSkim'
         data_pattern: '*.root*'
         data_treename: 'tau'
-        embed_path: '/global/oneil/lephad/skims/Ztautau_embedded11_D3PD'
-        embed_prefix: 'group.phys-higgs'
+        embed_path: '/global/oneil/lephad/skims/Ztautau_embedded11'
+        embed_prefix: 'group.phys-higgs.LHSkim'
         embed_pattern: '*.root*'
         embed_treename: 'tau'
     # hadhad config
@@ -47,3 +47,8 @@
         embed_prefix: 'group.phys-higgs.hhskim'
         embed_pattern: '*embedding12_ztautau_hh_p1131.root*'
         embed_treename: 'tau'
+    lh:
+        mc_path: '/global/oneil/lephad/skims/mc12'
+        mc_prefix: 'group.phys-higgs.LHSkim'
+        mc_pattern: '*.root*'
+        mc_treename: 'tau'

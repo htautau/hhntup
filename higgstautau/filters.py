@@ -418,7 +418,7 @@ class JetSelection(EventFilter):
         self.year = year
         super(JetSelection, self).__init__(**kwargs)
 
-    def passes(self, event, year):
+    def passes(self, event):
 
         if self.year == 2011:
             event.jets.select(jet_selection_2011)

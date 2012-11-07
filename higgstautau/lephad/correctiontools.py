@@ -160,17 +160,17 @@ class MuonIsoCorrection(EventFilter):
     Corrects the muon isolation in 2012
     """
 
-    def __init__(self, datatype, **kwargs):
+    def __init__(self, datatype, year, **kwargs):
 
         super(MuonIsoCorrection, self).__init__(**kwargs)
         self.datatype = datatype
-
+        self.year = year
         self.tool = CorrectCaloIso()
 
-    def passes(self, event, year):
+    def passes(self, event):
 
         ## Apply only in 2012
-        if year < 2012: return True
+        if self.year < 2012: return True
 
         ##Calculate HSG3 nvtx
         hsg3_nvtx = 0
@@ -202,27 +202,23 @@ class EgammaERescaling(EventFilter):
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EnergyScaleResolutionRecommendations
     """
 
-    def __init__(self, datatype, **kwargs):
+    def __init__(self, datatype, year, **kwargs):
 
         super(EgammaERescaling, self).__init__(**kwargs)
         self.datatype = datatype
+        self.year = year
+        self.tool = eg2011.EnergyRescaler()
+        if self.year == 2011:
+            self.tool.useDefaultCalibConstants('2011')
+        if self.year == 2012:
+            self.tool.useDefaultCalibConstants('2012')
 
-        self.tool2011 = eg2011.EnergyRescaler()
-        self.tool2011.useDefaultCalibConstants('2011')
-        self.tool2012 = eg2011.EnergyRescaler()
-        self.tool2012.useDefaultCalibConstants('2012')
-
-    def passes(self, event, year):
-
-        if year == 2011:
-            egammaER = self.tool2011
-        if year == 2012:
-            egammaER = self.tool2012
+    def passes(self, event):
 
         for el in event.electrons:
 
             ## Seed with event number, reproducible smear for different analyses
-            egammaER.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(getattr(el,'fourvect').Phi()+pi)*1000000.))
+            self.tool.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(getattr(el,'fourvect').Phi()+pi)*1000000.))
 
             raw_e  = el.cl_E
             raw_et = getattr(el,'fourvect').Pt()
@@ -232,16 +228,16 @@ class EgammaERescaling(EventFilter):
             trk_eta = el.tracketa
             cl_phi = el.cl_phi
 
-            if year == 2011:
+            if self.year == 2011:
                 ## Calibration for electrons in the transition region in Data and MC
-                scaleFactorForTransitionRegion = egammaER.applyMCCalibrationMeV(cl_eta, raw_et, 'ELECTRON')
+                scaleFactorForTransitionRegion = self.tool.applyMCCalibrationMeV(cl_eta, raw_et, 'ELECTRON')
                 corrected_e  *= scaleFactorForTransitionRegion
                 corrected_et *= scaleFactorForTransitionRegion
 
                 if self.datatype == datasets.MC or self.datatype == datasets.EMBED:
                     ## Smearing correction in MC
                     sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
-                    smearFactor = egammaER.getSmearingCorrectionMeV(cl_eta, corrected_e, sys, False, '2011')
+                    smearFactor = self.tool.getSmearingCorrectionMeV(cl_eta, corrected_e, sys, False, '2011')
                     corrected_e  *= smearFactor
                     corrected_et *= smearFactor
                 else:
@@ -249,17 +245,17 @@ class EgammaERescaling(EventFilter):
                     sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
                     scaleFactor = 1
                     if corrected_e > 0:
-                        scaleFactor = egammaER.applyEnergyCorrectionMeV(cl_eta, cl_phi, corrected_e, corrected_et, sys, 'ELECTRON') / corrected_e
+                        scaleFactor = self.tool.applyEnergyCorrectionMeV(cl_eta, cl_phi, corrected_e, corrected_et, sys, 'ELECTRON') / corrected_e
                     corrected_e  *= scaleFactor
                     corrected_et *= scaleFactor
 
-            if year == 2012:
+            if self.year == 2012:
                 if self.datatype == datasets.DATA:
-                    corrected_e = egammaER.applyEnergyCorrectionMeV(cl_eta, cl_phi, raw_e, raw_et, 0, 'ELECTRON')
+                    corrected_e = self.tool.applyEnergyCorrectionMeV(cl_eta, cl_phi, raw_e, raw_et, 0, 'ELECTRON')
                     corrected_et = corrected_e/cosh(trk_eta)
                 else:
-                    corrected_e = egammaER.applyEnergyCorrectionMeV(cl_eta, cl_phi, raw_e, raw_et, 0, 'ELECTRON')
-                    corrected_e *= egammaER.getSmearingCorrectionMeV(cl_eta, corrected_e, 0, False)
+                    corrected_e = self.tool.applyEnergyCorrectionMeV(cl_eta, cl_phi, raw_e, raw_et, 0, 'ELECTRON')
+                    corrected_e *= self.tool.getSmearingCorrectionMeV(cl_eta, corrected_e, 0, False)
                     corrected_et = corrected_e/cosh(trk_eta)
 
 
@@ -287,11 +283,11 @@ class EgammaERescaling(EventFilter):
                 corrected_px = corrected_et * cos(el.trackphi)
                 corrected_py = corrected_et * sin(el.trackphi)
 
-            if year == 2011:
+            if self.year == 2011:
                 event.MET_RefFinal_BDTMedium_etx += ( px - corrected_px ) * el.MET_BDTMedium_wpx[0]
                 event.MET_RefFinal_BDTMedium_ety += ( py - corrected_py ) * el.MET_BDTMedium_wpy[0]
                 event.MET_RefFinal_BDTMedium_sumet -= ( raw_et - corrected_et ) * el.MET_BDTMedium_wet[0]
-            if year == 2012:
+            if self.year == 2012:
                 event.MET_RefFinal_STVF_etx += ( px - corrected_px ) * el.MET_STVF_wpx[0]
                 event.MET_RefFinal_STVF_ety += ( py - corrected_py ) * el.MET_STVF_wpy[0]
                 event.MET_RefFinal_STVF_sumet -= ( raw_et - corrected_et ) * el.MET_STVF_wet[0]
@@ -310,12 +306,13 @@ class ElectronIsoCorrection(EventFilter):
     Correction for electron calorimeter isolation variables
     """
     
-    def __init__(self, datatype, **kwargs):
+    def __init__(self, datatype, year, **kwargs):
 
-        super(ElectronIsoCorrection, self).__init__(**kwargs)
         self.datatype = datatype
+        self.year = year        
+        super(ElectronIsoCorrection, self).__init__(**kwargs)
 
-    def passes(self, event, year):
+    def passes(self, event):
 
         nPV = 0
         for vxp in event.vertices:
@@ -329,7 +326,7 @@ class ElectronIsoCorrection(EventFilter):
             EtCone20 = el.Etcone20
             newEtCone20 = EtCone20
             
-            if year == 2011:
+            if self.year == 2011:
                 if self.datatype == datasets.MC:
                     newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
                                                                                        E,
@@ -350,7 +347,7 @@ class ElectronIsoCorrection(EventFilter):
                                                                                        EtCone20)
                 el.Etcone20 = newEtCone20
 
-            if year == 2012:
+            if self.year == 2012:
                 newTopoEtCone20 = CaloIsoCorrection.GetPtEDCorrectedTopoIsolation(el.ED_median,
                                                                                   E,
                                                                                   EtaS2,
@@ -708,7 +705,7 @@ def LeptonSLTSF(event, datatype):
 
 
 ## Scale factor for lephad triggers
-def ElectronLTTSF(electron, runNumber, datatype):
+def ElectronLTTSF(electron, runNumber, datatype, year, pileup_tool):
     """
     Returns nominal, +1sigma, -1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else

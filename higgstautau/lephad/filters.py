@@ -132,11 +132,16 @@ class muLTTriggers(EventFilter):
 # Muon any trigger
 class AnyMuTriggers(EventFilter):
 
-    def passes(self, event, year):
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(AnyMuTrigger, self).__init__(**kwargs)
+
+    def passes(self, event):
 
         TriggerList = []
         
-        if year == 2011:
+        if self.year == 2011:
             TriggerList = [
                 'EF_mu18',
                 'EF_mu18_MG',
@@ -146,7 +151,7 @@ class AnyMuTriggers(EventFilter):
                 'EF_tau20_medium_mu15'
                 ]
             
-        elif year == 2012:
+        elif self.year == 2012:
             TriggerList = [
                 'EF_mu24i_tight',
                 'EF_tau20_medium1_mu15'
@@ -246,11 +251,16 @@ class eLTTriggers(EventFilter):
 # Electron any trigger
 class AnyETriggers(EventFilter):
 
-    def passes(self, event, year):
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(AnyETrigger, self).__init__(**kwargs)
+    
+    def passes(self, event):
 
         TriggerList = []
         
-        if year == 2011:
+        if self.year == 2011:
             TriggerList = [
                 'EF_e20_medium',
                 'EF_e22_medium',
@@ -260,7 +270,7 @@ class AnyETriggers(EventFilter):
                 'EF_tau20_medium_e15vh_medium'
                 ]
 
-        elif year == 2012:
+        elif self.year == 2012:
             TriggerList = [
                 'EF_e24vhi_medium1',
                 'EF_tau20Ti_medium1_e18vh_medium1'
@@ -473,7 +483,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigLoose == 1) : return False
+    #if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True
@@ -604,27 +614,42 @@ directly. Right now you pass a function that calls a function...
 class MuonOverlapSelection(EventFilter):
     """ Selects low pt muons of good quality for overlap removal with taus """
 
-    def passes(self, event, year):
+    def __init__(self, year, **kwargs):
 
-        event.muons.select(lambda muon : muon_overlap_selection(muon, year))
+        self.year = year
+        super(MuonOverlapSelection, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.muons.select(lambda muon : muon_overlap_selection(muon, self.year))
         return True
 
 
 class MuonPreSelection(EventFilter):
     """Selects muons of good quality"""
 
-    def passes(self, event, year):
+    def __init__(self, year, **kwargs):
 
-        event.muons.select(lambda muon : muon_preselection(muon, year))
+        self.year = year
+        super(MuonPreSelection, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.muons.select(lambda muon : muon_preselection(muon, self.year))
         return True
 
 
 class ElectronPreSelection(EventFilter):
     """Selects electrons of good quality"""
 
-    def passes(self, event, year):
+    def __init__(self, year, **kwargs):
 
-        event.electrons.select(lambda electron : electron_preselection(electron, year))
+        self.year = year
+        super(ElectronPreSelection, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.electrons.select(lambda electron : electron_preselection(electron, self.year))
         return True
 
 
@@ -640,14 +665,14 @@ class ElectronEtaSelection(EventFilter):
 class LeptonSelection(EventFilter):
     """ Selects the lepton, with all possible trigger/stream provenance """
 
-    def __init__(self, datatype, stream, **kwargs):
+    def __init__(self, datatype, stream, year, **kwargs):
 
         self.datatype = datatype
         self.stream = stream
-
+        self.year = year
         super(LeptonSelection, self).__init__(**kwargs)
 
-    def passes(self, event, year):
+    def passes(self, event):
 
         # Get the lepton Pt
         Pt = None
@@ -664,13 +689,13 @@ class LeptonSelection(EventFilter):
         el_SLT_threshold = 0
         el_LTT_threshold = 0
 
-        if year == 2011:
+        if self.year == 2011:
             mu_SLT_threshold = 22*GeV
             mu_LTT_threshold = 17*GeV
             el_SLT_threshold = 25*GeV
             el_LTT_threshold = 17*GeV
 
-        if year == 2012:
+        if self.year == 2012:
             mu_SLT_threshold = 26*GeV
             mu_LTT_threshold = 17*GeV
             el_SLT_threshold = 26*GeV
