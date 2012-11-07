@@ -377,7 +377,7 @@ class TauLArHole(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
-def jet_selection(jet):
+def jet_selection_2011(jet):
     """ Finalizes the jet selection """
 
     if not (jet.pt > 25 * GeV):
@@ -395,13 +395,35 @@ def jet_selection(jet):
 
     return True
 
+def jet_selection_2012(jet):
+    """ Finalizes the jet selection """
+
+    if not (jet.pt > 30 * GeV):
+        return False
+
+    if not (abs(jet.eta) < 4.5):
+        return False
+
+    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.5):
+        return False
+
+    return True
+
 
 class JetSelection(EventFilter):
     """Selects jets of good quality, keep event in any case"""
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(JetSelection, self).__init__(**kwargs)
+
     def passes(self, event):
 
-        event.jets.select(jet_selection)
+        if self.year == 2011:
+            event.jets.select(jet_selection_2011)
+        if self.year == 2012:
+            event.jets.select(jet_selection_2012)
         return True
 
 

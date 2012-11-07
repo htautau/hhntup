@@ -78,19 +78,23 @@ class muSLTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-I  (177986-186493) : EF_mu18_MG
         period J-M  (186516-191933) : EF_mu18_MG_medium
+
+        2012:
+        period A-E (200804-210308) : EF_mu24i_tight
         """
         try:
             if 177986 <= event.RunNumber <= 186493:
                 return event.EF_mu18_MG
             elif 186516 <= event.RunNumber <= 191933:
                 return event.EF_mu18_MG_medium
-            elif 200000 <= event.RunNumber:
-                return True
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_mu24i_tight
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -102,19 +106,23 @@ class muLTTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-J  (177986-186755) : EF_tau16_loose_mu15
         period K-M  (186873-191933) : EF_tau20_medium_mu15
+
+        2012:
+        period A-E (200804-210308) : EF_tau20_medium1_mu15
         """
         try:
             if 177986 <= event.RunNumber <= 186755:
                 return event.EF_tau16_loose_mu15
             elif 186873 <= event.RunNumber <= 191933:
                 return event.EF_tau20_medium_mu15
-            elif 200000 <= event.RunNumber:
-                return True
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_tau20_medium1_mu15
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -124,14 +132,30 @@ class muLTTriggers(EventFilter):
 # Muon any trigger
 class AnyMuTriggers(EventFilter):
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(AnyMuTrigger, self).__init__(**kwargs)
+
     def passes(self, event):
 
-        TriggerList = ['EF_mu18',
-                       'EF_mu18_MG',
-                       'EF_mu18_medium',
-                       'EF_mu18_MG_medium',
-                       'EF_tau16_loose_mu15',
-                       'EF_tau20_medium_mu15']
+        TriggerList = []
+        
+        if self.year == 2011:
+            TriggerList = [
+                'EF_mu18',
+                'EF_mu18_MG',
+                'EF_mu18_medium',
+                'EF_mu18_MG_medium',
+                'EF_tau16_loose_mu15',
+                'EF_tau20_medium_mu15'
+                ]
+            
+        elif self.year == 2012:
+            TriggerList = [
+                'EF_mu24i_tight',
+                'EF_tau20_medium1_mu15'
+            ]
 
         TriggersToOR = 0
 
@@ -165,13 +189,18 @@ class eSLTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-J  (177986-186755) : EF_e20_medium
         period K    (186873-187815) : EF_e22_medium
         period L-M  (188902-191933) : EF_e22vh_medium1
+
+        2012:
+        period A-E (200804-210308) : EF_e24vhi_tight
         """
+        
         try:
             if 177986 <= event.RunNumber <= 186755:
                 return event.EF_e20_medium
@@ -179,8 +208,8 @@ class eSLTriggers(EventFilter):
                 return event.EF_e22_medium
             elif 188902 <= event.RunNumber <= 191933:
                 return event.EF_e22vh_medium1
-            elif 200000 <= event.RunNumber:
-                return True
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_e24vhi_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -192,13 +221,18 @@ class eLTTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-J  (177986-186755) : EF_tau16_e15_medium
         period K    (186873-187815) : EF_tau20_medium_e15_medium
         period L-M  (188902-191933) : EF_tau20_medium_e15vh_medium
+
+        2012:
+        period A-E (200804-210308) : EF_tau20Ti_medium1_e18vh_medium1
         """
+        
         try:
             if 177986 <= event.RunNumber <= 186755:
                 return event.EF_tau16_loose_e15_medium
@@ -206,8 +240,8 @@ class eLTTriggers(EventFilter):
                 return event.EF_tau20_medium_e15_medium
             elif 188902 <= event.RunNumber <= 191933:
                 return event.EF_tau20_medium_e15vh_medium
-            elif 200000 <= event.RunNumber:
-                return True
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_tau20Ti_medium1_e18vh_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -217,14 +251,30 @@ class eLTTriggers(EventFilter):
 # Electron any trigger
 class AnyETriggers(EventFilter):
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(AnyETrigger, self).__init__(**kwargs)
+    
     def passes(self, event):
 
-        TriggerList = ['EF_e20_medium',
-                       'EF_e22_medium',
-                       'EF_e22vh_medium1',
-                       'EF_tau16_loose_e15_medium',
-                       'EF_tau20_medium_e15_medium',
-                       'EF_tau20_medium_e15vh_medium']
+        TriggerList = []
+        
+        if self.year == 2011:
+            TriggerList = [
+                'EF_e20_medium',
+                'EF_e22_medium',
+                'EF_e22vh_medium1',
+                'EF_tau16_loose_e15_medium',
+                'EF_tau20_medium_e15_medium',
+                'EF_tau20_medium_e15vh_medium'
+                ]
+
+        elif self.year == 2012:
+            TriggerList = [
+                'EF_e24vhi_medium1',
+                'EF_tau20Ti_medium1_e18vh_medium1'
+                ]
 
         TriggersToOR = 0
 
@@ -279,14 +329,21 @@ class muMCSLTriggers(EventFilter):
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-K  (177986-187815) : EF_mu18_MG
         period L-M  (188902-191933) : EF_mu18_MG_medium
+
+        2012:
+        period A-E  (200804-210308) : EF_mu24i_tight
         """
         try:
             if 177986 <= event.RunNumber <= 187815:
                 return event.EF_mu18_MG
-            elif 188902 <= event.RunNumber:
+            elif 188902 <= event.RunNumber <= 200000:
                 return event.EF_mu18_MG_medium
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_mu24i_tight
+            
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -298,17 +355,25 @@ class muMCLTTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-K  (177986-187815) : EF_tau16_loose_mu15
         period L-M  (188902-191933) : EF_tau20_medium_mu15
+
+        2012:
+        period A-E  (200804-210308) : EF_tau20_medium1_mu15
         """
+        
         try:
             if 177986 <= event.RunNumber <= 187815:
                 return event.EF_tau16_loose_mu15
-            elif 188902 <= event.RunNumber:
+            elif 188902 <= event.RunNumber <= 200000:
                 return event.EF_tau20_medium_mu15
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_tau20_medium1_mu15
+            
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -324,17 +389,25 @@ class eMCSLTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Winter#Data
+         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-K  (177986-187815) : EF_e20_medium
         period L-M  (188902-191933) : EF_e22vh_medium1
+
+        2012:
+        period A-E  (200804-210308) : EF_e24vhi_medium1
         """
+        
         try:
             if 177986 <= event.RunNumber <= 187815:
                 return event.EF_e20_medium
-            elif 188902 <= event.RunNumber:
+            elif 188902 <= event.RunNumber <= 200000:
                 return event.EF_e22vh_medium1
+            elif 200804 <= event.RunNumber < 210308:
+                return event.EF_e24vhi_medium1
+            
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -346,17 +419,25 @@ class eMCLTTriggers(EventFilter):
 
     def passes(self, event):
         """
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers#Tau_Lepton_Triggers
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLHTriggers
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
+        2011:
         period B-K  (177986-187815) : EF_tau16_loose_e15_medium
         period L-M  (188902-191933) : EF_tau20_medium_e15vh_medium
+
+        2012:
+        period A-E  (200804-210308) : EF_tau20_medium1_e18vh_medium1
         """
+        
         try:
             if 177986 <= event.RunNumber <= 187815:
                 return event.EF_tau16_loose_e15_medium
-            elif 188902 <= event.RunNumber:
+            elif 188902 <= event.RunNumber <= 200000:
                 return event.EF_tau20_medium_e15vh_medium
+            elif 200804 <= event.RunNumber <= 210308:
+                return event.EF_tau20_medium1_e18vh_medium1
+            
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
@@ -448,22 +529,22 @@ def muon_skimselection(mu):
     return True
 
 
-def muon_overlap_selection(mu):
+def muon_overlap_selection(mu, year):
     """ Do a pre-preselection for overlap removal with taus and jets """
 
     if not (mu.pt > 4*GeV) : return False
-    if not (muon_has_good_track(mu)) : return False
+    if not (muon_has_good_track(mu, year)) : return False
     if not (abs(mu.eta) < 2.5) : return False
     if not (mu.loose) : return False
 
     return True
 
 
-def muon_preselection(mu):
+def muon_preselection(mu, year):
     """ Does the complete muon preselection """
 
     if not (mu.pt > 10*GeV) : return False
-    if not (muon_has_good_track(mu)) : return False
+    if not (muon_has_good_track(mu, year)) : return False
     if not (abs(mu.eta) < 2.5) : return False
     if not (mu.loose) : return False
 
@@ -487,12 +568,14 @@ def electron_skimselection(el):
     return True
 
 
-def electron_preselection(el):
+def electron_preselection(el, year):
     """ Does the complete electron preselection """
 
     el_cl_Et = getattr(el,'fourvect').Pt()
 
     if not (el_cl_Et > 15*GeV) : return False
+    if year == 2012:
+        if not (el.OQ&1446) == 0: return False
     if not (abs(el.cl_eta) < 2.47) : return False
     if not (el.author == 1 or el.author == 3) : return False
     if not (el.loosePP) : return False
@@ -519,9 +602,6 @@ def jet_preselection(jet):
 
     return True
 
-# use same jet selection for lephad and hadhad
-from ..filters import jet_selection
-
 ############################################################
 # OBJECT ANALYSIS FILTERS
 ############################################################
@@ -534,27 +614,42 @@ directly. Right now you pass a function that calls a function...
 class MuonOverlapSelection(EventFilter):
     """ Selects low pt muons of good quality for overlap removal with taus """
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(MuonOverlapSelection, self).__init__(**kwargs)
+
     def passes(self, event):
 
-        event.muons.select(lambda muon : muon_overlap_selection(muon))
+        event.muons.select(lambda muon : muon_overlap_selection(muon, self.year))
         return True
 
 
 class MuonPreSelection(EventFilter):
     """Selects muons of good quality"""
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(MuonPreSelection, self).__init__(**kwargs)
+
     def passes(self, event):
 
-        event.muons.select(lambda muon : muon_preselection(muon))
+        event.muons.select(lambda muon : muon_preselection(muon, self.year))
         return True
 
 
 class ElectronPreSelection(EventFilter):
     """Selects electrons of good quality"""
 
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(ElectronPreSelection, self).__init__(**kwargs)
+
     def passes(self, event):
 
-        event.electrons.select(lambda electron : electron_preselection(electron))
+        event.electrons.select(lambda electron : electron_preselection(electron, self.year))
         return True
 
 
@@ -570,11 +665,11 @@ class ElectronEtaSelection(EventFilter):
 class LeptonSelection(EventFilter):
     """ Selects the lepton, with all possible trigger/stream provenance """
 
-    def __init__(self, datatype, stream, **kwargs):
+    def __init__(self, datatype, stream, year, **kwargs):
 
         self.datatype = datatype
         self.stream = stream
-
+        self.year = year
         super(LeptonSelection, self).__init__(**kwargs)
 
     def passes(self, event):
@@ -589,22 +684,38 @@ class LeptonSelection(EventFilter):
             Pt = event.muons[0].pt
             ID = event.muons[0].isCombinedMuon
 
-        if not ID: return False
+        mu_SLT_threshold = 0
+        mu_LTT_threshold = 0
+        el_SLT_threshold = 0
+        el_LTT_threshold = 0
 
+        if self.year == 2011:
+            mu_SLT_threshold = 22*GeV
+            mu_LTT_threshold = 17*GeV
+            el_SLT_threshold = 25*GeV
+            el_LTT_threshold = 17*GeV
+
+        if self.year == 2012:
+            mu_SLT_threshold = 26*GeV
+            mu_LTT_threshold = 17*GeV
+            el_SLT_threshold = 26*GeV
+            el_LTT_threshold = 20*GeV
+
+        if not ID: return False
 
         if self.datatype == datasets.EMBED:
                  
             if event.leptonType == 'e':
-                if Pt > 17*GeV:
-                    if Pt <= 25*GeV:
+                if Pt > el_LTT_threshold:
+                    if Pt <= el_SLT_threshold:
                         event.isLTT = True
                     return True
                 else:
                     return False
 
             if event.leptonType == 'mu':
-                if Pt > 17*GeV:
-                    if Pt <= 22*GeV:
+                if Pt > mu_LTT_threshold:
+                    if Pt <= mu_SLT_threshold:
                         event.isLTT = True
                     return True
                 else:
@@ -614,11 +725,11 @@ class LeptonSelection(EventFilter):
         if self.datatype == datasets.MC:
                  
             if event.leptonType == 'e':
-                if Pt > 25*GeV:
+                if Pt > el_SLT_threshold:
                     trigger = eMCSLTriggers()
                     if trigger.passes(event):
                         return True
-                if 17*GeV < Pt <= 25*GeV:
+                if el_LTT_threshold < Pt <= el_SLT_threshold:
                     trigger = eMCLTTriggers()
                     if trigger.passes(event):
                         event.isLTT = True
@@ -626,11 +737,11 @@ class LeptonSelection(EventFilter):
                 return False
 
             if event.leptonType == 'mu':
-                if Pt > 22*GeV:
+                if Pt > mu_SLT_threshold:
                     trigger = muMCSLTriggers()
                     if trigger.passes(event):
                         return True
-                if 17*GeV < Pt <= 22*GeV:
+                if mu_LTT_threshold < Pt <= mu_SLT_threshold:
                     trigger = muMCLTTriggers()
                     if trigger.passes(event):
                         event.isLTT = True
@@ -646,7 +757,7 @@ class LeptonSelection(EventFilter):
                     SLT = eSLTriggers()
                     LTT = eLTTriggers()
                     if LTT.passes(event) and not SLT.passes(event):
-                        if 17*GeV < Pt <= 25*GeV:
+                        if el_LTT_threshold < Pt <= el_SLT_threshold:
                             event.isLTT = True
                             return True
                     return False
@@ -655,7 +766,7 @@ class LeptonSelection(EventFilter):
                     SLT = muSLTriggers()
                     LTT = muLTTriggers()
                     if LTT.passes(event) and not SLT.passes(event):
-                        if 17*GeV < Pt <= 22*GeV:
+                        if mu_LTT_threshold < Pt <= mu_SLT_threshold:
                             event.isLTT = True
                             return True
                     return False
@@ -665,9 +776,9 @@ class LeptonSelection(EventFilter):
                 LTT = eLTTriggers()
                 isSLT = SLT.passes(event)
                 isLTT = LTT.passes(event)
-                if isSLT and Pt > 25*GeV:
+                if isSLT and Pt > el_SLT_threshold:
                     return True
-                if isLTT and isSLT and 17*GeV < Pt <= 25*GeV:
+                if isLTT and isSLT and el_LTT_threshold < Pt <= el_SLT_threshold:
                     event.isLTT = True
                     return True
                 return False
@@ -677,9 +788,9 @@ class LeptonSelection(EventFilter):
                 LTT = muLTTriggers()
                 isSLT = SLT.passes(event)
                 isLTT = LTT.passes(event)
-                if isSLT and Pt > 22*GeV:
+                if isSLT and Pt > mu_SLT_threshold:
                     return True
-                if isLTT and isSLT and 17*GeV < Pt <= 22*GeV:
+                if isLTT and isSLT and mu_LTT_threshold < Pt <= mu_SLT_threshold:
                     event.isLTT = True
                     return True
                 return False

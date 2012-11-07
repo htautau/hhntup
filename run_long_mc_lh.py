@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument('--student', default='LHProcessor.py')
 parser.add_argument('--systematics', default=None)
-parser.add_argument('--nproc', type=int, default=12)
+parser.add_argument('--nproc', type=int, default=1)
 parser.add_argument('--queue', default='medium')
 parser.add_argument('--output-path', default='ntuples/lephadComposite')
 parser.add_argument('--db', default='datasets_lh')
@@ -26,7 +26,7 @@ hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.michel.sfu.txt')
 
 datasets = [
-    'AlpgenJimmyZeeNp0_pt20.mc11c',
+    #'AlpgenJimmyZeeNp0_pt20.mc11c',
     'AlpgenJimmyZtautauNp0_pt20.mc11c',
     ]
 
