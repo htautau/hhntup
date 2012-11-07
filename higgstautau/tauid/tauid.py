@@ -45,6 +45,55 @@ EFFIC_SF_2011 = {
 """
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsSummerConf2012#Systematics_for_Tau_identificati
 """
+EFFIC_SF_2012 = {
+    'loose': {
+        1: {'central': (1.008, 0.030),
+            'forward': (1.012, 0.038)},
+        3: {'central': (1.084, 0.059),
+            'forward': (1.07, 0.11)},
+    },
+    'medium': {
+        1: {'central': (0.992, 0.030),
+            'forward': (0.952, 0.040)},
+        3: {'central': (1.073, 0.071),
+            'forward': (0.99, 0.10)},
+    },
+    'tight': {
+        1: {'central': (0.985, 0.045),
+            'forward': (0.876, 0.045)},
+        3: {'central': (1.074, 0.097),
+            'forward': (0.99, 0.10)},
+    },
+}
+
+
+def effic_sf_uncert(tau, year):
+
+    year = year % 1000
+    if tau.JetBDTSigTight:
+        wp = 'tight'
+    elif tau.JetBDTSigMedium:
+        wp = 'medium'
+    elif tau.JetBDTSigLoose:
+        wp = 'loose'
+    else:
+        wp = 'loose'
+        print ("Warning: requested efficiency for tau below BDT loose. "
+               "Using BDT loose.")
+    np = nprong(tau.numTrack)
+    if year == 11:
+        sf, sf_uncert = EFFIC_SF_2011[wp][np]
+    elif year == 12:
+        if abs(tau.eta) > 1.5:
+            region = 'forward'
+        else:
+            region = 'central'
+        sf, sf_uncert = EFFIC_SF_2012[wp][np][region]
+    else:
+        raise ValueError(
+                'no efficiency scale factors defined for year %d' % year)
+    return sf, sf_uncert
+
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

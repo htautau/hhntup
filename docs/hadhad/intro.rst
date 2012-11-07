@@ -10,20 +10,6 @@ Plans
 * Determine normalization of QCD and Ztautau from simultaneous fit with
   BDT distribution in low MMC mass region (80 - 110 GeV)
 
-Status
-------
-
-* Pileup reweighting *DONE*
-* Define event selection *DONE*
-* Define categories *DONE*
-* Trigger emulation *DONE*
-* Fake rate scale factor correction (will have updated factors from Marcus) *DONE*
-* Trigger efficiency scale factor correction *TODO*
-* Background estimation: determine QCD and Ztautau normalizations *WORK IN PROGRESS*
-* Final BDT training and show output in low mass region (and sideband?) *WORK IN PROGRESS*
-* Systematics *WORK IN PROGRESS*
-* Determine limits on Higgs cross sections *WORK IN PROGRESS*
-
 Outstanding Problems
 --------------------
 
@@ -44,21 +30,21 @@ Outstanding Problems
 Ideas
 -----
 
-* Try dR<2.8 cut on the taus to easily remove some QCD
-* Use dR>1.0 to fix low mass modeling
-* Use Higgs pT (see Michel's analysis). Bottom of ranking.
-* Use sum pT. Bottom of ranking
-* Split 0/1-jet category into boosted (1 jet above 50GeV) and non-boosted to
-  improve sensitivity. DONE. Large improvement.
+* Use Higgs pT as an input variable to the BDT.
+* Use Higgs pT to define the boosted category instead of #jet
+* Need theory uncert based on Higgs pT
+* Use sum pT.
 * Require "Higgs pT" > 100 GeV or X in the boosted category.
-* Reduce number of bins in VBF BDT fit.
 * Try defining separate categories on final BDT output and calculating limits in
   each subcategory separately using the MMC output.
   Swagato suggested this. gammagamma analysis does this.
   OR try calculating limits using 2D BDT vs MMC distributions.
-* Look at sideband above 150GeV to check shape and norm
+* Look at sideband above 180GeV to check shape and norm
 * Use SS for VBF norm but !OS for QCD in plots after norm to smooth it out
   Check that BDTJetScore is still well modeled.
+* Next skims: use baseline trigger and make separate skim with new triggers
+  E- and H7-
+* Add new runs to skim
 
 
 Notes

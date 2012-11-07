@@ -1,14 +1,12 @@
 from rootpy.tree.filtering import EventFilter
 
-from externaltools import CoEPPTrigTool
-from ROOT import CoEPP
-
 
 def update_trigger_trees(student, tool, name, file, tree):
     """
     This method must be called when each new tree is loaded in the chain
     """
     if not tool.passthrough and tool.year == 2011:
+        print "Loading current tree in the TriggerTool ..."
         tool.trigger_tool_wrapper.loadMainTree(tree)
         tool.trigger_tool_wrapper.loadMetaTree(
                 file.Get('%sMeta/TrigConfTree' % name))
@@ -21,6 +19,8 @@ class TauTriggerEmulation(EventFilter):
     def __init__(self, year, passthrough=False, **kwargs):
 
         if not passthrough:
+            from externaltools import TauTriggerEmulation as TTE
+            from ROOT import CoEPP
 
             self.year = year
 
@@ -31,7 +31,7 @@ class TauTriggerEmulation(EventFilter):
                 self.trigger_tool_wrapper = CoEPP.OfficialWrapper()
                 self.trigger_tool = CoEPP.TriggerTool()
                 self.trigger_tool.setWrapper(self.trigger_tool_wrapper)
-                trigger_config = CoEPPTrigTool.get_resource(
+                trigger_config = TTE.get_resource(
                         'config_EF_DiTau.xml')
                 self.trigger_tool.setXMLFile(trigger_config)
                 self.trigger_tool.initializeFromXML()

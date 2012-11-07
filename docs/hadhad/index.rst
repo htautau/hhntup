@@ -4,8 +4,6 @@
 
 .. include:: abstract.rst
 
-.. include:: general_notes.rst
-
 .. include:: intro.rst
 
 Contents:

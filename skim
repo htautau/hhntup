@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument('--local-test', action='store_true', default=False)
 parser.add_argument('--grid-test', action='store_true', default=False)
+parser.add_argument('--yall', action='store_true', default=False)
 parser.add_argument('skim', help='skim name', nargs='*')
 args, user_args = parser.parse_known_args()
 
@@ -30,7 +31,7 @@ grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
 %(student_args)s
 %(dataset)s
 --official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
---destSE=TOKYO-LCG2_PHYS-HIGGS,NIKHEF-ELPROD_PHYS-HIGGS
+%(dest)s
 """
 
 configspec = 'skims.spec'
@@ -66,6 +67,9 @@ for skim_name in args.skim:
     testinput = skim['testinput']
     version = skim['version']
     options = skim['options']
+    dest = ','.join(skim['dest']).strip()
+    if dest:
+        dest = '--destSE=%s' % dest
     student_args = skim['student_args']
     if user_args:
         student_args += ' ' + ' '.join(user_args)
@@ -75,10 +79,11 @@ for skim_name in args.skim:
     else:
         if student_args:
             student_args = '--student-args="%s"' % student_args
+        opts = ''
         if args.grid_test:
-            opts = '--test'
-        else:
-            opts = ''
+            opts += ' --test'
+        if args.yall:
+            opts += ' --yall'
         cmd = SUBMIT_CMD % locals()
 
     cmd = cmd.replace('\n', ' ')
@@ -87,7 +92,7 @@ for skim_name in args.skim:
     print
     print cmd
     print
-    if raw_input("Is this OK? Y/[n] ") == 'Y':
+    if args.yall or raw_input("Is this OK? Y/[n] ") == 'Y':
         try:
             call(cmd, shell=True)
         except KeyboardInterrupt:

@@ -108,10 +108,10 @@ class hhskim(ATLASStudent):
 
         trigger_emulation = TauTriggerEmulation(
                 year=year,
-                passthrough=no_trigger or datatype != datasets.MC,
+                passthrough=no_trigger or datatype != datasets.MC or year > 2011,
                 count_funcs=count_funcs)
 
-        if datatype == datasets.MC:
+        if not trigger_emulation.passthrough:
             onfilechange.append(
                 (update_trigger_trees, (self, trigger_emulation,)))
 
@@ -155,7 +155,6 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 year=year,
                 verbose=VERBOSE,
-                passthrough=year == 2012,
                 count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
@@ -220,21 +219,42 @@ class hhskim(ATLASStudent):
                 lead=35 * GeV if datatype == datasets.DATA else 30 * GeV,
                 sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
                 count_funcs=count_funcs),
+            TaudR(3.2,
+                count_funcs=count_funcs),
             TauTriggerMatchThreshold(
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
-            #TauTriggerEfficiency(
-            #    year=year,
-            #    datatype=datatype,
-            #    tes_systematic=self.args.syst_terms and (Systematics.TES_TERMS &
-            #        self.args.syst_terms),
-            #    passthrough=datatype == datasets.DATA or year == 2012),
-            TaudR(3.2,
+            TauTriggerEfficiency(
+                year=year,
+                datatype=datatype,
+                tes_systematic=self.args.syst_terms and (
+                    Systematics.TES_TERMS & self.args.syst_terms),
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             PileupReweight(
                 year=year,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            TruthMatching(
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            EfficiencyScaleFactors(
+                year=year,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            FakeRateScaleFactors(
+                year=year,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            ggFReweighting(
+                dsname=self.metadata.name,
+                tree=tree,
+                # no ggf reweighting for 2012 MC
+                passthrough=datatype != datasets.MC or year != 2011,
+                count_funcs=count_funcs),
+            TauTrackRecounting(
+                year=year,
                 count_funcs=count_funcs),
         ])
 
@@ -330,6 +350,7 @@ class hhskim(ATLASStudent):
             tree.tau_trigger_match_index.clear()
             tree.tau_trigger_match_thresh.clear()
             tree.tau_collinear_momentum_fraction.clear()
+            tree.tau_numTrack_recounted.clear()
 
             tree.tau_efficiency_scale_factor.clear()
             tree.tau_efficiency_scale_factor_high.clear()
@@ -355,6 +376,8 @@ class hhskim(ATLASStudent):
                         tau.trigger_match_thresh)
                 tree.tau_collinear_momentum_fraction.push_back(
                         tau.collinear_momentum_fraction)
+                tree.tau_numTrack_recounted.push_back(
+                        tau.numTrack_recounted)
 
                 tree.tau_efficiency_scale_factor.push_back(
                         tau.efficiency_scale_factor)
