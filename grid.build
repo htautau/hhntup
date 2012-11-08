@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd higgstautau/jetcleaning
+cp ${BASE}/distribute-${DISTRIBUTE_VERS}.tar.gz .
 if ! ./setup.py build_ext --inplace
 then
     cd -
