@@ -12,6 +12,7 @@ try:
     from pyAMI.client import AMIClient
     from pyAMI.query import get_dataset_xsec_effic, \
                             get_dataset_info, \
+                            get_datasets, \
                             get_provenance, \
                             get_periods, \
                             get_runs
@@ -225,16 +226,14 @@ class Database(dict):
             print '-'*50
             if not complete:
                 incomplete.append(info.ds)
-        """
-        pool = Pool(processes=cpu_count())
-        for result, complete in pool.map(
-                validate_single, sorted(ds.items(), key=itemgetter(0))):
-            print result
-            print "Complete: %s" % complete
-            print '-'*50
-            if not complete:
-                all_complete = False
-        """
+        #pool = Pool(processes=cpu_count())
+        #for result, complete in pool.map(
+        #        validate_single, sorted(ds.items(), key=itemgetter(0))):
+        #    print result
+        #    print "Complete: %s" % complete
+        #    print '-'*50
+        #    if not complete:
+        #        all_complete = False
         if not incomplete:
             print "ALL DATASETS ARE COMPLETE"
         else:
@@ -805,16 +804,15 @@ def validate_single(args, child=True):
         dirs = info.dirs
         root_files = []
         for dir in dirs:
-            root_files += glob.glob(os.path.join(dir, '*.root*'))
+            root_files += glob.glob(os.path.join(dir, info.file_pattern))
         events = 0
         for fname in root_files:
             try:
                 with ropen(fname) as rfile:
-                    tree = rfile.tau
                     try: # skimmed dataset
-                        cutflow = rfile.cutflow
-                        events += int(cutflow[0])
+                        events += int(rfile.cutflow_event[0])
                     except DoesNotExist: # unskimmed dataset
+                        tree = rfile.tau
                         events += tree.GetEntries()
             except IOError:
                 print "Currupt file: %s" % fname
@@ -828,10 +826,10 @@ def validate_single(args, child=True):
         try:
             # determine events in AODs
             prov = get_provenance(amiclient, ds_name, type='AOD')
-            AOD_ds = prov.values()[0][0]
+            AOD_ds = prov.values()[0][0].replace('recon', 'merge')
             print 'AOD: ' + AOD_ds
-            AOD_ds_info = get_dataset_info(amiclient, AOD_ds)
-            AOD_events = int(AOD_ds_info.info['totalEvents'])
+            AOD_events = int(get_datasets(amiclient, AOD_ds, fields='events',
+                    flatten=True)[0][0])
         except IndexError:
             print 'AOD: UNKNOWN'
             AOD_events = ntuple_events
@@ -901,6 +899,7 @@ if __name__ == '__main__':
     parser.add_argument('--versioned', action='store_true', default=False)
     parser.add_argument('--validate', action='store_true', default=False)
     parser.add_argument('--validate-pattern', default=None)
+    parser.add_argument('--validate-type', default='MC')
     parser.add_argument('--info', action='store_true', default=False)
 
     """
@@ -944,23 +943,25 @@ if __name__ == '__main__':
     if args.reset:
         db.clear()
 
-    with open(args.config) as config:
-        config_dict = yaml.load(config)
-        for year, year_config in config_dict.items():
-            if args.analysis not in year_config:
-                continue
-            params = {}
-            params['data_grl'] = year_config['common'].get('grl', None)
-            params.update(year_config[args.analysis])
-            db.scan(year,
-                    deep=args.deep,
-                    versioned=args.versioned,
-                    **params)
-
-    if args.validate or args.validate_pattern is not None:
+    if not args.validate and not args.validate_pattern:
+        with open(args.config) as config:
+            config_dict = yaml.load(config)
+            for year, year_config in config_dict.items():
+                if args.analysis not in year_config:
+                    continue
+                params = {}
+                params['data_grl'] = year_config['common'].get('grl', None)
+                params.update(year_config[args.analysis])
+                db.scan(year,
+                        deep=args.deep,
+                        versioned=args.versioned,
+                        **params)
+    elif args.validate or args.validate_pattern is not None:
         # check for missing events etc...
+        validate_type = args.validate_type.upper()
+        validate_type = eval(validate_type)
         db.validate(pattern=args.validate_pattern,
-                    datatype=MC)
+                    datatype=validate_type)
     else:
         if args.info:
             print "%i datasets in database" % len(db)
