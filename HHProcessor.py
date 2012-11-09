@@ -132,22 +132,16 @@ class HHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        if year == 2011:
-            if datatype == datasets.DATA:
-                merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
-            else:
-                merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
-        else:
-            # need to know how many bins...
+        if datatype == datasets.DATA:
             merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+        else:
+            merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
 
         def update_cutflow(student, cutflow, name, file, tree):
 
             year = student.metadata.year
             datatype = student.metadata.datatype
-            if year == 2011:
-                cutflow += file.cutflow
-            elif datatype == datasets.MC:
+            if datatype == datasets.MC:
                 cutflow[0] += file.cutflow_event[0]
                 cutflow[1] += file.cutflow_event_mc_weight[0]
             else:
@@ -446,10 +440,12 @@ class HHProcessor(ATLASStudent):
 
             # Jet variables
             tree.numJets = len(event.jets)
-            tree.sum_pt = sum([tau1.pt, tau2.pt] +
-                              [jet.pt for jet in leading_jets])
-            tree.sum_pt_full = sum([tau1.pt, tau2.pt] +
-                                   [jet.pt for jet in jets])
+            tree.sum_pt = sum(
+                    [tau1.pt, tau2.pt] +
+                    [jet.pt for jet in jets[:2]])
+            tree.sum_pt_full = sum(
+                    [tau1.pt, tau2.pt] +
+                    [jet.pt for jet in jets])
 
             # MET
             METx = event.MET.etx
@@ -574,13 +570,13 @@ class HHProcessor(ATLASStudent):
                             setattr(tree, "trueTau%i_matched_dR" % (i+1),
                                     event.truetaus.getitem(
                                         matching_truth_index).tauAssoc_dr)
-                            TrueTauBlock.set(self.tree, i+1,
+                            TrueTauBlock.set(tree, i+1,
                                     event.truetaus.getitem(matching_truth_index))
 
                 for i, j in zip(unmatched_reco, unmatched_truth):
                     TrueTauBlock.set(tree, i+1, event.truetaus.getitem(j))
 
-                self.tree.mass_vis_true_tau1_tau2 = (
+                tree.mass_vis_true_tau1_tau2 = (
                         tree.trueTau1_fourvect_vis +
                         tree.trueTau2_fourvect_vis).M()
 
