@@ -12,8 +12,15 @@ Data
 MC
 --
 
-* group.phys-higgs.hhskim.mc11_7TeV*v9/
-* group.phys-higgs.hhskim.mc12_8TeV*v9/
+* group.phys-higgs.hhskim.mc11_7TeV*p851.v9/
+* group.phys-higgs.hhskim.mc12_8TeV*p1130.v9/
+
+MC with no trigger requirement
+------------------------------
+
+(same selection as embedded samples)
+
+* group.phys-higgs.hhskim.mc12_8TeV*p1130.no_trigger.v9/
 
 Embedded
 --------
