@@ -377,6 +377,17 @@ class TauLArHole(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class TauSelected(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+        self.min_taus = min_taus
+        super(TauSelected, self).__init__(**kwargs)
+
+    def passes(self, event):
+        event.taus.select(lambda tau: tau.selected)
+        return len(event.taus) > self.min_taus
+
+
 def jet_selection_2011(jet):
     """ Finalizes the jet selection """
 

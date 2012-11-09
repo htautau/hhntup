@@ -193,24 +193,24 @@ class HHProcessor(ATLASStudent):
                 self.grl,
                 passthrough=datatype != datasets.DATA,
                 count_funcs=count_funcs),
-            EmbeddingPileupPatch(
-                passthrough=year > 2011 or datatype != datasets.EMBED,
-                count_funcs=count_funcs),
-            Triggers(
-                year=year,
-                old_skim=datatype == datasets.MC,
-                passthrough=datatype == datasets.EMBED,
-                count_funcs=count_funcs),
-            PriVertex(
-                count_funcs=count_funcs),
-            LArError(
-                count_funcs=count_funcs),
+            #EmbeddingPileupPatch(
+            #    passthrough=year > 2011 or datatype != datasets.EMBED,
+            #    count_funcs=count_funcs),
+            #Triggers(
+            #    year=year,
+            #    old_skim=datatype == datasets.MC,
+            #    passthrough=datatype == datasets.EMBED,
+            #    count_funcs=count_funcs),
+            #PriVertex(
+            #    count_funcs=count_funcs),
+            #LArError(
+            #    count_funcs=count_funcs),
             # no need to recalibrate jets in 2012 (yet...)
-            JetCalibration(
-                datatype=datatype,
-                year=year,
-                verbose=VERBOSE,
-                count_funcs=count_funcs),
+            #JetCalibration(
+            #    datatype=datatype,
+            #    year=year,
+            #    verbose=VERBOSE,
+            #    count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
@@ -223,97 +223,99 @@ class HHProcessor(ATLASStudent):
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
-            TauIDpatch(
-                year=year,
-                count_funcs=count_funcs),
+            #TauIDpatch(
+            #    year=year,
+            #    count_funcs=count_funcs),
             # patch electron ID for 2012
-            ElectronIDpatch(
-                passthrough=year != 2012,
-                count_funcs=count_funcs),
-            LArHole(
-                datatype=datatype,
-                count_funcs=count_funcs),
-            JetCleaning(
-                datatype=datatype,
-                year=year,
-                count_funcs=count_funcs),
-            ElectronVeto(
-                count_funcs=count_funcs),
-            MuonVeto(
-                year=year,
-                count_funcs=count_funcs),
-            TauElectronVeto(2,
-                count_funcs=count_funcs),
-            TauMuonVeto(2,
-                count_funcs=count_funcs),
-            TauAuthor(2,
-                count_funcs=count_funcs),
-            TauHasTrack(2,
-                count_funcs=count_funcs),
-            TauPT(2,
-                thresh=20 * GeV,
-                count_funcs=count_funcs),
-            TauEta(2,
-                count_funcs=count_funcs),
-            TauCrack(2,
-                count_funcs=count_funcs),
-            TauLArHole(2,
-                count_funcs=count_funcs),
-            TauIDMedium(2,
-                count_funcs=count_funcs),
-            TauTriggerMatchIndex(
-                config=trigger_config,
-                year=year,
-                datatype=datatype,
-                passthrough=datatype == datasets.EMBED,
-                count_funcs=count_funcs),
-            TauLeadSublead(
-                lead=35 * GeV,
-                sublead=25 * GeV,
-                count_funcs=count_funcs),
-            TauTriggerMatchThreshold(
-                passthrough=datatype == datasets.EMBED,
-                count_funcs=count_funcs),
-            TauTriggerEfficiency(
-                year=year,
-                datatype=datatype,
-                tes_systematic=self.args.syst_terms and (
-                    Systematics.TES_TERMS & self.args.syst_terms),
-                passthrough=datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            PileupReweight(
-                year=year,
-                tree=tree,
-                passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            JetSelection(
-                year=year,
+            #ElectronIDpatch(
+            #    passthrough=year != 2012,
+            #    count_funcs=count_funcs),
+            #LArHole(
+            #    datatype=datatype,
+            #    count_funcs=count_funcs),
+            #JetCleaning(
+            #    datatype=datatype,
+            #    year=year,
+            #    count_funcs=count_funcs),
+            #ElectronVeto(
+            #    count_funcs=count_funcs),
+            #MuonVeto(
+            #    year=year,
+            #    count_funcs=count_funcs),
+            #TauElectronVeto(2,
+            #    count_funcs=count_funcs),
+            #TauMuonVeto(2,
+            #    count_funcs=count_funcs),
+            #TauAuthor(2,
+            #    count_funcs=count_funcs),
+            #TauHasTrack(2,
+            #    count_funcs=count_funcs),
+            #TauPT(2,
+            #    thresh=20 * GeV,
+            #    count_funcs=count_funcs),
+            #TauEta(2,
+            #    count_funcs=count_funcs),
+            #TauCrack(2,
+            #    count_funcs=count_funcs),
+            #TauLArHole(2,
+            #    count_funcs=count_funcs),
+            #TauIDMedium(2,
+            #    count_funcs=count_funcs),
+            #TauTriggerMatchIndex(
+            #    config=trigger_config,
+            #    year=year,
+            #    datatype=datatype,
+            #    passthrough=datatype == datasets.EMBED,
+            #    count_funcs=count_funcs),
+            #TauLeadSublead(
+            #    lead=35 * GeV,
+            #    sublead=25 * GeV,
+            #    count_funcs=count_funcs),
+            #TauTriggerMatchThreshold(
+            #    passthrough=datatype == datasets.EMBED,
+            #    count_funcs=count_funcs),
+            #TauTriggerEfficiency(
+            #    year=year,
+            #    datatype=datatype,
+            #    tes_systematic=self.args.syst_terms and (
+            #        Systematics.TES_TERMS & self.args.syst_terms),
+            #    passthrough=datatype == datasets.DATA,
+            #    count_funcs=count_funcs),
+            #PileupReweight(
+            #    year=year,
+            #    tree=tree,
+            #    passthrough=datatype != datasets.MC,
+            #    count_funcs=count_funcs),
+            #EfficiencyScaleFactors(
+            #    year=year,
+            #    passthrough=datatype != datasets.MC,
+            #    count_funcs=count_funcs),
+            #FakeRateScaleFactors(
+            #    year=year,
+            #    passthrough=datatype != datasets.MC,
+            #    count_funcs=count_funcs),
+            #ggFReweighting(
+            #    dsname=self.metadata.name,
+            #    tree=tree,
+            #    # no ggf reweighting for 2012 MC
+            #    passthrough=datatype != datasets.MC or year != 2011,
+            #    count_funcs=count_funcs),
+            #TauTrackRecounting(
+            #    year=year,
+            #    count_funcs=count_funcs),
+            TauSelected(2,
                 count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
             TruthMatching(
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            EfficiencyScaleFactors(
-                year=year,
-                passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            FakeRateScaleFactors(
-                year=year,
-                passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            ggFReweighting(
-                dsname=self.metadata.name,
-                tree=tree,
-                # no ggf reweighting for 2012 MC
-                passthrough=datatype != datasets.MC or year != 2011,
-                count_funcs=count_funcs),
             MCWeight(
                 datatype=datatype,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            TauTrackRecounting(
+            JetSelection(
                 year=year,
                 count_funcs=count_funcs),
         ])
