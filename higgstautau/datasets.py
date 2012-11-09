@@ -219,8 +219,8 @@ class Database(dict):
                 if pattern is None or fnmatch.fnmatch(name, pattern):
                     ds[name] = info
         incomplete = []
-        for name, info in ds.items():
-            print "Validating %s..." % name
+        for name, info in sorted(ds.items(), key=lambda item: item[0]):
+            print "Validating %s ..." % name
             complete = validate_single((name, info), child=False)
             print "Complete: %s" % complete
             print '-'*50
