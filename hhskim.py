@@ -229,7 +229,7 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
-                passthrough=datatype == datasets.DATA,
+                passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             PileupReweight(
                 year=year,
@@ -245,7 +245,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=no_trigger or datatype != datasets.MC,
                 count_funcs=count_funcs),
             ggFReweighting(
                 dsname=self.metadata.name,
