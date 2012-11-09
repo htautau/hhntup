@@ -385,7 +385,7 @@ class TauSelected(EventFilter):
 
     def passes(self, event):
         event.taus.select(lambda tau: tau.selected)
-        return len(event.taus) > self.min_taus
+        return len(event.taus) >= self.min_taus
 
 
 def jet_selection_2011(jet):
