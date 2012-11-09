@@ -20,11 +20,11 @@
     hh:
         mc_path: '/global/common/higgstautau/skims/hadhad/newskims'
         mc_prefix: 'group.phys-higgs.hhskim'
-        mc_pattern: '*HHSkim*.root*'
+        mc_pattern: '*hadhad.root*'
         mc_treename: 'tau'
         data_path: '/global/common/higgstautau/skims/hadhad/newskims'
         data_prefix: 'group.phys-higgs.hhskim'
-        data_pattern: '*HTauSkim*.root*'
+        data_pattern: '*hadhad.root*'
         data_treename: 'tau'
         embed_path: '/global/common/higgstautau/skims/hadhad/newskims'
         embed_prefix: 'group.phys-higgs.hhskim'
