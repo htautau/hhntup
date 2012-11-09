@@ -47,10 +47,12 @@ import xsec
 
 DATA_PATTERN = re.compile(
         '^(?P<prefix>\S+\.)?'
-        'data(?P<year>\d+)_(?P<energy>\d+)TeV\.'
-        '(?P<run>\d+)\.physics_'
-        '(?P<stream>\S+)?'
-        '\.merge\.NTUP_TAU(MEDIUM)?\.(?P<tag>\w+)'
+        'data(?P<year>\d+)_(?P<energy>\d+)TeV'
+        '\.(?P<run>\d+)'
+        '\.physics_'
+        '(?P<stream>\S+)'
+        '\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?)'
+        '\.(?P<tag>\w+)'
         '(\.(?P<suffix>\S+))?$')
 
 MC_TAG_PATTERN1 = re.compile(
@@ -114,7 +116,7 @@ MC_CATEGORIES = {
               'merge': (2780, 2700)},
     'mc11b': {'reco':  (2920, 2923),
               'merge': (3063, 2993, 2900)},
-    'mc11c': {'reco':  (3043, 3060),
+    'mc11c': {'reco':  (3043, 3060, 3108),
               'merge': (3109, 3063, 2993)},
     'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542),
               'merge': (3549,)}}
@@ -150,7 +152,33 @@ class NoMatchingDatasetsFound(Exception):
 
 class Database(dict):
 
-    def __init__(self, name='datasets', verbose=False):
+    @classmethod
+    def data_match_to_ds(cls, match):
+        """
+        Contruct the original NTUP dataset name from a data skim match object
+        """
+        return 'data%s_%sTeV.%s.physics_%s.%s.%s' % (
+                match.group('year'),
+                match.group('energy'),
+                match.group('run'),
+                match.group('stream'),
+                match.group('ntup'),
+                match.group('tag'))
+
+    @classmethod
+    def mc_match_to_ds(cls, match):
+        """
+        Construct the original NTUP dataset name from a MC skim match object
+        """
+        return 'mc%s_%sTeV.%s.%s.%s.%s' % (
+                match.group('year'),
+                match.group('energy'),
+                match.group('id'),
+                match.group('name'),
+                match.group('ntup'),
+                match.group('tag'))
+
+    def __init__(self, name='datasets', verbose=False, stream=None):
 
         super(Database, self).__init__()
         self.name = name
@@ -164,6 +192,10 @@ class Database(dict):
                 if d:
                     self.update(d)
         self.modified = False
+        if stream is None:
+            self.stream = sys.stdout
+        else:
+            self.stream = stream
 
     def write(self):
 
@@ -241,32 +273,29 @@ class Database(dict):
         if self.verbose: print "Updating '%s' dataset database..." % self.name
         self.modified = True
 
+        ###############################
+        # MC
+        ###############################
         if mc_path is not None:
             if versioned:
-                pattern1 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
-                pattern2 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
+                pattern = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV'
+                           '\.(?P<id>\d+)'
+                           '\.(?P<name>\w+)'
+                           '\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?)?'
+                           '\.(?P<tag>e\d+_s\d+_s\d+_r\d+(_r\d+)?_p\d+)'
+                           '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
             else:
-                pattern1 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '_(?P<suffix>\S+)$')
-                pattern2 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '_(?P<suffix>\S+)$')
+                pattern = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV'
+                           '\.(?P<id>\d+)'
+                           '\.(?P<name>\w+)'
+                           '\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?)?'
+                           '\.(?P<tag>e\d+_s\d+_s\d+_r\d+(_r\d+)?_p\d+)'
+                           '_(?P<suffix>\S+)$')
 
             if mc_prefix:
-                pattern1 = ('^%s\.' % re.escape(mc_prefix)) + pattern1[1:]
-                pattern2 = ('^%s\.' % re.escape(mc_prefix)) + pattern2[1:]
+                pattern = ('^%s\.' % re.escape(mc_prefix)) + pattern[1:]
 
-            MC_PATTERN1 = re.compile(pattern1)
-            MC_PATTERN2 = re.compile(pattern2)
+            MC_PATTERN = re.compile(pattern)
 
             if deep:
                 mc_dirs = get_all_dirs_under(mc_path, prefix=mc_prefix)
@@ -278,12 +307,10 @@ class Database(dict):
 
             for dir in mc_dirs:
                 dirname, basename = os.path.split(dir)
-                match  = re.match(MC_PATTERN1, basename)
-                match2 = re.match(MC_PATTERN2, basename)
-
-                if (match2 and not match): match = match2
+                match  = re.match(MC_PATTERN, basename)
 
                 if match:
+                    ds_name = Database.mc_match_to_ds(match)
                     name = match.group('name')
                     tag = match.group('tag')
                     try:
@@ -344,11 +371,7 @@ class Database(dict):
                                 DATASETS[name] = Dataset(name=name,
                                     datatype=MC,
                                     treename=mc_treename,
-                                    ds='mc11_7TeV.' +
-                                    match.group('id') + '.' +
-                                    match.group('name') +
-                                    '.merge.NTUP_TAUMEDIUM.' +
-                                    match.group('tag'),
+                                    ds=ds_name,
                                     id=int(match.group('id')),
                                     category=cat,
                                     version=version,
@@ -364,11 +387,7 @@ class Database(dict):
                         self[name] = Dataset(name=name,
                             datatype=MC,
                             treename=mc_treename,
-                            ds='mc11_7TeV.' +
-                            match.group('id') + '.' +
-                            match.group('name') +
-                            '.merge.NTUP_TAUMEDIUM.' +
-                            match.group('tag'),
+                            ds=ds_name,
                             id=int(match.group('id')),
                             category=cat,
                             version=version,
@@ -377,11 +396,12 @@ class Database(dict):
                             dirs=[dir],
                             file_pattern=mc_pattern,
                             year=year)
-                else:
+                elif self.verbose:
                     print "not matched: %s" % basename
 
-        #######################################################################
-
+        #####################################
+        # EMBEDDING
+        #####################################
         if embed_path is not None:
 
             if embed_prefix:
@@ -407,9 +427,9 @@ class Database(dict):
                         if channel not in channels:
                             channels[channel] = []
                         channels[channel].append(dir)
-                    else:
+                    elif self.verbose:
                         print "not a valid dataset name: %s" % basename
-                else:
+                elif self.verbose:
                     print "skipping file: %s" % dir
 
             for channel, channel_dirs in channels.items():
@@ -425,7 +445,7 @@ class Database(dict):
                             if isol not in isols:
                                 isols[isol] = []
                             isols[isol].append(dir)
-                        else:
+                        elif self.verbose:
                             print "not a valid dataset name: %s" % basename
 
                     for isol, isol_dirs in isols.items():
@@ -440,7 +460,7 @@ class Database(dict):
                                 if mfs not in mfss:
                                     mfss[mfs] = []
                                 mfss[mfs].append(dir)
-                            else:
+                            elif self.verbose:
                                 print "not a valid dataset name: %s" % basename
 
                         for mfs, mfs_dirs in mfss.items():
@@ -474,7 +494,7 @@ class Database(dict):
                                                 'multiple copies of run with '
                                                 'different tags: %s' %
                                                 periods[period]['dirs'])
-                                else:
+                                elif self.verbose:
                                     print "not a valid dataset name: %s" % basename
 
                             for period, info in periods.items():
@@ -499,7 +519,7 @@ class Database(dict):
                             if mfs not in mfss:
                                 mfss[mfs] = []
                             mfss[mfs].append(dir)
-                        else:
+                        elif self.verbose:
                             print "not a valid dataset name: %s" % basename
 
                     for mfs, mfs_dirs in mfss.items():
@@ -533,7 +553,7 @@ class Database(dict):
                                             'multiple copies of run with '
                                             'different tags: %s' %
                                             periods[period]['dirs'])
-                            else:
+                            elif self.verbose:
                                 print "not a valid dataset name: %s" % basename
 
                         for period, info in periods.items():
@@ -548,8 +568,9 @@ class Database(dict):
                                 file_pattern=embed_pattern,
                                 year=year)
 
-        #######################################################################
-
+        ##############################
+        # DATA
+        ##############################
         if data_path is not None:
 
             # get all data directories
@@ -564,7 +585,7 @@ class Database(dict):
                     if stream not in streams:
                         streams[stream] = []
                     streams[stream].append(dir)
-                else:
+                elif self.verbose:
                     print "not a valid dataset name: %s" % dir
 
             for stream, dirs in streams.items():
@@ -589,21 +610,25 @@ class Database(dict):
                         run = int(match.group('run'))
                         tag = match.group('tag')
                         if run not in runs:
-                            runs[run] = {'tag': tag, 'dirs': [dir]}
+                            runs[run] = {
+                                    'tag': tag,
+                                    'dirs': [dir],
+                                    'ds': Database.data_match_to_ds(match)}
                         else:
                             runs[run]['dirs'].append(dir)
                             if tag != runs[run]['tag']:
                                 print (
                                     'multiple copies of run with different '
                                     'tags: %s' % runs[run]['dirs'])
-                    else:
+                    elif self.verbose:
                         print "not a valid dataset name: %s" % dir
+                # need to use the actual ds name for ds for validation
                 for run, info in runs.items():
                     name = 'data%d-%s-%d' % (year % 1000, stream, run)
                     self[name] = Dataset(name=name,
                         datatype=DATA,
                         treename=data_treename,
-                        ds=name,
+                        ds=info['ds'],
                         id=1,
                         grl=data_grl,
                         dirs=info['dirs'],
@@ -646,6 +671,12 @@ class Database(dict):
                             stream=stream,
                             file_pattern=data_pattern,
                             year=year)
+
+    def __setitem__(self, name, ds):
+
+        if self.verbose:
+            print >> self.stream, str(ds)
+        super(Database, self).__setitem__(name, ds)
 
     def search(self, pattern):
 
@@ -738,13 +769,17 @@ class Dataset(yaml.YAMLObject):
                            fnmatch.filter(files, self.file_pattern)]
         return _files
 
+    def __str__(self):
+
+        return "%s:\n\t%s" % (
+                self.name,
+                self.ds)
 
 def dataset_constructor(loader, node):
 
     return Dataset(**loader.construct_mapping(node))
 
 yaml.add_constructor(u'!Dataset', dataset_constructor)
-
 
 
 if os.path.isfile(XSEC_CACHE_FILE):
@@ -894,6 +929,7 @@ if __name__ == '__main__':
     """
     parser.add_argument('--name', default='datasets')
     parser.add_argument('--config', default='datasets_config.yml')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False)
     parser.add_argument('analysis', choices=('lh', 'hh'))
     args = parser.parse_args()
 
@@ -904,7 +940,9 @@ if __name__ == '__main__':
         args.versioned = True
         args.name = 'datasets_lh'
 
-    db = Database(name=args.name, verbose=True)
+    db = Database(
+            name=args.name,
+            verbose=args.verbose)
 
     if args.info:
         for name in sorted(db.keys()):
