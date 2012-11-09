@@ -77,10 +77,11 @@ class LHProcessor(ATLASStudent):
         This is the one function that all "ATLASStudent"s must implement.
         """
 
-        # trigger config tool to read trigger info in the ntuples
-        #trigger_config = get_trigger_config()
-
+        ## Set the output ntuple model
         OutputModel = RecoTauLepBlock + EventVariables + RecoMET + SysWeights
+
+        ## Use the metadata to set the year
+        YEAR = self.metadata.year
 
         onfilechange = []
         if self.metadata.datatype == datasets.DATA:
@@ -145,7 +146,7 @@ class LHProcessor(ATLASStudent):
         ## Setting event filters
         event_filters = EventFilterList([
             PrepareInputTree(),
-            Trigger(),
+            Trigger( year=YEAR ),
             GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),
             #EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
             JetCalibration( year=YEAR, datatype=self.metadata.datatype, verbose=False ),
@@ -429,6 +430,7 @@ class LHProcessor(ATLASStudent):
                 tauidsf_w      = 1.0
                 leptonsf_w     = 1.0
                 leptontrigsf_w = 1.0
+                tautriggersf_w = 1.0
                 muonisosf_w    = 1.0
                 ggf_w          = 1.0
                 
@@ -439,6 +441,7 @@ class LHProcessor(ATLASStudent):
                     pass
 
                 # set the event pileup weight
+
                 pileup_w = pileup_tool.GetCombinedWeight(event.RunNumber,
                                                          event.mc_channel_number,
                                                          event.averageIntPerXing)
@@ -453,23 +456,23 @@ class LHProcessor(ATLASStudent):
                             lumi_w = 0.29186
 
                 #Tau/Electron misidentification correction
-                tauesf_w, tree.sys_tau_ESF_DOWN, tree.sys_tau_ESF_UP = TauEfficiencySF(event,
+                tauesf_w, tree.sys_tau_ESF_UP, tree.sys_tau_ESF_DOWN = TauEfficiencySF(event,
                                                                                        self.metadata.datatype,
                                                                                        YEAR)
 
                 #Tau ID scale factor correction
-                tauidsf_w, tree.sys_tau_IDSF_DOWN, tree.sys_tau_IDSF_UP = TauIDSF(event,
+                tauidsf_w, tree.sys_tau_IDSF_UP, tree.sys_tau_IDSF_DOWN = TauIDSF(event,
                                                                                   self.metadata.datatype,
                                                                                   YEAR)
 
                 #Lepton Efficiency scale factors
                 if event.leptonType == 'mu':
-                    leptonsf_w, tree.sys_mu_EFFSF_DOWN, tree.sys_mu_EFFSF_UP = MuonSF(event,
+                    leptonsf_w, tree.sys_mu_EFFSF_UP, tree.sys_mu_EFFSF_DOWN = MuonSF(event,
                                                                                       self.metadata.datatype,
                                                                                       pileup_tool,
                                                                                       YEAR)
                 if event.leptonType == 'e':
-                    leptonsf_w, tree.sys_e_EFFSF_DOWN, tree.sys_e_EFFSF_UP = ElectronSF(event,
+                    leptonsf_w, tree.sys_e_EFFSF_UP, tree.sys_e_EFFSF_DOWN = ElectronSF(event,
                                                                                         self.metadata.datatype,
                                                                                         pileup_tool,
                                                                                         YEAR)
@@ -477,34 +480,45 @@ class LHProcessor(ATLASStudent):
                 #Lepton Trigger scale factors
                 if not event.isLTT:
                     if event.leptonType == 'mu':
-                        leptontrigwsf_w, tree.sys_mu_SLTSF_DOWN, tree.sys_mu_SLTSF_UP = LeptonSLTSF(event,
-                                                                                                    self.metadata.datatype)
+                        leptontrigwsf_w, tree.sys_mu_SLTSF_UP, tree.sys_mu_SLTSF_DOWN = LeptonSLTSF(event,
+                                                                                                    self.metadata.datatype,
+                                                                                                    pileup_tool, 
+                                                                                                    YEAR)
                     if event.leptonType == 'e':
-                        leptontrigwsf_w, tree.sys_e_SLTSF_DOWN, tree.sys_e_SLTSF_UP = LeptonSLTSF(event,
-                                                                                                  self.metadata.datatype)
+                        leptontrigwsf_w, tree.sys_e_SLTSF_UP, tree.sys_e_SLTSF_DOWN = LeptonSLTSF(event,
+                                                                                                  self.metadata.datatype,
+                                                                                                  pileup_tool,
+                                                                                                  YEAR)
                 else:
                     if event.leptonType == 'mu':
-                        leptontrigsf_w, tree.sys_mu_LTTSF_DOWN, tree.sys_mu_LTTSF_UP = MuonLTTSF(Lep,
-                                                                                                 event.RunNumber,
+                        leptontrigsf_w, tree.sys_mu_LTTSF_UP, tree.sys_mu_LTTSF_DOWN = MuonLTTSF(event,
                                                                                                  self.metadata.datatype,
                                                                                                  YEAR,
                                                                                                  pileup_tool)
                     if event.leptonType == 'e':
-                        leptontrigsf_w, tree.sys_e_LTTSF_DOWN, tree.sys_e_LTTSF_UP = ElectronLTTSF(Lep,
-                                                                                                   event.RunNumber,
+                        leptontrigsf_w, tree.sys_e_LTTSF_UP, tree.sys_e_LTTSF_DOWN = ElectronLTTSF(event,
                                                                                                    self.metadata.datatype,
                                                                                                    YEAR,
                                                                                                    pileup_tool)
-
-                muonisosf_w, tree.sys_mu_ISOSF_DOWN, tree.sys_mu_ISOSF_UP = MuonIsoEffCorrection(event,
-                                                                                                 self.metadata.datatype,
-                                                                                                 YEAR)
                         
+                    #Tau trigger scale factors
+                    tautriggersf_w, tree.sys_tau_TRIGSF_UP, tree.sys_tau_TRIGSF_DOWN = TauTriggerSF(Tau,
+                                                                                                    npileup_vtx,
+                                                                                                    event.RunNumber,
+                                                                                                    YEAR,
+                                                                                                    event.leptonType,
+                                                                                                    pileup_tool)
+
+                if event.leptonType == 'mu':
+                    muonisosf_w, tree.sys_mu_ISOSF_UP, tree.sys_mu_ISOSF_DOWN = MuonIsoEffCorrection(event,
+                                                                                                     self.metadata.datatype,
+                                                                                                     YEAR)
+
                 #ggF Reweighting
                 ggf_w = reweight_ggf(event,
                                      self.metadata.name)
 
-                event_weight = mc_w * pileup_w * lumi_w * tauesf_w * tauidsf_w * leptonsf_w * leptontrigsf_w * muonisosf_w * ggf_w
+                event_weight = mc_w * pileup_w * lumi_w * tauesf_w * tauidsf_w * leptonsf_w * leptontrigsf_w * tautriggersf_w * muonisosf_w * ggf_w
 
 
              ## Event weight corrections for embedded samples
@@ -525,23 +539,23 @@ class LHProcessor(ATLASStudent):
                     pass
 
                 #Tau/Electron misidentification correction
-                tauesf_w, tree.sys_tau_ESF_DOWN, tree.sys_tau_ESF_UP = TauEfficiencySF(event,
+                tauesf_w, tree.sys_tau_ESF_UP, tree.sys_tau_ESF_DOWN = TauEfficiencySF(event,
                                                                                        self.metadata.datatype,
                                                                                        YEAR)
 
                 #Tau ID scale factor correction
-                tauidsf_w, tree.sys_tau_IDSF_DOWN, tree.sys_tau_IDSF_UP = TauIDSF(event,
+                tauidsf_w, tree.sys_tau_IDSF_UP, tree.sys_tau_IDSF_DOWN = TauIDSF(event,
                                                                                   self.metadata.datatype,
                                                                                   YEAR)
 
                 #Lepton Efficiency scale factors
                 if event.leptonType == 'mu':
-                    leptonsf_w, tree.sys_mu_EFFSF_DOWN, tree.sys_mu_EFFSF_UP = MuonSF(event,
+                    leptonsf_w, tree.sys_mu_EFFSF_UP, tree.sys_mu_EFFSF_DOWN = MuonSF(event,
                                                                                       self.metadata.datatype,
                                                                                       pileup_tool,
                                                                                       YEAR)
                 if event.leptonType == 'e':
-                    leptonsf_w, tree.sys_e_EFFSF_DOWN, tree.sys_e_EFFSF_UP = ElectronSF(event,
+                    leptonsf_w, tree.sys_e_EFFSF_UP, tree.sys_e_EFFSF_DOWN = ElectronSF(event,
                                                                                         self.metadata.datatype,
                                                                                         pileup_tool,
                                                                                         YEAR)
@@ -549,35 +563,40 @@ class LHProcessor(ATLASStudent):
                 #Lepton Trigger scale factors
                 if not event.isLTT:
                     if event.leptonType == 'mu':
-                        leptontrigwsf_w, tree.sys_mu_SLTSF_DOWN, tree.sys_mu_SLTSF_UP = LeptonSLTSF(event,
-                                                                                                    self.metadata.datatype)
+                        leptontrigwsf_w, tree.sys_mu_SLTSF_UP, tree.sys_mu_SLTSF_DOWN = LeptonSLTSF(event,
+                                                                                                    self.metadata.datatype,
+                                                                                                    pileup_tool,
+                                                                                                    YEAR)
                     if event.leptonType == 'e':
-                        leptontrigwsf_w, tree.sys_e_SLTSF_DOWN, tree.sys_e_SLTSF_UP = LeptonSLTSF(event,
-                                                                                                  self.metadata.datatype)
+                        leptontrigwsf_w, tree.sys_e_SLTSF_UP, tree.sys_e_SLTSF_DOWN = LeptonSLTSF(event,
+                                                                                                  self.metadata.datatype,
+                                                                                                  pileup_tool,
+                                                                                                  YEAR)
                 else:
                     if event.leptonType == 'mu':
-                        leptontrigsf_w, tree.sys_mu_LTTSF_DOWN, tree.sys_mu_LTTSF_UP = MuonLTTSF(Lep,
+                        leptontrigsf_w, tree.sys_mu_LTTSF_UP, tree.sys_mu_LTTSF_DOWN = MuonLTTSF(Lep,
                                                                                                  event.RunNumber,
                                                                                                  self.metadata.datatype,
                                                                                                  YEAR,
                                                                                                  pileup_tool)
                     if event.leptonType == 'e':
-                        leptontrigsf_w, tree.sys_e_LTTSF_DOWN, tree.sys_e_LTTSF_UP = ElectronLTTSF(Lep,
+                        leptontrigsf_w, tree.sys_e_LTTSF_UP, tree.sys_e_LTTSF_DOWN = ElectronLTTSF(Lep,
                                                                                                    event.RunNumber,
                                                                                                    self.metadata.datatype,
                                                                                                    YEAR,
                                                                                                    pileup_tool)
 
                     #Tau trigger scale factors
-                    tautriggersf_w, tree.sys_tau_TRIGSF_DOWN, tree.sys_tau_TRIGSF_UP = EmbedTauTriggerCorr(Tau,
-                                                                                                           npileup_vtx,
-                                                                                                           event.RunNumber,
-                                                                                                           YEAR,
-                                                                                                           event.leptonType)
-
-                muonisosf_w, tree.sys_mu_ISOSF_DOWN, tree.sys_mu_ISOSF_UP = MuonIsoEffCorrection(event,
-                                                                                                 self.metadata.datatype,
-                                                                                                 YEAR)
+                    tautriggersf_w, tree.sys_tau_TRIGSF_UP, tree.sys_tau_TRIGSF_DOWN = TauTriggerSF(Tau,
+                                                                                                    npileup_vtx,
+                                                                                                    event.RunNumber,
+                                                                                                    YEAR,
+                                                                                                    event.leptonType,
+                                                                                                    pileup_tool)
+                if event.leptonType == 'mu':
+                    muonisosf_w, tree.sys_mu_ISOSF_UP, tree.sys_mu_ISOSF_DOWN = MuonIsoEffCorrection(event,
+                                                                                                     self.metadata.datatype,
+                                                                                                     YEAR)
 
                 event_weight = mc_w * tautriggersf_w * tauidsf * leptonsf_w * leptontrigsf_w * muonisosf_w
 

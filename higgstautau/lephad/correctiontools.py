@@ -6,13 +6,8 @@ from atlastools import datasets
 from math import *
 import os
 
-from externaltools import MuonMomentumCorrections
-from externaltools import MuonEfficiencyCorrections
 from externaltools.bundle_2012 import MuonIsolationCorrection
-from externaltools import TrigMuonEfficiency
-
 from externaltools import egammaAnalysisUtils
-
 from externaltools import HSG4TriggerSF as HSG4
 
 from ROOT import std, TLorentzVector, TFile
@@ -22,8 +17,43 @@ from higgstautau.mixins import *
 #################################################
 # Muon Pt Smearing
 #################################################
+__mmc_cached__  = False
 
-from ROOT import MuonSmear
+def getMMC(year):
+    global __mmc_cached__
+    if not (__mmc_cached__):
+        # if year == 2011:
+        #     from externaltools.bundle_2011 import MuonMomentumCorrections as MMC2011
+        #     __mmc_path_cached__ = MMC2011.RESOURCE_PATH
+        # if year == 2012:
+        #     from externaltools.bundle_2012 import MuonMomentumCorrections as MMC2012
+        #     __mmc_path_cached__ = MMC2012.RESOURCE_PATH
+
+        from externaltools import MuonMomentumCorrections as MMC
+        from ROOT import MuonSmear
+        if year == 2011:
+            ## Prepare 2011 muon pt smearing tool
+            __mmc_cached__ = MuonSmear.SmearingClass('Data11',
+                                                     'staco',
+                                                     'pT',
+                                                     'Rel17',
+                                                     MMC.RESOURCE_PATH)
+            __mmc_cached__.UseScale(1)
+            __mmc_cached__.UseImprovedCombine()
+            __mmc_cached__.RestrictCurvatureCorrections(2.5)
+            __mmc_cached__.FillScales('KC')
+
+        if year == 2012:
+            ## Prepare 2012 muon pt smearing tool
+            __mmc_cached__ = MuonSmear.SmearingClass('Data12',
+                                                     'staco',
+                                                     'pT',
+                                                     'Rel17.2_preliminary',
+                                                     MMC.RESOURCE_PATH)
+            __mmc_cached__.UseScale(1)
+            __mmc_cached__.UseImprovedCombine()
+            
+    return __mmc_cached__
 
 class MuonPtSmearing(EventFilter):
     """
@@ -36,31 +66,7 @@ class MuonPtSmearing(EventFilter):
         self.datatype = datatype
 
         self.year = year
-        self.tool = None
-
-        if self.year == 2011:
-            ## Prepare 2011 muon pt smearing tool
-            self.tool = MuonSmear.SmearingClass('Data11',
-                                                    'staco',
-                                                    'pT',
-                                                    'Rel17',
-                                                    MuonMomentumCorrections.RESOURCE_PATH)
-            self.tool.UseScale(1)
-            self.tool.UseImprovedCombine()
-            self.tool.RestrictCurvatureCorrections(2.5)
-            self.tool.FillScales('KC')
-
-        if self.year == 2012:
-            ## Prepare 2012 muon pt smearing tool
-            self.tool = MuonSmear.SmearingClass('Data12',
-                                                    'staco',
-                                                    'pT',
-                                                    'Rel17.2_preliminary',
-                                                    MuonMomentumCorrections.RESOURCE_PATH)
-            self.tool.UseScale(1)
-            self.tool.UseImprovedCombine()
-
-
+        self.tool = getMMC(year)
         
     def passes(self, event):
 
@@ -92,6 +98,7 @@ class MuonPtSmearing(EventFilter):
             pt_smear = -1
 
             if mu.isCombinedMuon:
+
                 self.tool.Event(pt_ms, pt_id, pt, eta, charge)
                 pt_smear = self.tool.pTCB()
                 if self.year == 2012:
@@ -152,7 +159,6 @@ class MuonPtSmearing(EventFilter):
 #################################################
 # Muon isolation correction
 #################################################
-
 from ROOT import CorrectCaloIso
 
 class MuonIsoCorrection(EventFilter):
@@ -193,7 +199,6 @@ class MuonIsoCorrection(EventFilter):
 #################################################
 # Electron Energy Rescaling
 #################################################
-
 from ROOT import eg2011
 
 class EgammaERescaling(EventFilter):
@@ -374,7 +379,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 MuonIsoCorrFile = ropen(os.path.join(HERE, 'SF_2D_UptoE5.root'))
 Corr2D = MuonIsoCorrFile.Get('SF_2D_PtVsNvx')
 
-
 def MuonIsoEffCorrection(event, datatype, year):
     """
     Apply a correction on the muon isolation, returns nominal, -1sigma, +1sigma
@@ -404,7 +408,6 @@ def MuonIsoEffCorrection(event, datatype, year):
 #################################################
 # Tau/Electron Misidentification correction
 #################################################
-
 def TauEfficiencySF(event, datatype, year):
     """
     Apply Tau Efficiency Scale Factor correction
@@ -412,46 +415,55 @@ def TauEfficiencySF(event, datatype, year):
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
     """
 
-    # Apply only on MC
-    if datatype != datasets.MC: return 1.0, 1.0, 1.0
-
-    for tau in event.taus:
-        #Correct 1p taus/ electron fake rate
-        #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012#Systematics_for_Electron_Misiden
-        eta = abs(tau.eta)
+    sf, errup, errdown = 1.0, 1.0, 1.0
         
-        if tau.numTrack == 1 and tau.fourvect.Pt() > 20*GeV:
-            nMC = event.mc_n
-            for i in range(0, nMC):
-                if abs(event.mc_pdgId[i]) == 11 and event.mc_pt[i] > 8*GeV and event.mc_status[i] == 1:
-                    
-                    if utils.dR(event.mc_eta[i], event.mc_phi[i], tau.eta, tau.phi) > 0.2: continue
-                    
-                    if year == 2011:
-                        if eta < 1.37:
-                            return 1.64, (1.64-0.81)/1.64, (1.64+0.81)/1.64
-                        elif eta < 1.52:
-                            return 1.0 , 0.0, 2.0
-                        elif eta < 2.0:
-                            return 0.71, (0.71-0.63)/0.71, (0.71+0.63)/0.71
-                        else:
-                            return 2.90, (2.90-1.42)/2.90, (2.90+1.42)/2.90
+    # Apply only on MC
+    if datatype != datasets.MC: return sf, errup, errdown
 
-                    if year == 2012:
-                        if eta < 0.05:
-                            return 0.856, (0.856-0.154)/0.856, (0.856+0.154)/0.856
-                        if eta < 1.37:
-                            return 1.119, (1.119-0.200)/1.119, (1.119+0.200)/1.119 
-                        if eta < 2.00:
-                            return 1.402, (1.402-0.307)/1.402, (1.402+0.307)/1.402
-                        if eta < 2.30:
-                            return 1.579, (1.579-1.176)/1.579, (1.579+1.176)/1.579
-                        if eta < 2.47:
-                            return 2.669, 0.0, (2.669+3.936)/2.669
-                        if eta < 2.50:
-                            return 21.688, 0.0, (21.688+22.277)/21.688
+    errup, errdown = 0.0, 0.0
 
-    return 1.0, 1.0, 1.0
+    #Correct 1p taus/ electron fake rate
+    #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012#Systematics_for_Electron_Misiden
+
+    tau = event.taus[0]
+    
+    eta = abs(tau.eta)
+    
+    if tau.numTrack == 1 and tau.fourvect.Pt() > 20*GeV:
+        nMC = event.mc_n
+        for i in range(0, nMC):
+            if abs(event.mc_pdgId[i]) == 11 and event.mc_pt[i] > 8*GeV and event.mc_status[i] == 1:
+                if utils.dR(event.mc_eta[i], event.mc_phi[i], tau.eta, tau.phi) > 0.2: continue
+                
+                if year == 2011:
+                    if eta < 1.37:
+                        sf, errup, errdown = 1.64, 0.81, 0.81 
+                    elif eta < 1.52:
+                        sf, errup, errdown = 1.00, 1.00, 1.00
+                    elif eta < 2.0:
+                        sf, errup, errdown = 0.71, 0.63, 0.63
+                    else:
+                        sf, errup, errdown = 2.90, 1.42, 1.42
+                        
+                if year == 2012:
+                    if eta < 0.05:
+                        sf, errup, errdown = 0.856, 0.154, 0.154
+                    elif eta < 1.37:
+                        sf, errup, errdown = 1.119, 0.200, 0.200
+                    elif eta < 2.00:
+                        sf, errup, errdown = 1.402, 0.307, 0.307
+                    elif eta < 2.30:
+                        sf, errup, errdown = 1.579, 1.176, 1.176
+                    elif eta < 2.47:
+                        sf, errup, errdown = 2.669, 2.669, 2.936
+                    else:
+                        sf, errup, errdown = 21.688, 21.688, 22.277
+
+    if sf > 0.0:
+        errup   = (sf + errup) / sf
+        errdown = (sf - errdown) / sf
+
+    return sf, errup, errdown
 
 
 
@@ -465,8 +477,10 @@ def TauIDSF(event, datatype, year):
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
     """
 
-    ## Apply on MC and Embedding
-    if datatype == datasets.DATA: return 1.0, 1.0, 1.0
+    ## Apply only on MC and Embedding, initialze numbers to return
+    sf, errup, errdown = 1.0, 1.0, 1.0
+    if datatype == datasets.DATA: return sf, errup, errdown
+    errup, errdown = 0.0, 0.0
 
     for tau in event.taus:
         ntracks = tau.numTrack
@@ -476,24 +490,28 @@ def TauIDSF(event, datatype, year):
             ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsWinterConf2012
             ## https://twiki.cern.ch/twiki/pub/AtlasProtected/TauSystematicsWinterConf2012/tauWG_wtaunu2012winter_01.27.2012_soshi.pdf
             if ntracks == 1:
-                return 0.9210, (0.9210-0.0421)/0.9210, (0.9210+0.0421)/0.9210
+                sf, errup, errdown = 0.9210, 0.0421, 0.0421
             if ntracks == 3:
-                return 0.9849, (0.9849-0.0800)/0.9849, (0.9849+0.0800)/0.9849
+                sf, errup, errdown = 0.9849, 0.08, 0.08
 
         if year == 2012:
             ## https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauSystematicsSummerConf2012
             if ntracks == 1:
                 if eta < 1.5:
-                    return 0.992, (0.992-0.030)/0.992, (0.992+0.030)/0.992
+                    sf, errup, errdown = 0.992, 0.03, 0.03
                 if eta >= 1.5:
-                    return 0.952, (0.952-0.040)/0.952, (0.952+0.040)/0.952
+                    sf, errup, errdown = 0.952, 0.04, 0.04
             if ntracks == 3:
                 if eta < 1.5:
-                    return 1.073, (1.073-0.071)/1.073, (1.073+0.071)/1.073
+                    sf, errup, errdown = 1.073, 0.071, 0.071
                 if eta >= 1.5:
-                    return 0.99, (0.99-0.10)/0.99, (0.99+0.10)/0.99
+                    sf, errup, errdown = 0.99, 0.10, 0.10
 
-    return 1.0, 1.0, 1.0
+    if sf > 0.0:
+        errup   = (sf + errup) / sf
+        errdown = (sf - errdown) / sf
+
+    return sf, errup, errdown
 
 
 #################################################
@@ -501,6 +519,7 @@ def TauIDSF(event, datatype, year):
 #################################################
 
 ## Scale factors for single muon triggers
+from externaltools import MuonEfficiencyCorrections
 from ROOT import Analysis
 
 __cached__ = False
@@ -516,10 +535,10 @@ def getMuonSF(pileup, year):
                                                                      MuonEfficiencyCorrections.RESOURCE_PATH)
         if year == 2012:
             __cached__ = Analysis.AnalysisMuonConfigurableScaleFactors('',
-                                                           MuonEfficiencyCorrections.RESOURCE_PATH + '/STACO_CB_2012_SF.txt',
-                                                           'MeV',
-                                                           Analysis.AnalysisMuonConfigurableScaleFactors.AverageOverPeriods)
-            __cached__.SetRunInterval(200804, 210308)
+                                                                       MuonEfficiencyCorrections.RESOURCE_PATH + '/STACO_CB_2012_SF.txt',
+                                                                       'MeV',
+                                                                       Analysis.AnalysisMuonConfigurableScaleFactors.AverageOverPeriods)
+            __cached__.setRunInterval(200804, 210308)
             __cached__.Initialise()
             
     return __cached__
@@ -530,70 +549,84 @@ def MuonSF(event, datatype, pileup_tool, year):
     Returns nominal, +1sigma, -1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
     """
+
+    sf, errup, errdown = 1.0, 1.0, 1.0
+    
     # Apply only on MC and Embedding
-    if datatype == datasets.DATA: return 1.0
+    if datatype == datasets.DATA: sf, errup, errdown
+
+    errup, errdown = 0.0, 0.0
 
     muon = event.muons[0].fourvect
-    muon_charge = event.muons[0].charge
+    muon_charge = int(event.muons[0].charge)
     muonSF = getMuonSF(pileup_tool, year)
 
     if year == 2011:
         sf = muonSF.scaleFactor(muon)
         sf_err_stat = muonSF.scaleFactorUncertainty(muon)
         sf_err_syst = muonSF.scaleFactorSystematicUncertainty(muon)
-        err = sqrt(sf_err_stat**2 + sf_err_syst**2)
-        return sf, (sf-err)/err, (sf+err)/sf
+        errup = sqrt(sf_err_stat**2 + sf_err_syst**2)
+        errdown = errup
     
     if year == 2012:
         sf = muonSF.scaleFactor(muon_charge, muon)
         sf_err_stat = muonSF.scaleFactorUncertainty(muon_charge, muon)
         sf_err_syst = muonSF.scaleFactorSystematicUncertainty(muon_charge, muon)
-        err = sqrt(sf_err_stat**2 + sf_err_syst**2)
-        return sf, (sf-err)/err, (sf+err)/err
+        errup = sqrt(sf_err_stat**2 + sf_err_syst**2)
+        errdown = errup
 
-    return 1.0, 1.0, 1.0
+
+    if sf > 0.0:
+        errup   = (sf + errup) / sf
+        errdown = (sf - errdown) / sf
+
+    return sf, errup, errdown
 
 ## Scale factor for lephad triggers
 from ROOT import HSG4TriggerSF
 sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
 
-def MuonLTTSF(muon, runNumber, datatype, year, pileup_tool):
+def MuonLTTSF(event, datatype, year, pileup_tool):
     """
     Returns nominal, +1sigma, -1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
     """
 
-    w        = 1.0
-    errup    = 0.0
-    errodown = 0.0
+    sf, errup, errdown = 1.0, 0.0, 0.0
 
-    mu = muon.fourvect
+    mu = event.muons[0].fourvect
+    runNumber = event.RunNumber
 
     if year == 2011:
         if datatype == datasets.MC:
-            w       = sfTool.getSFMuon(mu, runNumber, 0)
+            sf      = sfTool.getSFMuon(mu, runNumber, 0)
             errup   = sfTool.getSFMuon(mu, runNumber, 1)
             errdown = sfTool.getSFMuon(mu, runNumber, -1)
         else:
-            w       = sfTool.getDataEffMuon(mu, runNumber, 0)
+            sf      = sfTool.getDataEffMuon(mu, runNumber, 0)
             errup   = sfTool.getDataEffMuon(mu, runNumber, 1)
             errdown = sfTool.getDataEffMuon(mu, runNumber, -1)
 
-        return w, (w-errdown)/w, (w+errup)/w
 
-    if year == 2012:
+    elif year == 2012:
         randomRunNumber = pileup_tool.GetRandomRunNumber(runNumber)
         
         if datatype == datasets.MC:
-            w       = sfTool.getSFMuon(mu, randomRunNumber, 0)
+            sf      = sfTool.getSFMuon(mu, randomRunNumber, 0)
             errup   = sfTool.getSFMuon(mu, randomRunNumber, 1)
             errdown = sfTool.getSFMuon(mu, randomRunNumber, -1)
         else:
-            w       = sfTool.getDataEffMuon(mu, randomRunNumber, 0)
+            sf      = sfTool.getDataEffMuon(mu, randomRunNumber, 0)
             errup   = sfTool.getDataEffMuon(mu, randomRunNumber, 1)
             errdown = sfTool.getDataEffMuon(mu, randomRunNumber, -1)
 
-        return w, (w-errdown)/w, (w+errup)/w
+    if sf > 0.0:
+        errup   = errup / sf
+        errdown = errdown / sf
+
+    print HSG4.RESOURCE_PATH
+
+    return sf, errup, errdown
         
         
 
@@ -604,10 +637,10 @@ def MuonLTTSF(muon, runNumber, datatype, year, pileup_tool):
 
 ## Scale factors for single electron triggers
 from ROOT import egammaSFclass
-
 egammaSF = egammaSFclass()
 
 def ElectronSF(event, datatype, pileup_tool, year):
+
     """
     Electron efficiency correction.
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EfficiencyMeasurements
@@ -615,8 +648,12 @@ def ElectronSF(event, datatype, pileup_tool, year):
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
     """
 
-    ## Apply only on MC and embedded
-    if datatype == datasets.DATA: return 1.0
+    sf, errup, errdown = 1.0, 1.0, 1.0
+    
+    # Apply only on MC and Embedding
+    if datatype == datasets.DATA: sf, errup, errdown
+
+    errup, errdown = 0.0, 0.0
 
     el = event.electrons[0]
     
@@ -626,16 +663,21 @@ def ElectronSF(event, datatype, pileup_tool, year):
         reconstructionEffCorr = egammaSF.scaleFactor(eta, pt, 4, 0, 6, True) # track + reco eff SF
         identificationEffCorr = egammaSF.scaleFactor(eta, pt, 7, 0, 6, True) # ID eff SF
     if year == 2012:
-        randomRunNumber = pileup_tool.GetRandomRunNumber(runNumber)
+        randomRunNumber = pileup_tool.GetRandomRunNumber(event.RunNumber)
         reconstructionEffCorr = egammaSF.scaleFactor(eta, pt, 4, 0, 8, 1, randomRunNumber) # track + reco eff SF
         identificationEffCorr = egammaSF.scaleFactor(eta, pt, 7, 0, 8, 1, randomRunNumber) # ID eff SF
     ## We don't use electrons in the forward region, so we don't need to apply SF for them.
     sf = reconstructionEffCorr.first * identificationEffCorr.first
     reconstructionError = reconstructionEffCorr.second
     identificationError = identificationEffCorr.second
-    err = sqrt(reconstructionError**2 + identificationError**2)
+    errup = sqrt(reconstructionError**2 + identificationError**2)
+    errdown = errup
 
-    return sf, (sf-err)/sf, (sf+err)/sf
+    if sf > 0.0:
+        errup   = (sf + errup) / sf
+        errdown = (sf - errdown) / sf
+
+    return sf, errup, errdown
 
 
 
@@ -643,11 +685,26 @@ def ElectronSF(event, datatype, pileup_tool, year):
 #################################################
 # Lepton trigger scale factors
 #################################################
-from ROOT import LeptonTriggerSF
-leptonTriggerSF = LeptonTriggerSF(TrigMuonEfficiency.RESOURCE_PATH)
+__ltsf_cached__ = False
+
+def getLTSF(year):
+    global __ltsf_cached__
+    if not __ltsf_cached__:
+        if year == 2011:
+            from externaltools.bundle_2011 import TrigMuonEfficiency
+            from ROOT import LeptonTriggerSF
+            __lstf_cached__ = LeptonTriggerSF(TrigMuonEfficiency.RESOURCE_PATH)
+        if year == 2012:
+            from externaltools.bundle_2012 import TrigMuonEfficiency
+            from ROOT import LeptonTriggerSF
+            __ltsf_cached__ = LeptonTriggerSF(2012, TrigMuonEfficiency.RESOURCE_PATH, 'muon_trigger_sf_2012_AtoE.root')
+            
+    return __ltsf_cached__
+
 
 ## Scale factor for single lepton triggers
-def LeptonSLTSF(event, datatype):
+def LeptonSLTSF(event, datatype, pileup_tool, year):
+
     """
     Trigger efficiency correction.
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Electrons
@@ -675,6 +732,13 @@ def LeptonSLTSF(event, datatype):
     ## * The trigger matching is not applied for this analysis because of missing information in D3PDs,
     ##   but this is a small effect.
 
+    sf, errup, errdown = 1.0, 1.0, 1.0
+    
+    # Apply only on MC and Embedding
+    if datatype == datasets.DATA: sf, errup, errdown
+
+    errup, errdown = 0.0, 0.0
+    
     v_muTLVs = std.vector(TLorentzVector)()
     v_elTLVs = std.vector(TLorentzVector)()
 
@@ -695,59 +759,74 @@ def LeptonSLTSF(event, datatype):
         E   = el.fourvect.E()
         elTLV.SetPtEtaPhiE(pt,eta,phi,E)
         v_elTLVs.push_back(elTLV)
-    
-    trigSF = leptonTriggerSF.GetTriggerSF(event.RunNumber, False, v_muTLVs, 1, v_elTLVs, 2, 0)
-    sf = trigSF.first
-    err = trigSF.second
 
-    return sf, (sf-err)/sf, (sf+err)/sf
+    randomRunNumber = pileup_tool.GetRandomRunNumber(event.RunNumber)
+
+    leptonTriggerSF = getLTSF(year)
+
+    trigSF = leptonTriggerSF.GetTriggerSF(randomRunNumber, False, v_muTLVs, 1, v_elTLVs, 2, 0)
+    sf = trigSF.first
+    errup = trigSF.second
+    errdown = errup
+
+    if sf > 0.0:
+        errup   = (sf + errup) / sf
+        errdown = (sf - errdown) / sf
+
+    return sf, errup, errdown
 
 
 
 ## Scale factor for lephad triggers
-def ElectronLTTSF(electron, runNumber, datatype, year, pileup_tool):
+def ElectronLTTSF(event, datatype, year, pileup_tool):
     """
     Returns nominal, +1sigma, -1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
     """
 
-    w        = 1.0
-    errup    = 0.0
-    errodown = 0.0
+    sf, errup, errdown = 1.0, 1.0, 1.0
+    
+    # Apply only on MC and Embedding
+    if datatype == datasets.DATA: sf, errup, errdown
 
-    e = electron.fourvect
+    errup, errdown = 0.0, 0.0
+
+    e = event.electrons[0].fourvect
+    runNumber = event.RunNumber
 
     if year == 2011:
         if datatype == datasets.MC:
-            w       = sfTool.getSFElec(e, runNumber, 0)
+            sf      = sfTool.getSFElec(e, runNumber, 0)
             errup   = sfTool.getSFElec(e, runNumber, 1)
             errdown = sfTool.getSFElec(e, runNumber, -1)
         else:
-            w       = sfTool.getDataEffElec(e, runNumber, 0)
+            sf      = sfTool.getDataEffElec(e, runNumber, 0)
             errup   = sfTool.getDataEffElec(e, runNumber, 1)
             errdown = sfTool.getDataEffElec(e, runNumber, -1)
 
-        return w, (w-errdown)/w, (w+errup)/w
-
-    if year == 2012:
+    elif year == 2012:
         randomRunNumber = pileup_tool.GetRandomRunNumber(runNumber)
         
         if datatype == datasets.MC:
-            w       = sfTool.getSFElec(e, randomRunNumber, 0)
+            sf      = sfTool.getSFElec(e, randomRunNumber, 0)
             errup   = sfTool.getSFElec(e, randomRunNumber, 1)
             errdown = sfTool.getSFElec(e, randomRunNumber, -1)
         else:
-            w       = sfTool.getDataEffElec(e, randomRunNumber, 0)
+            sf      = sfTool.getDataEffElec(e, randomRunNumber, 0)
             errup   = sfTool.getDataEffElec(e, randomRunNumber, 1)
             errdown = sfTool.getDataEffElec(e, randomRunNumber, -1)
 
-        return w, (w-errdown)/w, (w+errup)/w
+    if sf > 0.0:
+        errup   = errup / sf
+        errdown = errdown / sf
+
+    return sf, errup, errdown
 
 
     
 
 #################################################
-# Special LTT corrections for embedded
+# Special LTT corrections for tau trigger
 #################################################
 
 __ttc_cached__  = False
@@ -769,10 +848,9 @@ def getTTC(year):
     return __ttc_cached__, __path_cached__
 
 
-def EmbedTauTriggerCorr(Tau, nvtx, runNumber, year, lep, pileup_tool):
-    weight = 1.0
-    errup = 0.0
-    errdown = 0.0
+def TauTriggerSF(Tau, nvtx, runNumber, year, lep, pileup_tool):
+    
+    sf, errup, errdown = 1.0, 0.0, 0.0
     ttc, ttcPath = getTTC(year)
     tauPt  = Tau.fourvect.Pt()
     tauEta = Tau.fourvect.Eta()
@@ -780,18 +858,18 @@ def EmbedTauTriggerCorr(Tau, nvtx, runNumber, year, lep, pileup_tool):
     if year == 2011:
         if runNumber > 186755:
             status    =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'), '1P3P', 'BDTm')
-            weight    =  ttc.get3DMCEff(tauPt, tauEta , nvtx, 0)
+            sf    =  ttc.get3DMCEff(tauPt, tauEta , nvtx, 0)
             errup    += ttc.get3DMCEff(tauPt, tauEta , nvtx, 1)**2
             errdown  += ttc.get3DMCEff(tauPt, tauEta , nvtx, -1)**2
             status    =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20_medium1.root'))
-            weight   *= ttc.getSF(tauPt, 0)
+            sf   *= ttc.getSF(tauPt, 0)
             errup    += ttc.getSF(tauPt, 1)**2
             errdown  += ttc.getSF(tauPt, -1)**2
             errup = sqrt(errup)
             errdown = sqrt(errdown)
         else:
             status  = ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau16_loose.root'))
-            weight  = ttc.getDataEff(tauPt, 0)
+            sf  = ttc.getDataEff(tauPt, 0)
             errup   = ttc.getDataEff(tauPt, 1)
             errdown = ttc.getDataEff(tauPt, -1)
 
@@ -801,9 +879,7 @@ def EmbedTauTriggerCorr(Tau, nvtx, runNumber, year, lep, pileup_tool):
         period = ''
 
         if 200804 < randomRunNumber <= 201556: period = 'periodA'
-        if 202660 < randomRunNumber <= 205113: period = 'periodB'
-        if 206247 < randomRunNumber <= 207397: period = 'periodC'
-        if 207446 < randomRunNumber <= 209025: period = 'periodD'
+        if 202660 < randomRunNumber <= 209025: period = 'periodBD'
         if 209073 < randomRunNumber <= 210308: period = 'periodE'
 
         nprongs = ''
@@ -815,16 +891,20 @@ def EmbedTauTriggerCorr(Tau, nvtx, runNumber, year, lep, pileup_tool):
         
         if lep == 'mu':
             ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20_medium1.root'))
-            weight  = ttc.getSF(tauPt, 0, period, nprong, 'BDTm', 'EVm')
-            errup   = ttc.getSF(tauPt, 1, period, nprong, 'BDTm', 'EVm')
-            errdown = ttc.getSF(tauPt, -1, period, nprong, 'BDTm', 'EVm')
+            sf  = ttc.getSF(tauPt, tauEta, 0, period, nprong, 'BDTm', 'EVm')
+            errup   = ttc.getSF(tauPt, tauEta, 1, period, nprong, 'BDTm', 'EVm')
+            errdown = ttc.getSF(tauPt, tauEta, -1, period, nprong, 'BDTm', 'EVm')
 
         if lep == 'e':
             ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20Ti_medium1.root'))
-            weight  = ttc.getSF(tauPt, 0, period, nprong, 'BDTm', 'EVm')
-            errup   = ttc.getSF(tauPt, 1, period, nprong, 'BDTm', 'EVm')
-            errdown = ttc.getSF(tauPt, -1, period, nprong, 'BDTm', 'EVm')
+            sf  = ttc.getSF(tauPt, tauEta, 0, period, nprong, 'BDTm', 'EVm')
+            errup   = ttc.getSF(tauPt, tauEta, 1, period, nprong, 'BDTm', 'EVm')
+            errdown = ttc.getSF(tauPt, tauEta, -1, period, nprong, 'BDTm', 'EVm')
 
-    return weight, (weight-errdown)/weight, (weight+errup)/weight
+    if sf > 0.0:
+        errup   = errup / sf
+        errdown = errdown / sf
+
+    return sf, errup, errdown
             
         

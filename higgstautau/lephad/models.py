@@ -121,8 +121,6 @@ class SysWeights(TreeModel):
     sys_tau_TRIGSF_UP = FloatCol()
     sys_tau_TRIGSF_DOWN = FloatCol()
 
-    sys_mu_IDSF_UP = FloatCol()
-    sys_mu_IDSF_DOWN = FloatCol()
     sys_mu_TRIGSF_UP = FloatCol()
     sys_mu_TRIGSF_DOWN = FloatCol()
     sys_mu_ISOSF_UP = FloatCol()
@@ -134,8 +132,6 @@ class SysWeights(TreeModel):
     sys_mu_LTTSF_UP = FloatCol()
     sys_mu_LTTSF_DOWN = FloatCol()
 
-    sys_e_IDSF_UP = FloatCol()
-    sys_e_IDSF_DOWN = FloatCol()
     sys_e_TRIGSF_UP = FloatCol()
     sys_e_TRIGSF_DOWN = FloatCol()
     sys_e_EFFSF_UP = FloatCol()
