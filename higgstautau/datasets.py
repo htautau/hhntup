@@ -45,15 +45,16 @@ from atlastools.datasets import DATA, MC, EMBED
 import xsec
 
 
-DATA_PATTERN = re.compile(
+DS_PATTERN = re.compile(
         '^(?P<prefix>\S+\.)?'
-        'data(?P<year>\d+)_(?P<energy>\d+)TeV'
-        '\.(?P<run>\d+)'
-        '\.physics_'
-        '(?P<stream>\S+)'
-        '\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?)'
+        '(?P<type>(data|mc))(?P<year>\d+)_(?P<energy>\d+)TeV'
+        '\.(?P<id>\d+)'
+        '\.(?P<name>\w+)'
+        '(\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?))?'
         '\.(?P<tag>\w+)'
-        '(\.(?P<suffix>\S+))?$')
+        '(\.small)?'
+        '(\.v(?P<version>\d+))?'
+        '\.(?P<suffix>\S+)$')
 
 MC_TAG_PATTERN1 = re.compile(
         '^e(?P<evnt>\d+)_'
@@ -75,15 +76,14 @@ MC_TAG_PATTERN2 = re.compile(
 EMBED_PATTERN11 = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
-        '\.DESD_((SGLMU)|(ZMUMU))'
+        '\.DESD_SGLMU'
         '\.pro(?P<prod>\d+)'
         '\.embedding-(?P<embedtag>\S+)?'
         '\.Ztautau_'
         '(?P<channel>(lh)|(hh))_'
-        '(((high)|(low))pt_)?'
         '(?P<isol>[a-z]+)_'
         '(?P<mfs>[a-z]+)_'
-        '((re)|(tau))reco_'
+        'rereco_'
         'p(?P<tag>\d+)_'
         'EXT0'
         '(\.(?P<suffix>\S+))?$')
@@ -91,7 +91,7 @@ EMBED_PATTERN11 = re.compile(
 EMBED_PATTERN12 = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
-        '\.DESD_((SGLMU)|(ZMUMU))'
+        '\.DESD_ZMUMU'
         '\.pro(?P<prod>\d+)'
         '\.embedding-(?P<embedtag>\S+)?'
         '\.Ztautau_'
@@ -99,7 +99,7 @@ EMBED_PATTERN12 = re.compile(
         '(((high)|(low))pt_)?'
         '(?P<mfs>[a-z]+)_'
         'filter_'
-        '((re)|(tau))reco_'
+        'taureco_'
         'p(?P<tag>\d+)_'
         'EXT0'
         '(\.(?P<suffix>\S+))?$')
@@ -153,29 +153,21 @@ class NoMatchingDatasetsFound(Exception):
 class Database(dict):
 
     @classmethod
-    def data_match_to_ds(cls, match):
+    def match_to_ds(cls, match):
         """
-        Contruct the original NTUP dataset name from a data skim match object
+        Construct the original NTUP dataset name from a skim match object
         """
-        return 'data%s_%sTeV.%s.physics_%s.%s.%s' % (
-                match.group('year'),
-                match.group('energy'),
-                match.group('run'),
-                match.group('stream'),
-                match.group('ntup'),
-                match.group('tag'))
-
-    @classmethod
-    def mc_match_to_ds(cls, match):
-        """
-        Construct the original NTUP dataset name from a MC skim match object
-        """
-        return 'mc%s_%sTeV.%s.%s.%s.%s' % (
+        if match.group('year') == '11':
+            ntup = 'merge.NTUP_TAUMEDIUM'
+        else:
+            ntup = 'merge.NTUP_TAU'
+        return '%s%s_%sTeV.%s.%s.%s.%s' % (
+                match.group('type'),
                 match.group('year'),
                 match.group('energy'),
                 match.group('id'),
                 match.group('name'),
-                match.group('ntup'),
+                ntup,
                 match.group('tag'))
 
     def __init__(self, name='datasets', verbose=False, stream=None):
@@ -277,26 +269,6 @@ class Database(dict):
         # MC
         ###############################
         if mc_path is not None:
-            if versioned:
-                pattern = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV'
-                           '\.(?P<id>\d+)'
-                           '\.(?P<name>\w+)'
-                           '\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?)?'
-                           '\.(?P<tag>e\d+_s\d+_s\d+_r\d+(_r\d+)?_p\d+)'
-                           '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
-            else:
-                pattern = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV'
-                           '\.(?P<id>\d+)'
-                           '\.(?P<name>\w+)'
-                           '\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?)?'
-                           '\.(?P<tag>e\d+_s\d+_s\d+_r\d+(_r\d+)?_p\d+)'
-                           '_(?P<suffix>\S+)$')
-
-            if mc_prefix:
-                pattern = ('^%s\.' % re.escape(mc_prefix)) + pattern[1:]
-
-            MC_PATTERN = re.compile(pattern)
-
             if deep:
                 mc_dirs = get_all_dirs_under(mc_path, prefix=mc_prefix)
             else:
@@ -307,16 +279,22 @@ class Database(dict):
 
             for dir in mc_dirs:
                 dirname, basename = os.path.split(dir)
-                match  = re.match(MC_PATTERN, basename)
-
+                match  = re.match(DS_PATTERN, basename)
                 if match:
-                    ds_name = Database.mc_match_to_ds(match)
+                    if int(match.group('year')) != (year % 1E3):
+                        continue
+                    if match.group('type') != 'mc':
+                        continue
+                    ds_name = Database.match_to_ds(match)
                     name = match.group('name')
                     tag = match.group('tag')
                     try:
                         version = int(match.group('version'))
                     except IndexError:
                         version = 0
+                    except:
+                        print basename
+                        raise
                     tag_match = re.match(MC_TAG_PATTERN1, tag)
                     tag_match2 = re.match(MC_TAG_PATTERN2, tag)
                     MC_TAG_PATTERN = MC_TAG_PATTERN1
@@ -397,19 +375,22 @@ class Database(dict):
                             file_pattern=mc_pattern,
                             year=year)
                 elif self.verbose:
-                    print "not matched: %s" % basename
+                    print "not a valid mc dataset name: %s" % basename
 
         #####################################
         # EMBEDDING
         #####################################
         if embed_path is not None:
 
-            if embed_prefix:
-                embed_dirs = glob.glob(
-                        os.path.join(embed_path, embed_prefix) + '*')
+            if deep:
+                embed_dirs = get_all_dirs_under(embed_path, prefix=embed_prefix)
             else:
-                embed_dirs = glob.glob(
-                        os.path.join(embed_path, '*'))
+                if embed_prefix:
+                    embed_dirs = glob.glob(
+                            os.path.join(embed_path, embed_prefix) + '*')
+                else:
+                    embed_dirs = glob.glob(
+                            os.path.join(embed_path, '*'))
 
             if year == 2011:
                 EMBED_PATTERN = EMBED_PATTERN11
@@ -428,7 +409,7 @@ class Database(dict):
                             channels[channel] = []
                         channels[channel].append(dir)
                     elif self.verbose:
-                        print "not a valid dataset name: %s" % basename
+                        print "not a valid embedding dataset name: %s" % basename
                 elif self.verbose:
                     print "skipping file: %s" % dir
 
@@ -446,7 +427,7 @@ class Database(dict):
                                 isols[isol] = []
                             isols[isol].append(dir)
                         elif self.verbose:
-                            print "not a valid dataset name: %s" % basename
+                            print "not a valid embedding dataset name: %s" % basename
 
                     for isol, isol_dirs in isols.items():
 
@@ -461,7 +442,7 @@ class Database(dict):
                                     mfss[mfs] = []
                                 mfss[mfs].append(dir)
                             elif self.verbose:
-                                print "not a valid dataset name: %s" % basename
+                                print "not a valid embedding dataset name: %s" % basename
 
                         for mfs, mfs_dirs in mfss.items():
 
@@ -495,7 +476,7 @@ class Database(dict):
                                                 'different tags: %s' %
                                                 periods[period]['dirs'])
                                 elif self.verbose:
-                                    print "not a valid dataset name: %s" % basename
+                                    print "not a valid embeding dataset name: %s" % basename
 
                             for period, info in periods.items():
                                 period_name = '%s-%s' % (name, period)
@@ -520,7 +501,7 @@ class Database(dict):
                                 mfss[mfs] = []
                             mfss[mfs].append(dir)
                         elif self.verbose:
-                            print "not a valid dataset name: %s" % basename
+                            print "not a valid embedding dataset name: %s" % basename
 
                     for mfs, mfs_dirs in mfss.items():
 
@@ -554,7 +535,7 @@ class Database(dict):
                                             'different tags: %s' %
                                             periods[period]['dirs'])
                             elif self.verbose:
-                                print "not a valid dataset name: %s" % basename
+                                print "not a valid embedding dataset name: %s" % basename
 
                         for period, info in periods.items():
                             period_name = '%s-%s' % (name, period)
@@ -573,20 +554,31 @@ class Database(dict):
         ##############################
         if data_path is not None:
 
-            # get all data directories
-            data_dirs = get_all_dirs_under(data_path, prefix=data_prefix)
+            if deep:
+                data_dirs = get_all_dirs_under(data_path, prefix=data_prefix)
+            else:
+                if data_prefix:
+                    data_dirs = glob.glob(
+                            os.path.join(data_path, data_prefix) + '*')
+                else:
+                    data_dirs = glob.glob(
+                            os.path.join(data_path, '*'))
 
             # classify dir by stream
             streams = {}
             for dir in data_dirs:
-                match = re.match(DATA_PATTERN, dir)
+                match = re.match(DS_PATTERN, dir)
                 if match:
-                    stream = match.group('stream')
+                    if int(match.group('year')) != (year % 1E3):
+                        continue
+                    if match.group('type') != 'data':
+                        continue
+                    stream = match.group('name')
                     if stream not in streams:
                         streams[stream] = []
                     streams[stream].append(dir)
                 elif self.verbose:
-                    print "not a valid dataset name: %s" % dir
+                    print "not a valid data dataset name: %s" % dir
 
             for stream, dirs in streams.items():
                 name = 'data%d-%s' % (year % 1000, stream)
@@ -605,15 +597,15 @@ class Database(dict):
                 # in each stream create a separate dataset for each run
                 runs = {}
                 for dir in dirs:
-                    match = re.match(DATA_PATTERN, dir)
+                    match = re.match(DS_PATTERN, dir)
                     if match:
-                        run = int(match.group('run'))
+                        run = int(match.group('id'))
                         tag = match.group('tag')
                         if run not in runs:
                             runs[run] = {
                                     'tag': tag,
                                     'dirs': [dir],
-                                    'ds': Database.data_match_to_ds(match)}
+                                    'ds': Database.match_to_ds(match)}
                         else:
                             runs[run]['dirs'].append(dir)
                             if tag != runs[run]['tag']:
@@ -621,7 +613,7 @@ class Database(dict):
                                     'multiple copies of run with different '
                                     'tags: %s' % runs[run]['dirs'])
                     elif self.verbose:
-                        print "not a valid dataset name: %s" % dir
+                        print "not a valid data dataset name: %s" % dir
                 # need to use the actual ds name for ds for validation
                 for run, info in runs.items():
                     name = 'data%d-%s-%d' % (year % 1000, stream, run)
