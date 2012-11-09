@@ -572,7 +572,7 @@ class Database(dict):
                         continue
                     if match.group('type') != 'data':
                         continue
-                    stream = match.group('name')
+                    stream = match.group('name').split('_')[-1]
                     if stream not in streams:
                         streams[stream] = []
                     streams[stream].append(dir)
