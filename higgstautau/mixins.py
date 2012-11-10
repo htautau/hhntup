@@ -51,6 +51,8 @@ class TauFourMomentum(FourMomentum):
 
     def __init__(self):
 
+        super(TauFourMomentum, self).__init__()
+
         self.centrality = 0.
         self.centrality_boosted = 0.
 
@@ -65,8 +67,6 @@ class TauFourMomentum(FourMomentum):
         self.min_dr_jet = 9999.
 
         self._pt_nominal = -1111.
-
-        super(TauFourMomentum, self).__init__()
 
     @property
     def pt_nominal(self):
