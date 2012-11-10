@@ -216,6 +216,9 @@ class Database(dict):
         ds = {}
         for name, info in self.items():
             if info.datatype == datatype:
+                if datatype == DATA and info.id < 0:
+                    # only validate data run datasets
+                    continue
                 if pattern is None or fnmatch.fnmatch(name, pattern):
                     ds[name] = info
         incomplete = []
@@ -585,7 +588,7 @@ class Database(dict):
                     datatype=DATA,
                     treename=data_treename,
                     ds=name,
-                    id=1,
+                    id=-1,
                     # The GRL is the same for both lephad and hadhad analyses
                     grl=data_grl,
                     dirs=dirs,
@@ -620,7 +623,7 @@ class Database(dict):
                         datatype=DATA,
                         treename=data_treename,
                         ds=info['ds'],
-                        id=1,
+                        id=run,
                         grl=data_grl,
                         dirs=info['dirs'],
                         stream=stream,
@@ -656,7 +659,7 @@ class Database(dict):
                             datatype=DATA,
                             treename=data_treename,
                             ds=name,
-                            id=1,
+                            id=-1,
                             grl=data_grl,
                             dirs=dirs,
                             stream=stream,

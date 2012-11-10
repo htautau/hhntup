@@ -4425,7 +4425,7 @@ data11-JetTauEtmiss: !Dataset
   ds: data11-JetTauEtmiss
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss
   stream: JetTauEtmiss
   tag: null
@@ -4440,7 +4440,7 @@ data11-JetTauEtmiss-178044: !Dataset
   ds: data11_7TeV.00178044.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 178044
   name: data11-JetTauEtmiss-178044
   stream: JetTauEtmiss
   tag: null
@@ -4455,7 +4455,7 @@ data11-JetTauEtmiss-178047: !Dataset
   ds: data11_7TeV.00178047.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 178047
   name: data11-JetTauEtmiss-178047
   stream: JetTauEtmiss
   tag: null
@@ -4470,7 +4470,7 @@ data11-JetTauEtmiss-178109: !Dataset
   ds: data11_7TeV.00178109.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 178109
   name: data11-JetTauEtmiss-178109
   stream: JetTauEtmiss
   tag: null
@@ -4485,7 +4485,7 @@ data11-JetTauEtmiss-179725: !Dataset
   ds: data11_7TeV.00179725.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179725
   name: data11-JetTauEtmiss-179725
   stream: JetTauEtmiss
   tag: null
@@ -4500,7 +4500,7 @@ data11-JetTauEtmiss-179739: !Dataset
   ds: data11_7TeV.00179739.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179739
   name: data11-JetTauEtmiss-179739
   stream: JetTauEtmiss
   tag: null
@@ -4515,7 +4515,7 @@ data11-JetTauEtmiss-179771: !Dataset
   ds: data11_7TeV.00179771.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179771
   name: data11-JetTauEtmiss-179771
   stream: JetTauEtmiss
   tag: null
@@ -4530,7 +4530,7 @@ data11-JetTauEtmiss-179804: !Dataset
   ds: data11_7TeV.00179804.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179804
   name: data11-JetTauEtmiss-179804
   stream: JetTauEtmiss
   tag: null
@@ -4545,7 +4545,7 @@ data11-JetTauEtmiss-179938: !Dataset
   ds: data11_7TeV.00179938.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179938
   name: data11-JetTauEtmiss-179938
   stream: JetTauEtmiss
   tag: null
@@ -4560,7 +4560,7 @@ data11-JetTauEtmiss-179939: !Dataset
   ds: data11_7TeV.00179939.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179939
   name: data11-JetTauEtmiss-179939
   stream: JetTauEtmiss
   tag: null
@@ -4575,7 +4575,7 @@ data11-JetTauEtmiss-179940: !Dataset
   ds: data11_7TeV.00179940.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 179940
   name: data11-JetTauEtmiss-179940
   stream: JetTauEtmiss
   tag: null
@@ -4590,7 +4590,7 @@ data11-JetTauEtmiss-180122: !Dataset
   ds: data11_7TeV.00180122.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180122
   name: data11-JetTauEtmiss-180122
   stream: JetTauEtmiss
   tag: null
@@ -4605,7 +4605,7 @@ data11-JetTauEtmiss-180124: !Dataset
   ds: data11_7TeV.00180124.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180124
   name: data11-JetTauEtmiss-180124
   stream: JetTauEtmiss
   tag: null
@@ -4620,7 +4620,7 @@ data11-JetTauEtmiss-180139: !Dataset
   ds: data11_7TeV.00180139.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180139
   name: data11-JetTauEtmiss-180139
   stream: JetTauEtmiss
   tag: null
@@ -4635,7 +4635,7 @@ data11-JetTauEtmiss-180144: !Dataset
   ds: data11_7TeV.00180144.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180144
   name: data11-JetTauEtmiss-180144
   stream: JetTauEtmiss
   tag: null
@@ -4650,7 +4650,7 @@ data11-JetTauEtmiss-180149: !Dataset
   ds: data11_7TeV.00180149.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180149
   name: data11-JetTauEtmiss-180149
   stream: JetTauEtmiss
   tag: null
@@ -4665,7 +4665,7 @@ data11-JetTauEtmiss-180153: !Dataset
   ds: data11_7TeV.00180153.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180153
   name: data11-JetTauEtmiss-180153
   stream: JetTauEtmiss
   tag: null
@@ -4680,7 +4680,7 @@ data11-JetTauEtmiss-180164: !Dataset
   ds: data11_7TeV.00180164.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180164
   name: data11-JetTauEtmiss-180164
   stream: JetTauEtmiss
   tag: null
@@ -4695,7 +4695,7 @@ data11-JetTauEtmiss-180212: !Dataset
   ds: data11_7TeV.00180212.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180212
   name: data11-JetTauEtmiss-180212
   stream: JetTauEtmiss
   tag: null
@@ -4710,7 +4710,7 @@ data11-JetTauEtmiss-180225: !Dataset
   ds: data11_7TeV.00180225.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180225
   name: data11-JetTauEtmiss-180225
   stream: JetTauEtmiss
   tag: null
@@ -4725,7 +4725,7 @@ data11-JetTauEtmiss-180241: !Dataset
   ds: data11_7TeV.00180241.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180241
   name: data11-JetTauEtmiss-180241
   stream: JetTauEtmiss
   tag: null
@@ -4740,7 +4740,7 @@ data11-JetTauEtmiss-180242: !Dataset
   ds: data11_7TeV.00180242.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180242
   name: data11-JetTauEtmiss-180242
   stream: JetTauEtmiss
   tag: null
@@ -4755,7 +4755,7 @@ data11-JetTauEtmiss-180309: !Dataset
   ds: data11_7TeV.00180309.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180309
   name: data11-JetTauEtmiss-180309
   stream: JetTauEtmiss
   tag: null
@@ -4770,7 +4770,7 @@ data11-JetTauEtmiss-180400: !Dataset
   ds: data11_7TeV.00180400.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180400
   name: data11-JetTauEtmiss-180400
   stream: JetTauEtmiss
   tag: null
@@ -4785,7 +4785,7 @@ data11-JetTauEtmiss-180448: !Dataset
   ds: data11_7TeV.00180448.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180448
   name: data11-JetTauEtmiss-180448
   stream: JetTauEtmiss
   tag: null
@@ -4800,7 +4800,7 @@ data11-JetTauEtmiss-180481: !Dataset
   ds: data11_7TeV.00180481.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180481
   name: data11-JetTauEtmiss-180481
   stream: JetTauEtmiss
   tag: null
@@ -4815,7 +4815,7 @@ data11-JetTauEtmiss-180614: !Dataset
   ds: data11_7TeV.00180614.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180614
   name: data11-JetTauEtmiss-180614
   stream: JetTauEtmiss
   tag: null
@@ -4830,7 +4830,7 @@ data11-JetTauEtmiss-180636: !Dataset
   ds: data11_7TeV.00180636.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180636
   name: data11-JetTauEtmiss-180636
   stream: JetTauEtmiss
   tag: null
@@ -4845,7 +4845,7 @@ data11-JetTauEtmiss-180664: !Dataset
   ds: data11_7TeV.00180664.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180664
   name: data11-JetTauEtmiss-180664
   stream: JetTauEtmiss
   tag: null
@@ -4860,7 +4860,7 @@ data11-JetTauEtmiss-180710: !Dataset
   ds: data11_7TeV.00180710.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180710
   name: data11-JetTauEtmiss-180710
   stream: JetTauEtmiss
   tag: null
@@ -4875,7 +4875,7 @@ data11-JetTauEtmiss-180776: !Dataset
   ds: data11_7TeV.00180776.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 180776
   name: data11-JetTauEtmiss-180776
   stream: JetTauEtmiss
   tag: null
@@ -4890,7 +4890,7 @@ data11-JetTauEtmiss-182013: !Dataset
   ds: data11_7TeV.00182013.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182013
   name: data11-JetTauEtmiss-182013
   stream: JetTauEtmiss
   tag: null
@@ -4905,7 +4905,7 @@ data11-JetTauEtmiss-182161: !Dataset
   ds: data11_7TeV.00182161.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182161
   name: data11-JetTauEtmiss-182161
   stream: JetTauEtmiss
   tag: null
@@ -4921,7 +4921,7 @@ data11-JetTauEtmiss-182284: !Dataset
   ds: data11_7TeV.00182284.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182284
   name: data11-JetTauEtmiss-182284
   stream: JetTauEtmiss
   tag: null
@@ -4936,7 +4936,7 @@ data11-JetTauEtmiss-182346: !Dataset
   ds: data11_7TeV.00182346.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182346
   name: data11-JetTauEtmiss-182346
   stream: JetTauEtmiss
   tag: null
@@ -4951,7 +4951,7 @@ data11-JetTauEtmiss-182372: !Dataset
   ds: data11_7TeV.00182372.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182372
   name: data11-JetTauEtmiss-182372
   stream: JetTauEtmiss
   tag: null
@@ -4966,7 +4966,7 @@ data11-JetTauEtmiss-182424: !Dataset
   ds: data11_7TeV.00182424.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182424
   name: data11-JetTauEtmiss-182424
   stream: JetTauEtmiss
   tag: null
@@ -4981,7 +4981,7 @@ data11-JetTauEtmiss-182449: !Dataset
   ds: data11_7TeV.00182449.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182449
   name: data11-JetTauEtmiss-182449
   stream: JetTauEtmiss
   tag: null
@@ -4996,7 +4996,7 @@ data11-JetTauEtmiss-182450: !Dataset
   ds: data11_7TeV.00182450.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182450
   name: data11-JetTauEtmiss-182450
   stream: JetTauEtmiss
   tag: null
@@ -5011,7 +5011,7 @@ data11-JetTauEtmiss-182454: !Dataset
   ds: data11_7TeV.00182454.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182454
   name: data11-JetTauEtmiss-182454
   stream: JetTauEtmiss
   tag: null
@@ -5026,7 +5026,7 @@ data11-JetTauEtmiss-182455: !Dataset
   ds: data11_7TeV.00182455.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182455
   name: data11-JetTauEtmiss-182455
   stream: JetTauEtmiss
   tag: null
@@ -5041,7 +5041,7 @@ data11-JetTauEtmiss-182456: !Dataset
   ds: data11_7TeV.00182456.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182456
   name: data11-JetTauEtmiss-182456
   stream: JetTauEtmiss
   tag: null
@@ -5057,7 +5057,7 @@ data11-JetTauEtmiss-182486: !Dataset
   ds: data11_7TeV.00182486.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182486
   name: data11-JetTauEtmiss-182486
   stream: JetTauEtmiss
   tag: null
@@ -5072,7 +5072,7 @@ data11-JetTauEtmiss-182516: !Dataset
   ds: data11_7TeV.00182516.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182516
   name: data11-JetTauEtmiss-182516
   stream: JetTauEtmiss
   tag: null
@@ -5087,7 +5087,7 @@ data11-JetTauEtmiss-182518: !Dataset
   ds: data11_7TeV.00182518.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182518
   name: data11-JetTauEtmiss-182518
   stream: JetTauEtmiss
   tag: null
@@ -5102,7 +5102,7 @@ data11-JetTauEtmiss-182519: !Dataset
   ds: data11_7TeV.00182519.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182519
   name: data11-JetTauEtmiss-182519
   stream: JetTauEtmiss
   tag: null
@@ -5117,7 +5117,7 @@ data11-JetTauEtmiss-182726: !Dataset
   ds: data11_7TeV.00182726.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182726
   name: data11-JetTauEtmiss-182726
   stream: JetTauEtmiss
   tag: null
@@ -5132,7 +5132,7 @@ data11-JetTauEtmiss-182747: !Dataset
   ds: data11_7TeV.00182747.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182747
   name: data11-JetTauEtmiss-182747
   stream: JetTauEtmiss
   tag: null
@@ -5147,7 +5147,7 @@ data11-JetTauEtmiss-182766: !Dataset
   ds: data11_7TeV.00182766.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182766
   name: data11-JetTauEtmiss-182766
   stream: JetTauEtmiss
   tag: null
@@ -5162,7 +5162,7 @@ data11-JetTauEtmiss-182787: !Dataset
   ds: data11_7TeV.00182787.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182787
   name: data11-JetTauEtmiss-182787
   stream: JetTauEtmiss
   tag: null
@@ -5177,7 +5177,7 @@ data11-JetTauEtmiss-182796: !Dataset
   ds: data11_7TeV.00182796.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182796
   name: data11-JetTauEtmiss-182796
   stream: JetTauEtmiss
   tag: null
@@ -5192,7 +5192,7 @@ data11-JetTauEtmiss-182879: !Dataset
   ds: data11_7TeV.00182879.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182879
   name: data11-JetTauEtmiss-182879
   stream: JetTauEtmiss
   tag: null
@@ -5207,7 +5207,7 @@ data11-JetTauEtmiss-182886: !Dataset
   ds: data11_7TeV.00182886.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182886
   name: data11-JetTauEtmiss-182886
   stream: JetTauEtmiss
   tag: null
@@ -5222,7 +5222,7 @@ data11-JetTauEtmiss-182997: !Dataset
   ds: data11_7TeV.00182997.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 182997
   name: data11-JetTauEtmiss-182997
   stream: JetTauEtmiss
   tag: null
@@ -5238,7 +5238,7 @@ data11-JetTauEtmiss-183003: !Dataset
   ds: data11_7TeV.00183003.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183003
   name: data11-JetTauEtmiss-183003
   stream: JetTauEtmiss
   tag: null
@@ -5253,7 +5253,7 @@ data11-JetTauEtmiss-183021: !Dataset
   ds: data11_7TeV.00183021.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183021
   name: data11-JetTauEtmiss-183021
   stream: JetTauEtmiss
   tag: null
@@ -5268,7 +5268,7 @@ data11-JetTauEtmiss-183038: !Dataset
   ds: data11_7TeV.00183038.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183038
   name: data11-JetTauEtmiss-183038
   stream: JetTauEtmiss
   tag: null
@@ -5283,7 +5283,7 @@ data11-JetTauEtmiss-183045: !Dataset
   ds: data11_7TeV.00183045.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183045
   name: data11-JetTauEtmiss-183045
   stream: JetTauEtmiss
   tag: null
@@ -5298,7 +5298,7 @@ data11-JetTauEtmiss-183054: !Dataset
   ds: data11_7TeV.00183054.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183054
   name: data11-JetTauEtmiss-183054
   stream: JetTauEtmiss
   tag: null
@@ -5313,7 +5313,7 @@ data11-JetTauEtmiss-183078: !Dataset
   ds: data11_7TeV.00183078.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183078
   name: data11-JetTauEtmiss-183078
   stream: JetTauEtmiss
   tag: null
@@ -5328,7 +5328,7 @@ data11-JetTauEtmiss-183079: !Dataset
   ds: data11_7TeV.00183079.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183079
   name: data11-JetTauEtmiss-183079
   stream: JetTauEtmiss
   tag: null
@@ -5344,7 +5344,7 @@ data11-JetTauEtmiss-183081: !Dataset
   ds: data11_7TeV.00183081.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183081
   name: data11-JetTauEtmiss-183081
   stream: JetTauEtmiss
   tag: null
@@ -5359,7 +5359,7 @@ data11-JetTauEtmiss-183127: !Dataset
   ds: data11_7TeV.00183127.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183127
   name: data11-JetTauEtmiss-183127
   stream: JetTauEtmiss
   tag: null
@@ -5374,7 +5374,7 @@ data11-JetTauEtmiss-183129: !Dataset
   ds: data11_7TeV.00183129.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183129
   name: data11-JetTauEtmiss-183129
   stream: JetTauEtmiss
   tag: null
@@ -5389,7 +5389,7 @@ data11-JetTauEtmiss-183130: !Dataset
   ds: data11_7TeV.00183130.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183130
   name: data11-JetTauEtmiss-183130
   stream: JetTauEtmiss
   tag: null
@@ -5404,7 +5404,7 @@ data11-JetTauEtmiss-183216: !Dataset
   ds: data11_7TeV.00183216.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183216
   name: data11-JetTauEtmiss-183216
   stream: JetTauEtmiss
   tag: null
@@ -5419,7 +5419,7 @@ data11-JetTauEtmiss-183272: !Dataset
   ds: data11_7TeV.00183272.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183272
   name: data11-JetTauEtmiss-183272
   stream: JetTauEtmiss
   tag: null
@@ -5434,7 +5434,7 @@ data11-JetTauEtmiss-183286: !Dataset
   ds: data11_7TeV.00183286.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183286
   name: data11-JetTauEtmiss-183286
   stream: JetTauEtmiss
   tag: null
@@ -5450,7 +5450,7 @@ data11-JetTauEtmiss-183347: !Dataset
   ds: data11_7TeV.00183347.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183347
   name: data11-JetTauEtmiss-183347
   stream: JetTauEtmiss
   tag: null
@@ -5465,7 +5465,7 @@ data11-JetTauEtmiss-183391: !Dataset
   ds: data11_7TeV.00183391.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183391
   name: data11-JetTauEtmiss-183391
   stream: JetTauEtmiss
   tag: null
@@ -5480,7 +5480,7 @@ data11-JetTauEtmiss-183407: !Dataset
   ds: data11_7TeV.00183407.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183407
   name: data11-JetTauEtmiss-183407
   stream: JetTauEtmiss
   tag: null
@@ -5495,7 +5495,7 @@ data11-JetTauEtmiss-183412: !Dataset
   ds: data11_7TeV.00183412.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183412
   name: data11-JetTauEtmiss-183412
   stream: JetTauEtmiss
   tag: null
@@ -5510,7 +5510,7 @@ data11-JetTauEtmiss-183426: !Dataset
   ds: data11_7TeV.00183426.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183426
   name: data11-JetTauEtmiss-183426
   stream: JetTauEtmiss
   tag: null
@@ -5525,7 +5525,7 @@ data11-JetTauEtmiss-183462: !Dataset
   ds: data11_7TeV.00183462.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183462
   name: data11-JetTauEtmiss-183462
   stream: JetTauEtmiss
   tag: null
@@ -5542,7 +5542,7 @@ data11-JetTauEtmiss-183544: !Dataset
   ds: data11_7TeV.00183544.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183544
   name: data11-JetTauEtmiss-183544
   stream: JetTauEtmiss
   tag: null
@@ -5557,7 +5557,7 @@ data11-JetTauEtmiss-183580: !Dataset
   ds: data11_7TeV.00183580.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183580
   name: data11-JetTauEtmiss-183580
   stream: JetTauEtmiss
   tag: null
@@ -5572,7 +5572,7 @@ data11-JetTauEtmiss-183581: !Dataset
   ds: data11_7TeV.00183581.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183581
   name: data11-JetTauEtmiss-183581
   stream: JetTauEtmiss
   tag: null
@@ -5587,7 +5587,7 @@ data11-JetTauEtmiss-183602: !Dataset
   ds: data11_7TeV.00183602.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183602
   name: data11-JetTauEtmiss-183602
   stream: JetTauEtmiss
   tag: null
@@ -5602,7 +5602,7 @@ data11-JetTauEtmiss-183780: !Dataset
   ds: data11_7TeV.00183780.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183780
   name: data11-JetTauEtmiss-183780
   stream: JetTauEtmiss
   tag: null
@@ -5617,7 +5617,7 @@ data11-JetTauEtmiss-183963: !Dataset
   ds: data11_7TeV.00183963.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 183963
   name: data11-JetTauEtmiss-183963
   stream: JetTauEtmiss
   tag: null
@@ -5632,7 +5632,7 @@ data11-JetTauEtmiss-184022: !Dataset
   ds: data11_7TeV.00184022.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184022
   name: data11-JetTauEtmiss-184022
   stream: JetTauEtmiss
   tag: null
@@ -5647,7 +5647,7 @@ data11-JetTauEtmiss-184066: !Dataset
   ds: data11_7TeV.00184066.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184066
   name: data11-JetTauEtmiss-184066
   stream: JetTauEtmiss
   tag: null
@@ -5662,7 +5662,7 @@ data11-JetTauEtmiss-184072: !Dataset
   ds: data11_7TeV.00184072.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184072
   name: data11-JetTauEtmiss-184072
   stream: JetTauEtmiss
   tag: null
@@ -5677,7 +5677,7 @@ data11-JetTauEtmiss-184074: !Dataset
   ds: data11_7TeV.00184074.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184074
   name: data11-JetTauEtmiss-184074
   stream: JetTauEtmiss
   tag: null
@@ -5692,7 +5692,7 @@ data11-JetTauEtmiss-184088: !Dataset
   ds: data11_7TeV.00184088.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184088
   name: data11-JetTauEtmiss-184088
   stream: JetTauEtmiss
   tag: null
@@ -5707,7 +5707,7 @@ data11-JetTauEtmiss-184130: !Dataset
   ds: data11_7TeV.00184130.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184130
   name: data11-JetTauEtmiss-184130
   stream: JetTauEtmiss
   tag: null
@@ -5723,7 +5723,7 @@ data11-JetTauEtmiss-184169: !Dataset
   ds: data11_7TeV.00184169.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2603_p659_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 184169
   name: data11-JetTauEtmiss-184169
   stream: JetTauEtmiss
   tag: null
@@ -5738,7 +5738,7 @@ data11-JetTauEtmiss-185353: !Dataset
   ds: data11_7TeV.00185353.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185353
   name: data11-JetTauEtmiss-185353
   stream: JetTauEtmiss
   tag: null
@@ -5753,7 +5753,7 @@ data11-JetTauEtmiss-185518: !Dataset
   ds: data11_7TeV.00185518.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185518
   name: data11-JetTauEtmiss-185518
   stream: JetTauEtmiss
   tag: null
@@ -5768,7 +5768,7 @@ data11-JetTauEtmiss-185649: !Dataset
   ds: data11_7TeV.00185649.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185649
   name: data11-JetTauEtmiss-185649
   stream: JetTauEtmiss
   tag: null
@@ -5783,7 +5783,7 @@ data11-JetTauEtmiss-185731: !Dataset
   ds: data11_7TeV.00185731.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185731
   name: data11-JetTauEtmiss-185731
   stream: JetTauEtmiss
   tag: null
@@ -5798,7 +5798,7 @@ data11-JetTauEtmiss-185761: !Dataset
   ds: data11_7TeV.00185761.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185761
   name: data11-JetTauEtmiss-185761
   stream: JetTauEtmiss
   tag: null
@@ -5813,7 +5813,7 @@ data11-JetTauEtmiss-185823: !Dataset
   ds: data11_7TeV.00185823.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185823
   name: data11-JetTauEtmiss-185823
   stream: JetTauEtmiss
   tag: null
@@ -5828,7 +5828,7 @@ data11-JetTauEtmiss-185856: !Dataset
   ds: data11_7TeV.00185856.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185856
   name: data11-JetTauEtmiss-185856
   stream: JetTauEtmiss
   tag: null
@@ -5843,7 +5843,7 @@ data11-JetTauEtmiss-185976: !Dataset
   ds: data11_7TeV.00185976.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185976
   name: data11-JetTauEtmiss-185976
   stream: JetTauEtmiss
   tag: null
@@ -5858,7 +5858,7 @@ data11-JetTauEtmiss-185998: !Dataset
   ds: data11_7TeV.00185998.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 185998
   name: data11-JetTauEtmiss-185998
   stream: JetTauEtmiss
   tag: null
@@ -5873,7 +5873,7 @@ data11-JetTauEtmiss-186049: !Dataset
   ds: data11_7TeV.00186049.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186049
   name: data11-JetTauEtmiss-186049
   stream: JetTauEtmiss
   tag: null
@@ -5888,7 +5888,7 @@ data11-JetTauEtmiss-186156: !Dataset
   ds: data11_7TeV.00186156.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186156
   name: data11-JetTauEtmiss-186156
   stream: JetTauEtmiss
   tag: null
@@ -5903,7 +5903,7 @@ data11-JetTauEtmiss-186169: !Dataset
   ds: data11_7TeV.00186169.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186169
   name: data11-JetTauEtmiss-186169
   stream: JetTauEtmiss
   tag: null
@@ -5918,7 +5918,7 @@ data11-JetTauEtmiss-186178: !Dataset
   ds: data11_7TeV.00186178.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186178
   name: data11-JetTauEtmiss-186178
   stream: JetTauEtmiss
   tag: null
@@ -5933,7 +5933,7 @@ data11-JetTauEtmiss-186179: !Dataset
   ds: data11_7TeV.00186179.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186179
   name: data11-JetTauEtmiss-186179
   stream: JetTauEtmiss
   tag: null
@@ -5948,7 +5948,7 @@ data11-JetTauEtmiss-186180: !Dataset
   ds: data11_7TeV.00186180.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186180
   name: data11-JetTauEtmiss-186180
   stream: JetTauEtmiss
   tag: null
@@ -5963,7 +5963,7 @@ data11-JetTauEtmiss-186182: !Dataset
   ds: data11_7TeV.00186182.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186182
   name: data11-JetTauEtmiss-186182
   stream: JetTauEtmiss
   tag: null
@@ -5978,7 +5978,7 @@ data11-JetTauEtmiss-186216: !Dataset
   ds: data11_7TeV.00186216.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186216
   name: data11-JetTauEtmiss-186216
   stream: JetTauEtmiss
   tag: null
@@ -5993,7 +5993,7 @@ data11-JetTauEtmiss-186217: !Dataset
   ds: data11_7TeV.00186217.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186217
   name: data11-JetTauEtmiss-186217
   stream: JetTauEtmiss
   tag: null
@@ -6008,7 +6008,7 @@ data11-JetTauEtmiss-186275: !Dataset
   ds: data11_7TeV.00186275.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186275
   name: data11-JetTauEtmiss-186275
   stream: JetTauEtmiss
   tag: null
@@ -6023,7 +6023,7 @@ data11-JetTauEtmiss-186361: !Dataset
   ds: data11_7TeV.00186361.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186361
   name: data11-JetTauEtmiss-186361
   stream: JetTauEtmiss
   tag: null
@@ -6038,7 +6038,7 @@ data11-JetTauEtmiss-186399: !Dataset
   ds: data11_7TeV.00186399.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186399
   name: data11-JetTauEtmiss-186399
   stream: JetTauEtmiss
   tag: null
@@ -6053,7 +6053,7 @@ data11-JetTauEtmiss-186456: !Dataset
   ds: data11_7TeV.00186456.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186456
   name: data11-JetTauEtmiss-186456
   stream: JetTauEtmiss
   tag: null
@@ -6068,7 +6068,7 @@ data11-JetTauEtmiss-186493: !Dataset
   ds: data11_7TeV.00186493.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186493
   name: data11-JetTauEtmiss-186493
   stream: JetTauEtmiss
   tag: null
@@ -6083,7 +6083,7 @@ data11-JetTauEtmiss-186516: !Dataset
   ds: data11_7TeV.00186516.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186516
   name: data11-JetTauEtmiss-186516
   stream: JetTauEtmiss
   tag: null
@@ -6098,7 +6098,7 @@ data11-JetTauEtmiss-186532: !Dataset
   ds: data11_7TeV.00186532.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186532
   name: data11-JetTauEtmiss-186532
   stream: JetTauEtmiss
   tag: null
@@ -6113,7 +6113,7 @@ data11-JetTauEtmiss-186533: !Dataset
   ds: data11_7TeV.00186533.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186533
   name: data11-JetTauEtmiss-186533
   stream: JetTauEtmiss
   tag: null
@@ -6128,7 +6128,7 @@ data11-JetTauEtmiss-186669: !Dataset
   ds: data11_7TeV.00186669.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186669
   name: data11-JetTauEtmiss-186669
   stream: JetTauEtmiss
   tag: null
@@ -6143,7 +6143,7 @@ data11-JetTauEtmiss-186673: !Dataset
   ds: data11_7TeV.00186673.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186673
   name: data11-JetTauEtmiss-186673
   stream: JetTauEtmiss
   tag: null
@@ -6158,7 +6158,7 @@ data11-JetTauEtmiss-186721: !Dataset
   ds: data11_7TeV.00186721.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186721
   name: data11-JetTauEtmiss-186721
   stream: JetTauEtmiss
   tag: null
@@ -6173,7 +6173,7 @@ data11-JetTauEtmiss-186729: !Dataset
   ds: data11_7TeV.00186729.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186729
   name: data11-JetTauEtmiss-186729
   stream: JetTauEtmiss
   tag: null
@@ -6188,7 +6188,7 @@ data11-JetTauEtmiss-186753: !Dataset
   ds: data11_7TeV.00186753.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186753
   name: data11-JetTauEtmiss-186753
   stream: JetTauEtmiss
   tag: null
@@ -6203,7 +6203,7 @@ data11-JetTauEtmiss-186755: !Dataset
   ds: data11_7TeV.00186755.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186755
   name: data11-JetTauEtmiss-186755
   stream: JetTauEtmiss
   tag: null
@@ -6218,7 +6218,7 @@ data11-JetTauEtmiss-186873: !Dataset
   ds: data11_7TeV.00186873.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186873
   name: data11-JetTauEtmiss-186873
   stream: JetTauEtmiss
   tag: null
@@ -6233,7 +6233,7 @@ data11-JetTauEtmiss-186877: !Dataset
   ds: data11_7TeV.00186877.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186877
   name: data11-JetTauEtmiss-186877
   stream: JetTauEtmiss
   tag: null
@@ -6248,7 +6248,7 @@ data11-JetTauEtmiss-186878: !Dataset
   ds: data11_7TeV.00186878.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186878
   name: data11-JetTauEtmiss-186878
   stream: JetTauEtmiss
   tag: null
@@ -6263,7 +6263,7 @@ data11-JetTauEtmiss-186923: !Dataset
   ds: data11_7TeV.00186923.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186923
   name: data11-JetTauEtmiss-186923
   stream: JetTauEtmiss
   tag: null
@@ -6278,7 +6278,7 @@ data11-JetTauEtmiss-186933: !Dataset
   ds: data11_7TeV.00186933.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186933
   name: data11-JetTauEtmiss-186933
   stream: JetTauEtmiss
   tag: null
@@ -6293,7 +6293,7 @@ data11-JetTauEtmiss-186934: !Dataset
   ds: data11_7TeV.00186934.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186934
   name: data11-JetTauEtmiss-186934
   stream: JetTauEtmiss
   tag: null
@@ -6308,7 +6308,7 @@ data11-JetTauEtmiss-186965: !Dataset
   ds: data11_7TeV.00186965.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 186965
   name: data11-JetTauEtmiss-186965
   stream: JetTauEtmiss
   tag: null
@@ -6323,7 +6323,7 @@ data11-JetTauEtmiss-187014: !Dataset
   ds: data11_7TeV.00187014.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187014
   name: data11-JetTauEtmiss-187014
   stream: JetTauEtmiss
   tag: null
@@ -6338,7 +6338,7 @@ data11-JetTauEtmiss-187196: !Dataset
   ds: data11_7TeV.00187196.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187196
   name: data11-JetTauEtmiss-187196
   stream: JetTauEtmiss
   tag: null
@@ -6353,7 +6353,7 @@ data11-JetTauEtmiss-187219: !Dataset
   ds: data11_7TeV.00187219.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187219
   name: data11-JetTauEtmiss-187219
   stream: JetTauEtmiss
   tag: null
@@ -6369,7 +6369,7 @@ data11-JetTauEtmiss-187457: !Dataset
   ds: data11_7TeV.00187457.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187457
   name: data11-JetTauEtmiss-187457
   stream: JetTauEtmiss
   tag: null
@@ -6384,7 +6384,7 @@ data11-JetTauEtmiss-187552: !Dataset
   ds: data11_7TeV.00187552.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187552
   name: data11-JetTauEtmiss-187552
   stream: JetTauEtmiss
   tag: null
@@ -6399,7 +6399,7 @@ data11-JetTauEtmiss-187763: !Dataset
   ds: data11_7TeV.00187763.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187763
   name: data11-JetTauEtmiss-187763
   stream: JetTauEtmiss
   tag: null
@@ -6414,7 +6414,7 @@ data11-JetTauEtmiss-187811: !Dataset
   ds: data11_7TeV.00187811.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187811
   name: data11-JetTauEtmiss-187811
   stream: JetTauEtmiss
   tag: null
@@ -6429,7 +6429,7 @@ data11-JetTauEtmiss-187812: !Dataset
   ds: data11_7TeV.00187812.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187812
   name: data11-JetTauEtmiss-187812
   stream: JetTauEtmiss
   tag: null
@@ -6444,7 +6444,7 @@ data11-JetTauEtmiss-187815: !Dataset
   ds: data11_7TeV.00187815.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.r2713_p705_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 187815
   name: data11-JetTauEtmiss-187815
   stream: JetTauEtmiss
   tag: null
@@ -6460,7 +6460,7 @@ data11-JetTauEtmiss-188921: !Dataset
   ds: data11_7TeV.00188921.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 188921
   name: data11-JetTauEtmiss-188921
   stream: JetTauEtmiss
   tag: null
@@ -6475,7 +6475,7 @@ data11-JetTauEtmiss-188951: !Dataset
   ds: data11_7TeV.00188951.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f403_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 188951
   name: data11-JetTauEtmiss-188951
   stream: JetTauEtmiss
   tag: null
@@ -6490,7 +6490,7 @@ data11-JetTauEtmiss-189027: !Dataset
   ds: data11_7TeV.00189027.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f403_m975_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189027
   name: data11-JetTauEtmiss-189027
   stream: JetTauEtmiss
   tag: null
@@ -6507,7 +6507,7 @@ data11-JetTauEtmiss-189028: !Dataset
   ds: data11_7TeV.00189028.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f403_m975_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189028
   name: data11-JetTauEtmiss-189028
   stream: JetTauEtmiss
   tag: null
@@ -6522,7 +6522,7 @@ data11-JetTauEtmiss-189049: !Dataset
   ds: data11_7TeV.00189049.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f403_m975_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189049
   name: data11-JetTauEtmiss-189049
   stream: JetTauEtmiss
   tag: null
@@ -6537,7 +6537,7 @@ data11-JetTauEtmiss-189079: !Dataset
   ds: data11_7TeV.00189079.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189079
   name: data11-JetTauEtmiss-189079
   stream: JetTauEtmiss
   tag: null
@@ -6552,7 +6552,7 @@ data11-JetTauEtmiss-189090: !Dataset
   ds: data11_7TeV.00189090.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f403_m975_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189090
   name: data11-JetTauEtmiss-189090
   stream: JetTauEtmiss
   tag: null
@@ -6567,7 +6567,7 @@ data11-JetTauEtmiss-189184: !Dataset
   ds: data11_7TeV.00189184.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f403_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189184
   name: data11-JetTauEtmiss-189184
   stream: JetTauEtmiss
   tag: null
@@ -6583,7 +6583,7 @@ data11-JetTauEtmiss-189207: !Dataset
   ds: data11_7TeV.00189207.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189207
   name: data11-JetTauEtmiss-189207
   stream: JetTauEtmiss
   tag: null
@@ -6598,7 +6598,7 @@ data11-JetTauEtmiss-189242: !Dataset
   ds: data11_7TeV.00189242.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189242
   name: data11-JetTauEtmiss-189242
   stream: JetTauEtmiss
   tag: null
@@ -6613,7 +6613,7 @@ data11-JetTauEtmiss-189280: !Dataset
   ds: data11_7TeV.00189280.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189280
   name: data11-JetTauEtmiss-189280
   stream: JetTauEtmiss
   tag: null
@@ -6628,7 +6628,7 @@ data11-JetTauEtmiss-189288: !Dataset
   ds: data11_7TeV.00189288.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189288
   name: data11-JetTauEtmiss-189288
   stream: JetTauEtmiss
   tag: null
@@ -6644,7 +6644,7 @@ data11-JetTauEtmiss-189372: !Dataset
   ds: data11_7TeV.00189372.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189372
   name: data11-JetTauEtmiss-189372
   stream: JetTauEtmiss
   tag: null
@@ -6659,7 +6659,7 @@ data11-JetTauEtmiss-189421: !Dataset
   ds: data11_7TeV.00189421.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189421
   name: data11-JetTauEtmiss-189421
   stream: JetTauEtmiss
   tag: null
@@ -6674,7 +6674,7 @@ data11-JetTauEtmiss-189425: !Dataset
   ds: data11_7TeV.00189425.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m980_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189425
   name: data11-JetTauEtmiss-189425
   stream: JetTauEtmiss
   tag: null
@@ -6689,7 +6689,7 @@ data11-JetTauEtmiss-189481: !Dataset
   ds: data11_7TeV.00189481.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f404_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189481
   name: data11-JetTauEtmiss-189481
   stream: JetTauEtmiss
   tag: null
@@ -6704,7 +6704,7 @@ data11-JetTauEtmiss-189483: !Dataset
   ds: data11_7TeV.00189483.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189483
   name: data11-JetTauEtmiss-189483
   stream: JetTauEtmiss
   tag: null
@@ -6719,7 +6719,7 @@ data11-JetTauEtmiss-189530: !Dataset
   ds: data11_7TeV.00189530.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189530
   name: data11-JetTauEtmiss-189530
   stream: JetTauEtmiss
   tag: null
@@ -6734,7 +6734,7 @@ data11-JetTauEtmiss-189536: !Dataset
   ds: data11_7TeV.00189536.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189536
   name: data11-JetTauEtmiss-189536
   stream: JetTauEtmiss
   tag: null
@@ -6749,7 +6749,7 @@ data11-JetTauEtmiss-189561: !Dataset
   ds: data11_7TeV.00189561.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189561
   name: data11-JetTauEtmiss-189561
   stream: JetTauEtmiss
   tag: null
@@ -6764,7 +6764,7 @@ data11-JetTauEtmiss-189598: !Dataset
   ds: data11_7TeV.00189598.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189598
   name: data11-JetTauEtmiss-189598
   stream: JetTauEtmiss
   tag: null
@@ -6779,7 +6779,7 @@ data11-JetTauEtmiss-189602: !Dataset
   ds: data11_7TeV.00189602.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189602
   name: data11-JetTauEtmiss-189602
   stream: JetTauEtmiss
   tag: null
@@ -6794,7 +6794,7 @@ data11-JetTauEtmiss-189610: !Dataset
   ds: data11_7TeV.00189610.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189610
   name: data11-JetTauEtmiss-189610
   stream: JetTauEtmiss
   tag: null
@@ -6809,7 +6809,7 @@ data11-JetTauEtmiss-189639: !Dataset
   ds: data11_7TeV.00189639.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189639
   name: data11-JetTauEtmiss-189639
   stream: JetTauEtmiss
   tag: null
@@ -6824,7 +6824,7 @@ data11-JetTauEtmiss-189660: !Dataset
   ds: data11_7TeV.00189660.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189660
   name: data11-JetTauEtmiss-189660
   stream: JetTauEtmiss
   tag: null
@@ -6839,7 +6839,7 @@ data11-JetTauEtmiss-189693: !Dataset
   ds: data11_7TeV.00189693.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189693
   name: data11-JetTauEtmiss-189693
   stream: JetTauEtmiss
   tag: null
@@ -6855,7 +6855,7 @@ data11-JetTauEtmiss-189719: !Dataset
   ds: data11_7TeV.00189719.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189719
   name: data11-JetTauEtmiss-189719
   stream: JetTauEtmiss
   tag: null
@@ -6871,7 +6871,7 @@ data11-JetTauEtmiss-189751: !Dataset
   ds: data11_7TeV.00189751.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m985_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189751
   name: data11-JetTauEtmiss-189751
   stream: JetTauEtmiss
   tag: null
@@ -6886,7 +6886,7 @@ data11-JetTauEtmiss-189813: !Dataset
   ds: data11_7TeV.00189813.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f405_m991_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189813
   name: data11-JetTauEtmiss-189813
   stream: JetTauEtmiss
   tag: null
@@ -6901,7 +6901,7 @@ data11-JetTauEtmiss-189822: !Dataset
   ds: data11_7TeV.00189822.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189822
   name: data11-JetTauEtmiss-189822
   stream: JetTauEtmiss
   tag: null
@@ -6916,7 +6916,7 @@ data11-JetTauEtmiss-189836: !Dataset
   ds: data11_7TeV.00189836.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f406_m991_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189836
   name: data11-JetTauEtmiss-189836
   stream: JetTauEtmiss
   tag: null
@@ -6932,7 +6932,7 @@ data11-JetTauEtmiss-189845: !Dataset
   ds: data11_7TeV.00189845.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f406_m991_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189845
   name: data11-JetTauEtmiss-189845
   stream: JetTauEtmiss
   tag: null
@@ -6947,7 +6947,7 @@ data11-JetTauEtmiss-189875: !Dataset
   ds: data11_7TeV.00189875.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f406_m991_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189875
   name: data11-JetTauEtmiss-189875
   stream: JetTauEtmiss
   tag: null
@@ -6962,7 +6962,7 @@ data11-JetTauEtmiss-189963: !Dataset
   ds: data11_7TeV.00189963.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f406_m997_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189963
   name: data11-JetTauEtmiss-189963
   stream: JetTauEtmiss
   tag: null
@@ -6978,7 +6978,7 @@ data11-JetTauEtmiss-189965: !Dataset
   ds: data11_7TeV.00189965.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f406_m991_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 189965
   name: data11-JetTauEtmiss-189965
   stream: JetTauEtmiss
   tag: null
@@ -6993,7 +6993,7 @@ data11-JetTauEtmiss-190046: !Dataset
   ds: data11_7TeV.00190046.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f407_m997_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190046
   name: data11-JetTauEtmiss-190046
   stream: JetTauEtmiss
   tag: null
@@ -7009,7 +7009,7 @@ data11-JetTauEtmiss-190116: !Dataset
   ds: data11_7TeV.00190116.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f407_m997_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190116
   name: data11-JetTauEtmiss-190116
   stream: JetTauEtmiss
   tag: null
@@ -7024,7 +7024,7 @@ data11-JetTauEtmiss-190119: !Dataset
   ds: data11_7TeV.00190119.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f407_m997_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190119
   name: data11-JetTauEtmiss-190119
   stream: JetTauEtmiss
   tag: null
@@ -7039,7 +7039,7 @@ data11-JetTauEtmiss-190120: !Dataset
   ds: data11_7TeV.00190120.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f407_m997_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190120
   name: data11-JetTauEtmiss-190120
   stream: JetTauEtmiss
   tag: null
@@ -7054,7 +7054,7 @@ data11-JetTauEtmiss-190236: !Dataset
   ds: data11_7TeV.00190236.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f408_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190236
   name: data11-JetTauEtmiss-190236
   stream: JetTauEtmiss
   tag: null
@@ -7070,7 +7070,7 @@ data11-JetTauEtmiss-190256: !Dataset
   ds: data11_7TeV.00190256.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f408_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190256
   name: data11-JetTauEtmiss-190256
   stream: JetTauEtmiss
   tag: null
@@ -7085,7 +7085,7 @@ data11-JetTauEtmiss-190297: !Dataset
   ds: data11_7TeV.00190297.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f408_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190297
   name: data11-JetTauEtmiss-190297
   stream: JetTauEtmiss
   tag: null
@@ -7100,7 +7100,7 @@ data11-JetTauEtmiss-190300: !Dataset
   ds: data11_7TeV.00190300.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f409_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190300
   name: data11-JetTauEtmiss-190300
   stream: JetTauEtmiss
   tag: null
@@ -7115,7 +7115,7 @@ data11-JetTauEtmiss-190343: !Dataset
   ds: data11_7TeV.00190343.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f409_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190343
   name: data11-JetTauEtmiss-190343
   stream: JetTauEtmiss
   tag: null
@@ -7130,7 +7130,7 @@ data11-JetTauEtmiss-190608: !Dataset
   ds: data11_7TeV.00190608.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190608
   name: data11-JetTauEtmiss-190608
   stream: JetTauEtmiss
   tag: null
@@ -7145,7 +7145,7 @@ data11-JetTauEtmiss-190611: !Dataset
   ds: data11_7TeV.00190611.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190611
   name: data11-JetTauEtmiss-190611
   stream: JetTauEtmiss
   tag: null
@@ -7160,7 +7160,7 @@ data11-JetTauEtmiss-190618: !Dataset
   ds: data11_7TeV.00190618.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190618
   name: data11-JetTauEtmiss-190618
   stream: JetTauEtmiss
   tag: null
@@ -7175,7 +7175,7 @@ data11-JetTauEtmiss-190643: !Dataset
   ds: data11_7TeV.00190643.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190643
   name: data11-JetTauEtmiss-190643
   stream: JetTauEtmiss
   tag: null
@@ -7190,7 +7190,7 @@ data11-JetTauEtmiss-190644: !Dataset
   ds: data11_7TeV.00190644.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190644
   name: data11-JetTauEtmiss-190644
   stream: JetTauEtmiss
   tag: null
@@ -7205,7 +7205,7 @@ data11-JetTauEtmiss-190661: !Dataset
   ds: data11_7TeV.00190661.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190661
   name: data11-JetTauEtmiss-190661
   stream: JetTauEtmiss
   tag: null
@@ -7220,7 +7220,7 @@ data11-JetTauEtmiss-190689: !Dataset
   ds: data11_7TeV.00190689.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190689
   name: data11-JetTauEtmiss-190689
   stream: JetTauEtmiss
   tag: null
@@ -7237,7 +7237,7 @@ data11-JetTauEtmiss-190872: !Dataset
   ds: data11_7TeV.00190872.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190872
   name: data11-JetTauEtmiss-190872
   stream: JetTauEtmiss
   tag: null
@@ -7252,7 +7252,7 @@ data11-JetTauEtmiss-190878: !Dataset
   ds: data11_7TeV.00190878.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190878
   name: data11-JetTauEtmiss-190878
   stream: JetTauEtmiss
   tag: null
@@ -7267,7 +7267,7 @@ data11-JetTauEtmiss-190933: !Dataset
   ds: data11_7TeV.00190933.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f412_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190933
   name: data11-JetTauEtmiss-190933
   stream: JetTauEtmiss
   tag: null
@@ -7282,7 +7282,7 @@ data11-JetTauEtmiss-190934: !Dataset
   ds: data11_7TeV.00190934.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f412_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190934
   name: data11-JetTauEtmiss-190934
   stream: JetTauEtmiss
   tag: null
@@ -7297,7 +7297,7 @@ data11-JetTauEtmiss-190975: !Dataset
   ds: data11_7TeV.00190975.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 190975
   name: data11-JetTauEtmiss-190975
   stream: JetTauEtmiss
   tag: null
@@ -7313,7 +7313,7 @@ data11-JetTauEtmiss-191138: !Dataset
   ds: data11_7TeV.00191138.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1007_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191138
   name: data11-JetTauEtmiss-191138
   stream: JetTauEtmiss
   tag: null
@@ -7328,7 +7328,7 @@ data11-JetTauEtmiss-191139: !Dataset
   ds: data11_7TeV.00191139.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191139
   name: data11-JetTauEtmiss-191139
   stream: JetTauEtmiss
   tag: null
@@ -7344,7 +7344,7 @@ data11-JetTauEtmiss-191149: !Dataset
   ds: data11_7TeV.00191149.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191149
   name: data11-JetTauEtmiss-191149
   stream: JetTauEtmiss
   tag: null
@@ -7359,7 +7359,7 @@ data11-JetTauEtmiss-191150: !Dataset
   ds: data11_7TeV.00191150.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f411_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191150
   name: data11-JetTauEtmiss-191150
   stream: JetTauEtmiss
   tag: null
@@ -7375,7 +7375,7 @@ data11-JetTauEtmiss-191190: !Dataset
   ds: data11_7TeV.00191190.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191190
   name: data11-JetTauEtmiss-191190
   stream: JetTauEtmiss
   tag: null
@@ -7391,7 +7391,7 @@ data11-JetTauEtmiss-191217: !Dataset
   ds: data11_7TeV.00191217.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191217
   name: data11-JetTauEtmiss-191217
   stream: JetTauEtmiss
   tag: null
@@ -7406,7 +7406,7 @@ data11-JetTauEtmiss-191218: !Dataset
   ds: data11_7TeV.00191218.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191218
   name: data11-JetTauEtmiss-191218
   stream: JetTauEtmiss
   tag: null
@@ -7421,7 +7421,7 @@ data11-JetTauEtmiss-191235: !Dataset
   ds: data11_7TeV.00191235.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191235
   name: data11-JetTauEtmiss-191235
   stream: JetTauEtmiss
   tag: null
@@ -7437,7 +7437,7 @@ data11-JetTauEtmiss-191239: !Dataset
   ds: data11_7TeV.00191239.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191239
   name: data11-JetTauEtmiss-191239
   stream: JetTauEtmiss
   tag: null
@@ -7453,7 +7453,7 @@ data11-JetTauEtmiss-191425: !Dataset
   ds: data11_7TeV.00191425.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1019_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191425
   name: data11-JetTauEtmiss-191425
   stream: JetTauEtmiss
   tag: null
@@ -7470,7 +7470,7 @@ data11-JetTauEtmiss-191426: !Dataset
   ds: data11_7TeV.00191426.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191426
   name: data11-JetTauEtmiss-191426
   stream: JetTauEtmiss
   tag: null
@@ -7485,7 +7485,7 @@ data11-JetTauEtmiss-191513: !Dataset
   ds: data11_7TeV.00191513.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191513
   name: data11-JetTauEtmiss-191513
   stream: JetTauEtmiss
   tag: null
@@ -7501,7 +7501,7 @@ data11-JetTauEtmiss-191517: !Dataset
   ds: data11_7TeV.00191517.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f413_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191517
   name: data11-JetTauEtmiss-191517
   stream: JetTauEtmiss
   tag: null
@@ -7517,7 +7517,7 @@ data11-JetTauEtmiss-191635: !Dataset
   ds: data11_7TeV.00191635.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f414_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191635
   name: data11-JetTauEtmiss-191635
   stream: JetTauEtmiss
   tag: null
@@ -7532,7 +7532,7 @@ data11-JetTauEtmiss-191676: !Dataset
   ds: data11_7TeV.00191676.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f414_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191676
   name: data11-JetTauEtmiss-191676
   stream: JetTauEtmiss
   tag: null
@@ -7548,7 +7548,7 @@ data11-JetTauEtmiss-191715: !Dataset
   ds: data11_7TeV.00191715.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f414_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191715
   name: data11-JetTauEtmiss-191715
   stream: JetTauEtmiss
   tag: null
@@ -7564,7 +7564,7 @@ data11-JetTauEtmiss-191920: !Dataset
   ds: data11_7TeV.00191920.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f414_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191920
   name: data11-JetTauEtmiss-191920
   stream: JetTauEtmiss
   tag: null
@@ -7579,7 +7579,7 @@ data11-JetTauEtmiss-191933: !Dataset
   ds: data11_7TeV.00191933.physics_JetTauEtmiss.merge.NTUP_TAUMEDIUM.f415_m1025_p851
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: 191933
   name: data11-JetTauEtmiss-191933
   stream: JetTauEtmiss
   tag: null
@@ -7596,7 +7596,7 @@ data11-JetTauEtmiss-B: !Dataset
   ds: data11-JetTauEtmiss-B
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-B
   stream: JetTauEtmiss
   tag: null
@@ -7632,7 +7632,7 @@ data11-JetTauEtmiss-D: !Dataset
   ds: data11-JetTauEtmiss-D
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-D
   stream: JetTauEtmiss
   tag: null
@@ -7651,7 +7651,7 @@ data11-JetTauEtmiss-E: !Dataset
   ds: data11-JetTauEtmiss-E
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-E
   stream: JetTauEtmiss
   tag: null
@@ -7682,7 +7682,7 @@ data11-JetTauEtmiss-F: !Dataset
   ds: data11-JetTauEtmiss-F
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-F
   stream: JetTauEtmiss
   tag: null
@@ -7727,7 +7727,7 @@ data11-JetTauEtmiss-G: !Dataset
   ds: data11-JetTauEtmiss-G
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-G
   stream: JetTauEtmiss
   tag: null
@@ -7757,7 +7757,7 @@ data11-JetTauEtmiss-H: !Dataset
   ds: data11-JetTauEtmiss-H
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-H
   stream: JetTauEtmiss
   tag: null
@@ -7794,7 +7794,7 @@ data11-JetTauEtmiss-I: !Dataset
   ds: data11-JetTauEtmiss-I
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-I
   stream: JetTauEtmiss
   tag: null
@@ -7817,7 +7817,7 @@ data11-JetTauEtmiss-J: !Dataset
   ds: data11-JetTauEtmiss-J
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-J
   stream: JetTauEtmiss
   tag: null
@@ -7848,7 +7848,7 @@ data11-JetTauEtmiss-K: !Dataset
   ds: data11-JetTauEtmiss-K
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-K
   stream: JetTauEtmiss
   tag: null
@@ -7917,7 +7917,7 @@ data11-JetTauEtmiss-L: !Dataset
   ds: data11-JetTauEtmiss-L
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-L
   stream: JetTauEtmiss
   tag: null
@@ -7975,7 +7975,7 @@ data11-JetTauEtmiss-M: !Dataset
   ds: data11-JetTauEtmiss-M
   file_pattern: '*hadhad.root*'
   grl: grl/2011/data11_7TeV.periodAllYear_DetStatus-v36-pro10_CoolRunQuery-00-04-08_Higgs_tautau_lh.xml
-  id: 1
+  id: -1
   name: data11-JetTauEtmiss-M
   stream: JetTauEtmiss
   tag: null
@@ -8223,7 +8223,7 @@ data12-JetTauEtmiss: !Dataset
   ds: data12-JetTauEtmiss
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss
   stream: JetTauEtmiss
   tag: null
@@ -8238,7 +8238,7 @@ data12-JetTauEtmiss-200842: !Dataset
   ds: data12_8TeV.00200842.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200842
   name: data12-JetTauEtmiss-200842
   stream: JetTauEtmiss
   tag: null
@@ -8253,7 +8253,7 @@ data12-JetTauEtmiss-200863: !Dataset
   ds: data12_8TeV.00200863.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200863
   name: data12-JetTauEtmiss-200863
   stream: JetTauEtmiss
   tag: null
@@ -8268,7 +8268,7 @@ data12-JetTauEtmiss-200926: !Dataset
   ds: data12_8TeV.00200926.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200926
   name: data12-JetTauEtmiss-200926
   stream: JetTauEtmiss
   tag: null
@@ -8283,7 +8283,7 @@ data12-JetTauEtmiss-200965: !Dataset
   ds: data12_8TeV.00200965.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200965
   name: data12-JetTauEtmiss-200965
   stream: JetTauEtmiss
   tag: null
@@ -8298,7 +8298,7 @@ data12-JetTauEtmiss-200967: !Dataset
   ds: data12_8TeV.00200967.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200967
   name: data12-JetTauEtmiss-200967
   stream: JetTauEtmiss
   tag: null
@@ -8313,7 +8313,7 @@ data12-JetTauEtmiss-200982: !Dataset
   ds: data12_8TeV.00200982.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200982
   name: data12-JetTauEtmiss-200982
   stream: JetTauEtmiss
   tag: null
@@ -8328,7 +8328,7 @@ data12-JetTauEtmiss-200987: !Dataset
   ds: data12_8TeV.00200987.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 200987
   name: data12-JetTauEtmiss-200987
   stream: JetTauEtmiss
   tag: null
@@ -8343,7 +8343,7 @@ data12-JetTauEtmiss-201006: !Dataset
   ds: data12_8TeV.00201006.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201006
   name: data12-JetTauEtmiss-201006
   stream: JetTauEtmiss
   tag: null
@@ -8358,7 +8358,7 @@ data12-JetTauEtmiss-201052: !Dataset
   ds: data12_8TeV.00201052.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201052
   name: data12-JetTauEtmiss-201052
   stream: JetTauEtmiss
   tag: null
@@ -8376,7 +8376,7 @@ data12-JetTauEtmiss-201113: !Dataset
   ds: data12_8TeV.00201113.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201113
   name: data12-JetTauEtmiss-201113
   stream: JetTauEtmiss
   tag: null
@@ -8391,7 +8391,7 @@ data12-JetTauEtmiss-201120: !Dataset
   ds: data12_8TeV.00201120.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201120
   name: data12-JetTauEtmiss-201120
   stream: JetTauEtmiss
   tag: null
@@ -8406,7 +8406,7 @@ data12-JetTauEtmiss-201138: !Dataset
   ds: data12_8TeV.00201138.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201138
   name: data12-JetTauEtmiss-201138
   stream: JetTauEtmiss
   tag: null
@@ -8421,7 +8421,7 @@ data12-JetTauEtmiss-201190: !Dataset
   ds: data12_8TeV.00201190.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201190
   name: data12-JetTauEtmiss-201190
   stream: JetTauEtmiss
   tag: null
@@ -8436,7 +8436,7 @@ data12-JetTauEtmiss-201269: !Dataset
   ds: data12_8TeV.00201269.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201269
   name: data12-JetTauEtmiss-201269
   stream: JetTauEtmiss
   tag: null
@@ -8451,7 +8451,7 @@ data12-JetTauEtmiss-201280: !Dataset
   ds: data12_8TeV.00201280.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201280
   name: data12-JetTauEtmiss-201280
   stream: JetTauEtmiss
   tag: null
@@ -8466,7 +8466,7 @@ data12-JetTauEtmiss-201289: !Dataset
   ds: data12_8TeV.00201289.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201289
   name: data12-JetTauEtmiss-201289
   stream: JetTauEtmiss
   tag: null
@@ -8481,7 +8481,7 @@ data12-JetTauEtmiss-201489: !Dataset
   ds: data12_8TeV.00201489.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201489
   name: data12-JetTauEtmiss-201489
   stream: JetTauEtmiss
   tag: null
@@ -8496,7 +8496,7 @@ data12-JetTauEtmiss-201494: !Dataset
   ds: data12_8TeV.00201494.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201494
   name: data12-JetTauEtmiss-201494
   stream: JetTauEtmiss
   tag: null
@@ -8511,7 +8511,7 @@ data12-JetTauEtmiss-201555: !Dataset
   ds: data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201555
   name: data12-JetTauEtmiss-201555
   stream: JetTauEtmiss
   tag: null
@@ -8526,7 +8526,7 @@ data12-JetTauEtmiss-201556: !Dataset
   ds: data12_8TeV.00201556.physics_JetTauEtmiss.merge.NTUP_TAU.f437_m1126_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 201556
   name: data12-JetTauEtmiss-201556
   stream: JetTauEtmiss
   tag: null
@@ -8541,7 +8541,7 @@ data12-JetTauEtmiss-202660: !Dataset
   ds: data12_8TeV.00202660.physics_JetTauEtmiss.merge.NTUP_TAU.f442_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202660
   name: data12-JetTauEtmiss-202660
   stream: JetTauEtmiss
   tag: null
@@ -8556,7 +8556,7 @@ data12-JetTauEtmiss-202668: !Dataset
   ds: data12_8TeV.00202668.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202668
   name: data12-JetTauEtmiss-202668
   stream: JetTauEtmiss
   tag: null
@@ -8572,7 +8572,7 @@ data12-JetTauEtmiss-202712: !Dataset
   ds: data12_8TeV.00202712.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202712
   name: data12-JetTauEtmiss-202712
   stream: JetTauEtmiss
   tag: null
@@ -8587,7 +8587,7 @@ data12-JetTauEtmiss-202740: !Dataset
   ds: data12_8TeV.00202740.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202740
   name: data12-JetTauEtmiss-202740
   stream: JetTauEtmiss
   tag: null
@@ -8602,7 +8602,7 @@ data12-JetTauEtmiss-202798: !Dataset
   ds: data12_8TeV.00202798.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202798
   name: data12-JetTauEtmiss-202798
   stream: JetTauEtmiss
   tag: null
@@ -8617,7 +8617,7 @@ data12-JetTauEtmiss-202965: !Dataset
   ds: data12_8TeV.00202965.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202965
   name: data12-JetTauEtmiss-202965
   stream: JetTauEtmiss
   tag: null
@@ -8632,7 +8632,7 @@ data12-JetTauEtmiss-202991: !Dataset
   ds: data12_8TeV.00202991.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1136_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 202991
   name: data12-JetTauEtmiss-202991
   stream: JetTauEtmiss
   tag: null
@@ -8649,7 +8649,7 @@ data12-JetTauEtmiss-203027: !Dataset
   ds: data12_8TeV.00203027.physics_JetTauEtmiss.merge.NTUP_TAU.f443_m1143_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203027
   name: data12-JetTauEtmiss-203027
   stream: JetTauEtmiss
   tag: null
@@ -8664,7 +8664,7 @@ data12-JetTauEtmiss-203169: !Dataset
   ds: data12_8TeV.00203169.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203169
   name: data12-JetTauEtmiss-203169
   stream: JetTauEtmiss
   tag: null
@@ -8679,7 +8679,7 @@ data12-JetTauEtmiss-203191: !Dataset
   ds: data12_8TeV.00203191.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203191
   name: data12-JetTauEtmiss-203191
   stream: JetTauEtmiss
   tag: null
@@ -8694,7 +8694,7 @@ data12-JetTauEtmiss-203195: !Dataset
   ds: data12_8TeV.00203195.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203195
   name: data12-JetTauEtmiss-203195
   stream: JetTauEtmiss
   tag: null
@@ -8709,7 +8709,7 @@ data12-JetTauEtmiss-203228: !Dataset
   ds: data12_8TeV.00203228.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203228
   name: data12-JetTauEtmiss-203228
   stream: JetTauEtmiss
   tag: null
@@ -8724,7 +8724,7 @@ data12-JetTauEtmiss-203258: !Dataset
   ds: data12_8TeV.00203258.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1143_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203258
   name: data12-JetTauEtmiss-203258
   stream: JetTauEtmiss
   tag: null
@@ -8739,7 +8739,7 @@ data12-JetTauEtmiss-203277: !Dataset
   ds: data12_8TeV.00203277.physics_JetTauEtmiss.merge.NTUP_TAU.f444_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203277
   name: data12-JetTauEtmiss-203277
   stream: JetTauEtmiss
   tag: null
@@ -8755,7 +8755,7 @@ data12-JetTauEtmiss-203335: !Dataset
   ds: data12_8TeV.00203335.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203335
   name: data12-JetTauEtmiss-203335
   stream: JetTauEtmiss
   tag: null
@@ -8772,7 +8772,7 @@ data12-JetTauEtmiss-203336: !Dataset
   ds: data12_8TeV.00203336.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203336
   name: data12-JetTauEtmiss-203336
   stream: JetTauEtmiss
   tag: null
@@ -8787,7 +8787,7 @@ data12-JetTauEtmiss-203353: !Dataset
   ds: data12_8TeV.00203353.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203353
   name: data12-JetTauEtmiss-203353
   stream: JetTauEtmiss
   tag: null
@@ -8802,7 +8802,7 @@ data12-JetTauEtmiss-203432: !Dataset
   ds: data12_8TeV.00203432.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203432
   name: data12-JetTauEtmiss-203432
   stream: JetTauEtmiss
   tag: null
@@ -8819,7 +8819,7 @@ data12-JetTauEtmiss-203454: !Dataset
   ds: data12_8TeV.00203454.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203454
   name: data12-JetTauEtmiss-203454
   stream: JetTauEtmiss
   tag: null
@@ -8834,7 +8834,7 @@ data12-JetTauEtmiss-203456: !Dataset
   ds: data12_8TeV.00203456.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203456
   name: data12-JetTauEtmiss-203456
   stream: JetTauEtmiss
   tag: null
@@ -8849,7 +8849,7 @@ data12-JetTauEtmiss-203523: !Dataset
   ds: data12_8TeV.00203523.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203523
   name: data12-JetTauEtmiss-203523
   stream: JetTauEtmiss
   tag: null
@@ -8864,7 +8864,7 @@ data12-JetTauEtmiss-203524: !Dataset
   ds: data12_8TeV.00203524.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203524
   name: data12-JetTauEtmiss-203524
   stream: JetTauEtmiss
   tag: null
@@ -8880,7 +8880,7 @@ data12-JetTauEtmiss-203602: !Dataset
   ds: data12_8TeV.00203602.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203602
   name: data12-JetTauEtmiss-203602
   stream: JetTauEtmiss
   tag: null
@@ -8895,7 +8895,7 @@ data12-JetTauEtmiss-203605: !Dataset
   ds: data12_8TeV.00203605.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203605
   name: data12-JetTauEtmiss-203605
   stream: JetTauEtmiss
   tag: null
@@ -8910,7 +8910,7 @@ data12-JetTauEtmiss-203636: !Dataset
   ds: data12_8TeV.00203636.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203636
   name: data12-JetTauEtmiss-203636
   stream: JetTauEtmiss
   tag: null
@@ -8926,7 +8926,7 @@ data12-JetTauEtmiss-203680: !Dataset
   ds: data12_8TeV.00203680.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203680
   name: data12-JetTauEtmiss-203680
   stream: JetTauEtmiss
   tag: null
@@ -8941,7 +8941,7 @@ data12-JetTauEtmiss-203719: !Dataset
   ds: data12_8TeV.00203719.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203719
   name: data12-JetTauEtmiss-203719
   stream: JetTauEtmiss
   tag: null
@@ -8956,7 +8956,7 @@ data12-JetTauEtmiss-203739: !Dataset
   ds: data12_8TeV.00203739.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203739
   name: data12-JetTauEtmiss-203739
   stream: JetTauEtmiss
   tag: null
@@ -8971,7 +8971,7 @@ data12-JetTauEtmiss-203745: !Dataset
   ds: data12_8TeV.00203745.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1148_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203745
   name: data12-JetTauEtmiss-203745
   stream: JetTauEtmiss
   tag: null
@@ -8986,7 +8986,7 @@ data12-JetTauEtmiss-203760: !Dataset
   ds: data12_8TeV.00203760.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203760
   name: data12-JetTauEtmiss-203760
   stream: JetTauEtmiss
   tag: null
@@ -9001,7 +9001,7 @@ data12-JetTauEtmiss-203779: !Dataset
   ds: data12_8TeV.00203779.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203779
   name: data12-JetTauEtmiss-203779
   stream: JetTauEtmiss
   tag: null
@@ -9016,7 +9016,7 @@ data12-JetTauEtmiss-203792: !Dataset
   ds: data12_8TeV.00203792.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203792
   name: data12-JetTauEtmiss-203792
   stream: JetTauEtmiss
   tag: null
@@ -9031,7 +9031,7 @@ data12-JetTauEtmiss-203875: !Dataset
   ds: data12_8TeV.00203875.physics_JetTauEtmiss.merge.NTUP_TAU.f446_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203875
   name: data12-JetTauEtmiss-203875
   stream: JetTauEtmiss
   tag: null
@@ -9046,7 +9046,7 @@ data12-JetTauEtmiss-203876: !Dataset
   ds: data12_8TeV.00203876.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203876
   name: data12-JetTauEtmiss-203876
   stream: JetTauEtmiss
   tag: null
@@ -9061,7 +9061,7 @@ data12-JetTauEtmiss-203934: !Dataset
   ds: data12_8TeV.00203934.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 203934
   name: data12-JetTauEtmiss-203934
   stream: JetTauEtmiss
   tag: null
@@ -9076,7 +9076,7 @@ data12-JetTauEtmiss-204025: !Dataset
   ds: data12_8TeV.00204025.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204025
   name: data12-JetTauEtmiss-204025
   stream: JetTauEtmiss
   tag: null
@@ -9091,7 +9091,7 @@ data12-JetTauEtmiss-204026: !Dataset
   ds: data12_8TeV.00204026.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204026
   name: data12-JetTauEtmiss-204026
   stream: JetTauEtmiss
   tag: null
@@ -9106,7 +9106,7 @@ data12-JetTauEtmiss-204071: !Dataset
   ds: data12_8TeV.00204071.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204071
   name: data12-JetTauEtmiss-204071
   stream: JetTauEtmiss
   tag: null
@@ -9122,7 +9122,7 @@ data12-JetTauEtmiss-204073: !Dataset
   ds: data12_8TeV.00204073.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204073
   name: data12-JetTauEtmiss-204073
   stream: JetTauEtmiss
   tag: null
@@ -9137,7 +9137,7 @@ data12-JetTauEtmiss-204134: !Dataset
   ds: data12_8TeV.00204134.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204134
   name: data12-JetTauEtmiss-204134
   stream: JetTauEtmiss
   tag: null
@@ -9152,7 +9152,7 @@ data12-JetTauEtmiss-204153: !Dataset
   ds: data12_8TeV.00204153.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204153
   name: data12-JetTauEtmiss-204153
   stream: JetTauEtmiss
   tag: null
@@ -9167,7 +9167,7 @@ data12-JetTauEtmiss-204158: !Dataset
   ds: data12_8TeV.00204158.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1153_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204158
   name: data12-JetTauEtmiss-204158
   stream: JetTauEtmiss
   tag: null
@@ -9182,7 +9182,7 @@ data12-JetTauEtmiss-204240: !Dataset
   ds: data12_8TeV.00204240.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204240
   name: data12-JetTauEtmiss-204240
   stream: JetTauEtmiss
   tag: null
@@ -9197,7 +9197,7 @@ data12-JetTauEtmiss-204265: !Dataset
   ds: data12_8TeV.00204265.physics_JetTauEtmiss.merge.NTUP_TAU.f447_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204265
   name: data12-JetTauEtmiss-204265
   stream: JetTauEtmiss
   tag: null
@@ -9212,7 +9212,7 @@ data12-JetTauEtmiss-204416: !Dataset
   ds: data12_8TeV.00204416.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204416
   name: data12-JetTauEtmiss-204416
   stream: JetTauEtmiss
   tag: null
@@ -9227,7 +9227,7 @@ data12-JetTauEtmiss-204442: !Dataset
   ds: data12_8TeV.00204442.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204442
   name: data12-JetTauEtmiss-204442
   stream: JetTauEtmiss
   tag: null
@@ -9242,7 +9242,7 @@ data12-JetTauEtmiss-204474: !Dataset
   ds: data12_8TeV.00204474.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204474
   name: data12-JetTauEtmiss-204474
   stream: JetTauEtmiss
   tag: null
@@ -9257,7 +9257,7 @@ data12-JetTauEtmiss-204564: !Dataset
   ds: data12_8TeV.00204564.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204564
   name: data12-JetTauEtmiss-204564
   stream: JetTauEtmiss
   tag: null
@@ -9272,7 +9272,7 @@ data12-JetTauEtmiss-204633: !Dataset
   ds: data12_8TeV.00204633.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1158_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204633
   name: data12-JetTauEtmiss-204633
   stream: JetTauEtmiss
   tag: null
@@ -9287,7 +9287,7 @@ data12-JetTauEtmiss-204668: !Dataset
   ds: data12_8TeV.00204668.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204668
   name: data12-JetTauEtmiss-204668
   stream: JetTauEtmiss
   tag: null
@@ -9302,7 +9302,7 @@ data12-JetTauEtmiss-204726: !Dataset
   ds: data12_8TeV.00204726.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204726
   name: data12-JetTauEtmiss-204726
   stream: JetTauEtmiss
   tag: null
@@ -9318,7 +9318,7 @@ data12-JetTauEtmiss-204763: !Dataset
   ds: data12_8TeV.00204763.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204763
   name: data12-JetTauEtmiss-204763
   stream: JetTauEtmiss
   tag: null
@@ -9333,7 +9333,7 @@ data12-JetTauEtmiss-204769: !Dataset
   ds: data12_8TeV.00204769.physics_JetTauEtmiss.merge.NTUP_TAU.f448_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204769
   name: data12-JetTauEtmiss-204769
   stream: JetTauEtmiss
   tag: null
@@ -9348,7 +9348,7 @@ data12-JetTauEtmiss-204772: !Dataset
   ds: data12_8TeV.00204772.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204772
   name: data12-JetTauEtmiss-204772
   stream: JetTauEtmiss
   tag: null
@@ -9363,7 +9363,7 @@ data12-JetTauEtmiss-204796: !Dataset
   ds: data12_8TeV.00204796.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204796
   name: data12-JetTauEtmiss-204796
   stream: JetTauEtmiss
   tag: null
@@ -9379,7 +9379,7 @@ data12-JetTauEtmiss-204853: !Dataset
   ds: data12_8TeV.00204853.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204853
   name: data12-JetTauEtmiss-204853
   stream: JetTauEtmiss
   tag: null
@@ -9394,7 +9394,7 @@ data12-JetTauEtmiss-204857: !Dataset
   ds: data12_8TeV.00204857.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204857
   name: data12-JetTauEtmiss-204857
   stream: JetTauEtmiss
   tag: null
@@ -9409,7 +9409,7 @@ data12-JetTauEtmiss-204910: !Dataset
   ds: data12_8TeV.00204910.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204910
   name: data12-JetTauEtmiss-204910
   stream: JetTauEtmiss
   tag: null
@@ -9424,7 +9424,7 @@ data12-JetTauEtmiss-204932: !Dataset
   ds: data12_8TeV.00204932.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204932
   name: data12-JetTauEtmiss-204932
   stream: JetTauEtmiss
   tag: null
@@ -9439,7 +9439,7 @@ data12-JetTauEtmiss-204954: !Dataset
   ds: data12_8TeV.00204954.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204954
   name: data12-JetTauEtmiss-204954
   stream: JetTauEtmiss
   tag: null
@@ -9454,7 +9454,7 @@ data12-JetTauEtmiss-204955: !Dataset
   ds: data12_8TeV.00204955.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204955
   name: data12-JetTauEtmiss-204955
   stream: JetTauEtmiss
   tag: null
@@ -9470,7 +9470,7 @@ data12-JetTauEtmiss-204976: !Dataset
   ds: data12_8TeV.00204976.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 204976
   name: data12-JetTauEtmiss-204976
   stream: JetTauEtmiss
   tag: null
@@ -9485,7 +9485,7 @@ data12-JetTauEtmiss-205010: !Dataset
   ds: data12_8TeV.00205010.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205010
   name: data12-JetTauEtmiss-205010
   stream: JetTauEtmiss
   tag: null
@@ -9500,7 +9500,7 @@ data12-JetTauEtmiss-205016: !Dataset
   ds: data12_8TeV.00205016.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205016
   name: data12-JetTauEtmiss-205016
   stream: JetTauEtmiss
   tag: null
@@ -9515,7 +9515,7 @@ data12-JetTauEtmiss-205017: !Dataset
   ds: data12_8TeV.00205017.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205017
   name: data12-JetTauEtmiss-205017
   stream: JetTauEtmiss
   tag: null
@@ -9532,7 +9532,7 @@ data12-JetTauEtmiss-205055: !Dataset
   ds: data12_8TeV.00205055.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205055
   name: data12-JetTauEtmiss-205055
   stream: JetTauEtmiss
   tag: null
@@ -9548,7 +9548,7 @@ data12-JetTauEtmiss-205071: !Dataset
   ds: data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205071
   name: data12-JetTauEtmiss-205071
   stream: JetTauEtmiss
   tag: null
@@ -9563,7 +9563,7 @@ data12-JetTauEtmiss-205112: !Dataset
   ds: data12_8TeV.00205112.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205112
   name: data12-JetTauEtmiss-205112
   stream: JetTauEtmiss
   tag: null
@@ -9578,7 +9578,7 @@ data12-JetTauEtmiss-205113: !Dataset
   ds: data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.f449_m1163_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 205113
   name: data12-JetTauEtmiss-205113
   stream: JetTauEtmiss
   tag: null
@@ -9593,7 +9593,7 @@ data12-JetTauEtmiss-206368: !Dataset
   ds: data12_8TeV.00206368.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1170_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206368
   name: data12-JetTauEtmiss-206368
   stream: JetTauEtmiss
   tag: null
@@ -9610,7 +9610,7 @@ data12-JetTauEtmiss-206369: !Dataset
   ds: data12_8TeV.00206369.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206369
   name: data12-JetTauEtmiss-206369
   stream: JetTauEtmiss
   tag: null
@@ -9626,7 +9626,7 @@ data12-JetTauEtmiss-206409: !Dataset
   ds: data12_8TeV.00206409.physics_JetTauEtmiss.merge.NTUP_TAU.f450_m1175_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206409
   name: data12-JetTauEtmiss-206409
   stream: JetTauEtmiss
   tag: null
@@ -9641,7 +9641,7 @@ data12-JetTauEtmiss-206497: !Dataset
   ds: data12_8TeV.00206497.physics_JetTauEtmiss.merge.NTUP_TAU.f453_m1175_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206497
   name: data12-JetTauEtmiss-206497
   stream: JetTauEtmiss
   tag: null
@@ -9656,7 +9656,7 @@ data12-JetTauEtmiss-206573: !Dataset
   ds: data12_8TeV.00206573.physics_JetTauEtmiss.merge.NTUP_TAU.f458_m1180_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206573
   name: data12-JetTauEtmiss-206573
   stream: JetTauEtmiss
   tag: null
@@ -9672,7 +9672,7 @@ data12-JetTauEtmiss-206614: !Dataset
   ds: data12_8TeV.00206614.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1180_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206614
   name: data12-JetTauEtmiss-206614
   stream: JetTauEtmiss
   tag: null
@@ -9689,7 +9689,7 @@ data12-JetTauEtmiss-206955: !Dataset
   ds: data12_8TeV.00206955.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1180_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206955
   name: data12-JetTauEtmiss-206955
   stream: JetTauEtmiss
   tag: null
@@ -9705,7 +9705,7 @@ data12-JetTauEtmiss-206962: !Dataset
   ds: data12_8TeV.00206962.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206962
   name: data12-JetTauEtmiss-206962
   stream: JetTauEtmiss
   tag: null
@@ -9720,7 +9720,7 @@ data12-JetTauEtmiss-206971: !Dataset
   ds: data12_8TeV.00206971.physics_JetTauEtmiss.merge.NTUP_TAU.f456_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 206971
   name: data12-JetTauEtmiss-206971
   stream: JetTauEtmiss
   tag: null
@@ -9735,7 +9735,7 @@ data12-JetTauEtmiss-207044: !Dataset
   ds: data12_8TeV.00207044.physics_JetTauEtmiss.merge.NTUP_TAU.f462_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207044
   name: data12-JetTauEtmiss-207044
   stream: JetTauEtmiss
   tag: null
@@ -9750,7 +9750,7 @@ data12-JetTauEtmiss-207046: !Dataset
   ds: data12_8TeV.00207046.physics_JetTauEtmiss.merge.NTUP_TAU.f462_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207046
   name: data12-JetTauEtmiss-207046
   stream: JetTauEtmiss
   tag: null
@@ -9765,7 +9765,7 @@ data12-JetTauEtmiss-207221: !Dataset
   ds: data12_8TeV.00207221.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207221
   name: data12-JetTauEtmiss-207221
   stream: JetTauEtmiss
   tag: null
@@ -9780,7 +9780,7 @@ data12-JetTauEtmiss-207262: !Dataset
   ds: data12_8TeV.00207262.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207262
   name: data12-JetTauEtmiss-207262
   stream: JetTauEtmiss
   tag: null
@@ -9795,7 +9795,7 @@ data12-JetTauEtmiss-207304: !Dataset
   ds: data12_8TeV.00207304.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1186_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207304
   name: data12-JetTauEtmiss-207304
   stream: JetTauEtmiss
   tag: null
@@ -9810,7 +9810,7 @@ data12-JetTauEtmiss-207332: !Dataset
   ds: data12_8TeV.00207332.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207332
   name: data12-JetTauEtmiss-207332
   stream: JetTauEtmiss
   tag: null
@@ -9825,7 +9825,7 @@ data12-JetTauEtmiss-207397: !Dataset
   ds: data12_8TeV.00207397.physics_JetTauEtmiss.merge.NTUP_TAU.f464_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207397
   name: data12-JetTauEtmiss-207397
   stream: JetTauEtmiss
   tag: null
@@ -9840,7 +9840,7 @@ data12-JetTauEtmiss-207447: !Dataset
   ds: data12_8TeV.00207447.physics_JetTauEtmiss.merge.NTUP_TAU.f466_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207447
   name: data12-JetTauEtmiss-207447
   stream: JetTauEtmiss
   tag: null
@@ -9856,7 +9856,7 @@ data12-JetTauEtmiss-207490: !Dataset
   ds: data12_8TeV.00207490.physics_JetTauEtmiss.merge.NTUP_TAU.f466_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207490
   name: data12-JetTauEtmiss-207490
   stream: JetTauEtmiss
   tag: null
@@ -9871,7 +9871,7 @@ data12-JetTauEtmiss-207528: !Dataset
   ds: data12_8TeV.00207528.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207528
   name: data12-JetTauEtmiss-207528
   stream: JetTauEtmiss
   tag: null
@@ -9886,7 +9886,7 @@ data12-JetTauEtmiss-207531: !Dataset
   ds: data12_8TeV.00207531.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207531
   name: data12-JetTauEtmiss-207531
   stream: JetTauEtmiss
   tag: null
@@ -9901,7 +9901,7 @@ data12-JetTauEtmiss-207532: !Dataset
   ds: data12_8TeV.00207532.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207532
   name: data12-JetTauEtmiss-207532
   stream: JetTauEtmiss
   tag: null
@@ -9918,7 +9918,7 @@ data12-JetTauEtmiss-207582: !Dataset
   ds: data12_8TeV.00207582.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207582
   name: data12-JetTauEtmiss-207582
   stream: JetTauEtmiss
   tag: null
@@ -9933,7 +9933,7 @@ data12-JetTauEtmiss-207589: !Dataset
   ds: data12_8TeV.00207589.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1191_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207589
   name: data12-JetTauEtmiss-207589
   stream: JetTauEtmiss
   tag: null
@@ -9948,7 +9948,7 @@ data12-JetTauEtmiss-207620: !Dataset
   ds: data12_8TeV.00207620.physics_JetTauEtmiss.merge.NTUP_TAU.f467_m1197_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207620
   name: data12-JetTauEtmiss-207620
   stream: JetTauEtmiss
   tag: null
@@ -9963,7 +9963,7 @@ data12-JetTauEtmiss-207664: !Dataset
   ds: data12_8TeV.00207664.physics_JetTauEtmiss.merge.NTUP_TAU.f468_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207664
   name: data12-JetTauEtmiss-207664
   stream: JetTauEtmiss
   tag: null
@@ -9979,7 +9979,7 @@ data12-JetTauEtmiss-207696: !Dataset
   ds: data12_8TeV.00207696.physics_JetTauEtmiss.merge.NTUP_TAU.f468_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207696
   name: data12-JetTauEtmiss-207696
   stream: JetTauEtmiss
   tag: null
@@ -9994,7 +9994,7 @@ data12-JetTauEtmiss-207749: !Dataset
   ds: data12_8TeV.00207749.physics_JetTauEtmiss.merge.NTUP_TAU.f469_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207749
   name: data12-JetTauEtmiss-207749
   stream: JetTauEtmiss
   tag: null
@@ -10009,7 +10009,7 @@ data12-JetTauEtmiss-207772: !Dataset
   ds: data12_8TeV.00207772.physics_JetTauEtmiss.merge.NTUP_TAU.f469_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207772
   name: data12-JetTauEtmiss-207772
   stream: JetTauEtmiss
   tag: null
@@ -10024,7 +10024,7 @@ data12-JetTauEtmiss-207800: !Dataset
   ds: data12_8TeV.00207800.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207800
   name: data12-JetTauEtmiss-207800
   stream: JetTauEtmiss
   tag: null
@@ -10039,7 +10039,7 @@ data12-JetTauEtmiss-207809: !Dataset
   ds: data12_8TeV.00207809.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207809
   name: data12-JetTauEtmiss-207809
   stream: JetTauEtmiss
   tag: null
@@ -10054,7 +10054,7 @@ data12-JetTauEtmiss-207845: !Dataset
   ds: data12_8TeV.00207845.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207845
   name: data12-JetTauEtmiss-207845
   stream: JetTauEtmiss
   tag: null
@@ -10069,7 +10069,7 @@ data12-JetTauEtmiss-207864: !Dataset
   ds: data12_8TeV.00207864.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207864
   name: data12-JetTauEtmiss-207864
   stream: JetTauEtmiss
   tag: null
@@ -10084,7 +10084,7 @@ data12-JetTauEtmiss-207865: !Dataset
   ds: data12_8TeV.00207865.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207865
   name: data12-JetTauEtmiss-207865
   stream: JetTauEtmiss
   tag: null
@@ -10099,7 +10099,7 @@ data12-JetTauEtmiss-207929: !Dataset
   ds: data12_8TeV.00207929.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207929
   name: data12-JetTauEtmiss-207929
   stream: JetTauEtmiss
   tag: null
@@ -10114,7 +10114,7 @@ data12-JetTauEtmiss-207931: !Dataset
   ds: data12_8TeV.00207931.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207931
   name: data12-JetTauEtmiss-207931
   stream: JetTauEtmiss
   tag: null
@@ -10129,7 +10129,7 @@ data12-JetTauEtmiss-207934: !Dataset
   ds: data12_8TeV.00207934.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207934
   name: data12-JetTauEtmiss-207934
   stream: JetTauEtmiss
   tag: null
@@ -10144,7 +10144,7 @@ data12-JetTauEtmiss-207975: !Dataset
   ds: data12_8TeV.00207975.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207975
   name: data12-JetTauEtmiss-207975
   stream: JetTauEtmiss
   tag: null
@@ -10159,7 +10159,7 @@ data12-JetTauEtmiss-207982: !Dataset
   ds: data12_8TeV.00207982.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 207982
   name: data12-JetTauEtmiss-207982
   stream: JetTauEtmiss
   tag: null
@@ -10174,7 +10174,7 @@ data12-JetTauEtmiss-208123: !Dataset
   ds: data12_8TeV.00208123.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208123
   name: data12-JetTauEtmiss-208123
   stream: JetTauEtmiss
   tag: null
@@ -10189,7 +10189,7 @@ data12-JetTauEtmiss-208126: !Dataset
   ds: data12_8TeV.00208126.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208126
   name: data12-JetTauEtmiss-208126
   stream: JetTauEtmiss
   tag: null
@@ -10204,7 +10204,7 @@ data12-JetTauEtmiss-208179: !Dataset
   ds: data12_8TeV.00208179.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1202_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208179
   name: data12-JetTauEtmiss-208179
   stream: JetTauEtmiss
   tag: null
@@ -10219,7 +10219,7 @@ data12-JetTauEtmiss-208184: !Dataset
   ds: data12_8TeV.00208184.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208184
   name: data12-JetTauEtmiss-208184
   stream: JetTauEtmiss
   tag: null
@@ -10234,7 +10234,7 @@ data12-JetTauEtmiss-208189: !Dataset
   ds: data12_8TeV.00208189.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208189
   name: data12-JetTauEtmiss-208189
   stream: JetTauEtmiss
   tag: null
@@ -10249,7 +10249,7 @@ data12-JetTauEtmiss-208258: !Dataset
   ds: data12_8TeV.00208258.physics_JetTauEtmiss.merge.NTUP_TAU.f470_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208258
   name: data12-JetTauEtmiss-208258
   stream: JetTauEtmiss
   tag: null
@@ -10265,7 +10265,7 @@ data12-JetTauEtmiss-208261: !Dataset
   ds: data12_8TeV.00208261.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208261
   name: data12-JetTauEtmiss-208261
   stream: JetTauEtmiss
   tag: null
@@ -10280,7 +10280,7 @@ data12-JetTauEtmiss-208354: !Dataset
   ds: data12_8TeV.00208354.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208354
   name: data12-JetTauEtmiss-208354
   stream: JetTauEtmiss
   tag: null
@@ -10295,7 +10295,7 @@ data12-JetTauEtmiss-208485: !Dataset
   ds: data12_8TeV.00208485.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208485
   name: data12-JetTauEtmiss-208485
   stream: JetTauEtmiss
   tag: null
@@ -10310,7 +10310,7 @@ data12-JetTauEtmiss-208631: !Dataset
   ds: data12_8TeV.00208631.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208631
   name: data12-JetTauEtmiss-208631
   stream: JetTauEtmiss
   tag: null
@@ -10325,7 +10325,7 @@ data12-JetTauEtmiss-208642: !Dataset
   ds: data12_8TeV.00208642.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208642
   name: data12-JetTauEtmiss-208642
   stream: JetTauEtmiss
   tag: null
@@ -10340,7 +10340,7 @@ data12-JetTauEtmiss-208662: !Dataset
   ds: data12_8TeV.00208662.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208662
   name: data12-JetTauEtmiss-208662
   stream: JetTauEtmiss
   tag: null
@@ -10355,7 +10355,7 @@ data12-JetTauEtmiss-208705: !Dataset
   ds: data12_8TeV.00208705.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208705
   name: data12-JetTauEtmiss-208705
   stream: JetTauEtmiss
   tag: null
@@ -10370,7 +10370,7 @@ data12-JetTauEtmiss-208717: !Dataset
   ds: data12_8TeV.00208717.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208717
   name: data12-JetTauEtmiss-208717
   stream: JetTauEtmiss
   tag: null
@@ -10385,7 +10385,7 @@ data12-JetTauEtmiss-208720: !Dataset
   ds: data12_8TeV.00208720.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208720
   name: data12-JetTauEtmiss-208720
   stream: JetTauEtmiss
   tag: null
@@ -10400,7 +10400,7 @@ data12-JetTauEtmiss-208780: !Dataset
   ds: data12_8TeV.00208780.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208780
   name: data12-JetTauEtmiss-208780
   stream: JetTauEtmiss
   tag: null
@@ -10415,7 +10415,7 @@ data12-JetTauEtmiss-208781: !Dataset
   ds: data12_8TeV.00208781.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208781
   name: data12-JetTauEtmiss-208781
   stream: JetTauEtmiss
   tag: null
@@ -10430,7 +10430,7 @@ data12-JetTauEtmiss-208811: !Dataset
   ds: data12_8TeV.00208811.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208811
   name: data12-JetTauEtmiss-208811
   stream: JetTauEtmiss
   tag: null
@@ -10445,7 +10445,7 @@ data12-JetTauEtmiss-208870: !Dataset
   ds: data12_8TeV.00208870.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208870
   name: data12-JetTauEtmiss-208870
   stream: JetTauEtmiss
   tag: null
@@ -10460,7 +10460,7 @@ data12-JetTauEtmiss-208930: !Dataset
   ds: data12_8TeV.00208930.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208930
   name: data12-JetTauEtmiss-208930
   stream: JetTauEtmiss
   tag: null
@@ -10475,7 +10475,7 @@ data12-JetTauEtmiss-208931: !Dataset
   ds: data12_8TeV.00208931.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1208_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208931
   name: data12-JetTauEtmiss-208931
   stream: JetTauEtmiss
   tag: null
@@ -10490,7 +10490,7 @@ data12-JetTauEtmiss-208970: !Dataset
   ds: data12_8TeV.00208970.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208970
   name: data12-JetTauEtmiss-208970
   stream: JetTauEtmiss
   tag: null
@@ -10505,7 +10505,7 @@ data12-JetTauEtmiss-208982: !Dataset
   ds: data12_8TeV.00208982.physics_JetTauEtmiss.merge.NTUP_TAU.f472_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 208982
   name: data12-JetTauEtmiss-208982
   stream: JetTauEtmiss
   tag: null
@@ -10520,7 +10520,7 @@ data12-JetTauEtmiss-209024: !Dataset
   ds: data12_8TeV.00209024.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209024
   name: data12-JetTauEtmiss-209024
   stream: JetTauEtmiss
   tag: null
@@ -10535,7 +10535,7 @@ data12-JetTauEtmiss-209025: !Dataset
   ds: data12_8TeV.00209025.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209025
   name: data12-JetTauEtmiss-209025
   stream: JetTauEtmiss
   tag: null
@@ -10551,7 +10551,7 @@ data12-JetTauEtmiss-209074: !Dataset
   ds: data12_8TeV.00209074.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209074
   name: data12-JetTauEtmiss-209074
   stream: JetTauEtmiss
   tag: null
@@ -10566,7 +10566,7 @@ data12-JetTauEtmiss-209084: !Dataset
   ds: data12_8TeV.00209084.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209084
   name: data12-JetTauEtmiss-209084
   stream: JetTauEtmiss
   tag: null
@@ -10582,7 +10582,7 @@ data12-JetTauEtmiss-209109: !Dataset
   ds: data12_8TeV.00209109.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209109
   name: data12-JetTauEtmiss-209109
   stream: JetTauEtmiss
   tag: null
@@ -10597,7 +10597,7 @@ data12-JetTauEtmiss-209161: !Dataset
   ds: data12_8TeV.00209161.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1213_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209161
   name: data12-JetTauEtmiss-209161
   stream: JetTauEtmiss
   tag: null
@@ -10613,7 +10613,7 @@ data12-JetTauEtmiss-209183: !Dataset
   ds: data12_8TeV.00209183.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209183
   name: data12-JetTauEtmiss-209183
   stream: JetTauEtmiss
   tag: null
@@ -10628,7 +10628,7 @@ data12-JetTauEtmiss-209214: !Dataset
   ds: data12_8TeV.00209214.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209214
   name: data12-JetTauEtmiss-209214
   stream: JetTauEtmiss
   tag: null
@@ -10643,7 +10643,7 @@ data12-JetTauEtmiss-209254: !Dataset
   ds: data12_8TeV.00209254.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209254
   name: data12-JetTauEtmiss-209254
   stream: JetTauEtmiss
   tag: null
@@ -10658,7 +10658,7 @@ data12-JetTauEtmiss-209265: !Dataset
   ds: data12_8TeV.00209265.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209265
   name: data12-JetTauEtmiss-209265
   stream: JetTauEtmiss
   tag: null
@@ -10673,7 +10673,7 @@ data12-JetTauEtmiss-209269: !Dataset
   ds: data12_8TeV.00209269.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209269
   name: data12-JetTauEtmiss-209269
   stream: JetTauEtmiss
   tag: null
@@ -10688,7 +10688,7 @@ data12-JetTauEtmiss-209353: !Dataset
   ds: data12_8TeV.00209353.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209353
   name: data12-JetTauEtmiss-209353
   stream: JetTauEtmiss
   tag: null
@@ -10704,7 +10704,7 @@ data12-JetTauEtmiss-209381: !Dataset
   ds: data12_8TeV.00209381.physics_JetTauEtmiss.merge.NTUP_TAU.f473_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209381
   name: data12-JetTauEtmiss-209381
   stream: JetTauEtmiss
   tag: null
@@ -10720,7 +10720,7 @@ data12-JetTauEtmiss-209550: !Dataset
   ds: data12_8TeV.00209550.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209550
   name: data12-JetTauEtmiss-209550
   stream: JetTauEtmiss
   tag: null
@@ -10736,7 +10736,7 @@ data12-JetTauEtmiss-209580: !Dataset
   ds: data12_8TeV.00209580.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209580
   name: data12-JetTauEtmiss-209580
   stream: JetTauEtmiss
   tag: null
@@ -10751,7 +10751,7 @@ data12-JetTauEtmiss-209608: !Dataset
   ds: data12_8TeV.00209608.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209608
   name: data12-JetTauEtmiss-209608
   stream: JetTauEtmiss
   tag: null
@@ -10766,7 +10766,7 @@ data12-JetTauEtmiss-209628: !Dataset
   ds: data12_8TeV.00209628.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209628
   name: data12-JetTauEtmiss-209628
   stream: JetTauEtmiss
   tag: null
@@ -10781,7 +10781,7 @@ data12-JetTauEtmiss-209629: !Dataset
   ds: data12_8TeV.00209629.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209629
   name: data12-JetTauEtmiss-209629
   stream: JetTauEtmiss
   tag: null
@@ -10796,7 +10796,7 @@ data12-JetTauEtmiss-209736: !Dataset
   ds: data12_8TeV.00209736.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209736
   name: data12-JetTauEtmiss-209736
   stream: JetTauEtmiss
   tag: null
@@ -10811,7 +10811,7 @@ data12-JetTauEtmiss-209776: !Dataset
   ds: data12_8TeV.00209776.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209776
   name: data12-JetTauEtmiss-209776
   stream: JetTauEtmiss
   tag: null
@@ -10826,7 +10826,7 @@ data12-JetTauEtmiss-209787: !Dataset
   ds: data12_8TeV.00209787.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209787
   name: data12-JetTauEtmiss-209787
   stream: JetTauEtmiss
   tag: null
@@ -10841,7 +10841,7 @@ data12-JetTauEtmiss-209812: !Dataset
   ds: data12_8TeV.00209812.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1218_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209812
   name: data12-JetTauEtmiss-209812
   stream: JetTauEtmiss
   tag: null
@@ -10857,7 +10857,7 @@ data12-JetTauEtmiss-209864: !Dataset
   ds: data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209864
   name: data12-JetTauEtmiss-209864
   stream: JetTauEtmiss
   tag: null
@@ -10872,7 +10872,7 @@ data12-JetTauEtmiss-209866: !Dataset
   ds: data12_8TeV.00209866.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209866
   name: data12-JetTauEtmiss-209866
   stream: JetTauEtmiss
   tag: null
@@ -10887,7 +10887,7 @@ data12-JetTauEtmiss-209899: !Dataset
   ds: data12_8TeV.00209899.physics_JetTauEtmiss.merge.NTUP_TAU.f475_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209899
   name: data12-JetTauEtmiss-209899
   stream: JetTauEtmiss
   tag: null
@@ -10902,7 +10902,7 @@ data12-JetTauEtmiss-209980: !Dataset
   ds: data12_8TeV.00209980.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209980
   name: data12-JetTauEtmiss-209980
   stream: JetTauEtmiss
   tag: null
@@ -10917,7 +10917,7 @@ data12-JetTauEtmiss-209995: !Dataset
   ds: data12_8TeV.00209995.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 209995
   name: data12-JetTauEtmiss-209995
   stream: JetTauEtmiss
   tag: null
@@ -10932,7 +10932,7 @@ data12-JetTauEtmiss-210302: !Dataset
   ds: data12_8TeV.00210302.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 210302
   name: data12-JetTauEtmiss-210302
   stream: JetTauEtmiss
   tag: null
@@ -10947,7 +10947,7 @@ data12-JetTauEtmiss-210308: !Dataset
   ds: data12_8TeV.00210308.physics_JetTauEtmiss.merge.NTUP_TAU.f476_m1223_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 210308
   name: data12-JetTauEtmiss-210308
   stream: JetTauEtmiss
   tag: null
@@ -10962,7 +10962,7 @@ data12-JetTauEtmiss-211620: !Dataset
   ds: data12_8TeV.00211620.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211620
   name: data12-JetTauEtmiss-211620
   stream: JetTauEtmiss
   tag: null
@@ -10977,7 +10977,7 @@ data12-JetTauEtmiss-211670: !Dataset
   ds: data12_8TeV.00211670.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211670
   name: data12-JetTauEtmiss-211670
   stream: JetTauEtmiss
   tag: null
@@ -10992,7 +10992,7 @@ data12-JetTauEtmiss-211697: !Dataset
   ds: data12_8TeV.00211697.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211697
   name: data12-JetTauEtmiss-211697
   stream: JetTauEtmiss
   tag: null
@@ -11007,7 +11007,7 @@ data12-JetTauEtmiss-211772: !Dataset
   ds: data12_8TeV.00211772.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211772
   name: data12-JetTauEtmiss-211772
   stream: JetTauEtmiss
   tag: null
@@ -11022,7 +11022,7 @@ data12-JetTauEtmiss-211787: !Dataset
   ds: data12_8TeV.00211787.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211787
   name: data12-JetTauEtmiss-211787
   stream: JetTauEtmiss
   tag: null
@@ -11037,7 +11037,7 @@ data12-JetTauEtmiss-211867: !Dataset
   ds: data12_8TeV.00211867.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211867
   name: data12-JetTauEtmiss-211867
   stream: JetTauEtmiss
   tag: null
@@ -11052,7 +11052,7 @@ data12-JetTauEtmiss-211902: !Dataset
   ds: data12_8TeV.00211902.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211902
   name: data12-JetTauEtmiss-211902
   stream: JetTauEtmiss
   tag: null
@@ -11067,7 +11067,7 @@ data12-JetTauEtmiss-211937: !Dataset
   ds: data12_8TeV.00211937.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 211937
   name: data12-JetTauEtmiss-211937
   stream: JetTauEtmiss
   tag: null
@@ -11082,7 +11082,7 @@ data12-JetTauEtmiss-212034: !Dataset
   ds: data12_8TeV.00212034.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212034
   name: data12-JetTauEtmiss-212034
   stream: JetTauEtmiss
   tag: null
@@ -11097,7 +11097,7 @@ data12-JetTauEtmiss-212103: !Dataset
   ds: data12_8TeV.00212103.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212103
   name: data12-JetTauEtmiss-212103
   stream: JetTauEtmiss
   tag: null
@@ -11112,7 +11112,7 @@ data12-JetTauEtmiss-212142: !Dataset
   ds: data12_8TeV.00212142.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212142
   name: data12-JetTauEtmiss-212142
   stream: JetTauEtmiss
   tag: null
@@ -11128,7 +11128,7 @@ data12-JetTauEtmiss-212144: !Dataset
   ds: data12_8TeV.00212144.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212144
   name: data12-JetTauEtmiss-212144
   stream: JetTauEtmiss
   tag: null
@@ -11143,7 +11143,7 @@ data12-JetTauEtmiss-212172: !Dataset
   ds: data12_8TeV.00212172.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212172
   name: data12-JetTauEtmiss-212172
   stream: JetTauEtmiss
   tag: null
@@ -11158,7 +11158,7 @@ data12-JetTauEtmiss-212199: !Dataset
   ds: data12_8TeV.00212199.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212199
   name: data12-JetTauEtmiss-212199
   stream: JetTauEtmiss
   tag: null
@@ -11173,7 +11173,7 @@ data12-JetTauEtmiss-212272: !Dataset
   ds: data12_8TeV.00212272.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: 212272
   name: data12-JetTauEtmiss-212272
   stream: JetTauEtmiss
   tag: null
@@ -11210,7 +11210,7 @@ data12-JetTauEtmiss-A: !Dataset
   ds: data12-JetTauEtmiss-A
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss-A
   stream: JetTauEtmiss
   tag: null
@@ -11310,7 +11310,7 @@ data12-JetTauEtmiss-B: !Dataset
   ds: data12-JetTauEtmiss-B
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss-B
   stream: JetTauEtmiss
   tag: null
@@ -11347,7 +11347,7 @@ data12-JetTauEtmiss-C: !Dataset
   ds: data12-JetTauEtmiss-C
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss-C
   stream: JetTauEtmiss
   tag: null
@@ -11413,7 +11413,7 @@ data12-JetTauEtmiss-D: !Dataset
   ds: data12-JetTauEtmiss-D
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss-D
   stream: JetTauEtmiss
   tag: null
@@ -11461,7 +11461,7 @@ data12-JetTauEtmiss-E: !Dataset
   ds: data12-JetTauEtmiss-E
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss-E
   stream: JetTauEtmiss
   tag: null
@@ -11491,7 +11491,7 @@ data12-JetTauEtmiss-G: !Dataset
   ds: data12-JetTauEtmiss-G
   file_pattern: '*hadhad.root*'
   grl: grl/2012/data12_8TeV.periodAllYear_PHYS_StandardGRL_All_Good.xml
-  id: 1
+  id: -1
   name: data12-JetTauEtmiss-G
   stream: JetTauEtmiss
   tag: null
