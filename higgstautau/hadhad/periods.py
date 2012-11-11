@@ -28,12 +28,12 @@ PERIODS = {
 
 PERIODS = {
     'B2-M': {'runs': (178044, 191933),
-             'lumi': 4617.}, #4661.2},
+             'lumi': 4604.52}, #4617.}, #4661.2},
 }
 
-LUMI = { # pb-1
-    2011: 4617., # B2-M
-    2012: 13018.3, # A3-E no run 200841
+LUMI = { # pb-1 atlas-lumicalc.cern.ch
+    2011: 4604.52, # B2-M skim v9
+    2012: 14130.8, # A3-E no run 200841 skim v9
 }
 
 def total_lumi():
