@@ -31,7 +31,6 @@ from higgstautau import eventshapes
 from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
-from higgstautau.hadhad.categories import *
 from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.embedding import EmbeddingPileupPatch
