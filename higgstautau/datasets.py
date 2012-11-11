@@ -728,12 +728,12 @@ class Dataset(yaml.YAMLObject):
     def xsec_kfact_effic(self):
 
         global XSEC_CACHE_MODIFIED
-
+        year = self.year % 1E3
         if self.datatype == DATA:
             return 1., 1., 1.
-        if self.name in XSEC_CACHE:
+        if year in XSEC_CACHE and self.name in XSEC_CACHE[year]:
             print "WARNING: using cached cross section for dataset %s" % self.ds
-            return XSEC_CACHE[self.name]
+            return XSEC_CACHE[year][self.name]
 
         try:
             return xsec.xsec_kfact_effic(self.year, self.id)
@@ -748,7 +748,9 @@ class Dataset(yaml.YAMLObject):
                 xs, effic = get_dataset_xsec_effic(amiclient, DS_NOPROV[self.ds])
             else:
                 xs, effic = get_dataset_xsec_effic(amiclient, self.ds)
-            XSEC_CACHE[self.name] = (xs, 1., effic)
+            if year not in XSEC_CACHE:
+                XSEC_CACHE[year] = {}
+            XSEC_CACHE[year][self.name] = (xs, 1., effic)
             XSEC_CACHE_MODIFIED = True
             return xs, 1., effic
         raise Exception("cross section of dataset %s is not known!" % self.ds)
