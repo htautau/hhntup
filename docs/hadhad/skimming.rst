@@ -36,6 +36,22 @@ panda page for jobs still running.
 Skims are DaTRI'd to TOKYO-LCG2_PHYS-HIGGS and NIKHEF-ELPROD_PHYS-HIGGS
 automatically as soon as the jobs finish.
 
+Notes on skim v9
+----------------
+
+* The v9 skims were produced with the wrong MMC tag. The next version will use tag
+  7. 
+* At least one file is corrupt (missing tauMeta/TrigConfTree)::
+
+  group.phys-higgs.hhskim.mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v9.121105031615/
+  group.phys-higgs.156433_052542.107671._00037.hhskim.mc11_p851_hadhad.root
+
+* A small portion of data11 must have been recorded as "complete" by panda when
+  it was in fact not done. This can be picked up in the next skim.
+
+* The total lumi in skim v9 of data11 is 4604.52 pb-1 and of data12 is 14130.8
+  pb-1
+
 Additional Branches Created by the Skim
 ---------------------------------------
 
