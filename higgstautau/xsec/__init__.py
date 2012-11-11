@@ -6,52 +6,52 @@ import os
 __HERE = os.path.dirname(os.path.abspath(__file__))
 
 SAMPLE_NAMES = {}
-
-# read sampleid
-with open(os.path.join(__HERE, 'sampleid.txt')) as f:
-    for line in f.readlines():
-        if line.startswith('#'):
-            continue
-        sampleid, name = line.split()[:2]
-        sampleid = int(sampleid)
-        SAMPLE_NAMES[sampleid] = name
-
-
 SAMPLES = {}
-SAMPLES[11] = {}
-SAMPLES[12] = {}
 
-# read lephad
-with open(os.path.join(__HERE, 'lephad')) as f:
-    for line in f.readlines():
-        line = line.strip()
-        if not line:
-            continue
-        line = line.split()
-        if line[0].startswith('#'):
-            if 'kfac' in line[-1]:
-                kfact = float(line[-1].split('=')[1].strip(')'))
-            else:
-                kfact = 1.
-        else:
-            sampleid, info = line[:2]
+for year, energy in ((11, 7), (12, 8)):
+    # read sampleid
+    SAMPLE_NAMES[year] = {}
+    with open(os.path.join(__HERE, '%dTeV' % energy, 'sampleid.txt')) as f:
+        for line in f.readlines():
+            if line.startswith('#'):
+                continue
+            sampleid, name = line.split()[:2]
             sampleid = int(sampleid)
-            info = info.split('*')
-            if len(info) >= 2:
-                xsec, effic = map(float, info[:2])
-            else:
-                xsec = float(info[0])
-                effic = 1.
-            xsec *= 1E3
-            if sampleid not in SAMPLES:
-                SAMPLES[sampleid] = {}
-            SAMPLES[sampleid]['lephad'] = {
-                'xsec': xsec,
-                'effic': effic,
-                'kfact': kfact,
-                'prod': xsec * kfact / effic,
-            }
+            SAMPLE_NAMES[sampleid] = name
 
+    SAMPLES[year] = {}
+    # read lephad
+    with open(os.path.join(__HERE, '%dTeV' % energy, 'lephad')) as f:
+        for line in f.readlines():
+            line = line.strip()
+            if not line:
+                continue
+            line = line.split()
+            if line[0].startswith('#'):
+                if 'kfac' in line[-1]:
+                    kfact = float(line[-1].split('=')[1].strip(')'))
+                else:
+                    kfact = 1.
+            else:
+                sampleid, info = line[:2]
+                sampleid = int(sampleid)
+                info = info.split('*')
+                if len(info) >= 2:
+                    xsec, effic = map(float, info[:2])
+                else:
+                    xsec = float(info[0])
+                    effic = 1.
+                xsec *= 1E3
+                if sampleid not in SAMPLES[year]:
+                    SAMPLES[year][sampleid] = {}
+                SAMPLES[year][sampleid]['lephad'] = {
+                    'xsec': xsec,
+                    'effic': effic,
+                    'kfact': kfact,
+                    'prod': xsec * kfact / effic,
+                }
+
+"""
 # read topmc
 with open(os.path.join(__HERE, 'TopMC')) as f:
     for line in f.readlines():
@@ -91,7 +91,7 @@ with open(os.path.join(__HERE, 'SMWZ')) as f:
             'effic': effic,
             'prod': xsec * kfact / effic,
         }
-
+"""
 
 def xsec_kfact_effic(year, id):
 
