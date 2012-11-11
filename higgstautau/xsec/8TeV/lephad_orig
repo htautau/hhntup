@@ -1,6 +1,8 @@
+# https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MC12A
+# https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/HiggsPhys/HSG3/WWDileptonAnalysisCode/HWWAnalysisCode/trunk/XsectionInput/Xsection8TeV_bkg_v4.txt
 ##############################################################################################################################
-##Format                                                                                                                    ##
-DatasetID : Xsection(pb) : K-factor : Filtering Efficiency : Uncertainty : Mass : Sample Priority : Generator : ProcessInfo ##
+# Format                                                                                                                    ##
+# DatasetID : Xsection(pb) : K-factor : Filtering Efficiency : Uncertainty : Mass : Sample Priority : Generator : ProcessInfo ##
 ##############################################################################################################################
 
 105921    0.631         1.0      1.0           --   -999      1      MC@NLO                qq->WpWm->eenunu 

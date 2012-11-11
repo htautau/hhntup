@@ -18,6 +18,8 @@ with open(os.path.join(__HERE, 'sampleid.txt')) as f:
 
 
 SAMPLES = {}
+SAMPLES[11] = {}
+SAMPLES[12] = {}
 
 # read lephad
 with open(os.path.join(__HERE, 'lephad')) as f:
@@ -91,9 +93,10 @@ with open(os.path.join(__HERE, 'SMWZ')) as f:
         }
 
 
-def xsec_kfact_effic(group, id):
+def xsec_kfact_effic(year, id):
 
-    info = SAMPLES[id][group]
+    year %= 1E3
+    info = SAMPLES[year][id]['lephad']
     return info['xsec'], info['kfact'], info['effic']
 
 
