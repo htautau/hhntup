@@ -736,7 +736,7 @@ class Dataset(yaml.YAMLObject):
             return XSEC_CACHE[self.name]
 
         try:
-            return xsec.xsec_kfact_effic('lephad', self.id)
+            return xsec.xsec_kfact_effic(self.year, self.id)
         except KeyError:
             print "WARNING: cross section of dataset %s not available locally." % self.ds
             print "Looking it up in AMI instead. AMI cross sections can be very"
