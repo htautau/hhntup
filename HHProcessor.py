@@ -317,7 +317,7 @@ class HHProcessor(ATLASStudent):
 
         chain.filters += event_filters
 
-        define_objects(chain, year, skim=datatype == datasets.DATA)
+        define_objects(chain, year, skim=False)
 
         # define tree objects
         #tree.define_object(name='tau1', prefix='tau1_')
