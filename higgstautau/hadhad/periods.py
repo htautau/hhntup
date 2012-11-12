@@ -36,13 +36,6 @@ LUMI = { # pb-1 atlas-lumicalc.cern.ch
     2012: 14130.8, # A3-E no run 200841 skim v9
 }
 
-def total_lumi():
-
-    total = 0
-    for period, info in PERIODS.items():
-        total += info['lumi']
-    return total
-
 
 if __name__ == '__main__':
 

@@ -41,7 +41,8 @@ for year, energy in ((11, 7), (12, 8)):
                 else:
                     xsec = float(info[0])
                     effic = 1.
-                xsec *= 1E3
+                if year == 11:
+                    xsec *= 1E3
                 if sampleid not in SAMPLES[year]:
                     SAMPLES[year][sampleid] = {}
                 SAMPLES[year][sampleid]['lephad'] = {
