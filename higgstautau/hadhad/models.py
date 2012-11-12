@@ -53,6 +53,8 @@ class RecoTau(TreeModel):
     trigger_scale_factor_high = FloatCol(default=1.)
     trigger_scale_factor_low = FloatCol(default=1.)
 
+    trigger_match_thresh = IntCol(default=0)
+
     # overlap checking
     min_dr_jet = FloatCol(default=9999)
 
@@ -211,6 +213,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + Matche
                     tau.trigger_scale_factor_high)
             setattr(tree, 'tau%i_trigger_scale_factor_low' % i,
                     tau.trigger_scale_factor_low)
+            setattr(tree, 'tau%i_trigger_match_thresh' % i,
+                    tau.trigger_match_thresh)
 
             setattr(tree, 'tau%i_matched' % i, tau.matched)
             setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)

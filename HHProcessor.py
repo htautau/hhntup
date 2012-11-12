@@ -332,12 +332,13 @@ class HHProcessor(ATLASStudent):
 
         # entering the main event loop...
         for event in chain:
-            # taus are already sorted by pT in TauLeadSublead filter
-            tau1, tau2 = event.taus
 
+            # sort taus and jets in decreasing order by pT
+            event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+            event.jets.sort(key=lambda jet: jet.pt, reverse=True)
+
+            tau1, tau2 = event.taus
             jets = list(event.jets)
-            # sort by decreasing pT
-            jets.sort(key=lambda jet: jet.pt, reverse=True)
 
             if len(jets) >= 2:
                 jet1, jet2 = jets[:2]
@@ -466,9 +467,10 @@ class HHProcessor(ATLASStudent):
                 tree.MET_sig = -1.
             MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
 
-            tree.MET_centrality = eventshapes.phi_centrality(tau1.fourvect,
-                                                             tau2.fourvect,
-                                                             MET_vect)
+            tree.MET_centrality = eventshapes.phi_centrality(
+                    tau1.fourvect,
+                    tau2.fourvect,
+                    MET_vect)
 
             # Mass
             #mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
@@ -546,7 +548,6 @@ class HHProcessor(ATLASStudent):
                             print ""
                     tree.error = True
 
-                tau1, tau2 = event.taus
                 unmatched_reco = range(2)
                 unmatched_truth = range(event.truetaus.len())
                 matched_truth = []
