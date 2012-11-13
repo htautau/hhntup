@@ -249,6 +249,7 @@ class hhskim(ATLASStudent):
                 year=year,
                 passthrough=no_trigger or datatype != datasets.MC,
                 count_funcs=count_funcs),
+            # FIXME!!! dsname does not match regex for ggf
             ggFReweighting(
                 dsname=self.metadata.name,
                 tree=tree,

@@ -52,6 +52,10 @@ Notes on skim v9
 * The total lumi in skim v9 of data11 is 4604.52 pb-1 and of data12 is 14130.8
   pb-1
 
+* The ggF reweighting wasn't applied so is 1. for all events in mc11 ggF
+  samples. You must apply this yourself. ggF weights will be set properly in the
+  next skim.
+
 Additional Branches Created by the Skim
 ---------------------------------------
 

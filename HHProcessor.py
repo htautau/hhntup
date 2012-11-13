@@ -287,12 +287,12 @@ class HHProcessor(ATLASStudent):
             #    year=year,
             #    passthrough=datatype != datasets.MC,
             #    count_funcs=count_funcs),
-            #ggFReweighting(
-            #    dsname=self.metadata.name,
-            #    tree=tree,
-            #    # no ggf reweighting for 2012 MC
-            #    passthrough=datatype != datasets.MC or year != 2011,
-            #    count_funcs=count_funcs),
+            ggFReweighting(
+                dsname=self.metadata.name,
+                tree=tree,
+                # no ggf reweighting for 2012 MC
+                passthrough=datatype != datasets.MC or year != 2011,
+                count_funcs=count_funcs),
             #TauTrackRecounting(
             #    year=year,
             #    count_funcs=count_funcs),
