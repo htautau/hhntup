@@ -150,6 +150,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             LArError(
                 count_funcs=count_funcs),
+            # 2011 and 2012 jet calibrations are applied
+            # InsituJES_2011_Preliminary.config
+            # JES_August2012.config
             JetCalibration(
                 datatype=datatype,
                 year=year,
