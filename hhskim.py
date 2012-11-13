@@ -150,7 +150,6 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             LArError(
                 count_funcs=count_funcs),
-            # no need to recalibrate jets in 2012 (yet...)
             JetCalibration(
                 datatype=datatype,
                 year=year,
