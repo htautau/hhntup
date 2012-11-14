@@ -39,8 +39,10 @@ automatically as soon as the jobs finish.
 Notes on skim v9
 ----------------
 
-* The v9 skims were produced with the wrong MMC tag. The next version will use tag
-  7. 
+* The 2012 v9 skims were produced with the wrong MMC tag. The next version will use tag
+  7. MMC 9 is for 2011 but tag 7 should be used for 2012 until we have a new tag
+  for 2012. Strange tagging scheme going on here...
+
 * At least one file is corrupt (missing tauMeta/TrigConfTree)::
 
   group.phys-higgs.hhskim.mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v9.121105031615/
