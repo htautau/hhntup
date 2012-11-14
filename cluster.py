@@ -45,10 +45,12 @@ class Host(object):
 def get_load(host):
 
     # normalize by the number of CPUs
-    cmd = 'python -c "import os; print (os.getloadavg()[0] / open(\\"/proc/cpuinfo\\").read().count(\\"processor\\t:\\"))"'
+    cmd = ('python -c "import os; print (os.getloadavg()[0] / '
+           'open(\\"/proc/cpuinfo\\").read().count(\\"processor\\t:\\"))"')
     if not HOSTNAME.startswith(host):
         cmd = "ssh %s '%s'" % (host, cmd)
-    load = float(subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].strip())
+    load = float(subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].strip())
     return load
 
 

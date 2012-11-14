@@ -12,12 +12,13 @@ parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--dry', action='store_true', default=False)
+parser.add_argument('--output-path', default='ntuples/hadhad')
 parser.add_argument('splits', nargs='*', type=int)
 args = parser.parse_args()
 
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
-output_path = 'ntuples/hadhad/HHProcessor'
+output_path = os.path.join(args.output_path, 'HHProcessor')
 
 CWD = os.getcwd()
 CMD = ("%s && ./run --output-path %s "
@@ -38,7 +39,7 @@ for i in xrange(args.nsplit):
         cmd,
         ncpus=args.nproc,
         name='HHProcessor.data%d_%d' % (args.year, i + 1),
-        stderr_path='ntuples/hadhad/HHProcessor',
-        stdout_path='ntuples/hadhad/HHProcessor',
+        stderr_path=output_path,
+        stdout_path=output_path,
         queue=args.queue,
         dry_run=args.dry)
