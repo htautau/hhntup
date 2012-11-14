@@ -320,10 +320,10 @@ class HHProcessor(ATLASStudent):
         define_objects(chain, year, skim=False)
 
         # define tree objects
-        #tree.define_object(name='tau1', prefix='tau1_')
-        #tree.define_object(name='tau2', prefix='tau2_')
-        #tree.define_object(name='jet1', prefix='jet1_')
-        #tree.define_object(name='jet2', prefix='jet2_')
+        tree.define_object(name='tau1', prefix='tau1_')
+        tree.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='jet1', prefix='jet1_')
+        tree.define_object(name='jet2', prefix='jet2_')
 
         """ Associations not currently implemented in rootpy
         chain.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
@@ -331,7 +331,7 @@ class HHProcessor(ATLASStudent):
         """
 
         # create MMC object
-        mmc = mass.MMC(year=year, channel='hh')
+        #mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -465,7 +465,8 @@ class HHProcessor(ATLASStudent):
             sumET = event.MET.sumet
             tree.sumET = sumET
             if sumET != 0:
-                tree.MET_sig = (2. * MET / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
+                tree.MET_sig = ((2. * MET / GeV) /
+                        (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
             else:
                 tree.MET_sig = -1.
             MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
@@ -503,12 +504,14 @@ class HHProcessor(ATLASStudent):
             else:
                 taumode2 = HAD3P
 
-            tree.mass_dtm_tau1_tau2 = mass.ditaumass(tau1.fourvect, taumode1,
-                                                     tau2.fourvect, taumode2,
-                                                     METx, METy, MET_res) / GeV
-            tree.mass_dtm_tau1_tau2_scan = mass.ditaumass_scan(tau1.fourvect, taumode1,
-                                                     tau2.fourvect, taumode2,
-                                                     METx, METy, MET_res, 5) / GeV
+            tree.mass_dtm_tau1_tau2 = mass.ditaumass(
+                tau1.fourvect, taumode1,
+                tau2.fourvect, taumode2,
+                METx, METy, MET_res) / GeV
+            tree.mass_dtm_tau1_tau2_scan = mass.ditaumass_scan(
+                tau1.fourvect, taumode1,
+                tau2.fourvect, taumode2,
+                METx, METy, MET_res, 5) / GeV
             """
             collin_mass, tau1_x, tau2_x = mass.collinearmass(tau1, tau2, METx, METy)
             tree.mass_collinear_tau1_tau2 = collin_mass

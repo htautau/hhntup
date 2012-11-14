@@ -11,58 +11,10 @@ from rootpy.types import *
 from atlastools.utils import et2pt
 from atlastools import utils
 
-from ..models import MatchedObject, TrueTau
+from ..models import MatchedObject, TrueTau, FourMomentum
 
 import math
 import ROOT
-
-
-class RecoTau(TreeModel):
-
-    BDTJetScore = FloatCol()
-    BDTEleScore = FloatCol()
-
-    JetBDTSigLoose = BoolCol()
-    JetBDTSigMedium = BoolCol()
-    JetBDTSigTight = BoolCol()
-
-    nPi0 = IntCol()
-    seedCalo_numTrack = IntCol()
-    numTrack = IntCol()
-    charge = IntCol()
-    jvtxf = FloatCol()
-
-    centrality = FloatCol()
-    centrality_boosted = FloatCol()
-
-    fourvect = LorentzVector
-    fourvect_boosted = LorentzVector
-
-    # efficiency scale factor if matches truth
-    efficiency_scale_factor = FloatCol(default=1.)
-    efficiency_scale_factor_high = FloatCol(default=1.)
-    efficiency_scale_factor_low = FloatCol(default=1.)
-
-    # fake rate scale factor for taus that do not match truth
-    fakerate_scale_factor = FloatCol(default=1.)
-    fakerate_scale_factor_high = FloatCol(default=1.)
-    fakerate_scale_factor_low = FloatCol(default=1.)
-
-    # trigger efficiency correction
-    trigger_scale_factor = FloatCol(default=1.)
-    trigger_scale_factor_high = FloatCol(default=1.)
-    trigger_scale_factor_low = FloatCol(default=1.)
-
-    trigger_match_thresh = IntCol(default=0)
-
-    # overlap checking
-    min_dr_jet = FloatCol(default=9999)
-
-    # track recounting
-    numTrack_recounted = IntCol(default=-1)
-
-    # vertex association
-    vertex_prob = FloatCol()
 
 
 class EventVariables(TreeModel):
@@ -148,120 +100,145 @@ class EventVariables(TreeModel):
     sum_pt_full = FloatCol()
 
 
-class RecoJet(TreeModel):
+class RecoTau(FourMomentum):
 
-    fourvect = LorentzVector
-    fourvect_boosted = LorentzVector
+    BDTJetScore = FloatCol()
+    BDTEleScore = FloatCol()
+
+    JetBDTSigLoose = BoolCol()
+    JetBDTSigMedium = BoolCol()
+    JetBDTSigTight = BoolCol()
+
+    nPi0 = IntCol()
+    seedCalo_numTrack = IntCol()
+    numTrack = IntCol()
+    charge = IntCol()
+    jvtxf = FloatCol()
+
+    centrality = FloatCol()
+    centrality_boosted = FloatCol()
+
+    # efficiency scale factor if matches truth
+    efficiency_scale_factor = FloatCol(default=1.)
+    efficiency_scale_factor_high = FloatCol(default=1.)
+    efficiency_scale_factor_low = FloatCol(default=1.)
+
+    # fake rate scale factor for taus that do not match truth
+    fakerate_scale_factor = FloatCol(default=1.)
+    fakerate_scale_factor_high = FloatCol(default=1.)
+    fakerate_scale_factor_low = FloatCol(default=1.)
+
+    # trigger efficiency correction
+    trigger_scale_factor = FloatCol(default=1.)
+    trigger_scale_factor_high = FloatCol(default=1.)
+    trigger_scale_factor_low = FloatCol(default=1.)
+
+    trigger_match_thresh = IntCol(default=0)
+
+    # overlap checking
+    min_dr_jet = FloatCol(default=9999)
+
+    # track recounting
+    numTrack_recounted = IntCol(default=-1)
+
+    # vertex association
+    vertex_prob = FloatCol()
+
+
+class RecoJet(FourMomentum):
 
     jvtxf = FloatCol()
     BDTJetScore = FloatCol()
 
 
-class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') + (RecoTau + MatchedObject).prefix('tau2_')):
+class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
+                   (RecoTau + MatchedObject).prefix('tau2_')):
 
     @classmethod
     def set(cls, event, tree, tau1, tau2):
 
         if tau1 is not None and tau2 is not None:
-            tree.mass_vis_tau1_tau2 = utils.Mvis(tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
+            tree.mass_vis_tau1_tau2 = utils.Mvis(
+                    tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
             tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
             tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
             tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
             tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
             tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
 
-        for i, tau in zip((1,2), (tau1, tau2)):
-            if tau is None:
+        for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
+            if intau is None:
                 continue
-            fourvect = tau.fourvect
-            setattr(tree, 'tau%i_BDTJetScore' % i, tau.BDTJetScore)
-            setattr(tree, 'tau%i_BDTEleScore' % i, tau.BDTEleScore)
+            FourMomentum.set(outtau, intau)
 
-            setattr(tree, 'tau%i_JetBDTSigLoose' % i, tau.JetBDTSigLoose)
-            setattr(tree, 'tau%i_JetBDTSigMedium' % i, tau.JetBDTSigMedium)
-            setattr(tree, 'tau%i_JetBDTSigTight' % i, tau.JetBDTSigTight)
+            outtau.BDTJetScore = intau.BDTJetScore
+            outtau.BDTEleScore = intau.BDTEleScore
 
-            setattr(tree, 'tau%i_nPi0' % i, tau.nPi0)
-            setattr(tree, 'tau%i_seedCalo_numTrack' % i, tau.seedCalo_numTrack)
-            setattr(tree, 'tau%i_numTrack' % i, tau.numTrack)
-            setattr(tree, 'tau%i_charge' % i, tau.charge)
-            setattr(tree, 'tau%i_jvtxf' % i, tau.jet_jvtxf)
+            outtau.JetBDTSigLoose = intau.JetBDTSigLoose
+            outtau.JetBDTSigMedium = intau.JetBDTSigMedium
+            outtau.JetBDTSigTight = intau.JetBDTSigTight
 
-            getattr(tree, 'tau%i_fourvect' % i).set_from(tau.fourvect)
-            getattr(tree, 'tau%i_fourvect_boosted' % i).set_from(tau.fourvect_boosted)
+            outtau.nPi0 = intau.nPi0
+            outtau.seedCalo_numTrack = intau.seedCalo_numTrack
+            outtau.numTrack = intau.numTrack
+            outtau.charge = intau.charge
+            outtau.jet_jvtxf = intau.jet_jvtxf
 
-            setattr(tree, 'tau%i_centrality' % i, tau.centrality)
-            setattr(tree, 'tau%i_centrality_boosted' % i, tau.centrality_boosted)
+            outtau.centrality = intau.centrality
+            outtau.centrality = intau.centrality_boosted
 
-            setattr(tree, 'tau%i_efficiency_scale_factor' % i,
-                    tau.efficiency_scale_factor)
-            setattr(tree, 'tau%i_efficiency_scale_factor_high' % i,
-                    tau.efficiency_scale_factor_high)
-            setattr(tree, 'tau%i_efficiency_scale_factor_low' % i,
-                    tau.efficiency_scale_factor_low)
+            outtau.efficiency_scale_factor = intau.efficiency_scale_factor
+            outtau.efficiency_scale_factor_high = intau.efficiency_scale_factor_high
+            outtau.efficiency_scale_factor_low = intau.efficiency_scale_factor_low
 
-            setattr(tree, 'tau%i_fakerate_scale_factor' % i,
-                    tau.fakerate_scale_factor)
-            setattr(tree, 'tau%i_fakerate_scale_factor_high' % i,
-                    tau.fakerate_scale_factor_high)
-            setattr(tree, 'tau%i_fakerate_scale_factor_low' % i,
-                    tau.fakerate_scale_factor_low)
+            outtau.fakerate_scale_factor = intau.fakerate_scale_factor
+            outtau.fakerate_scale_factor_high = intau.fakerate_scale_factor_high
+            outtau.fakerate_scale_factor_low = intau.fakerate_scale_factor_low
 
-            setattr(tree, 'tau%i_trigger_scale_factor' % i,
-                    tau.trigger_scale_factor)
-            setattr(tree, 'tau%i_trigger_scale_factor_high' % i,
-                    tau.trigger_scale_factor_high)
-            setattr(tree, 'tau%i_trigger_scale_factor_low' % i,
-                    tau.trigger_scale_factor_low)
-            setattr(tree, 'tau%i_trigger_match_thresh' % i,
-                    tau.trigger_match_thresh)
+            outtau.trigger_scale_factor = intau.trigger_scale_factor
+            outtau.trigger_scale_factor_high = intau.trigger_scale_factor_high
+            outtau.trigger_scale_factor_low = intau.trigger_scale_factor_low
+            outtau.trigger_match_thresh = intau.trigger_match_thresh
 
-            setattr(tree, 'tau%i_matched' % i, tau.matched)
-            setattr(tree, 'tau%i_matched_dR' % i, tau.matched_dR)
-            setattr(tree, 'tau%i_matched_collision' % i, tau.matched_collision)
-            setattr(tree, 'tau%i_min_dr_jet' % i, tau.min_dr_jet)
+            outtau.matched = intau.matched
+            outtau.matched_dR = intau.matched_dR
+            outtau.matched_collision = intau.matched_collision
+            outtau.min_dr_jet = intau.min_dr_jet
 
             # track recounting
-            setattr(tree, 'tau%i_numTrack_recounted' % i, tau.numTrack_recounted)
+            outtau.numTrack_recounted = intau.numTrack_recounted
 
             # tau vertex association
-            setattr(tree, 'tau%i_vertex_prob' % i, tau.vertex_prob)
+            outtau.vertex_prob = intau.vertex_prob
 
 
-class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') + (RecoJet + MatchedObject).prefix('jet2_')):
+class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
+                   (RecoJet + MatchedObject).prefix('jet2_')):
 
     @classmethod
     def set(cls, tree, jet1, jet2=None):
 
-        tree.jet1_fourvect.set_from(jet1.fourvect)
+        FourMomentum.set(tree.jet1, jet1)
         tree.jet1_jvtxf = jet1.jvtxf
 
         if jet2 is not None:
-            # the jets should already be sorted by eta
-            # sort by eta
-            # jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect.Eta())
-
-            # sort by transformed eta
-            #jet1, jet2 = sorted([jet1, jet2], key=lambda jet: jet.fourvect_boosted.Eta())
+            FourMomentum.set(tree.jet2, jet2)
+            tree.jet2_jvtxf = jet2.jvtxf
 
             tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
-            tree.jet2_fourvect.set_from(jet2.fourvect)
-
-            tree.jet1_fourvect_boosted.set_from(jet1.fourvect_boosted)
-            tree.jet2_fourvect_boosted.set_from(jet2.fourvect_boosted)
-
-            tree.jet2_jvtxf = jet2.jvtxf
-
-            tree.dEta_jets = abs(jet1.fourvect.Eta() - jet2.fourvect.Eta())
-            tree.dEta_jets_boosted = abs(jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+            tree.dEta_jets = abs(
+                    jet1.fourvect.Eta() - jet2.fourvect.Eta())
+            tree.dEta_jets_boosted = abs(
+                    jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
 
             tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
             tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
                                              jet2.fourvect_boosted.Eta())
 
 
-class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') + (TrueTau + MatchedObject).prefix('trueTau2_')):
+class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') +
+                   (TrueTau + MatchedObject).prefix('trueTau2_')):
 
     @classmethod
     def set(cls, tree, index, tau):
