@@ -12,6 +12,7 @@ try:
     from pyAMI.client import AMIClient
     from pyAMI.query import get_dataset_xsec_effic, \
                             get_dataset_info, \
+                            get_datasets, \
                             get_provenance, \
                             get_periods, \
                             get_runs
@@ -45,13 +46,16 @@ from atlastools.datasets import DATA, MC, EMBED
 import xsec
 
 
-DATA_PATTERN = re.compile(
+DS_PATTERN = re.compile(
         '^(?P<prefix>\S+\.)?'
-        'data(?P<year>\d+)_(?P<energy>\d+)TeV\.'
-        '(?P<run>\d+)\.physics_'
-        '(?P<stream>\S+)?'
-        '\.merge\.NTUP_TAU(MEDIUM)?\.(?P<tag>\w+)'
-        '(\.(?P<suffix>\S+))?$')
+        '(?P<type>(data|mc))(?P<year>\d+)_(?P<energy>\d+)TeV'
+        '\.(?P<id>\d+)'
+        '\.(?P<name>\w+)'
+        '(\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?))?'
+        '\.(?P<tag>\w+)'
+        '(\.small)?'
+        '(\.v(?P<version>\d+))?'
+        '\.(?P<suffix>\S+)$')
 
 MC_TAG_PATTERN1 = re.compile(
         '^e(?P<evnt>\d+)_'
@@ -73,15 +77,14 @@ MC_TAG_PATTERN2 = re.compile(
 EMBED_PATTERN11 = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
-        '\.DESD_((SGLMU)|(ZMUMU))'
+        '\.DESD_SGLMU'
         '\.pro(?P<prod>\d+)'
         '\.embedding-(?P<embedtag>\S+)?'
         '\.Ztautau_'
         '(?P<channel>(lh)|(hh))_'
-        '(((high)|(low))pt_)?'
         '(?P<isol>[a-z]+)_'
         '(?P<mfs>[a-z]+)_'
-        '((re)|(tau))reco_'
+        'rereco_'
         'p(?P<tag>\d+)_'
         'EXT0'
         '(\.(?P<suffix>\S+))?$')
@@ -89,7 +92,7 @@ EMBED_PATTERN11 = re.compile(
 EMBED_PATTERN12 = re.compile(
         '^(?P<prefix>\S+)?'
         'period(?P<period>[A-Z])'
-        '\.DESD_((SGLMU)|(ZMUMU))'
+        '\.DESD_ZMUMU'
         '\.pro(?P<prod>\d+)'
         '\.embedding-(?P<embedtag>\S+)?'
         '\.Ztautau_'
@@ -97,7 +100,7 @@ EMBED_PATTERN12 = re.compile(
         '(((high)|(low))pt_)?'
         '(?P<mfs>[a-z]+)_'
         'filter_'
-        '((re)|(tau))reco_'
+        'taureco_'
         'p(?P<tag>\d+)_'
         'EXT0'
         '(\.(?P<suffix>\S+))?$')
@@ -114,7 +117,7 @@ MC_CATEGORIES = {
               'merge': (2780, 2700)},
     'mc11b': {'reco':  (2920, 2923),
               'merge': (3063, 2993, 2900)},
-    'mc11c': {'reco':  (3043, 3060),
+    'mc11c': {'reco':  (3043, 3060, 3108),
               'merge': (3109, 3063, 2993)},
     'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542),
               'merge': (3549,)}}
@@ -150,7 +153,25 @@ class NoMatchingDatasetsFound(Exception):
 
 class Database(dict):
 
-    def __init__(self, name='datasets', verbose=False):
+    @classmethod
+    def match_to_ds(cls, match):
+        """
+        Construct the original NTUP dataset name from a skim match object
+        """
+        if match.group('year') == '11':
+            ntup = 'merge.NTUP_TAUMEDIUM'
+        else:
+            ntup = 'merge.NTUP_TAU'
+        return '%s%s_%sTeV.%s.%s.%s.%s' % (
+                match.group('type'),
+                match.group('year'),
+                match.group('energy'),
+                match.group('id'),
+                match.group('name'),
+                ntup,
+                match.group('tag'))
+
+    def __init__(self, name='datasets', verbose=False, stream=None):
 
         super(Database, self).__init__()
         self.name = name
@@ -164,6 +185,10 @@ class Database(dict):
                 if d:
                     self.update(d)
         self.modified = False
+        if stream is None:
+            self.stream = sys.stdout
+        else:
+            self.stream = stream
 
     def write(self):
 
@@ -191,26 +216,27 @@ class Database(dict):
         ds = {}
         for name, info in self.items():
             if info.datatype == datatype:
+                if datatype == DATA and info.id < 0:
+                    # only validate data run datasets
+                    continue
                 if pattern is None or fnmatch.fnmatch(name, pattern):
                     ds[name] = info
         incomplete = []
-        for name, info in ds.items():
-            print "Validating %s..." % name
+        for name, info in sorted(ds.items(), key=lambda item: item[0]):
+            print "Validating %s ..." % name
             complete = validate_single((name, info), child=False)
             print "Complete: %s" % complete
             print '-'*50
             if not complete:
                 incomplete.append(info.ds)
-        """
-        pool = Pool(processes=cpu_count())
-        for result, complete in pool.map(
-                validate_single, sorted(ds.items(), key=itemgetter(0))):
-            print result
-            print "Complete: %s" % complete
-            print '-'*50
-            if not complete:
-                all_complete = False
-        """
+        #pool = Pool(processes=cpu_count())
+        #for result, complete in pool.map(
+        #        validate_single, sorted(ds.items(), key=itemgetter(0))):
+        #    print result
+        #    print "Complete: %s" % complete
+        #    print '-'*50
+        #    if not complete:
+        #        all_complete = False
         if not incomplete:
             print "ALL DATASETS ARE COMPLETE"
         else:
@@ -241,33 +267,10 @@ class Database(dict):
         if self.verbose: print "Updating '%s' dataset database..." % self.name
         self.modified = True
 
+        ###############################
+        # MC
+        ###############################
         if mc_path is not None:
-            if versioned:
-                pattern1 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
-                pattern2 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '\.(small\.)?v(?P<version>\d+)\.(?P<suffix>\S+)$')
-            else:
-                pattern1 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_r\d+_p\d+)'
-                            '_(?P<suffix>\S+)$')
-                pattern2 = ('^mc(?P<year>\d+)_(?P<energy>\d+)TeV\.(?P<id>\d+)'
-                            '\.(?P<name>\w+)(\.merge\.NTUP_TAU(MEDIUM)?)?'
-                            '\.(?P<tag>e\d+_s\d+_s\d+_r\d+_p\d+)'
-                            '_(?P<suffix>\S+)$')
-
-            if mc_prefix:
-                pattern1 = ('^%s\.' % re.escape(mc_prefix)) + pattern1[1:]
-                pattern2 = ('^%s\.' % re.escape(mc_prefix)) + pattern2[1:]
-
-            MC_PATTERN1 = re.compile(pattern1)
-            MC_PATTERN2 = re.compile(pattern2)
-
             if deep:
                 mc_dirs = get_all_dirs_under(mc_path, prefix=mc_prefix)
             else:
@@ -278,18 +281,22 @@ class Database(dict):
 
             for dir in mc_dirs:
                 dirname, basename = os.path.split(dir)
-                match  = re.match(MC_PATTERN1, basename)
-                match2 = re.match(MC_PATTERN2, basename)
-
-                if (match2 and not match): match = match2
-
+                match  = re.match(DS_PATTERN, basename)
                 if match:
+                    if int(match.group('year')) != (year % 1E3):
+                        continue
+                    if match.group('type') != 'mc':
+                        continue
+                    ds_name = Database.match_to_ds(match)
                     name = match.group('name')
                     tag = match.group('tag')
                     try:
                         version = int(match.group('version'))
                     except IndexError:
                         version = 0
+                    except:
+                        print basename
+                        raise
                     tag_match = re.match(MC_TAG_PATTERN1, tag)
                     tag_match2 = re.match(MC_TAG_PATTERN2, tag)
                     MC_TAG_PATTERN = MC_TAG_PATTERN1
@@ -344,11 +351,7 @@ class Database(dict):
                                 DATASETS[name] = Dataset(name=name,
                                     datatype=MC,
                                     treename=mc_treename,
-                                    ds='mc11_7TeV.' +
-                                    match.group('id') + '.' +
-                                    match.group('name') +
-                                    '.merge.NTUP_TAUMEDIUM.' +
-                                    match.group('tag'),
+                                    ds=ds_name,
                                     id=int(match.group('id')),
                                     category=cat,
                                     version=version,
@@ -364,11 +367,7 @@ class Database(dict):
                         self[name] = Dataset(name=name,
                             datatype=MC,
                             treename=mc_treename,
-                            ds='mc11_7TeV.' +
-                            match.group('id') + '.' +
-                            match.group('name') +
-                            '.merge.NTUP_TAUMEDIUM.' +
-                            match.group('tag'),
+                            ds=ds_name,
                             id=int(match.group('id')),
                             category=cat,
                             version=version,
@@ -377,19 +376,23 @@ class Database(dict):
                             dirs=[dir],
                             file_pattern=mc_pattern,
                             year=year)
-                else:
-                    print "not matched: %s" % basename
+                elif self.verbose:
+                    print "not a valid mc dataset name: %s" % basename
 
-        #######################################################################
-
+        #####################################
+        # EMBEDDING
+        #####################################
         if embed_path is not None:
 
-            if embed_prefix:
-                embed_dirs = glob.glob(
-                        os.path.join(embed_path, embed_prefix) + '*')
+            if deep:
+                embed_dirs = get_all_dirs_under(embed_path, prefix=embed_prefix)
             else:
-                embed_dirs = glob.glob(
-                        os.path.join(embed_path, '*'))
+                if embed_prefix:
+                    embed_dirs = glob.glob(
+                            os.path.join(embed_path, embed_prefix) + '*')
+                else:
+                    embed_dirs = glob.glob(
+                            os.path.join(embed_path, '*'))
 
             if year == 2011:
                 EMBED_PATTERN = EMBED_PATTERN11
@@ -407,9 +410,9 @@ class Database(dict):
                         if channel not in channels:
                             channels[channel] = []
                         channels[channel].append(dir)
-                    else:
-                        print "not a valid dataset name: %s" % basename
-                else:
+                    elif self.verbose:
+                        print "not a valid embedding dataset name: %s" % basename
+                elif self.verbose:
                     print "skipping file: %s" % dir
 
             for channel, channel_dirs in channels.items():
@@ -425,8 +428,8 @@ class Database(dict):
                             if isol not in isols:
                                 isols[isol] = []
                             isols[isol].append(dir)
-                        else:
-                            print "not a valid dataset name: %s" % basename
+                        elif self.verbose:
+                            print "not a valid embedding dataset name: %s" % basename
 
                     for isol, isol_dirs in isols.items():
 
@@ -440,8 +443,8 @@ class Database(dict):
                                 if mfs not in mfss:
                                     mfss[mfs] = []
                                 mfss[mfs].append(dir)
-                            else:
-                                print "not a valid dataset name: %s" % basename
+                            elif self.verbose:
+                                print "not a valid embedding dataset name: %s" % basename
 
                         for mfs, mfs_dirs in mfss.items():
 
@@ -474,8 +477,8 @@ class Database(dict):
                                                 'multiple copies of run with '
                                                 'different tags: %s' %
                                                 periods[period]['dirs'])
-                                else:
-                                    print "not a valid dataset name: %s" % basename
+                                elif self.verbose:
+                                    print "not a valid embeding dataset name: %s" % basename
 
                             for period, info in periods.items():
                                 period_name = '%s-%s' % (name, period)
@@ -499,8 +502,8 @@ class Database(dict):
                             if mfs not in mfss:
                                 mfss[mfs] = []
                             mfss[mfs].append(dir)
-                        else:
-                            print "not a valid dataset name: %s" % basename
+                        elif self.verbose:
+                            print "not a valid embedding dataset name: %s" % basename
 
                     for mfs, mfs_dirs in mfss.items():
 
@@ -533,8 +536,8 @@ class Database(dict):
                                             'multiple copies of run with '
                                             'different tags: %s' %
                                             periods[period]['dirs'])
-                            else:
-                                print "not a valid dataset name: %s" % basename
+                            elif self.verbose:
+                                print "not a valid embedding dataset name: %s" % basename
 
                         for period, info in periods.items():
                             period_name = '%s-%s' % (name, period)
@@ -548,24 +551,36 @@ class Database(dict):
                                 file_pattern=embed_pattern,
                                 year=year)
 
-        #######################################################################
-
+        ##############################
+        # DATA
+        ##############################
         if data_path is not None:
 
-            # get all data directories
-            data_dirs = get_all_dirs_under(data_path, prefix=data_prefix)
+            if deep:
+                data_dirs = get_all_dirs_under(data_path, prefix=data_prefix)
+            else:
+                if data_prefix:
+                    data_dirs = glob.glob(
+                            os.path.join(data_path, data_prefix) + '*')
+                else:
+                    data_dirs = glob.glob(
+                            os.path.join(data_path, '*'))
 
             # classify dir by stream
             streams = {}
             for dir in data_dirs:
-                match = re.match(DATA_PATTERN, dir)
+                match = re.match(DS_PATTERN, dir)
                 if match:
-                    stream = match.group('stream')
+                    if int(match.group('year')) != (year % 1E3):
+                        continue
+                    if match.group('type') != 'data':
+                        continue
+                    stream = match.group('name').split('_')[-1]
                     if stream not in streams:
                         streams[stream] = []
                     streams[stream].append(dir)
-                else:
-                    print "not a valid dataset name: %s" % dir
+                elif self.verbose:
+                    print "not a valid data dataset name: %s" % dir
 
             for stream, dirs in streams.items():
                 name = 'data%d-%s' % (year % 1000, stream)
@@ -573,7 +588,7 @@ class Database(dict):
                     datatype=DATA,
                     treename=data_treename,
                     ds=name,
-                    id=1,
+                    id=-1,
                     # The GRL is the same for both lephad and hadhad analyses
                     grl=data_grl,
                     dirs=dirs,
@@ -584,27 +599,31 @@ class Database(dict):
                 # in each stream create a separate dataset for each run
                 runs = {}
                 for dir in dirs:
-                    match = re.match(DATA_PATTERN, dir)
+                    match = re.match(DS_PATTERN, dir)
                     if match:
-                        run = int(match.group('run'))
+                        run = int(match.group('id'))
                         tag = match.group('tag')
                         if run not in runs:
-                            runs[run] = {'tag': tag, 'dirs': [dir]}
+                            runs[run] = {
+                                    'tag': tag,
+                                    'dirs': [dir],
+                                    'ds': Database.match_to_ds(match)}
                         else:
                             runs[run]['dirs'].append(dir)
                             if tag != runs[run]['tag']:
                                 print (
                                     'multiple copies of run with different '
                                     'tags: %s' % runs[run]['dirs'])
-                    else:
-                        print "not a valid dataset name: %s" % dir
+                    elif self.verbose:
+                        print "not a valid data dataset name: %s" % dir
+                # need to use the actual ds name for ds for validation
                 for run, info in runs.items():
                     name = 'data%d-%s-%d' % (year % 1000, stream, run)
                     self[name] = Dataset(name=name,
                         datatype=DATA,
                         treename=data_treename,
-                        ds=name,
-                        id=1,
+                        ds=info['ds'],
+                        id=run,
                         grl=data_grl,
                         dirs=info['dirs'],
                         stream=stream,
@@ -640,12 +659,18 @@ class Database(dict):
                             datatype=DATA,
                             treename=data_treename,
                             ds=name,
-                            id=1,
+                            id=-1,
                             grl=data_grl,
                             dirs=dirs,
                             stream=stream,
                             file_pattern=data_pattern,
                             year=year)
+
+    def __setitem__(self, name, ds):
+
+        if self.verbose:
+            print >> self.stream, str(ds)
+        super(Database, self).__setitem__(name, ds)
 
     def search(self, pattern):
 
@@ -703,15 +728,15 @@ class Dataset(yaml.YAMLObject):
     def xsec_kfact_effic(self):
 
         global XSEC_CACHE_MODIFIED
-
+        year = self.year % 1E3
         if self.datatype == DATA:
             return 1., 1., 1.
-        if self.name in XSEC_CACHE:
+        if year in XSEC_CACHE and self.name in XSEC_CACHE[year]:
             print "WARNING: using cached cross section for dataset %s" % self.ds
-            return XSEC_CACHE[self.name]
+            return XSEC_CACHE[year][self.name]
 
         try:
-            return xsec.xsec_kfact_effic('lephad', self.id)
+            return xsec.xsec_kfact_effic(self.year, self.id)
         except KeyError:
             print "WARNING: cross section of dataset %s not available locally." % self.ds
             print "Looking it up in AMI instead. AMI cross sections can be very"
@@ -723,7 +748,9 @@ class Dataset(yaml.YAMLObject):
                 xs, effic = get_dataset_xsec_effic(amiclient, DS_NOPROV[self.ds])
             else:
                 xs, effic = get_dataset_xsec_effic(amiclient, self.ds)
-            XSEC_CACHE[self.name] = (xs, 1., effic)
+            if year not in XSEC_CACHE:
+                XSEC_CACHE[year] = {}
+            XSEC_CACHE[year][self.name] = (xs, 1., effic)
             XSEC_CACHE_MODIFIED = True
             return xs, 1., effic
         raise Exception("cross section of dataset %s is not known!" % self.ds)
@@ -738,13 +765,17 @@ class Dataset(yaml.YAMLObject):
                            fnmatch.filter(files, self.file_pattern)]
         return _files
 
+    def __str__(self):
+
+        return "%s:\n\t%s" % (
+                self.name,
+                self.ds)
 
 def dataset_constructor(loader, node):
 
     return Dataset(**loader.construct_mapping(node))
 
 yaml.add_constructor(u'!Dataset', dataset_constructor)
-
 
 
 if os.path.isfile(XSEC_CACHE_FILE):
@@ -778,16 +809,15 @@ def validate_single(args, child=True):
         dirs = info.dirs
         root_files = []
         for dir in dirs:
-            root_files += glob.glob(os.path.join(dir, '*.root*'))
+            root_files += glob.glob(os.path.join(dir, info.file_pattern))
         events = 0
         for fname in root_files:
             try:
                 with ropen(fname) as rfile:
-                    tree = rfile.tau
                     try: # skimmed dataset
-                        cutflow = rfile.cutflow
-                        events += int(cutflow[0])
+                        events += int(rfile.cutflow_event[0])
                     except DoesNotExist: # unskimmed dataset
+                        tree = rfile.tau
                         events += tree.GetEntries()
             except IOError:
                 print "Currupt file: %s" % fname
@@ -801,10 +831,10 @@ def validate_single(args, child=True):
         try:
             # determine events in AODs
             prov = get_provenance(amiclient, ds_name, type='AOD')
-            AOD_ds = prov.values()[0][0]
+            AOD_ds = prov.values()[0][0].replace('recon', 'merge')
             print 'AOD: ' + AOD_ds
-            AOD_ds_info = get_dataset_info(amiclient, AOD_ds)
-            AOD_events = int(AOD_ds_info.info['totalEvents'])
+            AOD_events = int(get_datasets(amiclient, AOD_ds, fields='events',
+                    flatten=True)[0][0])
         except IndexError:
             print 'AOD: UNKNOWN'
             AOD_events = ntuple_events
@@ -874,6 +904,7 @@ if __name__ == '__main__':
     parser.add_argument('--versioned', action='store_true', default=False)
     parser.add_argument('--validate', action='store_true', default=False)
     parser.add_argument('--validate-pattern', default=None)
+    parser.add_argument('--validate-type', default='MC')
     parser.add_argument('--info', action='store_true', default=False)
 
     """
@@ -894,6 +925,7 @@ if __name__ == '__main__':
     """
     parser.add_argument('--name', default='datasets')
     parser.add_argument('--config', default='datasets_config.yml')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False)
     parser.add_argument('analysis', choices=('lh', 'hh'))
     args = parser.parse_args()
 
@@ -904,7 +936,9 @@ if __name__ == '__main__':
         args.versioned = True
         args.name = 'datasets_lh'
 
-    db = Database(name=args.name, verbose=True)
+    db = Database(
+            name=args.name,
+            verbose=args.verbose)
 
     if args.info:
         for name in sorted(db.keys()):
@@ -914,23 +948,25 @@ if __name__ == '__main__':
     if args.reset:
         db.clear()
 
-    with open(args.config) as config:
-        config_dict = yaml.load(config)
-        for year, year_config in config_dict.items():
-            if args.analysis not in year_config:
-                continue
-            params = {}
-            params['data_grl'] = year_config['common'].get('grl', None)
-            params.update(year_config[args.analysis])
-            db.scan(year,
-                    deep=args.deep,
-                    versioned=args.versioned,
-                    **params)
-
-    if args.validate or args.validate_pattern is not None:
+    if not args.validate and not args.validate_pattern:
+        with open(args.config) as config:
+            config_dict = yaml.load(config)
+            for year, year_config in config_dict.items():
+                if args.analysis not in year_config:
+                    continue
+                params = {}
+                params['data_grl'] = year_config['common'].get('grl', None)
+                params.update(year_config[args.analysis])
+                db.scan(year,
+                        deep=args.deep,
+                        versioned=args.versioned,
+                        **params)
+    elif args.validate or args.validate_pattern is not None:
         # check for missing events etc...
+        validate_type = args.validate_type.upper()
+        validate_type = eval(validate_type)
         db.validate(pattern=args.validate_pattern,
-                    datatype=MC)
+                    datatype=validate_type)
     else:
         if args.info:
             print "%i datasets in database" % len(db)

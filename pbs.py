@@ -1,18 +1,22 @@
+#!/usr/bin/env python
 import subprocess
 from subprocess import call
+import getpass
 
 
 class PBSMonitor(object):
 
     def __init__(self):
 
+        self.user = getpass.getuser()
         self.jobs = {}
+        self.job_names = {}
         self.update()
 
     def update(self):
 
         qstat = subprocess.Popen(
-            ['qstat', '-f'],
+            ['qstat', '-f', '-1'],
             stdout=subprocess.PIPE).communicate()[0]
         jobs = qstat.split('\n\n')
         self.jobs = {}
@@ -20,13 +24,25 @@ class PBSMonitor(object):
             if not block:
                 continue
             block = block.split('\n')
-            jobid = block[0][8:]
-            jobname = block[1].split('=')[-1].strip()
-            self.jobs[jobid] = jobname
+            user = block[2].split(' = ')[-1].split('@')[0]
+            if self.user != user:
+                continue
+            info = {}
+            jobid = block[0].split(': ')[-1]
+            for line in block[1:]:
+                param, value = line.split(' = ')
+                info[param.strip()] = value.strip()
+            self.job_names[info['Job_Name']] = jobid
+            self.jobs[jobid] = info
 
     def has_jobname(self, name):
 
-        return name in self.jobs.values()
+        return name in self.job_names
+
+    def print_jobs(self):
+
+        for id, info in self.jobs.items():
+            print id, info['Job_Name']
 
 
 MONITOR = PBSMonitor()
@@ -58,3 +74,7 @@ def qsub(cmd,
     if not dry_run:
         call(cmd, shell=True)
 
+
+if __name__ == '__main__':
+
+    MONITOR.print_jobs()

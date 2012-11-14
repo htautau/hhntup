@@ -51,19 +51,7 @@ class TauFourMomentum(FourMomentum):
 
     def __init__(self):
 
-        self.efficiency_scale_factor = 1.
-        self.efficiency_scale_factor_high = 1.
-        self.efficiency_scale_factor_low = 1.
-
-        self.fakerate_scale_factor = 1.
-        self.fakerate_scale_factor_high = 1.
-        self.fakerate_scale_factor_low = 1.
-
-        self.trigger_scale_factor = 1.
-        self.trigger_scale_factor_high = 1.
-        self.trigger_scale_factor_low = 1.
-
-        self.collinear_momentum_fraction = -9999.
+        super(TauFourMomentum, self).__init__()
 
         self.centrality = 0.
         self.centrality_boosted = 0.
@@ -72,9 +60,6 @@ class TauFourMomentum(FourMomentum):
         self.matched_dR = 9999.
         self.matched_collision = False
 
-        # track recounting
-        self.numTrack_recounted = -1
-
         # vertex association
         self.vertex_prob = 0.
 
@@ -82,8 +67,6 @@ class TauFourMomentum(FourMomentum):
         self.min_dr_jet = 9999.
 
         self._pt_nominal = -1111.
-
-        super(TauFourMomentum, self).__init__()
 
     @property
     def pt_nominal(self):
@@ -122,6 +105,23 @@ class TauFourMomentumSkim(TauFourMomentum):
 
         self.trigger_match_thresh = 0
         self.trigger_match_index = -1
+
+        self.efficiency_scale_factor = 1.
+        self.efficiency_scale_factor_high = 1.
+        self.efficiency_scale_factor_low = 1.
+
+        self.fakerate_scale_factor = 1.
+        self.fakerate_scale_factor_high = 1.
+        self.fakerate_scale_factor_low = 1.
+
+        self.trigger_scale_factor = 1.
+        self.trigger_scale_factor_high = 1.
+        self.trigger_scale_factor_low = 1.
+
+        self.collinear_momentum_fraction = -9999.
+
+        # track recounting
+        self.numTrack_recounted = -1
 
 
 class ElectronFourMomentum(FourMomentum):

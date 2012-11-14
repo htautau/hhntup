@@ -150,7 +150,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             LArError(
                 count_funcs=count_funcs),
-            # no need to recalibrate jets in 2012 (yet...)
+            # 2011 and 2012 jet calibrations are applied
+            # InsituJES_2011_Preliminary.config
+            # JES_August2012.config
             JetCalibration(
                 datatype=datatype,
                 year=year,
@@ -229,7 +231,7 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
-                passthrough=datatype == datasets.DATA,
+                passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             PileupReweight(
                 year=year,
@@ -245,8 +247,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=no_trigger or datatype != datasets.MC,
                 count_funcs=count_funcs),
+            # FIXME!!! dsname does not match regex for ggf
             ggFReweighting(
                 dsname=self.metadata.name,
                 tree=tree,
@@ -295,6 +298,9 @@ class hhskim(ATLASStudent):
                 validate_log = open('skim2_validate_embedded_%d.txt' %
                         chain.RunNumber, 'w')
 
+        # create MMC object
+        mmc = mass.MMC(year=year, channel='hh')
+
         # entering the main event loop...
         for event in chain:
             assert len(event.taus) == 2
@@ -320,9 +326,8 @@ class hhskim(ATLASStudent):
             MET = event.MET.et
             sumET = event.MET.sumet
 
-            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
-                    tau1, tau2, METx, METy, sumET,
-                    year=year)
+            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+                    tau1, tau2, METx, METy, sumET)
 
             tree.tau_MMC_mass = mmc_mass
             tree.tau_MMC_resonance.set_from(mmc_resonance)

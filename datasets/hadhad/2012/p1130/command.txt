@@ -1,1 +1,0 @@
-ami list data --project data12_8TeV --type NTUP_TAU --parent-type AOD p1130

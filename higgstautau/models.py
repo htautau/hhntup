@@ -3,8 +3,38 @@ TreeModels common to both lephad and hadhad analyses
 """
 
 from rootpy.tree import TreeModel
-from rootpy.math.physics.vector import LorentzRotation, LorentzVector, Vector3, Vector2
+from rootpy.math.physics.vector import LorentzRotation, \
+                                       LorentzVector, \
+                                       Vector3, Vector2
 from rootpy.types import *
+
+
+class FourMomentum(TreeModel):
+
+    fourvect = LorentzVector
+    fourvect_boosted = LorentzVector
+
+    pt = FloatCol()
+    p = FloatCol()
+    et = FloatCol()
+    e = FloatCol()
+    eta = FloatCol(default=-1111)
+    phi = FloatCol(default=-1111)
+    m = FloatCol()
+
+    @classmethod
+    def set(cls, this, other):
+
+        vect = other.fourvect
+        this.pt = vect.Pt()
+        this.p = vect.P()
+        this.et = vect.Et()
+        this.e = vect.E()
+        this.m = vect.M()
+        this.phi = vect.Phi()
+        this.eta = vect.Eta()
+        this.fourvect.set_from(vect)
+        this.fourvect_boosted.set_from(other.fourvect_boosted)
 
 
 class TrueTau(TreeModel):

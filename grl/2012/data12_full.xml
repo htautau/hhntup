@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">
-<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on 2012-11-08 at 05:26:31 -->
+<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on 2012-11-14 at 03:23:14 -->
 <LumiRangeCollection>
   <NamedLumiRange>
     <Name>PHYS_StandardGRL_All_Good</Name>
@@ -2070,6 +2070,110 @@
       <LBRange Start='176' End='308'/>
       <LBRange Start='312' End='418'/>
       <LBRange Start='422' End='512'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213359</Run>
+      <LBRange Start='37' End='39'/>
+      <LBRange Start='41' End='144'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213431</Run>
+      <LBRange Start='184' End='300'/>
+      <LBRange Start='302' End='427'/>
+      <LBRange Start='431' End='447'/>
+      <LBRange Start='451' End='462'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213479</Run>
+      <LBRange Start='119' End='141'/>
+      <LBRange Start='146' End='150'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213486</Run>
+      <LBRange Start='88' End='124'/>
+      <LBRange Start='127' End='142'/>
+      <LBRange Start='144' End='167'/>
+      <LBRange Start='171' End='175'/>
+      <LBRange Start='191' End='326'/>
+      <LBRange Start='336' End='491'/>
+      <LBRange Start='496' End='576'/>
+      <LBRange Start='579' End='582'/>
+      <LBRange Start='587' End='645'/>
+      <LBRange Start='652' End='775'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213539</Run>
+      <LBRange Start='141' End='181'/>
+      <LBRange Start='188' End='189'/>
+      <LBRange Start='191' End='200'/>
+      <LBRange Start='202' End='226'/>
+      <LBRange Start='236' End='238'/>
+      <LBRange Start='247' End='249'/>
+      <LBRange Start='252' End='257'/>
+      <LBRange Start='260' End='283'/>
+      <LBRange Start='287' End='311'/>
+      <LBRange Start='319' End='364'/>
+      <LBRange Start='368' End='376'/>
+      <LBRange Start='380' End='614'/>
+      <LBRange Start='619' End='629'/>
+      <LBRange Start='631' End='985'/>
+      <LBRange Start='989' End='1260'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213627</Run>
+      <LBRange Start='219' End='231'/>
+      <LBRange Start='233' End='278'/>
+      <LBRange Start='280' End='312'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213640</Run>
+      <LBRange Start='4' End='8'/>
+      <LBRange Start='13' End='38'/>
+      <LBRange Start='41' End='59'/>
+      <LBRange Start='71' End='115'/>
+      <LBRange Start='120' End='200'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213684</Run>
+      <LBRange Start='189' End='204'/>
+      <LBRange Start='207' End='229'/>
+      <LBRange Start='231' End='255'/>
+      <LBRange Start='260' End='291'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213695</Run>
+      <LBRange Start='200' End='445'/>
+      <LBRange Start='447' End='471'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213702</Run>
+      <LBRange Start='219' End='356'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213754</Run>
+      <LBRange Start='426' End='530'/>
+      <LBRange Start='533' End='641'/>
+      <LBRange Start='645' End='673'/>
+      <LBRange Start='680' End='725'/>
+      <LBRange Start='734' End='799'/>
+      <LBRange Start='802' End='1054'/>
+      <LBRange Start='1058' End='1259'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213900</Run>
+      <LBRange Start='307' End='377'/>
+      <LBRange Start='382' End='462'/>
+      <LBRange Start='467' End='578'/>
+      <LBRange Start='581' End='609'/>
+      <LBRange Start='613' End='666'/>
+      <LBRange Start='668' End='731'/>
+      <LBRange Start='734' End='825'/>
+      <LBRange Start='828' End='891'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213968</Run>
+      <LBRange Start='170' End='223'/>
+      <LBRange Start='227' End='264'/>
     </LumiBlockCollection>
   </NamedLumiRange>
 </LumiRangeCollection>
