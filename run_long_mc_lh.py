@@ -5,9 +5,9 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument('--student', default='LHProcessor.py')
 parser.add_argument('--systematics', default=None)
-parser.add_argument('--nproc', type=int, default=1)
+parser.add_argument('--nproc', type=int, default=12)
 parser.add_argument('--queue', default='medium')
-parser.add_argument('--output-path', default='ntuples/lephadComposite')
+parser.add_argument('--output-path', default='ntuples/lephad/2012')
 parser.add_argument('--db', default='datasets_lh')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
@@ -32,8 +32,8 @@ datasets2011 = [
 
 datasets2012 = [
     'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a',
-    #'PowHegPythia8_AU2CT10_VBFH125_tautaulh.mc12a',
-    #'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a',
+    'PowHegPythia8_AU2CT10_VBFH125_tautaulh.mc12a',
+    'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a',
 ]
 
 datasets = datasets2012

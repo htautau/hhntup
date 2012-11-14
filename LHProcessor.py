@@ -92,14 +92,18 @@ class LHProcessor(ATLASStudent):
 
             onfilechange.append((update_grl, (self, merged_grl,)))
 
-        # update the trigger config maps on every file change
-        # onfilechange.append((update_trigger_config, (trigger_config,)))
 
         if self.metadata.datatype != datasets.EMBED:
             merged_cutflow = Hist(7, 0, 7, name='cutflow', type='D')
 
             def update_cutflow(student, cutflow, name, file, tree):
-                cutflow += file.cutflow
+                if year == 2011:
+                    cutflow += file.cutflow
+                elif datatype == datasets.MC:
+                    cutflow[0] += file.cutflow_event[0]
+                    cutflow[1] += file.cutflow_event_mc_weight[0]
+                else:
+                    cutflow[0] += file.cutflow_event[0]
 
                 onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
@@ -346,7 +350,9 @@ class LHProcessor(ATLASStudent):
             tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x  = tau_x
             tree.lep_x = lep_x
-            mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Lep, METx, METy, sumET, leptype)
+            mmc_mass, mmc_pt, mmc_met = -1,-1,-1
+            if tree.charge_product_tau_lep < 0 and tree.lep_isolated:
+                mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Lep, METx, METy, sumET, leptype)
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt.Pt()
             tree.met_mmc_tau_lep = mmc_met.Mod()
@@ -480,26 +486,26 @@ class LHProcessor(ATLASStudent):
                 #Lepton Trigger scale factors
                 if not event.isLTT:
                     if event.leptonType == 'mu':
-                        leptontrigwsf_w, tree.sys_mu_SLTSF_UP, tree.sys_mu_SLTSF_DOWN = LeptonSLTSF(event,
-                                                                                                    self.metadata.datatype,
-                                                                                                    pileup_tool, 
-                                                                                                    YEAR)
+                        leptontrigwsf_w, tree.sys_mu_TRIGSF_UP, tree.sys_mu_TRIGSF_DOWN = LeptonSLTSF(event,
+                                                                                                      self.metadata.datatype,
+                                                                                                      pileup_tool, 
+                                                                                                      YEAR)
                     if event.leptonType == 'e':
-                        leptontrigwsf_w, tree.sys_e_SLTSF_UP, tree.sys_e_SLTSF_DOWN = LeptonSLTSF(event,
-                                                                                                  self.metadata.datatype,
-                                                                                                  pileup_tool,
-                                                                                                  YEAR)
+                        leptontrigwsf_w, tree.sys_e_TRIGSF_UP, tree.sys_e_TRIGSF_DOWN = LeptonSLTSF(event,
+                                                                                                    self.metadata.datatype,
+                                                                                                    pileup_tool,
+                                                                                                    YEAR)
                 else:
                     if event.leptonType == 'mu':
-                        leptontrigsf_w, tree.sys_mu_LTTSF_UP, tree.sys_mu_LTTSF_DOWN = MuonLTTSF(event,
-                                                                                                 self.metadata.datatype,
-                                                                                                 YEAR,
-                                                                                                 pileup_tool)
-                    if event.leptonType == 'e':
-                        leptontrigsf_w, tree.sys_e_LTTSF_UP, tree.sys_e_LTTSF_DOWN = ElectronLTTSF(event,
+                        leptontrigsf_w, tree.sys_mu_TRIGSF_UP, tree.sys_mu_TRIGSF_DOWN = MuonLTTSF(event,
                                                                                                    self.metadata.datatype,
                                                                                                    YEAR,
                                                                                                    pileup_tool)
+                    if event.leptonType == 'e':
+                        leptontrigsf_w, tree.sys_e_TRIGSF_UP, tree.sys_e_TRIGSF_DOWN = ElectronLTTSF(event,
+                                                                                                     self.metadata.datatype,
+                                                                                                     YEAR,
+                                                                                                     pileup_tool)
                         
                     #Tau trigger scale factors
                     tautriggersf_w, tree.sys_tau_TRIGSF_UP, tree.sys_tau_TRIGSF_DOWN = TauTriggerSF(Tau,
@@ -563,28 +569,28 @@ class LHProcessor(ATLASStudent):
                 #Lepton Trigger scale factors
                 if not event.isLTT:
                     if event.leptonType == 'mu':
-                        leptontrigwsf_w, tree.sys_mu_SLTSF_UP, tree.sys_mu_SLTSF_DOWN = LeptonSLTSF(event,
+                        leptontrigwsf_w, tree.sys_mu_TRIGSF_UP, tree.sys_mu_TRIGSF_DOWN = LeptonSLTSF(event,
+                                                                                                      self.metadata.datatype,
+                                                                                                      pileup_tool,
+                                                                                                      YEAR)
+                    if event.leptonType == 'e':
+                        leptontrigwsf_w, tree.sys_e_TRIGSF_UP, tree.sys_e_TRIGSF_DOWN = LeptonSLTSF(event,
                                                                                                     self.metadata.datatype,
                                                                                                     pileup_tool,
                                                                                                     YEAR)
-                    if event.leptonType == 'e':
-                        leptontrigwsf_w, tree.sys_e_SLTSF_UP, tree.sys_e_SLTSF_DOWN = LeptonSLTSF(event,
-                                                                                                  self.metadata.datatype,
-                                                                                                  pileup_tool,
-                                                                                                  YEAR)
                 else:
                     if event.leptonType == 'mu':
-                        leptontrigsf_w, tree.sys_mu_LTTSF_UP, tree.sys_mu_LTTSF_DOWN = MuonLTTSF(Lep,
-                                                                                                 event.RunNumber,
-                                                                                                 self.metadata.datatype,
-                                                                                                 YEAR,
-                                                                                                 pileup_tool)
-                    if event.leptonType == 'e':
-                        leptontrigsf_w, tree.sys_e_LTTSF_UP, tree.sys_e_LTTSF_DOWN = ElectronLTTSF(Lep,
+                        leptontrigsf_w, tree.sys_mu_TRIGSF_UP, tree.sys_mu_TRIGSF_DOWN = MuonLTTSF(Lep,
                                                                                                    event.RunNumber,
                                                                                                    self.metadata.datatype,
                                                                                                    YEAR,
                                                                                                    pileup_tool)
+                    if event.leptonType == 'e':
+                        leptontrigsf_w, tree.sys_e_TRIGSF_UP, tree.sys_e_TRIGSF_DOWN = ElectronLTTSF(Lep,
+                                                                                                     event.RunNumber,
+                                                                                                     self.metadata.datatype,
+                                                                                                     YEAR,
+                                                                                                     pileup_tool)
 
                     #Tau trigger scale factors
                     tautriggersf_w, tree.sys_tau_TRIGSF_UP, tree.sys_tau_TRIGSF_DOWN = TauTriggerSF(Tau,

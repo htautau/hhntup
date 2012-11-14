@@ -127,19 +127,11 @@ class SysWeights(TreeModel):
     sys_mu_ISOSF_DOWN = FloatCol()
     sys_mu_EFFSF_UP = FloatCol()
     sys_mu_EFFSF_DOWN = FloatCol()
-    sys_mu_SLTSF_UP = FloatCol()
-    sys_mu_SLTSF_DOWN = FloatCol()
-    sys_mu_LTTSF_UP = FloatCol()
-    sys_mu_LTTSF_DOWN = FloatCol()
 
     sys_e_TRIGSF_UP = FloatCol()
     sys_e_TRIGSF_DOWN = FloatCol()
     sys_e_EFFSF_UP = FloatCol()
     sys_e_EFFSF_DOWN = FloatCol()
-    sys_e_SLTSF_UP = FloatCol()
-    sys_e_SLTSF_DOWN = FloatCol()
-    sys_e_LTTSF_UP = FloatCol()
-    sys_e_LTTSF_DOWN = FloatCol()
 
 
 class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):

@@ -624,8 +624,6 @@ def MuonLTTSF(event, datatype, year, pileup_tool):
         errup   = errup / sf
         errdown = errdown / sf
 
-    print HSG4.RESOURCE_PATH
-
     return sf, errup, errdown
         
         
