@@ -1,14 +1,13 @@
 import re
 from atlastools.units import GeV
 from externaltools import ggFReweighting
-
 ggFResources = ggFReweighting.RESOURCE_PATH
+from ROOT import ggFReweighting
 
 #################################################
 #ggF reweighting
 #################################################
 
-from ROOT import ggFReweighting
 
 ggF_tool = {}
 ggF_tool[100] = ggFReweighting("PowHeg", 100, "Mean", ggFResources, "mc11")
@@ -23,7 +22,7 @@ ggF_tool[140] = ggFReweighting("PowHeg", 140, "Mean", ggFResources, "mc11")
 ggF_tool[145] = ggFReweighting("PowHeg", 145, "Mean", ggFResources, "mc11")
 ggF_tool[150] = ggFReweighting("PowHeg", 150, "Mean", ggFResources, "mc11")
 
-DS_PATTERN = re.compile('PowHegPythia_ggH(?P<mass>\d+)_tautau')
+DS_PATTERN = re.compile('_ggH(?P<mass>\d+)_')
 
 
 def reweight_ggf(event, dataname):
