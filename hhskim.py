@@ -298,6 +298,9 @@ class hhskim(ATLASStudent):
                 validate_log = open('skim2_validate_embedded_%d.txt' %
                         chain.RunNumber, 'w')
 
+        # create MMC object
+        mmc = mass.MMC(year=year, channel='hh')
+
         # entering the main event loop...
         for event in chain:
             assert len(event.taus) == 2
@@ -323,9 +326,8 @@ class hhskim(ATLASStudent):
             MET = event.MET.et
             sumET = event.MET.sumet
 
-            mmc_mass, mmc_resonance, mmc_met = mass.missingmass(
-                    tau1, tau2, METx, METy, sumET,
-                    year=year)
+            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+                    tau1, tau2, METx, METy, sumET)
 
             tree.tau_MMC_mass = mmc_mass
             tree.tau_MMC_resonance.set_from(mmc_resonance)
