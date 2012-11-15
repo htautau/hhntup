@@ -225,6 +225,9 @@ class LHProcessor(ATLASStudent):
             pileup_tool.Initialize()
             print pileup_tool.getIntegratedLumiVector()
 
+        ## Initiate the MMC object
+        mmc = mass.MMC(year=YEAR, channel='lh')
+
 
         # entering the main event loop...
         for event in chain:
@@ -352,7 +355,7 @@ class LHProcessor(ATLASStudent):
             tree.lep_x = lep_x
             mmc_mass, mmc_pt, mmc_met = -1,-1,-1
             if tree.charge_product_tau_lep < 0 and tree.lep_isolated:
-                mmc_mass, mmc_pt, mmc_met = mass.missingmass(Tau, Lep, METx, METy, sumET, leptype)
+                mmc_mass, mmc_pt, mmc_met = mmc.mass(Tau, Lep, METx, METy, sumET, leptype)
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt.Pt()
             tree.met_mmc_tau_lep = mmc_met.Mod()
