@@ -10,8 +10,7 @@ from ..filters import pileup_vertex_selection
 
 class TauTriggerEfficiency(EventFilter):
     """
-    This filter should only be run on MC
-    currently only supports 2011
+    Determine the trigger efficiency corrections
     """
     @classmethod
     def get_period(cls, run):
