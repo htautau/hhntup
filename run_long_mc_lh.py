@@ -32,7 +32,7 @@ datasets2011 = [
 
 datasets2012 = [
     'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a',
-    'PowHegPythia8_AU2CT10_VBFH125_tautaulh.mc12a',
+    'McAtNloJimmy_CT10_ttbar_LeptonFilter.mc12a',  
     'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a',
 ]
 
