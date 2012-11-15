@@ -40,8 +40,7 @@ class MMC(object):
             self.tool.SetNiterFit2(40)
             self.tool.SetNsigmaMETscan(4.0)
 
-    @classmethod
-    def mass(cls,
+    def mass(self,
             tau1, tau2,
             METx, METy, sumET,
             tau2_lep_type=-1,
