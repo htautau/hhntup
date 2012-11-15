@@ -331,7 +331,7 @@ class HHProcessor(ATLASStudent):
         """
 
         # create MMC object
-        #mmc = mass.MMC(year=year, channel='hh')
+        mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -477,8 +477,8 @@ class HHProcessor(ATLASStudent):
                     MET_vect)
 
             # Mass
-            #mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-            #        tau1, tau2, METx, METy, sumET)
+            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+                    tau1, tau2, METx, METy, sumET)
             mmc_mass = event.tau_MMC_mass
             mmc_resonance = event.tau_MMC_resonance
             mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)

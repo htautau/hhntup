@@ -19,10 +19,10 @@ class MMC(object):
         assert year in (2011, 2012)
 
         if channel == 'hh' and year == 2012:
-            from externaltools.bundle_2011 import MissingMassCalculator
+            from externaltools.bundle_2012 import MissingMassCalculator
             # tag 7
         else:
-            from externaltools.bundle_2012 import MissingMassCalculator
+            from externaltools.bundle_2011 import MissingMassCalculator
             # tag 9
             # mmc tags are a mess...
 
