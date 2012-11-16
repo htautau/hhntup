@@ -5,7 +5,8 @@ as TreeModels.
 
 
 from rootpy.tree import TreeModel
-from rootpy.math.physics.vector import LorentzRotation, LorentzVector, Vector3, Vector2
+from rootpy.math.physics.vector import LorentzRotation, \
+        LorentzVector, Vector3, Vector2
 from rootpy.types import *
 
 from atlastools.utils import et2pt
