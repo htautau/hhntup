@@ -4,7 +4,7 @@
         grl: 'grl/2011/current.xml'
     # lephad config
     lh:
-        mc_path: '/global/oneil/lephad/skims/mc11_samples_used_for_analysis'
+        mc_path: '/global/oneil/lephad/skims/mc11'
         mc_prefix: 'group.phys-higgs.LHSkim'
         mc_pattern: '*.root*'
         mc_treename: 'tau'

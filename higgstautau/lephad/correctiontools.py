@@ -6,10 +6,6 @@ from atlastools import datasets
 from math import *
 import os
 
-from externaltools.bundle_2012 import MuonIsolationCorrection
-from externaltools import egammaAnalysisUtils
-from externaltools import HSG4TriggerSF as HSG4
-
 from ROOT import std, TLorentzVector, TFile
 from higgstautau.mixins import *
 
@@ -17,56 +13,19 @@ from higgstautau.mixins import *
 #################################################
 # Muon Pt Smearing
 #################################################
-__mmc_cached__  = False
-
-def getMMC(year):
-    global __mmc_cached__
-    if not (__mmc_cached__):
-        # if year == 2011:
-        #     from externaltools.bundle_2011 import MuonMomentumCorrections as MMC2011
-        #     __mmc_path_cached__ = MMC2011.RESOURCE_PATH
-        # if year == 2012:
-        #     from externaltools.bundle_2012 import MuonMomentumCorrections as MMC2012
-        #     __mmc_path_cached__ = MMC2012.RESOURCE_PATH
-
-        from externaltools import MuonMomentumCorrections as MMC
-        from ROOT import MuonSmear
-        if year == 2011:
-            ## Prepare 2011 muon pt smearing tool
-            __mmc_cached__ = MuonSmear.SmearingClass('Data11',
-                                                     'staco',
-                                                     'pT',
-                                                     'Rel17',
-                                                     MMC.RESOURCE_PATH)
-            __mmc_cached__.UseScale(1)
-            __mmc_cached__.UseImprovedCombine()
-            __mmc_cached__.RestrictCurvatureCorrections(2.5)
-            __mmc_cached__.FillScales('KC')
-
-        if year == 2012:
-            ## Prepare 2012 muon pt smearing tool
-            __mmc_cached__ = MuonSmear.SmearingClass('Data12',
-                                                     'staco',
-                                                     'pT',
-                                                     'Rel17.2_preliminary',
-                                                     MMC.RESOURCE_PATH)
-            __mmc_cached__.UseScale(1)
-            __mmc_cached__.UseImprovedCombine()
-            
-    return __mmc_cached__
 
 class MuonPtSmearing(EventFilter):
     """
     Smears the Muon Pt using the official ATLAS tool
     """
 
-    def __init__(self, datatype, year, **kwargs):
+    def __init__(self, datatype, year, tool, **kwargs):
 
         super(MuonPtSmearing, self).__init__(**kwargs)
         self.datatype = datatype
 
         self.year = year
-        self.tool = getMMC(year)
+        self.tool = tool
         
     def passes(self, event):
 
@@ -159,19 +118,17 @@ class MuonPtSmearing(EventFilter):
 #################################################
 # Muon isolation correction
 #################################################
-from ROOT import CorrectCaloIso
-
 class MuonIsoCorrection(EventFilter):
     """
     Corrects the muon isolation in 2012
     """
 
-    def __init__(self, datatype, year, **kwargs):
+    def __init__(self, datatype, year, tool, **kwargs):
 
         super(MuonIsoCorrection, self).__init__(**kwargs)
         self.datatype = datatype
         self.year = year
-        self.tool = CorrectCaloIso()
+        self.tool = tool
 
     def passes(self, event):
 
@@ -199,7 +156,6 @@ class MuonIsoCorrection(EventFilter):
 #################################################
 # Electron Energy Rescaling
 #################################################
-from ROOT import eg2011
 
 class EgammaERescaling(EventFilter):
     """
@@ -207,12 +163,12 @@ class EgammaERescaling(EventFilter):
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EnergyScaleResolutionRecommendations
     """
 
-    def __init__(self, datatype, year, **kwargs):
+    def __init__(self, datatype, year, tool, **kwargs):
 
         super(EgammaERescaling, self).__init__(**kwargs)
         self.datatype = datatype
         self.year = year
-        self.tool = eg2011.EnergyRescaler()
+        self.tool = tool
         if self.year == 2011:
             self.tool.useDefaultCalibConstants('2011')
         if self.year == 2012:
@@ -305,16 +261,16 @@ class EgammaERescaling(EventFilter):
 # Electron Isolation correction
 #################################################
     
-from ROOT import CaloIsoCorrection
 class ElectronIsoCorrection(EventFilter):
     """
     Correction for electron calorimeter isolation variables
     """
     
-    def __init__(self, datatype, year, **kwargs):
+    def __init__(self, datatype, year, tool, **kwargs):
 
         self.datatype = datatype
-        self.year = year        
+        self.year = year
+        self.tool = tool  
         super(ElectronIsoCorrection, self).__init__(**kwargs)
 
     def passes(self, event):
@@ -333,38 +289,38 @@ class ElectronIsoCorrection(EventFilter):
             
             if self.year == 2011:
                 if self.datatype == datasets.MC:
-                    newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
-                                                                                       E,
-                                                                                       EtaS2,
-                                                                                       EtaP,
-                                                                                       cl_eta,
-                                                                                       20,
-                                                                                       True,
-                                                                                       EtCone20)
+                    newElectronEtCone20 = self.tool.GetPtNPVCorrectedIsolation(nPV,
+                                                                               E,
+                                                                               EtaS2,
+                                                                               EtaP,
+                                                                               cl_eta,
+                                                                               20,
+                                                                               True,
+                                                                               EtCone20)
                 else:
-                    newElectronEtCone20 = CaloIsoCorrection.GetPtNPVCorrectedIsolation(nPV,
-                                                                                       E,
-                                                                                       EtaS2,
-                                                                                       EtaP,
-                                                                                       cl_eta,
-                                                                                       20,
-                                                                                       False,
-                                                                                       EtCone20)
+                    newElectronEtCone20 = self.tool.GetPtNPVCorrectedIsolation(nPV,
+                                                                               E,
+                                                                               EtaS2,
+                                                                               EtaP,
+                                                                               cl_eta,
+                                                                               20,
+                                                                               False,
+                                                                               EtCone20)
                 el.Etcone20 = newEtCone20
 
             if self.year == 2012:
-                newTopoEtCone20 = CaloIsoCorrection.GetPtEDCorrectedTopoIsolation(el.ED_median,
-                                                                                  E,
-                                                                                  EtaS2,
-                                                                                  EtaP,
-                                                                                  cl_eta,
-                                                                                  20,
-                                                                                  self.datatype == datasets.MC,
-                                                                                  el.topoEtcone20,
-                                                                                  False,
-                                                                                  CaloIsoCorrection.ELECTRON,
-                                                                                  CaloIsoCorrection.REL17)
-
+                newTopoEtCone20 = self.tool.GetPtEDCorrectedTopoIsolation(el.ED_median,
+                                                                          E,
+                                                                          EtaS2,
+                                                                          EtaP,
+                                                                          cl_eta,
+                                                                          20,
+                                                                          self.datatype == datasets.MC,
+                                                                          el.topoEtcone20,
+                                                                          False,
+                                                                          CaloIsoCorrection.ELECTRON,
+                                                                          CaloIsoCorrection.REL17)
+                
                 el.topoEtcone20 = newTopoEtCone20
                 
         return True
@@ -373,13 +329,7 @@ class ElectronIsoCorrection(EventFilter):
 #################################################
 # Muon isolation efficiency
 #################################################
-
-from rootpy.io import open as ropen
-HERE = os.path.dirname(os.path.abspath(__file__))
-MuonIsoCorrFile = ropen(os.path.join(HERE, 'SF_2D_UptoE5.root'))
-Corr2D = MuonIsoCorrFile.Get('SF_2D_PtVsNvx')
-
-def MuonIsoEffCorrection(event, datatype, year):
+def MuonIsoEffCorrection(tool, event, datatype, year):
     """
     Apply a correction on the muon isolation, returns nominal, -1sigma, +1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
@@ -396,8 +346,8 @@ def MuonIsoEffCorrection(event, datatype, year):
         if vx.nTracks >= 3:
             hsg3_nvtx += 1
 
-    b = Corr2D.FindBin(mu.fourvect.Pt()/1000, hsg3_nvtx)
-    weight = Corr2D.GetBinContent(b)
+    b = tool.FindBin(mu.fourvect.Pt()/1000, hsg3_nvtx)
+    weight = tool.GetBinContent(b)
 
     return weight, 0.98, 1.02
     
@@ -519,31 +469,7 @@ def TauIDSF(event, datatype, year):
 #################################################
 
 ## Scale factors for single muon triggers
-from externaltools import MuonEfficiencyCorrections
-from ROOT import Analysis
-
-__cached__ = False
-
-def getMuonSF(pileup, year):
-    global __cached__
-    if not __cached__:
-        if year == 2011:
-            int_lum = pileup.getIntegratedLumiVector()
-            __cached__ = Analysis.AnalysisMuonEfficiencyScaleFactors('STACO_CB',
-                                                                     int_lum,
-                                                                     'MeV',
-                                                                     MuonEfficiencyCorrections.RESOURCE_PATH)
-        if year == 2012:
-            __cached__ = Analysis.AnalysisMuonConfigurableScaleFactors('',
-                                                                       MuonEfficiencyCorrections.RESOURCE_PATH + '/STACO_CB_2012_SF.txt',
-                                                                       'MeV',
-                                                                       Analysis.AnalysisMuonConfigurableScaleFactors.AverageOverPeriods)
-            __cached__.setRunInterval(200804, 210308)
-            __cached__.Initialise()
-            
-    return __cached__
-
-def MuonSF(event, datatype, pileup_tool, year):
+def MuonSF(tool, event, datatype, pileup_tool, year):
     """
     Apply Muon Efficiency correction
     Returns nominal, +1sigma, -1sigma
@@ -559,7 +485,7 @@ def MuonSF(event, datatype, pileup_tool, year):
 
     muon = event.muons[0].fourvect
     muon_charge = int(event.muons[0].charge)
-    muonSF = getMuonSF(pileup_tool, year)
+    muonSF = tool
 
     if year == 2011:
         sf = muonSF.scaleFactor(muon)
@@ -583,10 +509,8 @@ def MuonSF(event, datatype, pileup_tool, year):
     return sf, errup, errdown
 
 ## Scale factor for lephad triggers
-from ROOT import HSG4TriggerSF
-sfTool = HSG4TriggerSF(HSG4.RESOURCE_PATH)
 
-def MuonLTTSF(event, datatype, year, pileup_tool):
+def MuonLTTSF(tool, event, datatype, year, pileup_tool):
     """
     Returns nominal, +1sigma, -1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
@@ -599,26 +523,26 @@ def MuonLTTSF(event, datatype, year, pileup_tool):
 
     if year == 2011:
         if datatype == datasets.MC:
-            sf      = sfTool.getSFMuon(mu, runNumber, 0)
-            errup   = sfTool.getSFMuon(mu, runNumber, 1)
-            errdown = sfTool.getSFMuon(mu, runNumber, -1)
+            sf      = tool.getSFMuon(mu, runNumber, 0)
+            errup   = tool.getSFMuon(mu, runNumber, 1)
+            errdown = tool.getSFMuon(mu, runNumber, -1)
         else:
-            sf      = sfTool.getDataEffMuon(mu, runNumber, 0)
-            errup   = sfTool.getDataEffMuon(mu, runNumber, 1)
-            errdown = sfTool.getDataEffMuon(mu, runNumber, -1)
+            sf      = tool.getDataEffMuon(mu, runNumber, 0)
+            errup   = tool.getDataEffMuon(mu, runNumber, 1)
+            errdown = tool.getDataEffMuon(mu, runNumber, -1)
 
 
     elif year == 2012:
         randomRunNumber = pileup_tool.GetRandomRunNumber(runNumber)
         
         if datatype == datasets.MC:
-            sf      = sfTool.getSFMuon(mu, randomRunNumber, 0)
-            errup   = sfTool.getSFMuon(mu, randomRunNumber, 1)
-            errdown = sfTool.getSFMuon(mu, randomRunNumber, -1)
+            sf      = tool.getSFMuon(mu, randomRunNumber, 0)
+            errup   = tool.getSFMuon(mu, randomRunNumber, 1)
+            errdown = tool.getSFMuon(mu, randomRunNumber, -1)
         else:
-            sf      = sfTool.getDataEffMuon(mu, randomRunNumber, 0)
-            errup   = sfTool.getDataEffMuon(mu, randomRunNumber, 1)
-            errdown = sfTool.getDataEffMuon(mu, randomRunNumber, -1)
+            sf      = tool.getDataEffMuon(mu, randomRunNumber, 0)
+            errup   = tool.getDataEffMuon(mu, randomRunNumber, 1)
+            errdown = tool.getDataEffMuon(mu, randomRunNumber, -1)
 
     if sf > 0.0:
         errup   = errup / sf
@@ -634,10 +558,7 @@ def MuonLTTSF(event, datatype, year, pileup_tool):
 #################################################
 
 ## Scale factors for single electron triggers
-from ROOT import egammaSFclass
-egammaSF = egammaSFclass()
-
-def ElectronSF(event, datatype, pileup_tool, year):
+def ElectronSF(tool, event, datatype, pileup_tool, year):
 
     """
     Electron efficiency correction.
@@ -658,12 +579,12 @@ def ElectronSF(event, datatype, pileup_tool, year):
     pt = el.fourvect.Pt()
     eta = el.cl_eta
     if year == 2011:
-        reconstructionEffCorr = egammaSF.scaleFactor(eta, pt, 4, 0, 6, True) # track + reco eff SF
-        identificationEffCorr = egammaSF.scaleFactor(eta, pt, 7, 0, 6, True) # ID eff SF
+        reconstructionEffCorr = tool.scaleFactor(eta, pt, 4, 0, 6, True) # track + reco eff SF
+        identificationEffCorr = tool.scaleFactor(eta, pt, 7, 0, 6, True) # ID eff SF
     if year == 2012:
         randomRunNumber = pileup_tool.GetRandomRunNumber(event.RunNumber)
-        reconstructionEffCorr = egammaSF.scaleFactor(eta, pt, 4, 0, 8, 1, randomRunNumber) # track + reco eff SF
-        identificationEffCorr = egammaSF.scaleFactor(eta, pt, 7, 0, 8, 1, randomRunNumber) # ID eff SF
+        reconstructionEffCorr = tool.scaleFactor(eta, pt, 4, 0, 8, 1, randomRunNumber) # track + reco eff SF
+        identificationEffCorr = tool.scaleFactor(eta, pt, 7, 0, 8, 1, randomRunNumber) # ID eff SF
     ## We don't use electrons in the forward region, so we don't need to apply SF for them.
     sf = reconstructionEffCorr.first * identificationEffCorr.first
     reconstructionError = reconstructionEffCorr.second
@@ -683,25 +604,9 @@ def ElectronSF(event, datatype, pileup_tool, year):
 #################################################
 # Lepton trigger scale factors
 #################################################
-__ltsf_cached__ = False
-
-def getLTSF(year):
-    global __ltsf_cached__
-    if not __ltsf_cached__:
-        if year == 2011:
-            from externaltools.bundle_2011 import TrigMuonEfficiency
-            from ROOT import LeptonTriggerSF
-            __lstf_cached__ = LeptonTriggerSF(TrigMuonEfficiency.RESOURCE_PATH)
-        if year == 2012:
-            from externaltools.bundle_2012 import TrigMuonEfficiency
-            from ROOT import LeptonTriggerSF
-            __ltsf_cached__ = LeptonTriggerSF(2012, TrigMuonEfficiency.RESOURCE_PATH, 'muon_trigger_sf_2012_AtoE.root')
-            
-    return __ltsf_cached__
-
 
 ## Scale factor for single lepton triggers
-def LeptonSLTSF(event, datatype, pileup_tool, year):
+def LeptonSLTSF(tool, event, datatype, pileup_tool, year):
 
     """
     Trigger efficiency correction.
@@ -760,7 +665,7 @@ def LeptonSLTSF(event, datatype, pileup_tool, year):
 
     randomRunNumber = pileup_tool.GetRandomRunNumber(event.RunNumber)
 
-    leptonTriggerSF = getLTSF(year)
+    leptonTriggerSF = tool
 
     trigSF = leptonTriggerSF.GetTriggerSF(randomRunNumber, False, v_muTLVs, 1, v_elTLVs, 2, 0)
     sf = trigSF.first
@@ -776,7 +681,7 @@ def LeptonSLTSF(event, datatype, pileup_tool, year):
 
 
 ## Scale factor for lephad triggers
-def ElectronLTTSF(event, datatype, year, pileup_tool):
+def ElectronLTTSF(tool, event, datatype, year, pileup_tool):
     """
     Returns nominal, +1sigma, -1sigma
     The -1sigma and +1sigma weights are designed to be applied on top of everything else
@@ -794,25 +699,25 @@ def ElectronLTTSF(event, datatype, year, pileup_tool):
 
     if year == 2011:
         if datatype == datasets.MC:
-            sf      = sfTool.getSFElec(e, runNumber, 0)
-            errup   = sfTool.getSFElec(e, runNumber, 1)
-            errdown = sfTool.getSFElec(e, runNumber, -1)
+            sf      = tool.getSFElec(e, runNumber, 0)
+            errup   = tool.getSFElec(e, runNumber, 1)
+            errdown = tool.getSFElec(e, runNumber, -1)
         else:
-            sf      = sfTool.getDataEffElec(e, runNumber, 0)
-            errup   = sfTool.getDataEffElec(e, runNumber, 1)
-            errdown = sfTool.getDataEffElec(e, runNumber, -1)
+            sf      = tool.getDataEffElec(e, runNumber, 0)
+            errup   = tool.getDataEffElec(e, runNumber, 1)
+            errdown = tool.getDataEffElec(e, runNumber, -1)
 
     elif year == 2012:
         randomRunNumber = pileup_tool.GetRandomRunNumber(runNumber)
         
         if datatype == datasets.MC:
-            sf      = sfTool.getSFElec(e, randomRunNumber, 0)
-            errup   = sfTool.getSFElec(e, randomRunNumber, 1)
-            errdown = sfTool.getSFElec(e, randomRunNumber, -1)
+            sf      = tool.getSFElec(e, randomRunNumber, 0)
+            errup   = tool.getSFElec(e, randomRunNumber, 1)
+            errdown = tool.getSFElec(e, randomRunNumber, -1)
         else:
-            sf      = sfTool.getDataEffElec(e, randomRunNumber, 0)
-            errup   = sfTool.getDataEffElec(e, randomRunNumber, 1)
-            errdown = sfTool.getDataEffElec(e, randomRunNumber, -1)
+            sf      = tool.getDataEffElec(e, randomRunNumber, 0)
+            errup   = tool.getDataEffElec(e, randomRunNumber, 1)
+            errdown = tool.getDataEffElec(e, randomRunNumber, -1)
 
     if sf > 0.0:
         errup   = errup / sf
@@ -827,29 +732,10 @@ def ElectronLTTSF(event, datatype, year, pileup_tool):
 # Special LTT corrections for tau trigger
 #################################################
 
-__ttc_cached__  = False
-__path_cached__ = False
-
-def getTTC(year):
-    global __ttc_cached__
-    global __path_cached__
-    if not (__ttc_cached__ or __path_cached__):
-        if year == 2011:
-            from externaltools.bundle_2011 import TauTriggerCorrections as TTC2011
-            __path_cached__ = TTC2011.RESOURCE_PATH
-        if year == 2012:
-            from externaltools.bundle_2012 import TauTriggerCorrections as TTC2012
-            __path_cached__ = TTC2012.RESOURCE_PATH
-
-    from ROOT import TauTriggerCorrections
-    __ttc_cached__ = TauTriggerCorrections()
-    return __ttc_cached__, __path_cached__
-
-
-def TauTriggerSF(Tau, nvtx, runNumber, year, lep, pileup_tool):
+def TauTriggerSF(tool, path, Tau, nvtx, runNumber, year, lep, pileup_tool):
     
     sf, errup, errdown = 1.0, 0.0, 0.0
-    ttc, ttcPath = getTTC(year)
+    ttc, ttcPath = tool, path
     tauPt  = Tau.fourvect.Pt()
     tauEta = Tau.fourvect.Eta()
 
