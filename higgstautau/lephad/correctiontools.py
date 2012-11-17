@@ -732,30 +732,26 @@ def ElectronLTTSF(tool, event, datatype, year, pileup_tool):
 # Special LTT corrections for tau trigger
 #################################################
 
-def TauTriggerSF(tool, path, Tau, nvtx, runNumber, year, lep, pileup_tool):
+def TauTriggerSF(tool1, tool2, tool3, Tau, nvtx, runNumber, year, lep, pileup_tool):
     
     sf, errup, errdown = 1.0, 0.0, 0.0
-    ttc, ttcPath = tool, path
     tauPt  = Tau.fourvect.Pt()
     tauEta = Tau.fourvect.Eta()
 
     if year == 2011:
         if runNumber > 186755:
-            status    =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'), '1P3P', 'BDTm')
-            sf    =  ttc.get3DMCEff(tauPt, tauEta , nvtx, 0)
-            errup    += ttc.get3DMCEff(tauPt, tauEta , nvtx, 1)**2
-            errdown  += ttc.get3DMCEff(tauPt, tauEta , nvtx, -1)**2
-            status    =  ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20_medium1.root'))
-            sf   *= ttc.getSF(tauPt, 0)
-            errup    += ttc.getSF(tauPt, 1)**2
-            errdown  += ttc.getSF(tauPt, -1)**2
+            sf    =  tool1.get3DMCEff(tauPt, tauEta , nvtx, 0)
+            errup    += tool1.get3DMCEff(tauPt, tauEta , nvtx, 1)**2
+            errdown  += tool1.get3DMCEff(tauPt, tauEta , nvtx, -1)**2
+            sf   *= tool2.getSF(tauPt, 0)
+            errup    += tool2.getSF(tauPt, 1)**2
+            errdown  += tool2.getSF(tauPt, -1)**2
             errup = sqrt(errup)
             errdown = sqrt(errdown)
         else:
-            status  = ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau16_loose.root'))
-            sf  = ttc.getDataEff(tauPt, 0)
-            errup   = ttc.getDataEff(tauPt, 1)
-            errdown = ttc.getDataEff(tauPt, -1)
+            sf  = tool3.getDataEff(tauPt, 0)
+            errup   = tool3.getDataEff(tauPt, 1)
+            errdown = tool3.getDataEff(tauPt, -1)
 
     if year == 2012:
         
@@ -774,16 +770,14 @@ def TauTriggerSF(tool, path, Tau, nvtx, runNumber, year, lep, pileup_tool):
             nprong = '3p'
         
         if lep == 'mu':
-            ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20_medium1.root'))
-            sf  = ttc.getSF(tauPt, tauEta, 0, period, nprong, 'BDTm', 'EVm')
-            errup   = ttc.getSF(tauPt, tauEta, 1, period, nprong, 'BDTm', 'EVm')
-            errdown = ttc.getSF(tauPt, tauEta, -1, period, nprong, 'BDTm', 'EVm')
+            sf  = tool1.getSF(tauPt, tauEta, 0, period, nprong, 'BDTm', 'EVm')
+            errup   = tool1.getSF(tauPt, tauEta, 1, period, nprong, 'BDTm', 'EVm')
+            errdown = tool1.getSF(tauPt, tauEta, -1, period, nprong, 'BDTm', 'EVm')
 
         if lep == 'e':
-            ttc.loadInputFile(os.path.join(ttcPath, 'triggerSF_EF_tau20Ti_medium1.root'))
-            sf  = ttc.getSF(tauPt, tauEta, 0, period, nprong, 'BDTm', 'EVm')
-            errup   = ttc.getSF(tauPt, tauEta, 1, period, nprong, 'BDTm', 'EVm')
-            errdown = ttc.getSF(tauPt, tauEta, -1, period, nprong, 'BDTm', 'EVm')
+            sf  = tool2.getSF(tauPt, tauEta, 0, period, nprong, 'BDTm', 'EVm')
+            errup   = tool2.getSF(tauPt, tauEta, 1, period, nprong, 'BDTm', 'EVm')
+            errdown = tool2.getSF(tauPt, tauEta, -1, period, nprong, 'BDTm', 'EVm')
 
     if sf > 0.0:
         errup   = errup / sf
