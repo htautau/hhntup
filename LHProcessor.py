@@ -114,8 +114,7 @@ class LHProcessor(ATLASStudent):
                          cache=True,
                          cache_size=10000000,
                          learn_entries=30,
-                         onfilechange=onfilechange,
-                         verbose=True)
+                         onfilechange=onfilechange)
 
         # create output tree
         self.output.cd()
