@@ -45,7 +45,8 @@ class MMC(object):
             METx, METy, sumET,
             tau2_lep_type=-1,
             method=1,
-            year=None):
+            year=None,
+            njets25=0):
         """
         Missing mass calculation
         returns the most likely mass
@@ -74,13 +75,13 @@ class MMC(object):
 
         # electron
         elif tau2_lep_type == 0:
-            tau2_decay_type = 0
-            vis_tau2.SetPtEtaPhiM(tau2.pt/GeV, tau2.eta, tau2.phi, 0.000511)
+            tau2_decay_type = 1
+            vis_tau2.SetPtEtaPhiM(tau2.pt/GeV, tau2.eta, tau2.phi,0.10565836668)
 
         # muon
         elif tau2_lep_type == 1:
             tau2_decay_type = 0
-            vis_tau2.SetPtEtaPhiM(tau2.pt/GeV, tau2.eta, tau2.phi, 0.105658)
+            vis_tau2.SetPtEtaPhiM(tau2.pt/GeV, tau2.eta, tau2.phi, 0.000510999)
 
         else:
             raise ValueError(
@@ -91,6 +92,10 @@ class MMC(object):
         self.tool.SetVisTauVec(1, vis_tau2)
         self.tool.SetVisTauType(0, tau1_decay_type)
         self.tool.SetVisTauType(1, tau2_decay_type)
+
+        if tau2_lep_type > -1:
+            self.tool.SetSumEt(sumET)
+            self.tool.SetNjet25(njets25)
 
         """
         jetvec = ROOT.vector("TLorentzVector")()
@@ -113,8 +118,9 @@ class MMC(object):
         met_vec = ROOT.TVector2(METx/GeV, METy/GeV)
         self.tool.SetMetVec(met_vec)
 
-        MET_res = 6.14 + 0.5 * sqrt(abs(sumET) / GeV) # sumET can be negative!!
-        self.tool.SetMetScanParams(0.0, MET_res, MET_res)
+        if tau2_lep_type == -1:
+            MET_res = 6.14 + 0.5 * sqrt(abs(sumET) / GeV) # sumET can be negative!!
+            self.tool.SetMetScanParams(0.0, MET_res, MET_res)
 
         """
         if len(jets) > 0:

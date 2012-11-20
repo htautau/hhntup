@@ -133,6 +133,18 @@ class SysWeights(TreeModel):
     sys_e_EFFSF_UP = FloatCol()
     sys_e_EFFSF_DOWN = FloatCol()
 
+    w_mc           = FloatCol()
+    w_pileup       = FloatCol()
+    w_lumi         = FloatCol()
+    w_tauesf       = FloatCol()
+    w_tauidsf      = FloatCol()
+    w_leptonsf     = FloatCol()
+    w_leptontrigsf = FloatCol()
+    w_tautriggersf = FloatCol()
+    w_muonisosf    = FloatCol()
+    w_ggf          = FloatCol()
+
+
 
 class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
 

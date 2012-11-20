@@ -8,6 +8,8 @@ import os
 
 from ROOT import std, TLorentzVector, TFile
 from higgstautau.mixins import *
+from externaltools import MissingETUtility
+from ROOT import METUtility
 
 
 #################################################
@@ -150,6 +152,20 @@ class MuonIsoCorrection(EventFilter):
 
         return True
 
+
+
+#################################################
+# Correct MET
+#################################################
+class METCorrection(EventFilter):
+    """
+    Adjusts the MET according to new adjusted Pt of objects
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Missing_ET_Correction_due_to_Pt
+    """
+
+    def __init__(self, datatype, year, **kwargs):
+        self.tool = METUtility()
+    
         
 
 
@@ -178,9 +194,6 @@ class EgammaERescaling(EventFilter):
 
         for el in event.electrons:
 
-            ## Seed with event number, reproducible smear for different analyses
-            self.tool.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(getattr(el,'fourvect').Phi()+pi)*1000000.))
-
             raw_e  = el.cl_E
             raw_et = getattr(el,'fourvect').Pt()
             corrected_e  = raw_e
@@ -188,19 +201,22 @@ class EgammaERescaling(EventFilter):
             cl_eta = el.cl_eta
             trk_eta = el.tracketa
             cl_phi = el.cl_phi
+            
+            ## Seed with event number, reproducible smear for different analyses
+            self.tool.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(cl_phi+pi)*1000000.))
 
             if self.year == 2011:
                 ## Calibration for electrons in the transition region in Data and MC
                 scaleFactorForTransitionRegion = self.tool.applyMCCalibrationMeV(cl_eta, raw_et, 'ELECTRON')
                 corrected_e  *= scaleFactorForTransitionRegion
-                corrected_et *= scaleFactorForTransitionRegion
+                corrected_et = corrected_e/cosh(trk_eta)
 
                 if self.datatype == datasets.MC or self.datatype == datasets.EMBED:
                     ## Smearing correction in MC
                     sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
                     smearFactor = self.tool.getSmearingCorrectionMeV(cl_eta, corrected_e, sys, False, '2011')
                     corrected_e  *= smearFactor
-                    corrected_et *= smearFactor
+                    corrected_et = corrected_e/cosh(trk_eta)
                 else:
                     ## Calibration correction in Data
                     sys = 0 # 0: nominal, 1: -1sigma, 2: +1sigma
@@ -208,7 +224,7 @@ class EgammaERescaling(EventFilter):
                     if corrected_e > 0:
                         scaleFactor = self.tool.applyEnergyCorrectionMeV(cl_eta, cl_phi, corrected_e, corrected_et, sys, 'ELECTRON') / corrected_e
                     corrected_e  *= scaleFactor
-                    corrected_et *= scaleFactor
+                    corrected_et = corrected_e/cosh(trk_eta)
 
             if self.year == 2012:
                 if self.datatype == datasets.DATA:
@@ -233,16 +249,10 @@ class EgammaERescaling(EventFilter):
             
 
             ## Adjust MET accordingly
-            if ((el.nSCTHits + el.nPixHits) < 4):
-                px = raw_et * cos(el.cl_phi)
-                py = raw_et * sin(el.cl_phi)
-                corrected_px = corrected_et * cos(el.cl_phi)
-                corrected_py = corrected_et * sin(el.cl_phi)
-            else:
-                px = raw_et * cos(el.trackphi)
-                py = raw_et * sin(el.trackphi)
-                corrected_px = corrected_et * cos(el.trackphi)
-                corrected_py = corrected_et * sin(el.trackphi)
+            px = raw_et * cos(el.phi)
+            py = raw_et * sin(el.phi)
+            corrected_px = corrected_et * cos(el.phi)
+            corrected_py = corrected_et * sin(el.phi)
 
             if self.year == 2011:
                 event.MET_RefFinal_BDTMedium_etx += ( px - corrected_px ) * el.MET_BDTMedium_wpx[0]
