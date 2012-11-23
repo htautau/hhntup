@@ -88,10 +88,11 @@ class hhskim(ATLASStudent):
         # define the model of the output tree
         Model = SkimModel + TriggerMatching + MassModel + TauCorrections
 
+        self.output.cd()
+
         # create the output tree
         tree = Tree(
                 name=self.metadata.treename,
-                file=self.output,
                 model=Model)
 
         onfilechange = []
