@@ -474,6 +474,7 @@ class Systematics(EventFilter):
     def __init__(self,
             datatype,
             year,
+            channel='hh',
             terms=None,
             verbose=False,
             very_verbose=False,
@@ -518,6 +519,7 @@ class Systematics(EventFilter):
 
         self.datatype = datatype
         self.year = year
+        self.channel = channel
         self.verbose = verbose
         self.very_verbose = very_verbose
 
@@ -525,7 +527,8 @@ class Systematics(EventFilter):
         self.met_utility = METUtility()
 
         # configure
-        self.met_utility.configMissingET(
+        if self.year == 2012:
+            self.met_utility.configMissingET(
                 year == 2012, # is 2012
                 year == 2012) # is STVF
 
@@ -612,17 +615,32 @@ class Systematics(EventFilter):
         JETS
         Always use setJetParameters since they may be recalibrated upstream
         """
-        self.met_utility.setJetParameters(
-            event.jet_pt,
-            event.jet_eta,
-            event.jet_phi,
-            event.jet_E,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-        self.met_utility.setOriJetParameters(event.jet_pt)
+        if self.channel == 'hh':
+            self.met_utility.setJetParameters(
+                event.jet_pt,
+                event.jet_eta,
+                event.jet_phi,
+                event.jet_E,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+
+            self.met_utility.setOriJetParameters(event.jet_pt)
+
+        if self.channel == 'lh':
+            self.met_utility.setJetParameters(
+                event.jet_pt,
+                event.jet_eta,
+                event.jet_phi,
+                event.jet_PhiOriginEM,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
+                event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+
+            self.met_utility.setOriJetParameters(event.jet_EtaOriginEM)
 
         """ NEVER USE THIS since jets may be recalibrated upstream
         self.met_utility.setMETTerm(
@@ -635,21 +653,34 @@ class Systematics(EventFilter):
         """
         ELECTRONS
         """
-        if self.terms & Systematics.ELECTRON_TERMS:
+
+        if self.channel == 'hh':
+            if self.terms & Systematics.ELECTRON_TERMS:
+                self.met_utility.setElectronParameters(
+                    event.el_pt,
+                    event.el_eta,
+                    event.el_phi,
+                    event.el_MET_BDTMedium_wet,
+                    event.el_MET_BDTMedium_wpx,
+                    event.el_MET_BDTMedium_wpy,
+                    event.el_MET_BDTMedium_statusWord)
+            else:
+                self.met_utility.setMETTerm(
+                    METUtil.RefEle,
+                    event.MET_RefEle_BDTMedium_etx,
+                    event.MET_RefEle_BDTMedium_ety,
+                    event.MET_RefEle_BDTMedium_sumet)
+
+        if self.channel == 'lh':
             self.met_utility.setElectronParameters(
-                event.el_pt,
+                event.el_cl_pt,
                 event.el_eta,
                 event.el_phi,
                 event.el_MET_BDTMedium_wet,
                 event.el_MET_BDTMedium_wpx,
                 event.el_MET_BDTMedium_wpy,
                 event.el_MET_BDTMedium_statusWord)
-        else:
-            self.met_utility.setMETTerm(
-                METUtil.RefEle,
-                event.MET_RefEle_BDTMedium_etx,
-                event.MET_RefEle_BDTMedium_ety,
-                event.MET_RefEle_BDTMedium_sumet)
+            
 
 
         if self.terms & Systematics.PHOTON_TERMS:
@@ -671,28 +702,47 @@ class Systematics(EventFilter):
         """
         MUONS
         """
-        if self.terms & Systematics.MUON_TERMS:
+        if self.channel == 'hh':
+            if self.terms & Systematics.MUON_TERMS:
+                self.met_utility.setMuonParameters(
+                    event.mu_staco_pt, # or smeared pT
+                    event.mu_staco_eta,
+                    event.mu_staco_phi,
+                    event.mu_staco_MET_BDTMedium_wet,
+                    event.mu_staco_MET_BDTMedium_wpx,
+                    event.mu_staco_MET_BDTMedium_wpy,
+                    event.mu_staco_MET_BDTMedium_statusWord)
+
+                # In this instance there is an overloaded version of
+                # setExtraMuonParameters that accepts smeared pTs for spectro
+                self.met_utility.setExtraMuonParameters(
+                    event.mu_staco_ms_pt, # or smeared pT
+                    event.mu_staco_ms_theta,
+                    event.mu_staco_ms_phi)
+            else:
+                self.met_utility.setMETTerm(
+                    METUtil.MuonTotal,
+                    event.MET_Muon_Total_Staco_BDTMedium_etx,
+                    event.MET_Muon_Total_Staco_BDTMedium_ety,
+                    event.MET_Muon_Total_Staco_BDTMedium_sumet)
+
+        if self.channel == 'lh':
             self.met_utility.setMuonParameters(
-                event.mu_staco_pt, # or smeared pT
+                event.mu_staco_etcone30, # or smeared pT
                 event.mu_staco_eta,
                 event.mu_staco_phi,
                 event.mu_staco_MET_BDTMedium_wet,
                 event.mu_staco_MET_BDTMedium_wpx,
                 event.mu_staco_MET_BDTMedium_wpy,
                 event.mu_staco_MET_BDTMedium_statusWord)
-
+            
             # In this instance there is an overloaded version of
             # setExtraMuonParameters that accepts smeared pTs for spectro
             self.met_utility.setExtraMuonParameters(
-                event.mu_staco_ms_pt, # or smeared pT
+                event.mu_staco_ptcone30, # or smeared pT
                 event.mu_staco_ms_theta,
                 event.mu_staco_ms_phi)
-        else:
-            self.met_utility.setMETTerm(
-                METUtil.MuonTotal,
-                event.MET_Muon_Total_Staco_BDTMedium_etx,
-                event.MET_Muon_Total_Staco_BDTMedium_ety,
-                event.MET_Muon_Total_Staco_BDTMedium_sumet)
+            
 
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
@@ -705,7 +755,24 @@ class Systematics(EventFilter):
         """
         TAUS
         """
-        if self.terms & Systematics.TAU_TERMS:
+        if self.channel == 'hh':
+            if self.terms & Systematics.TAU_TERMS:
+                self.met_utility.setTauParameters(
+                    event.tau_pt,
+                    event.tau_eta,
+                    event.tau_phi,
+                    event.tau_MET_BDTMedium_wet,
+                    event.tau_MET_BDTMedium_wpx,
+                    event.tau_MET_BDTMedium_wpy,
+                    event.tau_MET_BDTMedium_statusWord)
+            else:
+                self.met_utility.setMETTerm(
+                    METUtil.RefTau,
+                    event.MET_RefTau_BDTMedium_etx,
+                    event.MET_RefTau_BDTMedium_ety,
+                    event.MET_RefTau_BDTMedium_sumet)
+
+        if self.channel == 'lh':
             self.met_utility.setTauParameters(
                 event.tau_pt,
                 event.tau_eta,
@@ -714,13 +781,8 @@ class Systematics(EventFilter):
                 event.tau_MET_BDTMedium_wpx,
                 event.tau_MET_BDTMedium_wpy,
                 event.tau_MET_BDTMedium_statusWord)
-        else:
-            self.met_utility.setMETTerm(
-                METUtil.RefTau,
-                event.MET_RefTau_BDTMedium_etx,
-                event.MET_RefTau_BDTMedium_ety,
-                event.MET_RefTau_BDTMedium_sumet)
-
+             
+            
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
             event.MET_SoftJets_BDTMedium_etx,

@@ -28,7 +28,7 @@ class PrepareInputTree(EventFilter):
                 phi = el.trackphi
                 et  = el.cl_E / cosh(el.tracketa)
             vect = LorentzVector()
-            vect.SetPtEtaPhiE(et, eta, phi, el.cl_E)
+            vect.SetPtEtaPhiM(et, eta, phi, 0.510999)
             setattr(el, 'fourvect', vect)
 
         ## Append the isLTT (is Lepton-Tau trigger event) flag
@@ -36,6 +36,19 @@ class PrepareInputTree(EventFilter):
 
         ## Default value for the leptonType
         event.leptonType = 'mu'
+
+        return True
+
+
+class AcceptanceChallenge(EventFilter):
+
+    def passes(self, event):
+
+        EventNumbers = [30099, 30100, 30122, 30138, 30166, 30217, 30303, 30311, 30343, 30347]
+        EventNumbers += [30095, 30125, 30134, 30154, 30167, 30182, 30219, 30227, 30248, 30266]
+
+        if event.EventNumber not in EventNumbers:
+            return False
 
         return True
 
@@ -553,7 +566,7 @@ def tau_skimselection(tau):
 
     if not (tau.pt > 15*GeV) : return False
     if not (tau.numTrack == 1 or tau.numTrack == 3) : return False
-    if not (tau.JetBDTSigLoose == 1) : return False
+    #if not (tau.JetBDTSigLoose == 1) : return False
     if not (abs(tau.eta) < 2.5) : return False
 
     return True

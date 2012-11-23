@@ -13,8 +13,6 @@ __all__ = [
     'FourMomentum',
     'TauFourMomentum',
     'TauFourMomentumSkim',
-    'ElFourMomentum', # this one is buggy...
-    'ElectronFourMomentum',
     'MCTauFourMomentum',
     'MCParticle',
 ]
@@ -122,47 +120,6 @@ class TauFourMomentumSkim(TauFourMomentum):
 
         # track recounting
         self.numTrack_recounted = -1
-
-
-class ElectronFourMomentum(FourMomentum):
-
-    @cached_property
-    def fourvect(self):
-
-        if ((self.nSCTHits + self.nPixHits) < 4):
-            # electron with low number of tracker hits
-            eta = self.cl_eta
-            phi = self.cl_phi
-            et  = self.cl_E / math.cosh(self.cl_eta)
-        else:
-            eta = self.tracketa
-            phi = self.trackphi
-            et  = self.cl_E / math.cosh(self.tracketa)
-
-        vect = LorentzVector()
-        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
-        return vect
-
-
-class ElFourMomentum(FourMomentum):
-
-    @cached_property
-    def fourvect(self):
-
-        if ((self.nSCTHits + self.nPixHits) < 4):
-            print 'Electron with low number of tracks'
-            eta = self.cl_eta
-            phi = self.cl_phi
-            et  = self.cl_et # this isn't in the NTUP_TAU ntuples
-            # see alternate ElectronFourMomentum above
-        else:
-            eta = self.tracketa
-            phi = self.trackphi
-            et  = self.cl_E / math.cosh(self.tracketa)
-
-        vect = LorentzVector()
-        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
-        return vect
 
 
 class MCTauFourMomentum(FourMomentum):

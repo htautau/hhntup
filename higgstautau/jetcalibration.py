@@ -70,6 +70,9 @@ class JetCalibration(EventFilter):
                 eta     = jet.EtaOrigin
                 phi     = jet.PhiOrigin
                 m       = jet.MOrigin
+                ## Record old values
+                jet.EtaOriginEM = jet.pt
+                jet.PhiOriginEM = jet.E
                 #calib_jet = self.jes_tool.ApplyOffsetEtaJES(
                 #    Eraw, eta_det, eta, phi, m, mu, NPV)
                 calib_jet = self.jes_tool.ApplyEtaJES(
@@ -87,6 +90,9 @@ class JetCalibration(EventFilter):
                 eta     = jet.constscale_eta
                 phi     = jet.constscale_phi
                 m       = jet.constscale_m
+                ## Record old values
+                jet.EtaOriginEM = jet.pt
+                jet.PhiOriginEM = jet.E
                 calib_jet = self.jes_tool.ApplyOffsetEtaJES(
                     Eraw, eta_det, eta, phi, m, mu, NPV)
                 jet.E = calib_jet.E()

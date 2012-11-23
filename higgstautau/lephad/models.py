@@ -56,6 +56,7 @@ class RecoMET(TreeModel):
     MET_vect = Vector2
     MET_sig  = FloatCol()
     MET      = FloatCol()
+    sumET    = FloatCol()
 
 
 class RecoJet(TreeModel):
