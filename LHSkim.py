@@ -54,7 +54,7 @@ class SkimExtraModel(TreeModel):
 class LHSkim(ATLASStudent):
 
     def work(self):
-        
+
         # Determine year
         YEAR = 2012
         if self.metadata.year == 2011:
@@ -65,8 +65,8 @@ class LHSkim(ATLASStudent):
                           files=self.files,
                           events=self.events)
 
+        self.output.cd()
         outtree = Tree(name=self.metadata.treename,
-                       file=self.output,
                        model=SkimExtraModel)
 #        outtree.set_buffer(intree.buffer, create_branches=True, visible=False)
 
@@ -114,7 +114,7 @@ class LHSkim(ATLASStudent):
         if YEAR == 2012:
             eventFilterList.append(ElectronIDpatch())
             eventFilterList.append(TauIDpatch(YEAR))
-        
+
         event_filters = EventFilterList(eventFilterList)
 
         self.filters['event'] = event_filters
@@ -161,10 +161,10 @@ class LHSkim(ATLASStudent):
                        _mu_staco_trk_mindist = _trk_mindist
                        _mu_staco_trk_d3pdindex = i_trk
                 outtree.mu_staco_trk_d3pdindex.push_back(_mu_staco_trk_d3pdindex)
-                
+
             if self.metadata.datatype == datasets.MC:
                 nevents_mc_weights += event.mc_event_weight
-                
+
             if True: #trigger_filter(event):
                 nevents_passing_trigger +=1
 
