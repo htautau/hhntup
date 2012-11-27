@@ -282,7 +282,7 @@ class hhskim(ATLASStudent):
                 chain.buffer,
                 ignore_branches=chain.glob(
                     hhbranches.REMOVE,
-                    prune=hhbranches.KEEP),
+                    exclude=hhbranches.KEEP),
                 create_branches=True,
                 transfer_objects=True,
                 visible=False)

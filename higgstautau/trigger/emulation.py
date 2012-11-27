@@ -8,8 +8,11 @@ def update_trigger_trees(student, tool, name, file, tree):
     if not tool.passthrough and tool.year == 2011:
         print "Loading current tree in the TriggerTool ..."
         tool.trigger_tool_wrapper.loadMainTree(tree)
-        tool.trigger_tool_wrapper.loadMetaTree(
-                file.Get('%sMeta/TrigConfTree' % name))
+        if hasattr(file, 'GetRaw'):
+            trigtree = file.GetRaw('%sMeta/TrigConfTree' % name)
+        else:
+            trigtree = file.Get('%sMeta/TrigConfTree' % name)
+        tool.trigger_tool_wrapper.loadMetaTree(trigtree)
 
 
 class TauTriggerEmulation(EventFilter):
