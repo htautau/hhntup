@@ -302,8 +302,10 @@ class hhskim(ATLASStudent):
         # create MMC object
         mmc = mass.MMC(year=year, channel='hh')
 
+        self.output.cd()
         # entering the main event loop...
         for event in chain:
+
             assert len(event.taus) == 2
 
             tree.number_of_good_vertices = len(event.vertices)
