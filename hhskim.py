@@ -282,7 +282,7 @@ class hhskim(ATLASStudent):
                 chain.buffer,
                 ignore_branches=chain.glob(
                     hhbranches.REMOVE,
-                    prune=hhbranches.KEEP),
+                    exclude=hhbranches.KEEP),
                 create_branches=True,
                 transfer_objects=True,
                 visible=False)
@@ -302,8 +302,10 @@ class hhskim(ATLASStudent):
         # create MMC object
         mmc = mass.MMC(year=year, channel='hh')
 
+        self.output.cd()
         # entering the main event loop...
         for event in chain:
+
             assert len(event.taus) == 2
 
             tree.number_of_good_vertices = len(event.vertices)

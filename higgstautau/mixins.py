@@ -13,6 +13,7 @@ __all__ = [
     'FourMomentum',
     'TauFourMomentum',
     'TauFourMomentumSkim',
+    'ElectronFourMomentum',
     'MCTauFourMomentum',
     'MCParticle',
 ]
@@ -304,3 +305,23 @@ class MCParticle(FourMomentum):
              self.vx_x,
              self.vx_y,
              self.vx_z)
+
+
+class ElectronFourMomentum(FourMomentum):
+
+    @cached_property
+    def fourvect(self):
+
+        if ((self.nSCTHits + self.nPixHits) < 4):
+            # electron with low number of tracker hits
+            eta = self.cl_eta
+            phi = self.cl_phi
+            et  = self.cl_E / math.cosh(self.cl_eta)
+        else:
+            eta = self.tracketa
+            phi = self.trackphi
+            et  = self.cl_E / math.cosh(self.tracketa)
+
+        vect = LorentzVector()
+        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
+        return vect
