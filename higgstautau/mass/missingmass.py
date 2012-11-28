@@ -27,7 +27,7 @@ class MMC(object):
             # mmc tags are a mess...
 
         self.tool = ROOT.MissingMassCalculator()
-        
+
         if channel == 'hh':
             self.tool.SetAlgorithmVersion(1)
             self.tool.SetNiterFit1(20)
@@ -57,11 +57,16 @@ class MMC(object):
         # 1 prong
         if tau1.numTrack <= 1:
             tau1_decay_type = 10
-            vis_tau1.SetPtEtaPhiM(tau1.fourvect.Pt()/GeV, tau1.fourvect.Eta(), tau1.fourvect.Phi(), 0.8)
+            mvis = 0.8
         # 3 prongs
         else:
             tau1_decay_type = 30
-            vis_tau1.SetPtEtaPhiM(tau1.fourvect.Pt()/GeV, tau1.fourvect.Eta(), tau1.fourvect.Phi(), 1.2)
+            mvis = 1.2
+
+        vis_tau1.SetPtEtaPhiM(
+                tau1.fourvect.Pt()/GeV,
+                tau1.fourvect.Eta(),
+                tau1.fourvect.Phi(), mvis)
 
         vis_tau2 = ROOT.TLorentzVector()
 
@@ -69,11 +74,15 @@ class MMC(object):
             # 1 prong
             if tau2.numTrack <= 1:
                 tau2_decay_type = 10
-                vis_tau2.SetPtEtaPhiM(tau2.fourvect.Pt()/GeV, tau2.fourvect.Eta(), tau2.fourvect.Phi(), 0.8)
+                mvis = 0.8
             # 3 prongs
             else:
                 tau2_decay_type = 30
-                vis_tau2.SetPtEtaPhiM(tau2.fourvect.Pt()/GeV, tau2.fourvect.Eta(), fourvect.Phi(), 1.2)
+                mvis = 1.2
+            vis_tau2.SetPtEtaPhiM(
+                    tau2.fourvect.Pt()/GeV,
+                    tau2.fourvect.Eta(),
+                    tau2.fourvect.Phi(), mvis)
 
         # electron
         elif tau2_lep_type == 0:
@@ -123,7 +132,7 @@ class MMC(object):
         if tau2_lep_type == -1:
             MET_res = 6.14 + 0.5 * sqrt(abs(sumET) / GeV) # sumET can be negative!!
             self.tool.SetMetScanParams(0.0, MET_res, MET_res)
-            
+
         """
         if len(jets) > 0:
            MMC.SetMetScanParamsJets(jetvec)
