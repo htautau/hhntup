@@ -311,7 +311,7 @@ class LHProcessor(ATLASStudent):
 
         ## Setting event filters
         event_filters = EventFilterList([
-            AcceptanceChallenge(),
+            #AcceptanceChallenge(),
             PrepareInputTree(),
             Trigger( year=YEAR ),
             GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),

@@ -4,15 +4,15 @@
         grl: 'grl/2011/current.xml'
     # lephad config
     lh:
-        mc_path: '/global/oneil/lephad/skims/mc11'
+        mc_path: '/cluster/data03/michel/mc11'
         mc_prefix: 'group.phys-higgs.LHSkim'
         mc_pattern: '*.root*'
         mc_treename: 'tau'
-        data_path: '/global/oneil/lephad/skims/data11'
+        data_path: '/cluster/data01/michel/data11/all'
         data_prefix: 'group.phys-higgs.LHSkim'
         data_pattern: '*.root*'
         data_treename: 'tau'
-        embed_path: '/global/oneil/lephad/skims/Ztautau_embedded11'
+        embed_path: '/cluster/data05/michel/Ntuples/Ztautau_embedded11'
         embed_prefix: 'group.phys-higgs.LHSkim'
         embed_pattern: '*.root*'
         embed_treename: 'tau'

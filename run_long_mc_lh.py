@@ -7,7 +7,7 @@ parser.add_argument('--student', default='LHProcessor.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=12)
 parser.add_argument('--queue', default='medium')
-parser.add_argument('--output-path', default='ntuples/lephad/2012')
+parser.add_argument('--output-path', default='/cluster/data05/michel/Ntuples/lephad/test')
 parser.add_argument('--db', default='datasets_lh')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
@@ -26,8 +26,9 @@ hosts = cluster.get_hosts('hosts.sfu.txt')
 setup = cluster.get_setup('setup.michel.sfu.txt')
 
 datasets2011 = [
-    #'AlpgenJimmyZeeNp0_pt20.mc11c',
+    'AlpgenJimmyZeeNp0_pt20.mc11c',
     'AlpgenJimmyZtautauNp0_pt20.mc11c',
+    'T1_McAtNlo_Jimmy.mc11c'
     ]
 
 datasets2012 = [
@@ -36,7 +37,7 @@ datasets2012 = [
     'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a',
 ]
 
-datasets = datasets2012
+datasets = datasets2011
 
 if not args.systematics_only:
     # nominal values

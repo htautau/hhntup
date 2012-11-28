@@ -561,10 +561,10 @@ class Database(dict):
             else:
                 if data_prefix:
                     data_dirs = glob.glob(
-                            os.path.join(data_path, data_prefix) + '*')
+                        os.path.join(data_path, data_prefix) + '*')
                 else:
                     data_dirs = glob.glob(
-                            os.path.join(data_path, '*'))
+                        os.path.join(data_path, '*'))
 
             # classify dir by stream
             streams = {}

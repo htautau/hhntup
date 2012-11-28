@@ -388,7 +388,7 @@ class EgammaERescaling(EventFilter):
             cl_phi = el.cl_phi
             
             ## Seed with event number, reproducible smear for different analyses
-            self.tool.SetRandomSeed(int(5*event.RunNumber+event.EventNumber+(cl_phi+pi)*1000000.))
+            self.tool.SetRandomSeed(abs(int(5*event.RunNumber+event.EventNumber+(cl_phi+pi)*1000000.)))
 
             if self.year == 2011:
                 ## Calibration for electrons in the transition region in Data and MC

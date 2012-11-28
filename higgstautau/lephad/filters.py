@@ -1087,7 +1087,7 @@ def truthJetOverlap(truthJet, vectors):
 
     return False
 
-def vbfFilter(event):
+def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
     jets = []
 
     overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
@@ -1112,8 +1112,41 @@ def vbfFilter(event):
                 dEta = abs(jets[i].Eta() - jets[j].Eta())
                 Mjj  = (jets[i] + jets[j]).M()
                 
-                if dEta > 2.0: passdEta = True
-                if Mjj > 200*GeV: passMjj = True
+                if dEta > deta_cut: passdEta = True
+                if Mjj > mjj_cut*GeV: passMjj = True
+
+    if passMjj and passdEta and passNjets:
+        return True
+    return False
+
+
+def vbfFilter3(event, deta_cut=2.0, mjj_cut=200):
+
+    overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
+        
+    for jet in event.truthjets:
+        if jet.fourvect.Pt() < 15*GeV: continue
+        if abs(jet.fourvect.Eta()) > 5.0: continue
+        if truthJetOverlap(jet.fourvect, overlapParticles): continue
+        jets.append(jet.fourvect)
+
+    passNjets = False
+
+    njets =  len(jets)
+    if njets >= 2 : passNjets = True
+
+    passMjj  = False
+    passdEta = False
+
+    for i in event.truthjets:
+        for j in event.truthjets:
+            for k in event.truthjets:
+                if i.Eta() > j.Eta() > k.Eta():
+                    Mjj = (i + k).M()
+                    dEta = abs(i.Eta() - k.Eta())
+
+                    if dEta > deta_cut: passdEta = True
+                    if Mjj > mjj_cut*GeV: passMjj = True
 
     if passMjj and passdEta and passNjets:
         return True
@@ -1123,8 +1156,27 @@ def vbfFilter(event):
 class VBFFilter(EventFilter):
     """Keep events that don't pass the VBF filter"""
 
+    def __init__(self, deta_cut, mjj_cut, **kwargs):
+
+        self.deta_cut = deta_cut
+        self.mjj_cut
+        super(VBFFilter, self).__init__(**kwargs)
+
     def passes(self, event):
-        return vbfFilter(event)
+        return vbfFilter(event, self.deta_cut, self.mjj_cut)
+
+
+class VBFFilter3(EventFilter):
+    """Keep events that don't pass the VBF filter"""
+
+    def __init__(self, deta_cut, mjj_cut, **kwargs):
+
+        self.deta_cut = deta_cut
+        self.mjj_cut
+        super(VBFFilter3, self).__init__(**kwargs)
+
+    def passes(self, event):
+        return vbfFilter3(event, self.deta_cut, self.mjj_cut)
             
 
 class AntiVBFFilter(EventFilter):

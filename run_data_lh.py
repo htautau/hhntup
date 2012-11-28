@@ -6,7 +6,7 @@ import cluster
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
-parser.add_argument('--nproc', type=int, default=6)
+parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
@@ -22,7 +22,7 @@ datasets2011 = [
     'embed11-lh-isol-mfsim'
     ]
 
-datasets2011 = [
+datasets2012 = [
     'data12-Egamma',
     'data12-JetTauEtmiss',
     'data12-Muons',
@@ -36,7 +36,7 @@ CWD = os.getcwd()
 for i in xrange(args.nsplit):
     for dataset in datasets:
 
-        CMD = ("%s && ./run --output-path ntuples/lephadComposite/%s "
+        CMD = ("%s && ./run --output-path ntuples/lephad/test/%s "
                "-s LHProcessor.py -n %d --db datasets_lh "
         "--nice %d --split %d:%%d %s") % (
             setup, dataset, args.nproc, args.nice, args.nsplit, dataset)
@@ -46,7 +46,7 @@ for i in xrange(args.nsplit):
             cmd,
             ncpus=args.nproc,
             name= ('LHProcessor.data-%s_%d') % (dataset, (i + 1)),
-            stderr_path='ntuples/lephadComposite/' + dataset,
-            stdout_path='ntuples/lephadComposite/' + dataset,
+            stderr_path='ntuples/lephad/test/' + dataset,
+            stdout_path='ntuples/lephad/test/' + dataset,
             queue=args.queue,
             dry_run=args.dry)

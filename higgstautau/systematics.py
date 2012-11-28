@@ -41,10 +41,12 @@ from ROOT import TESUncertaintyProvider
 
 class ObjectSystematic(object):
 
-    def __init__(self, sys_util, verbose=False):
+    def __init__(self, sys_util, year=2011, channel='hh', verbose=False):
 
         self.sys_util = sys_util
         self.verbose = verbose
+        self.year = year
+        self.channel = channel
 
 
 class JetSystematic(ObjectSystematic):
@@ -83,13 +85,23 @@ class JES(JetSystematic):
 
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
-
-        self.jes_tool = MultijetJESUncertaintyProvider(
-            "MultijetJES_2011.config",
-            "InsituJES2011_AllNuisanceParameters.config",
-            "AntiKt4LCTopoJets","MC11c",
-            "externaltools/JetUncertainties/share/")
         super(JES, self).__init__(is_up, **kwargs)
+
+        self.jes_tool = None
+        
+        if self.channel == 'hh':
+            self.jes_tool = MultijetJESUncertaintyProvider(
+                "MultijetJES_2011.config",
+                "InsituJES2011_AllNuisanceParameters.config",
+                "AntiKt4LCTopoJets",
+                "MC11c",
+                "externaltools/JetUncertainties/share/")
+            
+        if self.channel == 'lh':
+            self.jes_tool = MultijetJESUncertaintyProvider("externaltools/JetUncertainties/share/MultijetJES_Preliminary.config",
+                                                           "externaltools/JetUncertainties/share/InsituJES2011_AllNuisanceParameters.config",
+                                                           "AntiKt4LCTopoJets",
+                                                           "MC11c")
 
     @JetSystematic.set
     def run(self, jet, event):
@@ -421,7 +433,7 @@ class Systematics(EventFilter):
     JES_DOWN = METUtil.JESDown
     JER_UP = METUtil.JERUp
     JER_DOWN = METUtil.JERDown # NOT USED!
-    JET_TERMS = set([JES_UP, JES_DOWN, JER_UP, JER_DOWN])
+    JES_TERMS = set([JES_UP, JES_DOWN, JER_UP, JER_DOWN])
 
     # muons
     MERID_UP = METUtil.MERIDUp
@@ -490,9 +502,9 @@ class Systematics(EventFilter):
             self.terms = terms
             for term in terms:
                 if term == Systematics.JES_UP:
-                    systematic = JES(True, sys_util=self, verbose=verbose)
+                    systematic = JES(True, sys_util=self, verbose=verbose, channel=channel)
                 elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, sys_util=self, verbose=verbose)
+                    systematic = JES(False, sys_util=self, verbose=verbose, channel=channel)
                 elif term == Systematics.JER_UP:
                     systematic = JER(True, sys_util=self, verbose=verbose)
                 elif term == Systematics.TES_UP:
