@@ -67,9 +67,11 @@ for skim_name in args.skim:
     testinput = skim['testinput']
     version = skim['version']
     options = skim['options']
-    dest = ','.join(skim['dest']).strip()
-    if dest:
-        dest = '--destSE=%s' % dest
+    dest = ''
+    if not args.grid_test:
+        dest = ','.join(skim['dest']).strip()
+        if dest:
+            dest = '--destSE=%s' % dest
     student_args = skim['student_args']
     if user_args:
         student_args += ' ' + ' '.join(user_args)

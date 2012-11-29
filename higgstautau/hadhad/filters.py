@@ -181,24 +181,28 @@ class EfficiencyScaleFactors(EventFilter):
 
 class FakeRateScaleFactors(EventFilter):
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, year, passthrough=False, **kwargs):
 
-        self.year = year % 1000
-        if self.year == 11:
-            from externaltools.bundle_2011 import TauFakeRates
-            from ROOT import TauFakeRates as TFR
-            fakerate_table = TauFakeRates.get_resource('FakeRateScaleFactor.txt')
-            self.fakerate_tool = TFR.FakeRateScaler(fakerate_table)
-            self.passes = self.passes_2011
-        elif self.year == 12:
-            from externaltools.bundle_2012 import TauFakeRates
-            from ROOT import TauFakeRates as TFR
-            self.fakerate_tool = TFR.FakeRateScaler(TauFakeRates.RESOURCE_PATH)
-            self.passes = self.passes_2012
-        else:
-            raise ValueError("No fakerates defined for year %d" % year)
+        if not passthrough:
+            self.year = year % 1000
+            if self.year == 11:
+                from externaltools.bundle_2011 import TauFakeRates
+                from ROOT import TauFakeRates as TFR
+                fakerate_table = TauFakeRates.get_resource(
+                        'FakeRateScaleFactor.txt')
+                self.fakerate_tool = TFR.FakeRateScaler(fakerate_table)
+                self.passes = self.passes_2011
+            elif self.year == 12:
+                from externaltools.bundle_2012 import TauFakeRates
+                from ROOT import TauFakeRates as TFR
+                self.fakerate_tool = TFR.FakeRateScaler(
+                        TauFakeRates.RESOURCE_PATH)
+                self.passes = self.passes_2012
+            else:
+                raise ValueError("No fakerates defined for year %d" % year)
 
-        super(FakeRateScaleFactors, self).__init__(**kwargs)
+        super(FakeRateScaleFactors, self).__init__(
+                passthrough=passthrough, **kwargs)
 
     def passes_2011(self, event):
 
