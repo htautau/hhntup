@@ -15,9 +15,8 @@ from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
 from rootpy.types import *
 from rootpy.io import open as ropen
 from rootpy.plotting import Hist
-from rootpy.registry import lookup_demotion
 
-from higgstautau.mixins import TauFourMomentum, ElFourMomentum
+from higgstautau.mixins import TauFourMomentum, ElectronFourMomentum
 from higgstautau.lephad.filters import tau_skimselection, muon_skimselection, electron_skimselection, \
                                        OverlapCheck, PrepareInputTree
 
@@ -72,7 +71,7 @@ class LHSkim(ATLASStudent):
 
         outtree.set_buffer(
                 intree.buffer,
-                ignore_branches=intree.glob(REMOVE,prune=KEEP),
+                ignore_branches=intree.glob(REMOVE,exclude=KEEP),
                 create_branches=True,
                 transfer_objects=True,
             visible=False)
@@ -103,7 +102,7 @@ class LHSkim(ATLASStudent):
         # Define collections for preselection
         intree.define_collection(name='taus', prefix='tau_', size='tau_n', mix=TauFourMomentum)
         intree.define_collection(name='muons', prefix='mu_staco_', size='mu_staco_n')
-        intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElFourMomentum)
+        intree.define_collection(name='electrons', prefix='el_', size='el_n', mix=ElectronFourMomentum)
         intree.define_object(name='isLTT', prefix='')
         intree.define_object(name='leptonType', prefix='')
 

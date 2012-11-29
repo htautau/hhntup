@@ -2,13 +2,13 @@
 
 # 2012 Official Tau D3PDs
 ##################################################
-grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg mc12_p1130_lephad
+grid-submit --yall -s LHSkim.py -u group.phys-higgs --suffix small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg mc12_p1130_lephad
 
-grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg embedded_p1130_lephad
+grid-submit --yall -s LHSkim.py -u group.phys-higgs --suffix small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg embedded_p1130_lephad
 
-grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg data12_p1130_muhad
-grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg data12_p1130_ehad
-grid-submit -s LHSkim.py -u group.phys-higgs -l small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg data12_p1130_leptau
+grid-submit --yall -s LHSkim.py -u group.phys-higgs --suffix small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg data12_p1130_muhad
+grid-submit --yall -s LHSkim.py -u group.phys-higgs --suffix small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg data12_p1130_ehad
+grid-submit --yall -s LHSkim.py -u group.phys-higgs --suffix small --official --destSE=CA-MCGILL-CLUMEQ-T2_PHYS-HIGGS,UNI-FREIBURG_PHYS-HIGGS -v 7 -m datasets.cfg data12_p1130_leptau
 
 # 2012 Testing Tau D3PDs
 ##################################################

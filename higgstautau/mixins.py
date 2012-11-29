@@ -1,7 +1,7 @@
 import math
 from decorators import cached_property
 from rootpy.math.physics.vector import LorentzVector
-from rootpy.hep import pdg
+from rootpy.extern.hep import pdg
 from atlastools.units import GeV
 
 """

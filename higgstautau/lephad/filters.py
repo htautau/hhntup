@@ -1159,7 +1159,7 @@ class VBFFilter(EventFilter):
     def __init__(self, deta_cut, mjj_cut, **kwargs):
 
         self.deta_cut = deta_cut
-        self.mjj_cut
+        self.mjj_cut  = mjj_cut
         super(VBFFilter, self).__init__(**kwargs)
 
     def passes(self, event):
@@ -1172,7 +1172,7 @@ class VBFFilter3(EventFilter):
     def __init__(self, deta_cut, mjj_cut, **kwargs):
 
         self.deta_cut = deta_cut
-        self.mjj_cut
+        self.mjj_cut  = mjj_cut
         super(VBFFilter3, self).__init__(**kwargs)
 
     def passes(self, event):
