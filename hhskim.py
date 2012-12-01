@@ -271,15 +271,14 @@ class hhskim(ATLASStudent):
                 files=self.files,
                 events=self.events,
                 onfilechange=onfilechange,
-                filters=event_filters,
-                verbose=True)
+                filters=event_filters)
 
         define_objects(chain, year, skim=True)
 
         # include the branches in the input chain in the output tree
         # set branches to be removed in ignore_branches
         tree.set_buffer(
-                chain.buffer,
+                chain._buffer,
                 ignore_branches=chain.glob(
                     hhbranches.REMOVE,
                     exclude=hhbranches.KEEP),
