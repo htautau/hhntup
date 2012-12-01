@@ -16,6 +16,7 @@ parser.add_argument('--systematics-only', action='store_true', default=False)
 parser.add_argument('--dry', action='store_true', default=False)
 parser.add_argument('--use-ssh', dest='use_qsub', action='store_false', default=True)
 parser.add_argument('--warnings-as-errors', action='store_true', default=False)
+parser.add_argument('--include-embedded', action='store_true', default=False)
 parser.add_argument('samples', nargs='*', default=None)
 
 args = parser.parse_args()
@@ -29,7 +30,8 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 
 if not args.systematics_only:
     # nominal values
-    datasets = samples.samples('hadhad', args.year, args.samples)
+    datasets = samples.samples('hadhad', args.year, args.samples,
+            include_embedded=args.include_embedded)
     cluster.run(args.student,
                 db=args.db,
                 datasets=datasets,
@@ -51,7 +53,8 @@ if not args.nominal_only:
                 args.systematics.split(',')]
     # systematics
     for datasets, systematics in samples.iter_samples('hadhad', args.year,
-            args.samples, systematics=True):
+            args.samples, systematics=True,
+            include_embedded=args.include_embedded):
         cluster.run_systematics_new('HADHAD',
                     args.student,
                     db=args.db,
