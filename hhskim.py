@@ -243,6 +243,7 @@ class hhskim(ATLASStudent):
             PileupReweight(
                 year=year,
                 tree=tree,
+                use_defaults=True,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             TruthMatching(
