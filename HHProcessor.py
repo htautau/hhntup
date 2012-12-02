@@ -322,7 +322,7 @@ class HHProcessor(ATLASStudent):
 
         self.filters['event'] = event_filters
 
-        chain.filters += event_filters
+        chain._filters += event_filters
 
         define_objects(chain, year, skim=False)
 
