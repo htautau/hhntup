@@ -101,6 +101,11 @@ class EventVariables(TreeModel):
     sum_pt_full = FloatCol()
 
 
+class EmbeddingBlock(TreeModel):
+
+    embedding_isolation = IntCol()
+
+
 class RecoTau(FourMomentum):
 
     BDTJetScore = FloatCol()

@@ -101,6 +101,10 @@ class HHProcessor(ATLASStudent):
             if 'VBF' in self.metadata.name:
                 OutputModel += PartonBlock
 
+        if datatype == datasets.EMBED:
+            # add embedding systematics branches
+            OutputModel += EmbeddingBlock
+
         onfilechange = []
         count_funcs = {}
 
@@ -308,6 +312,10 @@ class HHProcessor(ATLASStudent):
                 tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
+            EmbeddingIsolation(
+                tree=tree,
+                passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
             JetSelection(
                 year=year,
                 count_funcs=count_funcs),
@@ -331,7 +339,7 @@ class HHProcessor(ATLASStudent):
         """
 
         # create MMC object
-        mmc = mass.MMC(year=year, channel='hh')
+        #mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -476,9 +484,9 @@ class HHProcessor(ATLASStudent):
                     tau2.fourvect,
                     MET_vect)
 
-            # Mass
-            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2, METx, METy, sumET)
+            # Mass (use values in skim)
+            #mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+            #        tau1, tau2, METx, METy, sumET)
             mmc_mass = event.tau_MMC_mass
             mmc_resonance = event.tau_MMC_resonance
             mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
