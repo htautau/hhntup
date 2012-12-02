@@ -692,7 +692,7 @@ def MuonSF(tool, tool2, event, datatype, pileup_tool, year, runNumber, isLTT, Tr
 
         if datatype == datasets.EMBED and not isLTT:
             period = None
-            if runNumber <  178044: period = TrigMuonEff.perUnDefined
+            if runNumber <  178044: return 0.0, 0.0, 0.0
             elif runNumber <= 186493: period = TrigMuonEff.per2011B_I
             elif runNumber <= 189090 or (runNumber >= 189639 and runNumber <= 191933): period = TrigMuonEff.per2011J_MwoL3_L4
             elif runNumber >= 189184 and runNumber <= 189610: period = TrigMuonEff.per2011L3_L4

@@ -19,7 +19,7 @@ datasets2011 = [
     'data11-Egamma',
     'data11-JetTauEtmiss',
     'data11-Muons',
-    'embed11-lh-isol-mfsim'
+    #'embed11-lh-isol-mfsim'
     ]
 
 datasets2012 = [
@@ -36,7 +36,7 @@ CWD = os.getcwd()
 for i in xrange(args.nsplit):
     for dataset in datasets:
 
-        CMD = ("%s && ./run --output-path ntuples/lephad/test/%s "
+        CMD = ("%s && ./run --output-path /cluster/data05/michel/Ntuples/lephad/test/%s "
                "-s LHProcessor.py -n %d --db datasets_lh "
         "--nice %d --split %d:%%d %s") % (
             setup, dataset, args.nproc, args.nice, args.nsplit, dataset)
@@ -46,7 +46,7 @@ for i in xrange(args.nsplit):
             cmd,
             ncpus=args.nproc,
             name= ('LHProcessor.data-%s_%d') % (dataset, (i + 1)),
-            stderr_path='ntuples/lephad/test/' + dataset,
-            stdout_path='ntuples/lephad/test/' + dataset,
+            stderr_path='/cluster/data05/michel/Ntuples/lephad/test/' + dataset,
+            stdout_path='/cluster/data05/michel/Ntuples/lephad/test/' + dataset,
             queue=args.queue,
             dry_run=args.dry)

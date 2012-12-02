@@ -71,7 +71,7 @@ class LHProcessor(ATLASStudent):
                 grl |= GRL('%s:/lumi' % input)
             grl.save('%s:/lumi' % root_output)
 
-
+            
     def work(self):
         """
         This is the one function that all "ATLASStudent"s must implement.
@@ -224,74 +224,77 @@ class LHProcessor(ATLASStudent):
         MIEffCorrections = MuonIsoCorrFile.Get('SF_2D_PtVsNvx')
 
 
-        ## Muon Efficiency corrections
-        MEffCorrections = None
-        from externaltools import MuonEfficiencyCorrections
-        from ROOT import Analysis
+        if self.metadata.datatype != datasets.DATA:
+            ## Muon Efficiency corrections
+            MEffCorrections = None
+            from externaltools import MuonEfficiencyCorrections
+            from ROOT import Analysis
 
-        if YEAR == 2011:
-            int_lum = pileup_tool.getIntegratedLumiVector()
-            MEffCorrections = Analysis.AnalysisMuonEfficiencyScaleFactors('STACO_CB',
-                                                                          int_lum,
-                                                                          'MeV',
-                                                                          MuonEfficiencyCorrections.RESOURCE_PATH)
+            if YEAR == 2011:
+                int_lum = pileup_tool.getIntegratedLumiVector()
+                MEffCorrections = Analysis.AnalysisMuonEfficiencyScaleFactors('STACO_CB',
+                                                                              int_lum,
+                                                                              'MeV',
+                                                                              MuonEfficiencyCorrections.RESOURCE_PATH)
 
-        if YEAR == 2012:
-            MEffCorrections = Analysis.AnalysisMuonConfigurableScaleFactors('',
-                                                                            MuonEfficiencyCorrections.RESOURCE_PATH + '/STACO_CB_2012_SF.txt',
-                                                                            'MeV',
-                                                                            Analysis.AnalysisMuonConfigurableScaleFactors.AverageOverPeriods)
-            MEffCorrections.setRunInterval(200804, 210308)
-            MEffCorrections.Initialise()
+            if YEAR == 2012:
+                MEffCorrections = Analysis.AnalysisMuonConfigurableScaleFactors('',
+                                                                                MuonEfficiencyCorrections.RESOURCE_PATH + '/STACO_CB_2012_SF.txt',
+                                                                                'MeV',
+                                                                                Analysis.AnalysisMuonConfigurableScaleFactors.AverageOverPeriods)
+                MEffCorrections.setRunInterval(200804, 210308)
+                MEffCorrections.Initialise()
 
 
-        ## Electron Efficiency corrections
-        EGEffCorrections = None
-        from ROOT import egammaSFclass
-        EGEffCorrections = egammaSFclass()
+            ## Electron Efficiency corrections
+            EGEffCorrections = None
+            from ROOT import egammaSFclass
+            EGEffCorrections = egammaSFclass()
 
         
-        ## LTT trigger corrections
-        LTTCorrections = None
-        if YEAR == 2011:
-            from externaltools.bundle_2011 import HSG4TriggerSF as HSG4
-        if YEAR == 2012:
-            from externaltools.bundle_2012 import HSG4TriggerSF as HSG4
-        from ROOT import HSG4TriggerSF
-        LTTCorrections = HSG4TriggerSF(HSG4.RESOURCE_PATH)
+            ## LTT trigger corrections
+            LTTCorrections = None
+            if YEAR == 2011:
+                from externaltools.bundle_2011 import HSG4TriggerSF as HSG4
+            if YEAR == 2012:
+                from externaltools.bundle_2012 import HSG4TriggerSF as HSG4
+            from ROOT import HSG4TriggerSF
+            LTTCorrections = HSG4TriggerSF(HSG4.RESOURCE_PATH)
 
-        LTTtauCorrections = None
-        if YEAR == 2011:
-            from externaltools.bundle_2011 import TauTriggerCorrections  as TTC
-            LTTtauPath = TTC.RESOURCE_PATH
-        if YEAR == 2012:
-            from externaltools.bundle_2012 import TauTriggerCorrections  as TTC
-            LTTtauPath = TTC.RESOURCE_PATH
+            LTTtauCorrections = None
+            if YEAR == 2011:
+                from externaltools.bundle_2011 import TauTriggerCorrections  as TTC
+                LTTtauPath = TTC.RESOURCE_PATH
+            if YEAR == 2012:
+                from externaltools.bundle_2012 import TauTriggerCorrections  as TTC
+                LTTtauPath = TTC.RESOURCE_PATH
 
-        from ROOT import TauTriggerCorrections
-        LTTtauCorrections1 = TauTriggerCorrections()
-        LTTtauCorrections2 = TauTriggerCorrections()
-        LTTtauCorrections3 = TauTriggerCorrections()
+            from ROOT import TauTriggerCorrections
+            LTTtauCorrections1 = TauTriggerCorrections()
+            LTTtauCorrections2 = TauTriggerCorrections()
+            LTTtauCorrections3 = TauTriggerCorrections()
 
-        if YEAR == 2011:
-            LTTtauCorrections1.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'), '1P3P', 'BDTm')
-            LTTtauCorrections2.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau20_medium1.root'))
-            LTTtauCorrections3.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau16_loose.root'))
-        if YEAR == 2012:
-            LTTtauCorrections1.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau20_medium1.root'))
-            LTTtauCorrections2.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau20Ti_medium1.root'))
+            if YEAR == 2011:
+                LTTtauCorrections1.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_wmcpara_EF_tau20_medium1.root'), '1P3P', 'BDTm')
+                LTTtauCorrections2.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau20_medium1.root'))
+                LTTtauCorrections3.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau16_loose.root'))
+            if YEAR == 2012:
+                LTTtauCorrections1.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau20_medium1.root'))
+                LTTtauCorrections2.loadInputFile(os.path.join(LTTtauPath, 'triggerSF_EF_tau20Ti_medium1.root'))
 
 
-        ## SLT trigger corrections
-        SLTCorrections = None
-        if YEAR == 2011:
-            from externaltools import TrigMuonEfficiency
-            from ROOT import LeptonTriggerSF
-            SLTCorrections = LeptonTriggerSF(TrigMuonEfficiency.RESOURCE_PATH)
-        if YEAR == 2012:
-            from externaltools import TrigMuonEfficiency
-            from ROOT import LeptonTriggerSF
-            SLTCorrections = LeptonTriggerSF(2012, TrigMuonEfficiency.RESOURCE_PATH, 'muon_trigger_sf_2012_AtoE.root')
+            ## SLT trigger corrections
+            SLTCorrections = None
+            if YEAR == 2011:
+                from externaltools import TrigMuonEfficiency
+                from ROOT import LeptonTriggerSF
+                from ROOT import TrigMuonEff
+                SLTCorrections = LeptonTriggerSF(TrigMuonEfficiency.RESOURCE_PATH)
+            if YEAR == 2012:
+                from externaltools import TrigMuonEfficiency
+                from ROOT import LeptonTriggerSF
+                from ROOT import TrigMuonEff
+                SLTCorrections = LeptonTriggerSF(2012, TrigMuonEfficiency.RESOURCE_PATH, 'muon_trigger_sf_2012_AtoE.root')
 
 
         #####################################################################################
@@ -311,10 +314,11 @@ class LHProcessor(ATLASStudent):
 
         ## Setting event filters
         event_filters = EventFilterList([
-            #AcceptanceChallenge(),
+        #AcceptanceChallenge(),
             PrepareInputTree(),
             Trigger( year=YEAR ),
-            GRLFilter( self.grl, passthrough=self.metadata.datatype == datasets.MC ),
+            pseudoGRLFilter(),
+            GRLFilter( self.grl, passthrough=(self.metadata.datatype != datasets.DATA) ),
             #EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
             JetCalibration( year=YEAR, datatype=self.metadata.datatype, verbose=False ),
             MuonPtSmearing( datatype=self.metadata.datatype, year=YEAR, tool=MMCorrections ),
@@ -340,7 +344,7 @@ class LHProcessor(ATLASStudent):
             LeptonSelection( datatype=self.metadata.datatype, stream=self.metadata.stream, year=YEAR ),
             TauPreSelection(),
             TauSelection(),
-            JetSelection( year=YEAR ),
+            JetSelection( year=YEAR, bunny_ear_protection=False ),
             FinalOverlapRemoval(),
             ElectronIsoCorrection( datatype=self.metadata.datatype, year=YEAR, tool=EGICorrections ),
             MuonIsoCorrection(datatype=self.metadata.datatype, year=YEAR, tool=MICorrections )
@@ -489,7 +493,6 @@ class LHProcessor(ATLASStudent):
 
             #ddR
             tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau.fourvect, Lep.fourvect, MET_vect)
-
 
             """
             Higgs fancier mass calculation
@@ -649,7 +652,7 @@ class LHProcessor(ATLASStudent):
                                                                                       event,
                                                                                       self.metadata.datatype,
                                                                                       pileup_tool,
-                                                                                      YEAR, event.RunNumber, event.isLTT, TrigMuonEfficiency)
+                                                                                      YEAR, event.RunNumber, event.isLTT, TrigMuonEff)
                 if event.leptonType == 'e':
                     leptonsf_w, tree.sys_e_EFFSF_UP, tree.sys_e_EFFSF_DOWN = ElectronSF(EGEffCorrections,
                                                                                         event,
@@ -733,15 +736,15 @@ class LHProcessor(ATLASStudent):
                 except AttributeError:
                     pass
 
-                #Tau/Electron misidentification correction
-                tauesf_w, tree.sys_tau_ESF_UP, tree.sys_tau_ESF_DOWN = TauEfficiencySF(event,
-                                                                                       self.metadata.datatype,
-                                                                                       YEAR)
+                # #Tau/Electron misidentification correction
+                # tauesf_w, tree.sys_tau_ESF_UP, tree.sys_tau_ESF_DOWN = TauEfficiencySF(event,
+                #                                                                        self.metadata.datatype,
+                #                                                                        YEAR)
 
-                #Tau ID scale factor correction
-                tauidsf_w, tree.sys_tau_IDSF_UP, tree.sys_tau_IDSF_DOWN = TauIDSF(event,
-                                                                                  self.metadata.datatype,
-                                                                                  YEAR)
+                # #Tau ID scale factor correction
+                # tauidsf_w, tree.sys_tau_IDSF_UP, tree.sys_tau_IDSF_DOWN = TauIDSF(event,
+                #                                                                   self.metadata.datatype,
+                #                                                                   YEAR)
 
                 #Lepton Efficiency scale factors
                 if event.leptonType == 'mu':
@@ -750,7 +753,7 @@ class LHProcessor(ATLASStudent):
                                                                                       event,
                                                                                       self.metadata.datatype,
                                                                                       pileup_tool,
-                                                                                      YEAR, event.RunNumber, event.isLTT, TrigMuonEfficiency)
+                                                                                      YEAR, event.RunNumber, event.isLTT, TrigMuonEff)
                 if event.leptonType == 'e':
                     leptonsf_w, tree.sys_e_EFFSF_UP, tree.sys_e_EFFSF_DOWN = ElectronSF(EGEffCorrections,
                                                                                         event,
@@ -798,7 +801,7 @@ class LHProcessor(ATLASStudent):
                                                                                                      self.metadata.datatype,
                                                                                                      YEAR)
 
-                event_weight = mc_w * tautriggersf_w * tauidsf * leptonsf_w * leptontrigsf_w * muonisosf_w
+                event_weight = mc_w * tautriggersf_w * tauidsf_w * leptonsf_w * leptontrigsf_w * muonisosf_w
 
                 tree.w_mc           = mc_w
                 tree.w_tauidsf      = tauidsf_w

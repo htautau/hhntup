@@ -87,7 +87,7 @@ class LHSkim(ATLASStudent):
 
 
         # merge GRL XML strings
-        if self.metadata.datatype == datasets.DATA:
+        if self.metadata.datatype != datasets.MC:
             grls = []
             merged_grl = goodruns.GRL()
             for fname in self.files:

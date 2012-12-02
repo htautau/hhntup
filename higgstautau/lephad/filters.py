@@ -40,6 +40,14 @@ class PrepareInputTree(EventFilter):
         return True
 
 
+class pseudoGRLFilter(EventFilter):
+
+    def passes(self, event):
+
+        if event.RunNumber < 178044: return False
+        return True
+
+
 class AcceptanceChallenge(EventFilter):
 
     def passes(self, event):
@@ -97,7 +105,7 @@ class muSLTriggers(EventFilter):
     def __init__(self, year, **kwargs):
 
         self.year = year
-        super(muSLTTriggers, self).__init__(**kwargs)
+        super(muSLTriggers, self).__init__(**kwargs)
 
     def passes(self, event):
         """
@@ -223,7 +231,7 @@ class eSLTriggers(EventFilter):
     def __init__(self, year, **kwargs):
 
         self.year = year
-        super(eSLTTriggers, self).__init__(**kwargs)
+        super(eSLTriggers, self).__init__(**kwargs)
     
     def passes(self, event):
         """
@@ -268,7 +276,7 @@ class eLTTriggers(EventFilter):
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/DataPeriods
 
         2011:
-        period B-J  (177986-186755) : EF_tau16_e15_medium
+        period B-J  (177986-186755) : EF_tau16_loose_e15_medium
         period K    (186873-187815) : EF_tau20_medium_e15_medium
         period L-M  (188902-191933) : EF_tau20_medium_e15vh_medium
 
@@ -287,8 +295,7 @@ class eLTTriggers(EventFilter):
                 return event.EF_tau20Ti_medium1_e18vh_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+            return False
 
 
 # Electron any trigger
@@ -1090,7 +1097,13 @@ def truthJetOverlap(truthJet, vectors):
 def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
     jets = []
 
-    overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
+    photons   = getPhotons(event)
+    electrons = getElectrons(event)
+    taus      = getTaus(event)
+
+    print 'photons: %d, electrons: %d, taus: %d' % (len(photons), len(electrons), len(taus))
+
+    overlapParticles = photons + electrons + taus
         
     for jet in event.truthjets:
         if jet.fourvect.Pt() < 15*GeV: continue
@@ -1111,6 +1124,8 @@ def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
             if j > i:
                 dEta = abs(jets[i].Eta() - jets[j].Eta())
                 Mjj  = (jets[i] + jets[j]).M()
+
+                print 'dEta: %.2f, Mjj: %.2f' % (dEta, Mjj)
                 
                 if dEta > deta_cut: passdEta = True
                 if Mjj > mjj_cut*GeV: passMjj = True
@@ -1121,8 +1136,15 @@ def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
 
 
 def vbfFilter3(event, deta_cut=2.0, mjj_cut=200):
+    jets = []
 
-    overlapParticles = getPhotons(event) + getElectrons(event) + getTaus(event)
+    photons   = getPhotons(event)
+    electrons = getElectrons(event)
+    taus      = getTaus(event)
+
+    print 'photons: %d, electrons: %d, taus: %d' % (len(photons), len(electrons), len(taus))
+
+    overlapParticles = photons + electrons
         
     for jet in event.truthjets:
         if jet.fourvect.Pt() < 15*GeV: continue
@@ -1133,18 +1155,20 @@ def vbfFilter3(event, deta_cut=2.0, mjj_cut=200):
     passNjets = False
 
     njets =  len(jets)
-    if njets >= 2 : passNjets = True
+    if njets >= 3 : passNjets = True
 
     passMjj  = False
     passdEta = False
 
-    for i in event.truthjets:
-        for j in event.truthjets:
-            for k in event.truthjets:
+    for i in jets:
+        for j in jets:
+            for k in jets:
                 if i.Eta() > j.Eta() > k.Eta():
                     Mjj = (i + k).M()
                     dEta = abs(i.Eta() - k.Eta())
 
+                    print 'dEta: %.2f, Mjj: %.2f' % (dEta, Mjj)
+                    
                     if dEta > deta_cut: passdEta = True
                     if Mjj > mjj_cut*GeV: passMjj = True
 
