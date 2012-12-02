@@ -33,7 +33,7 @@ from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
-from higgstautau.embedding import EmbeddingPileupPatch
+from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
 from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
@@ -160,8 +160,7 @@ class HHProcessor(ATLASStudent):
                 cache=True,
                 cache_size=10000000,
                 learn_entries=30,
-                onfilechange=onfilechange,
-                verbose=True)
+                onfilechange=onfilechange)
 
         # create output tree
         self.output.cd()
@@ -176,7 +175,7 @@ class HHProcessor(ATLASStudent):
                 'lbn']
 
         tree.set_buffer(
-                chain.buffer,
+                chain._buffer,
                 branches=copied_variables,
                 create_branches=True,
                 visible=False)
