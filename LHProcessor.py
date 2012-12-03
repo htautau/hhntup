@@ -501,12 +501,13 @@ class LHProcessor(ATLASStudent):
             tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x  = tau_x
             tree.lep_x = lep_x
+            
             mmc_mass, mmc_pt, mmc_met = -1,-1,-1
-            if tree.charge_product_tau_lep < 0 and tree.lep_isolated and not self.metadata.datatype == datasets.DATA:
-                mmc_mass, mmc_pt, mmc_met = mmc.mass(Tau, Lep, METx, METy, sumET, mmc_leptype, njets25=numJets)
-                mmc_pt = mmc_pt.Pt()
-                mmc_met = mmc_met.Mod()
-
+            
+            mmc_mass, mmc_pt, mmc_met = mmc.mass(Tau, Lep, METx, METy, sumET, mmc_leptype, njets25=numJets)
+            mmc_pt = mmc_pt.Pt()
+            mmc_met = mmc_met.Mod()
+            
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt
             tree.met_mmc_tau_lep = mmc_met
