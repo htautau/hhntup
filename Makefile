@@ -11,7 +11,7 @@ hh-ntup-clean:
 
 hh-ntup-merge: hh-ntup-clean
 	./ntup-merge -s $(HHSTUDENT) $(HHNTUP)
-	(cd $(HHNTUP) && root2hdf5 $(HHSTUDENT).root)
+	(cd $(HHNTUP) && root2hd5 $(HHSTUDENT).root)
 
 clean:
 	rm -f *.pyc
