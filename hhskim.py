@@ -1,5 +1,6 @@
 import ROOT
 
+import os
 import math
 from argparse import ArgumentParser
 
@@ -18,7 +19,7 @@ from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
-from higgstautau.embedding import EmbeddingPileupPatch
+from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
 from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
@@ -28,6 +29,7 @@ from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.skimming.hadhad import branches as hhbranches
 from higgstautau.skimming.hadhad.models import *
+from higgstautau.hadhad.models import EmbeddingBlock
 from higgstautau.pileup import PileupTemplates, PileupReweight
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
@@ -87,6 +89,10 @@ class hhskim(ATLASStudent):
 
         # define the model of the output tree
         Model = SkimModel + TriggerMatching + MassModel + TauCorrections
+
+        if datatype == datasets.EMBED:
+            # add embedding systematics branches
+            OutputModel += EmbeddingBlock
 
         self.output.cd()
 
@@ -237,6 +243,7 @@ class hhskim(ATLASStudent):
             PileupReweight(
                 year=year,
                 tree=tree,
+                use_defaults=True,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             TruthMatching(
@@ -250,15 +257,18 @@ class hhskim(ATLASStudent):
                 year=year,
                 passthrough=no_trigger or datatype != datasets.MC,
                 count_funcs=count_funcs),
-            # FIXME!!! dsname does not match regex for ggf
             ggFReweighting(
-                dsname=self.metadata.name,
+                dsname=os.getenv('INPUT_DATASET_NAME', ''),
                 tree=tree,
                 # no ggf reweighting for 2012 MC
                 passthrough=datatype != datasets.MC or year != 2011,
                 count_funcs=count_funcs),
             TauTrackRecounting(
                 year=year,
+                count_funcs=count_funcs),
+            EmbeddingIsolation(
+                tree=tree,
+                passthrough=year < 2012 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
         ])
 
@@ -271,15 +281,14 @@ class hhskim(ATLASStudent):
                 files=self.files,
                 events=self.events,
                 onfilechange=onfilechange,
-                filters=event_filters,
-                verbose=True)
+                filters=event_filters)
 
         define_objects(chain, year, skim=True)
 
         # include the branches in the input chain in the output tree
         # set branches to be removed in ignore_branches
         tree.set_buffer(
-                chain.buffer,
+                chain._buffer,
                 ignore_branches=chain.glob(
                     hhbranches.REMOVE,
                     exclude=hhbranches.KEEP),

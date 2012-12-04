@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">
-<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on 2012-11-14 at 03:23:14 -->
+<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on 2012-12-01 at 23:51:12 -->
 <LumiRangeCollection>
   <NamedLumiRange>
     <Name>PHYS_StandardGRL_All_Good</Name>
@@ -2160,6 +2160,27 @@
       <LBRange Start='1058' End='1259'/>
     </LumiBlockCollection>
     <LumiBlockCollection>
+      <Run>213796</Run>
+      <LBRange Start='88' End='118'/>
+      <LBRange Start='123' End='128'/>
+      <LBRange Start='131' End='330'/>
+      <LBRange Start='332' End='346'/>
+      <LBRange Start='350' End='350'/>
+      <LBRange Start='357' End='362'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213816</Run>
+      <LBRange Start='192' End='380'/>
+      <LBRange Start='386' End='389'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213819</Run>
+      <LBRange Start='127' End='141'/>
+      <LBRange Start='155' End='182'/>
+      <LBRange Start='187' End='292'/>
+      <LBRange Start='294' End='371'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
       <Run>213900</Run>
       <LBRange Start='307' End='377'/>
       <LBRange Start='382' End='462'/>
@@ -2171,9 +2192,297 @@
       <LBRange Start='828' End='891'/>
     </LumiBlockCollection>
     <LumiBlockCollection>
+      <Run>213951</Run>
+      <LBRange Start='263' End='419'/>
+      <LBRange Start='421' End='452'/>
+      <LBRange Start='455' End='459'/>
+      <LBRange Start='464' End='475'/>
+      <LBRange Start='479' End='643'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>213964</Run>
+      <LBRange Start='46' End='69'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
       <Run>213968</Run>
-      <LBRange Start='170' End='223'/>
+      <LBRange Start='170' End='189'/>
+      <LBRange Start='191' End='223'/>
       <LBRange Start='227' End='264'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214021</Run>
+      <LBRange Start='332' End='410'/>
+      <LBRange Start='415' End='545'/>
+      <LBRange Start='549' End='551'/>
+      <LBRange Start='554' End='655'/>
+      <LBRange Start='657' End='1020'/>
+      <LBRange Start='1022' End='1142'/>
+      <LBRange Start='1144' End='1173'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214086</Run>
+      <LBRange Start='174' End='184'/>
+      <LBRange Start='193' End='279'/>
+      <LBRange Start='282' End='283'/>
+      <LBRange Start='290' End='500'/>
+      <LBRange Start='504' End='843'/>
+      <LBRange Start='846' End='1110'/>
+      <LBRange Start='1112' End='1128'/>
+      <LBRange Start='1133' End='1170'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214160</Run>
+      <LBRange Start='99' End='277'/>
+      <LBRange Start='279' End='290'/>
+      <LBRange Start='293' End='295'/>
+      <LBRange Start='300' End='427'/>
+      <LBRange Start='432' End='441'/>
+      <LBRange Start='445' End='496'/>
+      <LBRange Start='498' End='607'/>
+      <LBRange Start='611' End='788'/>
+      <LBRange Start='792' End='858'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214176</Run>
+      <LBRange Start='160' End='204'/>
+      <LBRange Start='207' End='257'/>
+      <LBRange Start='262' End='353'/>
+      <LBRange Start='357' End='357'/>
+      <LBRange Start='366' End='372'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214216</Run>
+      <LBRange Start='268' End='322'/>
+      <LBRange Start='325' End='369'/>
+      <LBRange Start='371' End='473'/>
+      <LBRange Start='477' End='738'/>
+      <LBRange Start='742' End='753'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214388</Run>
+      <LBRange Start='479' End='494'/>
+      <LBRange Start='498' End='507'/>
+      <LBRange Start='510' End='521'/>
+      <LBRange Start='524' End='547'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214390</Run>
+      <LBRange Start='12' End='13'/>
+      <LBRange Start='16' End='31'/>
+      <LBRange Start='34' End='41'/>
+      <LBRange Start='87' End='143'/>
+      <LBRange Start='146' End='191'/>
+      <LBRange Start='194' End='217'/>
+      <LBRange Start='229' End='231'/>
+      <LBRange Start='234' End='237'/>
+      <LBRange Start='239' End='272'/>
+      <LBRange Start='274' End='310'/>
+      <LBRange Start='319' End='319'/>
+      <LBRange Start='327' End='334'/>
+      <LBRange Start='336' End='342'/>
+      <LBRange Start='344' End='369'/>
+      <LBRange Start='371' End='373'/>
+      <LBRange Start='376' End='387'/>
+      <LBRange Start='390' End='408'/>
+      <LBRange Start='411' End='423'/>
+      <LBRange Start='425' End='425'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214494</Run>
+      <LBRange Start='68' End='91'/>
+      <LBRange Start='100' End='139'/>
+      <LBRange Start='141' End='273'/>
+      <LBRange Start='275' End='450'/>
+      <LBRange Start='454' End='490'/>
+      <LBRange Start='495' End='563'/>
+      <LBRange Start='568' End='690'/>
+      <LBRange Start='696' End='698'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214523</Run>
+      <LBRange Start='96' End='108'/>
+      <LBRange Start='115' End='152'/>
+      <LBRange Start='155' End='204'/>
+      <LBRange Start='206' End='317'/>
+      <LBRange Start='319' End='362'/>
+      <LBRange Start='366' End='577'/>
+      <LBRange Start='582' End='751'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214544</Run>
+      <LBRange Start='110' End='156'/>
+      <LBRange Start='159' End='204'/>
+      <LBRange Start='210' End='268'/>
+      <LBRange Start='276' End='326'/>
+      <LBRange Start='328' End='371'/>
+      <LBRange Start='373' End='496'/>
+      <LBRange Start='498' End='687'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214553</Run>
+      <LBRange Start='81' End='95'/>
+      <LBRange Start='99' End='103'/>
+      <LBRange Start='105' End='116'/>
+      <LBRange Start='119' End='120'/>
+      <LBRange Start='122' End='127'/>
+      <LBRange Start='135' End='147'/>
+      <LBRange Start='151' End='189'/>
+      <LBRange Start='195' End='225'/>
+      <LBRange Start='231' End='332'/>
+      <LBRange Start='335' End='442'/>
+      <LBRange Start='444' End='466'/>
+      <LBRange Start='469' End='572'/>
+      <LBRange Start='574' End='575'/>
+      <LBRange Start='582' End='674'/>
+      <LBRange Start='676' End='700'/>
+      <LBRange Start='719' End='726'/>
+      <LBRange Start='729' End='781'/>
+      <LBRange Start='784' End='791'/>
+      <LBRange Start='798' End='804'/>
+      <LBRange Start='813' End='818'/>
+      <LBRange Start='836' End='914'/>
+      <LBRange Start='920' End='935'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214618</Run>
+      <LBRange Start='89' End='154'/>
+      <LBRange Start='156' End='181'/>
+      <LBRange Start='184' End='188'/>
+      <LBRange Start='190' End='275'/>
+      <LBRange Start='278' End='329'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214651</Run>
+      <LBRange Start='63' End='73'/>
+      <LBRange Start='75' End='92'/>
+      <LBRange Start='100' End='118'/>
+      <LBRange Start='122' End='150'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214680</Run>
+      <LBRange Start='523' End='589'/>
+      <LBRange Start='592' End='600'/>
+      <LBRange Start='602' End='603'/>
+      <LBRange Start='605' End='666'/>
+      <LBRange Start='668' End='668'/>
+      <LBRange Start='674' End='744'/>
+      <LBRange Start='755' End='830'/>
+      <LBRange Start='832' End='850'/>
+      <LBRange Start='855' End='859'/>
+      <LBRange Start='861' End='1041'/>
+      <LBRange Start='1046' End='1172'/>
+      <LBRange Start='1175' End='1259'/>
+      <LBRange Start='1274' End='1330'/>
+      <LBRange Start='1333' End='1334'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214714</Run>
+      <LBRange Start='55' End='76'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214721</Run>
+      <LBRange Start='94' End='140'/>
+      <LBRange Start='145' End='219'/>
+      <LBRange Start='221' End='270'/>
+      <LBRange Start='274' End='292'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214758</Run>
+      <LBRange Start='111' End='181'/>
+      <LBRange Start='185' End='199'/>
+      <LBRange Start='204' End='216'/>
+      <LBRange Start='220' End='220'/>
+      <LBRange Start='224' End='230'/>
+      <LBRange Start='235' End='356'/>
+      <LBRange Start='360' End='494'/>
+      <LBRange Start='499' End='509'/>
+      <LBRange Start='513' End='543'/>
+      <LBRange Start='546' End='555'/>
+      <LBRange Start='564' End='566'/>
+      <LBRange Start='572' End='574'/>
+      <LBRange Start='583' End='618'/>
+      <LBRange Start='620' End='778'/>
+      <LBRange Start='782' End='847'/>
+      <LBRange Start='849' End='860'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214777</Run>
+      <LBRange Start='267' End='355'/>
+      <LBRange Start='360' End='369'/>
+      <LBRange Start='371' End='410'/>
+      <LBRange Start='412' End='482'/>
+      <LBRange Start='487' End='570'/>
+      <LBRange Start='574' End='683'/>
+      <LBRange Start='688' End='706'/>
+      <LBRange Start='724' End='804'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214984</Run>
+      <LBRange Start='388' End='391'/>
+      <LBRange Start='394' End='394'/>
+      <LBRange Start='444' End='444'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>214989</Run>
+      <LBRange Start='50' End='51'/>
+      <LBRange Start='55' End='55'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>215021</Run>
+      <LBRange Start='476' End='688'/>
+      <LBRange Start='693' End='719'/>
+      <LBRange Start='724' End='724'/>
+      <LBRange Start='731' End='731'/>
+      <LBRange Start='783' End='816'/>
+      <LBRange Start='820' End='968'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>215027</Run>
+      <LBRange Start='194' End='202'/>
+      <LBRange Start='204' End='223'/>
+      <LBRange Start='226' End='387'/>
+      <LBRange Start='392' End='441'/>
+      <LBRange Start='446' End='510'/>
+      <LBRange Start='515' End='610'/>
+      <LBRange Start='614' End='839'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>215061</Run>
+      <LBRange Start='117' End='140'/>
+      <LBRange Start='143' End='188'/>
+      <LBRange Start='192' End='241'/>
+      <LBRange Start='246' End='251'/>
+      <LBRange Start='253' End='253'/>
+      <LBRange Start='270' End='271'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>215063</Run>
+      <LBRange Start='127' End='242'/>
+      <LBRange Start='245' End='245'/>
+      <LBRange Start='250' End='387'/>
+      <LBRange Start='652' End='670'/>
+      <LBRange Start='701' End='730'/>
+      <LBRange Start='751' End='760'/>
+      <LBRange Start='771' End='832'/>
+    </LumiBlockCollection>
+    <LumiBlockCollection>
+      <Run>215091</Run>
+      <LBRange Start='91' End='98'/>
+      <LBRange Start='102' End='110'/>
+      <LBRange Start='112' End='128'/>
+      <LBRange Start='133' End='207'/>
+      <LBRange Start='211' End='273'/>
+      <LBRange Start='275' End='315'/>
+      <LBRange Start='318' End='329'/>
+      <LBRange Start='332' End='349'/>
+      <LBRange Start='352' End='431'/>
+      <LBRange Start='434' End='491'/>
+      <LBRange Start='495' End='498'/>
+      <LBRange Start='502' End='504'/>
+      <LBRange Start='511' End='511'/>
+      <LBRange Start='517' End='631'/>
+      <LBRange Start='634' End='714'/>
+      <LBRange Start='718' End='746'/>
     </LumiBlockCollection>
   </NamedLumiRange>
 </LumiRangeCollection>

@@ -9,20 +9,11 @@ from ROOT import ggFReweighting
 #################################################
 
 
-ggF_tool = {}
-ggF_tool[100] = ggFReweighting("PowHeg", 100, "Mean", ggFResources, "mc11")
-ggF_tool[105] = ggFReweighting("PowHeg", 105, "Mean", ggFResources, "mc11")
-ggF_tool[110] = ggFReweighting("PowHeg", 110, "Mean", ggFResources, "mc11")
-ggF_tool[115] = ggFReweighting("PowHeg", 115, "Mean", ggFResources, "mc11")
-ggF_tool[120] = ggFReweighting("PowHeg", 120, "Mean", ggFResources, "mc11")
-ggF_tool[125] = ggFReweighting("PowHeg", 125, "Mean", ggFResources, "mc11")
-ggF_tool[130] = ggFReweighting("PowHeg", 130, "Mean", ggFResources, "mc11")
-ggF_tool[135] = ggFReweighting("PowHeg", 135, "Mean", ggFResources, "mc11")
-ggF_tool[140] = ggFReweighting("PowHeg", 140, "Mean", ggFResources, "mc11")
-ggF_tool[145] = ggFReweighting("PowHeg", 145, "Mean", ggFResources, "mc11")
-ggF_tool[150] = ggFReweighting("PowHeg", 150, "Mean", ggFResources, "mc11")
+ggF_tool = dict([
+    (mass, ggFReweighting("PowHeg", mass, "Mean", ggFResources, "mc11"))
+    for mass in range(100, 155, 5)])
 
-DS_PATTERN = re.compile('_ggH(?P<mass>\d+)_')
+DS_PATTERN = re.compile('ggH(?P<mass>\d+)')
 
 
 def reweight_ggf(event, dataname):
@@ -43,11 +34,17 @@ def reweight_ggf(event, dataname):
 
     # Find the Higgs particle in mc
     pt = 0
+    higgs = None
     for mc in event.mc:
-        if mc.pdgId == 25 and mc.status != 3:
-            pt = mc.pt / GeV
-
+        if mc.pdgId == 25:
+            # get the Higgs just before the decay
+            higgs = mc.last_self
+            break
+    if higgs is None:
+        raise RuntimeError('could not find the Higgs!')
+    pt = higgs.pt / GeV
     if pt > 0:
-        return ggFTool.getWeight(pt)
+        weight = ggFTool.getWeight(pt)
     else:
-        return 1.
+        weight = 1.
+    return weight

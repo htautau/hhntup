@@ -38,8 +38,11 @@ class PileupTemplates(EventFilter):
 
 
 class PileupReweight(EventFilter):
-
-    def __init__(self, year, tree, passthrough=False, **kwargs):
+    """
+    Currently only implements hadhad reweighting
+    """
+    def __init__(self, year, tree,
+            use_defaults=True, passthrough=False, **kwargs):
 
         if not passthrough:
             self.tree = tree
@@ -47,20 +50,30 @@ class PileupReweight(EventFilter):
             # Initialize the pileup reweighting tool
             self.pileup_tool = Root.TPileupReweighting()
             if year == 2011:
-                self.pileup_tool.AddConfigFile(
+                if use_defaults:
+                    self.pileup_tool.AddConfigFile(
                         PileupReweighting.get_resource(
                             'mc11b_defaults.prw.root'))
+                else:
+                    self.pileup_tool.AddConfigFile(
+                        'lumi/2011/hadhad/'
+                        'TPileupReweighting.mc11.prw.root')
                 self.pileup_tool.AddLumiCalcFile(
                         'lumi/2011/hadhad/'
                         'ilumicalc_histograms_None_178044-191933.root')
             elif year == 2012:
-                self.pileup_tool.AddConfigFile(
+                if use_defaults:
+                    self.pileup_tool.AddConfigFile(
                         PileupReweighting.get_resource(
                             'mc12a_defaults.prw.root'))
+                else:
+                    self.pileup_tool.AddConfigFile(
+                        'lumi/2012/hadhad/'
+                        'TPileupReweighting.mc12.prw.root')
                 self.pileup_tool.SetDataScaleFactors(1./1.11)
                 self.pileup_tool.AddLumiCalcFile(
                         'lumi/2012/hadhad/'
-                        'ilumicalc_histograms_None_200841-213250.root')
+                        'ilumicalc_histograms_None_200841-215091.root')
             else:
                 raise ValueError('No pileup reweighting defined for year %d' %
                         year)

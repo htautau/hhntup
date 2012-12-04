@@ -42,7 +42,10 @@ class PBSMonitor(object):
     def print_jobs(self):
 
         for id, info in self.jobs.items():
-            print id, info['Job_Name']
+            if 'exec_host' in info:
+                print id, info['job_state'], info['Job_Name'], info['exec_host']
+            else:
+                print id, info['job_state'], info['Job_Name']
 
 
 MONITOR = PBSMonitor()

@@ -19,13 +19,7 @@ def get_trigger_config():
 
 def update_trigger_config(tool, name, file, tree):
 
-    configTreeName = "%sMeta/TrigConfTree"% name
-    if hasattr(file, 'GetRaw'):
-        configTree = file.GetRaw(configTreeName)
-    else:
-        configTree = file.Get(configTreeName)
-    if not configTree:
-        raise RuntimeError("Could not find %s in %s"% (configTreeName, file.GetName()))
+    configTree = file.Get("%sMeta/TrigConfTree" % name)
     tool.SetConfigTree(configTree)
 
 

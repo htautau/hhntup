@@ -89,6 +89,8 @@ def get_chunk(l, n, k):
         stop = step * k
     return l[start:stop]
 
+if args.nproc < 1:
+    args.nproc = 1
 
 supervisors = {}
 for dataset in _datasets:

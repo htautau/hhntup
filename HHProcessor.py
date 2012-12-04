@@ -33,7 +33,7 @@ from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
-from higgstautau.embedding import EmbeddingPileupPatch
+from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
 from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
@@ -101,6 +101,10 @@ class HHProcessor(ATLASStudent):
             if 'VBF' in self.metadata.name:
                 OutputModel += PartonBlock
 
+        if datatype == datasets.EMBED:
+            # add embedding systematics branches
+            OutputModel += EmbeddingBlock
+
         onfilechange = []
         count_funcs = {}
 
@@ -156,8 +160,7 @@ class HHProcessor(ATLASStudent):
                 cache=True,
                 cache_size=10000000,
                 learn_entries=30,
-                onfilechange=onfilechange,
-                verbose=True)
+                onfilechange=onfilechange)
 
         # create output tree
         self.output.cd()
@@ -172,7 +175,7 @@ class HHProcessor(ATLASStudent):
                 'lbn']
 
         tree.set_buffer(
-                chain.buffer,
+                chain._buffer,
                 branches=copied_variables,
                 create_branches=True,
                 visible=False)
@@ -308,6 +311,10 @@ class HHProcessor(ATLASStudent):
                 tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
+            EmbeddingIsolation(
+                tree=tree,
+                passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
             JetSelection(
                 year=year,
                 count_funcs=count_funcs),
@@ -315,7 +322,7 @@ class HHProcessor(ATLASStudent):
 
         self.filters['event'] = event_filters
 
-        chain.filters += event_filters
+        chain._filters += event_filters
 
         define_objects(chain, year, skim=False)
 
@@ -331,7 +338,7 @@ class HHProcessor(ATLASStudent):
         """
 
         # create MMC object
-        mmc = mass.MMC(year=year, channel='hh')
+        #mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -476,9 +483,9 @@ class HHProcessor(ATLASStudent):
                     tau2.fourvect,
                     MET_vect)
 
-            # Mass
-            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2, METx, METy, sumET)
+            # Mass (use values in skim)
+            #mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+            #        tau1, tau2, METx, METy, sumET)
             mmc_mass = event.tau_MMC_mass
             mmc_resonance = event.tau_MMC_resonance
             mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)

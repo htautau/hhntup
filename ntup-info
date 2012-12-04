@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('path')
+args = parser.parse_args()
+
+from rootpy.io import open as ropen
+import ROOT
+import json
+
+# hadhad info
+from higgstautau.hadhad.periods import LUMI
+
+with ropen(args.path, 'UPDATE') as outfile:
+    json_str = json.dumps({'lumi': LUMI},
+            sort_keys=True, indent=4,
+            separators=(',', ': '))
+    info = ROOT.TObjString(json_str)
+    info.Write('info', ROOT.gROOT.kOverwrite)

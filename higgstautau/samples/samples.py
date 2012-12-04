@@ -108,11 +108,14 @@ def filter_with_patterns(samples, patterns):
     return list(set(itertools.chain(*matches)))
 
 
-def iter_samples(channel, year, patterns=None, systematics=False):
+def iter_samples(channel, year, patterns=None, systematics=False,
+        include_embedded=True):
 
     channel = channel.lower()
     year = year % 1000
     for sample_type, sample_info in SAMPLES[channel][year].items():
+        if not include_embedded and 'embed' in sample_type:
+            continue
         samples = filter_with_patterns(sample_info['samples'][:], patterns)
         if systematics:
             if not samples:
@@ -128,10 +131,10 @@ def iter_samples(channel, year, patterns=None, systematics=False):
                 yield samples
 
 
-def samples(channel, year, patterns=None):
+def samples(channel, year, patterns=None, include_embedded=True):
 
     return list(itertools.chain.from_iterable(
-        iter_samples(channel, year, patterns, False)))
+        iter_samples(channel, year, patterns, False, include_embedded)))
 
 
 def get_systematics(channel, year, sample):
