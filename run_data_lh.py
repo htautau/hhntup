@@ -19,7 +19,7 @@ datasets2011 = [
     'data11-Egamma',
     'data11-JetTauEtmiss',
     'data11-Muons',
-    #'embed11-lh-isol-mfsim'
+    'embed11-lh-isol-mfsim'
     ]
 
 datasets2012 = [
