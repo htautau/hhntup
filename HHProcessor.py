@@ -108,7 +108,7 @@ class HHProcessor(ATLASStudent):
         onfilechange = []
         count_funcs = {}
 
-        if datatype == datasets.MC:
+        if datatype in (datasets.MC, datasets.EMBED):
 
             def mc_weight_count(event):
                 return event.mc_event_weight

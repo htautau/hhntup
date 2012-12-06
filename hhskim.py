@@ -92,7 +92,7 @@ class hhskim(ATLASStudent):
 
         if datatype == datasets.EMBED:
             # add embedding systematics branches
-            OutputModel += EmbeddingBlock
+            Model += EmbeddingBlock
 
         self.output.cd()
 
@@ -104,7 +104,7 @@ class hhskim(ATLASStudent):
         onfilechange = []
         count_funcs = {}
 
-        if datatype == datasets.MC:
+        if datatype in (datasets.MC, datasets.EMBED):
 
             def mc_weight_count(event):
                 return event.mc_event_weight
