@@ -56,10 +56,10 @@ class TauTriggerEfficiency(EventFilter):
                     self.corrections = {}
                     for thresh in (29, 20):
                         self.corrections[thresh] = {}
-                        for tight, bdt_label  in zip((0, 1), ('BDTm', 'BDTtEVm')):
-                            self.corrections[thresh][tight] = {}
+                        for wplevel in ('BDTl', 'BDTm', 'BDTtEVm'):
+                            self.corrections[thresh][wplevel] = {}
                             for prong in (1, 3):
-                                self.corrections[thresh][tight][prong] = {}
+                                self.corrections[thresh][wplevel][prong] = {}
                                 for period, is_late in zip(('', 'T'), (False, True)):
                                     tool = ROOT.TauTriggerCorrections()
                                     tool.loadInputFile(
@@ -67,7 +67,7 @@ class TauTriggerEfficiency(EventFilter):
                                         "triggerSF_wmcpara_EF_tau%d%s_medium1.root" % (
                                             thresh, period)),
                                         "%dP" % prong, bdt_label)
-                                    self.corrections[thresh][tight][prong][is_late] = tool
+                                    self.corrections[thresh][wplevel][prong][is_late] = tool
                     self.passes = self.passes_11_embed
                 else:
                     raise ValueError("datatype is not EMBED or MC")
@@ -96,17 +96,17 @@ class TauTriggerEfficiency(EventFilter):
                     self.corrections = {}
                     for thresh in (29, 20):
                         self.corrections[thresh] = {}
-                        for tight, bdt_label  in zip((0, 1), ('BDTm', 'BDTtEVm')):
-                            self.corrections[thresh][tight] = {}
+                        for wplevel in ('BDTl', 'BDTm', 'BDTtEVm'):
+                            self.corrections[thresh][wplevel] = {}
                             for prong in (1, 3):
-                                self.corrections[thresh][tight][prong] = {}
+                                self.corrections[thresh][wplevel][prong] = {}
                                 tool = ROOT.TauTriggerParameterisation()
                                 tool.loadInputFile(
                                     os.path.join(base,
                                         "triggerSF_wmcpara_EF_tau%dTi_medium1.root" %
                                         thresh),
                                     "%sP" % prong, bdt_label)
-                                self.corrections[thresh][tight][prong] = tool
+                                self.corrections[thresh][wplevel][prong] = tool
                     self.passes = self.passes_12_embed
                 else:
                     raise ValueError("datatype is not EMBED or MC")
@@ -165,16 +165,30 @@ class TauTriggerEfficiency(EventFilter):
             else:
                 raise ValueError("trigger match thresh of %d is not understood"
                         % tau.trigger_match_thresh)
-            # correct for TES variations (only on nominal)
-            # pt_nominal should equal pt when TES is not applied
-            if self.tes_systematic:
-                #print "%f %f" % (tau.pt, tau.pt_nominal)
-                tau.trigger_scale_factor = (corr.getSF(tau.pt, 0) *
-                    corr.getMCEff(tau.pt, 0) / corr.getMCEff(tau.pt_nominal, 0))
-            else:
-                tau.trigger_scale_factor = corr.getSF(tau.pt, 0)
-            tau.trigger_scale_factor_high = corr.getSF(tau.pt, 1)
-            tau.trigger_scale_factor_low = corr.getSF(tau.pt, -1)
+
+            wp = []
+            wp.append('loose')
+            if tau.JetBDTSigMedium:
+                wp.append('medium')
+            if tau.JetBDTSigTight:
+                wp.append('tight')
+
+            for wplevel in wp:
+                # correct for TES variations (only on nominal)
+                # pt_nominal should equal pt when TES is not applied
+                if self.tes_systematic:
+                    #print "%f %f" % (tau.pt, tau.pt_nominal)
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
+                            (corr.getSF(tau.pt, 0) *
+                            corr.getMCEff(tau.pt, 0) /
+                            corr.getMCEff(tau.pt_nominal, 0)))
+                else:
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
+                            corr.getSF(tau.pt, 0))
+                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
+                        corr.getSF(tau.pt, 1))
+                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
+                        corr.getSF(tau.pt, -1))
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
             raise Exception("there must be exactly two unique trigger match"
@@ -191,35 +205,59 @@ class TauTriggerEfficiency(EventFilter):
                            if pileup_vertex_selection(vtx)])
 
         for tau, thresh in zip(event.taus, (29, 20)):
+
+            wp = {}
+            wp['loose'] = 'BDTl'
+            if tau.JetBDTSigMedium:
+                wp['medium'] = 'BDTm'
+            if tau.JetBDTSigTight:
+                wp['tight'] = 'BDTtEVm'
+
             if tau.numTrack > 1:
                 prong = 3
             else:
                 prong = 1
-            corr = self.corrections[thresh][tau.JetBDTSigTight][prong][event.RunNumber >= 188902]
-            tau.trigger_scale_factor = corr.get3DMCEff(
-                        tau.pt, tau.eta,
-                        npileup_vtx, 0)
-            tau.trigger_scale_factor_high = corr.get3DMCEff(
-                        tau.pt, tau.eta,
-                        npileup_vtx, 1)
-            tau.trigger_scale_factor_low = corr.get3DMCEff(
-                        tau.pt, tau.eta,
-                        npileup_vtx, -1)
+
+            for wplevel, wpflag in wp.items():
+                corr = self.corrections[thresh][wpflag][prong][event.RunNumber >= 188902]
+                setattr(tau, 'trigger_eff_sf_%s' % wplevel,
+                        corr.get3DMCEff(
+                            tau.pt, tau.eta,
+                            npileup_vtx, 0))
+                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
+                        corr.get3DMCEff(
+                            tau.pt, tau.eta,
+                            npileup_vtx, 1))
+                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
+                        corr.get3DMCEff(
+                            tau.pt, tau.eta,
+                            npileup_vtx, -1))
         return True
 
     def passes_12_mc(self, event):
 
         period = self.get_period(event.RunNumber)
         thresh = []
+
+        if period == 'periodA':
+            eveto = 'EVm'
+        else:
+            eveto = 'EVnone'
+
         for tau in event.taus:
+
+            wp = {}
+            wp['loose'] = 'BDTl'
+            if tau.JetBDTSigMedium:
+                wp['medium'] = 'BDTm'
             if tau.JetBDTSigTight:
-                wp = 'BDTt'
-            else:
-                wp = 'BDTm'
+                wp['tight'] = 'BDTt'
+
             if tau.numTrack > 1:
                 prong = '3p'
             else:
                 prong = '1p'
+
             if tau.trigger_match_thresh == 20:
                 ttc = self.ttc_20
                 thresh.append(20)
@@ -230,21 +268,22 @@ class TauTriggerEfficiency(EventFilter):
                 raise ValueError("trigger match thresh of %d is not understood"
                         % tau.trigger_match_thresh)
 
-            # correct for TES variations (only on nominal)
-            # pt_nominal should equal pt when TES is not applied
-            if self.tes_systematic:
-                #print "%f %f" % (tau.pt, tau.pt_nominal)
-                tau.trigger_scale_factor = (
-                    ttc.getSF(tau.pt, tau.eta, 0, period, prong, wp, 'EVm') *
-                    ttc.getMCEff(tau.pt, tau.eta, 0, period, prong, wp, 'EVm') /
-                    ttc.getMCEff(tau.pt_nominal, tau.eta, 0, period, prong, wp, 'EVm'))
-            else:
-                tau.trigger_scale_factor = \
-                    ttc.getSF(tau.pt, tau.eta, 0, period, prong, wp, 'EVm')
-            tau.trigger_scale_factor_high = \
-                    ttc.getSF(tau.pt, tau.eta, 1, period, prong, wp, 'EVm')
-            tau.trigger_scale_factor_low = \
-                    ttc.getSF(tau.pt, tau.eta, -1, period, prong, wp, 'EVm')
+            for wplevel, wpflag in wp.items():
+                # correct for TES variations (only on nominal)
+                # pt_nominal should equal pt when TES is not applied
+                if self.tes_systematic:
+                    #print "%f %f" % (tau.pt, tau.pt_nominal)
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
+                        ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
+                        ttc.getMCEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) /
+                        ttc.getMCEff(tau.pt_nominal, tau.eta, 0, period, prong, wpflag, eveto))
+                else:
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, ttc.getSF(
+                            tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, ttc.getSF(
+                        tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
+                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, ttc.getSF(
+                        tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
             raise Exception("there must be exactly two unique trigger match"
@@ -261,18 +300,31 @@ class TauTriggerEfficiency(EventFilter):
                            if pileup_vertex_selection(vtx)])
 
         for tau, thresh in zip(event.taus, (29, 20)):
+
+            wp = {}
+            wp['loose'] = 'BDTl'
+            if tau.JetBDTSigMedium:
+                wp['medium'] = 'BDTm'
+            if tau.JetBDTSigTight:
+                wp['tight'] = 'BDTtEVm'
+
             if tau.numTrack > 1:
                 prong = 3
             else:
                 prong = 1
-            corr = self.corrections[thresh][tau.JetBDTSigTight][prong]
-            tau.trigger_scale_factor = corr.get3DMCEff(
-                        tau.pt, tau.eta,
-                        npileup_vtx, 0)
-            tau.trigger_scale_factor_high = corr.get3DMCEff(
-                        tau.pt, tau.eta,
-                        npileup_vtx, 1)
-            tau.trigger_scale_factor_low = corr.get3DMCEff(
-                        tau.pt, tau.eta,
-                        npileup_vtx, -1)
+
+            for wplevel, wpflag in wp.items():
+                corr = self.corrections[thresh][wpflag][prong]
+                setattr(tau, 'trigger_eff_sf_%s' % wplevel,
+                        corr.get3DMCEff(
+                            tau.pt, tau.eta,
+                            npileup_vtx, 0))
+                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
+                        corr.get3DMCEff(
+                            tau.pt, tau.eta,
+                            npileup_vtx, 1))
+                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
+                        corr.get3DMCEff(
+                            tau.pt, tau.eta,
+                            npileup_vtx, -1))
         return True

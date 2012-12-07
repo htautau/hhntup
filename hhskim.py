@@ -296,6 +296,8 @@ class hhskim(ATLASStudent):
                 transfer_objects=True,
                 visible=False)
 
+        tree.define_object(name='tau', prefix='tau_')
+
         if VALIDATE: # only validate on a single data run or MC channel
             chain.GetEntry(0)
             if datatype == datasets.MC:
@@ -364,58 +366,23 @@ class hhskim(ATLASStudent):
                 tree.ggf_weight = reweight_ggf(event, self.metadata.name)
 
             tree.tau_selected.clear()
-            tree.tau_trigger_match_index.clear()
-            tree.tau_trigger_match_thresh.clear()
             tree.tau_collinear_momentum_fraction.clear()
-            tree.tau_numTrack_recounted.clear()
 
-            tree.tau_efficiency_scale_factor.clear()
-            tree.tau_efficiency_scale_factor_high.clear()
-            tree.tau_efficiency_scale_factor_low.clear()
-
-            tree.tau_fakerate_scale_factor.clear()
-            tree.tau_fakerate_scale_factor_high.clear()
-            tree.tau_fakerate_scale_factor_low.clear()
-
-            tree.tau_trigger_scale_factor.clear()
-            tree.tau_trigger_scale_factor_high.clear()
-            tree.tau_trigger_scale_factor_low.clear()
+            SkimModel.reset(tree)
+            TriggerMatching.reset(tree)
+            TauCorrections.reset(tree)
 
             # set the skim-defined variables in the output tree
             for i in xrange(event.tau_n):
                 tau = event.taus.getitem(i)
 
                 tree.tau_selected.push_back(i in selected_idx)
-
-                tree.tau_trigger_match_index.push_back(
-                        tau.trigger_match_index)
-                tree.tau_trigger_match_thresh.push_back(
-                        tau.trigger_match_thresh)
                 tree.tau_collinear_momentum_fraction.push_back(
-                        tau.collinear_momentum_fraction)
-                tree.tau_numTrack_recounted.push_back(
-                        tau.numTrack_recounted)
+                    tau.collinear_momentum_fraction)
 
-                tree.tau_efficiency_scale_factor.push_back(
-                        tau.efficiency_scale_factor)
-                tree.tau_efficiency_scale_factor_high.push_back(
-                        tau.efficiency_scale_factor_high)
-                tree.tau_efficiency_scale_factor_low.push_back(
-                        tau.efficiency_scale_factor_low)
-
-                tree.tau_fakerate_scale_factor.push_back(
-                        tau.fakerate_scale_factor)
-                tree.tau_fakerate_scale_factor_high.push_back(
-                        tau.fakerate_scale_factor_high)
-                tree.tau_fakerate_scale_factor_low.push_back(
-                        tau.fakerate_scale_factor_low)
-
-                tree.tau_trigger_scale_factor.push_back(
-                        tau.trigger_scale_factor)
-                tree.tau_trigger_scale_factor_high.push_back(
-                        tau.trigger_scale_factor_high)
-                tree.tau_trigger_scale_factor_low.push_back(
-                        tau.trigger_scale_factor_low)
+                SkimModel.set(tree, tau)
+                TriggerMatching.set(tree, tau)
+                TauCorrections.set(tree, tau)
 
             # fill the output tree
             tree.Fill()
