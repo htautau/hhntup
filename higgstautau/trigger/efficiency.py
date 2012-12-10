@@ -105,7 +105,7 @@ class TauTriggerEfficiency(EventFilter):
                                     os.path.join(base,
                                         "triggerSF_wmcpara_EF_tau%dTi_medium1.root" %
                                         thresh),
-                                    "%sP" % prong, bdt_label)
+                                    "%sP" % prong, wplevel)
                                 self.corrections[thresh][wplevel][prong] = tool
                     self.passes = self.passes_12_embed
                 else:
