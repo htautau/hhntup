@@ -2,7 +2,6 @@ import ROOT
 
 import os
 import math
-from argparse import ArgumentParser
 
 from atlastools import utils
 from atlastools import datasets
@@ -14,6 +13,7 @@ from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel
 from rootpy.types import *
 from rootpy.io import open as ropen
+from rootpy.extern.argparse import ArgumentParser
 
 from higgstautau.mixins import *
 from higgstautau.filters import *
