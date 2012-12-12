@@ -281,7 +281,8 @@ class hhskim(ATLASStudent):
                 files=self.files,
                 events=self.events,
                 onfilechange=onfilechange,
-                filters=event_filters)
+                filters=event_filters,
+                cache=True)
 
         define_objects(chain, year, skim=True)
 

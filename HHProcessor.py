@@ -156,9 +156,8 @@ class HHProcessor(ATLASStudent):
                 self.metadata.treename,
                 files=self.files,
                 events=self.events,
+                read_branches_on_demand=True,
                 cache=True,
-                cache_size=10000000,
-                learn_entries=30,
                 onfilechange=onfilechange)
 
         # create output tree
