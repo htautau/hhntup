@@ -13,7 +13,11 @@ hh-ntup-merge: hh-ntup-clean
 	./ntup-merge -s $(HHSTUDENT) $(HHNTUP)
 	(cd $(HHNTUP) && root2hd5 $(HHSTUDENT).root)
 
-clean:
+clean-pyc:                                                                      
+	find higgstautau -name "*.pyc" | xargs rm -f
+	rm -f *.pyc
+
+clean: clean-pyc
 	rm -f *.pyc
 	rm -f cutflow.p
 	rm -f student*.root
