@@ -71,7 +71,7 @@ class LHProcessor(ATLASStudent):
                 grl |= GRL('%s:/lumi' % input)
             grl.save('%s:/lumi' % root_output)
 
-            
+
     def work(self):
         """
         This is the one function that all "ATLASStudent"s must implement.
@@ -79,7 +79,7 @@ class LHProcessor(ATLASStudent):
 
         ## Use the metadata to set the year
         YEAR = self.metadata.year
-        
+
         ## Initiate the MMC object
         mmc = mass.MMC(year=YEAR, channel='lh')
 
@@ -140,7 +140,7 @@ class LHProcessor(ATLASStudent):
 
         #####################################################################################
         ## Pileup tool for pileup reweighting (and so much more)
-        
+
         if self.metadata.datatype == datasets.MC or self.metadata.datatype == datasets.EMBED:
             from externaltools import PileupReweighting
             from ROOT import Root
@@ -162,10 +162,10 @@ class LHProcessor(ATLASStudent):
             pileup_tool.SetUnrepresentedDataAction(2)
             pileup_tool.Initialize()
 
-        
+
         ######################################################################################
         ## Instantiate correction tools
-        
+
         ## Muon momentum corrections
         MMCorrections = None
         from externaltools import MuonMomentumCorrections as MMC
@@ -251,7 +251,7 @@ class LHProcessor(ATLASStudent):
             from ROOT import egammaSFclass
             EGEffCorrections = egammaSFclass()
 
-        
+
             ## LTT trigger corrections
             LTTCorrections = None
             if YEAR == 2011:
@@ -344,7 +344,7 @@ class LHProcessor(ATLASStudent):
             LeptonSelection( datatype=self.metadata.datatype, stream=self.metadata.stream, year=YEAR ),
             TauPreSelection(),
             TauSelection(),
-            JetSelection( year=YEAR, bunny_ear_protection=False ),
+            JetSelection( year=YEAR, forward_suppression=False ),
             FinalOverlapRemoval(),
             ElectronIsoCorrection( datatype=self.metadata.datatype, year=YEAR, tool=EGICorrections ),
             MuonIsoCorrection(datatype=self.metadata.datatype, year=YEAR, tool=MICorrections )
@@ -501,13 +501,13 @@ class LHProcessor(ATLASStudent):
             tree.mass_collinear_tau_lep = collin_mass
             tree.tau_x  = tau_x
             tree.lep_x = lep_x
-            
+
             mmc_mass, mmc_pt, mmc_met = -1,-1,-1
-            
+
             mmc_mass, mmc_pt, mmc_met = mmc.mass(Tau, Lep, METx, METy, sumET, mmc_leptype, njets25=numJets)
             mmc_pt = mmc_pt.Pt()
             mmc_met = mmc_met.Mod()
-            
+
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt
             tree.met_mmc_tau_lep = mmc_met
@@ -580,7 +580,7 @@ class LHProcessor(ATLASStudent):
             npileup_vtx = len([vtx for vtx in event.vertices
                            if pileup_vertex_selection(vtx)])
 
-            
+
             tree.w_mc           = 1.0
             tree.w_pileup       = 1.0
             tree.w_lumi         = 1.0
@@ -591,7 +591,7 @@ class LHProcessor(ATLASStudent):
             tree.w_tautriggersf = 1.0
             tree.w_muonisosf    = 1.0
             tree.w_ggf          = 1.0
-            
+
             ## Event weight corrections for MC
             ###################################
             if self.metadata.datatype == datasets.MC:
@@ -606,7 +606,7 @@ class LHProcessor(ATLASStudent):
                 tautriggersf_w = 1.0
                 muonisosf_w    = 1.0
                 ggf_w          = 1.0
-                
+
                 ## Apply mc event weight:
                 try:
                     mc_w = event.mcevt_weight[0][0]
@@ -667,7 +667,7 @@ class LHProcessor(ATLASStudent):
                         leptontrigsf_w, tree.sys_mu_TRIGSF_UP, tree.sys_mu_TRIGSF_DOWN = LeptonSLTSF(SLTCorrections,
                                                                                                      event,
                                                                                                      self.metadata.datatype,
-                                                                                                     pileup_tool, 
+                                                                                                     pileup_tool,
                                                                                                      YEAR)
                 else:
                     if event.leptonType == 'mu':
@@ -683,7 +683,7 @@ class LHProcessor(ATLASStudent):
                                                                                                      YEAR,
                                                                                                      pileup_tool,
                                                                                                      event.RunNumber)
-                        
+
                     #Tau trigger scale factors
                     tautriggersf_w, tree.sys_tau_TRIGSF_UP, tree.sys_tau_TRIGSF_DOWN = TauTriggerSF(LTTtauCorrections1,
                                                                                                     LTTtauCorrections2,

@@ -388,15 +388,16 @@ class TauSelected(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
-def jet_selection_2011(jet):
+def jet_selection_2011(jet, forward_suppression=False):
     """ Finalizes the jet selection """
 
     if not (jet.pt > 25 * GeV):
         return False
 
-    # Protection against bunny ear jets
-    if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
-        return False
+    if forward_suppression:
+        # suppress forward jets
+        if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
+            return False
 
     if not (abs(jet.eta) < 4.5):
         return False
@@ -406,19 +407,6 @@ def jet_selection_2011(jet):
 
     return True
 
-def jet_selection_2011_no_protection(jet):
-    """ Finalizes the jet selection """
-
-    if not (jet.pt > 25 * GeV):
-        return False
-
-    if not (abs(jet.eta) < 4.5):
-        return False
-
-    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
-        return False
-
-    return True
 
 def jet_selection_2012(jet):
     """ Finalizes the jet selection """
@@ -438,20 +426,18 @@ def jet_selection_2012(jet):
 class JetSelection(EventFilter):
     """Selects jets of good quality, keep event in any case"""
 
-    def __init__(self, year, bunny_ear_protection, **kwargs):
+    def __init__(self, year, forward_suppression=False, **kwargs):
 
         self.year = year
-        self.bunny_ear_protection = bunny_ear_protection
+        self.forward_suppression = forward_suppression
         super(JetSelection, self).__init__(**kwargs)
 
     def passes(self, event):
 
         if self.year == 2011:
-            if self.bunny_ear_protection:
-                event.jets.select(jet_selection_2011)
-            else:
-                event.jets.select(jet_selection_2011_no_protection)
-        if self.year == 2012:
+            event.jets.select(lambda jet:
+                    jet_selection_2011(jet, self.forward_suppression))
+        elif self.year == 2012:
             event.jets.select(jet_selection_2012)
         return True
 

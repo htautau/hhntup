@@ -315,6 +315,7 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             JetSelection(
                 year=year,
+                forward_suppression=True,
                 count_funcs=count_funcs),
         ])
 
