@@ -389,7 +389,9 @@ class TauSelected(EventFilter):
 
 
 class NonIsolatedJet(EventFilter):
-
+    """
+    https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=200403
+    """
     def passes(self, event):
 
         for tau in event.taus:
