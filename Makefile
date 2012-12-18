@@ -18,7 +18,6 @@ clean-pyc:
 	rm -f *.pyc
 
 clean: clean-pyc
-	rm -f *.pyc
 	rm -f cutflow.p
 	rm -f student*.root
 	rm -f student*.profile

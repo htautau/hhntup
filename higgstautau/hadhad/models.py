@@ -163,18 +163,16 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     @classmethod
     def set(cls, event, tree, tau1, tau2):
 
-        if tau1 is not None and tau2 is not None:
-            tree.mass_vis_tau1_tau2 = utils.Mvis(
-                    tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
-            tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
-            tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
-            tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
-            tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
-            tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+        tree.mass_vis_tau1_tau2 = utils.Mvis(
+                tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
+        tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
+        tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
+        tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
+        tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
+        tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
-            if intau is None:
-                continue
+
             FourMomentum.set(outtau, intau)
 
             outtau.BDTJetScore = intau.BDTJetScore
@@ -188,7 +186,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.seedCalo_numTrack = intau.seedCalo_numTrack
             outtau.numTrack = intau.numTrack
             outtau.charge = intau.charge
-            outtau.jet_jvtxf = intau.jet_jvtxf
+            outtau.jvtxf = intau.jet_jvtxf
 
             outtau.centrality = intau.centrality
             outtau.centrality = intau.centrality_boosted
