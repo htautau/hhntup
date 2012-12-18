@@ -408,11 +408,18 @@ def jet_selection_2011(jet, forward_suppression=False):
     return True
 
 
-def jet_selection_2012(jet):
-    """ Finalizes the jet selection """
+def jet_selection_2012(jet, forward_suppression=False):
+    """ Finalizes the jet selection
+    https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
+    """
 
     if not (jet.pt > 30 * GeV):
         return False
+
+    if forward_suppression:
+        # suppress forward jets
+        if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
+            return False
 
     if not (abs(jet.eta) < 4.5):
         return False
@@ -438,7 +445,8 @@ class JetSelection(EventFilter):
             event.jets.select(lambda jet:
                     jet_selection_2011(jet, self.forward_suppression))
         elif self.year == 2012:
-            event.jets.select(jet_selection_2012)
+            event.jets.select(lambda jet:
+                    jet_selection_2012(jet, self.forward_suppression))
         return True
 
 
