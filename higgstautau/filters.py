@@ -388,6 +388,17 @@ class TauSelected(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class NonIsolatedJet(EventFilter):
+
+    def passes(self, event):
+
+        for tau in event.taus:
+            for jet in event.jets:
+                if 0.4 < utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 1.0:
+                    return False
+        return True
+
+
 def jet_selection_2011(jet, forward_suppression=False):
     """ Finalizes the jet selection """
 
@@ -447,6 +458,14 @@ class JetSelection(EventFilter):
         elif self.year == 2012:
             event.jets.select(lambda jet:
                     jet_selection_2012(jet, self.forward_suppression))
+        return True
+
+
+class JetPreselection(EventFilter):
+
+    def passes(self, event):
+
+        event.jets.select(lambda jet: jet.pt > 20 * GeV)
         return True
 
 

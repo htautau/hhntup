@@ -313,6 +313,12 @@ class HHProcessor(ATLASStudent):
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
+            JetPreselection(
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
+            NonIsolatedJet(
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
             JetSelection(
                 year=year,
                 forward_suppression=True,
