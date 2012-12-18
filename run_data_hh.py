@@ -12,7 +12,7 @@ parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--dry', action='store_true', default=False)
-parser.add_argument('--output-path', default='ntuples/hadhad')
+parser.add_argument('--output-path', default='ntuples/hadhad_running')
 parser.add_argument('splits', nargs='*', type=int)
 args = parser.parse_args()
 

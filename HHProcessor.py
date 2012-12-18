@@ -343,7 +343,7 @@ class HHProcessor(ATLASStudent):
         """
 
         # create MMC object
-        #mmc = mass.MMC(year=year, channel='hh')
+        mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -488,12 +488,14 @@ class HHProcessor(ATLASStudent):
                     tau2.fourvect,
                     MET_vect)
 
-            # Mass (use values in skim)
-            #mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-            #        tau1, tau2, METx, METy, sumET)
-            mmc_mass = event.tau_MMC_mass
-            mmc_resonance = event.tau_MMC_resonance
-            mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
+            # MMC Mass
+            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+                    tau1, tau2, METx, METy, sumET)
+
+            # use MMC values from skim
+            #mmc_mass = event.tau_MMC_mass
+            #mmc_resonance = event.tau_MMC_resonance
+            #mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
 
             tree.mass_mmc_tau1_tau2 = mmc_mass
             tree.mmc_resonance.set_from(mmc_resonance)
