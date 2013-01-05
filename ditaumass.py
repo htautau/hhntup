@@ -20,7 +20,13 @@ from higgstautau.hadhad.objects import define_objects
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 is_visible = lambda fourvect: (
-                fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
+    fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
+
+
+class MatchedObject(TreeModel):
+
+    matched = BoolCol()
+    match_dr = FloatCol(default=1111)
 
 
 class FourVectModel(TreeModel):
@@ -101,7 +107,8 @@ class Event(FourVectModel.prefix('resonance_') +
 
 class TrueTau(FourVectModel +
         FourVectModel.suffix('_vis') +
-        FourVectModel.suffix('_miss')):
+        FourVectModel.suffix('_miss'),
+        MatchedObject):
 
     visible = BoolCol(default=False)
     charge = IntCol()
@@ -178,7 +185,7 @@ class TrueTau(FourVectModel +
             print "===="
 
 
-class RecoTau(FourVectModel):
+class RecoTau(FourVectModel, MatchedObject):
 
     charge = IntCol()
     numTrack = IntCol()
@@ -196,6 +203,9 @@ class RecoTau(FourVectModel):
     ipZ0SinThetaSigLeadTrk = FloatCol()
     ipSigLeadTrk = FloatCol()
     trFlightPathSig = FloatCol()
+
+    dr_nu = FloatCol(default=-1111)
+    dtheta3d_nu = FloatCol(default=-1111)
 
     @classmethod
     def set(cls, tau, recotau, verbose=False):
@@ -266,7 +276,7 @@ class RecoTau(FourVectModel):
         """
 
 
-class RecoElectron(FourVectModel):
+class RecoElectron(FourVectModel, MatchedObject):
 
     charge = IntCol()
 
@@ -277,7 +287,7 @@ class RecoElectron(FourVectModel):
         FourVectModel.set(this, other)
 
 
-class RecoMuon(FourVectModel):
+class RecoMuon(FourVectModel, MatchedObject):
 
     charge = IntCol()
 
@@ -291,13 +301,13 @@ class RecoMuon(FourVectModel):
 def closest_reco_object(objects, thing, dR=0.2):
 
     closest_object = None
-    closest_dR = 10000
+    closest_dR = 1111
     for other in objects:
         dr = utils.dR(other.eta, other.phi, thing.Eta(), thing.Phi())
         if dr < dR and dr < closest_dR:
             closest_object = other
             closest_dR = dr
-    return closest_object
+    return closest_object, closest_dR
 
 
 class ditaumass(ATLASStudent):
@@ -339,9 +349,8 @@ class ditaumass(ATLASStudent):
                     'averageIntPerXing',
                     ],
                 events=self.events,
+                read_branches_on_demand=True,
                 cache=True,
-                cache_size=10000000,
-                learn_entries=30,
                 verbose=True)
 
         define_objects(chain, year)
@@ -468,7 +477,7 @@ class ditaumass(ATLASStudent):
                 tree.radiative_et_scalarsum = sum([
                     ph.pt for ph in mc_photons] + [0])
 
-                matched = True
+                all_matched = True
                 matched_objects = []
 
                 skip = False
@@ -483,29 +492,35 @@ class ditaumass(ATLASStudent):
 
                     # match to reco taus, electrons and muons
                     if decay.hadronic:
-                        recotau = closest_reco_object(
+                        recotau, dr = closest_reco_object(
                                 event.taus, decay.fourvect_visible, dR=0.2)
                         if recotau is not None:
                             matched_objects.append(recotau)
+                            recotau.matched = True
+                            recotau.matched_dr = dr
                             RecoTau.set(tau, recotau, verbose=verbose)
                         else:
-                            matched = False
+                            all_matched = False
                     elif decay.leptonic_electron:
-                        recoele = closest_reco_object(
+                        recoele, dr = closest_reco_object(
                                 event.electrons, decay.fourvect_visible, dR=0.2)
                         if recoele is not None:
                             matched_objects.append(recoele)
+                            recoele.matched = True
+                            recoele.matched_dr = dr
                             RecoElectron.set(electron, recoele)
                         else:
-                            matched = False
+                            all_matched = False
                     elif decay.leptonic_muon:
-                        recomuon = closest_reco_object(
+                        recomuon, dr = closest_reco_object(
                                 event.muons, decay.fourvect_visible, dR=0.2)
                         if recomuon is not None:
                             matched_objects.append(recomuon)
+                            recomuon.matched = True
+                            recomuon.matched_dr = dr
                             RecoMuon.set(muon, recomuon)
                         else:
-                            matched = False
+                            all_matched = False
                     else:
                         print "unhandled invalid tau decay:"
                         print decay
@@ -520,10 +535,10 @@ class ditaumass(ATLASStudent):
                     continue
 
                 # did both decays match a reco object?
-                tree.matched = matched
+                tree.matched = all_matched
 
                 # match collision: decays matched same reco object
-                if matched:
+                if all_matched:
                     tree.match_collision = (
                             matched_objects[0] == matched_objects[1])
 

@@ -19,11 +19,21 @@ __all__ = [
 ]
 
 
-class FourMomentum(object):
+class MatchedObject(object):
+
+    def __init__(self):
+
+        self.matched = False
+        self.matched_dR = 9999.
+        self.matched_collision = False
+
+
+class FourMomentum(MatchedObject):
 
     def __init__(self):
 
         self.fourvect_boosted = LorentzVector()
+        super(FourMomentum, self).__init__()
 
     @cached_property
     def fourvect(self):
@@ -54,10 +64,6 @@ class TauFourMomentum(FourMomentum):
 
         self.centrality = 0.
         self.centrality_boosted = 0.
-
-        self.matched = False
-        self.matched_dR = 9999.
-        self.matched_collision = False
 
         # vertex association
         self.vertex_prob = 0.
