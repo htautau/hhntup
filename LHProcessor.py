@@ -316,7 +316,7 @@ class LHProcessor(ATLASStudent):
         event_filters = EventFilterList([
         #AcceptanceChallenge(),
             PrepareInputTree(),
-            Trigger( year=YEAR ),
+            Trigger( year=YEAR),
             pseudoGRLFilter(),
             GRLFilter( self.grl, passthrough=(self.metadata.datatype != datasets.DATA) ),
             #EmbeddingPileupPatch( passthrough=self.metadata.datatype != datasets.EMBED ),
@@ -326,6 +326,12 @@ class LHProcessor(ATLASStudent):
             Systematics( terms=self.args.syst_terms, year=YEAR, channel='lh', datatype=self.metadata.datatype, verbose=VERBOSE ),
             #METCorrection( datatype=self.metadata.datatype, year=YEAR ),
             PriVertex(),
+            JetCleaning( self.metadata.datatype, year=YEAR ),
+            ElectronLArHole(),
+            TauHasTrack(1),
+            TauLArHole(1),
+            LArHole( datatype=self.metadata.datatype ),
+            LArError(),
             JetPreSelection(),
             MuonOverlapSelection(year=YEAR),
             TauMuonOverlapRemoval(),
@@ -333,15 +339,9 @@ class LHProcessor(ATLASStudent):
             ElectronPreSelection(year=YEAR),
             JetOverlapRemoval(),
             ElectronEtaSelection(),
-            JetCleaning( self.metadata.datatype, year=YEAR ),
-            ElectronLArHole(),
-            TauHasTrack(1),
-            TauLArHole(1),
-            LArHole( datatype=self.metadata.datatype ),
-            LArError(),
             LeptonOverlapRemoval(),
-            DileptonVeto(),
             LeptonSelection( datatype=self.metadata.datatype, stream=self.metadata.stream, year=YEAR ),
+            DileptonVeto(),
             TauPreSelection(),
             TauSelection(),
             JetSelection( year=YEAR, bunny_ear_protection=False ),
@@ -504,9 +504,9 @@ class LHProcessor(ATLASStudent):
             
             mmc_mass, mmc_pt, mmc_met = -1,-1,-1
             
-            mmc_mass, mmc_pt, mmc_met = mmc.mass(Tau, Lep, METx, METy, sumET, mmc_leptype, njets25=numJets)
-            mmc_pt = mmc_pt.Pt()
-            mmc_met = mmc_met.Mod()
+            #mmc_mass, mmc_pt, mmc_met = mmc.mass(Tau, Lep, METx, METy, sumET, mmc_leptype, njets25=numJets)
+            #mmc_pt = mmc_pt.Pt()
+            #mmc_met = mmc_met.Mod()
             
             tree.mass_mmc_tau_lep = mmc_mass
             tree.pt_mmc_tau_lep = mmc_pt
