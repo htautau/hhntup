@@ -127,15 +127,26 @@ class JES(JetSystematic):
                         if dr < drmin:
                             drmin = dr
 
-            # The bool is the "isPos" argument
+            # TODO: shift is symmetric (is_up argument is not needed)
             if self.is_up:
-                shift = self.jes_tool.getRelUncert(jet.pt,
-                             jet.eta, drmin,
-                             True, self.sys_util.nvtxjets, event.averageIntPerXing)
+                shift = self.jes_tool.getRelUncert(
+                        jet.pt,
+                        jet.eta,
+                        drmin,
+                        True, # is up
+                        self.sys_util.nvtxjets,
+                        event.averageIntPerXing,
+                        False) # is b jet
             else:
-                shift = -1 * self.jes_tool.getRelUncert(jet.pt,
-                              jet.eta, drmin,
-                              False, self.sys_util.nvtxjets, event.averageIntPerXing)
+                shift = -1 * self.jes_tool.getRelUncert(
+                        jet.pt,
+                        jet.eta,
+                        drmin,
+                        False, # is up
+                        self.sys_util.nvtxjets,
+                        event.averageIntPerXing,
+                        False) # is b jet
+
         jet.pt *= 1. + shift
 
 
