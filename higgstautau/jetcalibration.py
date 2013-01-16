@@ -7,10 +7,6 @@ See instructions here:
 from atlastools import datasets
 from rootpy.tree.filtering import EventFilter
 
-# ATLAS tools imports
-from externaltools import ApplyJetCalibration
-from ROOT import JetCalibrationTool
-
 
 class JetCalibration(EventFilter):
     """
@@ -32,9 +28,17 @@ class JetCalibration(EventFilter):
             self.verbose = verbose
             self.algo = 'AntiKt4LCTopo'
             if year == 2011:
+                # ATLAS tools imports
+                from externaltools.bundle_2011 import ApplyJetCalibration
+                from ROOT import JetCalibrationTool
+
                 config = 'InsituJES_2011_Preliminary.config'
                 # use Rel17_JES_AFII.config for fastsim MC
             elif year == 2012:
+                # ATLAS tools imports
+                from externaltools.bundle_2012 import ApplyJetCalibration
+                from ROOT import JetCalibrationTool
+
                 config = 'JES_August2012.config'
                 # use JES_August2012_AFII.config for fastsim MC
             else:

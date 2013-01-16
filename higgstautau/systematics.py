@@ -22,6 +22,7 @@ from externaltools import MuonMomentumCorrections
 from externaltools import JetUncertainties
 from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
+from externaltools import TESUncertaintyProvider as TESP
 
 # MissingETUtility
 from ROOT import METUtility
@@ -35,7 +36,7 @@ from ROOT import JERProvider
 from ROOT import eg2011
 # MuonMomentumCorrections
 from ROOT import MuonSmear
-# MissingETUtility
+# TESUncertaintyProvider
 from ROOT import TESUncertaintyProvider
 
 
@@ -88,20 +89,23 @@ class JES(JetSystematic):
         super(JES, self).__init__(is_up, **kwargs)
 
         self.jes_tool = None
-        
-        if self.channel == 'hh':
+
+        if self.year == 2011:
             self.jes_tool = MultijetJESUncertaintyProvider(
-                "MultijetJES_2011.config",
-                "InsituJES2011_AllNuisanceParameters.config",
+                "JES_2011/Final/MultijetJES_2011.config",
+                "JES_2011/Final/InsituJES2011_AllNuisanceParameters.config",
                 "AntiKt4LCTopoJets",
                 "MC11c",
-                "externaltools/JetUncertainties/share/")
-            
-        if self.channel == 'lh':
-            self.jes_tool = MultijetJESUncertaintyProvider("externaltools/JetUncertainties/share/MultijetJES_Preliminary.config",
-                                                           "externaltools/JetUncertainties/share/InsituJES2011_AllNuisanceParameters.config",
-                                                           "AntiKt4LCTopoJets",
-                                                           "MC11c")
+                JetUncertainties.RESOURCE_PATH)
+        elif self.year == 2012:
+            self.jes_tool = MultijetJESUncertaintyProvider(
+                "JES_2012/Final/MultijetJES_2012.config",
+                "JES_2012/Final/JESUncertainty2012_Sept2012.config",
+                "AntiKt4LCTopoJets",
+                "MC12a",
+                JetUncertainties.RESOURCE_PATH)
+        else:
+            raise ValueError('No JES defined for year %d' % year)
 
     @JetSystematic.set
     def run(self, jet, event):
@@ -288,9 +292,16 @@ class TES(TauSystematic):
 
     def __init__(self, is_up, **kwargs):
 
-        # No tag yet, testing code
-        self.tes_tool = TESUncertaintyProvider()
         super(TES, self).__init__(is_up, **kwargs)
+
+        if self.year == 2011:
+            self.tes_tool = TESUncertaintyProvider(
+                    TESP.RESOURCE_PATH, '', 'mc11')
+        elif self.year == 2012:
+            self.tes_tool = TESUncertaintyProvider(
+                    TESP.RESOURCE_PATH, '', 'mc12')
+        else:
+            raise ValueError('No TES defined for year %d' % self.year)
 
     @TauSystematic.set
     def run(self, tau, event):
@@ -692,7 +703,7 @@ class Systematics(EventFilter):
                 event.el_MET_BDTMedium_wpx,
                 event.el_MET_BDTMedium_wpy,
                 event.el_MET_BDTMedium_statusWord)
-            
+
 
 
         if self.terms & Systematics.PHOTON_TERMS:
@@ -747,14 +758,14 @@ class Systematics(EventFilter):
                 event.mu_staco_MET_BDTMedium_wpx,
                 event.mu_staco_MET_BDTMedium_wpy,
                 event.mu_staco_MET_BDTMedium_statusWord)
-            
+
             # In this instance there is an overloaded version of
             # setExtraMuonParameters that accepts smeared pTs for spectro
             self.met_utility.setExtraMuonParameters(
                 event.mu_staco_ptcone30, # or smeared pT
                 event.mu_staco_ms_theta,
                 event.mu_staco_ms_phi)
-            
+
 
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
@@ -793,8 +804,7 @@ class Systematics(EventFilter):
                 event.tau_MET_BDTMedium_wpx,
                 event.tau_MET_BDTMedium_wpy,
                 event.tau_MET_BDTMedium_statusWord)
-             
-            
+
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
             event.MET_SoftJets_BDTMedium_etx,
