@@ -43,12 +43,12 @@ from ROOT import TESUncertaintyProvider
 
 class ObjectSystematic(object):
 
-    def __init__(self, sys_util, year=2011, channel='hh', verbose=False):
+    def __init__(self, sys_util):
 
         self.sys_util = sys_util
-        self.verbose = verbose
-        self.year = year
-        self.channel = channel
+        self.verbose = sys_util.verbose
+        self.year = sys_util.year
+        self.channel = sys_util.channel
 
 
 class JetSystematic(ObjectSystematic):
@@ -100,8 +100,8 @@ class JES(JetSystematic):
                 JetUncertainties.RESOURCE_PATH)
         elif self.year == 2012:
             self.jes_tool = MultijetJESUncertaintyProvider(
-                "JES_2012/Final/MultijetJES_2012.config",
-                "JES_2012/Final/JESUncertainty2012_Sept2012.config",
+                "JES_2012/MultijetJES_2012.config",
+                "JES_2012/JESUncertainty2012_Sept2012.config",
                 "AntiKt4LCTopoJets",
                 "MC12a",
                 JetUncertainties.RESOURCE_PATH)
@@ -516,8 +516,14 @@ class Systematics(EventFilter):
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
+
         self.systematics = []
         self.terms = set([])
+        self.datatype = datatype
+        self.year = year
+        self.channel = channel
+        self.verbose = verbose
+        self.very_verbose = very_verbose
 
         if terms is not None:
             # remove possible duplicates
@@ -525,38 +531,32 @@ class Systematics(EventFilter):
             self.terms = terms
             for term in terms:
                 if term == Systematics.JES_UP:
-                    systematic = JES(True, sys_util=self, verbose=verbose, channel=channel)
+                    systematic = JES(True, sys_util=self)
                 elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, sys_util=self, verbose=verbose, channel=channel)
+                    systematic = JES(False, sys_util=self)
                 elif term == Systematics.JER_UP:
-                    systematic = JER(True, sys_util=self, verbose=verbose)
+                    systematic = JER(True, sys_util=self)
                 elif term == Systematics.TES_UP:
-                    systematic = TES(True, sys_util=self, verbose=verbose)
+                    systematic = TES(True, sys_util=self)
                 elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, sys_util=self, verbose=verbose)
+                    systematic = TES(False, sys_util=self)
                 elif term == Systematics.EES_UP:
-                    systematic = EES(True, datatype=datatype, sys_util=self,
-                            verbose=verbose)
+                    systematic = EES(True, sys_util=self,
+                        datatype=datatype)
                 elif term == Systematics.EES_DOWN:
-                    systematic = EES(False, datatype=datatype, sys_util=self,
-                            verbose=verbose)
+                    systematic = EES(False, sys_util=self,
+                        datatype=datatype)
                 elif term == Systematics.EER_UP:
-                    systematic = EER(True, sys_util=self, verbose=verbose)
+                    systematic = EER(True, sys_util=self)
                 elif term == Systematics.EER_DOWN:
-                    systematic = EER(False, sys_util=self, verbose=verbose)
+                    systematic = EER(False, sys_util=self)
                 elif term == Systematics.TAUBDT_UP:
-                    systematic = TauBDT(True, sys_util=self, verbose=verbose)
+                    systematic = TauBDT(True, sys_util=self)
                 elif term == Systematics.TAUBDT_DOWN:
-                    systematic = TauBDT(False, sys_util=self, verbose=verbose)
+                    systematic = TauBDT(False, sys_util=self)
                 else:
                     raise ValueError("systematic not supported")
                 self.systematics.append(systematic)
-
-        self.datatype = datatype
-        self.year = year
-        self.channel = channel
-        self.verbose = verbose
-        self.very_verbose = very_verbose
 
         # Initialise your METUtility object
         self.met_utility = METUtility()
