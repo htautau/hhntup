@@ -2,6 +2,7 @@
 Adapted from the Example.C in MissingETUtility/macros
 """
 # stdlib Python imports
+import os
 import math
 from math import sin, sqrt, pow
 
@@ -307,10 +308,10 @@ class TES(TauSystematic):
 
         if self.year == 2011:
             self.tes_tool = TESUncertaintyProvider(
-                    TESP.RESOURCE_PATH, '', 'mc11')
+                    os.path.normpath(TESP.RESOURCE_PATH), '', 'mc11')
         elif self.year == 2012:
             self.tes_tool = TESUncertaintyProvider(
-                    TESP.RESOURCE_PATH, '', 'mc12')
+                    os.path.normpath(TESP.RESOURCE_PATH), '', 'mc12')
         else:
             raise ValueError('No TES defined for year %d' % self.year)
 
