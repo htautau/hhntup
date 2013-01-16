@@ -2,8 +2,6 @@ embedded:
     systematics:
         - TES_UP
         - TES_DOWN
-        - TAUBDT_UP
-        - TAUBDT_DOWN
     samples:
         - 'embed12-hh-mfsim'
     systematics_samples:
@@ -18,8 +16,6 @@ mc:
         - TES_UP
         - TES_DOWN
         - JER_UP
-        - TAUBDT_UP
-        - TAUBDT_DOWN
     samples:
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
