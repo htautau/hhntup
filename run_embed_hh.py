@@ -35,7 +35,7 @@ output_path = os.path.join(args.output_path, student_name)
 CWD = os.getcwd()
 CMD = ("%s && ./run --output-path %s "
        "-s %s -n %d --db %s "
-       "--nice %d --split %d:%%d %%s %%s") % (
+       "--nice %d --split %d:%%d %%s %%s %%s") % (
                setup, output_path,
                args.student,
                args.nproc,
@@ -50,13 +50,14 @@ def run_sample(sample, systematics=None):
         if args.splits and (i + 1) not in args.splits:
             continue
         if systematics is not None:
-            syst = '--syst-terms %s' % ','.join(systematics)
-            cmd = "cd %s && %s" % (CWD, CMD % (i + 1, syst, sample))
-            job_name = '%s.%s_%d_%s' % (student_name, sample, i + 1,
-                    '_'.join(systematics))
+            syst = '--syst-terms=%s' % ','.join(systematics)
+            suffix = '_'.join(systematics)
+            cmd = "cd %s && %s" % (CWD, CMD % (i + 1, '--suffix=%s' % suffix,
+                syst, sample))
+            job_name = '%s.%s_%s_%d' % (student_name, sample, suffix, i + 1)
 
         else:
-            cmd = "cd %s && %s" % (CWD, CMD % (i + 1, '', sample))
+            cmd = "cd %s && %s" % (CWD, CMD % (i + 1, '', '', sample))
             job_name = '%s.%s_%d' % (student_name, sample, i + 1)
         output = job_name + '.root'
         if os.path.exists(os.path.join(output_path, output)):
