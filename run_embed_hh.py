@@ -35,7 +35,7 @@ output_path = os.path.join(args.output_path, student_name)
 CWD = os.getcwd()
 CMD = ("%s && ./run --output-path %s "
        "-s %s -n %d --db %s "
-       "--nice %d --split %d:%%d %%s") % (
+       "--nice %d --split %d:%%d %%s %%s") % (
                setup, output_path,
                args.student,
                args.nproc,
@@ -43,13 +43,21 @@ CMD = ("%s && ./run --output-path %s "
                args.nice,
                args.nsplit)
 
-def run_sample(sample):
+
+def run_sample(sample, systematics=None):
 
     for i in xrange(args.nsplit):
         if args.splits and (i + 1) not in args.splits:
             continue
-        cmd = "cd %s && %s" % (CWD, CMD % (i + 1, sample))
-        job_name = '%s.%s_%d' % (student_name, sample, i + 1)
+        if systematics is not None:
+            syst = '--syst-terms %s' % ','.join(systematics)
+            cmd = "cd %s && %s" % (CWD, CMD % (i + 1, syst, sample))
+            job_name = '%s.%s_%d_%s' % (student_name, sample, i + 1,
+                    '_'.join(systematics))
+
+        else:
+            cmd = "cd %s && %s" % (CWD, CMD % (i + 1, '', sample))
+            job_name = '%s.%s_%d' % (student_name, sample, i + 1)
         output = job_name + '.root'
         if os.path.exists(os.path.join(output_path, output)):
             print "%s already exists. please delete it and resubmit" % output
@@ -77,4 +85,6 @@ if not args.nominal_only:
     # systematics
     for datasets, systematics in samples.iter_samples('hadhad', args.year,
             '*embed*', systematics=True):
-        print datasets, systematics
+        for sample in datasets:
+            for sys_variations in systematics:
+                run_sample(sample, sys_variations)
