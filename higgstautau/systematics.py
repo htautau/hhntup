@@ -18,12 +18,13 @@ from rootpy.tree.filtering import EventFilter
 import ROOT
 
 # ATLAS tools imports
+# load TESUncertaintyProvider before MissingETUtility!!!
+from externaltools import TESUncertaintyProvider as TESP
 from externaltools import MissingETUtility
 from externaltools import MuonMomentumCorrections
 from externaltools import JetUncertainties
 from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
-from externaltools import TESUncertaintyProvider as TESP
 
 # MissingETUtility
 from ROOT import METUtility
