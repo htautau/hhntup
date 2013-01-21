@@ -392,12 +392,20 @@ class NonIsolatedJet(EventFilter):
     """
     https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=200403
     """
+    def __init__(self, tree, **kwargs):
+
+        super(NonIsolatedJet, self).__init__(**kwargs)
+        self.tree = tree
+
     def passes(self, event):
 
+        # only write flag instead of vetoing the event so this
+        # can be turned on and off after
+        self.tree.nonisolatedjet = False
         for tau in event.taus:
             for jet in event.jets:
                 if 0.4 < utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 1.0:
-                    return False
+                    self.tree.nonisolatedjet = True
         return True
 
 

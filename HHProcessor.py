@@ -317,6 +317,7 @@ class HHProcessor(ATLASStudent):
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
             NonIsolatedJet(
+                tree=tree,
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
             JetSelection(

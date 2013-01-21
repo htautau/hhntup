@@ -66,6 +66,7 @@ class EventVariables(TreeModel):
     eta_product_jets_boosted = FloatCol()
 
     numJets = IntCol()
+    nonisolatedjet = BoolCol()
 
     MET = FloatCol()
     MET_x = FloatCol()
@@ -85,10 +86,11 @@ class EventVariables(TreeModel):
 
     sumET = FloatCol()
 
-    error = BoolCol()
     jet_transformation = LorentzRotation
     jet_beta = Vector3
     parton_beta = Vector3
+
+    error = BoolCol()
     cutflow = IntCol()
 
     sphericity = FloatCol()
