@@ -1,0 +1,19 @@
+vector<vector<float> > *trk_atTJVA_phi_err;
+vector<vector<float> > *trk_atTJVA_d0_err;
+vector<vector<float> > *trk_atTJVA_z0_err;
+vector<vector<float> > *trk_atTJVA_theta_err;
+vector<vector<float> > *trk_atTJVA_qoverp_err;
+
+vector<float>   *tau_privtx_xx;
+vector<float>   *tau_privtx_yy;
+vector<float>   *tau_privtx_zz;
+vector<float>   *tau_privtx_xy;
+vector<float>   *tau_privtx_yz;
+vector<float>   *tau_privtx_zx;
+
+vector<float>   *tau_secvtx_xx;
+vector<float>   *tau_secvtx_yy;
+vector<float>   *tau_secvtx_zz;
+vector<float>   *tau_secvtx_xy;
+vector<float>   *tau_secvtx_yz;
+vector<float>   *tau_secvtx_zx;

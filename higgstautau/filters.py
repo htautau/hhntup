@@ -293,6 +293,19 @@ class Tau1Track3Track(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class Tau3P(EventFilter):
+
+    def __init__(self, min_taus, **kwargs):
+
+        self.min_taus = min_taus
+        super(Tau3P, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.taus.select(lambda tau: tau.numTrack == 3)
+        return len(event.taus) >= self.min_taus
+
+
 class TauCharge(EventFilter):
 
     def __init__(self, min_taus, **kwargs):

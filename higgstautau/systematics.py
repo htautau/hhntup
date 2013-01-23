@@ -560,6 +560,7 @@ class Systematics(EventFilter):
                 self.systematics.append(systematic)
 
         # Initialise your METUtility object
+        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtility
         self.met_utility = METUtility()
 
         # configure

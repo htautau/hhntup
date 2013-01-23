@@ -205,6 +205,7 @@ class FakeRateScaleFactors(EventFilter):
             elif self.year == 12:
                 from externaltools.bundle_2012 import TauFakeRates
                 from ROOT import TauFakeRates as TFR
+                #TODO update
                 self.fakerate_tool = TFR.FakeRateScaler(
                         TauFakeRates.RESOURCE_PATH)
                 self.passes = self.passes_2012
