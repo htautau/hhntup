@@ -33,7 +33,7 @@ PERIODS = {
 
 LUMI = { # pb-1 atlas-lumicalc.cern.ch
     2011: 4604.52, # B2-M skim v9
-    2012: 14130.8, # A3-E no run 200841 skim v9
+    2012: 14220.7, #14130.8, # A3-E no run 200841 skim v9
 }
 
 
