@@ -202,7 +202,7 @@ class c3po(ATLASStudent):
                 count_funcs=count_funcs),
             TauAuthor(2,
                 count_funcs=count_funcs),
-            Tau3P(2,
+            TauHasTrack(2,
                 count_funcs=count_funcs),
             TauPT(2,
                 thresh=20 * GeV,
@@ -226,6 +226,9 @@ class c3po(ATLASStudent):
             TauLeadSublead(
                 lead=29 * GeV,
                 sublead=20 * GeV,
+                count_funcs=count_funcs),
+            # select 1P + 3P or 3P + 3P
+            Tau1P3P(
                 count_funcs=count_funcs),
             TauTriggerMatchThreshold(
                 passthrough=no_trigger or datatype == datasets.EMBED,

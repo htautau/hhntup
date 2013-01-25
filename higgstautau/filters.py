@@ -293,17 +293,26 @@ class Tau1Track3Track(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
-class Tau3P(EventFilter):
-
-    def __init__(self, min_taus, **kwargs):
-
-        self.min_taus = min_taus
-        super(Tau3P, self).__init__(**kwargs)
+class Tau1P3P(EventFilter):
+    """
+    Only keep 1P + 3P and 3P + 3P
+    """
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: tau.numTrack == 3)
-        return len(event.taus) >= self.min_taus
+        assert len(event.taus) == 2
+        tau1, tau2 = event.taus
+
+        # 1P + 3P
+        if (tau1.numTrack == 1 and tau2.numTrack == 3) or \
+           (tau1.numTrack == 3 and tau2.numTrack == 1):
+            return True
+
+        # 3P + 3P
+        if tau1.numTrack == 3 and tau2.numTrack == 3:
+            return True
+
+        return False
 
 
 class TauCharge(EventFilter):

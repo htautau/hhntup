@@ -931,10 +931,10 @@ if __name__ == '__main__':
 
     if args.analysis == 'hh':
         args.versioned = True
-        args.name = 'datasets_hh'
+        args.name += '_hh'
     elif args.analysis == 'lh':
         args.versioned = True
-        args.name = 'datasets_lh'
+        args.name += '_lh'
 
     db = Database(
             name=args.name,
