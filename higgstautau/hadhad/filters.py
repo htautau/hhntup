@@ -139,8 +139,7 @@ class TruthMatching(EventFilter):
     def passes(self, event):
 
         for tau in event.taus:
-            if tau.trueTauAssoc_index > -1:
-                tau.matched = True
+            tau.matched = tau.trueTauAssoc_index > -1
         return True
 
 
