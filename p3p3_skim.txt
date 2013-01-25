@@ -1,7 +1,0 @@
-usual event cleaning
-two 3p taus
-e veto
-mu veto
-tau pt exactly at trigger thresh (20, 29)
-also check for other triggers, even PSed
-keep all branches

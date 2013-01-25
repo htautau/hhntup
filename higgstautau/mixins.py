@@ -1,6 +1,6 @@
 import math
 from decorators import cached_property
-from rootpy.math.physics.vector import LorentzVector
+from rootpy.math.physics.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
 from atlastools.units import GeV
 
@@ -101,6 +101,32 @@ class TauFourMomentum(FourMomentum):
                 ldtrkpt = pt
         return ldtrkindex
 
+    @cached_property
+    def privtx(self):
+
+        return Vector3(
+                self.privtx_x,
+                self.privtx_y,
+                self.privtx_z)
+
+    @cached_property
+    def secvtx(self):
+
+        return Vector3(
+                self.secvtx_x,
+                self.secvtx_y,
+                self.secvtx_z)
+
+    @cached_property
+    def decay_vect(self):
+
+        return self.secvtx - self.privtx
+
+    @cached_property
+    def decay_length(self):
+
+        return self.decay_vect.Mag()
+
 
 class TauFourMomentumSkim(TauFourMomentum):
 
@@ -166,6 +192,26 @@ class MCTauFourMomentum(FourMomentum):
 
         vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        return vect
+
+
+class ElectronFourMomentum(FourMomentum):
+
+    @cached_property
+    def fourvect(self):
+
+        if ((self.nSCTHits + self.nPixHits) < 4):
+            # electron with low number of tracker hits
+            eta = self.cl_eta
+            phi = self.cl_phi
+            et  = self.cl_E / math.cosh(self.cl_eta)
+        else:
+            eta = self.tracketa
+            phi = self.trackphi
+            et  = self.cl_E / math.cosh(self.tracketa)
+
+        vect = LorentzVector()
+        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
         return vect
 
 
@@ -341,23 +387,3 @@ class MCParticle(FourMomentum):
              self.vx_x,
              self.vx_y,
              self.vx_z)
-
-
-class ElectronFourMomentum(FourMomentum):
-
-    @cached_property
-    def fourvect(self):
-
-        if ((self.nSCTHits + self.nPixHits) < 4):
-            # electron with low number of tracker hits
-            eta = self.cl_eta
-            phi = self.cl_phi
-            et  = self.cl_E / math.cosh(self.cl_eta)
-        else:
-            eta = self.tracketa
-            phi = self.trackphi
-            et  = self.cl_E / math.cosh(self.tracketa)
-
-        vect = LorentzVector()
-        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
-        return vect

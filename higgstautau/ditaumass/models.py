@@ -1,5 +1,6 @@
+import ROOT
 from rootpy.tree import TreeModel
-from rootpy.math.physics.vector import LorentzVector
+from rootpy.math.physics.vector import LorentzVector, Vector3
 from rootpy.types import *
 
 
@@ -60,6 +61,121 @@ class FourVectModel(TreeModel):
         this.fourvect_miss.set_from(vect)
 
 
+class DecayVertex(TreeModel):
+
+    privtx_x = FloatCol()
+    privtx_y = FloatCol()
+    privtx_z = FloatCol()
+
+    secvtx_x = FloatCol()
+    secvtx_y = FloatCol()
+    secvtx_z = FloatCol()
+
+    privtx = Vector3
+    secvtx = Vector3
+
+    decay_theta = FloatCol()
+    decay_phi = FloatCol()
+    decay_length = FloatCol(default=-1111)
+
+    @classmethod
+    def set(cls, outobj, inobj):
+
+        outobj.privtx_x = inobj.privtx_x
+        outobj.privtx_y = inobj.privtx_y
+        outobj.privtx_z = inobj.privtx_z
+
+        outobj.secvtx_x = inobj.secvtx_x
+        outobj.secvtx_y = inobj.secvtx_y
+        outobj.secvtx_z = inobj.secvtx_z
+
+        outobj.privtx = inobj.privtx
+        outobj.secvtx = inobj.secvtx
+
+        outobj.decay_theta = inobj.decay_vect.Theta()
+        outobj.decay_phi = inobj.decay_vect.Phi()
+        outobj.decay_length = inobj.decay_vect.Mag()
+
+
+class RecoDecayVertex(DecayVertex):
+
+    # covariance matrix
+    privtx_xx = FloatCol()
+    privtx_yy = FloatCol()
+    privtx_zz = FloatCol()
+    privtx_xy = FloatCol()
+    privtx_yz = FloatCol()
+    privtx_zx = FloatCol()
+
+    secvtx_xx = FloatCol()
+    secvtx_yy = FloatCol()
+    secvtx_zz = FloatCol()
+    secvtx_xy = FloatCol()
+    secvtx_yz = FloatCol()
+    secvtx_zx = FloatCol()
+
+    privtx_chiSquared = FloatCol()
+    privtx_numberDoF = FloatCol()
+    privtx_jvf = FloatCol()
+    # ROOT.TMath.Prob(privtx_chiSquared, privtx_numberDoF)
+    privtx_prob = FloatCol()
+
+    secvtx_chiSquared = FloatCol()
+    secvtx_numberDoF = FloatCol()
+    # ROOT.TMath.Prob(secvtx_chiSquared, secvtx_numberDoF)
+    secvtx_prob = FloatCol()
+
+    decay_length_sigma = FloatCol()
+    # L / L_sigma
+    decay_length_significance = FloatCol()
+
+    @classmethod
+    def set(cls, outobj, inobj):
+
+        DecayVertex.set(outobj, inobj)
+
+        outobj.privtx_xx = inobj.privtx_xx
+        outobj.privtx_yy = inobj.privtx_yy
+        outobj.privtx_zz = inobj.privtx_zz
+        outobj.privtx_xy = inobj.privtx_xy
+        outobj.privtx_yz = inobj.privtx_yz
+        outobj.privtx_zx = inobj.privtx_zx
+
+        outobj.secvtx_xx = inobj.secvtx_xx
+        outobj.secvtx_yy = inobj.secvtx_yy
+        outobj.secvtx_zz = inobj.secvtx_zz
+        outobj.secvtx_xy = inobj.secvtx_xy
+        outobj.secvtx_yz = inobj.secvtx_yz
+        outobj.secvtx_zx = inobj.secvtx_zx
+
+        outobj.privtx_chiSquared = inobj.privtx_chiSquared
+        outobj.privtx_numberDoF = inobj.privtx_numberDoF
+        outobj.privtx_jvf = inobj.privtx_jvf
+        outobj.privtx_prob = ROOT.TMath.Prob(
+                inobj.privtx_chiSquared,
+                int(inobj.privtx_numberDoF))
+
+        outobj.secvtx_chiSquared = inobj.secvtx_chiSquared
+        outobj.secvtx_numberDoF = inobj.secvtx_numberDoF
+        outobj.secvtx_prob = ROOT.TMath.Prob(
+                inobj.secvtx_chiSquared,
+                int(inobj.secvtx_numberDoF))
+
+        x = inobj.decay_vect.X()
+        y = inobj.decay_vect.Y()
+        z = inobj.decay_vect.Z()
+
+        dx2 = inobj.privtx_xx
+        dy2 = inobj.privtx_yy
+        dz2 = inobj.privtx_zz
+
+        decay_length_sigma =
+        decay_length_significance = inobj.decay_length / decay_length_sigma
+
+        outobj.decay_length_sigma = decay_length_sigma
+        outobj.decay_length_significance = decay_length_significance
+
+
 class Event(FourVectModel.prefix('resonance_') +
             FourVectModel.prefix('radiative_')):
 
@@ -88,7 +204,8 @@ class Event(FourVectModel.prefix('resonance_') +
 class TrueTau(FourVectModel +
         FourVectModel.suffix('_vis') +
         FourVectModel.suffix('_miss'),
-        MatchedObject):
+        MatchedObject,
+        DecayVertex):
 
     visible = BoolCol(default=False)
     charge = IntCol()
@@ -110,10 +227,6 @@ class TrueTau(FourVectModel +
 
     has_charged_rho = BoolCol()
     has_a1 = BoolCol()
-
-    prod_vertex = Vector3
-    decay_vertex = Vector3
-    decay_length = FloatCol(default=-1111)
 
     dr_vistau_nu = FloatCol(default=-1111)
     dtheta3d_vistau_nu = FloatCol(default=-1111)
@@ -150,8 +263,8 @@ class TrueTau(FourVectModel +
         mctau.dtheta3d_vistau_nu = decay.dtheta3d_vistau_nu
 
         mctau.decay_length = decay.decay_length
-        mctau.prod_vertex.set_from(decay.prod_vertex)
-        mctau.decay_vertex.set_from(decay.decay_vertex)
+        mctau.privtx.set_from(decay.prod_vertex)
+        mctau.secvtx.set_from(decay.decay_vertex)
 
         # sanity check
         if mctau.hadronic:
@@ -165,20 +278,11 @@ class TrueTau(FourVectModel +
             print "===="
 
 
-class RecoTau(FourVectModel, MatchedObject):
+class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
 
     charge = IntCol()
     numTrack = IntCol()
     nPi0 = IntCol()
-
-    privtx = Vector3
-    privtx_chiSquared = FloatCol()
-    privtx_numberDoF = FloatCol()
-    privtx_jvf = FloatCol()
-
-    secvtx = Vector3
-    secvtx_chiSquared = FloatCol()
-    secvtx_numberDoF = FloatCol()
 
     ipZ0SinThetaSigLeadTrk = FloatCol()
     ipSigLeadTrk = FloatCol()
