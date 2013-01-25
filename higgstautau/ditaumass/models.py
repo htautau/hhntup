@@ -372,10 +372,7 @@ class DTMEvent(FourVectModel.prefix('resonance_') +
     radiative_et_scalarsum = FloatCol()
 
 
-class C3POEvent(FourVectModel.prefix('resonance_') +
-                TrueTau.prefix('truetau1_') +
-                TrueTau.prefix('truetau2_') +
-                RecoTau.prefix('tau1_') +
+class C3POEvent(RecoTau.prefix('tau1_') +
                 RecoTau.prefix('tau2_')):
 
     # event weight given by the PileupReweighting tool
