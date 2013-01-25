@@ -71,16 +71,7 @@ class ditaumass(ATLASStudent):
 
         # this tree will contain info pertaining to true tau decays
         # for possible use in the optimization of a missing mass calculator
-        tree = Tree(name="ditaumass",
-                model=(TrueTau.prefix('truetau1_') +
-                       TrueTau.prefix('truetau2_') +
-                       RecoTau.prefix('tau1_') +
-                       RecoTau.prefix('tau2_') +
-                       RecoElectron.prefix('ele1_') +
-                       RecoElectron.prefix('ele2_') +
-                       RecoMuon.prefix('muon1_') +
-                       RecoMuon.prefix('muon2_') +
-                       Event))
+        tree = Tree(name="ditaumass", model=DTMEvent)
 
         tree.define_object(name='resonance', prefix='resonance_')
         tree.define_object(name='radiative', prefix='radiative_')
@@ -171,6 +162,7 @@ class ditaumass(ATLASStudent):
                                     'decay_invalid_%d.dot' %
                                     event.EventNumber)
                         invalid = True
+                        break
                 if invalid:
                     # skip this event
                     continue

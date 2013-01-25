@@ -71,9 +71,6 @@ class DecayVertex(TreeModel):
     secvtx_y = FloatCol()
     secvtx_z = FloatCol()
 
-    privtx = Vector3
-    secvtx = Vector3
-
     decay_theta = FloatCol()
     decay_phi = FloatCol()
     decay_length = FloatCol(default=-1111)
@@ -88,9 +85,6 @@ class DecayVertex(TreeModel):
         outobj.secvtx_x = inobj.secvtx_x
         outobj.secvtx_y = inobj.secvtx_y
         outobj.secvtx_z = inobj.secvtx_z
-
-        outobj.privtx = inobj.privtx
-        outobj.secvtx = inobj.secvtx
 
         outobj.decay_theta = inobj.decay_vect.Theta()
         outobj.decay_phi = inobj.decay_vect.Phi()
@@ -165,40 +159,19 @@ class RecoDecayVertex(DecayVertex):
         y = inobj.decay_vect.Y()
         z = inobj.decay_vect.Z()
 
-        dx2 = inobj.privtx_xx
-        dy2 = inobj.privtx_yy
-        dz2 = inobj.privtx_zz
+        d1x2 = inobj.privtx_xx
+        d1y2 = inobj.privtx_yy
+        d1z2 = inobj.privtx_zz
+
+        d2x2 = inobj.secvtx_xx
+        d2y2 = inobj.secvtx_yy
+        d2z2 = inobj.secvtx_zz
 
         decay_length_sigma =
         decay_length_significance = inobj.decay_length / decay_length_sigma
 
         outobj.decay_length_sigma = decay_length_sigma
         outobj.decay_length_significance = decay_length_significance
-
-
-class Event(FourVectModel.prefix('resonance_') +
-            FourVectModel.prefix('radiative_')):
-
-    collision_energy = FloatCol()
-
-    event = IntCol()
-    run = IntCol()
-    channel = IntCol()
-    mu = FloatCol()
-
-    match_collision = BoolCol(default=False)
-    matched = BoolCol(False)
-
-    met_x = FloatCol()
-    met_y = FloatCol()
-    met_phi = FloatCol()
-    met = FloatCol()
-    sum_et = FloatCol()
-
-    radiative_ngamma = IntCol()
-    radiative_ngamma_5 = IntCol()
-    radiative_ngamma_10 = IntCol()
-    radiative_et_scalarsum = FloatCol()
 
 
 class TrueTau(FourVectModel +
@@ -259,12 +232,10 @@ class TrueTau(FourVectModel +
         FourVectModel.set_vis(mctau, decay)
         FourVectModel.set_miss(mctau, decay)
 
+        DecayVertex.set(mctau, decay)
+
         mctau.dr_vistau_nu = decay.dr_vistau_nu
         mctau.dtheta3d_vistau_nu = decay.dtheta3d_vistau_nu
-
-        mctau.decay_length = decay.decay_length
-        mctau.privtx.set_from(decay.prod_vertex)
-        mctau.secvtx.set_from(decay.decay_vertex)
 
         # sanity check
         if mctau.hadronic:
@@ -295,26 +266,12 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
     def set(cls, tau, recotau, verbose=False):
 
         FourVectModel.set(tau, recotau)
+        RecoDecayVertex.set(tau, recotau)
 
         tau.charge = recotau.charge
         tau.numTrack = recotau.numTrack
         tau.nPi0 = recotau.nPi0
         tau.charge = recotau.charge
-
-        tau.privtx.set_from(
-           Vector3(recotau.privtx_x,
-                   recotau.privtx_y,
-                   recotau.privtx_z))
-        tau.privtx_chiSquared = recotau.privtx_chiSquared
-        tau.privtx_numberDoF = recotau.privtx_numberDoF
-        tau.privtx_jvf = recotau.privtx_jvf
-
-        tau.secvtx.set_from(
-           Vector3(recotau.secvtx_x,
-                   recotau.secvtx_y,
-                   recotau.secvtx_z))
-        tau.secvtx_chiSquared = recotau.secvtx_chiSquared
-        tau.secvtx_numberDoF = recotau.secvtx_numberDoF
 
         tau.ipZ0SinThetaSigLeadTrk = recotau.ipZ0SinThetaSigLeadTrk
         tau.ipSigLeadTrk = recotau.ipSigLeadTrk
@@ -380,3 +337,72 @@ class RecoMuon(FourVectModel, MatchedObject):
 
         this.charge = other.charge
         FourVectModel.set(this, other)
+
+
+class DTMEvent(FourVectModel.prefix('resonance_') +
+               FourVectModel.prefix('radiative_') +
+               TrueTau.prefix('truetau1_') +
+               TrueTau.prefix('truetau2_') +
+               RecoTau.prefix('tau1_') +
+               RecoTau.prefix('tau2_') +
+               RecoElectron.prefix('ele1_') +
+               RecoElectron.prefix('ele2_') +
+               RecoMuon.prefix('muon1_') +
+               RecoMuon.prefix('muon2_')):
+
+    collision_energy = FloatCol()
+
+    event = IntCol()
+    run = IntCol()
+    channel = IntCol()
+    mu = FloatCol()
+
+    match_collision = BoolCol(default=False)
+    matched = BoolCol(False)
+
+    met_x = FloatCol()
+    met_y = FloatCol()
+    met_phi = FloatCol()
+    met = FloatCol()
+    sum_et = FloatCol()
+
+    radiative_ngamma = IntCol()
+    radiative_ngamma_5 = IntCol()
+    radiative_ngamma_10 = IntCol()
+    radiative_et_scalarsum = FloatCol()
+
+
+class C3POEvent(FourVectModel.prefix('resonance_') +
+                TrueTau.prefix('truetau1_') +
+                TrueTau.prefix('truetau2_') +
+                RecoTau.prefix('tau1_') +
+                RecoTau.prefix('tau2_')):
+
+    # event weight given by the PileupReweighting tool
+    pileup_weight = FloatCol(default=1.)
+    mc_weight = FloatCol(default=1.)
+
+    MET = FloatCol()
+    MET_x = FloatCol()
+    MET_y = FloatCol()
+    MET_phi = FloatCol()
+    MET_sig = FloatCol()
+    MET_vec = Vector2
+
+    MET_mmc = FloatCol()
+    MET_mmc_x = FloatCol()
+    MET_mmc_y = FloatCol()
+    MET_mmc_phi = FloatCol()
+    MET_mmc_vec = Vector2
+
+    mmc_resonance = LorentzVector
+    mmc_resonance_pt = FloatCol()
+
+    sumET = FloatCol()
+
+    # MMC mass
+    mass_mmc_tau1_tau2 = FloatCol()
+
+    # did both taus come from the same vertex?
+    tau_same_vertex = BoolCol()
+
