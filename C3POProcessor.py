@@ -296,12 +296,19 @@ class C3POProcessor(ATLASStudent):
             # truth matching
             if datatype == datasets.MC:
 
-                resonance, taus = get_taus(event)
+                resonance, tau_decays = get_taus(event)
 
                 if resonance is not None:
 
                     FourVectModel.set(tree.resonance, resonance)
-                    TrueTau.set(truetau, decay, verbose=verbose)
+
+                    for itau, tau in enumerate(event.taus):
+                        for tau_decay in tau_decays:
+                            if tau.matches_vect(tau_decay.fourvect_vis):
+                                TrueTau.set(truetaus[itau], tau_decay,
+                                        verbose=verbose)
+                                # TODO protect against double matching
+                                break
 
             # tau - vertex association
             tree.tau_same_vertex = (

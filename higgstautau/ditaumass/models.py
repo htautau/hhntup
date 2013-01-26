@@ -155,6 +155,7 @@ class RecoDecayVertex(DecayVertex):
                 inobj.secvtx_chiSquared,
                 int(inobj.secvtx_numberDoF))
 
+        """
         x = inobj.decay_vect.X()
         y = inobj.decay_vect.Y()
         z = inobj.decay_vect.Z()
@@ -172,6 +173,7 @@ class RecoDecayVertex(DecayVertex):
 
         outobj.decay_length_sigma = decay_length_sigma
         outobj.decay_length_significance = decay_length_significance
+        """
 
 
 class TrueTau(FourVectModel +
