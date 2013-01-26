@@ -3,6 +3,8 @@ from rootpy.tree import TreeModel
 from rootpy.math.physics.vector import LorentzVector, Vector3
 from rootpy.types import *
 
+from ..utils import is_visible
+
 
 class MatchedObject(TreeModel):
 
@@ -386,13 +388,11 @@ class C3POEvent(RecoTau.prefix('tau1_') +
     MET_y = FloatCol()
     MET_phi = FloatCol()
     MET_sig = FloatCol()
-    MET_vec = Vector2
 
     MET_mmc = FloatCol()
     MET_mmc_x = FloatCol()
     MET_mmc_y = FloatCol()
     MET_mmc_phi = FloatCol()
-    MET_mmc_vec = Vector2
 
     mmc_resonance = LorentzVector
     mmc_resonance_pt = FloatCol()

@@ -14,6 +14,7 @@ from rootpy.math.physics.vector import Vector2
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 from rootpy.extern.argparse import ArgumentParser
+from rootpy.extern.hep import pdg
 
 from atlastools import datasets
 from atlastools import utils
@@ -63,9 +64,8 @@ def get_taus(event):
         if abs(child.pdgId) == pdg.tau_minus:
             # ignore status 3 taus in 2012 (something strange in the
             # MC record...)
-            if year == 2012:
-                if child.status == 3:
-                    continue
+            if child.status == 3:
+                continue
             tau_decays.append(tautools.TauDecay(child))
         elif child.pdgId == pdg.gamma:
             mc_photons.append(child)
@@ -84,10 +84,9 @@ def get_taus(event):
         if not decay.valid:
             print "invalid tau decay:"
             print decay
-            if draw_decays:
-                decay.init.export_graphvis(
-                        'decay_invalid_%d.dot' %
-                        event.EventNumber)
+            decay.init.export_graphvis(
+                    'decay_invalid_%d.dot' %
+                    event.EventNumber)
 
     return resonance, tau_decays
 
@@ -240,7 +239,7 @@ class C3POProcessor(ATLASStudent):
 
         # define tree objects
         taus = [
-            tree.define_object(name='tau1', prefix='tau1_')
+            tree.define_object(name='tau1', prefix='tau1_'),
             tree.define_object(name='tau2', prefix='tau2_')]
 
         if datatype == datasets.MC:
@@ -268,7 +267,6 @@ class C3POProcessor(ATLASStudent):
             tree.MET_x = METx
             tree.MET_y = METy
             tree.MET_phi = event.MET.phi
-            tree.MET_vec.set_from(MET_vect)
 
             sumET = event.MET.sumet
             tree.sumET = sumET
@@ -291,7 +289,6 @@ class C3POProcessor(ATLASStudent):
             tree.MET_mmc_x = mmc_met.X()
             tree.MET_mmc_y = mmc_met.Y()
             tree.MET_mmc_phi = math.pi - mmc_met.Phi()
-            tree.MET_mmc_vec.set_from(mmc_met)
 
             # truth matching
             if datatype == datasets.MC:
@@ -304,7 +301,7 @@ class C3POProcessor(ATLASStudent):
 
                     for itau, tau in enumerate(event.taus):
                         for tau_decay in tau_decays:
-                            if tau.matches_vect(tau_decay.fourvect_vis):
+                            if tau.matches_vect(tau_decay.fourvect_visible):
                                 TrueTau.set(truetaus[itau], tau_decay,
                                         verbose=verbose)
                                 # TODO protect against double matching

@@ -1,3 +1,5 @@
+from atlastools.units import GeV
+
 
 is_visible = lambda fourvect: (
     fourvect.Et() > 10 * GeV and abs(fourvect.Eta()) < 2.5)
