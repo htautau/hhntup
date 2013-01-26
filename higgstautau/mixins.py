@@ -2,6 +2,7 @@ import math
 from decorators import cached_property
 from rootpy.math.physics.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
+from atlastools.utils import dR
 from atlastools.units import GeV
 
 """
@@ -26,6 +27,14 @@ class MatchedObject(object):
         self.matched = False
         self.matched_dR = 9999.
         self.matched_collision = False
+
+    def matches(self, other, dr=.2):
+
+        return dR(self.eta, self.phi, other.eta, other.phi) < dr
+
+    def matches_vect(self, vect, dr=.2):
+
+        return dR(self.eta, self.phi, vect.Eta(), vect.Phi()) < dr
 
 
 class FourMomentum(MatchedObject):

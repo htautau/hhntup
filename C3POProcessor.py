@@ -38,13 +38,59 @@ from higgstautau.pileup import PileupReweight
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.ditaumass.models import *
 
-
 from goodruns import GRL
 import subprocess
 
-
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-VERBOSE = False
+
+
+def get_taus(event):
+
+    # attempt to get the resonance Z (23) or Higgs (25)
+    resonance = tautools.get_particles(event, [25, 23],
+            num_expected=1)
+
+    if not resonance:
+        return None, None
+
+    # get the resonance just before the decay
+    resonance = resonance[0].last_self
+
+    # collect decay products (taus and photons)
+    tau_decays = []
+    mc_photons = []
+    for child in resonance.iter_children():
+        if abs(child.pdgId) == pdg.tau_minus:
+            # ignore status 3 taus in 2012 (something strange in the
+            # MC record...)
+            if year == 2012:
+                if child.status == 3:
+                    continue
+            tau_decays.append(tautools.TauDecay(child))
+        elif child.pdgId == pdg.gamma:
+            mc_photons.append(child)
+        else:
+            print 'unexpected particle after resonance:\n%s' % child
+
+    # There should be exactly two taus
+    if len(tau_decays) != 2:
+        print "found %i tau decays in MC record" % len(tau_decays)
+        for decay in tau_decays:
+            print decay
+
+    # check for incomplete tau decays
+    invalid = False
+    for decay in tau_decays:
+        if not decay.valid:
+            print "invalid tau decay:"
+            print decay
+            if draw_decays:
+                decay.init.export_graphvis(
+                        'decay_invalid_%d.dot' %
+                        event.EventNumber)
+
+    return resonance, tau_decays
+
 
 
 class C3POProcessor(ATLASStudent):
@@ -53,6 +99,9 @@ class C3POProcessor(ATLASStudent):
 
         super(C3POProcessor, self).__init__(**kwargs)
         parser = ArgumentParser()
+        parser.add_argument('--student-verbose',
+            dest='verbose',
+            action='store_true', default=False)
         parser.add_argument('--syst-terms', default=None)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
@@ -80,6 +129,7 @@ class C3POProcessor(ATLASStudent):
         """
         datatype = self.metadata.datatype
         year = self.metadata.year
+        verbose = self.args.verbose
 
         OutputModel = C3POEvent
 
@@ -154,7 +204,6 @@ class C3POProcessor(ATLASStudent):
         copied_variables = [
                 'actualIntPerXing',
                 'averageIntPerXing',
-                'number_of_good_vertices',
                 'RunNumber',
                 'EventNumber',
                 'lbn']
@@ -246,58 +295,13 @@ class C3POProcessor(ATLASStudent):
 
             # truth matching
             if datatype == datasets.MC:
-                # match only with visible true taus
-                event.truetaus.select(
-                        lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
-                if len(event.truetaus) > 2:
-                    print "ERROR: too many true taus: %i" % len(event.truetaus)
-                    for truetau in event.truetaus:
-                        print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (
-                                truetau.pt, truetau.eta, truetau.phi),
-                        if truetau.tauAssoc_index >= 0:
-                            matched_tau = event.taus.getitem(truetau.tauAssoc_index)
-                            print " ==> reco (pT: %.4f, eta: %.4f, phi: %.4f)" % (
-                                    matched_tau.pt, matched_tau.eta, matched_tau.phi),
-                            print "dR = %.4f" % truetau.tauAssoc_dr
-                        else:
-                            print ""
-                    tree.error = True
+                resonance, taus = get_taus(event)
 
-                unmatched_reco = range(2)
-                unmatched_truth = range(event.truetaus.len())
-                matched_truth = []
-                for i, tau in enumerate((tau1, tau2)):
-                    matching_truth_index = tau.trueTauAssoc_index
-                    if matching_truth_index >= 0:
-                        unmatched_reco.remove(i)
-                        # check that this tau / true tau was not previously matched
-                        if matching_truth_index not in unmatched_truth or \
-                           matching_truth_index in matched_truth:
-                            print "ERROR: match collision!"
-                            tau1.matched_collision = True
-                            tau2.matched_collision = True
-                            tree.trueTau1_matched_collision = True
-                            tree.trueTau2_matched_collision = True
-                            tree.error = True
-                        else:
-                            unmatched_truth.remove(matching_truth_index)
-                            matched_truth.append(matching_truth_index)
-                            tau.matched = True
-                            tau.matched_dR = tau.trueTauAssoc_dr
-                            setattr(tree, "trueTau%i_matched" % (i+1), 1)
-                            setattr(tree, "trueTau%i_matched_dR" % (i+1),
-                                    event.truetaus.getitem(
-                                        matching_truth_index).tauAssoc_dr)
-                            TrueTauBlock.set(tree, i+1,
-                                    event.truetaus.getitem(matching_truth_index))
+                if resonance is not None:
 
-                for i, j in zip(unmatched_reco, unmatched_truth):
-                    TrueTauBlock.set(tree, i+1, event.truetaus.getitem(j))
-
-                tree.mass_vis_true_tau1_tau2 = (
-                        tree.trueTau1_fourvect_vis +
-                        tree.trueTau2_fourvect_vis).M()
+                    FourVectModel.set(tree.resonance, resonance)
+                    TrueTau.set(truetau, decay, verbose=verbose)
 
             # tau - vertex association
             tree.tau_same_vertex = (
@@ -306,7 +310,8 @@ class C3POProcessor(ATLASStudent):
                     tau1.privtx_z == tau2.privtx_z)
 
             # fill tau block
-            RecoTauBlock.set(event, tree, tau1, tau2)
+            for outtau, intau in zip(taus, event.taus):
+                RecoTau.set(outtau, intau, verbose=verbose)
 
             # fill output ntuple
             tree.Fill(reset=True)
