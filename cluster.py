@@ -150,8 +150,13 @@ def run(student,
                 output_name)
             continue
 
+        try:
+            files = database[ds].files
+        except KeyError:
+            print "dataset %s not in database" % ds
+            continue
+
         # determine actual number of required CPU cores
-        files = database[ds].files
         nproc_actual = min(nproc, len(files))
         if not use_qsub:
             # load balancing
