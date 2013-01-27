@@ -179,10 +179,10 @@ class RecoDecayVertex(DecayVertex):
 
 
 class TrueTau(FourVectModel +
-        FourVectModel.suffix('_vis') +
-        FourVectModel.suffix('_miss'),
-        MatchedObject,
-        DecayVertex):
+              FourVectModel.suffix('_vis') +
+              FourVectModel.suffix('_miss'),
+              MatchedObject,
+              DecayVertex):
 
     visible = BoolCol(default=False)
     charge = IntCol()
