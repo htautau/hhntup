@@ -73,9 +73,10 @@ class DecayVertex(TreeModel):
     secvtx_y = FloatCol()
     secvtx_z = FloatCol()
 
-    decay_theta = FloatCol()
-    decay_phi = FloatCol()
+    decay_theta = FloatCol(default=-1111)
+    decay_phi = FloatCol(default=-1111)
     decay_length = FloatCol(default=-1111)
+    decay_angle = FloatCol(default=-1111)
 
     @classmethod
     def set(cls, outobj, inobj):
@@ -91,6 +92,7 @@ class DecayVertex(TreeModel):
         outobj.decay_theta = inobj.decay_vect.Theta()
         outobj.decay_phi = inobj.decay_vect.Phi()
         outobj.decay_length = inobj.decay_vect.Mag()
+        outobj.decay_angle = inobj.decay_angle
 
 
 class RecoDecayVertex(DecayVertex):
@@ -388,6 +390,11 @@ class C3POEvent(RecoTau.prefix('tau1_') +
     MET_y = FloatCol()
     MET_phi = FloatCol()
     MET_sig = FloatCol()
+
+    MET_true = FloatCol()
+    MET_phi_true = FloatCol()
+    MET_x_true = FloatCol()
+    MET_y_true = FloatCol()
 
     MET_mmc = FloatCol()
     MET_mmc_x = FloatCol()

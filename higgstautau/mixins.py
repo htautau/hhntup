@@ -136,6 +136,11 @@ class TauFourMomentum(FourMomentum):
 
         return self.decay_vect.Mag()
 
+    @cached_property
+    def decay_angle(self):
+
+        return self.decay_vect.Angle(self.fourvect)
+
 
 class TauFourMomentumSkim(TauFourMomentum):
 

@@ -191,6 +191,11 @@ class TauDecay(object):
         return self.decay_vect.Mag()
 
     @cached_property
+    def decay_angle(self):
+
+        return self.decay_vect.Angle(self.fourvect_visible)
+
+    @cached_property
     def npi0(self):
 
         if pdg.pi0 in self.child_pdgid_freq:

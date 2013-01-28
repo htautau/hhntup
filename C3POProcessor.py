@@ -59,7 +59,6 @@ def get_taus(event):
 
     # collect decay products (taus and photons)
     tau_decays = []
-    mc_photons = []
     for child in resonance.iter_children():
         if abs(child.pdgId) == pdg.tau_minus:
             # ignore status 3 taus in 2012 (something strange in the
@@ -67,19 +66,8 @@ def get_taus(event):
             if child.status == 3:
                 continue
             tau_decays.append(tautools.TauDecay(child))
-        elif child.pdgId == pdg.gamma:
-            mc_photons.append(child)
-        else:
-            print 'unexpected particle after resonance:\n%s' % child
-
-    # There should be exactly two taus
-    if len(tau_decays) != 2:
-        print "found %i tau decays in MC record" % len(tau_decays)
-        for decay in tau_decays:
-            print decay
 
     # check for incomplete tau decays
-    invalid = False
     for decay in tau_decays:
         if not decay.valid:
             print "invalid tau decay:"
@@ -299,13 +287,38 @@ class C3POProcessor(ATLASStudent):
 
                     FourVectModel.set(tree.resonance, resonance)
 
+                    matched_taus = []
+                    decays = tau_decays[:]
                     for itau, tau in enumerate(event.taus):
-                        for tau_decay in tau_decays:
+                        for idecay, tau_decay in enumerate(decays):
                             if tau.matches_vect(tau_decay.fourvect_visible):
                                 TrueTau.set(truetaus[itau], tau_decay,
                                         verbose=verbose)
-                                # TODO protect against double matching
+                                decays.pop(idecay)
+                                matched_taus.append(itau)
                                 break
+
+                    if len(decays) > 0:
+                        for idecay, decay in enumerate(decays):
+                            reco_idx = -1
+                            remaining_idx = range(2)
+                            for imatched in remaining_idx:
+                                if imatched not in matched_taus:
+                                    reco_idx = imatched
+                                    remaining_idx.remove(imatched)
+                                    break
+                            TrueTau.set(truetaus[reco_idx], tau_decay,
+                                    verbose=verbose)
+
+                    if len(tau_decays) == 2:
+                        # write truth met
+                        fourvect_missing = (tau_decays[0].fourvect_missing +
+                                            tau_decays[1].fourvect_missing)
+
+                        tree.MET_true = fourvect_missing.Pt()
+                        tree.MET_phi_true = fourvect_missing.Phi()
+                        tree.MET_x_true = tree.MET_true * math.cos(tree.MET_phi_true)
+                        tree.MET_y_true = tree.MET_true * math.sin(tree.MET_phi_true)
 
             # tau - vertex association
             tree.tau_same_vertex = (
