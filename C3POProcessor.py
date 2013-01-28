@@ -292,6 +292,8 @@ class C3POProcessor(ATLASStudent):
                     for itau, tau in enumerate(event.taus):
                         for idecay, tau_decay in enumerate(decays):
                             if tau.matches_vect(tau_decay.fourvect_visible):
+                                tau_decay.matched = True
+                                tau.matched = True
                                 TrueTau.set(truetaus[itau], tau_decay,
                                         verbose=verbose)
                                 decays.pop(idecay)

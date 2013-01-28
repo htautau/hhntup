@@ -9,7 +9,11 @@ from ..utils import is_visible
 class MatchedObject(TreeModel):
 
     matched = BoolCol()
-    match_dr = FloatCol(default=1111)
+
+    @classmethod
+    def set(cls, outobj, inobj):
+
+        outobj.matched = inobj.matched
 
 
 class FourVectModel(TreeModel):
@@ -239,6 +243,7 @@ class TrueTau(FourVectModel +
         FourVectModel.set_miss(mctau, decay)
 
         DecayVertex.set(mctau, decay)
+        MatchedObject.set(mctau, decay)
 
         mctau.dr_vistau_nu = decay.dr_vistau_nu
         mctau.dtheta3d_vistau_nu = decay.dtheta3d_vistau_nu
@@ -273,6 +278,7 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
 
         FourVectModel.set(tau, recotau)
         RecoDecayVertex.set(tau, recotau)
+        MatchedObject.set(tau, recotau)
 
         tau.charge = recotau.charge
         tau.numTrack = recotau.numTrack

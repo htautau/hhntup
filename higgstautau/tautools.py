@@ -99,6 +99,8 @@ class TauDecay(object):
         self.leptonic_muon = leptonic_muon
         self.nprong = nprong
 
+        self.matched = False
+
         # check charge conservation
         if self.valid:
             if self.init.charge != sum([p.charge for p in self.final]):
