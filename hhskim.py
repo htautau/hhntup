@@ -38,8 +38,6 @@ import goodruns
 
 
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-VALIDATE = False
-VERBOSE = False
 
 
 class hhskim(ATLASStudent):
@@ -51,6 +49,8 @@ class hhskim(ATLASStudent):
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--no-trigger', action='store_true', default=False)
         parser.add_argument('--no-grl', action='store_true', default=False)
+        parser.add_argument('--student-verbose', action='store_true', default=False)
+        parser.add_argument('--validate', action='store_true', default=False)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = set([
@@ -63,6 +63,8 @@ class hhskim(ATLASStudent):
         year = self.metadata.year
         no_trigger = self.args.no_trigger
         no_grl = self.args.no_grl
+        verbose = self.args.student_verbose
+        validate = self.args.validate
 
         if datatype != datasets.EMBED:
             # merge TrigConfTrees
@@ -157,13 +159,10 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             LArError(
                 count_funcs=count_funcs),
-            # 2011 and 2012 jet calibrations are applied
-            # InsituJES_2011_Preliminary.config
-            # JES_August2012.config
             JetCalibration(
                 datatype=datatype,
                 year=year,
-                verbose=VERBOSE,
+                verbose=verbose,
                 count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
@@ -172,18 +171,18 @@ class hhskim(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
-                verbose=VERBOSE,
+                verbose=verbose,
                 count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
-            TauIDpatch(
-                year=year,
-                count_funcs=count_funcs),
+            #TauIDpatch(
+            #    year=year,
+            #    count_funcs=count_funcs),
             # patch electron ID for 2012
-            ElectronIDpatch(
-                passthrough=year != 2012,
-                count_funcs=count_funcs),
+            #ElectronIDpatch(
+            #    passthrough=year != 2012,
+            #    count_funcs=count_funcs),
             LArHole(
                 datatype=datatype,
                 count_funcs=count_funcs),
@@ -255,7 +254,8 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
-                passthrough=no_trigger or datatype != datasets.MC,
+                passthrough=no_trigger or datatype != datasets.MC
+                            or year == 2012, # wait for new tool
                 count_funcs=count_funcs),
             ggFReweighting(
                 dsname=os.getenv('INPUT_DATASET_NAME', ''),
@@ -299,7 +299,7 @@ class hhskim(ATLASStudent):
 
         tree.define_object(name='tau', prefix='tau_')
 
-        if VALIDATE: # only validate on a single data run or MC channel
+        if validate: # only validate on a single data run or MC channel
             chain.GetEntry(0)
             if datatype == datasets.MC:
                 validate_log = open('skim2_validate_mc_%d.txt' %
@@ -326,7 +326,7 @@ class hhskim(ATLASStudent):
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
 
-            if VALIDATE:
+            if validate:
                 if datatype == datasets.MC:
                     print >> validate_log, event.mc_channel_number,
                 print >> validate_log, event.RunNumber, event.EventNumber,
@@ -390,7 +390,7 @@ class hhskim(ATLASStudent):
 
         self.output.cd()
 
-        if VALIDATE:
+        if validate:
             validate_log.close()
             # sort the output by event number for MC
             # sort +2 -3 -n skim2_validate_mc_125205.txt -o skim2_validate_mc_125205.txt

@@ -30,6 +30,7 @@ from externaltools import egammaAnalysisUtils
 from ROOT import METUtility
 from ROOT import METUtil
 from ROOT import METObject
+from ROOT import MissingETTags
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
 # JetResolution
@@ -847,6 +848,10 @@ class Systematics(EventFilter):
         return True
 
     def passes_12(self, event):
+
+        # this must be put before setting the jets parameters
+        self.met_utility.setJetPUcode(MissingETTags.JPU_JET_JVFCUT)
+
         """
         JETS
         Always use setJetParameters since they may be recalibrated upstream
@@ -856,10 +861,10 @@ class Systematics(EventFilter):
             event.jet_eta,
             event.jet_phi,
             event.jet_E,
-            event.jet_AntiKt4LCTopo_MET_STVF_wet,
-            event.jet_AntiKt4LCTopo_MET_STVF_wpx,
-            event.jet_AntiKt4LCTopo_MET_STVF_wpy,
-            event.jet_AntiKt4LCTopo_MET_STVF_statusWord)
+            event.jet_AntiKt4LCTopo_MET_wet,
+            event.jet_AntiKt4LCTopo_MET_wpx,
+            event.jet_AntiKt4LCTopo_MET_wpy,
+            event.jet_AntiKt4LCTopo_MET_statusWord)
 
         self.met_utility.setOriJetParameters(event.jet_pt)
 
@@ -879,33 +884,32 @@ class Systematics(EventFilter):
                 event.el_pt,
                 event.el_eta,
                 event.el_phi,
-                event.el_MET_STVF_wet,
-                event.el_MET_STVF_wpx,
-                event.el_MET_STVF_wpy,
-                event.el_MET_STVF_statusWord)
+                event.el_MET_wet,
+                event.el_MET_wpx,
+                event.el_MET_wpy,
+                event.el_MET_statusWord)
         else:
             self.met_utility.setMETTerm(
                 METUtil.RefEle,
-                event.MET_RefEle_STVF_etx,
-                event.MET_RefEle_STVF_ety,
-                event.MET_RefEle_STVF_sumet)
-
+                event.MET_RefEle_etx,
+                event.MET_RefEle_ety,
+                event.MET_RefEle_sumet)
 
         if self.terms & Systematics.PHOTON_TERMS:
             self.met_utility.setPhotonParameters(
                 event.ph_pt,
                 event.ph_eta,
                 event.ph_phi,
-                event.ph_MET_STVF_wet,
-                event.ph_MET_STVF_wpx,
-                event.ph_MET_STVF_wpy,
-                event.ph_MET_STVF_statusWord)
+                event.ph_MET_wet,
+                event.ph_MET_wpx,
+                event.ph_MET_wpy,
+                event.ph_MET_statusWord)
         else:
             self.met_utility.setMETTerm(
                 METUtil.RefGamma,
-                event.MET_RefGamma_STVF_etx,
-                event.MET_RefGamma_STVF_ety,
-                event.MET_RefGamma_STVF_sumet)
+                event.MET_RefGamma_etx,
+                event.MET_RefGamma_ety,
+                event.MET_RefGamma_sumet)
 
         """
         MUONS
@@ -915,10 +919,10 @@ class Systematics(EventFilter):
                 event.mu_staco_pt, # or smeared pT
                 event.mu_staco_eta,
                 event.mu_staco_phi,
-                event.mu_staco_MET_STVF_wet,
-                event.mu_staco_MET_STVF_wpx,
-                event.mu_staco_MET_STVF_wpy,
-                event.mu_staco_MET_STVF_statusWord)
+                event.mu_staco_MET_wet,
+                event.mu_staco_MET_wpx,
+                event.mu_staco_MET_wpy,
+                event.mu_staco_MET_statusWord)
 
             # In this instance there is an overloaded version of
             # setExtraMuonParameters that accepts smeared pTs for spectro
@@ -929,17 +933,17 @@ class Systematics(EventFilter):
         else:
             self.met_utility.setMETTerm(
                 METUtil.MuonTotal,
-                event.MET_Muon_Total_Staco_STVF_etx,
-                event.MET_Muon_Total_Staco_STVF_ety,
-                event.MET_Muon_Total_Staco_STVF_sumet)
+                event.MET_Muon_Total_Staco_etx,
+                event.MET_Muon_Total_Staco_ety,
+                event.MET_Muon_Total_Staco_sumet)
 
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
         self.met_utility.setMETTerm(
             METUtil.RefMuon,
-            event.MET_RefMuon_Staco_STVF_etx,
-            event.MET_RefMuon_Staco_STVF_ety,
-            event.MET_RefMuon_Staco_STVF_sumet)
+            event.MET_RefMuon_Staco_etx,
+            event.MET_RefMuon_Staco_ety,
+            event.MET_RefMuon_Staco_sumet)
 
         """
         TAUS
@@ -949,28 +953,22 @@ class Systematics(EventFilter):
                 event.tau_pt,
                 event.tau_eta,
                 event.tau_phi,
-                event.tau_MET_STVF_wet,
-                event.tau_MET_STVF_wpx,
-                event.tau_MET_STVF_wpy,
-                event.tau_MET_STVF_statusWord)
+                event.tau_MET_wet,
+                event.tau_MET_wpx,
+                event.tau_MET_wpy,
+                event.tau_MET_statusWord)
         else:
             self.met_utility.setMETTerm(
                 METUtil.RefTau,
-                event.MET_RefTau_STVF_etx,
-                event.MET_RefTau_STVF_ety,
-                event.MET_RefTau_STVF_sumet)
-
-        #self.met_utility.setMETTerm(
-        #    METUtil.SoftJets,
-        #    event.MET_SoftJets_STVF_etx,
-        #    event.MET_SoftJets_STVF_ety,
-        #    event.MET_SoftJets_STVF_sumet) NOT NEEDED??
+                event.MET_RefTau_etx,
+                event.MET_RefTau_ety,
+                event.MET_RefTau_sumet)
 
         self.met_utility.setMETTerm(
             METUtil.CellOutEflow,
-            event.MET_CellOutCorr_STVF_etx,
-            event.MET_CellOutCorr_STVF_ety,
-            event.MET_CellOutCorr_STVF_sumet)
+            event.MET_CellOut_Eflow_STVF_etx,
+            event.MET_CellOut_Eflow_STVF_ety,
+            event.MET_CellOut_Eflow_STVF_sumet)
 
         MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
