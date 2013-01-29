@@ -165,6 +165,7 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 year=year,
                 verbose=verbose,
+                passthrough=datatype == datasets.EMBED, # enable for p1344
                 count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
@@ -174,6 +175,7 @@ class hhskim(ATLASStudent):
                 year=year,
                 datatype=datatype,
                 verbose=verbose,
+                passthrough=datatype == datasets.EMBED, # enable for p1344
                 count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
