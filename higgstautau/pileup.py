@@ -58,6 +58,7 @@ class PileupReweight(EventFilter):
                     self.pileup_tool.AddConfigFile(
                         'lumi/2011/hadhad/'
                         'TPileupReweighting.mc11.prw.root')
+                self.pileup_tool.SetDataScaleFactors(1./0.97)
                 self.pileup_tool.AddLumiCalcFile(
                         'lumi/2011/hadhad/'
                         'ilumicalc_histograms_None_178044-191933.root')

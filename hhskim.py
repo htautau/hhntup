@@ -135,8 +135,8 @@ class hhskim(ATLASStudent):
 
         # define the list of event filters
         event_filters = EventFilterList([
-            #CoreFlags(
-            #    count_funcs=count_funcs),
+            CoreFlags(
+                count_funcs=count_funcs),
             GRLFilter(
                 self.grl,
                 passthrough=(no_grl or datatype != datasets.DATA),
@@ -158,6 +158,8 @@ class hhskim(ATLASStudent):
             PriVertex(
                 count_funcs=count_funcs),
             LArError(
+                count_funcs=count_funcs),
+            TileError(
                 count_funcs=count_funcs),
             JetCalibration(
                 datatype=datatype,

@@ -111,7 +111,14 @@ class LArError(EventFilter):
 
     def passes(self, event):
 
-        return event.larError <= 1
+        return event.larError != 2
+
+
+class TileError(EventFilter):
+
+    def passes(self, event):
+
+        return event.tileError != 2
 
 
 def in_lar_hole(eta, phi):
