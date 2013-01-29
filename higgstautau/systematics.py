@@ -102,8 +102,8 @@ class JES(JetSystematic):
                 JetUncertainties.RESOURCE_PATH)
         elif self.year == 2012:
             self.jes_tool = MultijetJESUncertaintyProvider(
-                "JES_2012/MultijetJES_2012.config",
-                "JES_2012/JESUncertainty2012_Sept2012.config",
+                "JES_2012/Moriond2013/MultijetJES_2012.config",
+                "JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
                 "AntiKt4LCTopoJets",
                 "MC12a",
                 JetUncertainties.RESOURCE_PATH)
