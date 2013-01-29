@@ -81,6 +81,7 @@ class JetCleaning(EventFilter):
                     LArQmean=LArQmean):
                 return False
 
+        """ NOT NEEDED IN REPROCESSED 2012 DATA
         if self.datatype == datasets.DATA and self.year == 2012:
             # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
             # Hot Tile calorimeter in period B1 and B2
@@ -102,6 +103,7 @@ class JetCleaning(EventFilter):
             #            abs(jet.eta) > 3.2 and
             #            1.6 < jet.phi < 3.1):
             #            return False
+        """
         return True
 
 
