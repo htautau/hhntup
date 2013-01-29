@@ -39,9 +39,6 @@ REMOVE = [
     "el_*",
     "mu_*",
     "MET_*Reg*",
-
-    "trk_*err*",
-    "trk_*cov*",
 ]
 
 # override globs above
