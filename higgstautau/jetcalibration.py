@@ -1,11 +1,13 @@
 """
 See instructions here:
-    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauToLH2012Summer#Jets_NEW
-    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/JetCalibrationToolsWinter2011
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/JetCalibrationToolsForPhysicsAnalyses
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ApplyJetCalibration2011
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ApplyJetCalibration2012
 """
 from atlastools import datasets
 from rootpy.tree.filtering import EventFilter
+from externaltools import ApplyJetCalibration
+from ROOT import JetCalibrationTool
 
 
 class JetCalibration(EventFilter):
@@ -28,19 +30,11 @@ class JetCalibration(EventFilter):
             self.verbose = verbose
             self.algo = 'AntiKt4LCTopo'
             if year == 2011:
-                # ATLAS tools imports
-                from externaltools.bundle_2011 import ApplyJetCalibration
-                from ROOT import JetCalibrationTool
-
                 config = 'InsituJES_2011_Preliminary.config'
                 # use Rel17_JES_AFII.config for fastsim MC
             elif year == 2012:
-                # ATLAS tools imports
-                from externaltools.bundle_2012 import ApplyJetCalibration
-                from ROOT import JetCalibrationTool
-
-                config = 'JES_August2012.config'
-                # use JES_August2012_AFII.config for fastsim MC
+                config = 'JES_Full2012dataset_Preliminary_Jan13.config'
+                # use JES_Full2012dataset_Preliminary_AFII_Jan13.config for fastsim MC
             else:
                 raise ValueError(
                         "No JES calibration defined for year %d" % year)
@@ -74,13 +68,8 @@ class JetCalibration(EventFilter):
                 eta     = jet.EtaOrigin
                 phi     = jet.PhiOrigin
                 m       = jet.MOrigin
-                ## Record old values
-                jet.EtaOriginEM = jet.pt
-                jet.PhiOriginEM = jet.E
-                #calib_jet = self.jes_tool.ApplyOffsetEtaJES(
-                #    Eraw, eta_det, eta, phi, m, mu, NPV)
-                calib_jet = self.jes_tool.ApplyEtaJES(
-                    Eraw, eta_det, eta, phi, m)
+                calib_jet = self.jes_tool.ApplyOffsetEtaJES(
+                    Eraw, eta_det, eta, phi, m, mu, NPV)
                 jet.E = calib_jet.E()
                 jet.m = calib_jet.M()
                 jet.pt = calib_jet.Pt()
@@ -88,17 +77,18 @@ class JetCalibration(EventFilter):
                 jet.phi = calib_jet.Phi()
 
         elif self.year == 2012:
+            rho = event.Eventshape_rhoKt4LC
             for jet in event.jets:
                 Eraw    = jet.constscale_E
-                eta_det = jet.constscale_eta
                 eta     = jet.constscale_eta
                 phi     = jet.constscale_phi
                 m       = jet.constscale_m
-                ## Record old values
-                jet.EtaOriginEM = jet.pt
-                jet.PhiOriginEM = jet.E
-                calib_jet = self.jes_tool.ApplyOffsetEtaJES(
-                    Eraw, eta_det, eta, phi, m, mu, NPV)
+                Ax      = jet.ActiveAreaPx
+                Ay      = jet.ActiveAreaPy
+                Az      = jet.ActiveAreaPz
+                Ae      = jet.ActiveAreaE
+                calib_jet = self.jes_tool.ApplyJetAreaOffsetEtaJES(
+                    Eraw, eta, phi, m, Ax, Ay, Az, Ae, rho, mu, NPV)
                 jet.E = calib_jet.E()
                 jet.m = calib_jet.M()
                 jet.pt = calib_jet.Pt()
