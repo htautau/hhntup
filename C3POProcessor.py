@@ -250,11 +250,12 @@ class C3POProcessor(ATLASStudent):
             METy = event.MET.ety
             MET_vect = Vector2(METx, METy)
             MET = event.MET.et
+            MET_phi = event.MET.phi
 
             tree.MET = MET
             tree.MET_x = METx
             tree.MET_y = METy
-            tree.MET_phi = event.MET.phi
+            tree.MET_phi = MET_phi
 
             sumET = event.MET.sumet
             tree.sumET = sumET
@@ -323,6 +324,7 @@ class C3POProcessor(ATLASStudent):
                         tree.MET_phi_true = fourvect_missing.Phi()
                         tree.MET_x_true = tree.MET_true * math.cos(tree.MET_phi_true)
                         tree.MET_y_true = tree.MET_true * math.sin(tree.MET_phi_true)
+                        tree.MET_phi_diff = TVector2.Phi_mpi_pi(tree.MET_phi_true - MET_phi)
 
             # tau - vertex association
             tree.tau_same_vertex = (

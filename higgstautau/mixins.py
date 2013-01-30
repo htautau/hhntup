@@ -41,6 +41,10 @@ class MatchedObject(object):
 
         return dR(self.eta, self.phi, other.Eta(), other.Phi())
 
+    def angle_vect(self, other):
+
+        return self.fourvect.Angle(other)
+
     def matches_vect(self, vect, thresh=.2):
 
         return self.dr_vect(vect) < thresh

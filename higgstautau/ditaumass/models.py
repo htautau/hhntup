@@ -11,6 +11,7 @@ class MatchedObject(TreeModel):
 
     matched = BoolCol()
     matched_dr = FloatCol(default=9999.)
+    matched_angle = FloatCol(default=9999.)
 
     @classmethod
     def set(cls, outobj, inobj):
@@ -214,7 +215,7 @@ class TrueTau(FourVectModel +
     has_a1 = BoolCol()
 
     dr_vistau_nu = FloatCol(default=-1111)
-    dtheta3d_vistau_nu = FloatCol(default=-1111)
+    angle_vistau_nu = FloatCol(default=-1111)
 
     @classmethod
     def set(cls, mctau, decay, verbose=False):
@@ -249,9 +250,10 @@ class TrueTau(FourVectModel +
         matched_reco = decay.matched_object
         if matched_reco:
             mctau.matched_dr = matched_reco.dr_vect(decay.fourvect_visible)
+            mctau.matched_angle = matched_reco.angle_vect(decay.fourvect_visible)
 
         mctau.dr_vistau_nu = decay.dr_vistau_nu
-        mctau.dtheta3d_vistau_nu = decay.dtheta3d_vistau_nu
+        mctau.angle_vistau_nu = decay.dtheta3d_vistau_nu
 
         # sanity check
         if mctau.hadronic:
@@ -276,7 +278,7 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
     trFlightPathSig = FloatCol()
 
     dr_nu = FloatCol(default=-1111)
-    dtheta3d_nu = FloatCol(default=-1111)
+    angle_nu = FloatCol(default=-1111)
 
     @classmethod
     def set(cls, tau, recotau, verbose=False):
@@ -287,15 +289,18 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
         matched_truth = recotau.matched_object
         if matched_truth:
             tau.matched_dr = recotau.dr_vect(matched_truth.fourvect_visible)
+            tau.matched_angle = recotau.angle_vect(matched_truth.fourvect_visible)
 
         tau.charge = recotau.charge
         tau.numTrack = recotau.numTrack
         tau.nPi0 = recotau.nPi0
-        tau.charge = recotau.charge
 
         tau.ipZ0SinThetaSigLeadTrk = recotau.ipZ0SinThetaSigLeadTrk
         tau.ipSigLeadTrk = recotau.ipSigLeadTrk
         tau.trFlightPathSig = recotau.trFlightPathSig
+
+        tau.dr_nu = recotau.dr_vect(matched_truth.fourvect_missing)
+        tau.angle_nu = recotau.angle_vect(matched_truth.fourvect_missing)
 
         if verbose:
             print
@@ -409,6 +414,8 @@ class C3POEvent(RecoTau.prefix('tau1_') +
     MET_phi_true = FloatCol()
     MET_x_true = FloatCol()
     MET_y_true = FloatCol()
+
+    MET_phi_diff = FloatCol()
 
     MET_mmc = FloatCol()
     MET_mmc_x = FloatCol()
