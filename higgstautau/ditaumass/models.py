@@ -290,6 +290,8 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
         if matched_truth:
             tau.matched_dr = recotau.dr_vect(matched_truth.fourvect_visible)
             tau.matched_angle = recotau.angle_vect(matched_truth.fourvect_visible)
+            tau.dr_nu = recotau.dr_vect(matched_truth.fourvect_missing)
+            tau.angle_nu = recotau.angle_vect(matched_truth.fourvect_missing)
 
         tau.charge = recotau.charge
         tau.numTrack = recotau.numTrack
@@ -298,9 +300,6 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
         tau.ipZ0SinThetaSigLeadTrk = recotau.ipZ0SinThetaSigLeadTrk
         tau.ipSigLeadTrk = recotau.ipSigLeadTrk
         tau.trFlightPathSig = recotau.trFlightPathSig
-
-        tau.dr_nu = recotau.dr_vect(matched_truth.fourvect_missing)
-        tau.angle_nu = recotau.angle_vect(matched_truth.fourvect_missing)
 
         if verbose:
             print
