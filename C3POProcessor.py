@@ -324,7 +324,7 @@ class C3POProcessor(ATLASStudent):
                         tree.MET_phi_true = fourvect_missing.Phi()
                         tree.MET_x_true = tree.MET_true * math.cos(tree.MET_phi_true)
                         tree.MET_y_true = tree.MET_true * math.sin(tree.MET_phi_true)
-                        tree.MET_phi_diff = TVector2.Phi_mpi_pi(tree.MET_phi_true - MET_phi)
+                        tree.MET_phi_diff = Vector2.Phi_mpi_pi(tree.MET_phi_true - MET_phi)
 
             # tau - vertex association
             tree.tau_same_vertex = (
