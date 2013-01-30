@@ -2,6 +2,7 @@ import ROOT
 from rootpy.tree import TreeModel
 from rootpy.math.physics.vector import LorentzVector, Vector3
 from rootpy.types import *
+from atlastools.utils import dR
 
 from ..utils import is_visible
 
@@ -9,6 +10,7 @@ from ..utils import is_visible
 class MatchedObject(TreeModel):
 
     matched = BoolCol()
+    matched_dr = FloatCol(default=9999.)
 
     @classmethod
     def set(cls, outobj, inobj):
@@ -244,6 +246,9 @@ class TrueTau(FourVectModel +
 
         DecayVertex.set(mctau, decay)
         MatchedObject.set(mctau, decay)
+        matched_reco = decay.matched_object
+        if matched_reco:
+            mctau.matched_dr = matched_reco.dr_vect(decay.fourvect_visible)
 
         mctau.dr_vistau_nu = decay.dr_vistau_nu
         mctau.dtheta3d_vistau_nu = decay.dtheta3d_vistau_nu
@@ -279,6 +284,9 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
         FourVectModel.set(tau, recotau)
         RecoDecayVertex.set(tau, recotau)
         MatchedObject.set(tau, recotau)
+        matched_truth = recotau.matched_object
+        if matched_truth:
+            tau.matched_dr = recotau.dr_vect(matched_truth.fourvect_visible)
 
         tau.charge = recotau.charge
         tau.numTrack = recotau.numTrack

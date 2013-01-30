@@ -27,14 +27,23 @@ class MatchedObject(object):
         self.matched = False
         self.matched_dR = 9999.
         self.matched_collision = False
+        self.matched_object = None
 
-    def matches(self, other, dr=.2):
+    def matches(self, other, thresh=.2):
 
-        return dR(self.eta, self.phi, other.eta, other.phi) < dr
+        return self.dr(other) < thresh
 
-    def matches_vect(self, vect, dr=.2):
+    def dr(self, other):
 
-        return dR(self.eta, self.phi, vect.Eta(), vect.Phi()) < dr
+        return dR(self.eta, self.phi, other.eta, other.phi)
+
+    def dr_vect(self, other):
+
+        return dR(self.eta, self.phi, other.Eta(), other.Phi())
+
+    def matches_vect(self, vect, thresh=.2):
+
+        return self.dr_vect(vect) < thresh
 
 
 class FourMomentum(MatchedObject):

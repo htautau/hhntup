@@ -100,6 +100,7 @@ class TauDecay(object):
         self.nprong = nprong
 
         self.matched = False
+        self.matched_object = None
 
         # check charge conservation
         if self.valid:
