@@ -975,6 +975,8 @@ class Systematics(EventFilter):
         if self.verbose:
             print "Recalculated MET: %.3f (original: %.3f)" % (
                     MET.et(), event.MET_RefFinal_STVF_et)
+            print "Recalculated MET phi: %.3f (original: %.3f)" % (
+                    MET.phi(), event.MET_RefFinal_STVF_phi)
 
         # update the MET with the shifted value
         event.MET_RefFinal_STVF_etx = MET.etx()
