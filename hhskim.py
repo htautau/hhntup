@@ -136,7 +136,7 @@ class hhskim(ATLASStudent):
         # define the list of event filters
         event_filters = EventFilterList([
             CoreFlags(
-                count_funcs=count_funcs),
+                count_funcs=count_funcs), #TODO move this below GRL
             GRLFilter(
                 self.grl,
                 passthrough=(no_grl or datatype != datasets.DATA),
