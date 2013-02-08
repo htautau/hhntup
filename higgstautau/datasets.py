@@ -763,6 +763,8 @@ class Dataset(yaml.YAMLObject):
 
         _files = []
         for dir in self.dirs:
+            if not os.path.exists(dir):
+                raise IOError("%s is not readable" % dir)
             for path, dirs, files in os.walk(dir):
                 _files += [os.path.join(path, f) for f in
                            fnmatch.filter(files, self.file_pattern)]
@@ -770,8 +772,9 @@ class Dataset(yaml.YAMLObject):
 
     def __str__(self):
 
-        return "%s:\n\t%s" % (
+        return "%s (%d files):\n\t%s" % (
                 self.name,
+                len(self.files),
                 self.ds)
 
 def dataset_constructor(loader, node):
@@ -944,15 +947,27 @@ if __name__ == '__main__':
             name=args.name,
             verbose=args.verbose)
 
-    if args.info:
+    if args.validate or args.validate_pattern is not None:
+        # check for missing events etc...
+        validate_type = args.validate_type
+        if validate_type is not None:
+            validate_type = args.validate_type.upper()
+            validate_type = eval(validate_type)
+        db.validate(pattern=args.validate_pattern,
+                    datatype=validate_type,
+                    year=args.validate_year)
+    elif args.info:
+        print "%i datasets in database" % len(db)
         for name in sorted(db.keys()):
-            print "%s => %s" % (name, db[name].ds)
-        sys.exit()
+            print db[name]
+            if len(db[name].files) == 0:
+                print "EMPTY DATASET"
+                sys.exit(1)
 
-    if args.reset:
-        db.clear()
+    else:
+        if args.reset:
+            db.clear()
 
-    if not args.validate and not args.validate_pattern:
         with open(args.config) as config:
             config_dict = yaml.load(config)
             for year, year_config in config_dict.items():
@@ -965,19 +980,4 @@ if __name__ == '__main__':
                         deep=args.deep,
                         versioned=args.versioned,
                         **params)
-    elif args.validate or args.validate_pattern is not None:
-        # check for missing events etc...
-        validate_type = args.validate_type
-        if validate_type is not None:
-            validate_type = args.validate_type.upper()
-            validate_type = eval(validate_type)
-        db.validate(pattern=args.validate_pattern,
-                    datatype=validate_type,
-                    year=args.validate_year)
-    else:
-        if args.info:
-            print "%i datasets in database" % len(db)
-        else:
-            for name in sorted(db.keys()):
-                print "%s => %s" % (name, db[name].ds)
-    db.write()
+        db.write()
