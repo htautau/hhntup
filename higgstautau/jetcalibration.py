@@ -6,6 +6,7 @@ See instructions here:
 """
 from atlastools import datasets
 from rootpy.tree.filtering import EventFilter
+from rootpy import ROOTError
 from externaltools import ApplyJetCalibration
 from ROOT import JetCalibrationTool
 
@@ -87,13 +88,27 @@ class JetCalibration(EventFilter):
                 Ay      = jet.ActiveAreaPy
                 Az      = jet.ActiveAreaPz
                 Ae      = jet.ActiveAreaE
-                calib_jet = self.jes_tool.ApplyJetAreaOffsetEtaJES(
-                    Eraw, eta, phi, m, Ax, Ay, Az, Ae, rho, mu, NPV)
-                jet.E = calib_jet.E()
-                jet.m = calib_jet.M()
-                jet.pt = calib_jet.Pt()
-                jet.eta = calib_jet.Eta()
-                jet.phi = calib_jet.Phi()
+                try:
+                    calib_jet = self.jes_tool.ApplyJetAreaOffsetEtaJES(
+                        Eraw, eta, phi, m, Ax, Ay, Az, Ae, rho, mu, NPV)
+                    jet.E = calib_jet.E()
+                    jet.m = calib_jet.M()
+                    jet.pt = calib_jet.Pt()
+                    jet.eta = calib_jet.Eta()
+                    jet.phi = calib_jet.Phi()
+                except ROOTError as e:
+                    print "JET ERROR"
+                    print "Run: ", event.RunNumber
+                    print "Event: ", event.EventNumber
+                    print "Eraw", Eraw
+                    print "eta", eta
+                    print "phi", phi
+                    print "m", m
+                    print "Ax", Ax
+                    print "Ay", Ay
+                    print "Az", Az
+                    print "Ae", Ae
+                    raise e
         else:
             raise ValueError('Invalid year in jet calibration: %d' % self.year)
 
