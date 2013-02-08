@@ -35,15 +35,15 @@
     common:
         grl: 'grl/2012/current.xml'
     hh:
-        mc_path: '/global/common/higgstautau/skims/hadhad/newskims'
+        mc_path: '/global/common/higgstautau/skims/hadhad/p1344'
         mc_prefix: 'group.phys-higgs.hhskim'
         mc_pattern: '*hadhad.root*'
         mc_treename: 'tau'
-        data_path: '/global/common/higgstautau/skims/hadhad/newskims'
+        data_path: '/global/common/higgstautau/skims/hadhad/p1344'
         data_prefix: 'group.phys-higgs.hhskim'
         data_pattern: '*hadhad.root*'
         data_treename: 'tau'
-        embed_path: '/global/common/higgstautau/skims/hadhad/newskims'
+        embed_path: '/global/common/higgstautau/skims/hadhad/p1344'
         embed_prefix: 'group.phys-higgs.hhskim'
         embed_pattern: '*embedding12_ztautau_hh_p1131.root*'
         embed_treename: 'tau'

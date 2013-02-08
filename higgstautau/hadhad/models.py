@@ -102,6 +102,9 @@ class EventVariables(TreeModel):
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
 
+    ntrack_pv = IntCol()
+    ntrack_nontau_pv = IntCol()
+
 
 class EmbeddingBlock(TreeModel):
 

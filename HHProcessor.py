@@ -63,6 +63,7 @@ class HHProcessor(ATLASStudent):
         super(HHProcessor, self).__init__(**kwargs)
         parser = ArgumentParser()
         parser.add_argument('--syst-terms', default=None)
+        parser.add_argument('--redo-mmc', default=False, action='store_true')
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = set([
@@ -89,6 +90,7 @@ class HHProcessor(ATLASStudent):
         """
         datatype = self.metadata.datatype
         year = self.metadata.year
+        redo_mmc = self.args.redo_mmc
 
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
@@ -343,8 +345,9 @@ class HHProcessor(ATLASStudent):
         chain.define_association(origin='truetaus', target='taus', prefix='tauAssoc_', link='index')
         """
 
-        # create MMC object
-        mmc = mass.MMC(year=year, channel='hh')
+        if redo_mmc:
+            # create MMC object
+            mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -454,6 +457,17 @@ class HHProcessor(ATLASStudent):
                 # aplanarity
                 tree.aplanarity = aplanarity
 
+            # number of tracks from PV minus taus
+            ntrack_pv = 0
+            ntrack_nontau_pv = 0
+            for vxp in event.vertices:
+                if vxp.type == 1:
+                    ntrack_pv = vxp.nTracks
+                    ntrack_nontau_pv = ntrack_pv - tau1.numTrack - tau2.numTrack
+                    break
+            tree.ntrack_pv = ntrack_pv
+            tree.ntrack_nontau_pv = ntrack_nontau_pv
+
             # Jet variables
             tree.numJets = len(event.jets)
             tree.sum_pt = sum(
@@ -490,13 +504,14 @@ class HHProcessor(ATLASStudent):
                     MET_vect)
 
             # MMC Mass
-            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2, METx, METy, sumET)
-
-            # use MMC values from skim
-            #mmc_mass = event.tau_MMC_mass
-            #mmc_resonance = event.tau_MMC_resonance
-            #mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
+            if redo_mmc:
+                mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+                        tau1, tau2, METx, METy, sumET)
+            else:
+                # use MMC values from skim
+                mmc_mass = event.tau_MMC_mass
+                mmc_resonance = event.tau_MMC_resonance
+                mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
 
             tree.mass_mmc_tau1_tau2 = mmc_mass
             tree.mmc_resonance.set_from(mmc_resonance)

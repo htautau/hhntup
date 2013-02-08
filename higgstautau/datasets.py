@@ -211,16 +211,19 @@ class Database(dict):
 
     def validate(self,
                  pattern=None,
-                 datatype=MC):
-
+                 datatype=None,
+                 year=None):
         ds = {}
         for name, info in self.items():
-            if info.datatype == datatype:
-                if datatype == DATA and info.id < 0:
-                    # only validate data run datasets
-                    continue
-                if pattern is None or fnmatch.fnmatch(name, pattern):
-                    ds[name] = info
+            if year is not None and info.year != year:
+                continue
+            if datatype is not None and info.datatype != datatype:
+                continue
+            if info.datatype == DATA and info.id < 0:
+                # only validate data run datasets
+                continue
+            if pattern is None or fnmatch.fnmatch(name, pattern):
+                ds[name] = info
         incomplete = []
         for name, info in sorted(ds.items(), key=lambda item: item[0]):
             print "Validating %s ..." % name
@@ -904,7 +907,8 @@ if __name__ == '__main__':
     parser.add_argument('--versioned', action='store_true', default=False)
     parser.add_argument('--validate', action='store_true', default=False)
     parser.add_argument('--validate-pattern', default=None)
-    parser.add_argument('--validate-type', default='MC')
+    parser.add_argument('--validate-type', default=None)
+    parser.add_argument('--validate-year', type=int, default=None)
     parser.add_argument('--info', action='store_true', default=False)
 
     """
@@ -963,10 +967,13 @@ if __name__ == '__main__':
                         **params)
     elif args.validate or args.validate_pattern is not None:
         # check for missing events etc...
-        validate_type = args.validate_type.upper()
-        validate_type = eval(validate_type)
+        validate_type = args.validate_type
+        if validate_type is not None:
+            validate_type = args.validate_type.upper()
+            validate_type = eval(validate_type)
         db.validate(pattern=args.validate_pattern,
-                    datatype=validate_type)
+                    datatype=validate_type,
+                    year=args.validate_year)
     else:
         if args.info:
             print "%i datasets in database" % len(db)
