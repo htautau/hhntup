@@ -109,6 +109,14 @@ class TauFourMomentum(FourMomentum):
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
         return vect
 
+    """
+    @cached_property
+    def fourvect_trk(self):
+
+        vect = LorentzVector()
+        #for itrk in self.
+    """
+
     @cached_property
     def leadtrack_idx(self):
         """

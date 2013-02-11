@@ -69,6 +69,19 @@ class FourVectModel(TreeModel):
         this.eta_miss = vect.Eta()
         this.fourvect_miss.set_from(vect)
 
+    @classmethod
+    def set_trk(cls, this, other):
+
+        vect = other.fourvect_trk
+        this.pt_trk = vect.Pt()
+        this.p_trk = vect.P()
+        this.et_trk = vect.Et()
+        this.e_trk = vect.E()
+        this.m_trk = vect.M()
+        this.phi_trk = vect.Phi()
+        this.eta_trk = vect.Eta()
+        this.fourvect_trk.set_from(vect)
+
 
 class DecayVertex(TreeModel):
 
@@ -267,7 +280,8 @@ class TrueTau(FourVectModel +
             print "===="
 
 
-class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
+class RecoTau(FourVectModel, FourVectModel.suffix('trk'),
+              MatchedObject, RecoDecayVertex):
 
     charge = IntCol()
     numTrack = IntCol()
@@ -284,6 +298,7 @@ class RecoTau(FourVectModel, MatchedObject, RecoDecayVertex):
     def set(cls, tau, recotau, verbose=False):
 
         FourVectModel.set(tau, recotau)
+        FourVectModel.set_trk(tau, recotau)
         RecoDecayVertex.set(tau, recotau)
         MatchedObject.set(tau, recotau)
         matched_truth = recotau.matched_object

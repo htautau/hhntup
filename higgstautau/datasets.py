@@ -151,6 +151,22 @@ class NoMatchingDatasetsFound(Exception):
     pass
 
 
+GLOBAL_BASE = '/global/'
+
+
+def find_global(path):
+
+    if not path.startswith('/global/'):
+        raise ValueError("path must be absolute and rooted at /global")
+
+    path = re.sub('^/global/', '/cluster/data%02d/export/', path)
+
+    for node in range(1, 13):
+        if os.path.exists(path % node):
+            return path % node
+    raise IOError('path %s does not exist' % path)
+
+
 class Database(dict):
 
     @classmethod
@@ -298,8 +314,8 @@ class Database(dict):
                     except IndexError:
                         version = 0
                     except:
-                        print basename
-                        raise
+                        print "skipping: ", basename
+                        continue
                     tag_match = re.match(MC_TAG_PATTERN1, tag)
                     tag_match2 = re.match(MC_TAG_PATTERN2, tag)
                     MC_TAG_PATTERN = MC_TAG_PATTERN1
@@ -768,7 +784,7 @@ class Dataset(yaml.YAMLObject):
             for path, dirs, files in os.walk(dir):
                 _files += [os.path.join(path, f) for f in
                            fnmatch.filter(files, self.file_pattern)]
-        return _files
+        return map(find_global, _files)
 
     def __str__(self):
 
