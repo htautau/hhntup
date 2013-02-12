@@ -784,7 +784,7 @@ class Dataset(yaml.YAMLObject):
             for path, dirs, files in os.walk(dir):
                 _files += [os.path.join(path, f) for f in
                            fnmatch.filter(files, self.file_pattern)]
-        return map(find_global, _files)
+        return _files
 
     def __str__(self):
 
