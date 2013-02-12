@@ -94,6 +94,9 @@ class TauTriggerMatchIndex(EventFilter):
         """
         Use the info stored in the D3PD for 2012:
         trig_EF_tau_EF_tau29Ti_medium1_tau20Ti_medium1
+
+        if(trig_EF_tau_EF_tau20Ti_medium1==1) tau_trigger_match_thresh = 20
+        if(trig_EF_tau_EF_tau29Ti_medium1==1) tau_trigger_match_thresh = 29
         """
         # get indices of trigger taus associated with this trigger
         trigger_idx = triggerutils.get_tau_trigger_obj_idx(
