@@ -10,7 +10,7 @@ parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--nsplit', type=int, default=30)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--output-path',
-                    default='/cluster/data11/endw/ntuples/hadhad_running')
+                    default='/cluster/data11/endw/ntuples/running')
 parser.add_argument('--db', default='datasets_hh')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
