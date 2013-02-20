@@ -183,8 +183,6 @@ class HHProcessor(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            CoreFlags(
-                count_funcs=count_funcs),
             GRLFilter(
                 self.grl,
                 passthrough=datatype != datasets.DATA,
@@ -324,7 +322,6 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             JetSelection(
                 year=year,
-                forward_suppression=True,
                 count_funcs=count_funcs),
         ])
 
@@ -591,8 +588,8 @@ class HHProcessor(ATLASStudent):
                     if matching_truth_index >= 0:
                         unmatched_reco.remove(i)
                         # check that this tau / true tau was not previously matched
-                        if matching_truth_index not in unmatched_truth or \
-                           matching_truth_index in matched_truth:
+                        if (matching_truth_index not in unmatched_truth or
+                            matching_truth_index in matched_truth):
                             print "ERROR: match collision!"
                             tau1.matched_collision = True
                             tau2.matched_collision = True

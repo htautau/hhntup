@@ -440,43 +440,48 @@ class NonIsolatedJet(EventFilter):
         return True
 
 
-def jet_selection_2011(jet, forward_suppression=False):
+def jet_selection_2011(jet):
     """ Finalizes the jet selection """
 
     if not (jet.pt > 25 * GeV):
         return False
 
-    if forward_suppression:
-        # suppress forward jets
-        if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
-            return False
+    if jet.pt > 50 * GeV:
+        # no JVF cut above 50
+        return True
 
-    if not (abs(jet.eta) < 4.5):
+    # suppress forward jets
+    if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
         return False
 
     if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
         return False
 
-    return True
-
-
-def jet_selection_2012(jet, forward_suppression=False):
-    """ Finalizes the jet selection
-    https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
-    """
-
-    if not (jet.pt > 30 * GeV):
-        return False
-
-    if forward_suppression:
-        # suppress forward jets
-        if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
-            return False
-
     if not (abs(jet.eta) < 4.5):
         return False
 
+    return True
+
+
+def jet_selection_2012(jet):
+    """ Finalizes the jet selection
+    https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
+    """
+    if not (jet.pt > 30 * GeV):
+        return False
+
+    if jet.pt > 50 * GeV:
+        # no JVF cut above 50
+        return True
+
+    # suppress forward jets
+    if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
+        return False
+
     if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.5):
+        return False
+
+    if not (abs(jet.eta) < 4.5):
         return False
 
     return True
@@ -485,20 +490,17 @@ def jet_selection_2012(jet, forward_suppression=False):
 class JetSelection(EventFilter):
     """Selects jets of good quality, keep event in any case"""
 
-    def __init__(self, year, forward_suppression=False, **kwargs):
+    def __init__(self, year, **kwargs):
 
         self.year = year
-        self.forward_suppression = forward_suppression
         super(JetSelection, self).__init__(**kwargs)
 
     def passes(self, event):
 
         if self.year == 2011:
-            event.jets.select(lambda jet:
-                    jet_selection_2011(jet, self.forward_suppression))
+            event.jets.select(jet_selection_2011)
         elif self.year == 2012:
-            event.jets.select(lambda jet:
-                    jet_selection_2012(jet, self.forward_suppression))
+            event.jets.select(jet_selection_2012)
         return True
 
 

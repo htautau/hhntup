@@ -169,7 +169,7 @@ class TauFourMomentumSkim(TauFourMomentum):
 
         super(TauFourMomentumSkim, self).__init__()
 
-        SF_DEFAULT = -1.
+        SF_DEFAULT = 1.
 
         self.trigger_match_thresh = 0
         self.trigger_match_index = -1

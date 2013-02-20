@@ -33,7 +33,8 @@ REMOVE = [
     "L2_*",
 
     "muonTruth*",
-    "jet_antikt4truth_*",
+    # needed for JVF syst
+    #"jet_antikt4truth_*",
     "collcand_*",
 
     "el_*",

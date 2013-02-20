@@ -198,39 +198,42 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
             # use SFs exclusively
             if intau.JetBDTSigTight:
-                outtau.efficiency_scale_factor = intau.id_eff_sf_tight
-                outtau.efficiency_scale_factor_high = intau.id_eff_sf_tight_high
-                outtau.efficiency_scale_factor_low = intau.id_eff_sf_tight_low
-
-                outtau.fakerate_scale_factor = intau.fakerate_sf_tight
-                outtau.fakerate_scale_factor_high = intau.fakerate_sf_tight_high
-                outtau.fakerate_scale_factor_low = intau.fakerate_sf_tight_low
+                if intau.matched:
+                    outtau.efficiency_scale_factor = intau.id_eff_sf_tight
+                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_tight_high
+                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_tight_low
+                else:
+                    outtau.fakerate_scale_factor = intau.fakerate_sf_tight
+                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_tight_high
+                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_tight_low
 
                 outtau.trigger_scale_factor = intau.trigger_eff_sf_tight
                 outtau.trigger_scale_factor_high = intau.trigger_eff_sf_tight_high
                 outtau.trigger_scale_factor_low = intau.trigger_eff_sf_tight_low
 
             elif intau.JetBDTSigMedium:
-                outtau.efficiency_scale_factor = intau.id_eff_sf_medium
-                outtau.efficiency_scale_factor_high = intau.id_eff_sf_medium_high
-                outtau.efficiency_scale_factor_low = intau.id_eff_sf_medium_low
-
-                outtau.fakerate_scale_factor = intau.fakerate_sf_medium
-                outtau.fakerate_scale_factor_high = intau.fakerate_sf_medium_high
-                outtau.fakerate_scale_factor_low = intau.fakerate_sf_medium_low
+                if intau.matched:
+                    outtau.efficiency_scale_factor = intau.id_eff_sf_medium
+                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_medium_high
+                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_medium_low
+                else:
+                    outtau.fakerate_scale_factor = intau.fakerate_sf_medium
+                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_medium_high
+                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_medium_low
 
                 outtau.trigger_scale_factor = intau.trigger_eff_sf_medium
                 outtau.trigger_scale_factor_high = intau.trigger_eff_sf_medium_high
                 outtau.trigger_scale_factor_low = intau.trigger_eff_sf_medium_low
 
             else:
-                outtau.efficiency_scale_factor = intau.id_eff_sf_loose
-                outtau.efficiency_scale_factor_high = intau.id_eff_sf_loose_high
-                outtau.efficiency_scale_factor_low = intau.id_eff_sf_loose_low
-
-                outtau.fakerate_scale_factor = intau.fakerate_sf_loose
-                outtau.fakerate_scale_factor_high = intau.fakerate_sf_loose_high
-                outtau.fakerate_scale_factor_low = intau.fakerate_sf_loose_low
+                if intau.matched:
+                    outtau.efficiency_scale_factor = intau.id_eff_sf_loose
+                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_loose_high
+                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_loose_low
+                else:
+                    outtau.fakerate_scale_factor = intau.fakerate_sf_loose
+                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_loose_high
+                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_loose_low
 
                 outtau.trigger_scale_factor = intau.trigger_eff_sf_loose
                 outtau.trigger_scale_factor_high = intau.trigger_eff_sf_loose_high
