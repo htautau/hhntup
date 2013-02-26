@@ -1,10 +1,11 @@
-remove track branches
-reduce skim size
-use "all good" GRL
-check scale factor default values (should be 1)
-- apply the new tau recommendations
-- think about dropping the tau_tracks_* variables (the recounted trks are already stored in the skim)
-- skim instead of the 2 taus BDT_loose OR LLH_loose, only BDT_loose. The OR was meant to get stats, but now we should have plenty and we prefer to not mix BDT and LLH
-- do the full MC skim without trigger
-- Only apply eveto on 1p taus:
+* reduce skim size (drop tau track branches)
+* use "all good" GRL
+* scale factor default values should be 1
+* add new fake rate scale factors when package is ready
+* fix trigger efficiency scale factors
+* apply the new tau recommendations
+* instead of the 2 taus BDT_loose OR LLH_loose, use only BDT_loose
+* also do the full MC skim without trigger
+* only apply eveto on 1p taus:
   https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
+* fix: averageIntPerXing = (isSimulation && lbn==1 && int(averageIntPerXing+0.5)==1) ? 0. : averageIntPerXing; 
