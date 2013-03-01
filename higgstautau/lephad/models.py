@@ -68,6 +68,7 @@ class EventVariables(TreeModel):
     mass_collinear_tau_lep = FloatCol()
     tau_x = FloatCol()
     lep_x = FloatCol()
+    tau_x_lep_x = FloatCol()
     mass_mmc_tau_lep = FloatCol()
     pt_mmc_tau_lep = FloatCol()
     met_mmc_tau_lep = FloatCol()
@@ -76,6 +77,12 @@ class EventVariables(TreeModel):
     cos_theta_tau_lep = FloatCol()
     pt_ratio_tau_lep = FloatCol()
     dphi_met_lep = FloatCol()
+    eta_vis_tau_lep = FloatCol()
+    pt_balance_tau_lep = FloatCol()
+
+    mass_j1_lep = FloatCol()
+    mass_jets_lep = FloatCol()
+    mass_jets_tau_lep = FloatCol()
 
     numJets = IntCol()
     numJets30 = IntCol()
@@ -96,12 +103,16 @@ class EventVariables(TreeModel):
     resonance_pt_tau_lep = FloatCol()
 
     mass_j1_j2 = FloatCol()
+    mass_transverse_j1_j2 = FloatCol()
     eta_product_j1_j2 = FloatCol()
     eta_delta_j1_j2 = FloatCol()
+    eta_balance_j1_j2 = FloatCol()
     tau_centrality_j1_j2 = FloatCol()
     lep_centrality_j1_j2 = FloatCol()
+    tau_lep_centrality_j1_j2 = FloatCol()
     met_phi_centrality = FloatCol()
     tau_j1_j2_phi_centrality = FloatCol()
+    dphi_j1_j2 = FloatCol()
 
     leadJetPt = FloatCol()
 
@@ -160,6 +171,8 @@ class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
         tree.cos_theta_tau_lep = math.cos(theta_tau_lep)
         tree.charge_product_tau_lep = tau.charge * lep.charge
         tree.pt_ratio_tau_lep = lep.fourvect.Pt()/tau.fourvect.Pt()
+        tree.eta_vis_tau_lep = (tau.fourvect + lep.fourvect).Eta()
+        tree.pt_balance_tau_lep = (lep.fourvect.Pt() - tau.fourvect.Pt())/(tau.fourvect.Pt() + lep.fourvect.Pt())
 
         #Set tau variables
         setattr(tree, 'tau_BDTJetScore', tau.BDTJetScore)

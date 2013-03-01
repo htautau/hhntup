@@ -1,5 +1,5 @@
 import ROOT
-import math
+import math, random
 
 from argparse import ArgumentParser
 
@@ -15,6 +15,7 @@ from higgstautau.lephad.models import *
 from higgstautau.filters import *
 from higgstautau.lephad.filters import *
 from higgstautau import eventshapes
+from higgstautau.systematics import Systematics
 
 from atlastools import datasets
 from atlastools import utils
@@ -26,6 +27,37 @@ import subprocess
 
 YEAR = 2011
 VERBOSE = False
+
+## Shape systematics dictionary to access systematics trees
+SYSTEMATICS = {
+    ## JES systematics
+    'ATLAS_JES_BASE_DOWN' : 'SystematicsDOWN/JES_BASE',
+    'ATLAS_JES_BASE_UP'   : 'SystematicsUP/JES_BASE',
+    'ATLAS_JES_FLAV_DOWN' : 'SystematicsDOWN/JES_FLAV',
+    'ATLAS_JES_FLAV_UP'   : 'SystematicsUP/JES_FLAV',
+    'ATLAS_JES_FWD_DOWN'  : 'SystematicsDOWN/JES_FWD',
+    'ATLAS_JES_FWD_UP'    : 'SystematicsUP/JES_FWD',
+
+    ## TES systematics
+    'ATLAS_TAU_ES_DOWN' : 'SystematicsDOWN/TES',
+    'ATLAS_TAU_ES_UP'   : 'SystematicsUP/TES',
+
+    ## MET systematics
+    'ATLAS_MET_RESOSOFT_DOWN'  : 'SystematicsDOWN/METResSys',
+    'ATLAS_MET_RESOSOFT_UP'    : 'SystematicsUP/METResSys',
+    'ATLAS_MET_SCALESOFT_DOWN' : 'SystematicsDOWN/METScaleSys',
+    'ATLAS_MET_SCALESOFT_UP'   : 'SystematicsUP/METScaleSys',
+
+    ## Electron systematics
+    'ATLAS_EL_ES_DOWN'  : 'SystematicsDOWN/EESSys',
+    'ATLAS_EL_ES_UP'    : 'SystematicsUP/EESSys',
+    'ATLAS_EL_RES_DOWN' : 'SystematicsDOWN/ElEnResSys',
+    'ATLAS_EL_RES_UP'   : 'SystematicsUP/ElEnResSys',
+
+    ## Muon systematics
+    'ATLAS_MU_ES_DOWN' : 'SystematicsDOWN/MuSys',
+    'ATLAS_MU_ES_UP'   : 'SystematicsUP/MuSys'
+}
 
 class LHProcessorCN(ATLASStudent):
     """
@@ -39,9 +71,7 @@ class LHProcessorCN(ATLASStudent):
         parser.add_argument('--syst-terms', default=None)
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
-            self.args.syst_terms = [
-                eval('Systematics.%s' % term) for term in
-                self.args.syst_terms.split(',')]
+            self.args.syst_terms = self.args.syst_terms.split(',')
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -86,15 +116,33 @@ class LHProcessorCN(ATLASStudent):
                 
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
-        # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
-        chain = TreeChain(self.metadata.treename,
-                         files=self.files,
-                         events=self.events,
-                         cache=True,
-                         cache_size=10000000,
-                         learn_entries=30,
-                         onfilechange=onfilechange,
-                         verbose=True)
+        ## initialize the TreeChain of all input files
+
+        ## Nominal
+        if self.args.syst_terms is None:
+            chain = TreeChain(self.metadata.treename,
+                              files=self.files,
+                              events=self.events,
+                              cache=True,
+                              cache_size=10000000,
+                              learn_entries=30,
+                              onfilechange=onfilechange,
+                              verbose=True)
+
+        ## Shape systematic variation
+        elif len(self.args.syst_terms) == 1:
+            chain = TreeChain(SYSTEMATICS[self.args.syst_terms[0]],
+                              files=self.files,
+                              events=self.events,
+                              cache=True,
+                              cache_size=10000000,
+                              learn_entries=30,
+                              onfilechange=onfilechange,
+                              verbose=True)
+                
+        else:
+            print "ERROR: Too many systematics terms, LHProcessorCN can only handle one at a time."
+            sys.exit()
 
         # create output tree
         self.output.cd()
@@ -115,8 +163,7 @@ class LHProcessorCN(ATLASStudent):
 
         ## Setting event filters
         event_filters = EventFilterList([
-            JetPreSelection(),
-            JetSelection( year=YEAR, bunny_ear_protection=False ),
+            JetSelection(YEAR, False)
         ])
 
         self.filters['event'] = event_filters
@@ -145,7 +192,7 @@ class LHProcessorCN(ATLASStudent):
 
             #Select if the event goes into the training or the testing tree
             tree = None
-            if event.EventNumber % 2:
+            if random.random() < 0.5:#event.EventNumber % 2:
                 tree = tree_train
             else:
                 tree = tree_test
@@ -212,8 +259,7 @@ class LHProcessorCN(ATLASStudent):
 
             ## -- Jet Information -- ##
 
-            numJets = len(event.jets)
-            tree.numJets = numJets
+            tree.numJets = len(event.jets)
 
             numJets50 = 0
             numJets30 = 0
@@ -278,6 +324,7 @@ class LHProcessorCN(ATLASStudent):
             tree.mass_collinear_tau_lep = event.evtsel_ditau_collinearMass*GeV
             tree.tau_x  = event.evtsel_tau_x1
             tree.lep_x = event.evtsel_lep_x2
+            tau_x_lep_x = event.evtsel_tau_x1*event.evtsel_lep_x2
             tree.mass_mmc_tau_lep = event.evtsel_ditau_MMC
             tree.pt_mmc_tau_lep = -1
             tree.met_mmc_tau_lep = -1
@@ -290,15 +337,19 @@ class LHProcessorCN(ATLASStudent):
 
             #VBF topology
             mass_j1_j2 = -1111
+            mass_transverse_j1_j2 = -1111
             eta_product_j1_j2 = -1111
             eta_delta_j1_j2 = -1111
+            eta_balance_j1_j2 = -1111
             tau_centrality_j1_j2 = -1111
             lep_centrality_j1_j2 = -1111
+            tau_lep_centrality_j1_j2 = -1111
             tau_j1_j2_phi_centrality = -1111
             sphericity = -1111
             aplanarity = -1111
+            dPhi_j1_j2 = -1111
 
-            event.jets.sort(key=lambda jet: jet.pt, reverse=True)
+            event.jets.sort(key=lambda jet: jet.fourvect.Pt(), reverse=True)
                 
             leadJetPt = 0.0
             if len(event.jets) > 0:
@@ -307,8 +358,17 @@ class LHProcessorCN(ATLASStudent):
 
             if len(event.jets) >= 2:
 
-                jet1 = event.jets[0].fourvect
-                jet2 = event.jets[1].fourvect
+                jet1Pt  = event.jets[0].fourvect.Pt()
+                jet1Eta = event.jets[0].fourvect.Eta()
+                jet1Phi = event.jets[0].fourvect.Phi()
+                jet1 = LorentzVector()
+                jet1.SetPtEtaPhiM(jet1Pt, jet1Eta, jet1Phi, 0.0)
+
+                jet2Pt  = event.jets[1].fourvect.Pt()
+                jet2Eta = event.jets[1].fourvect.Eta()
+                jet2Phi = event.jets[1].fourvect.Phi()
+                jet2 = LorentzVector()
+                jet2.SetPtEtaPhiM(jet2Pt, jet2Eta, jet2Phi, 0.0)
 
                 jet1_2Vector = Vector2(jet1.Px(), jet1.Py())
                 jet2_2Vector = Vector2(jet2.Px(), jet2.Py())
@@ -318,20 +378,45 @@ class LHProcessorCN(ATLASStudent):
                 mass_j1_j2 = (jet1 + jet2).M()
                 eta_product_j1_j2 = jet1.Eta() * jet2.Eta()
                 eta_delta_j1_j2 = abs(jet1.Eta() - jet2.Eta())
+                eta_balance_j1_j2 = (jet1.Eta()**2 + jet2.Eta()**2)*abs(jet2.Eta() - jet1.Eta())
+                
                 tau_centrality_j1_j2 = eventshapes.eta_centrality(Tau.Eta(), jet1.Eta(), jet2.Eta())
                 lep_centrality_j1_j2 = eventshapes.eta_centrality(Lep.Eta(), jet1.Eta(), jet2.Eta())
+                tau_lep_centrality_j1_j2 = tau_centrality_j1_j2 * lep_centrality_j1_j2
+
+                dPhi_j1_j2 = jet1_2Vector.DeltaPhi(jet2_2Vector)
+                mass_transverse_j1_j2 = sqrt(2*jet1Pt*jet2Pt*(1 - cos(dPhi_j1_j2)))
+                mass_j1_lep = (jet1 + Lep).M()
+
+            jets_vector_sum = LorentzVector()
 
             allJetList = []
             for jet in event.jets:
-                allJetList.append(jet.fourvect)
+                JetPt  = jet.fourvect.Pt()
+                JetEta = jet.fourvect.Eta()
+                JetPhi = jet.fourvect.Phi()
+                Jet = LorentzVector()
+                Jet.SetPtEtaPhiM(JetPt, JetEta, JetPhi, 0.0)
+                jets_vector_sum += Jet
+                allJetList.append(Jet)
+            
             sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau, Lep] + allJetList)
 
+            tree.mass_jets_lep = (jets_vector_sum + Lep).M()
+            tree.mass_jets_tau_lep = (jets_vector_sum + Tau + Lep).M()
+
             tree.mass_j1_j2 = mass_j1_j2
+            tree.mass_transverse_j1_j2 = mass_transverse_j1_j2
+            
             tree.eta_product_j1_j2 = eta_product_j1_j2
             tree.eta_delta_j1_j2 = eta_delta_j1_j2
+            tree.eta_balance_j1_j2 = eta_balance_j1_j2
+            
             tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
             tree.lep_centrality_j1_j2 = lep_centrality_j1_j2
+            tree.tau_lep_centrality_j1_j2 = tau_lep_centrality_j1_j2
             tree.tau_j1_j2_phi_centrality = tau_j1_j2_phi_centrality
+            tree.dphi_j1_j2 = dPhi_j1_j2
 
             tree.sphericity = sphericity
             tree.aplanarity = aplanarity

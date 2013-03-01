@@ -23,10 +23,12 @@ datasets2011 = [
     ]
 
 datasets2012 = [
-    'data12-Egamma',
+    #'data12-Egamma',
     'data12-JetTauEtmiss',
-    'data12-Muons',
-    'embed12-lh-mfsim',
+    'data12-PhysCont',
+    #'embed12-lh-mfsim',
+    #'embed12-lh-mfsup',
+    #'embed12-lh-mfsdn'
     ]
 
 datasets = datasets2012

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import ROOT
+import ROOT, sys
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(True)
 
@@ -112,17 +112,20 @@ CN_MC_PATTERN12 = re.compile(
         '\.(?P<name>\w+)'
         '\.(?P<tag>\w+)'
         '_lhCN'
-        '(v(?P<version>\S+))?'
+        '(v(?P<version1>\d+))?'
+        '(-(?P<version2>\d+))?'
         '\.(?P<suffix>\S+)$')
 
 CN_DATA_PATTERN12 = re.compile(
         '^(?P<prefix>\S+\.)?'
         'data12_8TeV\.'
-        '(?P<id>\d+)'
+        '(?P<id>\S+)'
         '\.(?P<name>\w+)'
+        '((\.PhysCont)?)'
         '\.(?P<tag>\w+)'
         '_lhCN'
-        '(v(?P<version>\S+))?'
+        '(v(?P<version1>\d+))?'
+        '(-(?P<version2>\d+))?'
         '\.(?P<suffix>\S+)$')
 
 CN_EMBED_PATTERN12 = re.compile(
@@ -424,16 +427,16 @@ class Database(dict):
                 elif mc_sampletype == 'lhCN':
                     match  = re.match(CN_MC_PATTERN12, basename)
                     if match:
-
+                        
                         name = match.group('name')
                         cat = 'mc12a'
                         tag = match.group('tag')
                         year = 2012
 
                         ## Calculate a version int
-                        version_string = match.group('version')
-                        version_numbers = version_string.split('-')
-                        version = int(version_numbers[0])*1000 + int(version_numbers[1])*10
+                        version_1 = match.group('version1')
+                        version_2 = match.group('version2')
+                        version = int(version_1)*1000 + int(version_2)*10
 
                         dataset = self.get(name, None)
                         if dataset is not None and version == dataset.version:
@@ -796,6 +799,7 @@ class Database(dict):
                 for dir in data_dirs:
                     match = re.match(CN_DATA_PATTERN12, dir)
                     if match:
+                        
                         stream = match.group('name')
                         if stream not in streams:
                             streams[stream] = []
@@ -818,35 +822,35 @@ class Database(dict):
                                         file_pattern=data_pattern,
                                         year=year)
 
-                    # in each stream create a separate dataset for each run
-                    runs = {}
+                    # in each stream create a separate dataset for each period
+                    periods = {}
                     for dir in dirs:
                         match = re.match(CN_DATA_PATTERN12, dir)
                         if match:
-                            run = int(match.group('id'))
+                            period = match.group('id')
                             tag = match.group('tag')
-                            if run not in runs:
-                                runs[run] = {
+                            if period not in periods:
+                                periods[period] = {
                                     'tag': tag,
                                     'dirs': [dir],
                                     'ds': -1}
                             else:
-                                runs[run]['dirs'].append(dir)
-                                if tag != runs[run]['tag']:
+                                periods[period]['dirs'].append(dir)
+                                if tag != periods[period]['tag']:
                                     print (
-                                        'multiple copies of run with different '
-                                        'tags: %s' % runs[run]['dirs'])
+                                        'multiple copies of period with different '
+                                        'tags: %s' % periods[period]['dirs'])
                         elif self.verbose:
                             print "not a valid data dataset name: %s" % dir
                     # need to use the actual ds name for ds for validation
-                    for run, info in runs.items():
-                        name = 'data%d-%s-%d' % (year % 1000, stream, run)
+                    for period, info in periods.items():
+                        name = 'data%d-%s-%s' % (year % 1000, stream, period)
                         print '\'%s\',' % name
                         self[name] = Dataset(name=name,
                                              datatype=DATA,
                                              treename=data_treename,
                                              ds=info['ds'],
-                                             id=run,
+                                             id=period,
                                              grl=data_grl,
                                              dirs=info['dirs'],
                                              stream=stream,
