@@ -298,6 +298,7 @@ class hhskim(ATLASStudent):
                     hhbranches.REMOVE,
                     exclude=hhbranches.KEEP),
                 create_branches=True,
+                ignore_duplicates=True,
                 transfer_objects=True,
                 visible=False)
 
