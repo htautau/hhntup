@@ -205,7 +205,12 @@ class TauElectronVeto(EventFilter):
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: tau.EleBDTLoose == 0)
+        #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
+        # only apply eveto on 1p taus with cluster and track eta less than 2.47
+        event.taus.select(lambda tau: tau.numTrack > 1 or
+                                      abs(tau.eta) >= 2.47 or
+                                      abs(tau.track_eta[0]) >= 2.47 or
+                                      tau.EleBDTLoose == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -337,6 +342,33 @@ class TauCharge(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class TauID_SkimLoose(EventFilter):
+
+    def __init__(self, min_taus, year, **kwargs):
+
+        self.min_taus = min_taus
+        if year == 2011:
+            self.passes = self.passes_11
+        elif year == 2012:
+            self.passes = self.passes_12
+        else:
+            raise ValueError("no TauID_SkimLoose defined for year %d" % year)
+        super(TauID_BDTLoose_LLHLoose, self).__init__(**kwargs)
+
+    def passes_11(self, event):
+
+        # BDT loose OR LLH loose
+        event.taus.select(lambda tau:
+                tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1)
+        return len(event.taus) >= self.min_taus
+
+    def passes_12(self, event):
+
+        # BDT loose
+        event.taus.select(lambda tau: tau.JetBDTSigLoose == 1)
+        return len(event.taus) >= self.min_taus
+
+
 class TauIDLoose(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
@@ -347,20 +379,6 @@ class TauIDLoose(EventFilter):
     def passes(self, event):
 
         event.taus.select(lambda tau: tau.JetBDTSigLoose)
-        return len(event.taus) >= self.min_taus
-
-
-class TauID_BDTLoose_LLHLoose(EventFilter):
-
-    def __init__(self, min_taus, **kwargs):
-
-        self.min_taus = min_taus
-        super(TauID_BDTLoose_LLHLoose, self).__init__(**kwargs)
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau:
-                tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1)
         return len(event.taus) >= self.min_taus
 
 

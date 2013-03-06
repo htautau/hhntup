@@ -214,7 +214,8 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauLArHole(2,
                 count_funcs=count_funcs),
-            TauID_BDTLoose_LLHLoose(2,
+            TauID_SkimLoose(2,
+                year=year,
                 count_funcs=count_funcs),
             TauTriggerMatchIndex(
                 config=trigger_config,
