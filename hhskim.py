@@ -30,7 +30,8 @@ from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.skimming.hadhad import branches as hhbranches
 from higgstautau.skimming.hadhad.models import *
 from higgstautau.hadhad.models import EmbeddingBlock
-from higgstautau.pileup import PileupTemplates, PileupReweight
+from higgstautau.pileup import (PileupTemplates, PileupReweight,
+                                get_pileup_reweighting_tool)
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
 
@@ -65,6 +66,13 @@ class hhskim(ATLASStudent):
         no_grl = self.args.no_grl
         verbose = self.args.student_verbose
         validate = self.args.validate
+
+        pileup_tool = None
+        if datatype == datasets.MC:
+            # get pileup reweighting tool
+            pileup_tool = get_pileup_reweighting_tool(
+                    year=year,
+                    use_defaults=True)
 
         if datatype != datasets.EMBED:
             # merge TrigConfTrees
@@ -243,9 +251,8 @@ class hhskim(ATLASStudent):
                 passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             PileupReweight(
-                year=year,
+                tool=pileup_tool,
                 tree=tree,
-                use_defaults=True,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             TruthMatching(

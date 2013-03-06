@@ -17,6 +17,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2011/hadhad/'
                 'TPileupReweighting.mc11.prw.root')
+        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
         pileup_tool.SetDataScaleFactors(1./0.97)
         pileup_tool.AddLumiCalcFile(
                 'lumi/2011/hadhad/'
@@ -30,6 +31,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2012/hadhad/'
                 'TPileupReweighting.mc12.prw.root')
+        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
         pileup_tool.SetDataScaleFactors(1./1.11)
         pileup_tool.AddLumiCalcFile(
                 'lumi/2012/hadhad/'
@@ -92,9 +94,12 @@ class PileupReweight(EventFilter):
 
     def passes(self, event):
 
-        # set the event weight
-        self.tree.pileup_weight = self.pileup_tool.GetCombinedWeight(
+        # set the pileup and period weights
+        self.tree.pileup_weight = self.tool.GetPrimaryWeight(
                 event.RunNumber,
                 event.mc_channel_number,
                 event.averageIntPerXing)
+        self.tree.period_weight = self.tool.GetPeriodWeight(
+                event.RunNumber,
+                event.mc_channel_number)
         return True
