@@ -307,13 +307,13 @@ class hhskim(ATLASStudent):
         if validate: # only validate on a single data run or MC channel
             chain.GetEntry(0)
             if datatype == datasets.MC:
-                validate_log = open('skim2_validate_mc_%d.txt' %
+                validate_log = open('hhskim_validate_mc_%d.txt' %
                         chain.mc_channel_number, 'w')
             elif datatype == datasets.DATA:
-                validate_log = open('skim2_validate_data_%d.txt' %
+                validate_log = open('hhskim_validate_data_%d.txt' %
                         chain.RunNumber, 'w')
             else:
-                validate_log = open('skim2_validate_embedded_%d.txt' %
+                validate_log = open('hhskim_validate_embedded_%d.txt' %
                         chain.RunNumber, 'w')
 
         # create MMC object
@@ -324,21 +324,12 @@ class hhskim(ATLASStudent):
         for event in chain:
 
             assert len(event.taus) == 2
-
             tree.number_of_good_vertices = len(event.vertices)
-
             tau1, tau2 = event.taus
+
+
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
-
-            if validate:
-                if datatype == datasets.MC:
-                    print >> validate_log, event.mc_channel_number,
-                print >> validate_log, event.RunNumber, event.EventNumber,
-                print >> validate_log, "%.4f" % tree.pileup_weight,
-                for idx in selected_idx:
-                    print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
-                print >> validate_log
 
             # missing mass
             METx = event.MET.etx
@@ -361,12 +352,6 @@ class hhskim(ATLASStudent):
             # collinear and visible mass
             vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
-            vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt = \
-                    mass.collinearmass_alt(tau1, tau2, METx, METy)
-
-            print vis_mass, collin_mass, tau1_x, tau2_x
-            print vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt
-            print
 
             tree.tau_visible_mass = vis_mass
             tree.tau_collinear_mass = collin_mass
@@ -394,6 +379,48 @@ class hhskim(ATLASStudent):
                 SkimModel.set(tree, tau)
                 TriggerMatching.set(tree, tau)
                 TauCorrections.set(tree, tau)
+
+            if validate:
+                if datatype == datasets.MC:
+                    print >> validate_log, event.mc_channel_number,
+                print >> validate_log, event.RunNumber, event.EventNumber,
+                print >> validate_log, "%.4f" % tree.pileup_weight,
+                for idx in selected_idx:
+                    print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
+                print >> validate_log
+
+                print "entry:", event._entry.value
+                print "EventNumber:", event.EventNumber
+                print "trigger scale factors:"
+                for i, tau in enumerate(event.taus):
+                    print
+                    print "tau %d" % (i + 1)
+
+                    loose = tau.trigger_eff_sf_loose
+                    loose_high = tau.trigger_eff_sf_loose_high
+                    loose_low = tau.trigger_eff_sf_loose_low
+
+                    medium = tau.trigger_eff_sf_medium
+                    medium_high = tau.trigger_eff_sf_medium_high
+                    medium_low = tau.trigger_eff_sf_medium_low
+
+                    tight = tau.trigger_eff_sf_tight
+                    tight_high = tau.trigger_eff_sf_tight_high
+                    tight_low = tau.trigger_eff_sf_tight_low
+
+                    fmt = "%s: %f (+%f -%f)"
+                    print fmt % ('loose', loose, loose_high, loose_low)
+                    print fmt % ('medium', medium, medium_high, medium_low)
+                    print fmt % ('tight', tight, tight_high, tight_low)
+                print
+                print "mass:"
+                # print out values for comparing with Soshi's code
+                vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt = \
+                        mass.collinearmass_alt(tau1, tau2, METx, METy)
+                print "", "vis_mass", "coll_mass", "x1", "x2"
+                print "Me:", vis_mass, collin_mass, tau1_x, tau2_x
+                print "Soshi:", vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt
+                print
 
             # fill the output tree
             tree.Fill()
