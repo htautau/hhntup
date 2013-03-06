@@ -358,15 +358,20 @@ class hhskim(ATLASStudent):
             tree.tau_MMC_MET_y = mmc_met.Y()
             tree.tau_MMC_MET_phi = math.pi - mmc_met.Phi()
 
-            # collinear mass
-            collin_mass, tau1_x, tau2_x = mass.collinearmass(
+            # collinear and visible mass
+            vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
+            vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt = \
+                    mass.collinearmass_alt(tau1, tau2, METx, METy)
+
+            print vis_mass, collin_mass, tau1_x, tau2_x
+            print vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt
+            print
+
+            tree.tau_visible_mass = vis_mass
             tree.tau_collinear_mass = collin_mass
             tau1.collinear_momentum_fraction = tau1_x
             tau2.collinear_momentum_fraction = tau2_x
-
-            # visible mass
-            tree.tau_visible_mass = (tau1.fourvect + tau2.fourvect).M()
 
             if datatype == datasets.MC and year == 2011:
                 tree.ggf_weight = reweight_ggf(event, self.metadata.name)
