@@ -13,14 +13,12 @@ class TauTriggerEfficiency(EventFilter):
     Determine the trigger efficiency corrections
     """
     @classmethod
-    def get_period(cls, run):
+    def get_period_2012(cls, run):
 
         if run <= 201556:
             return 'periodA'
         elif run <= 209025:
             return 'periodBD'
-        elif run <= 210308:
-            return 'periodE'
         else:
             return 'periodE'
 
@@ -236,7 +234,7 @@ class TauTriggerEfficiency(EventFilter):
 
     def passes_12_mc(self, event):
 
-        period = self.get_period(event.RunNumber)
+        period = self.get_period_2012(event.RunNumber)
         thresh = []
 
         if period == 'periodA':
@@ -278,12 +276,12 @@ class TauTriggerEfficiency(EventFilter):
                         ttc.getMCEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) /
                         ttc.getMCEff(tau.pt_nominal, tau.eta, 0, period, prong, wpflag, eveto))
                 else:
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, ttc.getSF(
-                            tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
-                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, ttc.getSF(
-                        tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
-                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, ttc.getSF(
-                        tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
+                            ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
+                        ttc.getSF(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
+                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
+                        ttc.getSF(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
             raise Exception("there must be exactly two unique trigger match"

@@ -1,5 +1,5 @@
-ATLAS READY GRLs
-http://atlasdqm.web.cern.ch/atlasdqm/grlgen/Atlas_Ready/
+ATLAS ALL GOOD GRLs
+http://atlasdqm.web.cern.ch/atlasdqm/grlgen/All_Good/
 
 AND the GRL with the actual GRL observed in the combined /lumi TObjString in
 the output ROOT file.
