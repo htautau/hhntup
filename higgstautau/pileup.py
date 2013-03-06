@@ -4,6 +4,45 @@ from externaltools import PileupReweighting
 from ROOT import Root
 
 
+def get_pileup_reweighting_tool(year, use_defaults=True):
+
+    # Initialize the pileup reweighting tool
+    pileup_tool = Root.TPileupReweighting()
+    if year == 2011:
+        if use_defaults:
+            pileup_tool.AddConfigFile(
+                PileupReweighting.get_resource(
+                    'mc11b_defaults.prw.root'))
+        else:
+            pileup_tool.AddConfigFile(
+                'lumi/2011/hadhad/'
+                'TPileupReweighting.mc11.prw.root')
+        pileup_tool.SetDataScaleFactors(1./0.97)
+        pileup_tool.AddLumiCalcFile(
+                'lumi/2011/hadhad/'
+                'ilumicalc_histograms_None_178044-191933.root')
+    elif year == 2012:
+        if use_defaults:
+            pileup_tool.AddConfigFile(
+                PileupReweighting.get_resource(
+                    'mc12a_defaults.prw.root'))
+        else:
+            pileup_tool.AddConfigFile(
+                'lumi/2012/hadhad/'
+                'TPileupReweighting.mc12.prw.root')
+        pileup_tool.SetDataScaleFactors(1./1.11)
+        pileup_tool.AddLumiCalcFile(
+                'lumi/2012/hadhad/'
+                'ilumicalc_histograms_None_200842-215643.root')
+    else:
+        raise ValueError('No pileup reweighting defined for year %d' %
+                year)
+    # discard unrepresented data (with mu not simulated in MC)
+    pileup_tool.SetUnrepresentedDataAction(2)
+    pileup_tool.Initialize()
+    return pileup_tool
+
+
 class PileupTemplates(EventFilter):
 
     def __init__(self, year, passthrough=False, **kwargs):
@@ -41,46 +80,11 @@ class PileupReweight(EventFilter):
     """
     Currently only implements hadhad reweighting
     """
-    def __init__(self, year, tree,
-            use_defaults=True, passthrough=False, **kwargs):
+    def __init__(self, tool, tree, passthrough=False, **kwargs):
 
         if not passthrough:
             self.tree = tree
-
-            # Initialize the pileup reweighting tool
-            self.pileup_tool = Root.TPileupReweighting()
-            if year == 2011:
-                if use_defaults:
-                    self.pileup_tool.AddConfigFile(
-                        PileupReweighting.get_resource(
-                            'mc11b_defaults.prw.root'))
-                else:
-                    self.pileup_tool.AddConfigFile(
-                        'lumi/2011/hadhad/'
-                        'TPileupReweighting.mc11.prw.root')
-                self.pileup_tool.SetDataScaleFactors(1./0.97)
-                self.pileup_tool.AddLumiCalcFile(
-                        'lumi/2011/hadhad/'
-                        'ilumicalc_histograms_None_178044-191933.root')
-            elif year == 2012:
-                if use_defaults:
-                    self.pileup_tool.AddConfigFile(
-                        PileupReweighting.get_resource(
-                            'mc12a_defaults.prw.root'))
-                else:
-                    self.pileup_tool.AddConfigFile(
-                        'lumi/2012/hadhad/'
-                        'TPileupReweighting.mc12.prw.root')
-                self.pileup_tool.SetDataScaleFactors(1./1.11)
-                self.pileup_tool.AddLumiCalcFile(
-                        'lumi/2012/hadhad/'
-                        'ilumicalc_histograms_None_200841-215091.root')
-            else:
-                raise ValueError('No pileup reweighting defined for year %d' %
-                        year)
-            # discard unrepresented data (with mu not simulated in MC)
-            self.pileup_tool.SetUnrepresentedDataAction(2)
-            self.pileup_tool.Initialize()
+            self.tool = tool
 
         super(PileupReweight, self).__init__(
                 passthrough=passthrough,
