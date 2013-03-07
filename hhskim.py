@@ -413,6 +413,10 @@ class hhskim(ATLASStudent):
                 for i, tau in enumerate(event.taus):
                     print
                     print "tau %d:" % (i + 1)
+                    print "BDT ID Loose %d, Medium %d, Tight %d" % (
+                        tau.JetBDTSigLoose,
+                        tau.JetBDTSigMedium,
+                        tau.JetBDTSigTight)
 
                     loose = tau.trigger_eff_sf_loose
                     loose_high = tau.trigger_eff_sf_loose_high
