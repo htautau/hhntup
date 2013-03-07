@@ -103,3 +103,24 @@ class PileupReweight(EventFilter):
                 event.RunNumber,
                 event.mc_channel_number)
         return True
+
+
+class averageIntPerXingPatch(EventFilter):
+    """
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ExtendedPileupReweighting:
+
+    NOTE (23/01/2013): A bug has been found in the d3pd making code, causing
+    all MC12 samples to have a few of the averageIntPerXing values incorrectly set
+    (some should be 0 but are set to 1). The bug does not affect data. To resolve
+    this, when reading this branch, for both prw file generating and for when
+    retrieving pileup weights, you should amend the value with the following line
+    of code:
+
+    averageIntPerXing = (isSimulation && lbn==1 && int(averageIntPerXing+0.5)==1) ? 0. : averageIntPerXing;
+    """
+
+    def passes(self, event):
+
+        if event.lbn == 1 and int(event.averageIntPerXing + 0.5) == 1:
+            event.averageIntPerXing = 0.
+        return True

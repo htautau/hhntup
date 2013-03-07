@@ -31,7 +31,8 @@ from higgstautau.skimming.hadhad import branches as hhbranches
 from higgstautau.skimming.hadhad.models import *
 from higgstautau.hadhad.models import EmbeddingBlock
 from higgstautau.pileup import (PileupTemplates, PileupReweight,
-                                get_pileup_reweighting_tool)
+                                get_pileup_reweighting_tool,
+                                averageIntPerXingPatch)
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
 
@@ -151,6 +152,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
                 passthrough=year > 2011 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            averageIntPerXingPatch(
+                passthrough=year < 2012 or datatype != datasets.MC,
                 count_funcs=count_funcs),
             PileupTemplates(
                 year=year,
