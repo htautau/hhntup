@@ -42,6 +42,9 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
     # discard unrepresented data (with mu not simulated in MC)
     pileup_tool.SetUnrepresentedDataAction(2)
     pileup_tool.Initialize()
+    # set the random seed used by the GetRandomRunNumber and
+    # GetRandomPeriodNumber methods
+    pileup_tool.SetRandomSeed(1777)
     return pileup_tool
 
 

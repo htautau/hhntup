@@ -68,12 +68,10 @@ class hhskim(ATLASStudent):
         verbose = self.args.student_verbose
         validate = self.args.validate
 
-        pileup_tool = None
-        if datatype == datasets.MC:
-            # get pileup reweighting tool
-            pileup_tool = get_pileup_reweighting_tool(
-                    year=year,
-                    use_defaults=True)
+        # get pileup reweighting tool
+        pileup_tool = get_pileup_reweighting_tool(
+            year=year,
+            use_defaults=True)
 
         if datatype != datasets.EMBED:
             # merge TrigConfTrees
@@ -250,6 +248,7 @@ class hhskim(ATLASStudent):
             TauTriggerEfficiency(
                 year=year,
                 datatype=datatype,
+                pileup_tool=pileup_tool,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=no_trigger or datatype == datasets.DATA,
@@ -401,12 +400,19 @@ class hhskim(ATLASStudent):
                     print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
                 print >> validate_log
 
+                print "/" * 60
+                print "/" * 60
+
                 print "entry:", event._entry.value
                 print "EventNumber:", event.EventNumber
-                print "trigger scale factors:"
+                print
+                print "Pileup weight:", tree.pileup_weight
+                print "Period weight:", tree.period_weight
+                print
+                print "trigger scale factors (taus ordered by decreasing pT):"
                 for i, tau in enumerate(event.taus):
                     print
-                    print "tau %d" % (i + 1)
+                    print "tau %d:" % (i + 1)
 
                     loose = tau.trigger_eff_sf_loose
                     loose_high = tau.trigger_eff_sf_loose_high
@@ -420,7 +426,7 @@ class hhskim(ATLASStudent):
                     tight_high = tau.trigger_eff_sf_tight_high
                     tight_low = tau.trigger_eff_sf_tight_low
 
-                    fmt = "%s: %f (+%f -%f)"
+                    fmt = "%s: %f (high: %f low: %f)"
                     print fmt % ('loose', loose, loose_high, loose_low)
                     print fmt % ('medium', medium, medium_high, medium_low)
                     print fmt % ('tight', tight, tight_high, tight_low)
@@ -429,9 +435,9 @@ class hhskim(ATLASStudent):
                 # print out values for comparing with Soshi's code
                 vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt = \
                         mass.collinearmass_alt(tau1, tau2, METx, METy)
-                print "", "vis_mass", "coll_mass", "x1", "x2"
-                print "Me:", vis_mass, collin_mass, tau1_x, tau2_x
-                print "Soshi:", vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt
+                print "vis_mass", "coll_mass", "x1", "x2"
+                print vis_mass, collin_mass, tau1_x, tau2_x, "(me)"
+                print vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt, "(Soshi)"
                 print
 
             # fill the output tree

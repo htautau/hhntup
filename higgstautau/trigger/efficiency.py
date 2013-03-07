@@ -25,6 +25,7 @@ class TauTriggerEfficiency(EventFilter):
     def __init__(self,
             year,
             datatype,
+            pileup_tool,
             tes_systematic=False,
             passthrough=False,
             **kwargs):
@@ -33,6 +34,7 @@ class TauTriggerEfficiency(EventFilter):
             self.year = year % 1000
             self.datatype = datatype
             self.tes_systematic = tes_systematic
+            self.pileup_tool = pileup_tool
 
             if self.year == 11:
                 from externaltools.bundle_2011 import TauTriggerCorrections
@@ -234,7 +236,9 @@ class TauTriggerEfficiency(EventFilter):
 
     def passes_12_mc(self, event):
 
-        period = self.get_period_2012(event.RunNumber)
+        # get random run number using the pileup tool
+        run = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        period = self.get_period_2012(run)
         thresh = []
 
         if period == 'periodA':
