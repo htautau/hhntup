@@ -417,6 +417,9 @@ class hhskim(ATLASStudent):
                         tau.JetBDTSigLoose,
                         tau.JetBDTSigMedium,
                         tau.JetBDTSigTight)
+                    print "pT: %f" % tau.pt
+                    print "matched trigger threshold: %d" % tau.trigger_match_thresh
+                    print "matched trigger index: %d" % tau.trigger_match_index
 
                     loose = tau.trigger_eff_sf_loose
                     loose_high = tau.trigger_eff_sf_loose_high
