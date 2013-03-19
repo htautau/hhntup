@@ -98,6 +98,7 @@ class PileupReweight(EventFilter):
     def passes(self, event):
 
         # set the pileup and period weights
+        """
         self.tree.pileup_weight = self.tool.GetPrimaryWeight(
                 event.RunNumber,
                 event.mc_channel_number,
@@ -105,6 +106,11 @@ class PileupReweight(EventFilter):
         self.tree.period_weight = self.tool.GetPeriodWeight(
                 event.RunNumber,
                 event.mc_channel_number)
+        """
+        self.tree.pileup_weight = self.tool.GetCombinedWeight(
+                event.RunNumber,
+                event.mc_channel_number,
+                event.averageIntPerXing)
         return True
 
 

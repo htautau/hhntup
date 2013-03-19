@@ -407,7 +407,6 @@ class hhskim(ATLASStudent):
                 print "EventNumber:", event.EventNumber
                 print
                 print "Pileup weight:", tree.pileup_weight
-                print "Period weight:", tree.period_weight
                 print
                 print "trigger scale factors (taus ordered by decreasing pT):"
                 for i, tau in enumerate(event.taus):
