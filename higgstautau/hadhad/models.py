@@ -25,6 +25,8 @@ class EventVariables(TreeModel):
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 
+    tau_trigger_match_error = BoolCol(default=False)
+
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
     tau1_x = FloatCol()

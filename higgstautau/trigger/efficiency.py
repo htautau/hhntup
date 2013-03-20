@@ -25,6 +25,7 @@ class TauTriggerEfficiency(EventFilter):
     def __init__(self,
             year,
             datatype,
+            tree,
             pileup_tool,
             tes_systematic=False,
             passthrough=False,
@@ -34,6 +35,7 @@ class TauTriggerEfficiency(EventFilter):
             self.year = year % 1000
             self.datatype = datatype
             self.tes_systematic = tes_systematic
+            self.tree = tree
             self.pileup_tool = pileup_tool
 
             if self.year == 11:
@@ -179,16 +181,16 @@ class TauTriggerEfficiency(EventFilter):
                 if self.tes_systematic:
                     #print "%f %f" % (tau.pt, tau.pt_nominal)
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                            (corr.getSF(tau.pt, 0) *
+                        abs(corr.getSF(tau.pt, 0) *
                             corr.getMCEff(tau.pt, 0) /
                             corr.getMCEff(tau.pt_nominal, 0)))
                 else:
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                            corr.getSF(tau.pt, 0))
+                            abs(corr.getSF(tau.pt, 0)))
                 setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
-                        corr.getSF(tau.pt, 1))
+                        abs(corr.getSF(tau.pt, 1)))
                 setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
-                        corr.getSF(tau.pt, -1))
+                        abs(corr.getSF(tau.pt, -1)))
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
             raise Exception("there must be exactly two unique trigger match"
@@ -221,17 +223,17 @@ class TauTriggerEfficiency(EventFilter):
             for wplevel, wpflag in wp.items():
                 corr = self.corrections[thresh][wpflag][prong][event.RunNumber >= 188902]
                 setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                        corr.get3DMCEff(
+                        abs(corr.get3DMCEff(
                             tau.pt, tau.eta,
-                            npileup_vtx, 0))
+                            npileup_vtx, 0)))
                 setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
-                        corr.get3DMCEff(
+                        abs(corr.get3DMCEff(
                             tau.pt, tau.eta,
-                            npileup_vtx, 1))
+                            npileup_vtx, 1)))
                 setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
-                        corr.get3DMCEff(
+                        abs(corr.get3DMCEff(
                             tau.pt, tau.eta,
-                            npileup_vtx, -1))
+                            npileup_vtx, -1)))
         return True
 
     def passes_12_mc(self, event):
@@ -265,6 +267,9 @@ class TauTriggerEfficiency(EventFilter):
                 thresh.append(20)
             elif tau.trigger_match_thresh == 29:
                 ttc = self.ttc_29
+                if tau.pt < 35 * GeV:
+                    # should be rare (swapping of reco vs trigger pT)
+                    self.tree.tau_trigger_match_error = True
                 thresh.append(29)
             else:
                 raise ValueError("trigger match thresh of %d is not understood"
@@ -276,16 +281,16 @@ class TauTriggerEfficiency(EventFilter):
                 if self.tes_systematic:
                     #print "%f %f" % (tau.pt, tau.pt_nominal)
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                        ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
+                        abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
                         ttc.getMCEff(tau.pt, tau.eta, period, prong, wpflag, eveto) /
-                        ttc.getMCEff(tau.pt_nominal, tau.eta, period, prong, wpflag, eveto))
+                        ttc.getMCEff(tau.pt_nominal, tau.eta, period, prong, wpflag, eveto)))
                 else:
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                            ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+                            abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto)))
                 setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
-                        ttc.getSF(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
+                        abs(ttc.getSF(tau.pt, tau.eta, 1, period, prong, wpflag, eveto)))
                 setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
-                        ttc.getSF(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
+                        abs(ttc.getSF(tau.pt, tau.eta, -1, period, prong, wpflag, eveto)))
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
             raise Exception("there must be exactly two unique trigger match"
@@ -315,18 +320,21 @@ class TauTriggerEfficiency(EventFilter):
             else:
                 prong = 1
 
+            if thresh == 29 and tau.pt < 35 * GeV:
+                self.tree.tau_trigger_match_error = True
+
             for wplevel, wpflag in wp.items():
                 corr = self.corrections[thresh][wpflag][prong]
                 setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                        corr.get3DMCEff(
+                        abs(corr.get3DMCEff(
                             tau.pt, tau.eta,
-                            npileup_vtx, 0))
+                            npileup_vtx, 0)))
                 setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
-                        corr.get3DMCEff(
+                        abs(corr.get3DMCEff(
                             tau.pt, tau.eta,
-                            npileup_vtx, 1))
+                            npileup_vtx, 1)))
                 setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
-                        corr.get3DMCEff(
+                        abs(corr.get3DMCEff(
                             tau.pt, tau.eta,
-                            npileup_vtx, -1))
+                            npileup_vtx, -1)))
         return True

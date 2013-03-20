@@ -28,6 +28,7 @@ class TriggerMatching(TreeModel):
 
     tau_trigger_match_index = ROOT.vector('int')
     tau_trigger_match_thresh = ROOT.vector('int')
+    tau_trigger_match_error = BoolCol(default=False)
 
     @classmethod
     def reset(cls, tree):

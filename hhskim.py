@@ -243,11 +243,13 @@ class hhskim(ATLASStudent):
             TaudR(3.2,
                 count_funcs=count_funcs),
             TauTriggerMatchThreshold(
+                tree=tree,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             TauTriggerEfficiency(
                 year=year,
                 datatype=datatype,
+                tree=tree,
                 pileup_tool=pileup_tool,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
