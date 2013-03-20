@@ -270,11 +270,12 @@ class HHProcessor(ATLASStudent):
             #    datatype=datatype,
             #    passthrough=datatype == datasets.EMBED,
             #    count_funcs=count_funcs),
-            #TauLeadSublead(
-            #    lead=35 * GeV,
-            #    sublead=25 * GeV,
-            #    count_funcs=count_funcs),
             TauSelected(2,
+                count_funcs=count_funcs),
+            # apply this selection here since skim has lower threshold for data
+            TauLeadSublead(
+                lead=35 * GeV,
+                sublead=25 * GeV,
                 count_funcs=count_funcs),
             TauTriggerMatchThreshold(
                 passthrough=datatype == datasets.EMBED,
