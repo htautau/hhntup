@@ -57,6 +57,7 @@ class EventVariables(TreeModel):
     dR_jets = FloatCol()
     dR_quark_tau = FloatCol()
     dR_tau1_tau2 = FloatCol()
+    dEta_tau1_tau2 = FloatCol()
     dPhi_tau1_tau2 = FloatCol()
 
     dEta_quarks = FloatCol()
@@ -64,7 +65,6 @@ class EventVariables(TreeModel):
     dEta_jets_boosted = FloatCol()
     eta_product_jets = FloatCol()
     eta_product_jets_boosted = FloatCol()
-    # TODO: add dEta_taus
 
     numJets = IntCol()
     nonisolatedjet = BoolCol()
@@ -169,12 +169,10 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     @classmethod
     def set(cls, event, tree, tau1, tau2):
 
-        tree.mass_vis_tau1_tau2 = utils.Mvis(
-                tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
-        tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
-        tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
+        tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
+        tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
         tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:

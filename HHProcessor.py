@@ -42,7 +42,8 @@ from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.pileup import PileupReweight
+from higgstautau.pileup import (PileupReweight, averageIntPerXingPatch,
+                                get_pileup_reweighting_tool)
 from higgstautau.hadhad.objects import define_objects
 
 from goodruns import GRL
@@ -91,6 +92,11 @@ class HHProcessor(ATLASStudent):
         datatype = self.metadata.datatype
         year = self.metadata.year
         redo_mmc = self.args.redo_mmc
+
+        # get pileup reweighting tool
+        pileup_tool = get_pileup_reweighting_tool(
+            year=year,
+            use_defaults=True)
 
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
@@ -190,6 +196,9 @@ class HHProcessor(ATLASStudent):
             #EmbeddingPileupPatch(
             #    passthrough=year > 2011 or datatype != datasets.EMBED,
             #    count_funcs=count_funcs),
+            averageIntPerXingPatch(
+                passthrough=year < 2012 or datatype != datasets.MC,
+                count_funcs=count_funcs),
             #Triggers(
             #    year=year,
             #    old_skim=datatype == datasets.MC,
@@ -265,25 +274,28 @@ class HHProcessor(ATLASStudent):
             #    lead=35 * GeV,
             #    sublead=25 * GeV,
             #    count_funcs=count_funcs),
-            #TauTriggerMatchThreshold(
-            #    passthrough=datatype == datasets.EMBED,
-            #    count_funcs=count_funcs),
-            #TauTriggerEfficiency(
-            #    year=year,
-            #    datatype=datatype,
-            #    tes_systematic=self.args.syst_terms and (
-            #        Systematics.TES_TERMS & self.args.syst_terms),
-            #    passthrough=datatype == datasets.DATA,
-            #    count_funcs=count_funcs),
-            #PileupReweight(
-            #    year=year,
-            #    tree=tree,
-            #    passthrough=datatype != datasets.MC,
-            #    count_funcs=count_funcs),
-            #EfficiencyScaleFactors(
-            #    year=year,
-            #    passthrough=datatype != datasets.MC,
-            #    count_funcs=count_funcs),
+            TauSelected(2,
+                count_funcs=count_funcs),
+            TauTriggerMatchThreshold(
+                passthrough=datatype == datasets.EMBED,
+                count_funcs=count_funcs),
+            TauTriggerEfficiency(
+                year=year,
+                datatype=datatype,
+                pileup_tool=pileup_tool,
+                tes_systematic=self.args.syst_terms and (
+                    Systematics.TES_TERMS & self.args.syst_terms),
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
+            PileupReweight(
+                tool=pileup_tool,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            EfficiencyScaleFactors(
+                year=year,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
             #FakeRateScaleFactors(
             #    year=year,
             #    passthrough=datatype != datasets.MC,
@@ -297,8 +309,6 @@ class HHProcessor(ATLASStudent):
             #TauTrackRecounting(
             #    year=year,
             #    count_funcs=count_funcs),
-            TauSelected(2,
-                count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
             TruthMatching(
@@ -540,8 +550,10 @@ class HHProcessor(ATLASStudent):
                 tau2.fourvect, taumode2,
                 METx, METy, MET_res, 5) / GeV
             """
-            collin_mass, tau1_x, tau2_x = mass.collinearmass(tau1, tau2, METx, METy)
-            tree.mass_collinear_tau1_tau2 = collin_mass
+            mass_vis, mass_col, tau1_x, tau2_x = mass.collinearmass(
+                    tau1, tau2, METx, METy)
+            tree.mass_collinear_tau1_tau2 = mass_col
+            tree.mass_vis_tau1_tau2 = mass_vis
             tree.tau1_x = tau1_x
             tree.tau2_x = tau2_x
 
