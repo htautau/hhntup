@@ -18,13 +18,13 @@ from rootpy.tree.filtering import EventFilter
 import ROOT
 
 # ATLAS tools imports
-# load TESUncertaintyProvider before MissingETUtility!!!
-from externaltools import TESUncertaintyProvider as TESP
 from externaltools import MissingETUtility
 from externaltools import MuonMomentumCorrections
 from externaltools import JetUncertainties
 from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
+# TCU will soon support both 2011 and 2012
+from externaltools.bundle_2012 import TauCorrUncert as TCU
 
 # MissingETUtility
 from ROOT import METUtility
@@ -39,8 +39,8 @@ from ROOT import JERProvider
 from ROOT import eg2011
 # MuonMomentumCorrections
 from ROOT import MuonSmear
-# TESUncertaintyProvider
-from ROOT import TESUncertaintyProvider
+# tau corrections and uncertainties
+from ROOT import TauCorrUncert
 
 
 class ObjectSystematic(object):
@@ -309,11 +309,14 @@ class TES(TauSystematic):
         super(TES, self).__init__(is_up, **kwargs)
 
         if self.year == 2011:
+            from externaltools.bundle_2011 import TESUncertaintyProvider as TESP
+            from ROOT import TESUncertaintyProvider
             self.tes_tool = TESUncertaintyProvider(
                     os.path.normpath(TESP.RESOURCE_PATH), '', 'mc11')
         elif self.year == 2012:
-            self.tes_tool = TESUncertaintyProvider(
-                    os.path.normpath(TESP.RESOURCE_PATH), '', 'mc12')
+            # TODO use medium and tight?
+            self.tes_tool = TauCorrUncert.TESUncertainty(
+                    TCU.get_resource('TES/mc12_p1344_medium.root'))
         else:
             raise ValueError('No TES defined for year %d' % self.year)
 
@@ -323,7 +326,8 @@ class TES(TauSystematic):
         pt = tau.pt
         eta = tau.eta
         nProng = tau.nProng
-        shift = self.tes_tool.GetTESUncertainty(pt / 1e3, eta, nProng)
+        # TODO: include 2011 TES in TauCorrUncert and use MeV there also!!!
+        shift = self.tes_tool.GetTESUncertainty(pt, eta, nProng)
         if shift < 0:
             shift = 0
         if not self.is_up:
