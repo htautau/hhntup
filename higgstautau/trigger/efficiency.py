@@ -277,8 +277,8 @@ class TauTriggerEfficiency(EventFilter):
                     #print "%f %f" % (tau.pt, tau.pt_nominal)
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
                         ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
-                        ttc.getMCEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) /
-                        ttc.getMCEff(tau.pt_nominal, tau.eta, 0, period, prong, wpflag, eveto))
+                        ttc.getMCEff(tau.pt, tau.eta, period, prong, wpflag, eveto) /
+                        ttc.getMCEff(tau.pt_nominal, tau.eta, period, prong, wpflag, eveto))
                 else:
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
                             ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
