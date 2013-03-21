@@ -280,10 +280,14 @@ class TauTriggerEfficiency(EventFilter):
                 # pt_nominal should equal pt when TES is not applied
                 if self.tes_systematic:
                     #print "%f %f" % (tau.pt, tau.pt_nominal)
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                        abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
-                        ttc.getMCEff(tau.pt, tau.eta, period, prong, wpflag, eveto) /
-                        ttc.getMCEff(tau.pt_nominal, tau.eta, period, prong, wpflag, eveto)))
+                    try:
+                        sf = abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
+                            ttc.getMCEff(tau.pt, tau.eta, period, prong, wpflag, eveto) /
+                            ttc.getMCEff(tau.pt_nominal, tau.eta, period, prong, wpflag, eveto))
+                    except ZeroDivisionError:
+                        sf = 1.
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, sf)
+
                 else:
                     setattr(tau, 'trigger_eff_sf_%s' % wplevel,
                             abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto)))
