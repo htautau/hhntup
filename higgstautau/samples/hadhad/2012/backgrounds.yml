@@ -10,6 +10,12 @@ mc_ztautau:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp3.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp4.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp5.mc12a'
+
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp0.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp1.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp2.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp3.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp4.mc12a'
        
         - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
         - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
