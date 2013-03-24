@@ -60,7 +60,7 @@ SYSTEMATICS = {
 }
 
 ## Load overlap events
-f = open('overlap.txt')
+f = open('overlap_lh.txt')
 lines = f.readlines()
 
 overlap = []
