@@ -1,4 +1,4 @@
-import ROOT
+import ROOT, sys
 import math, random
 
 from argparse import ArgumentParser
@@ -59,6 +59,17 @@ SYSTEMATICS = {
     'ATLAS_MU_ES_UP'   : 'SystematicsUP/MuSys'
 }
 
+## Load overlap events
+f = open('overlap.txt')
+lines = f.readlines()
+
+overlap = []
+
+for line in lines:
+    elements = line.split()
+    if elements[0] == '<':
+        overlap.append('.'.join(elements[1:]))
+
 class LHProcessorCN(ATLASStudent):
     """
     ATLASStudent inherits from rootpy.batch.Student.
@@ -80,12 +91,12 @@ class LHProcessorCN(ATLASStudent):
         root_output = output + '.root'
         subprocess.call(['hadd', root_output] + inputs)
 
-        if metadata.datatype == datasets.DATA:
-            # merge GRLs
-            grl = GRL()
-            for input in inputs:
-                grl |= GRL('%s:/lumi' % input)
-            grl.save('%s:/lumi' % root_output)
+        # if metadata.datatype == datasets.DATA:
+        #     # merge GRLs
+        #     grl = GRL()
+        #     for input in inputs:
+        #         grl |= GRL('%s:/lumi' % input)
+        #     grl.save('%s:/lumi' % root_output)
 
             
     def work(self):
@@ -97,16 +108,16 @@ class LHProcessorCN(ATLASStudent):
         YEAR = self.metadata.year
 
         ## Set the output ntuple model
-        OutputModel = RecoTauLepBlock + EventVariables + RecoMET + SysWeights
+        OutputModel = RecoTauLepBlock + EventVariables + RecoMET# + SysWeights
 
         onfilechange = []
-        if self.metadata.datatype == datasets.DATA:
-            merged_grl = GRL()
+        #if self.metadata.datatype == datasets.DATA:
+            #merged_grl = GRL()
 
-            def update_grl(student, grl, name, file, tree):
-                grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
-                
-            onfilechange.append((update_grl, (self, merged_grl,)))
+            #def update_grl(student, grl, name, file, tree):
+            #    grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
+            #    
+            #onfilechange.append((update_grl, (self, merged_grl,)))
 
         if self.metadata.datatype != datasets.EMBED:
             merged_cutflow = Hist(1, 0, 1, name='TotalEvents', type='D')
@@ -146,8 +157,7 @@ class LHProcessorCN(ATLASStudent):
 
         # create output tree
         self.output.cd()
-        tree_train = Tree(name='lh_train', model=OutputModel)
-        tree_test = Tree(name='lh_test', model=OutputModel)
+        tree = Tree(name='lh', model=OutputModel)
 
 
         copied_variables = ['actualIntPerXing',
@@ -156,14 +166,15 @@ class LHProcessorCN(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
-        tree_train.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
-        tree_test.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        tree.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
 
         chain.always_read(copied_variables)
 
         ## Setting event filters
         event_filters = EventFilterList([
-            JetSelection(YEAR, False)
+            JetSelection(YEAR, False),
+            #VBFFilter(2.1, 210),
+            #AntiVBFFilter(4.1, 410),
         ])
 
         self.filters['event'] = event_filters
@@ -174,29 +185,45 @@ class LHProcessorCN(ATLASStudent):
             cutflow = Cutflow()
 
         ## Define handle to jet collection
-        chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
+        chain.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentumMeV)
+        chain.define_collection(name="truthjets", prefix="jet_antikt4truth_", size="jet_antikt4truth_n", mix=FourMomentum)
             
         # define tree objects
-        tree_train.define_object(name='tau', prefix='tau_')
-        tree_train.define_object(name='lep', prefix='lep_')
-        tree_test.define_object(name='tau', prefix='tau_')
-        tree_test.define_object(name='lep', prefix='lep_')
+        tree.define_object(name='tau', prefix='tau_')
+        tree.define_object(name='lep', prefix='lep_')
 
         # entering the main event loop...
         for event in chain:
 
-            #tree_train.reset() Use reset=True in the Fill below
-            #tree_test.reset()
             if self.metadata.datatype != datasets.EMBED:
                 cutflow.reset()
 
-            #Select if the event goes into the training or the testing tree
-            tree = None
-            if random.random() < 0.5:#event.EventNumber % 2:
-                tree = tree_train
-            else:
-                tree = tree_test
+            ## Take care of overlap events for data
+            if self.metadata.datatype == datasets.DATA:
+                current_event = '%d.%d' % (event.RunNumber, event.EventNumber)
+                if current_event in overlap:
+                    overlap[overlap.index(current_event)] += '.done'
+                    continue
+                
+            ## -- Subsample -- ##
+                
+            ## Initialize the subsample flags
+            tree.subsample1 = False
+            tree.subsample2 = False
+            tree.subsample2_1 = False
+            tree.subsample2_2 = False
 
+            ## Determine the subsamples
+            subsample1_1 = (event.EventNumber%4 == 0)
+            subsample1_2 = (event.EventNumber%4 == 2)
+            subsample2_1 = (event.EventNumber%4 == 1)
+            subsample2_2 = (event.EventNumber%4 == 3)
+
+            ## Assign the subsamples
+            if subsample1_1 or subsample1_2: tree.subsample1 = True
+            if subsample2_1 or subsample2_2: tree.subsample2 = True
+            tree.subsample2_1 = subsample2_1
+            tree.subsample2_2 = subsample2_2
 
             ## -- Event selection -- ##
             leptype = None
@@ -207,14 +234,27 @@ class LHProcessorCN(ATLASStudent):
             else:
                 continue
 
-            if not event.evtsel_is_tau: continue
-            if not event.evtsel_is_dilepVeto: continue
+            #if not event.evtsel_is_tau: continue
+            tree.is_tau = evtsel_is_tau
+            if self.metadata.datatype != datasets.DATA:
+                if not event.evtsel_is_tau: continue
+            #if not event.evtsel_is_dilepVeto: continue
 
             ## Convert to private ntuple
             ##########################################################################
 
-            ## -- Tau Information -- ##
+            ## Event type flags
+            tree.dilep_veto = event.evtsel_is_dilepVeto
+            tree.dilep_control = event.evtsel_is_dilepCR
 
+            LTT = (event.evtsel_is_mutau or event.evtsel_is_eltau)
+            SLT = (event.evtsel_is_mu or event.evtsel_is_el)
+
+            tree.LTT = (LTT and not SLT)
+            tree.SLT = (SLT and not LTT)
+
+            
+            ## -- Tau Information -- ##
             ## Basic kinematics
             Tau = LorentzVector()
             TauPt  = event.evtsel_tau_et*GeV
@@ -222,6 +262,13 @@ class LHProcessorCN(ATLASStudent):
             TauPhi = event.evtsel_tau_phi
             Tau.SetPtEtaPhiM(TauPt, TauEta, TauPhi, 0)
             getattr(tree, 'tau_fourvect').set_from(Tau)
+
+            TrueTau = LorentzVector()
+            TrueTauPt  = event.evtsel_truethad_pt
+            TrueTauEta = event.evtsel_truethad_eta
+            TrueTauPhi = event.evtsel_truethad_phi
+            TrueTau.SetPtEtaPhiM(TrueTauPt, TrueTauEta, TrueTauPhi, 0)
+            
 
             ## Other decorations
             setattr(tree, 'tau_BDTJetScore', event.evtsel_tau_JetBDTScore)
@@ -232,8 +279,9 @@ class LHProcessorCN(ATLASStudent):
             setattr(tree, 'tau_EleBDTtight', event.evtsel_tau_eVetoTight)
             setattr(tree, 'tau_numTrack', event.evtsel_tau_numTrack)
             setattr(tree, 'tau_charge', event.evtsel_tau_charge)
-            setattr(tree, 'tau_isTruthEl', event.evtsel_tau_is_el)
+            setattr(tree, 'tau_isTrueLep', event.evtsel_tau_is_el or event.evtsel_tau_is_mu)
 
+            
 
             ## -- Lepton Information -- ##
 
@@ -245,52 +293,83 @@ class LHProcessorCN(ATLASStudent):
             Lep.SetPtEtaPhiM(LepPt, LepEta, LepPhi, 0)
             getattr(tree, 'lep_fourvect').set_from(Lep)
 
-            ## Other decorations
+            TrueLep = LorentzVector()
+            TrueLepPt  = event.evtsel_truetlep_pt
+            TrueLepEta = event.evtsel_truetlep_eta
+            TrueLepPhi = event.evtsel_truetlep_phi
+            TrueLep.SetPtEtaPhiM(TrueLepPt, TrueLepEta, TrueLepPhi, 0)
+
+            ## Other information
             setattr(tree, 'lep_charge', event.evtsel_lep_charge)
             setattr(tree, 'lep_isolated', event.evtsel_is_isoLep)
             setattr(tree, 'lep_leptype', leptype)
-            setattr(tree, 'lep_BDTEleLoose', -1)
-            setattr(tree, 'lep_BDTEleMedium', -1)
-            setattr(tree, 'lep_BDTEleTight', -1)
-            setattr(tree, 'lep_BDTJetLoose', -1)
-            setattr(tree, 'lep_BDTJetMedium', -1)
-            setattr(tree, 'lep_BDTJetTight', -1)
 
 
+            
             ## -- Jet Information -- ##
-
+            
             tree.numJets = len(event.jets)
 
             numJets50 = 0
             numJets30 = 0
 
+            tree.btag = False
+
+            vector_all = Tau + Lep
+            
             for jet in event.jets:
-                tree.jet_fourvect.push_back(jet.fourvect)
-                tree.jet_jvtxf.push_back(jet.jvtxf)
-                tree.jet_btag.push_back(jet.flavor_weight_MV1)
+                vector_all += jet.fourvect
+                #tree.jet_fourvect.push_back(jet.fourvect)
+                #tree.jet_jvtxf.push_back(jet.jvtxf)
+                #tree.jet_btag.push_back(jet.flavor_weight_MV1)
+                if jet.flavor_weight_MV1 > 0.7892:
+                    tree.btag = True
                 if jet.fourvect.Pt() > 30*GeV:
                     numJets30 += 1
                     if jet.fourvect.Pt() > 50*GeV:
                         numJets50 += 1
 
+            tree.leadjet_btag     = -1111
+            tree.leadjet_jvtxf    = -1111
+
+            tree.subleadjet_btag  = -1111
+            tree.subleadjet_jvtxf = -1111
+                        
+            if tree.numJets > 0:
+                tree.leadjet_fourvect = event.jets[0].fourvect
+                tree.leadjet_btag     = event.jets[0].flavor_weight_MV1
+                tree.leadjet_jvtxf    = event.jets[0].jvtxf
+
+                if tree.numJets > 1:
+                    tree.subleadjet_fourvect = event.jets[1].fourvect
+                    tree.subleadjet_btag     = event.jets[1].flavor_weight_MV1
+                    tree.subleadjet_jvtxf    = event.jets[1].jvtxf
+
+                    
+
             tree.numJets50 = numJets50
             tree.numJets30 = numJets30
 
+            # ## true jets
+            # if ( self.metadata.datatype == datasets.MC ):
+            #     for truthjet in event.truthjets:
+            #         tree.truthjet_fourvect.push_back(truthjet.fourvect)
+                    
 
+            
             ## -- MET Information -- ##
 
             METx = event.evtsel_met_etx*GeV
             METy = event.evtsel_met_ety*GeV
-            sumET = event.evtsel_met_sumet*GeV
             MET_vect = Vector2(METx, METy)
             MET = MET_vect.Mod()
             tree.MET = MET
-            tree.sumET = sumET
             getattr(tree, 'MET_vect').set_from(MET_vect)
-            if (utils.sign(sumET) * sqrt(abs(sumET / GeV))) > 0.0:
-                tree.MET_sig = (2. * MET_vect.Mod() / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
+
+            tree.MET_Reftau_pt = event.evtsel_MET_RefTau_sumet*GeV
 
 
+            
             ## -- Variables -- ##
 
             #transverse mass
@@ -304,50 +383,55 @@ class LHProcessorCN(ATLASStudent):
             tree.mass_transverse_met_tau = mTtau
             tree.dphi_met_lep = dPhi_MET_lep
 
+            tree.pt_vector_sum_all = vector_all.Pt()
+
             #ddR
             tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau, Lep, MET_vect)
 
+            ## Weird
+            tree.MET_over_resonance_pt = MET/(tree.resonance_pt_tau_lep*GeV)
+            tree.sum_dphi_tau_lep = event.evtsel_dPhiSum
+            tree.dpt_tau_lep = Lep.Pt() - Tau.Pt()
+            
             #number of vertices
-            tree.numVertices = event.evtsel_vertices
             tree.nvtx = event.evtsel_vertices
 
             #sumPt
             sumPt = 0
+            sumJetPt = 0
             sumPt += TauPt
             sumPt += LepPt
             for jet in event.jets:
                 sumPt += jet.fourvect.Pt()
+                sumJetPt += jet.fourvect.Pt()
 
             tree.sumPt = sumPt
+            tree.HT_jets = sumJetPt
 
             #Ditau quantities
-            tree.mass_collinear_tau_lep = event.evtsel_ditau_collinearMass*GeV
             tree.tau_x  = event.evtsel_tau_x1
             tree.lep_x = event.evtsel_lep_x2
             tau_x_lep_x = event.evtsel_tau_x1*event.evtsel_lep_x2
             tree.mass_mmc_tau_lep = event.evtsel_ditau_MMC
             tree.pt_mmc_tau_lep = -1
             tree.met_mmc_tau_lep = -1
-            tree.mass2_vis_tau_lep = event.evtsel_ditau_visibleMass*GeV
-            theta_tau_lep = Tau.Vect().Angle(Lep.Vect())
-            tree.cos_theta_tau_lep = math.cos(theta_tau_lep)
+            tree.mass_vis_tau_lep = event.evtsel_ditau_visibleMass*GeV
             tree.charge_product_tau_lep = event.evtsel_tau_charge * event.evtsel_lep_charge
             tree.pt_ratio_tau_lep = LepPt/TauPt
             tree.met_phi_centrality = eventshapes.phi_centrality(tauPhiVector, lepPhiVector, MET_vect)
+            tree.pt_balance_tau_lep = (LepPt-TauPt)/(LepPt+TauPt)
 
             #VBF topology
             mass_j1_j2 = -1111
-            mass_transverse_j1_j2 = -1111
             eta_product_j1_j2 = -1111
             eta_delta_j1_j2 = -1111
             eta_balance_j1_j2 = -1111
             tau_centrality_j1_j2 = -1111
             lep_centrality_j1_j2 = -1111
             tau_lep_centrality_j1_j2 = -1111
-            tau_j1_j2_phi_centrality = -1111
             sphericity = -1111
-            aplanarity = -1111
-            dPhi_j1_j2 = -1111
+            min_deta_tau_lep_j1_j2 = -1111
+            true_dphi_resonance_dijet = -1111
 
             event.jets.sort(key=lambda jet: jet.fourvect.Pt(), reverse=True)
                 
@@ -364,16 +448,27 @@ class LHProcessorCN(ATLASStudent):
                 jet1 = LorentzVector()
                 jet1.SetPtEtaPhiM(jet1Pt, jet1Eta, jet1Phi, 0.0)
 
+                ## Truth match
+                trueJet1 = LorentzVector()
+                for truthjet in event.truthjets:
+                    if jet1.DeltaR(truthjet.fourvect) < 0.2:
+                        trueJet1 = truthjet.fourvect
+                        
+
                 jet2Pt  = event.jets[1].fourvect.Pt()
                 jet2Eta = event.jets[1].fourvect.Eta()
                 jet2Phi = event.jets[1].fourvect.Phi()
                 jet2 = LorentzVector()
                 jet2.SetPtEtaPhiM(jet2Pt, jet2Eta, jet2Phi, 0.0)
 
+                ## Truth match
+                trueJet2 = LorentzVector()
+                for truthjet in event.truthjets:
+                    if jet2.DeltaR(truthjet.fourvect) < 0.2:
+                        trueJet2 = truthjet.fourvect
+
                 jet1_2Vector = Vector2(jet1.Px(), jet1.Py())
                 jet2_2Vector = Vector2(jet2.Px(), jet2.Py())
-
-                tau_j1_j2_phi_centrality = eventshapes.phi_centrality(jet1_2Vector, jet2_2Vector, tauPhiVector)
 
                 mass_j1_j2 = (jet1 + jet2).M()
                 eta_product_j1_j2 = jet1.Eta() * jet2.Eta()
@@ -384,9 +479,18 @@ class LHProcessorCN(ATLASStudent):
                 lep_centrality_j1_j2 = eventshapes.eta_centrality(Lep.Eta(), jet1.Eta(), jet2.Eta())
                 tau_lep_centrality_j1_j2 = tau_centrality_j1_j2 * lep_centrality_j1_j2
 
-                dPhi_j1_j2 = jet1_2Vector.DeltaPhi(jet2_2Vector)
-                mass_transverse_j1_j2 = sqrt(2*jet1Pt*jet2Pt*(1 - cos(dPhi_j1_j2)))
-                mass_j1_lep = (jet1 + Lep).M()
+                deta_tau_lep_j1 = abs( (Tau + Lep).Eta() - jet1.Eta() )
+                deta_tau_lep_j2 = abs( (Tau + Lep).Eta() - jet2.Eta() )
+                
+                min_deta_tau_lep_j1_j2 = min(deta_tau_lep_j1, deta_tau_lep_j2)
+
+                ## True information
+                higgs = (TrueTau + TrueLep)
+                higgs_2Vector = Vector2(higgs.Px(), higgs.Py())
+                dijet = (trueJet1 + trueJet2)
+                dijet_2Vector = Vector2(dijet.Px(), dijet.Py())
+
+                true_dphi_resonance_dijet = higgs_2Vector.DeltaPhi(dijet_2Vector)
 
             jets_vector_sum = LorentzVector()
 
@@ -402,11 +506,7 @@ class LHProcessorCN(ATLASStudent):
             
             sphericity, aplanarity = eventshapes.sphericity_aplanarity([Tau, Lep] + allJetList)
 
-            tree.mass_jets_lep = (jets_vector_sum + Lep).M()
-            tree.mass_jets_tau_lep = (jets_vector_sum + Tau + Lep).M()
-
             tree.mass_j1_j2 = mass_j1_j2
-            tree.mass_transverse_j1_j2 = mass_transverse_j1_j2
             
             tree.eta_product_j1_j2 = eta_product_j1_j2
             tree.eta_delta_j1_j2 = eta_delta_j1_j2
@@ -415,17 +515,40 @@ class LHProcessorCN(ATLASStudent):
             tree.tau_centrality_j1_j2 = tau_centrality_j1_j2
             tree.lep_centrality_j1_j2 = lep_centrality_j1_j2
             tree.tau_lep_centrality_j1_j2 = tau_lep_centrality_j1_j2
-            tree.tau_j1_j2_phi_centrality = tau_j1_j2_phi_centrality
-            tree.dphi_j1_j2 = dPhi_j1_j2
 
             tree.sphericity = sphericity
-            tree.aplanarity = aplanarity
+
+            tree.min_deta_tau_lep_j1_j2 = min_deta_tau_lep_j1_j2
+            tree.true_dphi_resonance_dijet = true_dphi_resonance_dijet
+
+
+
+            ## -- Categories -- ##
+            tree.category_vbf_train = False
+            tree.category_vbf_test = False
+            tree.category_boosted = False
+            tree.category_1j = False
+            tree.category_0j = False
+
+            if (numJets30 >= 2 and numJets50 >= 1):
+                tree.category_vbf_train = True
+            if (numJets30 >= 2 and numJets50 >= 1 and eta_delta_j1_j2 > 3.0):
+                tree.category_vbf_test = True
+            elif tree.resonance_pt_tau_lep > 100:
+                tree.category_boosted = True
+            elif tree.numJets >= 1:
+                tree.category_1j = True
+            elif tree.numJets == 0:
+                tree.category_0j = True
 
 
 
             ## -- Event weights -- ##
-
             tree.weight = event.evtsel_weight
+
+
+            ## -- True Information -- ##
+            tree.true_higgs_mass = (TrueTau + TrueLep).M()
             
             
 
@@ -435,13 +558,11 @@ class LHProcessorCN(ATLASStudent):
             tree.Fill(reset=True)
 
         self.output.cd()
-        tree_train.FlushBaskets()
-        tree_train.Write()
-        tree_test.FlushBaskets()
-        tree_test.Write()
+        tree.FlushBaskets()
+        tree.Write()
 
-        if self.metadata.datatype == datasets.DATA:
-            xml_string = ROOT.TObjString(merged_grl.str())
-            xml_string.Write('lumi')
-        if self.metadata.datatype != datasets.EMBED:
-            merged_cutflow.Write()
+        #if self.metadata.datatype == datasets.DATA:
+        #    xml_string = ROOT.TObjString(merged_grl.str())
+        #    xml_string.Write('lumi')
+        #if self.metadata.datatype == datasets.MC:
+        #    merged_cutflow.Write()

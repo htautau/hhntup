@@ -17,7 +17,7 @@ from ..models import MatchedObject, TrueTau
 import math
 import ROOT
 
-
+##################################################
 class RecoTau(TreeModel):
 
     BDTJetScore = FloatCol()
@@ -27,7 +27,7 @@ class RecoTau(TreeModel):
     JetBDTSigMedium = BoolCol()
     JetBDTSigTight = BoolCol()
     EleBDTtight = BoolCol()
-    isTruthEl = BoolCol()
+    isTrueLep = BoolCol()
 
     numTrack = IntCol()
     charge = IntCol()
@@ -35,6 +35,8 @@ class RecoTau(TreeModel):
     fourvect = LorentzVector
 
 
+    
+##################################################
 class RecoLepton(TreeModel):
 
     isolated = BoolCol()
@@ -42,30 +44,36 @@ class RecoLepton(TreeModel):
     fourvect = LorentzVector
     leptype = BoolCol()
 
-    BDTJetLoose  = IntCol()
-    BDTJetMedium = IntCol()
-    BDTJetTight  = IntCol()
 
-    BDTEleLoose  = IntCol()
-    BDTEleMedium = IntCol()
-    BDTEleTight  = IntCol()
-
-
+##################################################
 class RecoMET(TreeModel):
 
     MET_vect = Vector2
-    MET_sig  = FloatCol()
     MET      = FloatCol()
-    sumET    = FloatCol()
 
-
-class RecoJet(TreeModel):
-
-    fourvect = LorentzVector
     
+##################################################
 class EventVariables(TreeModel):
 
-    mass_collinear_tau_lep = FloatCol()
+    dilep_veto = BoolCol()
+    dilep_control = BoolCol()
+    LTT = BoolCol()
+    SLT = BoolCol()
+
+    is_tau = BoolCol()
+
+    subsample1 = BoolCol()
+    subsample2 = BoolCol()
+
+    subsample2_1 = BoolCol()
+    subsample2_2 = BoolCol()
+
+    category_vbf_train = BoolCol()
+    category_vbf_test = BoolCol()
+    category_boosted = BoolCol()
+    category_1j = BoolCol()
+    category_0j = BoolCol()
+    
     tau_x = FloatCol()
     lep_x = FloatCol()
     tau_x_lep_x = FloatCol()
@@ -73,25 +81,33 @@ class EventVariables(TreeModel):
     pt_mmc_tau_lep = FloatCol()
     met_mmc_tau_lep = FloatCol()
     mass_vis_tau_lep = FloatCol()
-    mass2_vis_tau_lep = FloatCol()
-    cos_theta_tau_lep = FloatCol()
     pt_ratio_tau_lep = FloatCol()
     dphi_met_lep = FloatCol()
-    eta_vis_tau_lep = FloatCol()
     pt_balance_tau_lep = FloatCol()
+    sum_dphi_tau_lep = FloatCol()
+    pt_vector_sum_all = FloatCol()
+    dpt_tau_lep = FloatCol()
+    HT_jets = FloatCol()
+    MET_over_resonance_pt = FloatCol()
 
-    mass_j1_lep = FloatCol()
-    mass_jets_lep = FloatCol()
-    mass_jets_tau_lep = FloatCol()
+    MET_Reftau_pt = FloatCol()
 
     numJets = IntCol()
     numJets30 = IntCol()
     numJets50 = IntCol()
-    jet_fourvect = ROOT.vector('TLorentzVector')
-    truthjet_fourvect = ROOT.vector('TLorentzVector')
-    jet_jvtxf = ROOT.vector('float')
-    jet_btag  = ROOT.vector('float')
-    numVertices = IntCol()
+    btag = BoolCol()
+    #jet_fourvect = ROOT.vector('TLorentzVector')
+    #truthjet_fourvect = ROOT.vector('TLorentzVector')
+    #jet_jvtxf = ROOT.vector('float')
+    #jet_btag  = ROOT.vector('float')
+
+    leadjet_fourvect = LorentzVector
+    leadjet_btag     = FloatCol()
+    leadjet_jvtxf    = FloatCol()
+    subleadjet_fourvect = LorentzVector
+    subleadjet_btag     = FloatCol()
+    subleadjet_jvtxf    = FloatCol()
+    
     sumPt = FloatCol()
     cutflow = IntCol()
 
@@ -103,7 +119,6 @@ class EventVariables(TreeModel):
     resonance_pt_tau_lep = FloatCol()
 
     mass_j1_j2 = FloatCol()
-    mass_transverse_j1_j2 = FloatCol()
     eta_product_j1_j2 = FloatCol()
     eta_delta_j1_j2 = FloatCol()
     eta_balance_j1_j2 = FloatCol()
@@ -111,19 +126,18 @@ class EventVariables(TreeModel):
     lep_centrality_j1_j2 = FloatCol()
     tau_lep_centrality_j1_j2 = FloatCol()
     met_phi_centrality = FloatCol()
-    tau_j1_j2_phi_centrality = FloatCol()
-    dphi_j1_j2 = FloatCol()
-
+    min_deta_tau_lep_j1_j2 = FloatCol()
     leadJetPt = FloatCol()
-
     sphericity = FloatCol()
-    aplanarity = FloatCol()
 
     weight = FloatCol()
-
     nvtx = IntCol()
 
+    true_higgs_mass = FloatCol()
+    true_dphi_resonance_dijet = FloatCol()
 
+
+##################################################
 class SysWeights(TreeModel):
 
     sys_tau_ESF_UP = FloatCol()
@@ -157,7 +171,7 @@ class SysWeights(TreeModel):
     w_ggf          = FloatCol()
 
 
-
+##################################################
 class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
 
     @classmethod
@@ -165,13 +179,9 @@ class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
         """
         Misc variables
         """
-        tree.mass_vis_tau_lep = utils.Mvis(tau.Et, tau.phi, lep.fourvect.Pt(), lep.fourvect.Phi())
-        tree.mass2_vis_tau_lep = (tau.fourvect + lep.fourvect).M()
-        theta_tau_lep = tau.fourvect.Vect().Angle(lep.fourvect.Vect())
-        tree.cos_theta_tau_lep = math.cos(theta_tau_lep)
+        tree.mass_vis_tau_lep = (tau.fourvect + lep.fourvect).M()
         tree.charge_product_tau_lep = tau.charge * lep.charge
         tree.pt_ratio_tau_lep = lep.fourvect.Pt()/tau.fourvect.Pt()
-        tree.eta_vis_tau_lep = (tau.fourvect + lep.fourvect).Eta()
         tree.pt_balance_tau_lep = (lep.fourvect.Pt() - tau.fourvect.Pt())/(tau.fourvect.Pt() + lep.fourvect.Pt())
 
         #Set tau variables
@@ -213,12 +223,12 @@ class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
             
 
         #Find out if the tau is matched to an electron
-        TauIsEl = False
+        TauIsLep = False
         
         if tau.numTrack == 1 and tau.fourvect.Pt() > 20*GeV and isMC:
             nMC = event.mc_n
             for i in range(0, nMC):
                 if abs(event.mc_pdgId[i]) == 11 and event.mc_pt[i] > 8*GeV:
-                    if utils.dR(event.mc_eta[i], event.mc_phi[i], tau.eta, tau.phi) < 0.2: TauIsEl = True
+                    if utils.dR(event.mc_eta[i], event.mc_phi[i], tau.eta, tau.phi) < 0.2: TauIsLep = True
 
-        setattr(tree, "tau_isTruthEl", TauIsEl)
+        setattr(tree, "tau_isTruthLep", TauIsLep)

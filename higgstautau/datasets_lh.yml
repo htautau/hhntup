@@ -2702,6 +2702,21 @@ TVBF_ZeeNp2: !Dataset
   treename: tau
   version: 1000
   year: 2012
+TVBF_ZeeNp3: !Dataset
+  category: mc12a
+  datatype: 1
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.169503.TVBF_ZeeNp3.e1733_s1581_s1586_r3658_r3549_p1344_lhCNv01-00.130301132539.merge]
+  ds: null
+  file_pattern: '*.root*'
+  grl: null
+  id: 169503
+  name: TVBF_ZeeNp3
+  stream: null
+  tag: e1733_s1581_s1586_r3658_r3549_p1344
+  tag_pattern: null
+  treename: tau
+  version: 1000
+  year: 2012
 TVBF_ZeeNp4: !Dataset
   category: mc12a
   datatype: 1
@@ -2741,6 +2756,21 @@ TVBF_ZmumuNp2: !Dataset
   grl: null
   id: 169512
   name: TVBF_ZmumuNp2
+  stream: null
+  tag: e1733_s1581_s1586_r3658_r3549_p1344
+  tag_pattern: null
+  treename: tau
+  version: 1000
+  year: 2012
+TVBF_ZmumuNp3: !Dataset
+  category: mc12a
+  datatype: 1
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.169513.TVBF_ZmumuNp3.e1733_s1581_s1586_r3658_r3549_p1344_lhCNv01-00.130301132606.merge]
+  ds: null
+  file_pattern: '*.root*'
+  grl: null
+  id: 169513
+  name: TVBF_ZmumuNp3
   stream: null
   tag: e1733_s1581_s1586_r3658_r3549_p1344
   tag_pattern: null
@@ -3021,6 +3051,21 @@ VBF_ATau_ZtautauNp4: !Dataset
   treename: tau
   version: 1000
   year: 2012
+VBF_ATau_ZtautauNp5: !Dataset
+  category: mc12a
+  datatype: 1
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.147094.VBF_ATau_ZtautauNp5.e1422_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130222125318.merge]
+  ds: null
+  file_pattern: '*.root*'
+  grl: null
+  id: 147094
+  name: VBF_ATau_ZtautauNp5
+  stream: null
+  tag: e1422_s1499_s1504_r3658_r3549_p1344
+  tag_pattern: null
+  treename: tau
+  version: 1000
+  year: 2012
 VBF_ZeeNp0: !Dataset
   category: mc12a
   datatype: 1
@@ -3098,6 +3143,21 @@ VBF_ZeeNp4: !Dataset
   grl: null
   id: 167324
   name: VBF_ZeeNp4
+  stream: null
+  tag: e1422_s1499_s1504_r3658_r3549_p1344
+  tag_pattern: null
+  treename: tau
+  version: 1000
+  year: 2012
+VBF_ZeeNp5: !Dataset
+  category: mc12a
+  datatype: 1
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.147078.VBF_ZeeNp5.e1422_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130221223411.merge]
+  ds: null
+  file_pattern: '*.root*'
+  grl: null
+  id: 147078
+  name: VBF_ZeeNp5
   stream: null
   tag: e1422_s1499_s1504_r3658_r3549_p1344
   tag_pattern: null
@@ -3183,6 +3243,21 @@ VBF_ZmumuNp4: !Dataset
   grl: null
   id: 167334
   name: VBF_ZmumuNp4
+  stream: null
+  tag: e1422_s1499_s1504_r3658_r3549_p1344
+  tag_pattern: null
+  treename: tau
+  version: 1000
+  year: 2012
+VBF_ZmumuNp5: !Dataset
+  category: mc12a
+  datatype: 1
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.147086.VBF_ZmumuNp5.e1422_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130222150736.merge]
+  ds: null
+  file_pattern: '*.root*'
+  grl: null
+  id: 147086
+  name: VBF_ZmumuNp5
   stream: null
   tag: e1422_s1499_s1504_r3658_r3549_p1344
   tag_pattern: null
@@ -4422,7 +4497,6 @@ ZeeNp5: !Dataset
   category: mc12a
   datatype: 1
   dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.117655.ZeeNp5.e1477_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130221223957.merge,
-    /global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.147078.ZeeNp5.e1422_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130221223411.merge,
     /global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.107655.ZeeNp5.e1218_s1469_s1470_r3542_r3549_p1344_lhCNv01-00.130221221527.merge]
   ds: null
   file_pattern: '*.root*'
@@ -4677,16 +4751,15 @@ ZmumuNp4Excl_Mll10to60: !Dataset
 ZmumuNp5: !Dataset
   category: mc12a
   datatype: 1
-  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.147086.ZmumuNp5.e1422_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130222150736.merge,
-    /global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.117665.ZmumuNp5.e1477_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130221224116.merge,
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.117665.ZmumuNp5.e1477_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130221224116.merge,
     /global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.107665.ZmumuNp5.e1218_s1469_s1470_r3542_r3549_p1344_lhCNv01-00.130221221634.merge]
   ds: null
   file_pattern: '*.root*'
   grl: null
-  id: 147086
+  id: 117665
   name: ZmumuNp5
   stream: null
-  tag: e1422_s1499_s1504_r3658_r3549_p1344
+  tag: e1477_s1499_s1504_r3658_r3549_p1344
   tag_pattern: null
   treename: tau
   version: 1000
@@ -4937,16 +5010,15 @@ ZtautauNp4Excl_Mll10to60: !Dataset
 ZtautauNp5: !Dataset
   category: mc12a
   datatype: 1
-  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.147094.ZtautauNp5.e1422_s1499_s1504_r3658_r3549_p1344_lhCNv01-00.130222125318.merge,
-    /global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.107675.ZtautauNp5.e1218_s1469_s1470_r3542_r3549_p1344_lhCNv01-00.130221222024.merge,
+  dirs: [/global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.107675.ZtautauNp5.e1218_s1469_s1470_r3542_r3549_p1344_lhCNv01-00.130221222024.merge,
     /global/mtm/lhCN-2012-p1344/mc12/group.phys-higgs.mc12_8TeV.117675.ZtautauNp5.e1711_s1581_s1586_r3658_r3549_p1344_lhCNv01-00.130221224253.merge]
   ds: null
   file_pattern: '*.root*'
   grl: null
-  id: 147094
+  id: 107675
   name: ZtautauNp5
   stream: null
-  tag: e1422_s1499_s1504_r3658_r3549_p1344
+  tag: e1218_s1469_s1470_r3542_r3549_p1344
   tag_pattern: null
   treename: tau
   version: 1000
@@ -17516,8 +17588,11 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200926.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222100136.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00201555.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222101509.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209550.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222115627.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213431.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124051.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208931.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114701.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208970.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114746.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213816.JetTauEtmiss.f485_m1255_p1344_lhCNv01-00.130222125205.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213695.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124748.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00201289.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130224055536.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212809.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222123033.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212619.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130225114955.merge,
@@ -17526,7 +17601,9 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200804.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222095636.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209787.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222120310.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200841.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222095809.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213796.JetTauEtmiss.f485_m1255_p1344_lhCNv01-00.130222125113.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200863.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222100033.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213479.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124135.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207800.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222112249.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200863.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222095939.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209580.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222115727.merge,
@@ -17539,6 +17616,8 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212858.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222123228.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209995.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222120929.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200965.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130224054804.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213754.JetTauEtmiss.f485_m1250_p1344_lhCNv01-00.130222125002.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213702.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124854.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209909.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222120722.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200805.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222095731.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212815.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130224074341.merge,
@@ -17553,6 +17632,7 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208717.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114159.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209812.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222120402.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207772.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222112205.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213486.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124322.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207696.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222112035.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207664.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222111950.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213155.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222123659.merge,
@@ -17581,9 +17661,11 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209074.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222115040.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00200967.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222100301.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208705.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114111.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213640.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124559.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00201289.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222101136.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208982.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114831.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208870.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114534.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213539.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124415.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208179.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222113234.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212663.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222122659.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213204.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222123827.merge,
@@ -17611,6 +17693,7 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209381.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222115542.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208123.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222113107.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207975.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222112928.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213480.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124216.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209084.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222115124.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212967.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222123309.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209629.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222120016.merge,
@@ -17618,6 +17701,7 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209644.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222120059.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209084.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130224071058.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208184.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222113325.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213684.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124705.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00210308.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222121103.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207931.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222112756.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208261.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222113608.merge,
@@ -17629,6 +17713,7 @@ data12-JetTauEtmiss: !Dataset
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209628.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222115934.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00209787.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130224071923.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00207845.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222112424.merge,
+    /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213819.JetTauEtmiss.f485_m1255_p1344_lhCNv01-00.130222125250.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00208781.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222114431.merge,
     /global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00212815.JetTauEtmiss.r4065_p1278_p1344_lhCNv01-00.130222123139.merge]
   ds: data12-JetTauEtmiss
@@ -19361,6 +19446,201 @@ data12-JetTauEtmiss-00213314: !Dataset
   grl: grl/2012/current.xml
   id: '00213314'
   name: data12-JetTauEtmiss-00213314
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213431: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213431.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124051.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: '00213431'
+  name: data12-JetTauEtmiss-00213431
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213479: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213479.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124135.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213479
+  name: data12-JetTauEtmiss-00213479
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213480: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213480.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124216.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213480
+  name: data12-JetTauEtmiss-00213480
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213486: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213486.JetTauEtmiss.f482_m1238_p1344_lhCNv01-00.130222124322.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213486
+  name: data12-JetTauEtmiss-00213486
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213539: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213539.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124415.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213539
+  name: data12-JetTauEtmiss-00213539
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213640: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213640.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124559.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: '00213640'
+  name: data12-JetTauEtmiss-00213640
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213684: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213684.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124705.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213684
+  name: data12-JetTauEtmiss-00213684
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213695: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213695.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124748.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213695
+  name: data12-JetTauEtmiss-00213695
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213702: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213702.JetTauEtmiss.f482_m1250_p1344_lhCNv01-00.130222124854.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: '00213702'
+  name: data12-JetTauEtmiss-00213702
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213754: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213754.JetTauEtmiss.f485_m1250_p1344_lhCNv01-00.130222125002.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: '00213754'
+  name: data12-JetTauEtmiss-00213754
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213796: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213796.JetTauEtmiss.f485_m1255_p1344_lhCNv01-00.130222125113.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213796
+  name: data12-JetTauEtmiss-00213796
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213816: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213816.JetTauEtmiss.f485_m1255_p1344_lhCNv01-00.130222125205.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213816
+  name: data12-JetTauEtmiss-00213816
+  stream: JetTauEtmiss
+  tag: null
+  tag_pattern: null
+  treename: tau
+  version: null
+  year: 2012
+data12-JetTauEtmiss-00213819: !Dataset
+  category: null
+  datatype: 0
+  dirs: [/global/mtm/lhCN-2012-p1344/data12/group.phys-higgs.data12_8TeV.00213819.JetTauEtmiss.f485_m1255_p1344_lhCNv01-00.130222125250.merge]
+  ds: -1
+  file_pattern: '*.root*'
+  grl: grl/2012/current.xml
+  id: 00213819
+  name: data12-JetTauEtmiss-00213819
   stream: JetTauEtmiss
   tag: null
   tag_pattern: null

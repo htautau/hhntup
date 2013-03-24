@@ -21,30 +21,30 @@ SYSTEMATICS_LEPHAD = [
     ## JES systematics
     ('ATLAS_JES_BASE_DOWN',),
     ('ATLAS_JES_BASE_UP',),
-    ('ATLAS_JES_FLAV_DOWN',),
-    ('ATLAS_JES_FLAV_UP',),
+    #('ATLAS_JES_FLAV_DOWN',),
+    #('ATLAS_JES_FLAV_UP',),
     ('ATLAS_JES_FWD_DOWN',),
     ('ATLAS_JES_FWD_UP',),
 
     ## TES systematics
-    ('ATLAS_TAU_ES_DOWN',),
-    ('ATLAS_TAU_ES_UP',),
+    #('ATLAS_TAU_ES_DOWN',),
+    #('ATLAS_TAU_ES_UP',),
 
     ## MET systematics
-    ('ATLAS_MET_RESOSOFT_DOWN',),
-    ('ATLAS_MET_RESOSOFT_UP',),
-    ('ATLAS_MET_SCALESOFT_DOWN',),
-    ('ATLAS_MET_SCALESOFT_UP',),
+    #('ATLAS_MET_RESOSOFT_DOWN',),
+    #('ATLAS_MET_RESOSOFT_UP',),
+    #('ATLAS_MET_SCALESOFT_DOWN',),
+    #('ATLAS_MET_SCALESOFT_UP',),
 
     ## Electron systematics
-    ('ATLAS_EL_ES_DOWN',),
-    ('ATLAS_EL_ES_UP',),
-    ('ATLAS_EL_RES_DOWN',),
-    ('ATLAS_EL_RES_UP',),
+    #('ATLAS_EL_ES_DOWN',),
+    #('ATLAS_EL_ES_UP',),
+    #('ATLAS_EL_RES_DOWN',),
+    #('ATLAS_EL_RES_UP',),
 
     ## Muon systematics
-    ('ATLAS_MU_ES_DOWN',),
-    ('ATLAS_MU_ES_UP',),
+    #('ATLAS_MU_ES_DOWN',),
+    #('ATLAS_MU_ES_UP',),
 ] # ADD MORE HERE
 
 SYSTEMATICS = {

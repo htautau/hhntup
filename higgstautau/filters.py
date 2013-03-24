@@ -423,14 +423,15 @@ def jet_selection_2011_no_protection(jet):
 def jet_selection_2012(jet):
     """ Finalizes the jet selection """
 
-    if not (jet.pt > 30 * GeV):
+    if not (jet.fourvect.Pt() > 30 * GeV):
         return False
 
     if not (abs(jet.eta) < 4.5):
         return False
 
-    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.5):
-        return False
+    if (jet.fourvect.Pt() < 50*GeV) and (abs(jet.constscale_eta) < 2.4):
+        if not (jet.jvtxf > 0.5):
+            return False
 
     return True
 

@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('--nproc', type=int, default=5)
-parser.add_argument('--nsplit', type=int, default=1)
+parser.add_argument('--nsplit', type=int, default=20)
 parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--dry', action='store_true', default=False)

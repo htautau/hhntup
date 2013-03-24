@@ -1151,13 +1151,26 @@ def truthJetOverlap(truthJet, vectors):
 def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
     jets = []
 
-    photons   = getPhotons(event)
-    electrons = getElectrons(event)
-    taus      = getTaus(event)
+    TrueTau = LorentzVector()
+    TrueTauPt  = event.evtsel_truethad_pt
+    TrueTauEta = event.evtsel_truethad_eta
+    TrueTauPhi = event.evtsel_truethad_phi
+    TrueTau.SetPtEtaPhiM(TrueTauPt, TrueTauEta, TrueTauPhi, 0)
 
-    print 'photons: %d, electrons: %d, taus: %d' % (len(photons), len(electrons), len(taus))
+    overlapParticles = []
+    if TrueTauPt > 0.0:
+        overlapParticles.append(TrueTau)
 
-    overlapParticles = photons + electrons + taus
+    if event.evtsel_is_eltau or event.evtsel_is_el:
+        
+        TrueLep = LorentzVector()
+        TrueLepPt  = event.evtsel_truetlep_pt
+        TrueLepEta = event.evtsel_truetlep_eta
+        TrueLepPhi = event.evtsel_truetlep_phi
+        TrueLep.SetPtEtaPhiM(TrueLepPt, TrueLepEta, TrueLepPhi, 0)
+
+        if TrueLepPt > 0.0:
+            overlapParticles.append(TrueLep)
         
     for jet in event.truthjets:
         if jet.fourvect.Pt() < 15*GeV: continue
@@ -1172,6 +1185,7 @@ def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
 
     passMjj  = False
     passdEta = False
+    passBoth = False
 
     for i in range(njets):
         for j in range(njets):
@@ -1179,12 +1193,14 @@ def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
                 dEta = abs(jets[i].Eta() - jets[j].Eta())
                 Mjj  = (jets[i] + jets[j]).M()
 
-                print 'dEta: %.2f, Mjj: %.2f' % (dEta, Mjj)
+                #print 'dEta: %.2f, Mjj: %.2f' % (dEta, Mjj)
                 
                 if dEta > deta_cut: passdEta = True
                 if Mjj > mjj_cut*GeV: passMjj = True
+                if (dEta > deta_cut) and (Mjj > mjj_cut*GeV): passBoth = True
 
-    if passMjj and passdEta and passNjets:
+    #if passMjj and passdEta and passNjets:
+    if passBoth and passNjets:
         return True
     return False
 
@@ -1260,8 +1276,14 @@ class VBFFilter3(EventFilter):
 class AntiVBFFilter(EventFilter):
     """Keep events that don't pass the VBF filter"""
 
+    def __init__(self, deta_cut, mjj_cut, **kwargs):
+
+        self.deta_cut = deta_cut
+        self.mjj_cut  = mjj_cut
+        super(AntiVBFFilter, self).__init__(**kwargs)
+
     def passes(self, event):
-        return not vbfFilter(event)
+        return not vbfFilter(event, self.deta_cut, self.mjj_cut)
 
 
                         
