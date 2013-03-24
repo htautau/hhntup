@@ -2,22 +2,20 @@ embedded:
     systematics:
         - TES_UP
         - TES_DOWN
-        - TAUBDT_UP
-        - TAUBDT_DOWN
     samples:
         - 'embed12-hh-mfsim'
     systematics_samples:
         'embed12-hh-mfsim':
             'embed12-hh-mfsup': MFS_UP
             'embed12-hh-mfsdn': MFS_DOWN
-            # TODO add ISOL systematics
+            # ISOL systematics included in nominal sample
 mc:
     systematics:
-        - JES_UP,TES_UP
-        - JES_DOWN,TES_DOWN
+        - JES_UP
+        - JES_DOWN
+        - TES_UP
+        - TES_DOWN
         - JER_UP
-        - TAUBDT_UP
-        - TAUBDT_DOWN
     samples:
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'

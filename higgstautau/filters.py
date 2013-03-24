@@ -81,6 +81,7 @@ class JetCleaning(EventFilter):
                     LArQmean=LArQmean):
                 return False
 
+        """ NOT NEEDED IN REPROCESSED 2012 DATA
         if self.datatype == datasets.DATA and self.year == 2012:
             # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
             # Hot Tile calorimeter in period B1 and B2
@@ -102,6 +103,7 @@ class JetCleaning(EventFilter):
             #            abs(jet.eta) > 3.2 and
             #            1.6 < jet.phi < 3.1):
             #            return False
+        """
         return True
 
 
@@ -109,7 +111,14 @@ class LArError(EventFilter):
 
     def passes(self, event):
 
-        return event.larError <= 1
+        return event.larError != 2
+
+
+class TileError(EventFilter):
+
+    def passes(self, event):
+
+        return event.tileError != 2
 
 
 def in_lar_hole(eta, phi):
@@ -196,7 +205,13 @@ class TauElectronVeto(EventFilter):
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: tau.EleBDTLoose == 0)
+        #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
+        # only apply eveto on 1p taus with cluster and track eta less than 2.47
+        event.taus.select(lambda tau:
+                tau.numTrack > 1 or
+                abs(tau.eta) >= 2.47 or
+                (tau.numTrack > 0 and abs(tau.track_eta[0]) >= 2.47) or
+                tau.EleBDTLoose == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -293,6 +308,28 @@ class Tau1Track3Track(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class Tau1P3P(EventFilter):
+    """
+    Only keep 1P + 3P and 3P + 3P
+    """
+
+    def passes(self, event):
+
+        assert len(event.taus) == 2
+        tau1, tau2 = event.taus
+
+        # 1P + 3P
+        if (tau1.numTrack == 1 and tau2.numTrack == 3) or \
+           (tau1.numTrack == 3 and tau2.numTrack == 1):
+            return True
+
+        # 3P + 3P
+        if tau1.numTrack == 3 and tau2.numTrack == 3:
+            return True
+
+        return False
+
+
 class TauCharge(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
@@ -306,6 +343,33 @@ class TauCharge(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class TauID_SkimLoose(EventFilter):
+
+    def __init__(self, min_taus, year, **kwargs):
+
+        self.min_taus = min_taus
+        if year == 2011:
+            self.passes = self.passes_11
+        elif year == 2012:
+            self.passes = self.passes_12
+        else:
+            raise ValueError("no TauID_SkimLoose defined for year %d" % year)
+        super(TauID_SkimLoose, self).__init__(**kwargs)
+
+    def passes_11(self, event):
+
+        # BDT loose OR LLH loose
+        event.taus.select(lambda tau:
+                tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1)
+        return len(event.taus) >= self.min_taus
+
+    def passes_12(self, event):
+
+        # BDT loose
+        event.taus.select(lambda tau: tau.JetBDTSigLoose == 1)
+        return len(event.taus) >= self.min_taus
+
+
 class TauIDLoose(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
@@ -316,20 +380,6 @@ class TauIDLoose(EventFilter):
     def passes(self, event):
 
         event.taus.select(lambda tau: tau.JetBDTSigLoose)
-        return len(event.taus) >= self.min_taus
-
-
-class TauID_BDTLoose_LLHLoose(EventFilter):
-
-    def __init__(self, min_taus, **kwargs):
-
-        self.min_taus = min_taus
-        super(TauID_BDTLoose_LLHLoose, self).__init__(**kwargs)
-
-    def passes(self, event):
-
-        event.taus.select(lambda tau:
-                tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -388,50 +438,71 @@ class TauSelected(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class NonIsolatedJet(EventFilter):
+    """
+    https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=200403
+    """
+    def __init__(self, tree, **kwargs):
+
+        super(NonIsolatedJet, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+
+        # only write flag instead of vetoing the event so this
+        # can be turned on and off after
+        self.tree.nonisolatedjet = False
+        for tau in event.taus:
+            for jet in event.jets:
+                if 0.4 < utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 1.0:
+                    self.tree.nonisolatedjet = True
+        return True
+
+
 def jet_selection_2011(jet):
     """ Finalizes the jet selection """
 
     if not (jet.pt > 25 * GeV):
         return False
 
-    # Protection against bunny ear jets
+    if jet.pt > 50 * GeV:
+        # no JVF cut above 50
+        return True
+
+    # suppress forward jets
     if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
         return False
 
-    if not (abs(jet.eta) < 4.5):
-        return False
-
     if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
-        return False
-
-    return True
-
-def jet_selection_2011_no_protection(jet):
-    """ Finalizes the jet selection """
-
-    if not (jet.pt > 25 * GeV):
         return False
 
     if not (abs(jet.eta) < 4.5):
         return False
 
-    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
-        return False
-
     return True
+
 
 def jet_selection_2012(jet):
-    """ Finalizes the jet selection """
-
-    if not (jet.fourvect.Pt() > 30 * GeV):
+    """ Finalizes the jet selection
+    https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
+    """
+    if not (jet.pt > 30 * GeV):
         return False
 
-    if not (abs(jet.eta) < 4.5):
+    if jet.pt > 50 * GeV:
+        # no JVF cut above 50
+        return True
+
+    # suppress forward jets
+    if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
         return False
 
     if (jet.fourvect.Pt() < 50*GeV) and (abs(jet.constscale_eta) < 2.4):
         if not (jet.jvtxf > 0.5):
             return False
+
+    if not (abs(jet.eta) < 4.5):
+        return False
 
     return True
 
@@ -439,21 +510,25 @@ def jet_selection_2012(jet):
 class JetSelection(EventFilter):
     """Selects jets of good quality, keep event in any case"""
 
-    def __init__(self, year, bunny_ear_protection, **kwargs):
+    def __init__(self, year, **kwargs):
 
         self.year = year
-        self.bunny_ear_protection = bunny_ear_protection
         super(JetSelection, self).__init__(**kwargs)
 
     def passes(self, event):
 
         if self.year == 2011:
-            if self.bunny_ear_protection:
-                event.jets.select(jet_selection_2011)
-            else:
-                event.jets.select(jet_selection_2011_no_protection)
-        if self.year == 2012:
+            event.jets.select(jet_selection_2011)
+        elif self.year == 2012:
             event.jets.select(jet_selection_2012)
+        return True
+
+
+class JetPreselection(EventFilter):
+
+    def passes(self, event):
+
+        event.jets.select(lambda jet: jet.pt > 20 * GeV)
         return True
 
 

@@ -1,5 +1,5 @@
 from rootpy.math.physics.vector import Vector3, LorentzVector as FourVector
-from rootpy.hep import pdg
+from rootpy.extern.hep import pdg
 
 from .decorators import cached_property
 
@@ -99,6 +99,9 @@ class TauDecay(object):
         self.leptonic_muon = leptonic_muon
         self.nprong = nprong
 
+        self.matched = False
+        self.matched_object = None
+
         # check charge conservation
         if self.valid:
             if self.init.charge != sum([p.charge for p in self.final]):
@@ -125,6 +128,26 @@ class TauDecay(object):
                        self.init.vx_y,
                        self.init.vx_z)
 
+    @property
+    def privtx(self):
+
+        return self.prod_vertex
+
+    @property
+    def privtx_x(self):
+
+        return self.init.vx_x
+
+    @property
+    def privtx_y(self):
+
+        return self.init.vx_y
+
+    @property
+    def privtx_z(self):
+
+        return self.init.vx_z
+
     @cached_property
     def decay_vertex(self):
 
@@ -140,11 +163,40 @@ class TauDecay(object):
         return Vector3(nu_tau.vx_x,
                        nu_tau.vx_y,
                        nu_tau.vx_z)
+    @property
+    def secvtx(self):
+
+        return self.decay_vertex
+
+    @property
+    def secvtx_x(self):
+
+        return self.decay_vertex.X()
+
+    @property
+    def secvtx_y(self):
+
+        return self.decay_vertex.Y()
+
+    @property
+    def secvtx_z(self):
+
+        return self.decay_vertex.Z()
+
+    @cached_property
+    def decay_vect(self):
+
+        return self.decay_vertex - self.prod_vertex
 
     @cached_property
     def decay_length(self):
 
-        return (self.decay_vertex - self.prod_vertex).Mag()
+        return self.decay_vect.Mag()
+
+    @cached_property
+    def decay_angle(self):
+
+        return self.decay_vect.Angle(self.fourvect_visible)
 
     @cached_property
     def npi0(self):

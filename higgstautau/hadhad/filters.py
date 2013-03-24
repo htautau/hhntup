@@ -139,8 +139,7 @@ class TruthMatching(EventFilter):
     def passes(self, event):
 
         for tau in event.taus:
-            if tau.trueTauAssoc_index > -1:
-                tau.matched = True
+            tau.matched = tau.trueTauAssoc_index > -1
         return True
 
 
@@ -169,13 +168,23 @@ class EfficiencyScaleFactors(EventFilter):
     def passes(self, event):
 
         for tau in event.taus:
-            if tau.matched:
+            if not tau.matched:
+                continue
+
+            wplevels = []
+            wplevels.append('loose')
+            if tau.JetBDTSigMedium:
+                wplevels.append('medium')
+            if tau.JetBDTSigTight:
+                wplevels.append('tight')
+
+            for wp in wplevels:
                 # efficiency scale factor
-                effic_sf, err = tauid.effic_sf_uncert(tau, self.year)
-                tau.efficiency_scale_factor = effic_sf
+                effic_sf, err = tauid.effic_sf_uncert_exc(wp, tau, self.year)
+                setattr(tau, 'id_eff_sf_%s' % wp, effic_sf)
                 # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
-                tau.efficiency_scale_factor_high = effic_sf + err
-                tau.efficiency_scale_factor_low = effic_sf - err
+                setattr(tau, 'id_eff_sf_%s_high' % wp, effic_sf + err)
+                setattr(tau, 'id_eff_sf_%s_low' % wp, effic_sf - err)
         return True
 
 
@@ -195,6 +204,7 @@ class FakeRateScaleFactors(EventFilter):
             elif self.year == 12:
                 from externaltools.bundle_2012 import TauFakeRates
                 from ROOT import TauFakeRates as TFR
+                #TODO update
                 self.fakerate_tool = TFR.FakeRateScaler(
                         TauFakeRates.RESOURCE_PATH)
                 self.passes = self.passes_2012
@@ -213,23 +223,30 @@ class FakeRateScaleFactors(EventFilter):
 
         for tau in event.taus:
             # fakerate only applies to taus that don't match truth
-            if not tau.matched:
-                if tau.JetBDTSigTight:
-                    wp = 'Tight'
-                else:
-                    wp = 'Medium'
+            if tau.matched:
+                continue
+
+            wplevels = []
+            wplevels.append('loose')
+            if tau.JetBDTSigMedium:
+                wplevels.append('medium')
+            if tau.JetBDTSigTight:
+                wplevels.append('tight')
+
+            for wp in wplevels:
+                wpflag = wp.capitalize()
                 sf = self.fakerate_tool.getScaleFactor(
-                        tau.pt, wp,
+                        tau.pt, wpflag,
                         trig % tau.trigger_match_thresh)
-                tau.fakerate_scale_factor = sf
-                tau.fakerate_scale_factor_high = (sf +
+                setattr(tau, 'fakerate_sf_%s' % wp, sf)
+                setattr(tau, 'fakerate_sf_%s_high' % wp, (sf +
                         self.fakerate_tool.getScaleFactorUncertainty(
-                            tau.pt, wp,
-                            trig % tau.trigger_match_thresh, True))
-                tau.fakerate_scale_factor_low = (sf -
+                            tau.pt, wpflag,
+                            trig % tau.trigger_match_thresh, True)))
+                setattr(tau, 'fakerate_sf_%s_low' % wp, (sf -
                         self.fakerate_tool.getScaleFactorUncertainty(
-                            tau.pt, wp,
-                            trig % tau.trigger_match_thresh, False))
+                            tau.pt, wpflag,
+                            trig % tau.trigger_match_thresh, False)))
         return True
 
     def passes_2012(self, event):
@@ -238,25 +255,31 @@ class FakeRateScaleFactors(EventFilter):
 
         for tau in event.taus:
             # fakerate only applies to taus that don't match truth
-            if not tau.matched:
-                if tau.JetBDTSigTight:
-                    wp = 'tight'
-                else:
-                    wp = 'medium'
+            if tau.matched:
+                continue
+
+            wplevels = []
+            wplevels.append('loose')
+            if tau.JetBDTSigMedium:
+                wplevels.append('medium')
+            if tau.JetBDTSigTight:
+                wplevels.append('tight')
+
+            for wp in wplevels:
                 # last arg is lepton veto
                 sf = self.fakerate_tool.getScaleFactor(
                         tau.pt, tau.numTrack, event.RunNumber,
                         'BDT', wp,
                         trig % tau.trigger_match_thresh, True)
-                tau.fakerate_scale_factor = sf
-                tau.fakerate_scale_factor_high = (sf +
+                setattr(tau, 'fakerate_sf_%s' % wp, sf)
+                setattr(tau, 'fakerate_sf_%s_high' % wp, (sf +
                         self.fakerate_tool.getScaleFactorUncertainty(
                         tau.pt, tau.numTrack, event.RunNumber,
                         'BDT', wp,
-                        trig % tau.trigger_match_thresh, True, True))
-                tau.fakerate_scale_factor_low = (sf -
+                        trig % tau.trigger_match_thresh, True, True)))
+                setattr(tau, 'fakerate_sf_%s_low' % wp, (sf -
                         self.fakerate_tool.getScaleFactorUncertainty(
                         tau.pt, tau.numTrack, event.RunNumber,
                         'BDT', wp,
-                        trig % tau.trigger_match_thresh, True, False))
+                        trig % tau.trigger_match_thresh, True, False)))
         return True

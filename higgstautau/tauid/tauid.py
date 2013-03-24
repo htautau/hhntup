@@ -80,6 +80,12 @@ def effic_sf_uncert(tau, year):
         wp = 'loose'
         print ("Warning: requested efficiency for tau below BDT loose. "
                "Using BDT loose.")
+    return effic_sf_uncert_exc(wp, tau, year)
+
+
+def effic_sf_uncert_exc(wp, tau, year):
+
+    year = year % 1000
     np = nprong(tau.numTrack)
     if year == 11:
         sf, sf_uncert = EFFIC_SF_2011[wp][np]

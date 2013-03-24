@@ -239,3 +239,5 @@ data12_8TeV.00212172.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130_p1174/
 data12_8TeV.00212199.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130_p1174/
 data12_8TeV.00212272.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1228_p1130_p1174/
 data12_8TeV.00212588.physics_JetTauEtmiss.merge.NTUP_TAU.f479_m1233_p1130_p1174/
+data12_8TeV.00212619.physics_JetTauEtmiss.merge.NTUP_TAU.f481_m1233_p1130_p1174/
+data12_8TeV.00212721.physics_JetTauEtmiss.merge.NTUP_TAU.f481_m1233_p1130_p1174/

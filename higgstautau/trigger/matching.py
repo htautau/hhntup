@@ -91,10 +91,7 @@ class TauTriggerMatchIndex(EventFilter):
         return len(event.taus) >= 2
 
     def match_index(self, event, trigger):
-        """
-        Use the info stored in the D3PD for 2012:
-        trig_EF_tau_EF_tau29Ti_medium1_tau20Ti_medium1
-        """
+
         # get indices of trigger taus associated with this trigger
         trigger_idx = triggerutils.get_tau_trigger_obj_idx(
             self.config,
@@ -147,9 +144,11 @@ class TauTriggerMatchThreshold(EventFilter):
     Match previously matched reco taus to thresholds of the trigger
     """
     def __init__(self,
+                 tree,
                  passthrough=False,
                  **kwargs):
 
+        self.tree = tree
         super(TauTriggerMatchThreshold, self).__init__(
                 passthrough=passthrough,
                 **kwargs)
@@ -162,6 +161,13 @@ class TauTriggerMatchThreshold(EventFilter):
     def match_threshold(self, event, thresholds):
         """
         thresholds must be in descending order
+
+        TODO: Use the info stored in the D3PD for 2012:
+        trig_EF_tau_EF_tau29Ti_medium1_tau20Ti_medium1
+
+        if(trig_EF_tau_EF_tau20Ti_medium1==1) tau_trigger_match_thresh = 20
+        if(trig_EF_tau_EF_tau29Ti_medium1==1) tau_trigger_match_thresh = 29
+
         """
         assert len(event.taus) == 2
         assert len(thresholds) == 2
@@ -180,3 +186,4 @@ class TauTriggerMatchThreshold(EventFilter):
             if taus[i][1].pt < thresholds[i] * GeV:
                 print "WARNING: EF pT %f less than trigger threshold %f" % (
                         taus[i][1].pt, thresholds[i] * GeV)
+                self.tree.tau_trigger_match_error = True

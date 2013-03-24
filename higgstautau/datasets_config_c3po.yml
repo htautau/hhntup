@@ -1,0 +1,17 @@
+2012:
+    # common config
+    common:
+        grl: 'grl/2012/current.xml'
+    hh:
+        mc_path: '/global/common/higgstautau/skims/hadhad/c3po/v1'
+        mc_prefix: 'group.phys-higgs.c3po'
+        mc_pattern: '*hadhad.root*'
+        mc_treename: 'tau'
+        data_path: '/global/common/higgstautau/skims/hadhad/c3po/v1'
+        data_prefix: 'group.phys-higgs.c3po'
+        data_pattern: '*hadhad.root*'
+        data_treename: 'tau'
+        embed_path: '/global/common/higgstautau/skims/hadhad/c3po/v1'
+        embed_prefix: 'group.phys-higgs.c3po'
+        embed_pattern: '*embedding12_ztautau_hh_p1131.root*'
+        embed_treename: 'tau'

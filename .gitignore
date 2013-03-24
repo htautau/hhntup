@@ -1,6 +1,6 @@
 STDIN.*
 eventviews
-*validate.txt
+*validate*.txt
 *.xml
 *.pdf
 *.p

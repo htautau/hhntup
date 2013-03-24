@@ -2,6 +2,7 @@
 Adapted from the Example.C in MissingETUtility/macros
 """
 # stdlib Python imports
+import os
 import math
 from math import sin, sqrt, pow
 
@@ -22,11 +23,14 @@ from externaltools import MuonMomentumCorrections
 from externaltools import JetUncertainties
 from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
+# TCU will soon support both 2011 and 2012
+from externaltools.bundle_2012 import TauCorrUncert as TCU
 
 # MissingETUtility
 from ROOT import METUtility
 from ROOT import METUtil
 from ROOT import METObject
+from ROOT import MissingETTags
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
 # JetResolution
@@ -35,18 +39,18 @@ from ROOT import JERProvider
 from ROOT import eg2011
 # MuonMomentumCorrections
 from ROOT import MuonSmear
-# MissingETUtility
-from ROOT import TESUncertaintyProvider
+# tau corrections and uncertainties
+from ROOT import TauCorrUncert
 
 
 class ObjectSystematic(object):
 
-    def __init__(self, sys_util, year=2011, channel='hh', verbose=False):
+    def __init__(self, sys_util):
 
         self.sys_util = sys_util
-        self.verbose = verbose
-        self.year = year
-        self.channel = channel
+        self.verbose = sys_util.verbose
+        self.year = sys_util.year
+        self.channel = sys_util.channel
 
 
 class JetSystematic(ObjectSystematic):
@@ -88,20 +92,23 @@ class JES(JetSystematic):
         super(JES, self).__init__(is_up, **kwargs)
 
         self.jes_tool = None
-        
-        if self.channel == 'hh':
+
+        if self.year == 2011:
             self.jes_tool = MultijetJESUncertaintyProvider(
-                "MultijetJES_2011.config",
-                "InsituJES2011_AllNuisanceParameters.config",
+                "JES_2011/Final/MultijetJES_2011.config",
+                "JES_2011/Final/InsituJES2011_AllNuisanceParameters.config",
                 "AntiKt4LCTopoJets",
                 "MC11c",
-                "externaltools/JetUncertainties/share/")
-            
-        if self.channel == 'lh':
-            self.jes_tool = MultijetJESUncertaintyProvider("externaltools/JetUncertainties/share/MultijetJES_Preliminary.config",
-                                                           "externaltools/JetUncertainties/share/InsituJES2011_AllNuisanceParameters.config",
-                                                           "AntiKt4LCTopoJets",
-                                                           "MC11c")
+                JetUncertainties.RESOURCE_PATH)
+        elif self.year == 2012:
+            self.jes_tool = MultijetJESUncertaintyProvider(
+                "JES_2012/Moriond2013/MultijetJES_2012.config",
+                "JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
+                "AntiKt4LCTopoJets",
+                "MC12a",
+                JetUncertainties.RESOURCE_PATH)
+        else:
+            raise ValueError('No JES defined for year %d' % year)
 
     @JetSystematic.set
     def run(self, jet, event):
@@ -123,15 +130,26 @@ class JES(JetSystematic):
                         if dr < drmin:
                             drmin = dr
 
-            # The bool is the "isPos" argument
+            # TODO: shift is symmetric (is_up argument is not needed)
             if self.is_up:
-                shift = self.jes_tool.getRelUncert(jet.pt,
-                             jet.eta, drmin,
-                             True, self.sys_util.nvtxjets, event.averageIntPerXing)
+                shift = self.jes_tool.getRelUncert(
+                        jet.pt,
+                        jet.eta,
+                        drmin,
+                        True, # is up
+                        self.sys_util.nvtxjets,
+                        event.averageIntPerXing,
+                        False) # is b jet
             else:
-                shift = -1 * self.jes_tool.getRelUncert(jet.pt,
-                              jet.eta, drmin,
-                              False, self.sys_util.nvtxjets, event.averageIntPerXing)
+                shift = -1 * self.jes_tool.getRelUncert(
+                        jet.pt,
+                        jet.eta,
+                        drmin,
+                        False, # is up
+                        self.sys_util.nvtxjets,
+                        event.averageIntPerXing,
+                        False) # is b jet
+
         jet.pt *= 1. + shift
 
 
@@ -288,9 +306,19 @@ class TES(TauSystematic):
 
     def __init__(self, is_up, **kwargs):
 
-        # No tag yet, testing code
-        self.tes_tool = TESUncertaintyProvider()
         super(TES, self).__init__(is_up, **kwargs)
+
+        if self.year == 2011:
+            from externaltools.bundle_2011 import TESUncertaintyProvider as TESP
+            from ROOT import TESUncertaintyProvider
+            self.tes_tool = TESUncertaintyProvider(
+                    os.path.normpath(TESP.RESOURCE_PATH), '', 'mc11')
+        elif self.year == 2012:
+            # TODO use medium and tight?
+            self.tes_tool = TauCorrUncert.TESUncertainty(
+                    TCU.get_resource('TES/mc12_p1344_medium.root'))
+        else:
+            raise ValueError('No TES defined for year %d' % self.year)
 
     @TauSystematic.set
     def run(self, tau, event):
@@ -298,7 +326,8 @@ class TES(TauSystematic):
         pt = tau.pt
         eta = tau.eta
         nProng = tau.nProng
-        shift = self.tes_tool.GetTESUncertainty(pt / 1e3, eta, nProng)
+        # TODO: include 2011 TES in TauCorrUncert and use MeV there also!!!
+        shift = self.tes_tool.GetTESUncertainty(pt, eta, nProng)
         if shift < 0:
             shift = 0
         if not self.is_up:
@@ -493,8 +522,14 @@ class Systematics(EventFilter):
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
+
         self.systematics = []
         self.terms = set([])
+        self.datatype = datatype
+        self.year = year
+        self.channel = channel
+        self.verbose = verbose
+        self.very_verbose = very_verbose
 
         if terms is not None:
             # remove possible duplicates
@@ -502,40 +537,35 @@ class Systematics(EventFilter):
             self.terms = terms
             for term in terms:
                 if term == Systematics.JES_UP:
-                    systematic = JES(True, sys_util=self, verbose=verbose, channel=channel)
+                    systematic = JES(True, sys_util=self)
                 elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, sys_util=self, verbose=verbose, channel=channel)
+                    systematic = JES(False, sys_util=self)
                 elif term == Systematics.JER_UP:
-                    systematic = JER(True, sys_util=self, verbose=verbose)
+                    systematic = JER(True, sys_util=self)
                 elif term == Systematics.TES_UP:
-                    systematic = TES(True, sys_util=self, verbose=verbose)
+                    systematic = TES(True, sys_util=self)
                 elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, sys_util=self, verbose=verbose)
+                    systematic = TES(False, sys_util=self)
                 elif term == Systematics.EES_UP:
-                    systematic = EES(True, datatype=datatype, sys_util=self,
-                            verbose=verbose)
+                    systematic = EES(True, sys_util=self,
+                        datatype=datatype)
                 elif term == Systematics.EES_DOWN:
-                    systematic = EES(False, datatype=datatype, sys_util=self,
-                            verbose=verbose)
+                    systematic = EES(False, sys_util=self,
+                        datatype=datatype)
                 elif term == Systematics.EER_UP:
-                    systematic = EER(True, sys_util=self, verbose=verbose)
+                    systematic = EER(True, sys_util=self)
                 elif term == Systematics.EER_DOWN:
-                    systematic = EER(False, sys_util=self, verbose=verbose)
+                    systematic = EER(False, sys_util=self)
                 elif term == Systematics.TAUBDT_UP:
-                    systematic = TauBDT(True, sys_util=self, verbose=verbose)
+                    systematic = TauBDT(True, sys_util=self)
                 elif term == Systematics.TAUBDT_DOWN:
-                    systematic = TauBDT(False, sys_util=self, verbose=verbose)
+                    systematic = TauBDT(False, sys_util=self)
                 else:
                     raise ValueError("systematic not supported")
                 self.systematics.append(systematic)
 
-        self.datatype = datatype
-        self.year = year
-        self.channel = channel
-        self.verbose = verbose
-        self.very_verbose = very_verbose
-
         # Initialise your METUtility object
+        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtility
         self.met_utility = METUtility()
 
         # configure
@@ -692,7 +722,7 @@ class Systematics(EventFilter):
                 event.el_MET_BDTMedium_wpx,
                 event.el_MET_BDTMedium_wpy,
                 event.el_MET_BDTMedium_statusWord)
-            
+
 
 
         if self.terms & Systematics.PHOTON_TERMS:
@@ -747,14 +777,14 @@ class Systematics(EventFilter):
                 event.mu_staco_MET_BDTMedium_wpx,
                 event.mu_staco_MET_BDTMedium_wpy,
                 event.mu_staco_MET_BDTMedium_statusWord)
-            
+
             # In this instance there is an overloaded version of
             # setExtraMuonParameters that accepts smeared pTs for spectro
             self.met_utility.setExtraMuonParameters(
                 event.mu_staco_ptcone30, # or smeared pT
                 event.mu_staco_ms_theta,
                 event.mu_staco_ms_phi)
-            
+
 
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
@@ -793,8 +823,7 @@ class Systematics(EventFilter):
                 event.tau_MET_BDTMedium_wpx,
                 event.tau_MET_BDTMedium_wpy,
                 event.tau_MET_BDTMedium_statusWord)
-             
-            
+
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
             event.MET_SoftJets_BDTMedium_etx,
@@ -823,6 +852,10 @@ class Systematics(EventFilter):
         return True
 
     def passes_12(self, event):
+
+        # this must be put before setting the jets parameters
+        self.met_utility.setJetPUcode(MissingETTags.JPU_JET_JVFCUT)
+
         """
         JETS
         Always use setJetParameters since they may be recalibrated upstream
@@ -832,10 +865,10 @@ class Systematics(EventFilter):
             event.jet_eta,
             event.jet_phi,
             event.jet_E,
-            event.jet_AntiKt4LCTopo_MET_STVF_wet,
-            event.jet_AntiKt4LCTopo_MET_STVF_wpx,
-            event.jet_AntiKt4LCTopo_MET_STVF_wpy,
-            event.jet_AntiKt4LCTopo_MET_STVF_statusWord)
+            event.jet_AntiKt4LCTopo_MET_wet,
+            event.jet_AntiKt4LCTopo_MET_wpx,
+            event.jet_AntiKt4LCTopo_MET_wpy,
+            event.jet_AntiKt4LCTopo_MET_statusWord)
 
         self.met_utility.setOriJetParameters(event.jet_pt)
 
@@ -855,33 +888,32 @@ class Systematics(EventFilter):
                 event.el_pt,
                 event.el_eta,
                 event.el_phi,
-                event.el_MET_STVF_wet,
-                event.el_MET_STVF_wpx,
-                event.el_MET_STVF_wpy,
-                event.el_MET_STVF_statusWord)
+                event.el_MET_wet,
+                event.el_MET_wpx,
+                event.el_MET_wpy,
+                event.el_MET_statusWord)
         else:
             self.met_utility.setMETTerm(
                 METUtil.RefEle,
-                event.MET_RefEle_STVF_etx,
-                event.MET_RefEle_STVF_ety,
-                event.MET_RefEle_STVF_sumet)
-
+                event.MET_RefEle_etx,
+                event.MET_RefEle_ety,
+                event.MET_RefEle_sumet)
 
         if self.terms & Systematics.PHOTON_TERMS:
             self.met_utility.setPhotonParameters(
                 event.ph_pt,
                 event.ph_eta,
                 event.ph_phi,
-                event.ph_MET_STVF_wet,
-                event.ph_MET_STVF_wpx,
-                event.ph_MET_STVF_wpy,
-                event.ph_MET_STVF_statusWord)
+                event.ph_MET_wet,
+                event.ph_MET_wpx,
+                event.ph_MET_wpy,
+                event.ph_MET_statusWord)
         else:
             self.met_utility.setMETTerm(
                 METUtil.RefGamma,
-                event.MET_RefGamma_STVF_etx,
-                event.MET_RefGamma_STVF_ety,
-                event.MET_RefGamma_STVF_sumet)
+                event.MET_RefGamma_etx,
+                event.MET_RefGamma_ety,
+                event.MET_RefGamma_sumet)
 
         """
         MUONS
@@ -891,10 +923,10 @@ class Systematics(EventFilter):
                 event.mu_staco_pt, # or smeared pT
                 event.mu_staco_eta,
                 event.mu_staco_phi,
-                event.mu_staco_MET_STVF_wet,
-                event.mu_staco_MET_STVF_wpx,
-                event.mu_staco_MET_STVF_wpy,
-                event.mu_staco_MET_STVF_statusWord)
+                event.mu_staco_MET_wet,
+                event.mu_staco_MET_wpx,
+                event.mu_staco_MET_wpy,
+                event.mu_staco_MET_statusWord)
 
             # In this instance there is an overloaded version of
             # setExtraMuonParameters that accepts smeared pTs for spectro
@@ -905,17 +937,17 @@ class Systematics(EventFilter):
         else:
             self.met_utility.setMETTerm(
                 METUtil.MuonTotal,
-                event.MET_Muon_Total_Staco_STVF_etx,
-                event.MET_Muon_Total_Staco_STVF_ety,
-                event.MET_Muon_Total_Staco_STVF_sumet)
+                event.MET_Muon_Total_Staco_etx,
+                event.MET_Muon_Total_Staco_ety,
+                event.MET_Muon_Total_Staco_sumet)
 
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
         self.met_utility.setMETTerm(
             METUtil.RefMuon,
-            event.MET_RefMuon_Staco_STVF_etx,
-            event.MET_RefMuon_Staco_STVF_ety,
-            event.MET_RefMuon_Staco_STVF_sumet)
+            event.MET_RefMuon_Staco_etx,
+            event.MET_RefMuon_Staco_ety,
+            event.MET_RefMuon_Staco_sumet)
 
         """
         TAUS
@@ -925,34 +957,30 @@ class Systematics(EventFilter):
                 event.tau_pt,
                 event.tau_eta,
                 event.tau_phi,
-                event.tau_MET_STVF_wet,
-                event.tau_MET_STVF_wpx,
-                event.tau_MET_STVF_wpy,
-                event.tau_MET_STVF_statusWord)
+                event.tau_MET_wet,
+                event.tau_MET_wpx,
+                event.tau_MET_wpy,
+                event.tau_MET_statusWord)
         else:
             self.met_utility.setMETTerm(
                 METUtil.RefTau,
-                event.MET_RefTau_STVF_etx,
-                event.MET_RefTau_STVF_ety,
-                event.MET_RefTau_STVF_sumet)
-
-        #self.met_utility.setMETTerm(
-        #    METUtil.SoftJets,
-        #    event.MET_SoftJets_STVF_etx,
-        #    event.MET_SoftJets_STVF_ety,
-        #    event.MET_SoftJets_STVF_sumet) NOT NEEDED??
+                event.MET_RefTau_etx,
+                event.MET_RefTau_ety,
+                event.MET_RefTau_sumet)
 
         self.met_utility.setMETTerm(
             METUtil.CellOutEflow,
-            event.MET_CellOutCorr_STVF_etx,
-            event.MET_CellOutCorr_STVF_ety,
-            event.MET_CellOutCorr_STVF_sumet)
+            event.MET_CellOut_Eflow_STVF_etx,
+            event.MET_CellOut_Eflow_STVF_ety,
+            event.MET_CellOut_Eflow_STVF_sumet)
 
         MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
             print "Recalculated MET: %.3f (original: %.3f)" % (
                     MET.et(), event.MET_RefFinal_STVF_et)
+            print "Recalculated MET phi: %.3f (original: %.3f)" % (
+                    MET.phi(), event.MET_RefFinal_STVF_phi)
 
         # update the MET with the shifted value
         event.MET_RefFinal_STVF_etx = MET.etx()

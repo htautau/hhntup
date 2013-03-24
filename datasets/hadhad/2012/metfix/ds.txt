@@ -1,0 +1,4 @@
+group.perf-tau.data12_8TeV.00215063.physics_JetTauEtmiss.f495_m1266.met_fix.test.D3PD_EXT0/
+group.perf-tau.data12_8TeV.00215091.physics_JetTauEtmiss.f495_m1266.met_fix.test.D3PD_EXT0/
+data12_8TeV.00215063.physics_JetTauEtmiss.merge.NTUP_TAU.f495_m1266_p1344/
+data12_8TeV.00215091.physics_JetTauEtmiss.merge.NTUP_TAU.f495_m1266_p1344/

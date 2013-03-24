@@ -192,6 +192,22 @@ class NoMatchingDatasetsFound(Exception):
     pass
 
 
+GLOBAL_BASE = '/global/'
+
+
+def find_global(path):
+
+    if not path.startswith('/global/'):
+        raise ValueError("path must be absolute and rooted at /global")
+
+    path = re.sub('^/global/', '/cluster/data%02d/export/', path)
+
+    for node in range(1, 13):
+        if os.path.exists(path % node):
+            return path % node
+    raise IOError('path %s does not exist' % path)
+
+
 class Database(dict):
 
     @classmethod
@@ -252,16 +268,19 @@ class Database(dict):
 
     def validate(self,
                  pattern=None,
-                 datatype=MC):
-
+                 datatype=None,
+                 year=None):
         ds = {}
         for name, info in self.items():
-            if info.datatype == datatype:
-                if datatype == DATA and info.id < 0:
-                    # only validate data run datasets
-                    continue
-                if pattern is None or fnmatch.fnmatch(name, pattern):
-                    ds[name] = info
+            if year is not None and info.year != year:
+                continue
+            if datatype is not None and info.datatype != datatype:
+                continue
+            if info.datatype == DATA and info.id < 0:
+                # only validate data run datasets
+                continue
+            if pattern is None or fnmatch.fnmatch(name, pattern):
+                ds[name] = info
         incomplete = []
         for name, info in sorted(ds.items(), key=lambda item: item[0]):
             print "Validating %s ..." % name
@@ -367,6 +386,7 @@ class Database(dict):
                             if tag != dataset.tag:
                                 this_reco = int(tag_match.group('reco'))
                                 other_reco = int(
+
                                     re.match(dataset.tag_pattern,
                                              dataset.tag).group('reco'))
                                 use_mergetag = True
@@ -951,6 +971,8 @@ class Dataset(yaml.YAMLObject):
 
         _files = []
         for dir in self.dirs:
+            if not os.path.exists(dir):
+                raise IOError("%s is not readable" % dir)
             for path, dirs, files in os.walk(dir):
                 _files += [os.path.join(path, f) for f in
                            fnmatch.filter(files, self.file_pattern)]
@@ -958,8 +980,9 @@ class Dataset(yaml.YAMLObject):
 
     def __str__(self):
 
-        return "%s:\n\t%s" % (
+        return "%s (%d files):\n\t%s" % (
                 self.name,
+                len(self.files),
                 self.ds)
 
 def dataset_constructor(loader, node):
@@ -1095,7 +1118,8 @@ if __name__ == '__main__':
     parser.add_argument('--versioned', action='store_true', default=False)
     parser.add_argument('--validate', action='store_true', default=False)
     parser.add_argument('--validate-pattern', default=None)
-    parser.add_argument('--validate-type', default='MC')
+    parser.add_argument('--validate-type', default=None)
+    parser.add_argument('--validate-year', type=int, default=None)
     parser.add_argument('--info', action='store_true', default=False)
 
     """
@@ -1122,24 +1146,36 @@ if __name__ == '__main__':
 
     if args.analysis == 'hh':
         args.versioned = True
-        args.name = 'datasets_hh'
+        args.name += '_hh'
     elif args.analysis == 'lh':
         args.versioned = True
-        args.name = 'datasets_lh'
+        args.name += '_lh'
 
     db = Database(
             name=args.name,
             verbose=args.verbose)
 
-    if args.info:
+    if args.validate or args.validate_pattern is not None:
+        # check for missing events etc...
+        validate_type = args.validate_type
+        if validate_type is not None:
+            validate_type = args.validate_type.upper()
+            validate_type = eval(validate_type)
+        db.validate(pattern=args.validate_pattern,
+                    datatype=validate_type,
+                    year=args.validate_year)
+    elif args.info:
+        print "%i datasets in database" % len(db)
         for name in sorted(db.keys()):
-            print "%s => %s" % (name, db[name].ds)
-        sys.exit()
+            print db[name]
+            if len(db[name].files) == 0:
+                print "EMPTY DATASET"
+                sys.exit(1)
 
-    if args.reset:
-        db.clear()
+    else:
+        if args.reset:
+            db.clear()
 
-    if not args.validate and not args.validate_pattern:
         with open(args.config) as config:
             config_dict = yaml.load(config)
             for year, year_config in config_dict.items():
@@ -1152,16 +1188,4 @@ if __name__ == '__main__':
                         deep=args.deep,
                         versioned=args.versioned,
                         **params)
-    elif args.validate or args.validate_pattern is not None:
-        # check for missing events etc...
-        validate_type = args.validate_type.upper()
-        validate_type = eval(validate_type)
-        db.validate(pattern=args.validate_pattern,
-                    datatype=validate_type)
-    else:
-        if args.info:
-            print "%i datasets in database" % len(db)
-        else:
-            for name in sorted(db.keys()):
-                print "%s => %s" % (name, db[name].ds)
-    db.write()
+        db.write()

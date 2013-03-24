@@ -25,6 +25,8 @@ class EventVariables(TreeModel):
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 
+    tau_trigger_match_error = BoolCol(default=False)
+
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
     tau1_x = FloatCol()
@@ -57,6 +59,7 @@ class EventVariables(TreeModel):
     dR_jets = FloatCol()
     dR_quark_tau = FloatCol()
     dR_tau1_tau2 = FloatCol()
+    dEta_tau1_tau2 = FloatCol()
     dPhi_tau1_tau2 = FloatCol()
 
     dEta_quarks = FloatCol()
@@ -66,6 +69,7 @@ class EventVariables(TreeModel):
     eta_product_jets_boosted = FloatCol()
 
     numJets = IntCol()
+    nonisolatedjet = BoolCol()
 
     MET = FloatCol()
     MET_x = FloatCol()
@@ -85,10 +89,11 @@ class EventVariables(TreeModel):
 
     sumET = FloatCol()
 
-    error = BoolCol()
     jet_transformation = LorentzRotation
     jet_beta = Vector3
     parton_beta = Vector3
+
+    error = BoolCol()
     cutflow = IntCol()
 
     sphericity = FloatCol()
@@ -99,6 +104,9 @@ class EventVariables(TreeModel):
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
+
+    ntrack_pv = IntCol()
+    ntrack_nontau_pv = IntCol()
 
 
 class EmbeddingBlock(TreeModel):
@@ -163,18 +171,14 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     @classmethod
     def set(cls, event, tree, tau1, tau2):
 
-        if tau1 is not None and tau2 is not None:
-            tree.mass_vis_tau1_tau2 = utils.Mvis(
-                    tau1.Et, tau1.seedCalo_phi, tau2.Et, tau2.seedCalo_phi)
-            tree.mass2_vis_tau1_tau2 = (tau1.fourvect + tau2.fourvect).M()
-            tree.theta_tau1_tau2 = tau1.fourvect.Angle(tau2.fourvect)
-            tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
-            tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
-            tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+        tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
+        tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
+        tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
+        tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
+        tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
-            if intau is None:
-                continue
+
             FourMomentum.set(outtau, intau)
 
             outtau.BDTJetScore = intau.BDTJetScore
@@ -188,22 +192,55 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.seedCalo_numTrack = intau.seedCalo_numTrack
             outtau.numTrack = intau.numTrack
             outtau.charge = intau.charge
-            outtau.jet_jvtxf = intau.jet_jvtxf
+            outtau.jvtxf = intau.jet_jvtxf
 
             outtau.centrality = intau.centrality
             outtau.centrality = intau.centrality_boosted
 
-            outtau.efficiency_scale_factor = intau.efficiency_scale_factor
-            outtau.efficiency_scale_factor_high = intau.efficiency_scale_factor_high
-            outtau.efficiency_scale_factor_low = intau.efficiency_scale_factor_low
+            # use SFs exclusively
+            if intau.JetBDTSigTight:
+                if intau.matched:
+                    outtau.efficiency_scale_factor = intau.id_eff_sf_tight
+                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_tight_high
+                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_tight_low
+                else:
+                    outtau.fakerate_scale_factor = intau.fakerate_sf_tight
+                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_tight_high
+                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_tight_low
 
-            outtau.fakerate_scale_factor = intau.fakerate_scale_factor
-            outtau.fakerate_scale_factor_high = intau.fakerate_scale_factor_high
-            outtau.fakerate_scale_factor_low = intau.fakerate_scale_factor_low
+                outtau.trigger_scale_factor = intau.trigger_eff_sf_tight
+                outtau.trigger_scale_factor_high = intau.trigger_eff_sf_tight_high
+                outtau.trigger_scale_factor_low = intau.trigger_eff_sf_tight_low
 
-            outtau.trigger_scale_factor = intau.trigger_scale_factor
-            outtau.trigger_scale_factor_high = intau.trigger_scale_factor_high
-            outtau.trigger_scale_factor_low = intau.trigger_scale_factor_low
+            elif intau.JetBDTSigMedium:
+                if intau.matched:
+                    outtau.efficiency_scale_factor = intau.id_eff_sf_medium
+                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_medium_high
+                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_medium_low
+                else:
+                    outtau.fakerate_scale_factor = intau.fakerate_sf_medium
+                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_medium_high
+                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_medium_low
+
+                outtau.trigger_scale_factor = intau.trigger_eff_sf_medium
+                outtau.trigger_scale_factor_high = intau.trigger_eff_sf_medium_high
+                outtau.trigger_scale_factor_low = intau.trigger_eff_sf_medium_low
+
+            else:
+                if intau.matched:
+                    outtau.efficiency_scale_factor = intau.id_eff_sf_loose
+                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_loose_high
+                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_loose_low
+                else:
+                    outtau.fakerate_scale_factor = intau.fakerate_sf_loose
+                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_loose_high
+                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_loose_low
+
+                outtau.trigger_scale_factor = intau.trigger_eff_sf_loose
+                outtau.trigger_scale_factor_high = intau.trigger_eff_sf_loose_high
+                outtau.trigger_scale_factor_low = intau.trigger_eff_sf_loose_low
+
+
             outtau.trigger_match_thresh = intau.trigger_match_thresh
 
             outtau.matched = intau.matched

@@ -8,13 +8,12 @@ warnings.filterwarnings('error', category=np.ComplexWarning)
 import ROOT
 import math
 
-from argparse import ArgumentParser
-
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.math.physics.vector import Vector2
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
+from rootpy.extern.argparse import ArgumentParser
 
 from atlastools import datasets
 from atlastools import utils
@@ -43,7 +42,8 @@ from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.pileup import PileupReweight
+from higgstautau.pileup import (PileupReweight, averageIntPerXingPatch,
+                                get_pileup_reweighting_tool)
 from higgstautau.hadhad.objects import define_objects
 
 from goodruns import GRL
@@ -64,6 +64,7 @@ class HHProcessor(ATLASStudent):
         super(HHProcessor, self).__init__(**kwargs)
         parser = ArgumentParser()
         parser.add_argument('--syst-terms', default=None)
+        parser.add_argument('--redo-mmc', default=False, action='store_true')
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = set([
@@ -90,6 +91,12 @@ class HHProcessor(ATLASStudent):
         """
         datatype = self.metadata.datatype
         year = self.metadata.year
+        redo_mmc = self.args.redo_mmc
+
+        # get pileup reweighting tool
+        pileup_tool = get_pileup_reweighting_tool(
+            year=year,
+            use_defaults=True)
 
         OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
 
@@ -108,7 +115,7 @@ class HHProcessor(ATLASStudent):
         onfilechange = []
         count_funcs = {}
 
-        if datatype == datasets.MC:
+        if datatype in (datasets.MC, datasets.EMBED):
 
             def mc_weight_count(event):
                 return event.mc_event_weight
@@ -157,9 +164,8 @@ class HHProcessor(ATLASStudent):
                 self.metadata.treename,
                 files=self.files,
                 events=self.events,
+                read_branches_on_demand=True,
                 cache=True,
-                cache_size=10000000,
-                learn_entries=30,
                 onfilechange=onfilechange)
 
         # create output tree
@@ -183,8 +189,6 @@ class HHProcessor(ATLASStudent):
 
         # set the event filters
         event_filters = EventFilterList([
-            CoreFlags(
-                count_funcs=count_funcs),
             GRLFilter(
                 self.grl,
                 passthrough=datatype != datasets.DATA,
@@ -192,6 +196,9 @@ class HHProcessor(ATLASStudent):
             #EmbeddingPileupPatch(
             #    passthrough=year > 2011 or datatype != datasets.EMBED,
             #    count_funcs=count_funcs),
+            averageIntPerXingPatch(
+                passthrough=year < 2012 or datatype != datasets.MC,
+                count_funcs=count_funcs),
             #Triggers(
             #    year=year,
             #    old_skim=datatype == datasets.MC,
@@ -263,29 +270,35 @@ class HHProcessor(ATLASStudent):
             #    datatype=datatype,
             #    passthrough=datatype == datasets.EMBED,
             #    count_funcs=count_funcs),
-            #TauLeadSublead(
-            #    lead=35 * GeV,
-            #    sublead=25 * GeV,
-            #    count_funcs=count_funcs),
-            #TauTriggerMatchThreshold(
-            #    passthrough=datatype == datasets.EMBED,
-            #    count_funcs=count_funcs),
-            #TauTriggerEfficiency(
-            #    year=year,
-            #    datatype=datatype,
-            #    tes_systematic=self.args.syst_terms and (
-            #        Systematics.TES_TERMS & self.args.syst_terms),
-            #    passthrough=datatype == datasets.DATA,
-            #    count_funcs=count_funcs),
-            #PileupReweight(
-            #    year=year,
-            #    tree=tree,
-            #    passthrough=datatype != datasets.MC,
-            #    count_funcs=count_funcs),
-            #EfficiencyScaleFactors(
-            #    year=year,
-            #    passthrough=datatype != datasets.MC,
-            #    count_funcs=count_funcs),
+            TauSelected(2,
+                count_funcs=count_funcs),
+            # apply this selection here since skim has lower threshold for data
+            TauLeadSublead(
+                lead=35 * GeV,
+                sublead=25 * GeV,
+                count_funcs=count_funcs),
+            TauTriggerMatchThreshold(
+                tree=tree,
+                passthrough=datatype == datasets.EMBED,
+                count_funcs=count_funcs),
+            TauTriggerEfficiency(
+                year=year,
+                datatype=datatype,
+                tree=tree,
+                pileup_tool=pileup_tool,
+                tes_systematic=self.args.syst_terms and (
+                    Systematics.TES_TERMS & self.args.syst_terms),
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
+            PileupReweight(
+                tool=pileup_tool,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            EfficiencyScaleFactors(
+                year=year,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
             #FakeRateScaleFactors(
             #    year=year,
             #    passthrough=datatype != datasets.MC,
@@ -299,8 +312,6 @@ class HHProcessor(ATLASStudent):
             #TauTrackRecounting(
             #    year=year,
             #    count_funcs=count_funcs),
-            TauSelected(2,
-                count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
             TruthMatching(
@@ -314,6 +325,13 @@ class HHProcessor(ATLASStudent):
             EmbeddingIsolation(
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            JetPreselection(
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
+            NonIsolatedJet(
+                tree=tree,
+                passthrough=year < 2012,
                 count_funcs=count_funcs),
             JetSelection(
                 year=year,
@@ -337,8 +355,9 @@ class HHProcessor(ATLASStudent):
         chain.define_association(origin='truetaus', target='taus', prefix='tauAssoc_', link='index')
         """
 
-        # create MMC object
-        #mmc = mass.MMC(year=year, channel='hh')
+        if redo_mmc:
+            # create MMC object
+            mmc = mass.MMC(year=year, channel='hh')
 
         # entering the main event loop...
         for event in chain:
@@ -448,6 +467,17 @@ class HHProcessor(ATLASStudent):
                 # aplanarity
                 tree.aplanarity = aplanarity
 
+            # number of tracks from PV minus taus
+            ntrack_pv = 0
+            ntrack_nontau_pv = 0
+            for vxp in event.vertices:
+                if vxp.type == 1:
+                    ntrack_pv = vxp.nTracks
+                    ntrack_nontau_pv = ntrack_pv - tau1.numTrack - tau2.numTrack
+                    break
+            tree.ntrack_pv = ntrack_pv
+            tree.ntrack_nontau_pv = ntrack_nontau_pv
+
             # Jet variables
             tree.numJets = len(event.jets)
             tree.sum_pt = sum(
@@ -483,12 +513,15 @@ class HHProcessor(ATLASStudent):
                     tau2.fourvect,
                     MET_vect)
 
-            # Mass (use values in skim)
-            #mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-            #        tau1, tau2, METx, METy, sumET)
-            mmc_mass = event.tau_MMC_mass
-            mmc_resonance = event.tau_MMC_resonance
-            mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
+            # MMC Mass
+            if redo_mmc:
+                mmc_mass, mmc_resonance, mmc_met = mmc.mass(
+                        tau1, tau2, METx, METy, sumET)
+            else:
+                # use MMC values from skim
+                mmc_mass = event.tau_MMC_mass
+                mmc_resonance = event.tau_MMC_resonance
+                mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
 
             tree.mass_mmc_tau1_tau2 = mmc_mass
             tree.mmc_resonance.set_from(mmc_resonance)
@@ -520,8 +553,10 @@ class HHProcessor(ATLASStudent):
                 tau2.fourvect, taumode2,
                 METx, METy, MET_res, 5) / GeV
             """
-            collin_mass, tau1_x, tau2_x = mass.collinearmass(tau1, tau2, METx, METy)
-            tree.mass_collinear_tau1_tau2 = collin_mass
+            mass_vis, mass_col, tau1_x, tau2_x = mass.collinearmass(
+                    tau1, tau2, METx, METy)
+            tree.mass_collinear_tau1_tau2 = mass_col
+            tree.mass_vis_tau1_tau2 = mass_vis
             tree.tau1_x = tau1_x
             tree.tau2_x = tau2_x
 
@@ -568,8 +603,8 @@ class HHProcessor(ATLASStudent):
                     if matching_truth_index >= 0:
                         unmatched_reco.remove(i)
                         # check that this tau / true tau was not previously matched
-                        if matching_truth_index not in unmatched_truth or \
-                           matching_truth_index in matched_truth:
+                        if (matching_truth_index not in unmatched_truth or
+                            matching_truth_index in matched_truth):
                             print "ERROR: match collision!"
                             tau1.matched_collision = True
                             tau2.matched_collision = True

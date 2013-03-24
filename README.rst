@@ -57,3 +57,12 @@ External Tools
 
 higgspy depends on various external tools to perform systematics etc. See
 ``EXTERNALTOOLS_README.txt`` for further instructions.
+
+Also see the Htautau common ntuple production:
+https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauCommonNtupleProduction
+
+
+Recommendations
+===============
+
+https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis

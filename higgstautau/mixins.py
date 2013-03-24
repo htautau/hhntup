@@ -1,7 +1,8 @@
 import math
 from decorators import cached_property
-from rootpy.math.physics.vector import LorentzVector
+from rootpy.math.physics.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
+from atlastools.utils import dR
 from atlastools.units import GeV
 
 """
@@ -20,11 +21,42 @@ __all__ = [
 ]
 
 
-class FourMomentum(object):
+class MatchedObject(object):
+
+    def __init__(self):
+
+        self.matched = False
+        self.matched_dR = 9999.
+        self.matched_collision = False
+        self.matched_object = None
+
+    def matches(self, other, thresh=.2):
+
+        return self.dr(other) < thresh
+
+    def dr(self, other):
+
+        return dR(self.eta, self.phi, other.eta, other.phi)
+
+    def dr_vect(self, other):
+
+        return dR(self.eta, self.phi, other.Eta(), other.Phi())
+
+    def angle_vect(self, other):
+
+        return self.fourvect.Angle(other)
+
+    def matches_vect(self, vect, thresh=.2):
+
+        return self.dr_vect(vect) < thresh
+
+
+class FourMomentum(MatchedObject):
 
     def __init__(self):
 
         self.fourvect_boosted = LorentzVector()
+        super(FourMomentum, self).__init__()
 
     @cached_property
     def fourvect(self):
@@ -83,10 +115,6 @@ class TauFourMomentum(FourMomentum):
         self.centrality = 0.
         self.centrality_boosted = 0.
 
-        self.matched = False
-        self.matched_dR = 9999.
-        self.matched_collision = False
-
         # vertex association
         self.vertex_prob = 0.
 
@@ -109,6 +137,14 @@ class TauFourMomentum(FourMomentum):
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
         return vect
 
+    """
+    @cached_property
+    def fourvect_trk(self):
+
+        vect = LorentzVector()
+        #for itrk in self.
+    """
+
     @cached_property
     def leadtrack_idx(self):
         """
@@ -123,6 +159,37 @@ class TauFourMomentum(FourMomentum):
                 ldtrkpt = pt
         return ldtrkindex
 
+    @cached_property
+    def privtx(self):
+
+        return Vector3(
+                self.privtx_x,
+                self.privtx_y,
+                self.privtx_z)
+
+    @cached_property
+    def secvtx(self):
+
+        return Vector3(
+                self.secvtx_x,
+                self.secvtx_y,
+                self.secvtx_z)
+
+    @cached_property
+    def decay_vect(self):
+
+        return self.secvtx - self.privtx
+
+    @cached_property
+    def decay_length(self):
+
+        return self.decay_vect.Mag()
+
+    @cached_property
+    def decay_angle(self):
+
+        return self.decay_vect.Angle(self.fourvect)
+
 
 class TauFourMomentumSkim(TauFourMomentum):
 
@@ -130,21 +197,51 @@ class TauFourMomentumSkim(TauFourMomentum):
 
         super(TauFourMomentumSkim, self).__init__()
 
+        SF_DEFAULT = 1.
+
         self.trigger_match_thresh = 0
         self.trigger_match_index = -1
 
-        self.efficiency_scale_factor = 1.
-        self.efficiency_scale_factor_high = 1.
-        self.efficiency_scale_factor_low = 1.
+        # tau id efficiency scale factors
+        self.id_eff_sf_loose = SF_DEFAULT
+        self.id_eff_sf_loose_high = SF_DEFAULT
+        self.id_eff_sf_loose_low = SF_DEFAULT
 
-        self.fakerate_scale_factor = 1.
-        self.fakerate_scale_factor_high = 1.
-        self.fakerate_scale_factor_low = 1.
+        self.id_eff_sf_medium = SF_DEFAULT
+        self.id_eff_sf_medium_high = SF_DEFAULT
+        self.id_eff_sf_medium_low = SF_DEFAULT
 
-        self.trigger_scale_factor = 1.
-        self.trigger_scale_factor_high = 1.
-        self.trigger_scale_factor_low = 1.
+        self.id_eff_sf_tight = SF_DEFAULT
+        self.id_eff_sf_tight_high = SF_DEFAULT
+        self.id_eff_sf_tight_low = SF_DEFAULT
 
+        # fakerate scale factors
+        self.fakerate_sf_loose = SF_DEFAULT
+        self.fakerate_sf_loose_high = SF_DEFAULT
+        self.fakerate_sf_loose_low = SF_DEFAULT
+
+        self.fakerate_sf_medium = SF_DEFAULT
+        self.fakerate_sf_medium_high = SF_DEFAULT
+        self.fakerate_sf_medium_low = SF_DEFAULT
+
+        self.fakerate_sf_tight = SF_DEFAULT
+        self.fakerate_sf_tight_high = SF_DEFAULT
+        self.fakerate_sf_tight_low = SF_DEFAULT
+
+        # trigger efficiency scale factors
+        self.trigger_eff_sf_loose = SF_DEFAULT
+        self.trigger_eff_sf_loose_high = SF_DEFAULT
+        self.trigger_eff_sf_loose_low = SF_DEFAULT
+
+        self.trigger_eff_sf_medium = SF_DEFAULT
+        self.trigger_eff_sf_medium_high = SF_DEFAULT
+        self.trigger_eff_sf_medium_low = SF_DEFAULT
+
+        self.trigger_eff_sf_tight = SF_DEFAULT
+        self.trigger_eff_sf_tight_high = SF_DEFAULT
+        self.trigger_eff_sf_tight_low = SF_DEFAULT
+
+        # colliniear mass approx
         self.collinear_momentum_fraction = -9999.
 
         # track recounting
@@ -158,6 +255,26 @@ class MCTauFourMomentum(FourMomentum):
 
         vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        return vect
+
+
+class ElectronFourMomentum(FourMomentum):
+
+    @cached_property
+    def fourvect(self):
+
+        if ((self.nSCTHits + self.nPixHits) < 4):
+            # electron with low number of tracker hits
+            eta = self.cl_eta
+            phi = self.cl_phi
+            et  = self.cl_E / math.cosh(self.cl_eta)
+        else:
+            eta = self.tracketa
+            phi = self.trackphi
+            et  = self.cl_E / math.cosh(self.tracketa)
+
+        vect = LorentzVector()
+        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
         return vect
 
 
@@ -333,23 +450,3 @@ class MCParticle(FourMomentum):
              self.vx_x,
              self.vx_y,
              self.vx_z)
-
-
-class ElectronFourMomentum(FourMomentum):
-
-    @cached_property
-    def fourvect(self):
-
-        if ((self.nSCTHits + self.nPixHits) < 4):
-            # electron with low number of tracker hits
-            eta = self.cl_eta
-            phi = self.cl_phi
-            et  = self.cl_E / math.cosh(self.cl_eta)
-        else:
-            eta = self.tracketa
-            phi = self.trackphi
-            et  = self.cl_E / math.cosh(self.tracketa)
-
-        vect = LorentzVector()
-        vect.SetPtEtaPhiE(et, eta, phi, self.cl_E)
-        return vect

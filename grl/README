@@ -1,12 +1,8 @@
-GRLs are taken from here:
-http://atlasdqm.web.cern.ch/atlasdqm/grlgen/Higgs/Higgs_tautau_lh_v1/
+ATLAS ALL GOOD GRLs
+http://atlasdqm.web.cern.ch/atlasdqm/grlgen/All_Good/
 
-AND this GRL with the actual GRL observed in the combined /lumi TObjString in
+AND the GRL with the actual GRL observed in the combined /lumi TObjString in
 the output ROOT file.
-
-See GRLs here:
-/afs/cern.ch/user/a/atlasdqm/grlgen/StandardGRL/All_Good_v3/ (don't use HEAD)
-/afs/cern.ch/user/a/atlasdqm/grlgen/Higgs/Higgs_tautau_lh_v1/
 
 To create the lumicalc histograms use the GRL here:
 https://atlas-lumicalc.cern.ch/ and add --plots in "Other Options:"

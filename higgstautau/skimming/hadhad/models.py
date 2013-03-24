@@ -12,11 +12,37 @@ class SkimModel(TreeModel):
     pileup_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 
+    @classmethod
+    def reset(cls, tree):
+
+        tree.tau_numTrack_recounted.clear()
+
+    @classmethod
+    def set(cls, tree, tau):
+
+        tree.tau_numTrack_recounted.push_back(
+            tau.numTrack_recounted)
+
 
 class TriggerMatching(TreeModel):
 
     tau_trigger_match_index = ROOT.vector('int')
     tau_trigger_match_thresh = ROOT.vector('int')
+    tau_trigger_match_error = BoolCol(default=False)
+
+    @classmethod
+    def reset(cls, tree):
+
+        tree.tau_trigger_match_index.clear()
+        tree.tau_trigger_match_thresh.clear()
+
+    @classmethod
+    def set(cls, tree, tau):
+
+        tree.tau_trigger_match_index.push_back(
+                tau.trigger_match_index)
+        tree.tau_trigger_match_thresh.push_back(
+                tau.trigger_match_thresh)
 
 
 class MassModel(TreeModel):
@@ -35,16 +61,61 @@ class MassModel(TreeModel):
     tau_visible_mass = FloatCol()
 
 
-class TauCorrections(TreeModel):
+class ScaleFactors(TreeModel):
 
-    tau_efficiency_scale_factor = ROOT.vector('float')
-    tau_efficiency_scale_factor_high = ROOT.vector('float')
-    tau_efficiency_scale_factor_low = ROOT.vector('float')
+    # tau id efficiency scale factors
+    id_eff_sf_loose = ROOT.vector('float')
+    id_eff_sf_loose_high = ROOT.vector('float')
+    id_eff_sf_loose_low = ROOT.vector('float')
 
-    tau_fakerate_scale_factor = ROOT.vector('float')
-    tau_fakerate_scale_factor_high = ROOT.vector('float')
-    tau_fakerate_scale_factor_low = ROOT.vector('float')
+    id_eff_sf_medium = ROOT.vector('float')
+    id_eff_sf_medium_high = ROOT.vector('float')
+    id_eff_sf_medium_low = ROOT.vector('float')
 
-    tau_trigger_scale_factor = ROOT.vector('float')
-    tau_trigger_scale_factor_high = ROOT.vector('float')
-    tau_trigger_scale_factor_low = ROOT.vector('float')
+    id_eff_sf_tight = ROOT.vector('float')
+    id_eff_sf_tight_high = ROOT.vector('float')
+    id_eff_sf_tight_low = ROOT.vector('float')
+
+    # fakerate scale factors
+    fakerate_sf_loose = ROOT.vector('float')
+    fakerate_sf_loose_high = ROOT.vector('float')
+    fakerate_sf_loose_low = ROOT.vector('float')
+
+    fakerate_sf_medium = ROOT.vector('float')
+    fakerate_sf_medium_high = ROOT.vector('float')
+    fakerate_sf_medium_low = ROOT.vector('float')
+
+    fakerate_sf_tight = ROOT.vector('float')
+    fakerate_sf_tight_high = ROOT.vector('float')
+    fakerate_sf_tight_low = ROOT.vector('float')
+
+    # trigger efficiency scale factors
+    trigger_eff_sf_loose = ROOT.vector('float')
+    trigger_eff_sf_loose_high = ROOT.vector('float')
+    trigger_eff_sf_loose_low = ROOT.vector('float')
+
+    trigger_eff_sf_medium = ROOT.vector('float')
+    trigger_eff_sf_medium_high = ROOT.vector('float')
+    trigger_eff_sf_medium_low = ROOT.vector('float')
+
+    trigger_eff_sf_tight = ROOT.vector('float')
+    trigger_eff_sf_tight_high = ROOT.vector('float')
+    trigger_eff_sf_tight_low = ROOT.vector('float')
+
+
+class TauCorrections(ScaleFactors.prefix('tau_')):
+
+    @classmethod
+    def reset(cls, tree):
+
+        attrs = ScaleFactors.get_attrs()
+        for name, value in attrs:
+            getattr(tree.tau, name).clear()
+
+    @classmethod
+    def set(cls, tree, tau):
+
+        attrs = ScaleFactors.get_attrs()
+        for name, value in attrs:
+            getattr(tree.tau, name).push_back(getattr(tau, name))
+
