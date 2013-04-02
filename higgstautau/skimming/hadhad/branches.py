@@ -33,7 +33,7 @@ REMOVE = [
     "L2_*",
 
     "muonTruth*",
-    # needed for JVF syst
+    # needed for JVF syst ONLY IN THE SIGNAL SAMPLES
     #"jet_antikt4truth_*",
     "collcand_*",
 
