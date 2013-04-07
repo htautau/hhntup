@@ -50,8 +50,8 @@ class TileTripReader(EventFilter):
 
         if not passthrough:
             from externaltools.bundle_2012 import TileTripReader
-            from ROOT import TTileTripReader
-            self.tool = TTileTripReader()
+            from ROOT import Root
+            self.tool = Root.TTileTripReader()
         super(TileTripReader, self).__init__(passthrough=passthrough, **kwargs)
 
     def passes(self, event):
