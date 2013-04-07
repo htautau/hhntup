@@ -46,12 +46,13 @@ class TileTripReader(EventFilter):
     """
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event
     """
-    def __init__(self, **kwargs):
+    def __init__(self, passthrough=False, **kwargs):
 
-        from externaltools import TileTripReader
-        from ROOT import TTileTripReader
-        self.tool = TTileTripReader()
-        super(TileTripReader, self).__init__(**kwargs)
+        if not passthrough:
+            from externaltools.bundle_2012 import TileTripReader
+            from ROOT import TTileTripReader
+            self.tool = TTileTripReader()
+        super(TileTripReader, self).__init__(passthrough=passthrough, **kwargs)
 
     def passes(self, event):
 
