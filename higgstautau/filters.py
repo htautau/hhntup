@@ -42,6 +42,32 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
+class TileTripReader(EventFilter):
+    """
+    https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event
+    """
+    def __init__(self, **kwargs):
+
+        from externaltools import TileTripReader
+        from ROOT import TTileTripReader
+        self.tool = TTileTripReader()
+        super(TileTripReader, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        # only apply between G - J
+        if event.RunNumber < 211522:
+            return True
+        if event.RunNumber > 215091:
+            return True
+        # returns false if the event is one with a saturation in a tile cell
+        # (bad MET).
+        return self.tool.checkEvent(
+                event.RunNumber,
+                event.lbn,
+                event.EventNumber)
+
+
 class JetCleaning(EventFilter):
 
     def __init__(self,

@@ -171,6 +171,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TileError(
                 count_funcs=count_funcs),
+            TileTripReader(
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
             JetCalibration(
                 datatype=datatype,
                 year=year,
