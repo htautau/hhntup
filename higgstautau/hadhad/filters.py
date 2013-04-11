@@ -145,16 +145,17 @@ class TruthMatching(EventFilter):
 
 class TauTrackRecounting(EventFilter):
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, year, datatype, **kwargs):
 
         self.year = year
+        self.datatype = datatype
         super(TauTrackRecounting, self).__init__(**kwargs)
 
     def passes(self, event):
 
         for tau in event.taus:
             tau.numTrack_recounted = track_counting.count_tracks(
-                    tau, event, self.year)
+                    tau, event, self.year, self.datatype)
         return True
 
 

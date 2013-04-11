@@ -1,13 +1,16 @@
 from atlastools import utils
+from atlastools import datasets
 from math import sin, tan, log
 
 
-def count_tracks(tau, event, year):
+def count_tracks(tau, event, year, datatype):
 
     year = year % 1000
     if year == 11:
         return count_tracks_2011(tau, event)
     elif year == 12:
+        if datatype == datasets.DATA:
+            return count_tracks_2012_data(tau, event)
         return count_tracks_2012(tau, event)
     raise ValueError('No track recounting defined for year %d' % year)
 
@@ -62,9 +65,9 @@ def count_tracks_2012(tau, event):
         if (trkpt / 1000.0 > 0.5
             and abs(trk.atTJVA_d0[tau_index]) < 1.0
             and abs(trk.atTJVA_z0[tau_index] * sinth) < 1.5
-            and trk.nPixHits > 1
             and trk.nBLHits > 0
-            and trk.nPixHits + trk.nSCTHits > 6):
+            and trk.nPixHits + trk.nPixelDeadSensors > 1
+            and trk.nPixHits + trk.nPixelDeadSensors + trk.nSCTHits + trk.nSCTDeadSensors > 6):
             iCheckKtTrack = 0
             for j in xrange(tau.track_atTJVA_n):
                 dR1 = utils.dR(tau.track_atTJVA_eta[j], tau.track_atTJVA_phi[j],
@@ -77,3 +80,8 @@ def count_tracks_2012(tau, event):
             if iCheckKtTrack>0:
                 nOuterKtTrack1 += 1
     return nOuterKtTrack1 + tau.track_atTJVA_n
+
+
+def count_tracks_2012_data(tau, event):
+
+    return tau.out_track_n_extended

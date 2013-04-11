@@ -103,7 +103,10 @@ KEEP = [
     "mu_staco_nSCTHoles",
     "mu_staco_nTRTHits",
     "mu_staco_nTRTOutliers",
-] + [ # variables needed for MET patch
+]
+
+"""
++ [ # variables needed for MET patch
     "tau_pt",
     "tau_eta",
     "tau_phi",
@@ -143,3 +146,4 @@ KEEP = [
     "MET_CellOut_Eflow_STVF_sumet",
     "MET_CellOut_Eflow_sumet",
 ]
+"""

@@ -171,7 +171,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TileError(
                 count_funcs=count_funcs),
-            TileTripReader(
+            TileTrips(
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
             JetCalibration(
@@ -283,6 +283,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauTrackRecounting(
                 year=year,
+                datatype=datatype,
                 count_funcs=count_funcs),
             EmbeddingIsolation(
                 tree=tree,
