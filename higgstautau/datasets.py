@@ -121,7 +121,7 @@ CN_DATA_PATTERN12 = re.compile(
         'data12_8TeV\.'
         '(?P<id>\S+)'
         '\.(?P<name>\w+)'
-        '((\.PhysCont)?)'
+        '((\.TunaCont.2013-March-29.v03)?)'
         '\.(?P<tag>\w+)'
         '_lhCN'
         '(v(?P<version1>\d+))?'

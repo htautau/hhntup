@@ -83,30 +83,15 @@ class EventVariables(TreeModel):
     mass_vis_tau_lep = FloatCol()
     pt_ratio_tau_lep = FloatCol()
     dphi_met_lep = FloatCol()
-    pt_balance_tau_lep = FloatCol()
-    sum_dphi_tau_lep = FloatCol()
     pt_vector_sum_all = FloatCol()
-    dpt_tau_lep = FloatCol()
-    HT_jets = FloatCol()
-    MET_over_resonance_pt = FloatCol()
-
-    MET_Reftau_pt = FloatCol()
 
     numJets = IntCol()
     numJets30 = IntCol()
     numJets50 = IntCol()
     btag = BoolCol()
-    #jet_fourvect = ROOT.vector('TLorentzVector')
-    #truthjet_fourvect = ROOT.vector('TLorentzVector')
-    #jet_jvtxf = ROOT.vector('float')
-    #jet_btag  = ROOT.vector('float')
 
     leadjet_fourvect = LorentzVector
-    leadjet_btag     = FloatCol()
-    leadjet_jvtxf    = FloatCol()
     subleadjet_fourvect = LorentzVector
-    subleadjet_btag     = FloatCol()
-    subleadjet_jvtxf    = FloatCol()
     
     sumPt = FloatCol()
     cutflow = IntCol()
@@ -121,12 +106,10 @@ class EventVariables(TreeModel):
     mass_j1_j2 = FloatCol()
     eta_product_j1_j2 = FloatCol()
     eta_delta_j1_j2 = FloatCol()
-    eta_balance_j1_j2 = FloatCol()
     tau_centrality_j1_j2 = FloatCol()
     lep_centrality_j1_j2 = FloatCol()
     tau_lep_centrality_j1_j2 = FloatCol()
     met_phi_centrality = FloatCol()
-    min_deta_tau_lep_j1_j2 = FloatCol()
     leadJetPt = FloatCol()
     sphericity = FloatCol()
 

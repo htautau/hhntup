@@ -26,9 +26,12 @@ SYSTEMATICS_LEPHAD = [
     ('ATLAS_JES_FWD_DOWN',),
     ('ATLAS_JES_FWD_UP',),
 
+    ('ATLAS_JER_DOWN',),
+    ('ATLAS_JER_UP',),
+
     ## TES systematics
-    #('ATLAS_TAU_ES_DOWN',),
-    #('ATLAS_TAU_ES_UP',),
+    ('ATLAS_TAU_ES_DOWN',),
+    ('ATLAS_TAU_ES_UP',),
 
     ## MET systematics
     #('ATLAS_MET_RESOSOFT_DOWN',),

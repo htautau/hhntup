@@ -704,6 +704,56 @@ def jet_preselection(jet):
 
     return True
 
+def jet_selection_2011(jet):
+    """ Finalizes the jet selection """
+
+    if not (jet.pt > 25 * GeV):
+        return False
+
+    if jet.pt > 50 * GeV:
+        # no JVF cut above 50
+        return True
+
+    # suppress forward jets
+    if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
+        return False
+
+    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
+        return False
+
+    if not (abs(jet.eta) < 4.5):
+        return False
+
+    return True
+
+
+def jet_selection_2012(jet):
+    """ Finalizes the jet selection
+    https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
+    """
+    
+    if not (jet.fourvect.Pt() > 30*GeV):
+        return False
+
+    return True
+
+
+class JetSelection(EventFilter):
+    """Selects jets of good quality, keep event in any case"""
+
+    def __init__(self, year, **kwargs):
+
+        self.year = year
+        super(JetSelection, self).__init__(**kwargs)
+
+    def passes(self, event):
+        
+        if self.year == 2011:
+            event.jets.select(jet_selection_2011)
+        elif self.year == 2012:
+            event.jets.select(jet_selection_2012)
+        return True
+
 ############################################################
 # OBJECT ANALYSIS FILTERS
 ############################################################
@@ -970,11 +1020,6 @@ class JetPreSelection(EventFilter):
 
         event.jets.select(lambda jet : jet_preselection(jet))
         return True
-
-
-# JetSelection is in the common filters
-# putting import here so I don't break lephad code for now...
-from ..filters import JetSelection
 
 
 ############################################################
