@@ -41,12 +41,12 @@
     common:
         grl: 'grl/2012/current.xml'
     hh:
-        mc_path: '/cluster/data11/endw/skims/p1344_v1'
+        mc_path: '/cluster/data11/endw/skims/p1344_v2'
         mc_prefix: 'group.phys-higgs.hhskim'
         mc_pattern: '*hadhad.root*'
         mc_treename: 'tau'
         mc_sampletype: 'standard'
-        data_path: '/global/common/higgstautau/skims/hadhad/newskims'
+        data_path: '/cluster/data11/endw/skims/p1344_v2'
         data_prefix: 'group.phys-higgs.hhskim'
         data_pattern: '*hadhad.root*'
         data_treename: 'tau'

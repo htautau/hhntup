@@ -68,8 +68,8 @@ MC_TAG_PATTERN1 = re.compile(
 # not all valid samples have a recomerge tag:
 MC_TAG_PATTERN2 = re.compile(
         '^e(?P<evnt>\d+)_'
-        's(?P<digi>\d+)_'
-        's(?P<digimerge>\d+)_'
+        '[sa](?P<digi>\d+)_'
+        '[sa](?P<digimerge>\d+)_'
         'r(?P<reco>\d+)_'
         'p(?P<ntup>\d+)$')
 
@@ -160,7 +160,7 @@ MC_CATEGORIES = {
               'merge': (3063, 2993, 2900)},
     'mc11c': {'reco':  (3043, 3060, 3108),
               'merge': (3109, 3063, 2993)},
-    'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542),
+    'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542, 3549),
               'merge': (3549,)}}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -413,18 +413,18 @@ class Database(dict):
                                 if take_this:
                                     print "taking %s over %s" % (
                                         basename, dataset.ds)
-                                    DATASETS[name] = Dataset(name=name,
-                                                             datatype=MC,
-                                                             treename=mc_treename,
-                                                             ds=ds_name,
-                                                             id=int(match.group('id')),
-                                                             category=cat,
-                                                             version=version,
-                                                             tag_pattern=MC_TAG_PATTERN.pattern,
-                                                             tag=tag,
-                                                             dirs=[dir],
-                                                             file_pattern=mc_pattern,
-                                                             year=year)
+                                    self[name] = Dataset(name=name,
+                                                         datatype=MC,
+                                                         treename=mc_treename,
+                                                         ds=ds_name,
+                                                         id=int(match.group('id')),
+                                                         category=cat,
+                                                         version=version,
+                                                         tag_pattern=MC_TAG_PATTERN.pattern,
+                                                         tag=tag,
+                                                         dirs=[dir],
+                                                         file_pattern=mc_pattern,
+                                                         year=year)
                             else:
                                 dataset.dirs.append(dir)
                         elif dataset is None or (
@@ -443,11 +443,11 @@ class Database(dict):
                                                  year=year)
                     elif self.verbose:
                         print "not a valid mc dataset name: %s" % basename
-                        
+
                 elif mc_sampletype == 'lhCN':
                     match  = re.match(CN_MC_PATTERN12, basename)
                     if match:
-                        
+
                         name = match.group('name')
                         cat = 'mc12a'
                         tag = match.group('tag')
@@ -476,7 +476,7 @@ class Database(dict):
                                                  dirs=[dir],
                                                  file_pattern=mc_pattern,
                                                  year=year)
-                        
+
 
         #####################################
         # EMBEDDING
@@ -547,7 +547,7 @@ class Database(dict):
                             for mfs, mfs_dirs in mfss.items():
                                 name = 'embed%d-%s-%s-%s' % (
                                     year % 1000, channel, isol, mfs)
-                                
+
                                 self[name] = Dataset(name,
                                                      datatype=EMBED,
                                                      treename=embed_treename,
@@ -580,7 +580,7 @@ class Database(dict):
 
                                 for period, info in periods.items():
                                     period_name = '%s-%s' % (name, period)
-                                    
+
                                     self[period_name] = Dataset(name=period_name,
                                                                 datatype=EMBED,
                                                                 treename=embed_treename,
@@ -590,7 +590,7 @@ class Database(dict):
                                                                 dirs=info['dirs'],
                                                                 file_pattern=embed_pattern,
                                                                 year=year)
-                                    
+
                     else:
                         # group dirs by mfs
                         mfss = {}
@@ -695,7 +695,7 @@ class Database(dict):
                                              dirs=mfs_dirs,
                                              file_pattern=embed_pattern,
                                              year=year)
-                
+
 
         ##############################
         # DATA
@@ -736,12 +736,12 @@ class Database(dict):
                                          treename=data_treename,
                                          ds=name,
                                          id=-1,
-                                        # The GRL is the same for both lephad and hadhad analyses
-                                        grl=data_grl,
-                                        dirs=dirs,
-                                        stream=stream,
-                                        file_pattern=data_pattern,
-                                        year=year)
+                                         # The GRL is the same for both lephad and hadhad analyses
+                                         grl=data_grl,
+                                         dirs=dirs,
+                                         stream=stream,
+                                         file_pattern=data_pattern,
+                                         year=year)
 
                     # in each stream create a separate dataset for each run
                     runs = {}
@@ -819,7 +819,6 @@ class Database(dict):
                 for dir in data_dirs:
                     match = re.match(CN_DATA_PATTERN12, dir)
                     if match:
-                        
                         stream = match.group('name')
                         if stream not in streams:
                             streams[stream] = []
