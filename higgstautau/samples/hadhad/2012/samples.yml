@@ -17,9 +17,9 @@ mc:
         - TES_DOWN
         - JER_UP
     samples:
-        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0'
-        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp1'
-        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp2'
+        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.mc12a'
+        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp1.mc12a'
+        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp2.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
