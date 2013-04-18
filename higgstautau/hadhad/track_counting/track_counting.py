@@ -9,7 +9,7 @@ def count_tracks(tau, event, year, datatype):
     if year == 11:
         return count_tracks_2011(tau, event)
     elif year == 12:
-        if datatype == datasets.DATA:
+        if datatype in (datasets.DATA, datasets.EMBED):
             return count_tracks_2012_data(tau, event)
         return count_tracks_2012(tau, event)
     raise ValueError('No track recounting defined for year %d' % year)
