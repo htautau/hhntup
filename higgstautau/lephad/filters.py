@@ -537,13 +537,25 @@ class AllMCTriggers(EventFilter):
         super(AllMCTriggers, self).__init__(**kwargs)
 
     def passes(self, event):
+
+        channel = 'mu'
+        
         muonSLT = muMCSLTriggers(self.year)
         elecSLT = eMCSLTriggers(self.year)
         muonLTT = muMCLTTriggers(self.year)
         elecLTT = eMCLTTriggers(self.year)
 
-        isSLT = muonSLT.passes(event) or elecSLT.passes(event)
-        isLTT = muonLTT.passes(event) or elecLTT.passes(event)
+        if channel == '':
+            isSLT = muonSLT.passes(event) or elecSLT.passes(event)
+            isLTT = muonLTT.passes(event) or elecLTT.passes(event)
+        elif channel == 'e':
+            isSLT = elecSLT.passes(event)
+            isLTT = elecLTT.passes(event)
+        elif channel == 'mu':
+            isSLT = muonSLT.passes(event)
+            isLTT = muonLTT.passes(event)
+            
+            
 
         return isSLT or isLTT
 
@@ -750,7 +762,7 @@ class ElectronEtaSelection(EventFilter):
 
         event.electrons.select(lambda electron : electron_etaselection(electron))
         return True
-
+    
 
 class LeptonSelection(EventFilter):
     """ Selects the lepton, with all possible trigger/stream provenance """
@@ -764,16 +776,15 @@ class LeptonSelection(EventFilter):
 
     def passes(self, event):
 
-        # Get the lepton Pt
-        Pt = None
-        ID = None
+        ## Initiate selected lepton counter, choose the lepton collection
+        n_selected_leptons = 0
+        leptons = []
         if event.leptonType == 'e':
-            Pt = getattr(event.electrons[0],'fourvect').Pt()
-            ID = event.electrons[0].tightPP
+            leptons = event.electrons
         if event.leptonType == 'mu':
-            Pt = event.muons[0].pt
-            ID = event.muons[0].isCombinedMuon
+            leptons = event.muons
 
+        ## Select the Pt thresholds
         mu_SLT_threshold = 0
         mu_LTT_threshold = 0
         el_SLT_threshold = 0
@@ -791,99 +802,142 @@ class LeptonSelection(EventFilter):
             el_SLT_threshold = 26*GeV
             el_LTT_threshold = 20*GeV
 
-        if not ID: return False
+            
+        ## Electrons ##
+        ###############
+        for lep in event.electrons:
+            ## Treat lepton ID
+            ID = lep.tightPP
+            if not ID: continue
 
-        if self.datatype == datasets.EMBED:
-                 
-            if event.leptonType == 'e':
+            Pt = lep.fourvect.Pt()
+
+            ## Embedding selection ##
+            #-----------------------#
+            if self.datatype == datasets.EMBED:
+
                 if Pt > el_LTT_threshold:
+                    ## Accept the lepton
+                    n_selected_leptons +=1
+                    ## Specify that event is LTT
                     if Pt <= el_SLT_threshold:
                         event.isLTT = True
-                    return True
-                else:
-                    return False
 
-            if event.leptonType == 'mu':
-                if Pt > mu_LTT_threshold:
-                    if Pt <= mu_SLT_threshold:
-                        event.isLTT = True
-                    return True
-                else:
-                    return False
-
-            
-        if self.datatype == datasets.MC:
-                 
-            if event.leptonType == 'e':
+            ## MC selection ##
+            #----------------#
+            if self.datatype == datasets.MC:
                 if Pt > el_SLT_threshold:
                     trigger = eMCSLTriggers(self.year)
                     if trigger.passes(event):
-                        return True
+                        ## Accept the lepton
+                        n_selected_leptons +=1
                 if el_LTT_threshold < Pt <= el_SLT_threshold:
                     trigger = eMCLTTriggers(self.year)
                     if trigger.passes(event):
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                        ## Specify that event is LTT
                         event.isLTT = True
-                        return True
-                return False
 
-            if event.leptonType == 'mu':
-                if Pt > mu_SLT_threshold:
-                    trigger = muMCSLTriggers(self.year)
-                    if trigger.passes(event):
-                        return True
-                if mu_LTT_threshold < Pt <= mu_SLT_threshold:
-                    trigger = muMCLTTriggers(self.year)
-                    if trigger.passes(event):
-                        event.isLTT = True
-                        return True
-                return False
 
-            
-        if self.datatype == datasets.DATA:
-            
-            if self.stream == 'JetTauEtmiss':
+            ## Data selection ##
+            #------------------#
+            if self.datatype == datasets.DATA:
+
+                ## JetTauEtmiss stream
+                if self.stream == 'JetTauEtmiss':
                 
-                if event.leptonType == 'e':
                     SLT = eSLTriggers(self.year)
                     LTT = eLTTriggers(self.year)
                     if LTT.passes(event) and not SLT.passes(event):
                         if el_LTT_threshold < Pt <= el_SLT_threshold:
+                            ## Accept the lepton
+                            n_selected_leptons +=1
+                            ## Specify that event is LTT
                             event.isLTT = True
-                            return True
-                    return False
 
-                if event.leptonType == 'mu':
+                if self.stream == 'Egamma':
+                    SLT = eSLTriggers(self.year)
+                    LTT = eLTTriggers(self.year)
+                    isSLT = SLT.passes(event)
+                    isLTT = LTT.passes(event)
+                    if isSLT and Pt > el_SLT_threshold:
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                    if isLTT and isSLT and el_LTT_threshold < Pt <= el_SLT_threshold:
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                        ## Specify that event is LTT
+                        event.isLTT = True
+
+
+
+        ## Muons ##
+        ###########
+        for lep in event.muons:
+            ## Treat lepton ID
+            ID = lep.isCombinedMuon
+            if not ID: continue
+
+            Pt = lep.fourvect.Pt()
+
+            ## Embedding selection ##
+            #-----------------------#
+            if self.datatype == datasets.EMBED:
+                if Pt > mu_LTT_threshold:
+                    ## Accept the lepton
+                    n_selected_leptons +=1
+                    ## Specify that event is LTT
+                    if Pt <= mu_SLT_threshold:
+                        event.isLTT = True
+
+            ## MC selection ##
+            #----------------#
+            if self.datatype == datasets.MC:
+                if Pt > mu_SLT_threshold:
+                    trigger = muMCSLTriggers(self.year)
+                    if trigger.passes(event):
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                if mu_LTT_threshold < Pt <= mu_SLT_threshold:
+                    trigger = muMCLTTriggers(self.year)
+                    if trigger.passes(event):
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                        ## Specify that event is LTT
+                        event.isLTT = True
+
+                        
+            ## Data selection ##
+            #------------------#
+            if self.datatype == datasets.DATA:
+
+                ## JetTauEtmiss stream
+                if self.stream == 'JetTauEtmiss':
                     SLT = muSLTriggers(self.year)
                     LTT = muLTTriggers(self.year)
                     if LTT.passes(event) and not SLT.passes(event):
                         if mu_LTT_threshold < Pt <= mu_SLT_threshold:
+                            ## Accept the lepton
+                            n_selected_leptons +=1
+                            ## Specify that event is LTT
                             event.isLTT = True
-                            return True
-                    return False
 
-            if self.stream == 'Egamma' and event.leptonType == 'e':
-                SLT = eSLTriggers(self.year)
-                LTT = eLTTriggers(self.year)
-                isSLT = SLT.passes(event)
-                isLTT = LTT.passes(event)
-                if isSLT and Pt > el_SLT_threshold:
-                    return True
-                if isLTT and isSLT and el_LTT_threshold < Pt <= el_SLT_threshold:
-                    event.isLTT = True
-                    return True
-                return False
+                if self.stream == 'Muons':
+                    SLT = muSLTriggers(self.year)
+                    LTT = muLTTriggers(self.year)
+                    isSLT = SLT.passes(event)
+                    isLTT = LTT.passes(event)
+                    if isSLT and Pt > mu_SLT_threshold:
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                    if isLTT and isSLT and mu_LTT_threshold < Pt <= mu_SLT_threshold:
+                        ## Accept the lepton
+                        n_selected_leptons +=1
+                        ## Specify that event is LTT
+                        event.isLTT = True
 
-            if self.stream == 'Muons' and event.leptonType == 'mu':
-                SLT = muSLTriggers(self.year)
-                LTT = muLTTriggers(self.year)
-                isSLT = SLT.passes(event)
-                isLTT = LTT.passes(event)
-                if isSLT and Pt > mu_SLT_threshold:
-                    return True
-                if isLTT and isSLT and mu_LTT_threshold < Pt <= mu_SLT_threshold:
-                    event.isLTT = True
-                    return True
-                return False
+        return (n_selected_leptons > 0)
                     
 
 class TauPreSelection(EventFilter):
@@ -1097,13 +1151,26 @@ def truthJetOverlap(truthJet, vectors):
 def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
     jets = []
 
-    photons   = getPhotons(event)
-    electrons = getElectrons(event)
-    taus      = getTaus(event)
+    TrueTau = LorentzVector()
+    TrueTauPt  = event.evtsel_truethad_pt
+    TrueTauEta = event.evtsel_truethad_eta
+    TrueTauPhi = event.evtsel_truethad_phi
+    TrueTau.SetPtEtaPhiM(TrueTauPt, TrueTauEta, TrueTauPhi, 0)
 
-    print 'photons: %d, electrons: %d, taus: %d' % (len(photons), len(electrons), len(taus))
+    overlapParticles = []
+    if TrueTauPt > 0.0:
+        overlapParticles.append(TrueTau)
 
-    overlapParticles = photons + electrons + taus
+    if event.evtsel_is_eltau or event.evtsel_is_el:
+        
+        TrueLep = LorentzVector()
+        TrueLepPt  = event.evtsel_truetlep_pt
+        TrueLepEta = event.evtsel_truetlep_eta
+        TrueLepPhi = event.evtsel_truetlep_phi
+        TrueLep.SetPtEtaPhiM(TrueLepPt, TrueLepEta, TrueLepPhi, 0)
+
+        if TrueLepPt > 0.0:
+            overlapParticles.append(TrueLep)
         
     for jet in event.truthjets:
         if jet.fourvect.Pt() < 15*GeV: continue
@@ -1118,6 +1185,7 @@ def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
 
     passMjj  = False
     passdEta = False
+    passBoth = False
 
     for i in range(njets):
         for j in range(njets):
@@ -1125,12 +1193,14 @@ def vbfFilter(event, deta_cut=2.0, mjj_cut=200):
                 dEta = abs(jets[i].Eta() - jets[j].Eta())
                 Mjj  = (jets[i] + jets[j]).M()
 
-                print 'dEta: %.2f, Mjj: %.2f' % (dEta, Mjj)
+                #print 'dEta: %.2f, Mjj: %.2f' % (dEta, Mjj)
                 
                 if dEta > deta_cut: passdEta = True
                 if Mjj > mjj_cut*GeV: passMjj = True
+                if (dEta > deta_cut) and (Mjj > mjj_cut*GeV): passBoth = True
 
-    if passMjj and passdEta and passNjets:
+    #if passMjj and passdEta and passNjets:
+    if passBoth and passNjets:
         return True
     return False
 
@@ -1206,8 +1276,14 @@ class VBFFilter3(EventFilter):
 class AntiVBFFilter(EventFilter):
     """Keep events that don't pass the VBF filter"""
 
+    def __init__(self, deta_cut, mjj_cut, **kwargs):
+
+        self.deta_cut = deta_cut
+        self.mjj_cut  = mjj_cut
+        super(AntiVBFFilter, self).__init__(**kwargs)
+
     def passes(self, event):
-        return not vbfFilter(event)
+        return not vbfFilter(event, self.deta_cut, self.mjj_cut)
 
 
                         

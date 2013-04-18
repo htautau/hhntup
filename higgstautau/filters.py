@@ -42,7 +42,38 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
+class TileTrips(EventFilter):
+    """
+    https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event
+    """
+    def __init__(self, passthrough=False, **kwargs):
+
+        if not passthrough:
+            from externaltools.bundle_2012 import TileTripReader
+            from ROOT import Root
+            self.tool = Root.TTileTripReader()
+        super(TileTrips, self).__init__(passthrough=passthrough, **kwargs)
+
+    def passes(self, event):
+
+        # only apply between G - J
+        if event.RunNumber < 211522:
+            return True
+        if event.RunNumber > 215091:
+            return True
+        # returns false if the event is one with a saturation in a tile cell
+        # (bad MET).
+        return self.tool.checkEvent(
+                event.RunNumber,
+                event.lbn,
+                event.EventNumber)
+
+
 class JetCleaning(EventFilter):
+
+    BAD_TILE = [
+        202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
+    ]
 
     def __init__(self,
                  datatype,
@@ -81,11 +112,10 @@ class JetCleaning(EventFilter):
                     LArQmean=LArQmean):
                 return False
 
-        """ NOT NEEDED IN REPROCESSED 2012 DATA
         if self.datatype == datasets.DATA and self.year == 2012:
             # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
             # Hot Tile calorimeter in period B1 and B2
-            if 202660 <= event.RunNumber <= 203027:
+            if event.RunNumber in JetCleaning.BAD_TILE:
                 # recommendation is to use EM jets
                 for jet in event.jets_EM:
                     _etaphi28 = (
@@ -93,6 +123,7 @@ class JetCleaning(EventFilter):
                         2.65 < jet.phi < 2.75)
                     if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
                         return False
+            # Not required in reprocessed data:
             # Bad FCAL response in periods C1-C8
             # not applied in the skim for now.
             # Need to also apply on MC and choose a random run number with the
@@ -103,7 +134,6 @@ class JetCleaning(EventFilter):
             #            abs(jet.eta) > 3.2 and
             #            1.6 < jet.phi < 3.1):
             #            return False
-        """
         return True
 
 
@@ -497,8 +527,9 @@ def jet_selection_2012(jet):
     if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
         return False
 
-    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.5):
-        return False
+    if (jet.fourvect.Pt() < 50*GeV) and (abs(jet.constscale_eta) < 2.4):
+        if not (jet.jvtxf > 0.5):
+            return False
 
     if not (abs(jet.eta) < 4.5):
         return False

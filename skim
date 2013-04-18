@@ -4,7 +4,7 @@
 The master skim launcher and tester
 """
 
-from argparse import ArgumentParser
+from rootpy.extern.argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('--local-test', action='store_true', default=False)

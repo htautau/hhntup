@@ -5,6 +5,9 @@ HHNTUP ?= ntuples/hadhad/HHProcessor
 
 default: clean
 
+lib:
+	cd higgstautau/jetcleaning && ./setup.py build_ext --inplace
+
 hh-ntup-clean:
 	rm -f $(HHNTUP)/$(HHSTUDENT).root
 	rm -f $(HHNTUP)/$(HHSTUDENT).h5
