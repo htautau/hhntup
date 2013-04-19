@@ -302,12 +302,16 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') +
         fourvect_boosted.Boost(tree.parton_beta * -1)
 
         fourvect_vis = getattr(tree, 'trueTau%i_fourvect_vis' % index)
-        fourvect_vis.SetPtEtaPhiM(
-            et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
-            tau.vis_eta,
-            tau.vis_phi,
-            tau.vis_m)
-
-        fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
-        fourvect_vis_boosted.set_from(fourvect_vis)
-        fourvect_vis_boosted.Boost(tree.parton_beta * -1)
+        try:
+            fourvect_vis.SetPtEtaPhiM(
+                et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
+                tau.vis_eta,
+                tau.vis_phi,
+                tau.vis_m)
+        except ValueError:
+            print "DOMAIN ERROR ON TRUTH 4VECT"
+            print tau.vis_Et, tau.vis_eta, tau.vis_m
+        else:
+            fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
+            fourvect_vis_boosted.set_from(fourvect_vis)
+            fourvect_vis_boosted.Boost(tree.parton_beta * -1)
