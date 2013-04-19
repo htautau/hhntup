@@ -34,6 +34,7 @@ class EventVariables(TreeModel):
     tau_x_product = FloatCol()
     tau_x_sum = FloatCol()
     tau_pt_ratio = FloatCol()
+    tau_centrality_product = FloatCol()
 
     MET_centrality = FloatCol()
     MET_centrality_boosted = FloatCol()
@@ -182,6 +183,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
         # leading pt over subleading pt
         tree.tau_pt_ratio = tau1.pt / tau2.pt
+        tree.tau_centrality_product = tau1.centrality * tau2.centrality
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
 
