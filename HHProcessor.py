@@ -10,7 +10,7 @@ import math
 
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
-from rootpy.math.physics.vector import Vector2
+from rootpy.math.physics.vector import Vector2, LorentzVector
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 from rootpy.extern.argparse import ArgumentParser
@@ -366,6 +366,8 @@ class HHProcessor(ATLASStudent):
             event.taus.sort(key=lambda tau: tau.pt, reverse=True)
             event.jets.sort(key=lambda jet: jet.pt, reverse=True)
 
+            # tau1 is the leading tau
+            # tau2 is the subleading tau
             tau1, tau2 = event.taus
             jets = list(event.jets)
 
@@ -396,11 +398,6 @@ class HHProcessor(ATLASStudent):
                         tau2.fourvect.DeltaR(jet1.fourvect),
                         tau2.fourvect.DeltaR(jet2.fourvect))
 
-                """
-                Reco tau variables
-                This must come after the RecoJetBlock is filled since
-                that sets the jet_beta for boosting the taus
-                """
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                         [tau1.fourvect,
                          tau2.fourvect,
@@ -452,11 +449,6 @@ class HHProcessor(ATLASStudent):
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
 
-                """
-                Reco tau variables
-                This must come after the RecoJetBlock is filled since
-                that sets the jet_beta for boosting the taus
-                """
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                         [tau1.fourvect,
                          tau2.fourvect,
@@ -467,10 +459,13 @@ class HHProcessor(ATLASStudent):
                 # aplanarity
                 tree.aplanarity = aplanarity
 
+            #####################################
             # number of tracks from PV minus taus
+            #####################################
             ntrack_pv = 0
             ntrack_nontau_pv = 0
             for vxp in event.vertices:
+                # primary vertex
                 if vxp.type == 1:
                     ntrack_pv = vxp.nTracks
                     ntrack_nontau_pv = ntrack_pv - tau1.numTrack - tau2.numTrack
@@ -478,20 +473,15 @@ class HHProcessor(ATLASStudent):
             tree.ntrack_pv = ntrack_pv
             tree.ntrack_nontau_pv = ntrack_nontau_pv
 
-            # Jet variables
-            tree.numJets = len(event.jets)
-            tree.sum_pt = sum(
-                    [tau1.pt, tau2.pt] +
-                    [jet.pt for jet in jets[:2]])
-            tree.sum_pt_full = sum(
-                    [tau1.pt, tau2.pt] +
-                    [jet.pt for jet in jets])
-
-            # MET
+            #########################
+            # MET variables
+            #########################
             METx = event.MET.etx
             METy = event.MET.ety
-            MET_vect = Vector2(METx, METy)
             MET = event.MET.et
+            MET_vect = Vector2(METx, METy)
+            MET_4vect = LorentzVector()
+            MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
 
             tree.MET = MET
             tree.MET_x = METx
@@ -513,7 +503,27 @@ class HHProcessor(ATLASStudent):
                     tau2.fourvect,
                     MET_vect)
 
+            ##########################
+            # Jet and sum pt variables
+            ##########################
+            tree.numJets = len(event.jets)
+            # sum pt with only the two leading jets
+            tree.sum_pt = sum(
+                    [tau1.pt, tau2.pt] +
+                    [jet.pt for jet in jets[:2]])
+            # sum pt with all selected jets
+            tree.sum_pt_full = sum(
+                    [tau1.pt, tau2.pt] +
+                    [jet.pt for jet in jets])
+            # vector sum pt with two leading jets and MET
+            tree.vector_sum_pt = sum(
+                    [tau1.fourvect, tau2.fourvect] +
+                    [jet.fourvect for jet in jets[:2]] +
+                    [MET_4vect]).Pt()
+
+            ##########################
             # MMC Mass
+            ##########################
             if redo_mmc:
                 mmc_mass, mmc_resonance, mmc_met = mmc.mass(
                         tau1, tau2, METx, METy, sumET)
@@ -533,34 +543,18 @@ class HHProcessor(ATLASStudent):
             tree.MET_mmc_phi = math.pi - mmc_met.Phi()
             tree.MET_mmc_vec.set_from(mmc_met)
 
-            """
-            if tau1.numTrack <= 1:
-                taumode1 = HAD1P
-            else:
-                taumode1 = HAD3P
-
-            if tau2.numTrack <= 1:
-                taumode2 = HAD1P
-            else:
-                taumode2 = HAD3P
-
-            tree.mass_dtm_tau1_tau2 = mass.ditaumass(
-                tau1.fourvect, taumode1,
-                tau2.fourvect, taumode2,
-                METx, METy, MET_res) / GeV
-            tree.mass_dtm_tau1_tau2_scan = mass.ditaumass_scan(
-                tau1.fourvect, taumode1,
-                tau2.fourvect, taumode2,
-                METx, METy, MET_res, 5) / GeV
-            """
             mass_vis, mass_col, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
             tree.mass_collinear_tau1_tau2 = mass_col
             tree.mass_vis_tau1_tau2 = mass_vis
             tree.tau1_x = tau1_x
             tree.tau2_x = tau2_x
+            tree.tau_x_product = tau1_x * tau2_x
+            tree.tau_x_sum = tau1_x + tau2_x
 
+            ###########################
             # Match jets to VBF partons
+            ###########################
             if datatype == datasets.MC and 'VBF' in self.metadata.name and year == 2011:
                 # get partons (already sorted by eta in hepmc) FIXME!!!
                 parton1, parton2 = hepmc.get_VBF_partons(event)
@@ -575,7 +569,10 @@ class HHProcessor(ATLASStudent):
                         for parton in (parton1, parton2):
                             if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
                                 setattr(tree, 'jet%i_matched' % i, True)
+
+            ###########################
             # truth matching
+            ###########################
             if datatype == datasets.MC:
                 # match only with visible true taus
                 event.truetaus.select(
@@ -630,7 +627,9 @@ class HHProcessor(ATLASStudent):
                         tree.trueTau1_fourvect_vis +
                         tree.trueTau2_fourvect_vis).M()
 
-            # tau - vertex association
+            #############################
+            # tau <-> vertex association
+            #############################
             tree.tau_same_vertex = (
                     tau1.privtx_x == tau2.privtx_x and
                     tau1.privtx_y == tau2.privtx_y and
@@ -644,10 +643,12 @@ class HHProcessor(ATLASStudent):
                     tau2.privtx_chiSquared,
                     int(tau2.privtx_numberDoF))
 
-            # fill tau block
+            # Fill tau block
+            # This must come after the RecoJetBlock is filled since
+            # that sets the jet_beta for boosting the taus
             RecoTauBlock.set(event, tree, tau1, tau2)
 
-            # fill output ntuple
+            # Fill output ntuple
             tree.Fill(reset=True)
 
         self.output.cd()

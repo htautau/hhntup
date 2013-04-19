@@ -31,6 +31,9 @@ class EventVariables(TreeModel):
     cos_theta_tau1_tau2 = FloatCol()
     tau1_x = FloatCol()
     tau2_x = FloatCol()
+    tau_x_product = FloatCol()
+    tau_x_sum = FloatCol()
+    tau_pt_ratio = FloatCol()
 
     MET_centrality = FloatCol()
     MET_centrality_boosted = FloatCol()
@@ -104,6 +107,7 @@ class EventVariables(TreeModel):
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
+    vector_sum_pt = FloatCol()
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
@@ -176,6 +180,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
         tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
         tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+        # leading pt over subleading pt
+        tree.tau_pt_ratio = tau1.pt / tau2.pt
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
 
