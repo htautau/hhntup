@@ -75,24 +75,25 @@ class TauTriggerEfficiency(EventFilter):
                     raise ValueError("datatype is not EMBED or MC")
 
             elif self.year == 12:
-                from externaltools.bundle_2012 import TauTriggerCorrections
-                base = TauTriggerCorrections.RESOURCE_PATH
+                from externaltools.bundle_2012 import TrigTauEfficiency
+                base = os.path.join(TauTriggerCorrections.RESOURCE_PATH,
+                        'benchmark_menu')
 
-                if datatype == datasets.MC:
-                    self.ttc_20 = ROOT.TauTriggerCorrections()
+                if datatype in (datasets.MC, datasets.EMBED):
+                    self.ttc_20 = ROOT.TrigTauEfficiency()
                     status = self.ttc_20.loadInputFile(os.path.join(base,
                         'triggerSF_EF_tau20Ti_medium1.root'))
                     if status != 0:
                         raise RuntimeError(
                             'could not load triggerSF_EF_tau20Ti_medium1.root')
-                    self.ttc_29 = ROOT.TauTriggerCorrections()
+                    self.ttc_29 = ROOT.TrigTauEfficiency()
                     status = self.ttc_29.loadInputFile(os.path.join(base,
                         'triggerSF_EF_tau29Ti_medium1.root'))
                     if status != 0:
                         raise RuntimeError(
                             'could not load triggerSF_EF_tau29Ti_medium1.root')
                     self.passes = self.passes_12_mc
-
+                """
                 elif datatype == datasets.EMBED:
                     # use the 3D param
                     self.corrections = {}
@@ -110,6 +111,7 @@ class TauTriggerEfficiency(EventFilter):
                                     "%sP" % prong, wplevel)
                                 self.corrections[thresh][wplevel][prong] = tool
                     self.passes = self.passes_12_embed
+                """
                 else:
                     raise ValueError("datatype is not EMBED or MC")
             else:
