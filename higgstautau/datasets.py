@@ -105,6 +105,15 @@ EMBED_PATTERN12 = re.compile(
         'EXT0'
         '(\.(?P<suffix>\S+))?$')
 
+EMBED_PATTERN12_NEW = re.compile(
+        '^(?P<prefix>\S+)?'
+        'data12_8TeV\.'
+        '(?P<run>\d+)\.'
+        'physics_Muons\.merge\.'
+        'NTUP_EMB(?P<channel>(LH)|(HH))'
+        '(?P<sys>(DN)|(IM)|(UP))\.'
+        '(?P<suffix>\S+)')
+
 ## Common lephad ntuple pattern
 CN_MC_PATTERN12 = re.compile(
         '^(?P<prefix>\S+\.)?'
@@ -493,7 +502,54 @@ class Database(dict):
                     embed_dirs = glob.glob(
                             os.path.join(embed_path, '*'))
 
-            if embed_sampletype == 'standard':
+            if embed_sampletype == 'new':
+
+                EMBED_PATTERN = EMBED_PATTERN12_NEW
+
+                # determine what channels are available
+                channels = {}
+                for dir in embed_dirs:
+                    if os.path.isdir(dir):
+                        dirname, basename = os.path.split(dir)
+                        match = re.match(EMBED_PATTERN, basename)
+                        if match:
+                            channel = match.group('channel')
+                            if channel not in channels:
+                                channels[channel] = []
+                            channels[channel].append(dir)
+                        elif self.verbose:
+                            print "not a valid embedding dataset name: %s" % basename
+                    elif self.verbose:
+                        print "skipping file: %s" % dir
+
+                for channel, channel_dirs in channels.items():
+                    syst = {}
+                    for dir in channel_dirs:
+                        dirname, basename = os.path.split(dir)
+                        match = re.match(EMBED_PATTERN, basename)
+                        if match:
+                            isol = match.group('sys')
+                            if isol not in syst:
+                                syst[isol] = []
+                            syst[isol].append(dir)
+                        elif self.verbose:
+                            print "not a valid embedding dataset name: %s" % basename
+
+                    for syst_type, dirs in syst.items():
+                        name = 'embed%d-%s-%s' % (
+                                year % 1000, channel, syst_type)
+                        self[name] = Dataset(name,
+                                             datatype=EMBED,
+                                             treename=embed_treename,
+                                             ds=name,
+                                             id=1,
+                                             # The GRL is the same for both lephad and hadhad analyses
+                                             grl=None,
+                                             dirs=dirs,
+                                             file_pattern=embed_pattern,
+                                             year=year)
+
+            elif embed_sampletype == 'standard':
                 if year == 2011:
                     EMBED_PATTERN = EMBED_PATTERN11
                 else:
