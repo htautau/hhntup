@@ -125,7 +125,7 @@ class PileupDataScale(EventFilter):
     def __init__(self, year, **kwargs):
 
         self.scale = DATA_SCALE_FACTOR[year]
-        super(PileupDataScalem, self).__init__(**kwargs)
+        super(PileupDataScale, self).__init__(**kwargs)
 
     def passes(self, event):
 
