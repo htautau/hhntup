@@ -42,7 +42,8 @@ from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.pileup import (PileupReweight, averageIntPerXingPatch,
+from higgstautau.pileup import (PileupReweight, PileupDataScale,
+                                averageIntPerXingPatch,
                                 get_pileup_reweighting_tool)
 from higgstautau.hadhad.objects import define_objects
 
@@ -294,6 +295,10 @@ class HHProcessor(ATLASStudent):
                 tool=pileup_tool,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            PileupDataScale(
+                year=year,
+                passthrough=datatype != datasets.DATA,
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
