@@ -973,7 +973,8 @@ class Dataset(yaml.YAMLObject):
                  tag=None,
                  grl=None,
                  year=None,
-                 stream=None):
+                 stream=None,
+                 files=None):
 
         self.name = name
         self.datatype = datatype
