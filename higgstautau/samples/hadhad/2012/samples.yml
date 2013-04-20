@@ -3,11 +3,11 @@ embedded:
         - TES_UP
         - TES_DOWN
     samples:
-        - 'embed12-hh-mfsim'
+        - 'embed12-HH-IM'
     systematics_samples:
-        'embed12-hh-mfsim':
-            'embed12-hh-mfsup': MFS_UP
-            'embed12-hh-mfsdn': MFS_DOWN
+        'embed12-HH-IM':
+            'embed12-HH-UP': MFS_UP
+            'embed12-HH-DN': MFS_DOWN
             # ISOL systematics included in nominal sample
 mc:
     systematics:
