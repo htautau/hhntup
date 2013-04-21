@@ -298,7 +298,7 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             PileupDataScale(
                 year=year,
-                passthrough=datatype != datasets.DATA,
+                passthrough=datatype not in (datasets.DATA, datasets.EMBED),
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
