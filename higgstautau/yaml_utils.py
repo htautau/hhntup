@@ -1,3 +1,4 @@
+# http://stackoverflow.com/questions/11892736/python-yaml-how-to-initialize-additional-objects-not-just-from-the-yaml-file
 import inspect
 import yaml
 try:
