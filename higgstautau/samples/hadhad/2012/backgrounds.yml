@@ -29,7 +29,7 @@ embedded_ztautau:
     root: 'Z/#gamma^{*} (embedded)'
     color: '#00a4ff'
     samples:
-        - 'embed12-hh-mfsim'
+        - 'embed12-HH-IM'
 ewk:
     name: EW
     latex: EW
