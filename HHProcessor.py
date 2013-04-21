@@ -192,7 +192,7 @@ class HHProcessor(ATLASStudent):
         event_filters = EventFilterList([
             GRLFilter(
                 self.grl,
-                passthrough=datatype != datasets.DATA,
+                passthrough=datatype not in (datasets.DATA, datasets.EMBED),
                 count_funcs=count_funcs),
             #EmbeddingPileupPatch(
             #    passthrough=year > 2011 or datatype != datasets.EMBED,

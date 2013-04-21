@@ -41,6 +41,7 @@ import fnmatch
 
 from decorators import cached_property
 import yaml
+from yaml_utils import Serializable
 
 from atlastools.datasets import DATA, MC, EMBED
 import xsec
@@ -543,8 +544,7 @@ class Database(dict):
                                              treename=embed_treename,
                                              ds=name,
                                              id=1,
-                                             # The GRL is the same for both lephad and hadhad analyses
-                                             grl=None,
+                                             grl=data_grl,
                                              dirs=dirs,
                                              file_pattern=embed_pattern,
                                              year=year)
@@ -959,7 +959,7 @@ class Database(dict):
         return data
 
 
-class Dataset(yaml.YAMLObject):
+class Dataset(Serializable):
 
     yaml_tag = u'!Dataset'
 
@@ -973,8 +973,7 @@ class Dataset(yaml.YAMLObject):
                  tag=None,
                  grl=None,
                  year=None,
-                 stream=None,
-                 files=None):
+                 stream=None):
 
         self.name = name
         self.datatype = datatype
@@ -990,6 +989,18 @@ class Dataset(yaml.YAMLObject):
         self.grl = grl
         self.year = year
         self.stream = stream
+
+    def __repr__(self):
+
+        return ("%s(name=%r, datatype=%r, treename=%r, "
+                "id=%r, ds=%r, category=%r, version=%r, "
+                "tag_pattern=%r, tag=%r, dirs=%r, "
+                "file_pattern=%r, grl=%r, year=%r, stream=%r)") % (
+                        self.__class__.__name__,
+                        self.name, self.datatype, self.treename,
+                        self.id, self.ds, self.category, self.version,
+                        self.tag_pattern, self.tag, self.dirs,
+                        self.file_pattern, self.grl, self.year, self.stream)
 
     @cached_property
     def xsec_kfact_effic(self):
