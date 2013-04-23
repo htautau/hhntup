@@ -40,6 +40,16 @@ REMOVE = [
     "el_*",
     "mu_*",
     "MET_*Reg*",
+    # corrupt branch in some d3pds
+    "MET_CorrTopo_*",
+    "trk_z0_wrtBL",
+    "trk_err_z0_wrtBS",
+    "trig_EF_met_*",
+    "MET_LocHadTopo_*",
+    "trk_theta_qoverp_err_wrtBL",
+    "trk_err_phi_wrtBS",
+    "tau_jet_e_TileExt0",
+    "mcevt_pdf1",
 ]
 
 # override globs above
