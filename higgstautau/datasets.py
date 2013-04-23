@@ -25,7 +25,7 @@ except ImportError:
 
 
 import sys
-from rootpy.io import open as ropen, DoesNotExist
+from rootpy.io import root_open as ropen, DoesNotExist
 from rootpy.plotting import Hist
 import multiprocessing as mp
 from multiprocessing import Pool, cpu_count

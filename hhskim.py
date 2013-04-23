@@ -11,9 +11,8 @@ from atlastools.filtering import GRLFilter
 
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel
-from rootpy.types import *
-from rootpy.io import open as ropen
 from rootpy.extern.argparse import ArgumentParser
+from rootpy.io import root_open
 
 from higgstautau.mixins import *
 from higgstautau.filters import *
@@ -294,10 +293,18 @@ class hhskim(ATLASStudent):
         # set the event filters
         self.filters['event'] = event_filters
 
+        # peek at first tree to determine which branches to exclude
+        with root_open(self.files[0]) as test_file:
+            test_tree = test_file.Get(self.metadata.treename)
+            ignore_branches = test_tree.glob(
+                hhbranches.REMOVE,
+                exclude=hhbranches.KEEP)
+
         # initialize the TreeChain of all input files
         chain = TreeChain(
                 self.metadata.treename,
                 files=self.files,
+                ignore_branches=ignore_branches,
                 events=self.events,
                 onfilechange=onfilechange,
                 filters=event_filters,
@@ -311,9 +318,7 @@ class hhskim(ATLASStudent):
         # set branches to be removed in ignore_branches
         tree.set_buffer(
                 chain._buffer,
-                ignore_branches=chain.glob(
-                    hhbranches.REMOVE,
-                    exclude=hhbranches.KEEP),
+                ignore_branches=ignore_branches,
                 create_branches=True,
                 ignore_duplicates=True,
                 transfer_objects=True,

@@ -1,5 +1,5 @@
 from rootpy.tree.filtering import *
-from rootpy.io import open as ropen
+from rootpy.io import root_open as ropen
 from math import *
 import ROOT
 
