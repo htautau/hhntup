@@ -188,8 +188,9 @@ class TauTriggerEfficiency(EventFilter):
                         abs(corr.getSF(tau.pt, -1)))
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
-            raise Exception("there must be exactly two unique trigger match"
-                    " thresholds (29, 20). Got: %s" % str(thresh))
+            raise Exception(
+                "there must be exactly two unique trigger match "
+                "thresholds (29, 20). Got: %s" % str(thresh))
         return True
 
     def passes_11_embed(self, event):
@@ -309,8 +310,9 @@ class TauTriggerEfficiency(EventFilter):
                     setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, sf - sigma_dn)
 
         if len(set(thresh)) != 2 or len(thresh) != 2:
-            raise Exception("there must be exactly two unique trigger match"
-                    " thresholds (29, 20). Got: %s" % str(thresh))
+            raise Exception(
+                "there must be exactly two unique trigger match "
+                "thresholds (29, 20). Got: %s" % str(thresh))
         return True
 
     def passes_12_embed(self, event):
