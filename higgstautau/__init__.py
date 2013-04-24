@@ -1,5 +1,7 @@
 import rootpy
 import logging
+import os
+import ROOT
 
 ROOT.gROOT.SetBatch(True)
 rootpy.log.basic_config_colorized()
