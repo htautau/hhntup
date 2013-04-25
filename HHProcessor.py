@@ -324,7 +324,7 @@ class HHProcessor(ATLASStudent):
             MCWeight(
                 datatype=datatype,
                 tree=tree,
-                passthrough=datatype != datasets.MC,
+                passthrough=datatype not in (datasets.MC, datasets.EMBED),
                 count_funcs=count_funcs),
             EmbeddingIsolation(
                 tree=tree,
