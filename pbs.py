@@ -36,9 +36,15 @@ class Job(object):
         return self.info['Job_Name']
 
     @property
+    def hung(self):
+
+        # is the wall time higher than the CPU time?
+        return self.walltime > 0.5 * self.cputime and self.walltime > 60
+
+    @property
     def healthy(self):
-        # is the wall time lower than the CPU time?
-        return self.walltime <= self.cputime
+
+        return not self.hung
 
     @property
     def health_status(self):

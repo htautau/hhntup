@@ -8,6 +8,9 @@ default: clean
 lib:
 	cd higgstautau/jetcleaning && ./setup.py build_ext --inplace
 
+kill-hung:
+	-./pbs.py | grep HUNG | cut -d " " -f 1 | xargs qdel
+
 hh-ntup-clean:
 	rm -f $(HHNTUP)/$(HHSTUDENT).root
 	rm -f $(HHNTUP)/$(HHSTUDENT).h5
