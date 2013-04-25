@@ -2,6 +2,21 @@
 import subprocess
 from subprocess import call
 import getpass
+import time
+import datetime
+
+
+def print_table(table, sep='  '):
+
+    # Reorganize data by columns
+    cols = zip(*table)
+    # Compute column widths by taking maximum length of values per column
+    col_widths = [max(len(str(value)) for value in col) for col in cols]
+    # Create a suitable format string
+    format = sep.join(['%%-%ds' % width for width in col_widths])
+    # Print each row using the computed format
+    for row in table:
+        print format % tuple(row)
 
 
 class Job(object):
@@ -21,28 +36,51 @@ class Job(object):
         return self.info['Job_Name']
 
     @property
+    def healthy(self):
+        # is the wall time lower than the CPU time?
+        return self.walltime <= self.cputime
+
+    @property
     def health_status(self):
 
-        # is the wall time much higher than the CPU time?
-        pass
+        # is the wall time higher than the CPU time?
+        if self.healthy:
+            return 'GOOD'
+        return 'HUNG'
 
     @property
     def cputime(self):
 
-        return self.info['resources_used.cput']
+        if 'resources_used.cput' not in self.info:
+            return 0
+        x = time.strptime(self.info['resources_used.cput'], "%H:%M:%S")
+        return datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds()
 
     @property
     def walltime(self):
 
-        return self.info['resources_used.walltime']
+        if 'resources_used.walltime' not in self.info:
+            return 0
+        x = time.strptime(self.info['resources_used.walltime'], "%H:%M:%S")
+        return datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds()
+
+    @property
+    def host(self):
+
+        if 'exec_host' in self.info:
+            return self.info['exec_host']
+        return '-'
 
     @property
     def status(self):
 
-        if 'exec_host' in self.info:
-            return self.id, self.info['job_state'], self.info['exec_host'], self.info['Job_Name']
-        else:
-            return self.id, self.info['job_state'], '-', self.info['Job_Name']
+        return (self.id,
+                self.info['job_state'],
+                self.host,
+                self.info['Job_Name'],
+                self.cputime,
+                self.walltime,
+                self.health_status)
 
 
 class PBSMonitor(object):
@@ -83,8 +121,10 @@ class PBSMonitor(object):
 
     def print_jobs(self):
 
-        for id, job in self.jobs.items():
-            print(job.status)
+        rows = []
+        for id, job in sorted(self.jobs.items(), key=lambda item: item[0]):
+            rows.append(job.status)
+        print_table(rows)
 
 
 MONITOR = PBSMonitor()
