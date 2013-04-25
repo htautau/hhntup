@@ -4,6 +4,47 @@ from subprocess import call
 import getpass
 
 
+class Job(object):
+
+    def __init__(self, id, info):
+
+        self.id = id
+        self.info = info
+
+    def __getattr__(self, attr):
+
+        return self.info[attr]
+
+    @property
+    def name(self):
+
+        return self.info['Job_Name']
+
+    @property
+    def health_status(self):
+
+        # is the wall time much higher than the CPU time?
+        pass
+
+    @property
+    def cputime(self):
+
+        return self.info['resources_used.cput']
+
+    @property
+    def walltime(self):
+
+        return self.info['resources_used.walltime']
+
+    @property
+    def status(self):
+
+        if 'exec_host' in self.info:
+            return self.id, self.info['job_state'], self.info['exec_host'], self.info['Job_Name']
+        else:
+            return self.id, self.info['job_state'], '-', self.info['Job_Name']
+
+
 class PBSMonitor(object):
 
     def __init__(self):
@@ -32,8 +73,9 @@ class PBSMonitor(object):
             for line in block[1:]:
                 param, value = line.split(' = ')
                 info[param.strip()] = value.strip()
-            self.job_names[info['Job_Name']] = jobid
-            self.jobs[jobid] = info
+            job = Job(jobid, info)
+            self.job_names[job.name] = jobid
+            self.jobs[jobid] = job
 
     def has_jobname(self, name):
 
@@ -41,11 +83,8 @@ class PBSMonitor(object):
 
     def print_jobs(self):
 
-        for id, info in self.jobs.items():
-            if 'exec_host' in info:
-                print id, info['job_state'], info['Job_Name'], info['exec_host']
-            else:
-                print id, info['job_state'], info['Job_Name']
+        for id, job in self.jobs.items():
+            print(job.status)
 
 
 MONITOR = PBSMonitor()

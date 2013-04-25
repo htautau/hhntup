@@ -346,6 +346,13 @@ class TauTriggerEfficiency(EventFilter):
 
             for wplevel, wpflag in wp.items():
                 sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+                if sf == float('inf'):
+                    log.warning("trigger data efficiency is infinite! Using 0.")
+                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
+                    setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
+                    setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
+                    continue
+
                 setattr(tau, 'trigger_eff_sf_%s' % wplevel, sf)
 
                 # Data stat uncert

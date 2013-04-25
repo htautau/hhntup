@@ -49,9 +49,7 @@ from higgstautau.hadhad.objects import define_objects
 from goodruns import GRL
 import subprocess
 
-
 #ROOT.gErrorIgnoreLevel = ROOT.kFatal
-VERBOSE = False
 
 
 class HHProcessor(ATLASStudent):
@@ -65,6 +63,7 @@ class HHProcessor(ATLASStudent):
         parser = ArgumentParser()
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--redo-mmc', default=False, action='store_true')
+        parser.add_argument('--student-verbose', default=False, action='store_true')
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
             self.args.syst_terms = set([
@@ -92,6 +91,7 @@ class HHProcessor(ATLASStudent):
         datatype = self.metadata.datatype
         year = self.metadata.year
         redo_mmc = self.args.redo_mmc
+        verbose = self.args.student_verbose
 
         # get pileup reweighting tool
         pileup_tool = get_pileup_reweighting_tool(
@@ -212,7 +212,7 @@ class HHProcessor(ATLASStudent):
             #JetCalibration(
             #    datatype=datatype,
             #    year=year,
-            #    verbose=VERBOSE,
+            #    verbose=verbose,
             #    count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
@@ -221,7 +221,7 @@ class HHProcessor(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
-                verbose=VERBOSE,
+                verbose=verbose,
                 count_funcs=count_funcs),
             # the BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
