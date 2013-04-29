@@ -42,6 +42,20 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
+class MCRunNumber(EventFilter):
+
+    def __init__(self, pileup_tool, **kwargs):
+
+        self.pileup_tool = pileup_tool
+        super(MCRunNumber, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        # get random run number using the pileup tool
+        event.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        return True
+
+
 class TileTrips(EventFilter):
     """
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event

@@ -271,7 +271,8 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
-                passthrough=no_trigger or datatype != datasets.MC
+                passthrough=no_trigger
+                            or datatype not in (datasets.MC, datasets.EMBED)
                             or year == 2012, # wait for new tool
                 count_funcs=count_funcs),
             ggFReweighting(

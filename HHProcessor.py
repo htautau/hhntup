@@ -193,6 +193,18 @@ class HHProcessor(ATLASStudent):
                 self.grl,
                 passthrough=datatype not in (datasets.DATA, datasets.EMBED),
                 count_funcs=count_funcs),
+            # apply the PileupReweight before MCRunNumber
+            PileupReweight(
+                tool=pileup_tool,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
+            # set the RunNumber in MC to a random run number according to the
+            # pileup tool
+            MCRunNumber(
+                pileup_tool=pileup_tool,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
             #EmbeddingPileupPatch(
             #    passthrough=year > 2011 or datatype != datasets.EMBED,
             #    count_funcs=count_funcs),
@@ -285,15 +297,9 @@ class HHProcessor(ATLASStudent):
                 year=year,
                 datatype=datatype,
                 tree=tree,
-                pileup_tool=pileup_tool,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            PileupReweight(
-                tool=pileup_tool,
-                tree=tree,
-                passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             PileupDataScale(
                 year=year,
@@ -303,10 +309,10 @@ class HHProcessor(ATLASStudent):
                 year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            #FakeRateScaleFactors(
-            #    year=year,
-            #    passthrough=datatype != datasets.MC,
-            #    count_funcs=count_funcs),
+            FakeRateScaleFactors(
+                year=year,
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
             ggFReweighting(
                 dsname=self.metadata.name,
                 tree=tree,

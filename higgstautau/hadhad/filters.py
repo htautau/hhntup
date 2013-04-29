@@ -3,9 +3,11 @@ from atlastools import utils
 from atlastools.units import GeV
 from atlastools import datasets
 from math import *
+import math
 from .models import TrueTauBlock
 from . import track_counting
 from .. import tauid
+from . import log; log = log[__name__]
 
 
 class TauLeadSublead(EventFilter):
@@ -202,13 +204,15 @@ class FakeRateScaleFactors(EventFilter):
                         'FakeRateScaleFactor.txt')
                 self.fakerate_tool = TFR.FakeRateScaler(fakerate_table)
                 self.passes = self.passes_2011
+                log.info("will apply 2011 fake rate scale factors")
             elif self.year == 12:
                 from externaltools.bundle_2012 import TauFakeRates
                 from ROOT import TauFakeRates as TFR
-                #TODO update
-                self.fakerate_tool = TFR.FakeRateScaler(
-                        TauFakeRates.RESOURCE_PATH)
+                self.fakerate_tool = TFR.FakeRateScaler()
+                self.fakerate_tool.initialise(TauFakeRates.RESOURCE_PATH)
+                self.fakerate_ns = TFR
                 self.passes = self.passes_2012
+                log.info("will apply 2012 fake rate scale factors")
             else:
                 raise ValueError("No fakerates defined for year %d" % year)
 
@@ -252,35 +256,79 @@ class FakeRateScaleFactors(EventFilter):
 
     def passes_2012(self, event):
 
-        trig = 'EF_tau%dTi_medium1'
-
         for tau in event.taus:
             # fakerate only applies to taus that don't match truth
             if tau.matched:
                 continue
 
-            wplevels = []
-            wplevels.append('loose')
+            wplevels = dict()
+            wplevels['loose'] = self.fakerate_ns.LOOSE
             if tau.JetBDTSigMedium:
-                wplevels.append('medium')
+                wplevels['medium'] = self.fakerate_ns.MEDIUM
             if tau.JetBDTSigTight:
-                wplevels.append('tight')
+                wplevels['tight'] = self.fakerate_ns.TIGHT
 
-            for wp in wplevels:
-                # last arg is lepton veto
-                sf = self.fakerate_tool.getScaleFactor(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        'BDT', wp,
-                        trig % tau.trigger_match_thresh, True)
+            if tau.trigger_match_thresh == 20:
+                trigger = self.fakerate_ns.TAU20Ti
+            elif tau.trigger_match_thresh == 29:
+                trigger = self.fakerate_ns.TAU29Ti
+            else:
+                raise ValueError("trigger threshold %d not understood" %
+                    tau.trigger_match_thresh)
+
+            for wp, wpflag in wplevels.items():
+                # using LOOSE lepton veto
+                sf_data = self.fakerate_tool.getEffData(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE, trigger)
+
+                sf_data_up = self.fakerate_tool.getEffDataUncertainty(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE, trigger, True)
+
+                sf_data_dn = self.fakerate_tool.getEffDataUncertainty(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE, trigger, False)
+
+                sf_mc = self.fakerate_tool.getEffMC(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE, trigger)
+
+                sf_mc_up = self.fakerate_tool.getEffMCUncertainty(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE, trigger, True)
+
+                sf_mc_dn = self.fakerate_tool.getEffMCUncertainty(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE, trigger, False)
+
+                #log.info("data eff: %f, mc eff %f, wp %s, pt %f, ntrack %d, run: %d, trigger: %d" % (
+                #    sf_data, sf_mc, wp, tau.pt, tau.numTrack, event.RunNumber,
+                #    tau.trigger_match_thresh))
+
+                if sf_data == 0: # bug
+                    sf = 0.
+                    sf_high = 0.
+                    sf_low = 0.
+                else:
+                    sf = sf_data / sf_mc
+
+                    sf_up = sf * math.sqrt(
+                        (sf_mc_up / sf_mc)**2 +
+                        (sf_data_up / sf_data)**2)
+
+                    sf_dn = sf * math.sqrt(
+                        (sf_mc_dn / sf_mc)**2 +
+                        (sf_data_dn / sf_data)**2)
+
+                    sf_high = sf + sf_up
+                    sf_low = sf - sf_dn
+
                 setattr(tau, 'fakerate_sf_%s' % wp, sf)
-                setattr(tau, 'fakerate_sf_%s_high' % wp, (sf +
-                        self.fakerate_tool.getScaleFactorUncertainty(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        'BDT', wp,
-                        trig % tau.trigger_match_thresh, True, True)))
-                setattr(tau, 'fakerate_sf_%s_low' % wp, (sf -
-                        self.fakerate_tool.getScaleFactorUncertainty(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        'BDT', wp,
-                        trig % tau.trigger_match_thresh, True, False)))
+
+                # uncertainty
+                setattr(tau, 'fakerate_sf_%s_high' % wp, sf_high)
+                setattr(tau, 'fakerate_sf_%s_low' % wp, sf_low)
+
+                #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
         return True
