@@ -264,16 +264,16 @@ class hhskim(ATLASStudent):
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             TruthMatching(
-                passthrough=datatype != datasets.MC,
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
                 passthrough=no_trigger
-                            or datatype not in (datasets.MC, datasets.EMBED)
+                            or datatype == datasets.DATA
                             or year == 2012, # wait for new tool
                 count_funcs=count_funcs),
             ggFReweighting(

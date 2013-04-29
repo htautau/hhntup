@@ -306,11 +306,11 @@ class HHProcessor(ATLASStudent):
                 passthrough=datatype not in (datasets.DATA, datasets.EMBED),
                 count_funcs=count_funcs),
             TruthMatching(
-                passthrough=datatype != datasets.MC,
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
@@ -330,7 +330,7 @@ class HHProcessor(ATLASStudent):
             MCWeight(
                 datatype=datatype,
                 tree=tree,
-                passthrough=datatype not in (datasets.MC, datasets.EMBED),
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             EmbeddingIsolation(
                 tree=tree,
