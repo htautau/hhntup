@@ -144,10 +144,12 @@ class TauTriggerMatchThreshold(EventFilter):
     Match previously matched reco taus to thresholds of the trigger
     """
     def __init__(self,
+                 datatype,
                  tree,
                  passthrough=False,
                  **kwargs):
 
+        self.datatype = datatype
         self.tree = tree
         super(TauTriggerMatchThreshold, self).__init__(
                 passthrough=passthrough,
@@ -155,7 +157,15 @@ class TauTriggerMatchThreshold(EventFilter):
 
     def passes(self, event):
 
-        self.match_threshold(event, (29, 20))
+        if self.datatype == datasets.EMBED:
+            assert len(event.taus) == 2
+            assert event.taus[0].pt > event.taus[1].pt
+            # taus are already sorted in descending order by pT by TauLeadSublead
+            tau1, tau2 = event.taus
+            tau1.trigger_match_thresh = 29
+            tau2.trigger_match_thresh = 20
+        else:
+            self.match_threshold(event, (29, 20))
         return True
 
     def match_threshold(self, event, thresholds):

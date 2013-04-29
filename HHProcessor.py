@@ -290,8 +290,8 @@ class HHProcessor(ATLASStudent):
                 sublead=25 * GeV,
                 count_funcs=count_funcs),
             TauTriggerMatchThreshold(
+                datatype=datatype,
                 tree=tree,
-                passthrough=datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             TauTriggerEfficiency(
                 year=year,
@@ -304,6 +304,9 @@ class HHProcessor(ATLASStudent):
             PileupDataScale(
                 year=year,
                 passthrough=datatype not in (datasets.DATA, datasets.EMBED),
+                count_funcs=count_funcs),
+            TruthMatching(
+                passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
@@ -323,9 +326,6 @@ class HHProcessor(ATLASStudent):
             #    year=year,
             #    count_funcs=count_funcs),
             TauJetOverlapRemoval(
-                count_funcs=count_funcs),
-            TruthMatching(
-                passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
             MCWeight(
                 datatype=datatype,
