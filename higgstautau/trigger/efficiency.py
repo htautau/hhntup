@@ -288,7 +288,10 @@ class TauTriggerEfficiency(EventFilter):
                 else:
                     sf = abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
                     if math.isinf(sf) or math.isnan(sf):
-                        log.warning("trigger data efficiency is infinite or NaN! Using 0.")
+                        log.warning(
+                            "trigger efficiency SF is infinite or NaN! Using 0. "
+                            "pt: %f, eta: %f, mode: 0, period: %s, prong: %s, wp: %s, eveto: %s"
+                            % (tau.pt, tau.eta, period, prong, wpflag, eveto))
                         setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
                         setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
                         setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
