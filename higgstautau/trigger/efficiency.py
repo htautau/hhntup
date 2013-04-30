@@ -291,7 +291,11 @@ class TauTriggerEfficiency(EventFilter):
                         log.warning(
                             "trigger efficiency SF is infinite or NaN! Using 0. "
                             "pt: %f, eta: %f, mode: 0, period: %s, prong: %s, wp: %s, eveto: %s"
-                            % (tau.pt, tau.eta, period, prong, wpflag, eveto))
+                            " trigger: %d"
+                            % (tau.pt, tau.eta,
+                               period, prong,
+                               wpflag, eveto,
+                               tau.trigger_match_thresh))
                         setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
                         setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
                         setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
