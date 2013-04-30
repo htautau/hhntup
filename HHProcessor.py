@@ -274,8 +274,6 @@ class HHProcessor(ATLASStudent):
             #    count_funcs=count_funcs),
             #TauLArHole(2,
             #    count_funcs=count_funcs),
-            #TauIDMedium(2,
-            #    count_funcs=count_funcs),
             #TauTriggerMatchIndex(
             #    config=trigger_config,
             #    year=year,
@@ -283,6 +281,8 @@ class HHProcessor(ATLASStudent):
             #    passthrough=datatype == datasets.EMBED,
             #    count_funcs=count_funcs),
             TauSelected(2,
+                count_funcs=count_funcs),
+            TauIDMedium(2,
                 count_funcs=count_funcs),
             # apply this selection here since skim has lower threshold for data
             TauLeadSublead(
