@@ -2356,7 +2356,10 @@ PowHegPythia8_AU2CT10_VBFH110_tautauhh.mc12a: !Dataset
   ds: mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130414112449,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130416223126,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130423021708,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130417093101,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130422184803,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130423025810,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130414163851,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130415015010,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.mc12_8TeV.161614.PowHegPythia8_AU2CT10_VBFH110_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344.v4.130414232540]
@@ -6758,6 +6761,8 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209024.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015844,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416225013,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412030002,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422223221,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423010519,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015836,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204955.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015456,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211697.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025820,
@@ -6784,12 +6789,14 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211620.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015138,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200926.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015534,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207582.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015808,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422184307,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204796.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015528,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214758.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130412015753,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201052.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025938,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206573.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015920,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204976.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025946,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213754.physics_JetTauEtmiss.merge.NTUP_TAU.f485_m1250_p1443.v4.130416224705,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423020522,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212663.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015447,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207332.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015218,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204857.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025803,
@@ -6804,6 +6811,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203195.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015653,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025737,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208970.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025636,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422204539,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202712.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015743,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215456.physics_JetTauEtmiss.merge.NTUP_TAU.f495_m1266_p1443.v4.130412015050,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015706,
@@ -6811,6 +6819,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015851,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209787.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020036,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213486.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1238_p1443.v4.130416224919,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422183957,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211937.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414040006,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207397.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015431,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200987.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025739,
@@ -6820,6 +6829,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201269.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015907,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207982.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015615,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204134.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025951,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423010240,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1255_p1443.v4.130417092335,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207772.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020026,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200842.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015545,
@@ -6829,14 +6839,18 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213702.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130416224815,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203336.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025824,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208642.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015948,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422184324,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422232939,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203256.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412030009,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035824,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212199.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015714,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130423001301,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204853.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025757,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206369.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015358,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212103.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025946,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203027.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412030005,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207931.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015757,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423001247,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205071.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015648,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204769.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015923,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015520,
@@ -6860,6 +6874,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00210308.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015545,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209161.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015357,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209183.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025812,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422223051,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215464.physics_JetTauEtmiss.merge.NTUP_TAU.f495_m1266_p1443.v4.130412015715,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207532.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015346,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020041,
@@ -6869,8 +6884,10 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205017.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025908,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130412015610,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203432.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025900,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422223239,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204763.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015453,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209980.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015526,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422232924,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207800.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020001,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015307,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215473.physics_JetTauEtmiss.merge.NTUP_TAU.f495_m1266_p1443.v4.130412015941,
@@ -6911,12 +6928,14 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015249,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209812.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015821,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015615,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214680.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422184115,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130412015400,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209866.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414040138,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211902.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412030352,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209736.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015410,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201138.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015711,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025939,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130422184208,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015948,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015637,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213479.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1238_p1443.v4.130412015303,
@@ -6924,6 +6943,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208126.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020014,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205113.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015525,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204073.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015837,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423000927,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035953,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203523.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015449,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200982.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015847,
@@ -6947,6 +6967,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212721.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015245,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208485.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015726,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015822,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422184312,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203876.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015854,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213796.physics_JetTauEtmiss.merge.NTUP_TAU.f485_m1255_p1443.v4.130412015952,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204668.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035823,
@@ -6956,6 +6977,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1261_p1443.v4.130412015759,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015416,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130412015547,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204235,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015324,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203228.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015239,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202965.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015153,
@@ -6963,10 +6985,12 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207046.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015313,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035925,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203605.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025941,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204353,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204026.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015850,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203792.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414040011,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015630,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207620.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015736,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204342,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025558,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213486.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1238_p1443.v4.130417092253,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015310,
@@ -6987,6 +7011,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212142.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015908,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208354.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015734,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020052,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422232615,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203760.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015632,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_JetTauEtmiss.merge.NTUP_TAU.f485_m1255_p1443.v4.130416224951,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204442.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412030014,
@@ -7238,9 +7263,15 @@ data12-JetTauEtmiss-201555: !Dataset
   treename: tau
   ds: data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130417092158,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422183957,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423010240,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035824,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422223051,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416224706,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025558]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423000927,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204235,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025558,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422232615]
   file_pattern: '*hadhad.root*'
   id: 201555
   grl: grl/2012/current.xml
@@ -8939,8 +8970,15 @@ data12-JetTauEtmiss-209864: !Dataset
   treename: tau
   ds: data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416225013,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422223221,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423010519,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020022,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423020522,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423001247,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422232924,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130417092215,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422184312,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204342,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035930]
   file_pattern: '*hadhad.root*'
   id: 209864
@@ -9209,9 +9247,11 @@ data12-JetTauEtmiss-212687: !Dataset
   treename: tau
   ds: data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020013,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422184307,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130417092211,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416225006,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035925]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035925,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204353]
   file_pattern: '*hadhad.root*'
   id: 212687
   grl: grl/2012/current.xml
@@ -9457,6 +9497,17 @@ data12-JetTauEtmiss-213684: !Dataset
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130412015610]
   file_pattern: '*hadhad.root*'
   id: 213684
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtmiss
+data12-JetTauEtmiss-213695: !Dataset
+  name: data12-JetTauEtmiss-213695
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00213695.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130422184208]
+  file_pattern: '*hadhad.root*'
+  id: 213695
   grl: grl/2012/current.xml
   year: 2012
   stream: JetTauEtmiss
@@ -9706,6 +9757,17 @@ data12-JetTauEtmiss-214651: !Dataset
   grl: grl/2012/current.xml
   year: 2012
   stream: JetTauEtmiss
+data12-JetTauEtmiss-214680: !Dataset
+  name: data12-JetTauEtmiss-214680
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00214680.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214680.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422184115]
+  file_pattern: '*hadhad.root*'
+  id: 214680
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtmiss
 data12-JetTauEtmiss-214714: !Dataset
   name: data12-JetTauEtmiss-214714
   datatype: 0
@@ -9714,6 +9776,21 @@ data12-JetTauEtmiss-214714: !Dataset
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130412015535]
   file_pattern: '*hadhad.root*'
   id: 214714
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtmiss
+data12-JetTauEtmiss-214721: !Dataset
+  name: data12-JetTauEtmiss-214721
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422204539,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422184324,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422232939,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130423001301,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422223239]
+  file_pattern: '*hadhad.root*'
+  id: 214721
   grl: grl/2012/current.xml
   year: 2012
   stream: JetTauEtmiss
@@ -9905,9 +9982,15 @@ data12-JetTauEtmiss-A: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200842.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015545,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200842.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414040015,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130417092158,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422183957,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423010240,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035824,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422223051,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416224706,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423000927,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204235,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025558,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201555.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422232615,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201052.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025938,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201120.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015533,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201113.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015529,
@@ -10017,11 +10100,11 @@ data12-JetTauEtmiss-C: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206497.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015702,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207304.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015147,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207306.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015301,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207221.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015558,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207044.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015458,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207397.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015431,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206573.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015920,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207262.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015852,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207221.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015558,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206971.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015805,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206614.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015827,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207332.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015218]
@@ -10116,8 +10199,15 @@ data12-JetTauEtmiss-E: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209812.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015821,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209995.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015333,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416225013,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422223221,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423010519,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020022,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423020522,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130423001247,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422232924,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130417092215,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422184312,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204342,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035930,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025542,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209866.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015719,
@@ -10170,9 +10260,11 @@ data12-JetTauEtmiss-H: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015851,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212663.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015447,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412020013,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422184307,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130417092211,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130416225006,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130414035925,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212687.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130422204353,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213204.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412025746,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213250.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015744,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212742.physics_JetTauEtmiss.merge.NTUP_TAU.r4065_p1278_p1443.v4.130412015454,
@@ -10194,6 +10286,7 @@ data12-JetTauEtmiss-I: !Dataset
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213627.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130412015534,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130412015401,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130412015610,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130422184208,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213702.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130416224815,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213539.physics_JetTauEtmiss.merge.NTUP_TAU.f482_m1250_p1443.v4.130412015628,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213754.physics_JetTauEtmiss.merge.NTUP_TAU.f485_m1250_p1443.v4.130416224705,
@@ -10223,9 +10316,15 @@ data12-JetTauEtmiss-J: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130412015400,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214544.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1261_p1443.v4.130416224759,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1255_p1443.v4.130416224728,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214680.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422184115,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214176.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1261_p1443.v4.130412015801,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1255_p1443.v4.130412015307,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130412015535,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422204539,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422184324,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422232939,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130423001301,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_JetTauEtmiss.merge.NTUP_TAU.f489_m1261_p1443.v4.130422223239,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1255_p1443.v4.130414041322,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1255_p1443.v4.130417092335,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_JetTauEtmiss.merge.NTUP_TAU.f486_m1255_p1443.v4.130416224930,
@@ -10280,14 +10379,17 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201191.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104639,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207931.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105247,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203636.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105038,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209866.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104150,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213796.physics_Muons.merge.NTUP_EMBHHIM.f485_m1251_r4232_p1462.v4.130418104112,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104753,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105444,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105640,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182814,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204158.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105306,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418104601,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209736.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104754,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183512,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104116,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202991.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104348,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207934.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105143,
@@ -10297,6 +10399,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104143,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208720.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104715,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104415,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130422182710,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105421,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104724,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208982.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105241,
@@ -10308,6 +10411,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203605.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105644,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207931.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105237,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104235,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183553,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212742.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104947,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203680.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104616,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202740.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105210,
@@ -10317,8 +10421,11 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215541.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418105227,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213816.physics_Muons.merge.NTUP_EMBHHIM.f485_m1251_r4232_p1462.v4.130418104643,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203523.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104441,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183021,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105233,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183323,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207531.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104913,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422182657,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204416.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105301,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214021.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104203,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104426,
@@ -10336,6 +10443,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212199.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104246,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104534,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105315,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183149,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214544.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130418104154,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209550.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104748,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209629.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104340,
@@ -10356,6 +10464,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00210302.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104428,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203934.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105039,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215473.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105259,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182907,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105547,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207490.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105527,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105034,
@@ -10366,6 +10475,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207528.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209214.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104950,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104403,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130422183338,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213964.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418105312,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104916,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104221,
@@ -10375,7 +10485,9 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130418105311,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105412,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104950,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183424,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209254.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104444,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183246,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208781.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105654,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104755,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207772.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104753,
@@ -10395,7 +10507,9 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208485.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104302,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209161.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105617,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209161.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105615,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183140,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201006.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105112,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183718,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105135,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213486.physics_Muons.merge.NTUP_EMBHHIM.f482_m1239_r4232_p1462.v4.130418104330,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213479.physics_Muons.merge.NTUP_EMBHHIM.f482_m1239_r4232_p1462.v4.130418104208,
@@ -10403,6 +10517,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104720,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212103.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104324,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213627.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130418105603,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130422182851,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104427,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208126.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209736.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104738,
@@ -10415,6 +10530,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203739.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104918,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204857.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105627,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212199.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105620,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183227,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208354.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105146,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206971.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104956,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215589.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418105245,
@@ -10423,6 +10539,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214390.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418105006,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203456.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104544,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105625,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183100,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204976.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105628,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209787.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104144,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104225,
@@ -10431,6 +10548,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215473.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104854,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207447.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104736,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418105058,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183657,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213964.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104527,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213796.physics_Muons.merge.NTUP_EMBHHUP.f485_m1251_r4232_p1462.v4.130418105047,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214086.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418104238,
@@ -10450,7 +10568,9 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209025.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104802,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209550.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104831,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212142.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104628,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130422183612,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202740.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104511,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182931,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215464.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418104345,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105458,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204769.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105035,
@@ -10459,6 +10579,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204025.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105039,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206369.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104815,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104400,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183504,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104542,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104707,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213359.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104934,
@@ -10494,8 +10615,10 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203524.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104424,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104943,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105514,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418104111,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209812.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104816,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130422183513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207934.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104644,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104847,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203739.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104402,
@@ -10512,6 +10635,8 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104234,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215027.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418105652,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215414.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418104501,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182915,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183713,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104312,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130418104308,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207772.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104840,
@@ -10524,8 +10649,11 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104333,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215589.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104120,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209109.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105030,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130422183139,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183347,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207582.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104156,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104412,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130422183027,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206497.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104326,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104324,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208930.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104201,
@@ -10539,12 +10667,16 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208354.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104833,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104631,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104508,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130422182817,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215414.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105553,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130418105609,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213754.physics_Muons.merge.NTUP_EMBHHDN.f485_m1251_r4232_p1462.v4.130418104411,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105353,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183240,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183314,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00210302.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105536,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206369.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105453,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182804,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213486.physics_Muons.merge.NTUP_EMBHHUP.f482_m1239_r4232_p1462.v4.130418105305,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105606,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215643.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104246,
@@ -10554,6 +10686,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208982.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105540,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206497.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105143,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208970.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104913,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212721.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183207,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105625,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213431.physics_Muons.merge.NTUP_EMBHHIM.f482_m1239_r4232_p1462.v4.130418105427,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214176.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104601,
@@ -10573,6 +10706,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105300,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207845.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104758,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214021.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418104059,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130422182658,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201190.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105501,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105612,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204633.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104211,
@@ -10593,6 +10727,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418105511,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105345,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203191.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104834,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183340,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105153,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105509,
@@ -10634,6 +10769,8 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104652,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104849,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104549,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183226,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182916,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213819.physics_Muons.merge.NTUP_EMBHHIM.f485_m1251_r4232_p1462.v4.130418104450,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418105452,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207749.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104703,
@@ -10652,18 +10789,21 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208642.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104450,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200982.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104320,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209109.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105503,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183447,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213479.physics_Muons.merge.NTUP_EMBHHDN.f482_m1239_r4232_p1462.v4.130418105311,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105222,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104407,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215541.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105555,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207620.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104652,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201113.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104601,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183239,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208781.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105538,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209866.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105043,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213702.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104554,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204633.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105114,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104655,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203191.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105531,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183131,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104644,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208123.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104846,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215433.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418105535,
@@ -10673,13 +10813,16 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209628.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105447,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130418104549,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104842,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183023,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203934.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105346,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207800.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105323,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183645,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104659,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215027.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105614,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00210308.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105234,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104440,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208642.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104205,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130422183359,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130418104630,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208662.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104703,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418105331,
@@ -10703,6 +10846,7 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130418104404,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105639,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104510,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182706,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207772.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104715,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209265.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105009,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104839,
@@ -10723,7 +10867,8 @@ data12-Muons: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204954.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105422,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104957,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104102,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104526]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104526,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182925]
   file_pattern: '*hadhad.root*'
   id: -1
   grl: grl/2012/current.xml
@@ -11052,7 +11197,8 @@ data12-Muons-203779: !Dataset
   ds: data12_8TeV.00203779.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105625,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104943,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104758]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104758,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183226]
   file_pattern: '*hadhad.root*'
   id: 203779
   grl: grl/2012/current.xml
@@ -11178,7 +11324,8 @@ data12-Muons-204910: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00204910.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105659,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183718,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105659,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105040,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104641]
   file_pattern: '*hadhad.root*'
@@ -11595,7 +11742,8 @@ data12-Muons-208184: !Dataset
   treename: tau
   ds: data12_8TeV.00208184.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104204,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105612]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105612,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182916]
   file_pattern: '*hadhad.root*'
   id: 208184
   grl: grl/2012/current.xml
@@ -11630,7 +11778,8 @@ data12-Muons-208261: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00208261.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104141,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182814,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104141,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104334]
   file_pattern: '*hadhad.root*'
   id: 208261
@@ -11856,6 +12005,7 @@ data12-Muons-209074: !Dataset
   treename: tau
   ds: data12_8TeV.00209074.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105216,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183314,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104659]
   file_pattern: '*hadhad.root*'
   id: 209074
@@ -11867,7 +12017,8 @@ data12-Muons-209084: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00209084.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104427,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183512,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104427,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104644]
   file_pattern: '*hadhad.root*'
   id: 209084
@@ -12058,7 +12209,8 @@ data12-Muons-209864: !Dataset
   treename: tau
   ds: data12_8TeV.00209864.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104755,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104354]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104354,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182925]
   file_pattern: '*hadhad.root*'
   id: 209864
   grl: grl/2012/current.xml
@@ -12153,12 +12305,27 @@ data12-Muons-211620: !Dataset
   grl: grl/2012/current.xml
   year: 2012
   stream: Muons
+data12-Muons-211670: !Dataset
+  name: data12-Muons-211670
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00211670.physics_Muons.merge.NTUP_TAU.merge
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182907,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183657,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183347]
+  file_pattern: '*hadhad.root*'
+  id: 211670
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: Muons
 data12-Muons-211772: !Dataset
   name: data12-Muons-211772
   datatype: 0
   treename: tau
   ds: data12_8TeV.00211772.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104631]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104631,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182804]
   file_pattern: '*hadhad.root*'
   id: 211772
   grl: grl/2012/current.xml
@@ -12169,7 +12336,9 @@ data12-Muons-211787: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00211787.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105355]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183021,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183713,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105355]
   file_pattern: '*hadhad.root*'
   id: 211787
   grl: grl/2012/current.xml
@@ -12181,7 +12350,8 @@ data12-Muons-212034: !Dataset
   treename: tau
   ds: data12_8TeV.00212034.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105034,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104312]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104312,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182706]
   file_pattern: '*hadhad.root*'
   id: 212034
   grl: grl/2012/current.xml
@@ -12243,7 +12413,8 @@ data12-Muons-212272: !Dataset
   treename: tau
   ds: data12_8TeV.00212272.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105421,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105509]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105509,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183645]
   file_pattern: '*hadhad.root*'
   id: 212272
   grl: grl/2012/current.xml
@@ -12254,9 +12425,22 @@ data12-Muons-212619: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00212619.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104534]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183323,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104534,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183240]
   file_pattern: '*hadhad.root*'
   id: 212619
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: Muons
+data12-Muons-212721: !Dataset
+  name: data12-Muons-212721
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00212721.physics_Muons.merge.NTUP_TAU.merge
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212721.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183207]
+  file_pattern: '*hadhad.root*'
+  id: 212721
   grl: grl/2012/current.xml
   year: 2012
   stream: Muons
@@ -12286,12 +12470,26 @@ data12-Muons-212809: !Dataset
   grl: grl/2012/current.xml
   year: 2012
   stream: Muons
+data12-Muons-212815: !Dataset
+  name: data12-Muons-212815
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00212815.physics_Muons.merge.NTUP_TAU.merge
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183100,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182915,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183340]
+  file_pattern: '*hadhad.root*'
+  id: 212815
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: Muons
 data12-Muons-212858: !Dataset
   name: data12-Muons-212858
   datatype: 0
   treename: tau
   ds: data12_8TeV.00212858.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104115,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182931,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104106]
   file_pattern: '*hadhad.root*'
   id: 212858
@@ -12304,7 +12502,8 @@ data12-Muons-213039: !Dataset
   treename: tau
   ds: data12_8TeV.00213039.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104235,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104912]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104912,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183504]
   file_pattern: '*hadhad.root*'
   id: 213039
   grl: grl/2012/current.xml
@@ -12315,7 +12514,8 @@ data12-Muons-213079: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00213079.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104958,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183023,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104958,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104957]
   file_pattern: '*hadhad.root*'
   id: 213079
@@ -12327,7 +12527,9 @@ data12-Muons-213092: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00213092.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104234]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183149,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104234,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183239]
   file_pattern: '*hadhad.root*'
   id: 213092
   grl: grl/2012/current.xml
@@ -12338,9 +12540,24 @@ data12-Muons-213130: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00213130.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104244]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183553,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104244]
   file_pattern: '*hadhad.root*'
   id: 213130
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: Muons
+data12-Muons-213157: !Dataset
+  name: data12-Muons-213157
+  datatype: 0
+  treename: tau
+  ds: data12_8TeV.00213157.physics_Muons.merge.NTUP_TAU.merge
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183140,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183227,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183131]
+  file_pattern: '*hadhad.root*'
+  id: 213157
   grl: grl/2012/current.xml
   year: 2012
   stream: Muons
@@ -12439,7 +12656,9 @@ data12-Muons-213684: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00213684.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104927]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130422183338,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104927,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130422183612]
   file_pattern: '*hadhad.root*'
   id: 213684
   grl: grl/2012/current.xml
@@ -12540,7 +12759,8 @@ data12-Muons-213951: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00213951.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104839]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130422182851,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104839]
   file_pattern: '*hadhad.root*'
   id: 213951
   grl: grl/2012/current.xml
@@ -12603,7 +12823,9 @@ data12-Muons-214160: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00214160.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104549]
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130422182658,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104549,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130422183359]
   file_pattern: '*hadhad.root*'
   id: 214160
   grl: grl/2012/current.xml
@@ -12666,7 +12888,8 @@ data12-Muons-214494: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00214494.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418105511,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130422183027,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418105511,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130418104404]
   file_pattern: '*hadhad.root*'
   id: 214494
@@ -12679,6 +12902,7 @@ data12-Muons-214523: !Dataset
   treename: tau
   ds: data12_8TeV.00214523.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418104509,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130422183513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130418104110]
   file_pattern: '*hadhad.root*'
   id: 214523
@@ -12716,7 +12940,8 @@ data12-Muons-214618: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00214618.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104221,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422182657,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104221,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104222]
   file_pattern: '*hadhad.root*'
   id: 214618
@@ -12729,7 +12954,8 @@ data12-Muons-214651: !Dataset
   treename: tau
   ds: data12_8TeV.00214651.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104225,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105514]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105514,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183447]
   file_pattern: '*hadhad.root*'
   id: 214651
   grl: grl/2012/current.xml
@@ -12754,7 +12980,8 @@ data12-Muons-214714: !Dataset
   treename: tau
   ds: data12_8TeV.00214714.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104116,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105308]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105308,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183246]
   file_pattern: '*hadhad.root*'
   id: 214714
   grl: grl/2012/current.xml
@@ -12766,7 +12993,8 @@ data12-Muons-214721: !Dataset
   treename: tau
   ds: data12_8TeV.00214721.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104109,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104720]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104720,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130422182817]
   file_pattern: '*hadhad.root*'
   id: 214721
   grl: grl/2012/current.xml
@@ -12777,7 +13005,8 @@ data12-Muons-214777: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00214777.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418105406,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183424,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418105406,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105507]
   file_pattern: '*hadhad.root*'
   id: 214777
@@ -12803,6 +13032,7 @@ data12-Muons-215061: !Dataset
   treename: tau
   ds: data12_8TeV.00215061.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104847,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130422183139,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418105345]
   file_pattern: '*hadhad.root*'
   id: 215061
@@ -12827,7 +13057,8 @@ data12-Muons-215091: !Dataset
   datatype: 0
   treename: tau
   ds: data12_8TeV.00215091.physics_Muons.merge.NTUP_TAU.merge
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105412,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130422182710,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105412,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418104939]
   file_pattern: '*hadhad.root*'
   id: 215091
@@ -12990,6 +13221,7 @@ data12-Muons-B: !Dataset
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105625,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104943,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104758,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183226,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105233,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105625,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105255,
@@ -12998,6 +13230,7 @@ data12-Muons-B: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204857.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105150,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203353.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105438,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203353.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105622,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183718,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105659,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105040,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104641,
@@ -13138,7 +13371,6 @@ data12-Muons-D: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105444,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105458,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105330,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208189.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207528.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207531.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104913,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207531.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105613,
@@ -13174,6 +13406,7 @@ data12-Muons-D: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208179.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104802,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208179.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104402,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208179.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105612,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208189.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104415,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105019,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104407,
@@ -13185,12 +13418,14 @@ data12-Muons-D: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208720.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104144,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104204,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105612,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182916,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105545,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104446,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104102,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208258.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104708,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208258.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104844,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208258.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105534,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182814,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104141,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104334,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105547,
@@ -13232,7 +13467,9 @@ data12-Muons-E: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209550.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104831,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209550.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104512,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105216,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183314,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104659,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183512,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104427,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104644,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209109.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105030,
@@ -13278,6 +13515,7 @@ data12-Muons-E: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209995.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104935,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104755,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104354,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182925,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104950,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105353,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105153,
@@ -13299,6 +13537,7 @@ data12-Muons-G: !Dataset
   ds: data12-Muons-G
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105034,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104312,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182706,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211620.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105438,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211620.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105109,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211620.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104516,
@@ -13308,13 +13547,21 @@ data12-Muons-G: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104542,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105026,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104508,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182907,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183657,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183347,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212199.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104246,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212199.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105620,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212199.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105241,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212103.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104324,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105421,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105509,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183645,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104631,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182804,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183021,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183713,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105355]
   file_pattern: '*hadhad.root*'
   id: -1
@@ -13326,26 +13573,42 @@ data12-Muons-H: !Dataset
   datatype: 0
   treename: tau
   ds: data12-Muons-H
-  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104958,
+  dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183023,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104958,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104957,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104235,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104912,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183504,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183149,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104234,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183239,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183553,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104244,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183323,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104534,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183240,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183140,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183227,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183131,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213204.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105135,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213204.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105202,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213204.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104356,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212721.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183207,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212742.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104947,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212742.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105120,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212742.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104323,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104244,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105640,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104916,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105606,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183100,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182915,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183340,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213359.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104934,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213359.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105527,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213359.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105101,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104115,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182931,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104106]
   file_pattern: '*hadhad.root*'
   id: -1
@@ -13362,7 +13625,9 @@ data12-Muons-I: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130418104819,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418105452,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130418104630,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130422183338,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104927,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130422183612,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130418105311,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104824,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130418105628,
@@ -13406,6 +13671,7 @@ data12-Muons-J: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214544.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418104534,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214544.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130418105023,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104847,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130422183139,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418105345,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104403,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104059,
@@ -13413,17 +13679,18 @@ data12-Muons-J: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214553.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418105255,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214553.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104059,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214553.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104100,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130422182710,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105412,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418104939,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214086.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418104238,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214086.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418104059,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214086.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104521,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422182657,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104221,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104222,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104150,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418105058,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418104241,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130422182658,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104549,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130422183359,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214680.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105109,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214680.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104733,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214680.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104730,
@@ -13432,19 +13699,26 @@ data12-Muons-J: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214176.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104601,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104225,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105514,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183447,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130418105609,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130418104549,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418105331,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104116,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105308,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183246,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104109,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104720,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130422182817,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418105527,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130418105359,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214216.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130418104308,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214390.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418105006,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214390.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130418105416,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214390.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130418104356,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104150,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418105058,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418104241,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130422182851,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104839,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213964.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418105125,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213964.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418105312,
@@ -13452,14 +13726,17 @@ data12-Muons-J: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418104601,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104426,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418105217,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183424,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418105406,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105507,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130422183027,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418105511,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130418104404,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215027.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418105652,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215027.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104518,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215027.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105614,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHDN.f486_m1262_r4232_p1462.v4.130418104509,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130422183513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130418104110]
   file_pattern: '*hadhad.root*'
   id: -1
@@ -14101,11 +14378,14 @@ embed12-HH-DN: !Dataset
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208982.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104253,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203636.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105038,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104753,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182814,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204158.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105306,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183512,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418104116,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214553.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418105255,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104724,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203605.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105644,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183553,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208485.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105359,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214021.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104203,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104426,
@@ -14138,7 +14418,9 @@ embed12-HH-DN: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208717.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104625,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207490.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105153,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209161.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105615,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183140,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201006.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105112,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183718,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212103.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104324,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104150,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104059,
@@ -14155,6 +14437,7 @@ embed12-HH-DN: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209269.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105549,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212742.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105120,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207864.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105643,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHDN.f482_m1251_r4232_p1462.v4.130422183612,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207809.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105458,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104912,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201052.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104211,
@@ -14178,17 +14461,23 @@ embed12-HH-DN: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203353.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105622,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213486.physics_Muons.merge.NTUP_EMBHHDN.f482_m1239_r4232_p1462.v4.130418105011,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104234,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182915,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183713,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104312,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207589.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105216,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104333,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215589.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418104120,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183347,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206368.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104346,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105019,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104631,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215414.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105553,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213754.physics_Muons.merge.NTUP_EMBHHDN.f485_m1251_r4232_p1462.v4.130418104411,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183240,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183314,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105606,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105545,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212721.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183207,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105625,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214176.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104601,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHDN.f489_m1262_r4232_p1462.v4.130418105406,
@@ -14221,6 +14510,8 @@ embed12-HH-DN: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207447.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104932,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104849,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418104549,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183226,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208184.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182916,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207865.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105006,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209812.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104118,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214086.physics_Muons.merge.NTUP_EMBHHDN.f485_m1256_r4232_p1462.v4.130418104521,
@@ -14231,6 +14522,8 @@ embed12-HH-DN: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104655,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208123.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104846,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209995.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104935,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213079.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183023,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422183645,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215027.physics_Muons.merge.NTUP_EMBHHDN.f495_m1267_r4232_p1462.v4.130418105614,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104440,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214388.physics_Muons.merge.NTUP_EMBHHDN.f486_m1256_r4232_p1462.v4.130418105331,
@@ -14246,7 +14539,8 @@ embed12-HH-DN: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105409,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203524.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104301,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209629.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418105522,
-    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104526]
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207664.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130418104526,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHDN.r4065_p1278_r4232_p1462.v4.130422182925]
   file_pattern: '*hadhad.root*'
   id: 1
   grl: grl/2012/current.xml
@@ -14260,6 +14554,7 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208717.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104619,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201191.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104639,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207931.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105247,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213130.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213796.physics_Muons.merge.NTUP_EMBHHIM.f485_m1251_r4232_p1462.v4.130418104112,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418104601,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209736.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104754,
@@ -14274,10 +14569,12 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215541.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418105227,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213816.physics_Muons.merge.NTUP_EMBHHIM.f485_m1251_r4232_p1462.v4.130418104643,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105233,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422182657,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208179.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104802,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204772.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105604,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104534,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105315,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183149,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209629.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104340,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207865.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105103,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207845.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105131,
@@ -14285,6 +14582,7 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206971.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104412,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204416.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104624,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213964.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418105125,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182907,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208780.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105547,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207490.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105527,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105034,
@@ -14293,6 +14591,8 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209214.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104950,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212809.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104916,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104950,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183424,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183246,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209864.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104755,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203680.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104931,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209269.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105603,
@@ -14310,6 +14610,7 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105455,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209265.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104107,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203779.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105625,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183100,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104141,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207447.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104814,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213900.physics_Muons.merge.NTUP_EMBHHIM.f485_m1256_r4232_p1462.v4.130418105058,
@@ -14331,6 +14632,7 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209899.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105337,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105216,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214553.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130418104100,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422182701,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130418104111,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209812.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104816,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203739.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104402,
@@ -14348,6 +14650,8 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105026,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207582.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104708,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206573.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104452,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215061.physics_Muons.merge.NTUP_EMBHHIM.f495_m1267_r4232_p1462.v4.130422183139,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHIM.f486_m1262_r4232_p1462.v4.130422183027,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206497.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104326,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209776.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104324,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208930.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104201,
@@ -14361,6 +14665,7 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213431.physics_Muons.merge.NTUP_EMBHHIM.f482_m1239_r4232_p1462.v4.130418105427,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209980.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104623,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105300,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHIM.f486_m1256_r4232_p1462.v4.130422182658,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204976.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104411,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213695.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104824,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203256.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104536,
@@ -14387,12 +14692,14 @@ embed12-HH-IM: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208642.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104450,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200982.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104320,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209109.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105503,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHIM.f489_m1262_r4232_p1462.v4.130422183447,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104407,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207620.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104652,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208781.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105538,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209866.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105043,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213702.physics_Muons.merge.NTUP_EMBHHIM.f482_m1251_r4232_p1462.v4.130418104554,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203191.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105531,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130422183131,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104644,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204910.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104641,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209628.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418105447,
@@ -14429,6 +14736,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207934.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105143,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208717.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104316,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208705.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104415,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215091.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130422182710,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212272.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105421,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209254.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207532.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104131,
@@ -14439,6 +14747,8 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202740.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105210,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204025.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105352,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203523.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104441,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211787.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183021,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212619.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183323,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207531.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104913,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204416.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105301,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207490.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105030,
@@ -14454,6 +14764,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208720.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104651,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214714.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105308,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215063.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104403,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213684.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130422183338,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213964.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418105312,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214618.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104221,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214176.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130418104316,
@@ -14463,14 +14774,17 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208631.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105135,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203191.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105444,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213627.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130418105603,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213951.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130422182851,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209084.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104427,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208126.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209736.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104738,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213157.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183227,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215589.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418105245,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203456.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104544,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209787.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104144,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215473.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104854,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207447.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104736,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211670.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183657,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213796.physics_Muons.merge.NTUP_EMBHHUP.f485_m1251_r4232_p1462.v4.130418105047,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209628.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203719.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105150,
@@ -14479,8 +14793,10 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213816.physics_Muons.merge.NTUP_EMBHHUP.f485_m1251_r4232_p1462.v4.130418104445,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209025.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104802,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212142.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104628,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212858.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182931,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206369.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104815,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207975.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104400,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213039.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183504,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213359.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104934,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215414.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104920,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214553.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418104059,
@@ -14492,6 +14808,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213968.physics_Muons.merge.NTUP_EMBHHUP.f485_m1256_r4232_p1462.v4.130418105217,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203524.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104424,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214651.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105514,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214523.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130422183513,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201190.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105311,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207772.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104840,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206962.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105357,
@@ -14501,8 +14818,10 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00201052.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105646,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203636.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104938,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212172.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104508,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214721.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130422182817,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209353.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105353,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00210302.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105536,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00211772.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182804,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213486.physics_Muons.merge.NTUP_EMBHHUP.f482_m1239_r4232_p1462.v4.130418105305,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215643.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418104246,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207865.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104547,
@@ -14525,6 +14844,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208354.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104756,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208811.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104635,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204240.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105345,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212815.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183340,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214777.physics_Muons.merge.NTUP_EMBHHUP.f489_m1262_r4232_p1462.v4.130418105507,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208870.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104446,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207696.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105648,
@@ -14543,6 +14863,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00202668.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105017,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209995.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104505,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00200913.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105222,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213092.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422183239,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00204633.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105114,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00215433.physics_Muons.merge.NTUP_EMBHHUP.f495_m1267_r4232_p1462.v4.130418105535,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208930.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105152,
@@ -14552,6 +14873,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00209074.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104659,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00210308.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105234,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208642.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104205,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214160.physics_Muons.merge.NTUP_EMBHHUP.f486_m1256_r4232_p1462.v4.130422183359,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213640.physics_Muons.merge.NTUP_EMBHHUP.f482_m1251_r4232_p1462.v4.130418104630,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208662.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104703,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00213754.physics_Muons.merge.NTUP_EMBHHUP.f485_m1251_r4232_p1462.v4.130418104657,
@@ -14561,6 +14883,7 @@ embed12-HH-UP: !Dataset
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00205016.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104241,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00206368.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104107,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00214494.physics_Muons.merge.NTUP_EMBHHUP.f486_m1262_r4232_p1462.v4.130418104404,
+    /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00212034.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130422182706,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208261.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418104334,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00208179.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105612,
     /cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00203277.physics_Muons.merge.NTUP_EMBHHUP.r4065_p1278_r4232_p1462.v4.130418105255,
