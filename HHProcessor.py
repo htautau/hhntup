@@ -30,6 +30,7 @@ from higgstautau import eventview
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
+from higgstautau.mass import is_MET_bisecting
 #from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
@@ -498,6 +499,17 @@ class HHProcessor(ATLASStudent):
             tree.MET_y = METy
             tree.MET_phi = event.MET.phi
             tree.MET_vec.set_from(MET_vect)
+            dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+            dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
+            dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
+            tree.dPhi_tau1_tau2 = dPhi_tau1_tau2
+            tree.dPhi_tau1_MET = dPhi_tau1_MET
+            tree.dPhi_tau2_MET = dPhi_tau2_MET
+            tree.dPhi_min_tau_MET = min(dPhi_tau1_MET, dPhi_tau2_MET)
+            tree.MET_bisecting = is_MET_bisecting(
+                dPhi_tau1_tau2,
+                dPhi_tau1_MET,
+                dPhi_tau2_MET)
 
             sumET = event.MET.sumet
             tree.sumET = sumET

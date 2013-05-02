@@ -81,6 +81,10 @@ class EventVariables(TreeModel):
     MET_phi = FloatCol()
     MET_sig = FloatCol()
     MET_vec = Vector2
+    dPhi_tau1_MET = FloatCol()
+    dPhi_tau2_MET = FloatCol()
+    dPhi_min_tau_MET = FloatCol()
+    MET_bisecting = BoolCol()
 
     MET_mmc = FloatCol()
     MET_mmc_x = FloatCol()
@@ -180,7 +184,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
         tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
-        tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
         # leading pt over subleading pt
         tree.tau_pt_ratio = tau1.pt / tau2.pt
         tree.tau_centrality_product = tau1.centrality * tau2.centrality
