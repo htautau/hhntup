@@ -148,6 +148,15 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
+                tau.trigger_eff_sf_loose = 1.
+                tau.trigger_eff_sf_loose_high = 1.
+                tau.trigger_eff_sf_loose_low = 1.
+                tau.trigger_eff_sf_medium = 1.
+                tau.trigger_eff_sf_medium_high = 1.
+                tau.trigger_eff_sf_medium_low = 1.
+                tau.trigger_eff_sf_tight = 1.
+                tau.trigger_eff_sf_tight_high = 1.
+                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
             if tau.trigger_match_thresh == 20:
@@ -205,6 +214,16 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
+                # reset
+                tau.trigger_eff_sf_loose = 1.
+                tau.trigger_eff_sf_loose_high = 1.
+                tau.trigger_eff_sf_loose_low = 1.
+                tau.trigger_eff_sf_medium = 1.
+                tau.trigger_eff_sf_medium_high = 1.
+                tau.trigger_eff_sf_medium_low = 1.
+                tau.trigger_eff_sf_tight = 1.
+                tau.trigger_eff_sf_tight_high = 1.
+                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
             wp = {}
@@ -247,6 +266,16 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
+                # reset
+                tau.trigger_eff_sf_loose = 1.
+                tau.trigger_eff_sf_loose_high = 1.
+                tau.trigger_eff_sf_loose_low = 1.
+                tau.trigger_eff_sf_medium = 1.
+                tau.trigger_eff_sf_medium_high = 1.
+                tau.trigger_eff_sf_medium_low = 1.
+                tau.trigger_eff_sf_tight = 1.
+                tau.trigger_eff_sf_tight_high = 1.
+                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
             wp = {}
@@ -353,6 +382,16 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
+                # reset
+                tau.trigger_eff_sf_loose = 1.
+                tau.trigger_eff_sf_loose_high = 1.
+                tau.trigger_eff_sf_loose_low = 1.
+                tau.trigger_eff_sf_medium = 1.
+                tau.trigger_eff_sf_medium_high = 1.
+                tau.trigger_eff_sf_medium_low = 1.
+                tau.trigger_eff_sf_tight = 1.
+                tau.trigger_eff_sf_tight_high = 1.
+                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
             wp = {}
