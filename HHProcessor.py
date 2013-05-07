@@ -290,6 +290,9 @@ class HHProcessor(ATLASStudent):
                 lead=35 * GeV,
                 sublead=25 * GeV,
                 count_funcs=count_funcs),
+            TruthMatching(
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
             TauTriggerMatchThreshold(
                 datatype=datatype,
                 tree=tree,
@@ -306,15 +309,13 @@ class HHProcessor(ATLASStudent):
                 year=year,
                 passthrough=datatype not in (datasets.DATA, datasets.EMBED),
                 count_funcs=count_funcs),
-            TruthMatching(
-                passthrough=datatype == datasets.DATA,
-                count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
                 passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
+                datatype=datatype,
                 passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             ggFReweighting(

@@ -145,6 +145,11 @@ class TauTriggerEfficiency(EventFilter):
 
         thresh = []
         for tau in event.taus:
+
+            # only correct matched taus
+            if not tau.matched:
+                continue
+
             if tau.trigger_match_thresh == 20:
                 if event.RunNumber >= 188902:
                      corr = self.correct_20T
@@ -185,10 +190,6 @@ class TauTriggerEfficiency(EventFilter):
                 setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
                         abs(corr.getSF(tau.pt, -1)))
 
-        if len(set(thresh)) != 2 or len(thresh) != 2:
-            raise Exception(
-                "there must be exactly two unique trigger match "
-                "thresholds (29, 20). Got: %s" % str(thresh))
         return True
 
     def passes_11_embed(self, event):
@@ -201,6 +202,10 @@ class TauTriggerEfficiency(EventFilter):
                            if pileup_vertex_selection(vtx)])
 
         for tau, thresh in zip(event.taus, (29, 20)):
+
+            # only correct matched taus
+            if not tau.matched:
+                continue
 
             wp = {}
             wp['loose'] = 'BDTl'
@@ -239,6 +244,10 @@ class TauTriggerEfficiency(EventFilter):
         eveto = 'EVnone'
 
         for tau in event.taus:
+
+            # only correct matched taus
+            if not tau.matched:
+                continue
 
             wp = {}
             wp['loose'] = 'BDTl'
@@ -323,10 +332,6 @@ class TauTriggerEfficiency(EventFilter):
                     setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, sf + sigma_up)
                     setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, sf - sigma_dn)
 
-        if len(set(thresh)) != 2 or len(thresh) != 2:
-            raise Exception(
-                "there must be exactly two unique trigger match "
-                "thresholds (29, 20). Got: %s" % str(thresh))
         return True
 
     def passes_12_embed(self, event):
@@ -345,6 +350,10 @@ class TauTriggerEfficiency(EventFilter):
         eveto = 'EVnone'
 
         for tau, ttc in zip(event.taus, (self.ttc_29, self.ttc_20)):
+
+            # only correct matched taus
+            if not tau.matched:
+                continue
 
             wp = {}
             wp['loose'] = 'BDTl'
