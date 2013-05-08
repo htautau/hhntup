@@ -72,6 +72,7 @@ class EventVariables(TreeModel):
     eta_product_jets = FloatCol()
     eta_product_jets_boosted = FloatCol()
 
+    numJets25 = IntCol()
     numJets = IntCol()
     nonisolatedjet = BoolCol()
 

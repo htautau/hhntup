@@ -160,7 +160,7 @@ def run(student,
         # determine actual number of required CPU cores
         nproc_actual = min(nproc, len(files))
         cmd = CMD % (nproc_actual, ds)
-        if student_args is not None:
+        if student_args:
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "cd %s && %s" % (CWD, cmd)
 
@@ -202,6 +202,7 @@ def run(student,
 
 def run_systematics(channel, student, systematics=None, **kwargs):
 
+    student_args = kwargs.pop('student_args', [])
     for sys_variations in iter_systematics(channel):
         if systematics is not None:
             if sys_variations not in systematics:
@@ -211,7 +212,7 @@ def run_systematics(channel, student, systematics=None, **kwargs):
         print
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
-            student_args=syst.split(),
+            student_args=syst.split() + student_args,
             qsub_name_suffix='_'.join(sys_variations),
             suffix='_'.join(sys_variations),
             **kwargs)
@@ -220,6 +221,7 @@ def run_systematics(channel, student, systematics=None, **kwargs):
 def run_systematics_new(channel, student, datasets, systematics,
         filter_systematics=None, **kwargs):
 
+    student_args = kwargs.pop('student_args', [])
     for sys_variations in systematics:
         if filter_systematics is not None:
             if sys_variations not in filter_systematics:
@@ -227,7 +229,7 @@ def run_systematics_new(channel, student, datasets, systematics,
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
             datasets=datasets,
-            student_args=syst.split(),
+            student_args=syst.split() + student_args,
             qsub_name_suffix='_'.join(sys_variations),
             suffix='_'.join(sys_variations),
             **kwargs)

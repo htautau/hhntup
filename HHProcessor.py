@@ -20,6 +20,7 @@ from atlastools.units import *
 from atlastools.filtering import GRLFilter
 from atlastools.batch import ATLASStudent
 
+from higgstautau import log; log = log[__name__]
 from higgstautau.mixins import *
 from higgstautau import hepmc
 from higgstautau import tautools
@@ -338,6 +339,9 @@ class HHProcessor(ATLASStudent):
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
+            NumJets25(
+                tree=tree,
+                count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
@@ -368,6 +372,7 @@ class HHProcessor(ATLASStudent):
         """
 
         if redo_mmc:
+            log.info("will recalculate MMC output")
             # create MMC object
             mmc = mass.MMC(year=year, channel='hh')
 
@@ -519,7 +524,6 @@ class HHProcessor(ATLASStudent):
                         (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
             else:
                 tree.MET_sig = -1.
-            MET_res = 6.14 * math.sqrt(GeV) + 0.5 * math.sqrt(abs(sumET))
 
             tree.MET_centrality = eventshapes.phi_centrality(
                     tau1.fourvect,
@@ -549,7 +553,10 @@ class HHProcessor(ATLASStudent):
             ##########################
             if redo_mmc:
                 mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                        tau1, tau2, METx, METy, sumET)
+                        tau1, tau2,
+                        METx, METy, sumET,
+                        tree.numJets25,
+                        method=0)
             else:
                 # use MMC values from skim
                 mmc_mass = event.tau_MMC_mass
@@ -602,7 +609,7 @@ class HHProcessor(ATLASStudent):
                         lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
 
                 if len(event.truetaus) > 2:
-                    print "ERROR: too many true taus: %i" % len(event.truetaus)
+                    log.warning("too many true taus: %i" % len(event.truetaus))
                     for truetau in event.truetaus:
                         print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (
                                 truetau.pt, truetau.eta, truetau.phi),
@@ -625,7 +632,7 @@ class HHProcessor(ATLASStudent):
                         # check that this tau / true tau was not previously matched
                         if (matching_truth_index not in unmatched_truth or
                             matching_truth_index in matched_truth):
-                            print "ERROR: match collision!"
+                            log.warning("match collision!")
                             tau1.matched_collision = True
                             tau2.matched_collision = True
                             tree.trueTau1_matched_collision = True
