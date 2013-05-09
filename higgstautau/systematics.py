@@ -25,6 +25,7 @@ from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
 # TCU will soon support both 2011 and 2012
 from externaltools.bundle_2012 import TauCorrUncert as TCU
+from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool2012
 
 # MissingETUtility
 from ROOT import METUtility
@@ -33,6 +34,11 @@ from ROOT import METObject
 from ROOT import MissingETTags
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
+# JVF
+from ROOT import JVFUncertaintyTool
+from ROOT import TLorentzVector # needed for JVF
+from rootpy import stl
+VectorTLorentzVector = stl.vector("TLorentzVector")
 # JetResolution
 from ROOT import JERProvider
 # egammaAnalysisUtils
@@ -69,7 +75,7 @@ class JetSystematic(ObjectSystematic):
                 print "=" * 20
                 print "JETS BEFORE:"
                 for jet in event.jets:
-                    print jet.pt
+                    print jet.pt, '\t',jet.jvtxf
                 print "-" * 20
 
             for jet in event.jets:
@@ -78,15 +84,32 @@ class JetSystematic(ObjectSystematic):
             if self.verbose:
                 print "JETS AFTER:"
                 for jet in event.jets:
-                    print jet.pt
+                    print jet.pt, '\t',jet.jvtxf
 
         return wrapper
 
 
 class JES(JetSystematic):
+    # All 14 NPs in the 2013 recommendation
+    all_nps = [
+        'Statistical',
+        'Modelling',
+        'Detector',
+        'Mixed',
+        'EtaModelling',
+        'EtaMethod',
+        'PURho',
+        'PUPt',
+        'PUNPV',
+        'PUMu',
+        'FlavComp',
+        'FlavResp',
+        'BJet',
+        'NonClosure',  
+    ]
 
-    def __init__(self, is_up, **kwargs):
-
+    def __init__(self, is_up, np=None, **kwargs):
+        
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
         super(JES, self).__init__(is_up, **kwargs)
@@ -101,14 +124,89 @@ class JES(JetSystematic):
                 "MC11c",
                 JetUncertainties.RESOURCE_PATH)
         elif self.year == 2012:
+            assert np in self.all_nps and hasattr(self, '_'+np)
+            self.np = np
+            self.run_np = getattr(self, '_'+np)
+
             self.jes_tool = MultijetJESUncertaintyProvider(
                 "JES_2012/Moriond2013/MultijetJES_2012.config",
-                "JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
-                "AntiKt4LCTopoJets",
+#                 "JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
+                "JES_2012/Moriond2013/InsituJES2012_20NP_ByCategory.config",
+                "AntiKt4TopoLC",
                 "MC12a",
                 JetUncertainties.RESOURCE_PATH)
         else:
             raise ValueError('No JES defined for year %d' % year)
+
+    def _Statistical(self, jet, event):
+        uncs = [0., 0., 0.]
+        for i in range(3):
+            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Statistical%d" % (i+1), jet.pt, jet.eta)
+        return uncs
+
+    def _Modelling(self, jet, event):
+        uncs = [0., 0., 0., 0.]
+        for i in range(4):
+            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Modelling%d" % (i+1), jet.pt, jet.eta)
+        return uncs
+
+    def _Detector(self, jet, event):
+        uncs = [0., 0., 0.]
+        for i in range(3):
+            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Detector%d" % (i+1), jet.pt, jet.eta)
+        return uncs
+
+    def _Mixed(self, jet, event):
+        uncs = [0., 0.]
+        for i in range(2):
+            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Mixed%d" % (i+1), jet.pt, jet.eta)
+        return uncs
+
+    def _EtaModelling(self, jet, event):
+        return [ self.jes_tool.getRelUncertComponent("EtaIntercalibration_Modelling", jet.pt, jet.eta) ]
+
+    def _EtaMethod(self, jet, event):
+        return [ self.jes_tool.getRelUncertComponent("EtaIntercalibration_StatAndMethod", jet.pt, jet.eta) ]
+
+    def _PURho(self, jet, event):
+        return [ self.jes_tool.getRelPileupRhoTopology(jet.pt, jet.eta) ]
+
+    def _PUPt(self, jet, event):
+        return [ self.jes_tool.getRelPileupPtTerm(jet.pt, jet.eta, self.sys_util.nvtxjets, event.averageIntPerXing) ]
+
+    def _PUNPV(self, jet, event):
+        return [ self.jes_tool.getRelNPVOffsetTerm(jet.pt, jet.eta, self.sys_util.nvtxjets) ]
+
+    def _PUMu(self, jet, event):
+        return [ self.jes_tool.getRelMuOffsetTerm(jet.pt, jet.eta, event.averageIntPerXing) ]
+
+    def _FlavComp(self, jet, event):
+        uncs = [0.]
+        is_b = jet.flavor_truth_dRminToB < 0.4
+        if not is_b:
+            uncs[0] = self.jes_tool.getRelFlavorCompUncert(jet.pt, jet.eta, True)
+        return uncs
+
+    def _FlavResp(self, jet, event):
+        uncs = [0.]
+        is_b = jet.flavor_truth_dRminToB < 0.4
+        if not is_b:
+            uncs[0] = self.jes_tool.getRelFlavorResponseUncert(jet.pt, jet.eta)
+        return uncs
+
+    def _BJet(self, jet, event):
+        uncs = [0.]
+        is_b = jet.flavor_truth_dRminToB < 0.4
+        if not is_b:
+            uncs[0] = self.jes_tool.getRelBJESUncert(jet.pt, jet.eta)
+        return uncs
+
+    def _NonClosure(self, jet, event):
+        uncs = [0., 0.]
+        uncs[0] = self.jes_tool.getRelUncertComponent("SingleParticle_HighPt", jet.pt, jet.eta)
+        uncs[1] = self.jes_tool.getRelUncertComponent("RelativeNonClosure_Pythia8", jet.pt, jet.eta)
+        # TODO: If AFII, use "RelativeNonClosure_AFII" instead
+        return uncs
 
     @JetSystematic.set
     def run(self, jet, event):
@@ -117,41 +215,122 @@ class JES(JetSystematic):
         # These will go into SoftJets anyhow, and so the JES systematics
         # aren't used.
         shift = 0.
-        if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
+        if self.year == 2011:
+            if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
-            # delta R cut needed to apply close-by jets uncertainty
-            drmin=9999
-            for otherjet in event.jets:
-                if otherjet.emscale_pt > 7000:
-                    if jet.index != otherjet.index:
-                        dr = utils.dR(jet.eta, jet.phi,
-                                      otherjet.eta,
-                                      otherjet.phi)
-                        if dr < drmin:
-                            drmin = dr
+                # delta R cut needed to apply close-by jets uncertainty
+                drmin=9999
+                for otherjet in event.jets:
+                    if otherjet.emscale_pt > 7000:
+                        if jet.index != otherjet.index:
+                            dr = utils.dR(jet.eta, jet.phi,
+                                          otherjet.eta,
+                                          otherjet.phi)
+                            if dr < drmin:
+                                drmin = dr
 
-            # TODO: shift is symmetric (is_up argument is not needed)
-            if self.is_up:
-                shift = self.jes_tool.getRelUncert(
-                        jet.pt,
-                        jet.eta,
-                        drmin,
-                        True, # is up
-                        self.sys_util.nvtxjets,
-                        event.averageIntPerXing,
-                        False) # is b jet
-            else:
-                shift = -1 * self.jes_tool.getRelUncert(
-                        jet.pt,
-                        jet.eta,
-                        drmin,
-                        False, # is up
-                        self.sys_util.nvtxjets,
-                        event.averageIntPerXing,
-                        False) # is b jet
+                # TODO: shift is symmetric (is_up argument is not needed)
+                if self.is_up:
+                    shift = self.jes_tool.getRelUncert(
+                            jet.pt,
+                            jet.eta,
+                            drmin,
+                            True, # is up
+                            self.sys_util.nvtxjets,
+                            event.averageIntPerXing,
+                            False) # is b jet
+                else:
+                    shift = -1 * self.jes_tool.getRelUncert(
+                            jet.pt,
+                            jet.eta,
+                            drmin,
+                            False, # is up
+                            self.sys_util.nvtxjets,
+                            event.averageIntPerXing,
+                            False) # is b jet
+        elif self.year == 2012:
+            if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
+                uncs =self.run_np(jet, event)
+                if len(uncs) > 1:
+                    unc = 0.
+                    for u in uncs: unc += u**2.
+                    unc = unc**0.5
+                else:
+                    unc = uncs[0]
+
+                if abs(max(uncs)) < abs(min(uncs)):
+                    unc = -unc; # set total to sign of max
+                if self.is_up:
+                    shift = unc;
+                else:
+                    shift = -unc;
         jet.pt *= 1. + shift
 
+
+class JVF(JetSystematic):
+
+    def __init__(self, is_up, JVFcutNominal=0.5, **kwargs):
+        self.JVFcutNominal = JVFcutNominal
+
+        # Tag assumed: JVFUncertaintyTool-00-00-03
+        self.jvf_tool = JVFUncertaintyTool("AntiKt4LCTopo")
+        super(JVF, self).__init__(is_up, **kwargs)
+
+    @JetSystematic.set
+    def run(self, jet, event):
+        """ From Melbourne's framework...:
+        TLorentzVector jet;
+        TLorentzVector aux_trueJet;
+        std::vector<TLorentzVector> trueJets;
+
+        for (int k=0; k < ao->truejet.n; k++)
+        {
+            aux_trueJet.SetPtEtaPhiM(   ao->truejet.pt->at(k),  
+                                        ao->truejet.eta->at(k),  
+                                        ao->truejet.phi->at(k), 
+                                        ao->truejet.m->at(k));
+            if (aux_trueJet.Pt()<= 10000) continue;
+            trueJets.push_back(aux_trueJet);
+        }
+
+
+        for (int j=0; j < ao->jet.n; j++)
+        {
+            jet.SetPtEtaPhiM(ao->jet.pt->at(j),  ao->jet.eta->at(j),  ao->jet.phi->at(j),  ao->jet.m->at(j));
+
+            if (jet.Pt()>= 50000. || fabs(jet.Eta()) >= 2.4) continue;
+
+            //Verify is the jet is classified as a PU or HS jet
+            bool isPU = jvf_uncertainty_tool->isPileUpJet(jet, trueJets);
+
+            double eta_det = ao->jet.constscale_eta->at(j);
+            double JVFcutNominal = 0.5;
+            float jvf_cut_sys = jvf_uncertainty_tool->getJVFcut(JVFcutNominal, isPU, jet.Pt(), eta_det, flag);
+
+            //change variation from the jvf_cut to the jet jvf value
+            //easier to implement in the current framework, where the jvf_cut is always fixed to 0.5
+            float jvf_cut_diff = jvf_cut_sys - JVFcutNominal;
+            ao->jet.jvtxf->at(j)  =  ao->jet.jvtxf->at(j) - jvf_cut_diff;
+        }
+        """
+        # JVF is only used in a certain range, so only correct for those
+        if jet.pt < 50e3 and abs(jet.eta) < 2.4:
+            truejets = VectorTLorentzVector()
+            truejets_cache = []
+            for truejet in event.truejets:
+                if truejet.pt > 10e3:
+                    t = TLorentzVector()
+                    t.SetPtEtaPhiM(truejet.pt, truejet.eta, truejet.phi, truejet.m)
+                    truejets.push_back(t)
+                    truejets_cache.append(t)
+
+            j = TLorentzVector()
+            j.SetPtEtaPhiM(jet.pt, jet.eta, jet.phi, jet.m)
+            isPU = self.jvf_tool.isPileUpJet(j, truejets)
+            jvf_cut_sys = self.jvf_tool.getJVFcut(self.JVFcutNominal, isPU, jet.pt, jet.constscale_eta, self.is_up)
+            jvf_cut_diff = jvf_cut_sys - self.JVFcutNominal
+            jet.jvtxf -= jvf_cut_diff
 
 class JER(JetSystematic):
 
@@ -457,12 +636,61 @@ class Systematics(EventFilter):
     TAUBDT_UP = -100
     TAUBDT_DOWN = -101
 
+    JES_Statistical_UP = -10000
+    JES_Statistical_DOWN = -10001
+    JES_Modelling_UP = -10010
+    JES_Modelling_DOWN = -10011
+    JES_Detector_UP = -10020
+    JES_Detector_DOWN = -10021
+    JES_Mixed_UP = -10030
+    JES_Mixed_DOWN = -10031
+    JES_EtaModelling_UP = -10040
+    JES_EtaModelling_DOWN = -10041
+    JES_EtaMethod_UP = -10050
+    JES_EtaMethod_DOWN = -10051
+    JES_PURho_UP = -10060
+    JES_PURho_DOWN = -10061
+    JES_PUPt_UP = -10070
+    JES_PUPt_DOWN = -10071
+    JES_PUNPV_UP = -10080
+    JES_PUNPV_DOWN = -10081
+    JES_PUMu_UP = -10090
+    JES_PUMu_DOWN = -10091
+    JES_FlavComp_UP = -10100
+    JES_FlavComp_DOWN = -10101
+    JES_FlavResp_UP = -10110
+    JES_FlavResp_DOWN = -10111
+    JES_BJet_UP = -10120
+    JES_BJet_DOWN = -10121
+    JES_NonClosure_UP = -10130
+    JES_NonClosure_DOWN = -10131
+    JVF_UP = -11000
+    JVF_DOWN = -11001
+
     # jets
-    JES_UP = METUtil.JESUp
-    JES_DOWN = METUtil.JESDown
+#     JES_UP = METUtil.JESUp
+#     JES_DOWN = METUtil.JESDown
     JER_UP = METUtil.JERUp
     JER_DOWN = METUtil.JERDown # NOT USED!
-    JES_TERMS = set([JES_UP, JES_DOWN, JER_UP, JER_DOWN])
+    JES_TERMS = set([
+#             JES_UP,                 JES_DOWN,
+            JES_Statistical_UP,     JES_Statistical_DOWN,
+            JES_Modelling_UP,       JES_Modelling_DOWN,
+            JES_Detector_UP,        JES_Detector_DOWN,
+            JES_Mixed_UP,           JES_Mixed_DOWN,
+            JES_EtaModelling_UP,    JES_EtaModelling_DOWN,
+            JES_EtaMethod_UP,       JES_EtaMethod_DOWN,
+            JES_PURho_UP,           JES_PURho_DOWN,
+            JES_PUPt_UP,            JES_PUPt_DOWN,
+            JES_PUNPV_UP,           JES_PUNPV_DOWN,
+            JES_PUMu_UP,            JES_PUMu_DOWN,
+            JES_FlavComp_UP,        JES_FlavComp_DOWN,
+            JES_FlavResp_UP,        JES_FlavResp_DOWN,
+            JES_BJet_UP,            JES_BJet_DOWN,
+            JES_NonClosure_UP,      JES_NonClosure_DOWN,
+            JVF_UP,                 JVF_DOWN,
+            JER_UP,                 JER_DOWN,
+        ])
 
     # muons
     MERID_UP = METUtil.MERIDUp
@@ -536,10 +764,70 @@ class Systematics(EventFilter):
             terms = set(terms)
             self.terms = terms
             for term in terms:
-                if term == Systematics.JES_UP:
-                    systematic = JES(True, sys_util=self)
-                elif term == Systematics.JES_DOWN:
-                    systematic = JES(False, sys_util=self)
+#                 if term == Systematics.JES_UP:
+#                     systematic = JES(True, sys_util=self)
+#                 elif term == Systematics.JES_DOWN:
+#                     systematic = JES(False, sys_util=self)
+                if term == Systematics.JES_Statistical_UP:
+                    systematic = JES(True, np="Statistical", sys_util=self)
+                elif term == Systematics.JES_Statistical_DOWN:
+                    systematic = JES(False,  np="Statistical", sys_util=self)
+                elif term == Systematics.JES_Modelling_UP:
+                    systematic = JES(True, np="Modelling", sys_util=self)
+                elif term == Systematics.JES_Modelling_DOWN:
+                    systematic = JES(False,  np="Modelling", sys_util=self)
+                elif term == Systematics.JES_Detector_UP:
+                    systematic = JES(True, np="Detector", sys_util=self)
+                elif term == Systematics.JES_Detector_DOWN:
+                    systematic = JES(False,  np="Detector", sys_util=self)
+                elif term == Systematics.JES_Mixed_UP:
+                    systematic = JES(True, np="Mixed", sys_util=self)
+                elif term == Systematics.JES_Mixed_DOWN:
+                    systematic = JES(False,  np="Mixed", sys_util=self)
+                elif term == Systematics.JES_EtaModelling_UP:
+                    systematic = JES(True, np="EtaModelling", sys_util=self)
+                elif term == Systematics.JES_EtaModelling_DOWN:
+                    systematic = JES(False,  np="EtaModelling", sys_util=self)
+                elif term == Systematics.JES_EtaMethod_UP:
+                    systematic = JES(True, np="EtaMethod", sys_util=self)
+                elif term == Systematics.JES_EtaMethod_DOWN:
+                    systematic = JES(False,  np="EtaMethod", sys_util=self)
+                elif term == Systematics.JES_PURho_UP:
+                    systematic = JES(True, np="PURho", sys_util=self)
+                elif term == Systematics.JES_PURho_DOWN:
+                    systematic = JES(False,  np="PURho", sys_util=self)
+                elif term == Systematics.JES_PUPt_UP:
+                    systematic = JES(True, np="PUPt", sys_util=self)
+                elif term == Systematics.JES_PUPt_DOWN:
+                    systematic = JES(False,  np="PUPt", sys_util=self)
+                elif term == Systematics.JES_PUNPV_UP:
+                    systematic = JES(True, np="PUNPV", sys_util=self)
+                elif term == Systematics.JES_PUNPV_DOWN:
+                    systematic = JES(False,  np="PUNPV", sys_util=self)
+                elif term == Systematics.JES_PUMu_UP:
+                    systematic = JES(True, np="PUMu", sys_util=self)
+                elif term == Systematics.JES_PUMu_DOWN:
+                    systematic = JES(False,  np="PUMu", sys_util=self)
+                elif term == Systematics.JES_FlavComp_UP:
+                    systematic = JES(True, np="FlavComp", sys_util=self)
+                elif term == Systematics.JES_FlavComp_DOWN:
+                    systematic = JES(False,  np="FlavComp", sys_util=self)
+                elif term == Systematics.JES_FlavResp_UP:
+                    systematic = JES(True, np="FlavResp", sys_util=self)
+                elif term == Systematics.JES_FlavResp_DOWN:
+                    systematic = JES(False,  np="FlavResp", sys_util=self)
+                elif term == Systematics.JES_BJet_UP:
+                    systematic = JES(True, np="BJet", sys_util=self)
+                elif term == Systematics.JES_BJet_DOWN:
+                    systematic = JES(False,  np="BJet", sys_util=self)
+                elif term == Systematics.JES_NonClosure_UP:
+                    systematic = JES(True, np="NonClosure", sys_util=self)
+                elif term == Systematics.JES_NonClosure_DOWN:
+                    systematic = JES(False,  np="NonClosure", sys_util=self)
+                elif term == Systematics.JVF_UP:
+                    systematic = JVF(True, sys_util=self)
+                elif term == Systematics.JVF_DOWN:
+                    systematic = JVF(False, sys_util=self)
                 elif term == Systematics.JER_UP:
                     systematic = JER(True, sys_util=self)
                 elif term == Systematics.TES_UP:
