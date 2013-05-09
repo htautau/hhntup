@@ -75,6 +75,7 @@ class MMC(object):
             else:
                 tau2_decay_type = 30
                 mvis = 1.2
+
             vis_tau2.SetPtEtaPhiM(
                 tau2.fourvect.Pt() / GeV,
                 tau2.fourvect.Eta(),
