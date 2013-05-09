@@ -3,7 +3,7 @@
 HHSTUDENT ?= HHProcessor
 HHNTUP ?= ntuples/hadhad/HHProcessor
 
-default: clean
+default: clean lib
 
 lib:
 	cd higgstautau/jetcleaning && ./setup.py build_ext --inplace
@@ -24,7 +24,6 @@ clean-pyc:
 	rm -f *.pyc
 
 clean: clean-pyc
-	rm -f cutflow.p
 	rm -f student*.root
 	rm -f student*.profile
 	rm -f TPileupReweighting.prw.root
