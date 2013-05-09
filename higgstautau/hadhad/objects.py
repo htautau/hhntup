@@ -38,6 +38,11 @@ def define_objects(tree, year, skim=False):
             size="jet_AntiKt4TopoEM_n",
             mix=FourMomentum)
     tree.define_collection(
+            name="truejets",
+            prefix="jet_antikt4truth_",
+            size="jet_antikt4truth_n",
+            mix=FourMomentum)
+    tree.define_collection(
             name="truetaus",
             prefix="trueTau_",
             size="trueTau_n",

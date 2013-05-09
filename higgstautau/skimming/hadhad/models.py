@@ -89,6 +89,19 @@ class ScaleFactors(TreeModel):
     fakerate_sf_tight_high = ROOT.vector('float')
     fakerate_sf_tight_low = ROOT.vector('float')
 
+    # fakerate reco scale factors
+    fakerate_sf_reco_loose = ROOT.vector('float')
+    fakerate_sf_reco_loose_high = ROOT.vector('float')
+    fakerate_sf_reco_loose_low = ROOT.vector('float')
+
+    fakerate_sf_reco_medium = ROOT.vector('float')
+    fakerate_sf_reco_medium_high = ROOT.vector('float')
+    fakerate_sf_reco_medium_low = ROOT.vector('float')
+
+    fakerate_sf_reco_tight = ROOT.vector('float')
+    fakerate_sf_reco_tight_high = ROOT.vector('float')
+    fakerate_sf_reco_tight_low = ROOT.vector('float')
+
     # trigger efficiency scale factors
     trigger_eff_sf_loose = ROOT.vector('float')
     trigger_eff_sf_loose_high = ROOT.vector('float')

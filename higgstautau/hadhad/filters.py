@@ -193,7 +193,12 @@ class EfficiencyScaleFactors(EventFilter):
 
 class FakeRateScaleFactors(EventFilter):
 
-    def __init__(self, year, datatype, passthrough=False, **kwargs):
+    def __init__(self, year, datatype, tes_up_systematic=False, tes_down_systematic=False, passthrough=False, **kwargs):
+
+        self.tes_up = tes_up_systematic
+        self.tes_down = tes_down_systematic
+        if tes_up_systematic is None: self.tes_up = False
+        if tes_down_systematic is None: self.tes_down = False
 
         if not passthrough:
             self.year = year % 1000
@@ -261,9 +266,11 @@ class FakeRateScaleFactors(EventFilter):
         for tau in event.taus:
 
             # fakerate only applies to taus that don't match truth
-            if tau.matched:
-                continue
+#             if tau.matched:
+#                 continue
 
+            tes_up = self.tes_up
+            tes_down = self.tes_down
             wplevels = dict()
             wplevels['loose'] = self.fakerate_ns.LOOSE
             if tau.JetBDTSigMedium:
@@ -296,15 +303,15 @@ class FakeRateScaleFactors(EventFilter):
                 if self.datatype == datasets.MC:
                     sf_denom = self.fakerate_tool.getEffMC(
                         tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE, trigger)
+                        wpflag, self.fakerate_ns.LOOSE, trigger, tes_down, tes_up)
 
                     sf_denom_up = self.fakerate_tool.getEffMCUncertainty(
                         tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE, trigger, True)
+                        wpflag, self.fakerate_ns.LOOSE, trigger, True, tes_down, tes_up)
 
                     sf_denom_dn = self.fakerate_tool.getEffMCUncertainty(
                         tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE, trigger, False)
+                        wpflag, self.fakerate_ns.LOOSE, trigger, False, tes_down, tes_up)
 
                 else: # embedding: no trigger in denominator
                     sf_denom = self.fakerate_tool.getEffData(
@@ -326,11 +333,11 @@ class FakeRateScaleFactors(EventFilter):
                 #    sf_data, sf_mc, wp, tau.pt, tau.numTrack, event.RunNumber,
                 #    tau.trigger_match_thresh))
 
-                if sf_numer == 0 or sf_denom == 0: # bug
-                    log.warning("fake rate bug: efficiency == 0")
-                    sf = 0.
-                    sf_high = 0.
-                    sf_low = 0.
+                if sf_numer == 0 or sf_denom == 0:
+#                     log.warning("fake rate bug: efficiency == 0")
+                    sf = 1.
+                    sf_high = 1.
+                    sf_low = 1.
                 else:
                     sf = sf_numer / sf_denom
 
@@ -345,11 +352,23 @@ class FakeRateScaleFactors(EventFilter):
                     sf_high = sf + sf_up
                     sf_low = sf - sf_dn
 
+                if sf_low < 0: sf_low = 0.
                 setattr(tau, 'fakerate_sf_%s' % wp, sf)
 
                 # uncertainty
                 setattr(tau, 'fakerate_sf_%s_high' % wp, sf_high)
                 setattr(tau, 'fakerate_sf_%s_low' % wp, sf_low)
+
+                # Do the reco SF
+                sf_reco = self.fakerate_tool.getRecoSF(
+                    tau.pt, tau.numTrack, event.RunNumber)
+                sf_reco_high = 1.
+                sf_reco_low = 1.
+                if sf_reco_low < 0: sf_reco_low = 0.
+
+                setattr(tau, 'fakerate_sf_reco_%s' % wp, sf_reco)
+                setattr(tau, 'fakerate_sf_reco_%s_high' % wp, sf_reco_high)
+                setattr(tau, 'fakerate_sf_reco_%s_low' % wp, sf_reco_low)
 
                 #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
         return True

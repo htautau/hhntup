@@ -152,6 +152,11 @@ class RecoTau(FourMomentum):
     fakerate_scale_factor_high = FloatCol(default=1.)
     fakerate_scale_factor_low = FloatCol(default=1.)
 
+    # fake rate reco scale factor for taus that do not match truth
+    fakerate_scale_factor_reco = FloatCol(default=1.)
+    fakerate_scale_factor_reco_high = FloatCol(default=1.)
+    fakerate_scale_factor_reco_low = FloatCol(default=1.)
+
     # trigger efficiency correction
     trigger_scale_factor = FloatCol(default=1.)
     trigger_scale_factor_high = FloatCol(default=1.)
@@ -219,6 +224,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                     outtau.fakerate_scale_factor = intau.fakerate_sf_tight
                     outtau.fakerate_scale_factor_high = intau.fakerate_sf_tight_high
                     outtau.fakerate_scale_factor_low = intau.fakerate_sf_tight_low
+                    outtau.fakerate_scale_factor_reco = intau.fakerate_sf_reco_tight
+                    outtau.fakerate_scale_factor_reco_high = intau.fakerate_sf_reco_tight_high
+                    outtau.fakerate_scale_factor_reco_low = intau.fakerate_sf_reco_tight_low
 
                 outtau.trigger_scale_factor = intau.trigger_eff_sf_tight
                 outtau.trigger_scale_factor_high = intau.trigger_eff_sf_tight_high
@@ -233,6 +241,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                     outtau.fakerate_scale_factor = intau.fakerate_sf_medium
                     outtau.fakerate_scale_factor_high = intau.fakerate_sf_medium_high
                     outtau.fakerate_scale_factor_low = intau.fakerate_sf_medium_low
+                    outtau.fakerate_scale_factor_reco = intau.fakerate_sf_reco_medium
+                    outtau.fakerate_scale_factor_reco_high = intau.fakerate_sf_reco_medium_high
+                    outtau.fakerate_scale_factor_reco_low = intau.fakerate_sf_reco_medium_low
 
                 outtau.trigger_scale_factor = intau.trigger_eff_sf_medium
                 outtau.trigger_scale_factor_high = intau.trigger_eff_sf_medium_high
@@ -247,6 +258,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                     outtau.fakerate_scale_factor = intau.fakerate_sf_loose
                     outtau.fakerate_scale_factor_high = intau.fakerate_sf_loose_high
                     outtau.fakerate_scale_factor_low = intau.fakerate_sf_loose_low
+                    outtau.fakerate_scale_factor_reco = intau.fakerate_sf_reco_loose
+                    outtau.fakerate_scale_factor_reco_high = intau.fakerate_sf_reco_loose_high
+                    outtau.fakerate_scale_factor_reco_low = intau.fakerate_sf_reco_loose_low
 
                 outtau.trigger_scale_factor = intau.trigger_eff_sf_loose
                 outtau.trigger_scale_factor_high = intau.trigger_eff_sf_loose_high

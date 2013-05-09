@@ -253,7 +253,7 @@ class hhskim(ATLASStudent):
                 year=year,
                 datatype=datatype,
                 tree=tree,
-                pileup_tool=pileup_tool,
+#                 pileup_tool=pileup_tool,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=no_trigger or datatype == datasets.DATA,
@@ -272,9 +272,12 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
-                passthrough=no_trigger
-                            or datatype == datasets.DATA
-                            or year == 2012, # wait for new tool
+                datatype=datatype,
+                tes_up_systematic= (self.args.syst_terms and
+                                (Systematics.TES_UP in self.args.syst_terms)),
+                tes_down_systematic= (self.args.syst_terms and
+                                (Systematics.TES_DOWN in self.args.syst_terms)),
+                passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             ggFReweighting(
                 dsname=os.getenv('INPUT_DATASET_NAME', ''),
@@ -362,7 +365,7 @@ class hhskim(ATLASStudent):
             sumET = event.MET.sumet
 
             mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2, METx, METy, sumET)
+                    tau1, tau2, METx, METy, sumET, len(event.jets))
 
             tree.tau_MMC_mass = mmc_mass
             tree.tau_MMC_resonance.set_from(mmc_resonance)

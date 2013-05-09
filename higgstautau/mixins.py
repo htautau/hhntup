@@ -228,6 +228,20 @@ class TauFourMomentumSkim(TauFourMomentum):
         self.fakerate_sf_tight_high = SF_DEFAULT
         self.fakerate_sf_tight_low = SF_DEFAULT
 
+        # fakerate reco scale factors
+        self.fakerate_sf_reco_loose = SF_DEFAULT
+        self.fakerate_sf_reco_loose_high = SF_DEFAULT
+        self.fakerate_sf_reco_loose_low = SF_DEFAULT
+
+        self.fakerate_sf_reco_medium = SF_DEFAULT
+        self.fakerate_sf_reco_medium_high = SF_DEFAULT
+        self.fakerate_sf_reco_medium_low = SF_DEFAULT
+
+        self.fakerate_sf_reco_tight = SF_DEFAULT
+        self.fakerate_sf_reco_tight_high = SF_DEFAULT
+        self.fakerate_sf_reco_tight_low = SF_DEFAULT
+
+
         # trigger efficiency scale factors
         self.trigger_eff_sf_loose = SF_DEFAULT
         self.trigger_eff_sf_loose_high = SF_DEFAULT
