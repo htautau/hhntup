@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-
+from . import log; log = log[__name__]
 import ROOT, sys
-ROOT.PyConfig.IgnoreCommandLineOptions = True
+#ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(True)
 
 """
@@ -20,8 +19,8 @@ try:
     from pyAMI.auth import AMI_CONFIG, create_auth_config
 except ImportError:
     USE_PYAMI = False
-    print "Warning: pyAMI is not installed."
-    print "Cross-section retrieval will be disabled."
+    log.warning("pyAMI is not installed. "
+                "Cross-section retrieval will be disabled.")
 
 
 import sys
@@ -247,7 +246,7 @@ class Database(dict):
         if os.path.isfile(self.filepath):
             with open(self.filepath) as db:
                 if self.verbose:
-                    print "Loading '%s' dataset database..." % self.name
+                    log.info("Loading '%s' database ..." % self.name)
                 d = yaml.load(db)
                 if d:
                     self.update(d)
@@ -262,7 +261,8 @@ class Database(dict):
         if self.modified:
             with open(self.filepath, 'w') as db:
                 if self.verbose:
-                    print "Saving '%s' dataset database to disk..." % self.name
+                    log.info("Saving '%s' database ..." %
+                             self.name)
                 yaml.dump(dict(self), db)
 
     def reset(self):
@@ -272,7 +272,8 @@ class Database(dict):
     def clear(self):
 
         # erase all datasets in database
-        if self.verbose: print "Resetting '%s' dataset database..." % self.name
+        if self.verbose:
+            log.info("Resetting '%s' database ..." % self.name)
         super(Database, self).clear()
         self.modified = True
 
@@ -293,10 +294,10 @@ class Database(dict):
                 ds[name] = info
         incomplete = []
         for name, info in sorted(ds.items(), key=lambda item: item[0]):
-            print "Validating %s ..." % name
+            log.info("Validating %s ..." % name)
             complete = validate_single((name, info), child=False)
-            print "Complete: %s" % complete
-            print '-'*50
+            log.info("Complete: %s" % complete)
+            log.info('-' * 50)
             if not complete:
                 incomplete.append(info.ds)
         #pool = Pool(processes=cpu_count())
@@ -308,10 +309,9 @@ class Database(dict):
         #    if not complete:
         #        all_complete = False
         if not incomplete:
-            print "ALL DATASETS ARE COMPLETE"
+            log.info("ALL DATASETS ARE COMPLETE")
         else:
-            print "SOME DATASETS ARE NOT COMPLETE"
-            print "INCOMPLETE DATASETS:"
+            log.warning("SOME DATASETS ARE NOT COMPLETE:")
             for ds in incomplete:
                 print ds
 
@@ -337,7 +337,8 @@ class Database(dict):
         """
         Update the dataset database
         """
-        if self.verbose: print "Updating '%s' dataset database..." % self.name
+        if self.verbose:
+            log.info("Updating '%s' database ..." % self.name)
         self.modified = True
 
         ###############################
@@ -369,7 +370,7 @@ class Database(dict):
                         except IndexError:
                             version = 0
                         except:
-                            print basename
+                            log.warning(basename)
                             raise
                         tag_match = re.match(MC_TAG_PATTERN1, tag)
                         tag_match2 = re.match(MC_TAG_PATTERN2, tag)
@@ -380,7 +381,7 @@ class Database(dict):
                             MC_TAG_PATTERN = MC_TAG_PATTERN2
 
                         if not tag_match:
-                            print "not tag-matched: %s" % basename
+                            log.warning("not tag-matched: %s" % basename)
                             continue
                         cat = None
                         for cat_name, cat_params in MC_CATEGORIES.items():
@@ -388,7 +389,8 @@ class Database(dict):
                                 cat = cat_name
                                 break
                         if cat is None:
-                            print "does not match a category: %s" % basename
+                            log.warning(
+                                "does not match a category: %s" % basename)
                             continue
                         name += '.' + cat
                         dataset = self.get(name, None)
@@ -421,7 +423,7 @@ class Database(dict):
                                     take_this = True
 
                                 if take_this:
-                                    print "taking %s over %s" % (
+                                    log.warning"taking %s over %s" % (
                                         basename, dataset.ds)
                                     self[name] = Dataset(name=name,
                                                          datatype=MC,
@@ -452,7 +454,7 @@ class Database(dict):
                                                  file_pattern=mc_pattern,
                                                  year=year)
                     elif self.verbose:
-                        print "not a valid mc dataset name: %s" % basename
+                        log.info("not a valid mc dataset name: %s" % basename)
 
                 elif mc_sampletype == 'lhCN':
                     match  = re.match(CN_MC_PATTERN12, basename)
@@ -473,7 +475,7 @@ class Database(dict):
                             dataset.dirs.append(dir)
                         else:
 
-                            print '\'%s\',' % name
+                            log.info('\'%s\',' % name)
                             self[name] = Dataset(name=name,
                                                  datatype=MC,
                                                  treename=mc_treename,
@@ -519,9 +521,11 @@ class Database(dict):
                                 channels[channel] = []
                             channels[channel].append(dir)
                         elif self.verbose:
-                            print "not a valid embedding dataset name: %s" % basename
+                            log.warning(
+                                "not a valid embedding dataset name: %s"
+                                % basename)
                     elif self.verbose:
-                        print "skipping file: %s" % dir
+                        log.warning("skipping file: %s" % dir)
 
                 for channel, channel_dirs in channels.items():
                     syst = {}
@@ -534,7 +538,9 @@ class Database(dict):
                                 syst[isol] = []
                             syst[isol].append(dir)
                         elif self.verbose:
-                            print "not a valid embedding dataset name: %s" % basename
+                            log.warning(
+                                "not a valid embedding dataset name: %s"
+                                % basename)
 
                     for syst_type, dirs in syst.items():
                         name = 'embed%d-%s-%s' % (
@@ -567,9 +573,11 @@ class Database(dict):
                                 channels[channel] = []
                             channels[channel].append(dir)
                         elif self.verbose:
-                            print "not a valid embedding dataset name: %s" % basename
+                            log.warning(
+                                "not a valid embedding dataset name: %s"
+                                % basename)
                     elif self.verbose:
-                        print "skipping file: %s" % dir
+                        log.warning("skipping file: %s" % dir)
 
                 for channel, channel_dirs in channels.items():
                     if year == 2011:
@@ -584,7 +592,9 @@ class Database(dict):
                                     isols[isol] = []
                                 isols[isol].append(dir)
                             elif self.verbose:
-                                print "not a valid embedding dataset name: %s" % basename
+                                log.warning(
+                                    "not a valid embedding dataset name: %s"
+                                    % basename)
 
                         for isol, isol_dirs in isols.items():
                             # group dirs by mfs
@@ -598,7 +608,9 @@ class Database(dict):
                                         mfss[mfs] = []
                                     mfss[mfs].append(dir)
                                 elif self.verbose:
-                                    print "not a valid embedding dataset name: %s" % basename
+                                    log.warning(
+                                        "not a valid embedding dataset name: %s"
+                                        % basename)
 
                             for mfs, mfs_dirs in mfss.items():
                                 name = 'embed%d-%s-%s-%s' % (
@@ -627,12 +639,14 @@ class Database(dict):
                                         else:
                                             periods[period]['dirs'].append(dir)
                                             if tag != periods[period]['tag']:
-                                                print (
+                                                log.warning(
                                                     'multiple copies of run with '
                                                     'different tags: %s' %
                                                     periods[period]['dirs'])
                                     elif self.verbose:
-                                        print "not a valid embeding dataset name: %s" % basename
+                                        log.warning(
+                                            "not a valid embeding dataset name: %s"
+                                            % basename)
 
                                 for period, info in periods.items():
                                     period_name = '%s-%s' % (name, period)
@@ -659,7 +673,9 @@ class Database(dict):
                                     mfss[mfs] = []
                                 mfss[mfs].append(dir)
                             elif self.verbose:
-                                print "not a valid embedding dataset name: %s" % basename
+                                log.warning(
+                                    "not a valid embedding dataset name: %s"
+                                    % basename)
 
                         for mfs, mfs_dirs in mfss.items():
                             name = 'embed%d-%s-%s' % (
@@ -687,12 +703,14 @@ class Database(dict):
                                     else:
                                         periods[period]['dirs'].append(dir)
                                         if tag != periods[period]['tag']:
-                                            print (
+                                            log.warning(
                                                 'multiple copies of run with '
                                                 'different tags: %s' %
                                                 periods[period]['dirs'])
                                 elif self.verbose:
-                                    print "not a valid embedding dataset name: %s" % basename
+                                    log.warning(
+                                        "not a valid embedding dataset name: %s"
+                                        % basename)
 
                             for period, info in periods.items():
                                 period_name = '%s-%s' % (name, period)
@@ -719,9 +737,11 @@ class Database(dict):
                                 channels[channel] = []
                             channels[channel].append(dir)
                         elif self.verbose:
-                            print "not a valid embedding dataset name: %s" % basename
+                            log.warning(
+                                "not a valid embedding dataset name: %s"
+                                % basename)
                     elif self.verbose:
-                        print "skipping file: %s" % dir
+                        log.warning("skipping file: %s" % dir)
 
                 for channel, channel_dirs in channels.items():
                     # group dirs by mfs
@@ -735,12 +755,14 @@ class Database(dict):
                                 mfss[mfs] = []
                             mfss[mfs].append(dir)
                         elif self.verbose:
-                            print "not a valid embedding dataset name: %s" % basename
+                            log.warning(
+                                "not a valid embedding dataset name: %s"
+                                % basename)
 
                     for mfs, mfs_dirs in mfss.items():
                         name = 'embed%d-%s-%s' % (
                             year % 1000, channel, mfs)
-                        print '\'%s\',' % name
+                        log.info('\'%s\',' % name)
                         self[name] = Dataset(name,
                                              datatype=EMBED,
                                              treename=embed_treename,
@@ -783,7 +805,7 @@ class Database(dict):
                             streams[stream] = []
                         streams[stream].append(dir)
                     elif self.verbose:
-                        print "not a valid data dataset name: %s" % dir
+                        log.warning("not a valid data dataset name: %s" % dir)
 
                 for stream, dirs in streams.items():
                     name = 'data%d-%s' % (year % 1000, stream)
@@ -814,11 +836,12 @@ class Database(dict):
                             else:
                                 runs[run]['dirs'].append(dir)
                                 if tag != runs[run]['tag']:
-                                    print (
+                                    log.warning(
                                         'multiple copies of run with different '
                                         'tags: %s' % runs[run]['dirs'])
                         elif self.verbose:
-                            print "not a valid data dataset name: %s" % dir
+                            log.warning(
+                                "not a valid data dataset name: %s" % dir)
                     # need to use the actual ds name for ds for validation
                     for run, info in runs.items():
                         name = 'data%d-%s-%d' % (year % 1000, stream, run)
@@ -880,11 +903,11 @@ class Database(dict):
                             streams[stream] = []
                         streams[stream].append(dir)
                     elif self.verbose:
-                        print "not a valid data dataset name: %s" % dir
+                        log.warning("not a valid data dataset name: %s" % dir)
 
                 for stream, dirs in streams.items():
                     name = 'data%d-%s' % (year % 1000, stream)
-                    print '\'%s\',' % name
+                    log.info('\'%s\',' % name)
                     self[name] = Dataset(name=name,
                                          datatype=DATA,
                                          treename=data_treename,
@@ -912,15 +935,16 @@ class Database(dict):
                             else:
                                 periods[period]['dirs'].append(dir)
                                 if tag != periods[period]['tag']:
-                                    print (
+                                    log.warning(
                                         'multiple copies of period with different '
                                         'tags: %s' % periods[period]['dirs'])
                         elif self.verbose:
-                            print "not a valid data dataset name: %s" % dir
+                            log.warning(
+                                "not a valid data dataset name: %s" % dir)
                     # need to use the actual ds name for ds for validation
                     for period, info in periods.items():
                         name = 'data%d-%s-%s' % (year % 1000, stream, period)
-                        print '\'%s\',' % name
+                        log.info('\'%s\',' % name)
                         self[name] = Dataset(name=name,
                                              datatype=DATA,
                                              treename=data_treename,
@@ -1010,16 +1034,16 @@ class Dataset(Serializable):
         if self.datatype == DATA:
             return 1., 1., 1.
         if year in XSEC_CACHE and self.name in XSEC_CACHE[year]:
-            print "WARNING: using cached cross section for dataset %s" % self.ds
+            log.warning("using cached cross section for dataset %s" % self.ds)
             return XSEC_CACHE[year][self.name]
 
         try:
             return xsec.xsec_kfact_effic(self.year, self.id)
         except KeyError:
-            print "WARNING: cross section of dataset %s not available locally." % self.ds
-            print "Looking it up in AMI instead. AMI cross sections can be very"
-            print "wrong! You have been warned!"
-            print "A k factor of 1. will be assumed."
+            log.warning("cross section of dataset %s not available locally."
+                        "Looking it up in AMI instead. AMI cross sections can be very"
+                        "wrong! You have been warned!"
+                        % self.ds)
 
         if USE_PYAMI:
             if self.ds in DS_NOPROV:
@@ -1061,7 +1085,7 @@ yaml.add_constructor(u'!Dataset', dataset_constructor)
 
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
-        print "Loading cross-section cache..."
+        log.info("Loading cross-section cache...")
         XSEC_CACHE = pickle.load(cache)
 
 
@@ -1070,7 +1094,7 @@ def write_cache():
 
     if XSEC_CACHE_MODIFIED:
         with open(XSEC_CACHE_FILE, 'w') as cache:
-            print "Saving cross-section cache to disk..."
+            log.info("Saving cross-section cache to disk...")
             pickle.dump(XSEC_CACHE, cache)
 
 
@@ -1101,40 +1125,40 @@ def validate_single(args, child=True):
                         tree = rfile.tau
                         events += tree.GetEntries()
             except IOError:
-                print "Currupt file: %s" % fname
+                log.warning("Currupt file: %s" % fname)
                 pass
         # determine events in original ntuples
         # use first dir
         ds_name = info.ds
-        print 'NTUP: ' + ds_name
+        log.info('NTUP: ' + ds_name)
         ds_info = get_dataset_info(amiclient, ds_name)
         ntuple_events = int(ds_info.info['totalEvents'])
         try:
             # determine events in AODs
             prov = get_provenance(amiclient, ds_name, type='AOD')
             AOD_ds = prov.values()[0][0].replace('recon', 'merge')
-            print 'AOD: ' + AOD_ds
+            log.info('AOD: ' + AOD_ds)
             AOD_events = int(get_datasets(amiclient, AOD_ds, fields='events',
                     flatten=True)[0][0])
         except IndexError:
-            print 'AOD: UNKNOWN'
+            log.info('AOD: UNKNOWN')
             AOD_events = ntuple_events
-        print name
-        print "\tevts\tNTUP\tAOD"
-        print "\t%i\t%i\t%i" % (events, ntuple_events, AOD_events)
+        log.info(name)
+        log.info("\tevts\tNTUP\tAOD")
+        log.info("\t%i\t%i\t%i" % (events, ntuple_events, AOD_events))
         if events != ntuple_events:
-            print "NTUP MISMATCH"
+            log.warning("NTUP MISMATCH")
         if events != AOD_events:
-            print "AOD MISMATCH"
+            log.warning("AOD MISMATCH")
         if events != ntuple_events and (events != AOD_events or AOD_events == 0):
-            print "MISSING EVENTS"
+            log.warning("MISSING EVENTS")
             complete = False
         if child:
             return out.getvalue(), complete
         return complete
     except Exception, e:
         import traceback
-        print "dataset %s exception" % name
+        log.warning("dataset %s exception" % name)
         traceback.print_exception(*sys.exc_info())
         if child:
             return out.getvalue(), False
@@ -1170,89 +1194,3 @@ def get_all_dirs_under(path, prefix=None):
         dirnames = _dirnames
 
     return dirs
-
-
-if __name__ == '__main__':
-
-    """
-    Update the database
-    """
-    from argparse import ArgumentParser
-
-    parser = ArgumentParser()
-    parser.add_argument('--deep', action='store_true', default=False)
-    parser.add_argument('--reset', action='store_true', default=False)
-    parser.add_argument('--versioned', action='store_true', default=False)
-    parser.add_argument('--validate', action='store_true', default=False)
-    parser.add_argument('--validate-pattern', default=None)
-    parser.add_argument('--validate-type', default=None)
-    parser.add_argument('--validate-year', type=int, default=None)
-    parser.add_argument('--info', action='store_true', default=False)
-
-    """
-    parser.add_argument('--year', type=int, default=None)
-    parser.add_argument('--grl', default=None)
-
-    parser.add_argument('--mc-path', default=None)
-    parser.add_argument('--mc-prefix', default=None)
-    parser.add_argument('--mc-pattern', default='*.root*')
-
-    parser.add_argument('--data-path', default=None)
-    parser.add_argument('--data-prefix', default=None)
-    parser.add_argument('--data-pattern', default='*.root*')
-
-    parser.add_argument('--embed-path', default=None)
-    parser.add_argument('--embed-prefix', default=None)
-    parser.add_argument('--embed-pattern', default='*.root*')
-    """
-    parser.add_argument('--name', default='datasets')
-    parser.add_argument('--config', default='datasets_config.yml')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False)
-    parser.add_argument('analysis', choices=('lh', 'hh'))
-    args = parser.parse_args()
-
-    if args.analysis == 'hh':
-        args.versioned = True
-        args.name += '_hh'
-    elif args.analysis == 'lh':
-        args.versioned = True
-        args.name += '_lh'
-
-    db = Database(
-            name=args.name,
-            verbose=args.verbose)
-
-    if args.validate or args.validate_pattern is not None:
-        # check for missing events etc...
-        validate_type = args.validate_type
-        if validate_type is not None:
-            validate_type = args.validate_type.upper()
-            validate_type = eval(validate_type)
-        db.validate(pattern=args.validate_pattern,
-                    datatype=validate_type,
-                    year=args.validate_year)
-    elif args.info:
-        print "%i datasets in database" % len(db)
-        for name in sorted(db.keys()):
-            print db[name]
-            if len(db[name].files) == 0:
-                print "EMPTY DATASET"
-                sys.exit(1)
-
-    else:
-        if args.reset:
-            db.clear()
-
-        with open(args.config) as config:
-            config_dict = yaml.load(config)
-            for year, year_config in config_dict.items():
-                if args.analysis not in year_config:
-                    continue
-                params = {}
-                params['data_grl'] = year_config['common'].get('grl', None)
-                params.update(year_config[args.analysis])
-                db.scan(year,
-                        deep=args.deep,
-                        versioned=args.versioned,
-                        **params)
-        db.write()
