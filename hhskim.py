@@ -273,10 +273,10 @@ class hhskim(ATLASStudent):
             FakeRateScaleFactors(
                 year=year,
                 datatype=datatype,
-                tes_up_systematic= (self.args.syst_terms and
-                                (Systematics.TES_UP in self.args.syst_terms)),
-                tes_down_systematic= (self.args.syst_terms and
-                                (Systematics.TES_DOWN in self.args.syst_terms)),
+                tes_up_systematic=(self.args.syst_terms and
+                    (Systematics.TES_UP in self.args.syst_terms)),
+                tes_down_systematic=(self.args.syst_terms and
+                    (Systematics.TES_DOWN in self.args.syst_terms)),
                 passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             ggFReweighting(

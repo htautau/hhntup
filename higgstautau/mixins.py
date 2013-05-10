@@ -20,6 +20,8 @@ __all__ = [
     'MCParticle',
 ]
 
+SF_DEFAULT = 1.
+
 
 class MatchedObject(object):
 
@@ -123,6 +125,12 @@ class TauFourMomentum(FourMomentum):
 
         self._pt_nominal = -1111.
 
+        # Move to skim mixin after new skim
+        # fakerate reco scale factors
+        self.fakerate_sf_reco = SF_DEFAULT
+        self.fakerate_sf_reco_high = SF_DEFAULT
+        self.fakerate_sf_reco_low = SF_DEFAULT
+
     @property
     def pt_nominal(self):
 
@@ -197,8 +205,6 @@ class TauFourMomentumSkim(TauFourMomentum):
 
         super(TauFourMomentumSkim, self).__init__()
 
-        SF_DEFAULT = 1.
-
         self.trigger_match_thresh = 0
         self.trigger_match_index = -1
 
@@ -227,20 +233,6 @@ class TauFourMomentumSkim(TauFourMomentum):
         self.fakerate_sf_tight = SF_DEFAULT
         self.fakerate_sf_tight_high = SF_DEFAULT
         self.fakerate_sf_tight_low = SF_DEFAULT
-
-        # fakerate reco scale factors
-        self.fakerate_sf_reco_loose = SF_DEFAULT
-        self.fakerate_sf_reco_loose_high = SF_DEFAULT
-        self.fakerate_sf_reco_loose_low = SF_DEFAULT
-
-        self.fakerate_sf_reco_medium = SF_DEFAULT
-        self.fakerate_sf_reco_medium_high = SF_DEFAULT
-        self.fakerate_sf_reco_medium_low = SF_DEFAULT
-
-        self.fakerate_sf_reco_tight = SF_DEFAULT
-        self.fakerate_sf_reco_tight_high = SF_DEFAULT
-        self.fakerate_sf_reco_tight_low = SF_DEFAULT
-
 
         # trigger efficiency scale factors
         self.trigger_eff_sf_loose = SF_DEFAULT

@@ -266,8 +266,16 @@ class FakeRateScaleFactors(EventFilter):
         for tau in event.taus:
 
             # fakerate only applies to taus that don't match truth
-#             if tau.matched:
-#                 continue
+            if tau.matched:
+                continue
+
+            # Get the reco SF
+            sf_reco = self.fakerate_tool.getRecoSF(
+                tau.pt, tau.numTrack, event.RunNumber)
+
+            setattr(tau, 'fakerate_sf_reco', sf_reco)
+            setattr(tau, 'fakerate_sf_reco_high', sf_reco)
+            setattr(tau, 'fakerate_sf_reco_low', sf_reco)
 
             tes_up = self.tes_up
             tes_down = self.tes_down
@@ -334,7 +342,7 @@ class FakeRateScaleFactors(EventFilter):
                 #    tau.trigger_match_thresh))
 
                 if sf_numer == 0 or sf_denom == 0:
-#                     log.warning("fake rate bug: efficiency == 0")
+                    log.warning("fake rate bug: efficiency == 0")
                     sf = 1.
                     sf_high = 1.
                     sf_low = 1.
@@ -352,23 +360,13 @@ class FakeRateScaleFactors(EventFilter):
                     sf_high = sf + sf_up
                     sf_low = sf - sf_dn
 
-                if sf_low < 0: sf_low = 0.
+                if sf_low < 0:
+                    sf_low = 0.
                 setattr(tau, 'fakerate_sf_%s' % wp, sf)
 
                 # uncertainty
                 setattr(tau, 'fakerate_sf_%s_high' % wp, sf_high)
                 setattr(tau, 'fakerate_sf_%s_low' % wp, sf_low)
-
-                # Do the reco SF
-                sf_reco = self.fakerate_tool.getRecoSF(
-                    tau.pt, tau.numTrack, event.RunNumber)
-                sf_reco_high = 1.
-                sf_reco_low = 1.
-                if sf_reco_low < 0: sf_reco_low = 0.
-
-                setattr(tau, 'fakerate_sf_reco_%s' % wp, sf_reco)
-                setattr(tau, 'fakerate_sf_reco_%s_high' % wp, sf_reco_high)
-                setattr(tau, 'fakerate_sf_reco_%s_low' % wp, sf_reco_low)
 
                 #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
         return True
