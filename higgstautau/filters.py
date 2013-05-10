@@ -517,7 +517,7 @@ def jet_selection_2011(jet):
         return False
 
     # JVF cut on central jets
-    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
+    if (abs(jet.eta) < 2.4) and not (abs(jet.jvtxf) > 0.75):
         return False
 
     return True
@@ -539,7 +539,7 @@ def jet_selection_2012(jet):
 
     # JVF cut on central jets below 50 GeV
     if (jet.fourvect.Pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
-        if not (jet.jvtxf > 0.5):
+        if not (abs(jet.jvtxf) > 0.5):
             return False
 
     return True
