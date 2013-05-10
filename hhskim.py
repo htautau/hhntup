@@ -244,6 +244,9 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TaudR(3.2,
                 count_funcs=count_funcs),
+            TruthMatching(
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
             TauTriggerMatchThreshold(
                 datatype=datatype,
                 tree=tree,
@@ -253,7 +256,6 @@ class hhskim(ATLASStudent):
                 year=year,
                 datatype=datatype,
                 tree=tree,
-#                 pileup_tool=pileup_tool,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=no_trigger or datatype == datasets.DATA,
@@ -262,9 +264,6 @@ class hhskim(ATLASStudent):
                 tool=pileup_tool,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            TruthMatching(
-                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
