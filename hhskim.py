@@ -363,6 +363,7 @@ class hhskim(ATLASStudent):
             MET = event.MET.et
             sumET = event.MET.sumet
 
+            # TODO: use actual njets25
             mmc_mass, mmc_resonance, mmc_met = mmc.mass(
                     tau1, tau2, METx, METy, sumET, len(event.jets))
 
