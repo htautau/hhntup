@@ -56,20 +56,6 @@ class MCRunNumber(EventFilter):
         return True
 
 
-class NumJets25(EventFilter):
-
-    def __init__(self, tree, **kwargs):
-
-        super(NumJets25, self).__init__(**kwargs)
-        self.tree = tree
-
-    def passes(self, event):
-
-        self.tree.numJets25 = len([
-            j for j in event.jets if j.pt > 25 * GeV and abs(j.eta) < 4.5])
-        return True
-
-
 class TileTrips(EventFilter):
     """
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event
@@ -523,18 +509,15 @@ def jet_selection_2011(jet):
     if not (jet.pt > 25 * GeV):
         return False
 
-    if jet.pt > 50 * GeV:
-        # no JVF cut above 50
-        return True
+    if not (abs(jet.eta) < 4.5):
+        return False
 
     # suppress forward jets
     if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
         return False
 
+    # JVF cut on central jets
     if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
-        return False
-
-    if not (abs(jet.eta) < 4.5):
         return False
 
     return True
@@ -547,20 +530,17 @@ def jet_selection_2012(jet):
     if not (jet.pt > 30 * GeV):
         return False
 
-    if jet.pt > 50 * GeV:
-        # no JVF cut above 50
-        return True
+    if not (abs(jet.eta) < 4.5):
+        return False
 
     # suppress forward jets
     if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
         return False
 
-    if (jet.fourvect.Pt() < 50*GeV) and (abs(jet.constscale_eta) < 2.4):
+    # JVF cut on central jets below 50 GeV
+    if (jet.fourvect.Pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
         if not (jet.jvtxf > 0.5):
             return False
-
-    if not (abs(jet.eta) < 4.5):
-        return False
 
     return True
 

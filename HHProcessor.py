@@ -343,9 +343,6 @@ class HHProcessor(ATLASStudent):
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
-            NumJets25(
-                tree=tree,
-                count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
@@ -559,7 +556,7 @@ class HHProcessor(ATLASStudent):
                 mmc_mass, mmc_resonance, mmc_met = mmc.mass(
                         tau1, tau2,
                         METx, METy, sumET,
-                        tree.numJets25,
+                        len(event.jets),
                         method=0)
             else:
                 # use MMC values from skim

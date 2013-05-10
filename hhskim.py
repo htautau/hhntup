@@ -292,6 +292,16 @@ class hhskim(ATLASStudent):
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
+            JetPreselection(
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
+            NonIsolatedJet(
+                tree=tree,
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
+            JetSelection(
+                year=year,
+                count_funcs=count_funcs),
         ])
 
         # set the event filters
@@ -363,9 +373,12 @@ class hhskim(ATLASStudent):
             MET = event.MET.et
             sumET = event.MET.sumet
 
-            # TODO: use actual njets25
+            # TODO: get MMC output for all three methods
             mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2, METx, METy, sumET, len(event.jets))
+                    tau1, tau2,
+                    METx, METy, sumET,
+                    len(event.jets),
+                    method=0)
 
             tree.tau_MMC_mass = mmc_mass
             tree.tau_MMC_resonance.set_from(mmc_resonance)

@@ -30,7 +30,6 @@ from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool20
 # MissingETUtility
 from ROOT import METUtility
 from ROOT import METUtil
-from ROOT import METObject
 from ROOT import MissingETTags
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
@@ -105,11 +104,11 @@ class JES(JetSystematic):
         'FlavComp',
         'FlavResp',
         'BJet',
-        'NonClosure',  
+        'NonClosure',
     ]
 
     def __init__(self, is_up, np=None, **kwargs):
-        
+
         # *** Set up the uncertainty tools ***
         # Tag assumed: JetUncertainties-00-05-09-02
         super(JES, self).__init__(is_up, **kwargs)
@@ -286,9 +285,9 @@ class JVF(JetSystematic):
 
         for (int k=0; k < ao->truejet.n; k++)
         {
-            aux_trueJet.SetPtEtaPhiM(   ao->truejet.pt->at(k),  
-                                        ao->truejet.eta->at(k),  
-                                        ao->truejet.phi->at(k), 
+            aux_trueJet.SetPtEtaPhiM(   ao->truejet.pt->at(k),
+                                        ao->truejet.eta->at(k),
+                                        ao->truejet.phi->at(k),
                                         ao->truejet.m->at(k));
             if (aux_trueJet.Pt()<= 10000) continue;
             trueJets.push_back(aux_trueJet);
@@ -869,15 +868,13 @@ class Systematics(EventFilter):
                 True,  # RefGamma
                 True,  # RefTau
                 True,  # RefJet
-                True,  # SoftJets
                 True,  # RefMuon
                 True,  # MuonTotal
-                False, # CellOut
-                True   # CellOut_Eflow
+                True,  # Soft
             )
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
-        self.met_utility.setSoftJetCut(20e3)
+        #self.met_utility.setSoftJetCut(20e3)
 
         # Whether to use MUID muons (otherwise STACO).
         self.met_utility.setIsMuid(False)
@@ -957,7 +954,7 @@ class Systematics(EventFilter):
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-            self.met_utility.setOriJetParameters(event.jet_pt)
+            #self.met_utility.setOriJetParameters(event.jet_pt)
 
         if self.channel == 'lh':
             self.met_utility.setJetParameters(
@@ -970,7 +967,7 @@ class Systematics(EventFilter):
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-            self.met_utility.setOriJetParameters(event.jet_EtaOriginEM)
+            #self.met_utility.setOriJetParameters(event.jet_EtaOriginEM)
 
         """ NEVER USE THIS since jets may be recalibrated upstream
         self.met_utility.setMETTerm(
@@ -1112,14 +1109,16 @@ class Systematics(EventFilter):
                 event.tau_MET_BDTMedium_wpy,
                 event.tau_MET_BDTMedium_statusWord)
 
+        """
         self.met_utility.setMETTerm(
             METUtil.SoftJets,
             event.MET_SoftJets_BDTMedium_etx,
             event.MET_SoftJets_BDTMedium_ety,
             event.MET_SoftJets_BDTMedium_sumet)
+        """
 
         self.met_utility.setMETTerm(
-            METUtil.CellOutEflow,
+            METUtil.SoftTerms,
             event.MET_CellOut_BDTMedium_etx,
             event.MET_CellOut_BDTMedium_ety,
             event.MET_CellOut_BDTMedium_sumet)
@@ -1158,7 +1157,7 @@ class Systematics(EventFilter):
             event.jet_AntiKt4LCTopo_MET_wpy,
             event.jet_AntiKt4LCTopo_MET_statusWord)
 
-        self.met_utility.setOriJetParameters(event.jet_pt)
+        #self.met_utility.setOriJetParameters(event.jet_pt)
 
         """ NEVER USE THIS since jets may be recalibrated upstream
         self.met_utility.setMETTerm(
@@ -1257,7 +1256,7 @@ class Systematics(EventFilter):
                 event.MET_RefTau_sumet)
 
         self.met_utility.setMETTerm(
-            METUtil.CellOutEflow,
+            METUtil.SoftTerms,
             event.MET_CellOut_Eflow_STVF_etx,
             event.MET_CellOut_Eflow_STVF_ety,
             event.MET_CellOut_Eflow_STVF_sumet)
