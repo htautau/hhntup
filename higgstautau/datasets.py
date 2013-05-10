@@ -423,8 +423,8 @@ class Database(dict):
                                     take_this = True
 
                                 if take_this:
-                                    log.warning"taking %s over %s" % (
-                                        basename, dataset.ds)
+                                    log.warning("taking %s over %s" % (
+                                        basename, dataset.ds))
                                     self[name] = Dataset(name=name,
                                                          datatype=MC,
                                                          treename=mc_treename,
