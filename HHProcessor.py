@@ -284,7 +284,8 @@ class HHProcessor(ATLASStudent):
             #    count_funcs=count_funcs),
             TauSelected(2,
                 count_funcs=count_funcs),
-            TauIDMedium(2,
+            TauIDSelection(
+                year=year,
                 count_funcs=count_funcs),
             # apply this selection here since skim has lower threshold for data
             TauLeadSublead(
@@ -332,8 +333,6 @@ class HHProcessor(ATLASStudent):
             #TauTrackRecounting(
             #    year=year,
             #    count_funcs=count_funcs),
-            TauJetOverlapRemoval(
-                count_funcs=count_funcs),
             MCWeight(
                 datatype=datatype,
                 tree=tree,
@@ -342,6 +341,8 @@ class HHProcessor(ATLASStudent):
             EmbeddingIsolation(
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            TauJetOverlapRemoval(
                 count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,

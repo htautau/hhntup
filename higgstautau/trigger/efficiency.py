@@ -7,6 +7,7 @@ from atlastools.units import GeV
 from atlastools import datasets
 
 from ..filters import pileup_vertex_selection
+from ..tauid import IDLOOSE, IDMEDIUM, IDTIGHT
 from . import log; log = log[__name__]
 
 
@@ -148,15 +149,6 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
-                tau.trigger_eff_sf_loose = 1.
-                tau.trigger_eff_sf_loose_high = 1.
-                tau.trigger_eff_sf_loose_low = 1.
-                tau.trigger_eff_sf_medium = 1.
-                tau.trigger_eff_sf_medium_high = 1.
-                tau.trigger_eff_sf_medium_low = 1.
-                tau.trigger_eff_sf_tight = 1.
-                tau.trigger_eff_sf_tight_high = 1.
-                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
             if tau.trigger_match_thresh == 20:
@@ -175,31 +167,30 @@ class TauTriggerEfficiency(EventFilter):
                 raise ValueError("trigger match thresh of %d is not understood"
                         % tau.trigger_match_thresh)
 
-            wp = []
-            wp.append('loose')
-            if tau.JetBDTSigMedium:
-                wp.append('medium')
-            if tau.JetBDTSigTight:
-                wp.append('tight')
-
-            for wplevel in wp:
-                # correct for TES variations (only on nominal)
-                # pt_nominal should equal pt when TES is not applied
-                if self.tes_systematic:
-                    #print "%f %f" % (tau.pt, tau.pt_nominal)
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                        abs(corr.getSF(tau.pt, 0) *
-                            corr.getMCEff(tau.pt, 0) /
-                            corr.getMCEff(tau.pt_nominal, 0)))
-                else:
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                            abs(corr.getSF(tau.pt, 0)))
-                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
-                        abs(corr.getSF(tau.pt, 1)))
-                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
-                        abs(corr.getSF(tau.pt, -1)))
+            # correct for TES variations (only on nominal)
+            # pt_nominal should equal pt when TES is not applied
+            if self.tes_systematic:
+                #print "%f %f" % (tau.pt, tau.pt_nominal)
+                tau.trigger_scale_factor = abs(
+                    corr.getSF(tau.pt, 0) *
+                    corr.getMCEff(tau.pt, 0) /
+                    corr.getMCEff(tau.pt_nominal, 0))
+            else:
+                tau.trigger_scale_factor = abs(corr.getSF(tau.pt, 0))
+            tau.trigger_scale_factor_high = abs(corr.getSF(tau.pt, 1))
+            tau.trigger_scale_factor_low = abs(corr.getSF(tau.pt, -1))
 
         return True
+
+    def get_id_11_embed(self, tau):
+
+        if tau.id == IDLOOSE:
+            return 'BDTl'
+        elif tau.id == IDMEDIUM:
+            return 'BDTm'
+        elif tau.id == IDTIGHT:
+            return 'BDTtEVm'
+        raise ValueError("tau is not loose, medium, or tight")
 
     def passes_11_embed(self, event):
 
@@ -214,45 +205,37 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
-                # reset
-                tau.trigger_eff_sf_loose = 1.
-                tau.trigger_eff_sf_loose_high = 1.
-                tau.trigger_eff_sf_loose_low = 1.
-                tau.trigger_eff_sf_medium = 1.
-                tau.trigger_eff_sf_medium_high = 1.
-                tau.trigger_eff_sf_medium_low = 1.
-                tau.trigger_eff_sf_tight = 1.
-                tau.trigger_eff_sf_tight_high = 1.
-                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
-            wp = {}
-            wp['loose'] = 'BDTl'
-            if tau.JetBDTSigMedium:
-                wp['medium'] = 'BDTm'
-            if tau.JetBDTSigTight:
-                wp['tight'] = 'BDTtEVm'
+            wpflag = self.get_id_11_embed(tau)
 
             if tau.numTrack > 1:
                 prong = 3
             else:
                 prong = 1
 
-            for wplevel, wpflag in wp.items():
-                corr = self.corrections[thresh][wpflag][prong][event.RunNumber >= 188902]
-                setattr(tau, 'trigger_eff_sf_%s' % wplevel,
-                        abs(corr.get3DMCEff(
-                            tau.pt, tau.eta,
-                            npileup_vtx, 0)))
-                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel,
-                        abs(corr.get3DMCEff(
-                            tau.pt, tau.eta,
-                            npileup_vtx, 1)))
-                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel,
-                        abs(corr.get3DMCEff(
-                            tau.pt, tau.eta,
-                            npileup_vtx, -1)))
+            corr = self.corrections[thresh][wpflag][prong][event.RunNumber >= 188902]
+            tau.trigger_scale_factor = abs(corr.get3DMCEff(
+                tau.pt, tau.eta,
+                npileup_vtx, 0))
+            tau.trigger_scale_factor_high = abs(corr.get3DMCEff(
+                tau.pt, tau.eta,
+                npileup_vtx, 1))
+            tau.trigger_scale_factor_low = abs(corr.get3DMCEff(
+                tau.pt, tau.eta,
+                npileup_vtx, -1))
+
         return True
+
+    def get_id_12(self, tau):
+
+        if tau.id == IDLOOSE:
+            return 'BDTl'
+        elif tau.id == IDMEDIUM:
+            return 'BDTm'
+        elif tau.id == IDTIGHT:
+            return 'BDTt'
+        raise ValueError("tau is not loose, medium, or tight")
 
     def passes_12_mc(self, event):
 
@@ -266,24 +249,9 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
-                # reset
-                tau.trigger_eff_sf_loose = 1.
-                tau.trigger_eff_sf_loose_high = 1.
-                tau.trigger_eff_sf_loose_low = 1.
-                tau.trigger_eff_sf_medium = 1.
-                tau.trigger_eff_sf_medium_high = 1.
-                tau.trigger_eff_sf_medium_low = 1.
-                tau.trigger_eff_sf_tight = 1.
-                tau.trigger_eff_sf_tight_high = 1.
-                tau.trigger_eff_sf_tight_low = 1.
                 continue
 
-            wp = {}
-            wp['loose'] = 'BDTl'
-            if tau.JetBDTSigMedium:
-                wp['medium'] = 'BDTm'
-            if tau.JetBDTSigTight:
-                wp['tight'] = 'BDTt'
+            wpflag = self.get_id_12(tau)
 
             if tau.numTrack > 1:
                 prong = '3p'
@@ -304,62 +272,61 @@ class TauTriggerEfficiency(EventFilter):
                 raise ValueError("trigger match thresh of %d is not understood"
                         % tau.trigger_match_thresh)
 
-            for wplevel, wpflag in wp.items():
-                if self.tes_systematic:
-                    # correct for TES variations (only on nominal)
-                    # pt_nominal should equal pt when TES is not applied
-                    #print "%f %f" % (tau.pt, tau.pt_nominal)
-                    try:
-                        sf = abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
-                            ttc.getMCEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) /
-                            ttc.getMCEff(tau.pt_nominal, tau.eta, 0, period, prong, wpflag, eveto))
-                    except ZeroDivisionError:
-                        log.warning(
-                            "division by zero in trigger scale factors: using 1.")
-                        sf = 1.
-                    if math.isinf(sf) or math.isnan(sf):
-                        log.warning("trigger data efficiency is infinite or NaN! Using 0.")
-                        setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
-                        continue
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, sf)
+            if self.tes_systematic:
+                # correct for TES variations (only on nominal)
+                # pt_nominal should equal pt when TES is not applied
+                #print "%f %f" % (tau.pt, tau.pt_nominal)
+                try:
+                    sf = abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) *
+                        ttc.getMCEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto) /
+                        ttc.getMCEff(tau.pt_nominal, tau.eta, 0, period, prong, wpflag, eveto))
+                except ZeroDivisionError:
+                    log.warning(
+                        "division by zero in trigger scale factors: using 1.")
+                    sf = 1.
+                if math.isinf(sf) or math.isnan(sf):
+                    log.warning("trigger data efficiency is infinite or NaN! Using 0.")
+                    tau.trigger_scale_factor = 0.
+                    continue
+                tau.trigger_scale_factor = sf
 
-                else:
-                    sf = abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
-                    if math.isinf(sf) or math.isnan(sf):
-                        log.warning(
-                            "trigger efficiency SF is infinite or NaN! Using 0. "
-                            "pt: %f, eta: %f, mode: 0, period: %s, prong: %s, wp: %s, eveto: %s"
-                            " trigger: %d"
-                            % (tau.pt, tau.eta,
-                               period, prong,
-                               wpflag, eveto,
-                               tau.trigger_match_thresh))
-                        setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
-                        setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
-                        setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
-                        continue
+            else:
+                sf = abs(ttc.getSF(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+                if math.isinf(sf) or math.isnan(sf):
+                    log.warning(
+                        "trigger efficiency SF is infinite or NaN! Using 0. "
+                        "pt: %f, eta: %f, mode: 0, period: %s, prong: %s, wp: %s, eveto: %s"
+                        " trigger: %d"
+                        % (tau.pt, tau.eta,
+                           period, prong,
+                           wpflag, eveto,
+                           tau.trigger_match_thresh))
+                    tau.trigger_scale_factor = 0.
+                    tau.trigger_scale_factor_high = 0.
+                    tau.trigger_scale_factor_low = 0.
+                    continue
 
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, sf)
+                tau.trigger_scale_factor = sf
 
-                    # MC stat uncert
-                    mc_stat_up = abs(ttc.getSF(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
-                    mc_stat_dn = abs(ttc.getSF(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
-                    # Data stat uncert
-                    data_stat_up = abs(ttc.getSF(tau.pt, tau.eta, 2, period, prong, wpflag, eveto))
-                    data_stat_dn = abs(ttc.getSF(tau.pt, tau.eta, -2, period, prong, wpflag, eveto))
-                    # Systematic uncert
-                    sys_up = abs(ttc.getSF(tau.pt, tau.eta, 3, period, prong, wpflag, eveto))
-                    sys_dn = abs(ttc.getSF(tau.pt, tau.eta, -3, period, prong, wpflag, eveto))
+                # MC stat uncert
+                mc_stat_up = abs(ttc.getSF(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
+                mc_stat_dn = abs(ttc.getSF(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
+                # Data stat uncert
+                data_stat_up = abs(ttc.getSF(tau.pt, tau.eta, 2, period, prong, wpflag, eveto))
+                data_stat_dn = abs(ttc.getSF(tau.pt, tau.eta, -2, period, prong, wpflag, eveto))
+                # Systematic uncert
+                sys_up = abs(ttc.getSF(tau.pt, tau.eta, 3, period, prong, wpflag, eveto))
+                sys_dn = abs(ttc.getSF(tau.pt, tau.eta, -3, period, prong, wpflag, eveto))
 
-                    sigma_up = math.sqrt(math.pow(mc_stat_up, 2.) +
-                                         math.pow(data_stat_up, 2.) +
-                                         math.pow(sys_up, 2.))
-                    sigma_dn = math.sqrt(math.pow(mc_stat_dn, 2.) +
-                                         math.pow(data_stat_dn, 2.) +
-                                         math.pow(sys_dn, 2.))
+                sigma_up = math.sqrt(math.pow(mc_stat_up, 2.) +
+                                     math.pow(data_stat_up, 2.) +
+                                     math.pow(sys_up, 2.))
+                sigma_dn = math.sqrt(math.pow(mc_stat_dn, 2.) +
+                                     math.pow(data_stat_dn, 2.) +
+                                     math.pow(sys_dn, 2.))
 
-                    setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, sf + sigma_up)
-                    setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, sf - sigma_dn)
+                tau.trigger_scale_factor_high = sf + sigma_up
+                tau.trigger_scale_factor_low = sf - sigma_dn
 
         return True
 
@@ -382,54 +349,38 @@ class TauTriggerEfficiency(EventFilter):
 
             # only correct matched taus
             if not tau.matched:
-                # reset
-                tau.trigger_eff_sf_loose = 1.
-                tau.trigger_eff_sf_loose_high = 1.
-                tau.trigger_eff_sf_loose_low = 1.
-                tau.trigger_eff_sf_medium = 1.
-                tau.trigger_eff_sf_medium_high = 1.
-                tau.trigger_eff_sf_medium_low = 1.
-                tau.trigger_eff_sf_tight = 1.
-                tau.trigger_eff_sf_tight_high = 1.
-                tau.trigger_eff_sf_tight_low = 1.
                 continue
-
-            wp = {}
-            wp['loose'] = 'BDTl'
-            if tau.JetBDTSigMedium:
-                wp['medium'] = 'BDTm'
-            if tau.JetBDTSigTight:
-                wp['tight'] = 'BDTt'
 
             if tau.numTrack > 1:
                 prong = '3p'
             else:
                 prong = '1p'
 
-            for wplevel, wpflag in wp.items():
-                sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
-                if math.isinf(sf) or math.isnan(sf):
-                    log.warning("trigger data efficiency is infinite or NaN! Using 0.")
-                    setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
-                    setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
-                    setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
-                    continue
+            wpflag = self.get_id_12(tau)
 
-                setattr(tau, 'trigger_eff_sf_%s' % wplevel, sf)
+            sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+            if math.isinf(sf) or math.isnan(sf):
+                log.warning("trigger data efficiency is infinite or NaN! Using 0.")
+                setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
+                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
+                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
+                continue
 
-                # Data stat uncert
-                data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
-                data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
-                # Systematic uncert
-                sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, period, prong, wpflag, eveto))
-                sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, period, prong, wpflag, eveto))
+            tau.trigger_scale_factor = sf
 
-                sigma_up = math.sqrt(math.pow(data_stat_up, 2.) +
-                                     math.pow(sys_up, 2.))
-                sigma_dn = math.sqrt(math.pow(data_stat_dn, 2.) +
-                                     math.pow(sys_dn, 2.))
+            # Data stat uncert
+            data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
+            data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
+            # Systematic uncert
+            sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, period, prong, wpflag, eveto))
+            sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, period, prong, wpflag, eveto))
 
-                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, sf + sigma_up)
-                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, sf - sigma_dn)
+            sigma_up = math.sqrt(math.pow(data_stat_up, 2.) +
+                                 math.pow(sys_up, 2.))
+            sigma_dn = math.sqrt(math.pow(data_stat_dn, 2.) +
+                                 math.pow(sys_dn, 2.))
+
+            tau.trigger_scale_factor_high = sf + sigma_up
+            tau.trigger_scale_factor_low = sf - sigma_dn
 
         return True

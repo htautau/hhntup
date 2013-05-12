@@ -18,10 +18,13 @@ from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
+from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
-from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
+from higgstautau.trigger.emulation import (TauTriggerEmulation,
+                                           update_trigger_trees)
+from higgstautau.trigger.matching import (TauTriggerMatchIndex,
+                                          TauTriggerMatchThreshold)
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
@@ -36,9 +39,6 @@ from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
 
 import goodruns
-
-
-#ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 
 class hhskim(ATLASStudent):
@@ -88,7 +88,7 @@ class hhskim(ATLASStudent):
             merged_grl = goodruns.GRL()
             for fname in self.files:
                 merged_grl |= goodruns.GRL(
-                        '%s:/Lumi/%s' % (fname, self.metadata.treename))
+                    '%s:/Lumi/%s' % (fname, self.metadata.treename))
             lumi_dir = self.output.mkdir('Lumi')
             lumi_dir.cd()
             xml_string= ROOT.TObjString(merged_grl.str())
@@ -157,13 +157,12 @@ class hhskim(ATLASStudent):
                 year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            #ExtraInfoTree(
-            #   count_funcs=count_funcs)
             trigger_emulation,
             Triggers(
                 year=year,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
+            # TODO: APPLY RANDOM RUN NUMBER HERE FOR MC
             PriVertex(
                 count_funcs=count_funcs),
             LArError(
@@ -187,9 +186,10 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 verbose=verbose,
                 count_funcs=count_funcs),
-            # the BDT bits are broken in the p1130 production, correct them
+            # The BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
+            #
             #TauIDpatch(
             #    year=year,
             #    count_funcs=count_funcs),
@@ -197,6 +197,8 @@ class hhskim(ATLASStudent):
             #ElectronIDpatch(
             #    passthrough=year != 2012,
             #    count_funcs=count_funcs),
+            #
+            # The above patches are no longer required
             LArHole(
                 datatype=datatype,
                 count_funcs=count_funcs),
@@ -235,9 +237,9 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
-            # select two leading taus at this point
-            # 25/35 for data
-            # 20/30 for MC for TES
+            # Select two leading taus at this point
+            # 25 and 35 for data
+            # 20 and 30 for MC for TES uncertainty
             TauLeadSublead(
                 lead=35 * GeV if datatype == datasets.DATA else 30 * GeV,
                 sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
@@ -291,6 +293,8 @@ class hhskim(ATLASStudent):
             EmbeddingIsolation(
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            TauJetOverlapRemoval(
                 count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,

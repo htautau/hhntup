@@ -7,7 +7,56 @@ import math
 from .models import TrueTauBlock
 from . import track_counting
 from .. import tauid
+from ..tauid import IDLOOSE, IDMEDIUM, IDTIGHT
+import random
 from . import log; log = log[__name__]
+
+
+class TauIDSelection(EventFilter):
+
+    def __init__(self, year, **kwargs):
+
+        if year == 2011:
+            self.passes = self.passes_2011
+        elif year == 2012:
+            self.passes = self.passes_2012
+        else:
+            raise ValueError('no tau ID selection defined for year %d' % year)
+        super(TauIDSelection, self).__init__(**kwargs)
+
+    def passes_2011(self, event):
+
+        # both ID medium
+        tau1, tau2 = event.taus
+        if not (tau1.JetBDTSigMedium and tau2.JetBDTSigMedium):
+            return False
+        tau1.id = IDMEDIUM
+        tau2.id = IDMEDIUM
+        return True
+
+    def passes_2012(self, event):
+
+        # both medium
+        tau1, tau2 = event.taus
+        if not (tau1.JetBDTSigMedium and tau2.JetBDTSigMedium):
+            return False
+        # at least one being tight
+        if (not tau1.JetBDTSigTight) and (not tau2.JetBDTSigTight):
+            return False
+        # if both are tight then assign medium to one at random
+        # so we can apply the SFs in an inclusive manner
+        if tau1.JetBDTSigTight and tau2.JetBDTSigTight:
+            idx = range(2)
+            random.shuffle(idx)
+            event.taus[idx[0]].id = IDTIGHT
+            event.taus[idx[1]].id = IDMEDIUM
+        elif tau1.JetBDTSigTight:
+            tau1.id = IDTIGHT
+            tau2.id = IDMEDIUM
+        else:
+            tau1.id = IDMEDIUM
+            tau2.id = IDTIGHT
+        return True
 
 
 class TauLeadSublead(EventFilter):
@@ -163,31 +212,80 @@ class TauTrackRecounting(EventFilter):
 
 class EfficiencyScaleFactors(EventFilter):
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, year, passthrough=False, **kwargs):
 
-        self.year = year
-        super(EfficiencyScaleFactors, self).__init__(**kwargs)
+        if not passthrough:
+            if year == 2011:
+                log.info("will apply 2011 ID SFs")
+                self.passes = self.passes_2011
+            elif year == 2012:
+                log.info("will apply 2012 ID SFs")
+                from externaltools.bundle_2012 import TauCorrUncert as TCU
+                from ROOT import TauCorrUncert
+                self.tool = TauCorrUncert.TauSF(TCU.RESOURCE_PATH)
+                self.tool_ns = TauCorrUncert
+                self.passes = self.passes_2012
+            else:
+                raise ValueError("No efficiency SFs for year %d" % year)
+        super(EfficiencyScaleFactors, self).__init__(
+            passthrough=passthrough, **kwargs)
 
-    def passes(self, event):
+    def get_id_2011(self, tau):
+
+        if tau.id == IDLOOSE:
+            return 'loose'
+        elif tau.id == IDMEDIUM:
+            return 'medium'
+        elif tau.id == IDTIGHT:
+            return 'tight'
+        raise ValueError("tau is not loose, medium, or tight")
+
+    def get_id_2012(self, tau):
+
+        if tau.id == IDLOOSE:
+            return self.tool_ns.BDTLOOSE
+        elif tau.id == IDMEDIUM:
+            return self.tool_ns.BDTMEDIUM
+        elif tau.id == IDTIGHT:
+            return self.tool_ns.BDTTIGHT
+        raise ValueError("tau is not loose, medium, or tight")
+
+    def passes_2011(self, event):
 
         for tau in event.taus:
+
             if not tau.matched:
                 continue
 
-            wplevels = []
-            wplevels.append('loose')
-            if tau.JetBDTSigMedium:
-                wplevels.append('medium')
-            if tau.JetBDTSigTight:
-                wplevels.append('tight')
+            wp = self.get_id_2011(tau)
 
-            for wp in wplevels:
-                # efficiency scale factor
-                effic_sf, err = tauid.effic_sf_uncert_exc(wp, tau, self.year)
-                setattr(tau, 'id_eff_sf_%s' % wp, effic_sf)
-                # ALREADY ACCOUNTED FOR IN TauBDT SYSTEMATIC
-                setattr(tau, 'id_eff_sf_%s_high' % wp, effic_sf + err)
-                setattr(tau, 'id_eff_sf_%s_low' % wp, effic_sf - err)
+            # efficiency scale factor
+            effic_sf, err = tauid.effic_sf_uncert_exc(wp, tau, 2011)
+            tau.efficiency_scale_factor =  effic_sf
+            tau.efficiency_scale_factor_high = effic_sf + err
+            tau.efficiency_scale_factor_low = effic_sf - err
+
+        return True
+
+    def passes_2012(self, event):
+
+        for tau in event.taus:
+
+            if not tau.matched:
+                continue
+
+            wp = self.get_id_2012(tau)
+
+            sf = self.tool.GetIDSF(wp, tau.eta, tau.numTrack, tau.pt)
+            sf_stat = self.tool.GetIDStatUnc(wp, tau.eta, tau.numTrack, tau.pt)
+            sf_sys = self.tool.GetIDSysUnc(wp, tau.eta, tau.numTrack, tau.pt)
+
+            sf_uncert = sqrt(sf_stat**2 + sf_sys**2)
+
+            tau.efficiency_scale_factor =  sf
+            tau.efficiency_scale_factor_high = sf + sf_uncert
+            tau.efficiency_scale_factor_low = sf - sf_uncert
+
         return True
 
 
@@ -225,6 +323,26 @@ class FakeRateScaleFactors(EventFilter):
         super(FakeRateScaleFactors, self).__init__(
                 passthrough=passthrough, **kwargs)
 
+    def get_id_2011(self, tau):
+
+        if tau.id == IDLOOSE:
+            return 'Loose'
+        elif tau.id == IDMEDIUM:
+            return 'Medium'
+        elif tau.id == IDTIGHT:
+            return 'Tight'
+        raise ValueError("tau is not loose, medium, or tight")
+
+    def get_id_2012(self, tau):
+
+        if tau.id == IDLOOSE:
+            return self.fakerate_ns.LOOSE
+        elif tau.id == IDMEDIUM:
+            return self.fakerate_ns.MEDIUM
+        elif tau.id == IDTIGHT:
+            return self.fakerate_ns.TIGHT
+        raise ValueError("tau is not loose, medium, or tight")
+
     def passes_2011(self, event):
 
         if event.RunNumber >= 188902:
@@ -238,27 +356,20 @@ class FakeRateScaleFactors(EventFilter):
             if tau.matched:
                 continue
 
-            wplevels = []
-            wplevels.append('loose')
-            if tau.JetBDTSigMedium:
-                wplevels.append('medium')
-            if tau.JetBDTSigTight:
-                wplevels.append('tight')
+            wpflag = self.get_id_2011(tau)
 
-            for wp in wplevels:
-                wpflag = wp.capitalize()
-                sf = self.fakerate_tool.getScaleFactor(
+            sf = self.fakerate_tool.getScaleFactor(
+                    tau.pt, wpflag,
+                    trig % tau.trigger_match_thresh)
+            tau.fakerate_scale_factor = sf
+            tau.fakerate_scale_factor_high = (sf +
+                    self.fakerate_tool.getScaleFactorUncertainty(
                         tau.pt, wpflag,
-                        trig % tau.trigger_match_thresh)
-                setattr(tau, 'fakerate_sf_%s' % wp, sf)
-                setattr(tau, 'fakerate_sf_%s_high' % wp, (sf +
-                        self.fakerate_tool.getScaleFactorUncertainty(
-                            tau.pt, wpflag,
-                            trig % tau.trigger_match_thresh, True)))
-                setattr(tau, 'fakerate_sf_%s_low' % wp, (sf -
-                        self.fakerate_tool.getScaleFactorUncertainty(
-                            tau.pt, wpflag,
-                            trig % tau.trigger_match_thresh, False)))
+                        trig % tau.trigger_match_thresh, True))
+            tau.fakerate_scale_factor_low = (sf -
+                    self.fakerate_tool.getScaleFactorUncertainty(
+                        tau.pt, wpflag,
+                        trig % tau.trigger_match_thresh, False))
         return True
 
     def passes_2012(self, event):
@@ -273,18 +384,14 @@ class FakeRateScaleFactors(EventFilter):
             sf_reco = self.fakerate_tool.getRecoSF(
                 tau.pt, tau.numTrack, event.RunNumber)
 
-            setattr(tau, 'fakerate_sf_reco', sf_reco)
-            setattr(tau, 'fakerate_sf_reco_high', sf_reco)
-            setattr(tau, 'fakerate_sf_reco_low', sf_reco)
+            wpflag = self.get_id_2012(tau)
+
+            tau.fakerate_sf_reco = sf_reco
+            tau.fakerate_sf_reco_high = sf_reco
+            tau.fakerate_sf_reco_low = sf_reco
 
             tes_up = self.tes_up
             tes_down = self.tes_down
-            wplevels = dict()
-            wplevels['loose'] = self.fakerate_ns.LOOSE
-            if tau.JetBDTSigMedium:
-                wplevels['medium'] = self.fakerate_ns.MEDIUM
-            if tau.JetBDTSigTight:
-                wplevels['tight'] = self.fakerate_ns.TIGHT
 
             if tau.trigger_match_thresh == 20:
                 trigger = self.fakerate_ns.TAU20Ti
@@ -294,79 +401,78 @@ class FakeRateScaleFactors(EventFilter):
                 raise ValueError("trigger threshold %d not understood" %
                     tau.trigger_match_thresh)
 
-            for wp, wpflag in wplevels.items():
-                # using LOOSE lepton veto
-                sf_numer = self.fakerate_tool.getEffData(
+            # using LOOSE lepton veto
+            sf_numer = self.fakerate_tool.getEffData(
+                tau.pt, tau.numTrack, event.RunNumber,
+                wpflag, self.fakerate_ns.LOOSE, trigger)
+
+            sf_numer_up = self.fakerate_tool.getEffDataUncertainty(
+                tau.pt, tau.numTrack, event.RunNumber,
+                wpflag, self.fakerate_ns.LOOSE, trigger, True)
+
+            sf_numer_dn = self.fakerate_tool.getEffDataUncertainty(
+                tau.pt, tau.numTrack, event.RunNumber,
+                wpflag, self.fakerate_ns.LOOSE, trigger, False)
+
+            if self.datatype == datasets.MC:
+                sf_denom = self.fakerate_tool.getEffMC(
                     tau.pt, tau.numTrack, event.RunNumber,
-                    wpflag, self.fakerate_ns.LOOSE, trigger)
+                    wpflag, self.fakerate_ns.LOOSE, trigger, tes_down, tes_up)
 
-                sf_numer_up = self.fakerate_tool.getEffDataUncertainty(
+                sf_denom_up = self.fakerate_tool.getEffMCUncertainty(
                     tau.pt, tau.numTrack, event.RunNumber,
-                    wpflag, self.fakerate_ns.LOOSE, trigger, True)
+                    wpflag, self.fakerate_ns.LOOSE, trigger, True, tes_down, tes_up)
 
-                sf_numer_dn = self.fakerate_tool.getEffDataUncertainty(
+                sf_denom_dn = self.fakerate_tool.getEffMCUncertainty(
                     tau.pt, tau.numTrack, event.RunNumber,
-                    wpflag, self.fakerate_ns.LOOSE, trigger, False)
+                    wpflag, self.fakerate_ns.LOOSE, trigger, False, tes_down, tes_up)
 
-                if self.datatype == datasets.MC:
-                    sf_denom = self.fakerate_tool.getEffMC(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE, trigger, tes_down, tes_up)
+            else: # embedding: no trigger in denominator
+                sf_denom = self.fakerate_tool.getEffData(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE,
+                    self.fakerate_ns.TRIGGERNONE)
 
-                    sf_denom_up = self.fakerate_tool.getEffMCUncertainty(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE, trigger, True, tes_down, tes_up)
+                sf_denom_up = self.fakerate_tool.getEffDataUncertainty(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE,
+                    self.fakerate_ns.TRIGGERNONE, True)
 
-                    sf_denom_dn = self.fakerate_tool.getEffMCUncertainty(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE, trigger, False, tes_down, tes_up)
+                sf_denom_dn = self.fakerate_tool.getEffDataUncertainty(
+                    tau.pt, tau.numTrack, event.RunNumber,
+                    wpflag, self.fakerate_ns.LOOSE,
+                    self.fakerate_ns.TRIGGERNONE, False)
 
-                else: # embedding: no trigger in denominator
-                    sf_denom = self.fakerate_tool.getEffData(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE,
-                        self.fakerate_ns.TRIGGERNONE)
+            #log.info("data eff: %f, mc eff %f, wp %s, pt %f, ntrack %d, run: %d, trigger: %d" % (
+            #    sf_data, sf_mc, wp, tau.pt, tau.numTrack, event.RunNumber,
+            #    tau.trigger_match_thresh))
 
-                    sf_denom_up = self.fakerate_tool.getEffDataUncertainty(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE,
-                        self.fakerate_ns.TRIGGERNONE, True)
+            if sf_numer == 0 or sf_denom == 0:
+                log.warning("fake rate bug: efficiency == 0")
+                sf = 1.
+                sf_high = 1.
+                sf_low = 1.
+            else:
+                sf = sf_numer / sf_denom
 
-                    sf_denom_dn = self.fakerate_tool.getEffDataUncertainty(
-                        tau.pt, tau.numTrack, event.RunNumber,
-                        wpflag, self.fakerate_ns.LOOSE,
-                        self.fakerate_ns.TRIGGERNONE, False)
+                sf_up = sf * math.sqrt(
+                    (sf_denom_up / sf_denom)**2 +
+                    (sf_numer_up / sf_numer)**2)
 
-                #log.info("data eff: %f, mc eff %f, wp %s, pt %f, ntrack %d, run: %d, trigger: %d" % (
-                #    sf_data, sf_mc, wp, tau.pt, tau.numTrack, event.RunNumber,
-                #    tau.trigger_match_thresh))
+                sf_dn = sf * math.sqrt(
+                    (sf_denom_dn / sf_denom)**2 +
+                    (sf_numer_dn / sf_numer)**2)
 
-                if sf_numer == 0 or sf_denom == 0:
-                    log.warning("fake rate bug: efficiency == 0")
-                    sf = 1.
-                    sf_high = 1.
-                    sf_low = 1.
-                else:
-                    sf = sf_numer / sf_denom
+                sf_high = sf + sf_up
+                sf_low = sf - sf_dn
 
-                    sf_up = sf * math.sqrt(
-                        (sf_denom_up / sf_denom)**2 +
-                        (sf_numer_up / sf_numer)**2)
+            if sf_low < 0:
+                sf_low = 0.
 
-                    sf_dn = sf * math.sqrt(
-                        (sf_denom_dn / sf_denom)**2 +
-                        (sf_numer_dn / sf_numer)**2)
+            tau.fakerate_scale_factor = sf
+            # uncertainty
+            tau.fakerate_scale_factor_high = sf_high
+            tau.fakerate_scale_factor_low = sf_low
+            #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
 
-                    sf_high = sf + sf_up
-                    sf_low = sf - sf_dn
-
-                if sf_low < 0:
-                    sf_low = 0.
-                setattr(tau, 'fakerate_sf_%s' % wp, sf)
-
-                # uncertainty
-                setattr(tau, 'fakerate_sf_%s_high' % wp, sf_high)
-                setattr(tau, 'fakerate_sf_%s_low' % wp, sf_low)
-
-                #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
         return True
