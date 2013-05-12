@@ -384,11 +384,11 @@ class FakeRateScaleFactors(EventFilter):
             sf_reco = self.fakerate_tool.getRecoSF(
                 tau.pt, tau.numTrack, event.RunNumber)
 
-            wpflag = self.get_id_2012(tau)
+            tau.fakerate_scale_factor_reco = sf_reco
+            tau.fakerate_scale_factor_reco_high = sf_reco
+            tau.fakerate_scale_factor_reco_low = sf_reco
 
-            tau.fakerate_sf_reco = sf_reco
-            tau.fakerate_sf_reco_high = sf_reco
-            tau.fakerate_sf_reco_low = sf_reco
+            wpflag = self.get_id_2012(tau)
 
             tes_up = self.tes_up
             tes_down = self.tes_down

@@ -11,8 +11,36 @@ embedded:
             # ISOL systematics included in nominal sample
 mc:
     systematics:
-        - JES_UP
-        - JES_DOWN
+        - JES_Statistical_UP
+        - JES_Statistical_DOWN
+        - JES_Modelling_UP
+        - JES_Modelling_DOWN
+        - JES_Detector_UP
+        - JES_Detector_DOWN
+        - JES_Mixed_UP
+        - JES_Mixed_DOWN
+        - JES_EtaModelling_UP
+        - JES_EtaModelling_DOWN
+        - JES_EtaMethod_UP
+        - JES_EtaMethod_DOWN
+        - JES_PURho_UP
+        - JES_PURho_DOWN
+        - JES_PUPt_UP
+        - JES_PUPt_DOWN
+        - JES_PUNPV_UP
+        - JES_PUNPV_DOWN
+        - JES_PUMu_UP
+        - JES_PUMu_DOWN
+        - JES_FlavComp_UP
+        - JES_FlavComp_DOWN
+        - JES_FlavResp_UP
+        - JES_FlavResp_DOWN
+        - JES_BJet_UP
+        - JES_BJet_DOWN
+        - JES_NonClosure_UP
+        - JES_NonClosure_DOWN
+        - JVF_UP
+        - JVF_DOWN
         - TES_UP
         - TES_DOWN
         - JER_UP
