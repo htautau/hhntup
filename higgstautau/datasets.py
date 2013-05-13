@@ -20,7 +20,7 @@ try:
 except ImportError:
     USE_PYAMI = False
     log.warning("pyAMI is not installed. "
-                "Cross-section retrieval will be disabled.")
+                "Cross section retrieval will be disabled.")
 
 
 import sys
@@ -245,7 +245,7 @@ class Database(dict):
         self.filepath = os.path.join(HERE, '%s.yml' % self.name)
         if os.path.isfile(self.filepath):
             with open(self.filepath) as db:
-                log.info("Loading '%s' database ..." % self.name)
+                log.info("Loading database '%s' ..." % self.name)
                 d = yaml.load(db)
                 if d:
                     self.update(d)
@@ -259,7 +259,7 @@ class Database(dict):
 
         if self.modified:
             with open(self.filepath, 'w') as db:
-                log.info("Saving '%s' database ..." % self.name)
+                log.info("Saving database '%s' ..." % self.name)
                 yaml.dump(dict(self), db)
 
     def reset(self):
@@ -269,7 +269,7 @@ class Database(dict):
     def clear(self):
 
         # erase all datasets in database
-        log.info("Resetting '%s' database ..." % self.name)
+        log.info("Resetting database '%s' ..." % self.name)
         super(Database, self).clear()
         self.modified = True
 
@@ -333,7 +333,7 @@ class Database(dict):
         """
         Update the dataset database
         """
-        log.info("Updating '%s' database ..." % self.name)
+        log.info("Updating database '%s' ..." % self.name)
         self.modified = True
 
         ###############################
@@ -432,7 +432,7 @@ class Database(dict):
                                                          dirs=[dir],
                                                          file_pattern=mc_pattern,
                                                          year=year)
-                            else:
+                            elif dir not in dataset.dirs:
                                 dataset.dirs.append(dir)
                         elif dataset is None or (
                                 dataset is not None and version > dataset.version):
@@ -467,7 +467,8 @@ class Database(dict):
 
                         dataset = self.get(name, None)
                         if dataset is not None and version == dataset.version:
-                            dataset.dirs.append(dir)
+                            if dir not in dataset.dirs:
+                                dataset.dirs.append(dir)
                         else:
 
                             log.info('\'%s\',' % name)
@@ -1080,7 +1081,7 @@ yaml.add_constructor(u'!Dataset', dataset_constructor)
 
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
-        log.info("Loading cross-section cache...")
+        log.info("Loading cross section cache ...")
         XSEC_CACHE = pickle.load(cache)
 
 
