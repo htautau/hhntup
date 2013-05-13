@@ -282,13 +282,14 @@ class HHProcessor(ATLASStudent):
             #    count_funcs=count_funcs),
             TauSelected(2,
                 count_funcs=count_funcs),
-            TauIDSelection(
-                year=year,
-                count_funcs=count_funcs),
             # apply this selection here since skim has lower threshold for data
             TauLeadSublead(
                 lead=35 * GeV,
                 sublead=25 * GeV,
+                count_funcs=count_funcs),
+            # taus are sorted (in decreasing order) by pT from here on
+            TauIDSelection(
+                year=year,
                 count_funcs=count_funcs),
             TruthMatching(
                 passthrough=datatype == datasets.DATA,

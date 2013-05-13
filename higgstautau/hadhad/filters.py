@@ -8,7 +8,6 @@ from .models import TrueTauBlock
 from . import track_counting
 from .. import tauid
 from ..tauid import IDLOOSE, IDMEDIUM, IDTIGHT
-import random
 from . import log; log = log[__name__]
 
 
@@ -26,36 +25,49 @@ class TauIDSelection(EventFilter):
 
     def passes_2011(self, event):
 
-        # both ID medium
         tau1, tau2 = event.taus
-        if not (tau1.JetBDTSigMedium and tau2.JetBDTSigMedium):
+        if not (tau1.JetBDTSigLoose and tau2.JetBDTSigLoose):
             return False
-        tau1.id = IDMEDIUM
-        tau2.id = IDMEDIUM
+        # signal region is: both taus medium
+        # need loose taus for OSFF model
+        if tau1.JetBDTSigMedium:
+            tau1.id = IDMEDIUM
+        else:
+            tau1.id = IDLOOSE
+        if tau2.JetBDTSigMedium:
+            tau2.id = IDMEDIUM
+        else:
+            tau2.id = IDLOOSE
         return True
 
     def passes_2012(self, event):
 
-        # both medium
+        # taus must be sorted in descending order by pT
         tau1, tau2 = event.taus
-        if not (tau1.JetBDTSigMedium and tau2.JetBDTSigMedium):
+        if not (tau1.JetBDTSigLoose and tau2.JetBDTSigLoose):
             return False
-        # at least one being tight
-        if (not tau1.JetBDTSigTight) and (not tau2.JetBDTSigTight):
-            return False
-        # if both are tight then assign medium to one at random
-        # so we can apply the SFs in an inclusive manner
-        if tau1.JetBDTSigTight and tau2.JetBDTSigTight:
-            idx = range(2)
-            random.shuffle(idx)
-            event.taus[idx[0]].id = IDTIGHT
-            event.taus[idx[1]].id = IDMEDIUM
-        elif tau1.JetBDTSigTight:
-            tau1.id = IDTIGHT
-            tau2.id = IDMEDIUM
+        # signal region is: both medium with at least one being tight
+        if ((tau1.JetBDTSigMedium and tau2.JetBDTSigMedium) and
+            (tau1.JetBDTSigTight or tau2.JetBDTSigTight)):
+            # if both are tight then assign medium to one at random
+            # so we can apply the SFs in an inclusive manner
+            if tau1.JetBDTSigTight and tau2.JetBDTSigTight:
+                if event.EventNumber % 2 == 1: # ODD
+                    tau1.id = IDTIGHT
+                    tau2.id = IDMEDIUM
+                else: # EVEN
+                    tau1.id = IDMEDIUM
+                    tau2.id = IDTIGHT
+            elif tau1.JetBDTSigTight:
+                tau1.id = IDTIGHT
+                tau2.id = IDMEDIUM
+            else:
+                tau1.id = IDMEDIUM
+                tau2.id = IDTIGHT
         else:
-            tau1.id = IDMEDIUM
-            tau2.id = IDTIGHT
+            # need loose taus for OSFF model
+            tau1.id = IDLOOSE
+            tau2.id = IDLOOSE
         return True
 
 
@@ -64,9 +76,7 @@ class TauLeadSublead(EventFilter):
     def __init__(self, lead=35*GeV, sublead=25*GeV, **kwargs):
 
         super(TauLeadSublead, self).__init__(**kwargs)
-        """
-        Leading and subleading tau pT thresholds
-        """
+        # Leading and subleading tau pT thresholds
         self.lead = lead
         self.sublead = sublead
 
@@ -325,6 +335,7 @@ class FakeRateScaleFactors(EventFilter):
 
     def get_id_2011(self, tau):
 
+        # 2011 fake rates are inclusive
         if tau.id == IDLOOSE:
             return 'Loose'
         elif tau.id == IDMEDIUM:
@@ -335,12 +346,13 @@ class FakeRateScaleFactors(EventFilter):
 
     def get_id_2012(self, tau):
 
-        if tau.id == IDLOOSE:
-            return self.fakerate_ns.LOOSE
-        elif tau.id == IDMEDIUM:
-            return self.fakerate_ns.MEDIUM
-        elif tau.id == IDTIGHT:
+        # 2012 fake rates are exclusive
+        if tau.JetBDTSigTight:
             return self.fakerate_ns.TIGHT
+        elif tau.JetBDTSigMedium:
+            return self.fakerate_ns.MEDIUM
+        elif tau.JetBDTSigLoose:
+            return self.fakerate_ns.LOOSE
         raise ValueError("tau is not loose, medium, or tight")
 
     def passes_2011(self, event):
