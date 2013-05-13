@@ -59,16 +59,16 @@ class Job(object):
 
         if 'resources_used.cput' not in self.info:
             return 0
-        x = time.strptime(self.info['resources_used.cput'], "%H:%M:%S")
-        return datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds()
+        x = map(int, self.info['resources_used.cput'].split(':'))
+        return datetime.timedelta(hours=x[0],minutes=x[1],seconds=x[2]).total_seconds()
 
     @property
     def walltime(self):
 
         if 'resources_used.walltime' not in self.info:
             return 0
-        x = time.strptime(self.info['resources_used.walltime'], "%H:%M:%S")
-        return datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds()
+        x = map(int, self.info['resources_used.cput'].split(':'))
+        return datetime.timedelta(hours=x[0],minutes=x[1],seconds=x[2]).total_seconds()
 
     @property
     def host(self):
