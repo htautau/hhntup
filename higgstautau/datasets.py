@@ -449,7 +449,7 @@ class Database(dict):
                                                  file_pattern=mc_pattern,
                                                  year=year)
                     elif self.verbose:
-                        log.info("not a valid mc dataset name: %s" % basename)
+                        log.warning("not a valid mc dataset name: %s" % basename)
 
                 elif mc_sampletype == 'lhCN':
                     match  = re.match(CN_MC_PATTERN12, basename)
