@@ -20,7 +20,6 @@ from atlastools.units import *
 from atlastools.filtering import GRLFilter
 from atlastools.batch import ATLASStudent
 
-from higgstautau import log; log = log[__name__]
 from higgstautau.mixins import *
 from higgstautau import hepmc
 from higgstautau import tautools
@@ -32,13 +31,11 @@ from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
 from higgstautau.mass import is_MET_bisecting
-#from higgstautau.mass.ditaumass import HAD1P, HAD3P
 from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
 from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
-
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.overlap import TauJetOverlapRemoval
@@ -47,6 +44,7 @@ from higgstautau.pileup import (PileupReweight, PileupDataScale,
                                 averageIntPerXingPatch,
                                 get_pileup_reweighting_tool)
 from higgstautau.hadhad.objects import define_objects
+from higgstautau import log; log = log[__name__]
 
 from goodruns import GRL
 import subprocess
@@ -559,6 +557,8 @@ class HHProcessor(ATLASStudent):
                         METx, METy, sumET,
                         len(event.jets),
                         method=0)
+                if verbose:
+                    log.info("MMC: %f" % mmc_mass)
             else:
                 # use MMC values from skim
                 mmc_mass = event.tau_MMC_mass

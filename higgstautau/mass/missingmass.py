@@ -114,6 +114,9 @@ class MMC(object):
         self.tool.SetSumEt(sumET / GeV)
         self.tool.SetNjet25(njets25)
 
+        MET_res = 6.14 + 0.5 * sqrt(abs(sumET / GeV)) # sumET can be negative!!
+        self.tool.SetMetScanParams(0., MET_res, MET_res)
+
         self.tool.RunMissingMassCalculator()
         MMC_mass = -1
         MMC_resonance = ROOT.TLorentzVector(0, 0, 0, 0)
