@@ -245,8 +245,7 @@ class Database(dict):
         self.filepath = os.path.join(HERE, '%s.yml' % self.name)
         if os.path.isfile(self.filepath):
             with open(self.filepath) as db:
-                if self.verbose:
-                    log.info("Loading '%s' database ..." % self.name)
+                log.info("Loading '%s' database ..." % self.name)
                 d = yaml.load(db)
                 if d:
                     self.update(d)
@@ -260,9 +259,7 @@ class Database(dict):
 
         if self.modified:
             with open(self.filepath, 'w') as db:
-                if self.verbose:
-                    log.info("Saving '%s' database ..." %
-                             self.name)
+                log.info("Saving '%s' database ..." % self.name)
                 yaml.dump(dict(self), db)
 
     def reset(self):
@@ -272,8 +269,7 @@ class Database(dict):
     def clear(self):
 
         # erase all datasets in database
-        if self.verbose:
-            log.info("Resetting '%s' database ..." % self.name)
+        log.info("Resetting '%s' database ..." % self.name)
         super(Database, self).clear()
         self.modified = True
 
@@ -337,8 +333,7 @@ class Database(dict):
         """
         Update the dataset database
         """
-        if self.verbose:
-            log.info("Updating '%s' database ..." % self.name)
+        log.info("Updating '%s' database ..." % self.name)
         self.modified = True
 
         ###############################
