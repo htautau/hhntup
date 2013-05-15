@@ -13,8 +13,9 @@ from . import log; log = log[__name__]
 
 class TauIDSelection(EventFilter):
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, year, tree, **kwargs):
 
+        self.tree = tree
         if year == 2011:
             self.passes = self.passes_2011
         elif year == 2012:
@@ -38,6 +39,7 @@ class TauIDSelection(EventFilter):
             tau2.id = IDMEDIUM
         else:
             tau2.id = IDLOOSE
+        self.tree.taus_pass = tau1.JetBDTSigMedium and tau2.JetBDTSigMedium:
         return True
 
     def passes_2012(self, event):
@@ -64,10 +66,12 @@ class TauIDSelection(EventFilter):
             else:
                 tau1.id = IDMEDIUM
                 tau2.id = IDTIGHT
+            self.tree.taus_pass = True
         else:
             # need loose taus for OSFF model
             tau1.id = IDLOOSE
             tau2.id = IDLOOSE
+            self.tree.taus_pass = False
         return True
 
 

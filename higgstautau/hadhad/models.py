@@ -25,6 +25,9 @@ class EventVariables(TreeModel):
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 
+    # true if both taus pass ID requirements
+    taus_pass = BoolCol()
+
     tau_trigger_match_error = BoolCol(default=False)
 
     theta_tau1_tau2 = FloatCol()

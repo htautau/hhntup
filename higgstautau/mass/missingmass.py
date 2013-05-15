@@ -39,7 +39,7 @@ class MMC(object):
     def mass(self,
              tau1, tau2,
              METx, METy, sumET,
-             njets25,
+             njets,
              tau2_lep_type=None,
              method=1):
         """
@@ -112,7 +112,7 @@ class MMC(object):
         met_vec = ROOT.TVector2(METx / GeV, METy / GeV)
         self.tool.SetMetVec(met_vec)
         self.tool.SetSumEt(sumET / GeV)
-        self.tool.SetNjet25(njets25)
+        self.tool.SetNjet25(njets)
 
         MET_res = 6.14 + 0.5 * sqrt(abs(sumET / GeV)) # sumET can be negative!!
         self.tool.SetMetScanParams(0., MET_res, MET_res)

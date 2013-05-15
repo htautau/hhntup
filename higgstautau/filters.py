@@ -550,15 +550,17 @@ class JetSelection(EventFilter):
 
     def __init__(self, year, **kwargs):
 
-        self.year = year
+        if year == 2011:
+            self.filter_func = jet_selection_2011
+        elif year == 2012:
+            self.filter_func = jet_selection_2012
+        else:
+            raise ValueError("No jet selection defined for year %d" % year)
         super(JetSelection, self).__init__(**kwargs)
 
     def passes(self, event):
 
-        if self.year == 2011:
-            event.jets.select(jet_selection_2011)
-        elif self.year == 2012:
-            event.jets.select(jet_selection_2012)
+        event.jets.select(self.filter_func)
         return True
 
 

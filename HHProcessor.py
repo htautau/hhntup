@@ -290,6 +290,7 @@ class HHProcessor(ATLASStudent):
             # taus are sorted (in decreasing order) by pT from here on
             TauIDSelection(
                 year=year,
+                tree=tree,
                 count_funcs=count_funcs),
             TruthMatching(
                 passthrough=datatype == datasets.DATA,
@@ -556,7 +557,7 @@ class HHProcessor(ATLASStudent):
                 mmc_mass, mmc_resonance, mmc_met = mmc.mass(
                         tau1, tau2,
                         METx, METy, sumET,
-                        len(event.jets),
+                        njets=len(event.jets),
                         method=0)
                 if verbose:
                     log.info("MMC: %f" % mmc_mass)
