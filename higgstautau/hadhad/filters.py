@@ -39,7 +39,7 @@ class TauIDSelection(EventFilter):
             tau2.id = IDMEDIUM
         else:
             tau2.id = IDLOOSE
-        self.tree.taus_pass = tau1.JetBDTSigMedium and tau2.JetBDTSigMedium:
+        self.tree.taus_pass = tau1.JetBDTSigMedium and tau2.JetBDTSigMedium
         return True
 
     def passes_2012(self, event):

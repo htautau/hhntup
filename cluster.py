@@ -106,7 +106,7 @@ def run(student,
         args = ''
     else:
         args = ' '.join(['--%s %s' % (key, value)
-            for key, value in kwargs.items()]) + ' '
+            for key, value in kwargs.items() if value is not None]) + ' '
 
     if qsub_name_suffix is None:
         qsub_name_suffix = ''
@@ -142,8 +142,9 @@ def run(student,
         ds = datasets.pop(0)
 
         output_name = os.path.splitext(student)[0] + '.' + ds
-        if 'suffix' in kwargs:
-            output_name += '_%s' % kwargs['suffix']
+        suffix = kwargs.get('suffix', None)
+        if suffix:
+            output_name += '_%s' % suffix
         output_name += '.root'
         output_name = os.path.join(output_path, output_name)
         if os.path.exists(output_name):
