@@ -361,9 +361,9 @@ class TauTriggerEfficiency(EventFilter):
             sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
             if math.isinf(sf) or math.isnan(sf):
                 log.warning("trigger data efficiency is infinite or NaN! Using 0.")
-                setattr(tau, 'trigger_eff_sf_%s' % wplevel, 0.)
-                setattr(tau, 'trigger_eff_sf_%s_high' % wplevel, 0.)
-                setattr(tau, 'trigger_eff_sf_%s_low' % wplevel, 0.)
+                tau.trigger_scale_factor = 0.
+                tau.trigger_scale_factor_high = 0.
+                tau.trigger_scale_factor_low = 0.
                 continue
 
             tau.trigger_scale_factor = sf
