@@ -569,7 +569,7 @@ class HHProcessor(ATLASStudent):
                     tau1, tau2,
                     METx, METy, sumET,
                     #njets=tree.numJets25 if use_numjets25 else len(event.jets),
-                    njets=tree.numJets25)
+                    njets=len(event.jets))
 
                 for mmc_method, mmc_object in enumerate(mmc_objects):
                     mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]

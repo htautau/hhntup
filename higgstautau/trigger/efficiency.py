@@ -336,12 +336,6 @@ class TauTriggerEfficiency(EventFilter):
         assert event.taus[0].pt > event.taus[1].pt
         # taus are already sorted in descending order by pT by TauLeadSublead
 
-        # get random run number using the pileup tool
-        period = self.get_period_2012(event.RunNumber)
-        # TODO: use:
-        #tool.getPeriodFromRunNumber(event.RunNumber)
-        thresh = []
-
         # new tool only accepts EVnone
         eveto = 'EVnone'
 
@@ -358,7 +352,7 @@ class TauTriggerEfficiency(EventFilter):
 
             wpflag = self.get_id_12(tau)
 
-            sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, period, prong, wpflag, eveto))
+            sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, event.RunNumber, prong, wpflag, eveto))
             if math.isinf(sf) or math.isnan(sf):
                 log.warning("trigger data efficiency is infinite or NaN! Using 0.")
                 tau.trigger_scale_factor = 0.
@@ -369,11 +363,11 @@ class TauTriggerEfficiency(EventFilter):
             tau.trigger_scale_factor = sf
 
             # Data stat uncert
-            data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, period, prong, wpflag, eveto))
-            data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, period, prong, wpflag, eveto))
+            data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, event.RunNumber, prong, wpflag, eveto))
+            data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, event.RunNumber, prong, wpflag, eveto))
             # Systematic uncert
-            sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, period, prong, wpflag, eveto))
-            sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, period, prong, wpflag, eveto))
+            sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, event.RunNumber, prong, wpflag, eveto))
+            sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, event.RunNumber, prong, wpflag, eveto))
 
             sigma_up = math.sqrt(math.pow(data_stat_up, 2.) +
                                  math.pow(sys_up, 2.))
