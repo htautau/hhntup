@@ -67,7 +67,7 @@ class Job(object):
 
         if 'resources_used.walltime' not in self.info:
             return 0
-        x = map(int, self.info['resources_used.cput'].split(':'))
+        x = map(int, self.info['resources_used.walltime'].split(':'))
         return datetime.timedelta(hours=x[0],minutes=x[1],seconds=x[2]).total_seconds()
 
     @property
