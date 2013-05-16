@@ -111,7 +111,11 @@ class MMC(object):
         met_vec = ROOT.TVector2(METx / GeV, METy / GeV)
         self.tool.SetMetVec(met_vec)
         self.tool.SetSumEt(sumET / GeV)
-        self.tool.SetNjet25(njets)
+
+        # setting SetNjet25 is a bad idea!
+        # the mmc applies special treatment for njets==0 and fails a lot!
+        # not setting SetNjet25 for njets==0 is the same as not setting it at all!
+        #self.tool.SetNjet25(njets)
 
         MET_res = 6.14 + 0.5 * sqrt(abs(sumET / GeV)) # sumET can be negative!!
         self.tool.SetMetScanParams(0., MET_res, MET_res)
