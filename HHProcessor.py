@@ -63,6 +63,7 @@ class HHProcessor(ATLASStudent):
         parser = ArgumentParser()
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--redo-mmc', default=False, action='store_true')
+        #parser.add_argument('--use-numjets25', default=False, action='store_true')
         parser.add_argument('--student-verbose', default=False, action='store_true')
         self.args = parser.parse_args(options)
         if self.args.syst_terms is not None:
@@ -91,6 +92,7 @@ class HHProcessor(ATLASStudent):
         datatype = self.metadata.datatype
         year = self.metadata.year
         redo_mmc = self.args.redo_mmc
+        #use_numjets25 = self.args.use_numjets25
         verbose = self.args.student_verbose
 
         # get pileup reweighting tool
@@ -344,6 +346,9 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
+            NumJets25(
+                tree=tree,
+                count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
@@ -367,6 +372,12 @@ class HHProcessor(ATLASStudent):
         tree.define_object(name='tau2', prefix='tau2_')
         tree.define_object(name='jet1', prefix='jet1_')
         tree.define_object(name='jet2', prefix='jet2_')
+
+        mmc_objects = [
+            tree.define_object(name='mmc0', prefix='mmc0_'),
+            tree.define_object(name='mmc1', prefix='mmc1_'),
+            tree.define_object(name='mmc2', prefix='mmc2_'),
+        ]
 
         """ Associations not currently implemented in rootpy
         chain.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
@@ -554,28 +565,42 @@ class HHProcessor(ATLASStudent):
             # MMC Mass
             ##########################
             if redo_mmc:
-                mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                        tau1, tau2,
-                        METx, METy, sumET,
-                        njets=len(event.jets),
-                        method=0)
-                if verbose:
-                    log.info("MMC: %f" % mmc_mass)
+                mmc_result = mmc.mass(
+                    tau1, tau2,
+                    METx, METy, sumET,
+                    #njets=tree.numJets25 if use_numjets25 else len(event.jets),
+                    njets=tree.numJets25)
+
+                for mmc_method, mmc_object in enumerate(mmc_objects):
+                    mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
+                    if verbose:
+                        log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
+
+                    mmc_object.mass = mmc_mass
+                    mmc_object.resonance.set_from(mmc_resonance)
+                    if mmc_mass > 0:
+                        mmc_object.resonance_pt = mmc_resonance.Pt()
+                    mmc_object.MET = mmc_met.Mod()
+                    mmc_object.MET_x = mmc_met.X()
+                    mmc_object.MET_y = mmc_met.Y()
+                    mmc_object.MET_phi = math.pi - mmc_met.Phi()
+                    mmc_object.MET_vec.set_from(mmc_met)
+
             else:
                 # use MMC values from skim
                 mmc_mass = event.tau_MMC_mass
                 mmc_resonance = event.tau_MMC_resonance
                 mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
 
-            tree.mass_mmc_tau1_tau2 = mmc_mass
-            tree.mmc_resonance.set_from(mmc_resonance)
-            if mmc_mass > 0:
-                tree.mmc_resonance_pt = mmc_resonance.Pt()
-            tree.MET_mmc = mmc_met.Mod()
-            tree.MET_mmc_x = mmc_met.X()
-            tree.MET_mmc_y = mmc_met.Y()
-            tree.MET_mmc_phi = math.pi - mmc_met.Phi()
-            tree.MET_mmc_vec.set_from(mmc_met)
+                tree.mmc0_mass = mmc_mass
+                tree.mmc0_resonance.set_from(mmc_resonance)
+                if mmc_mass > 0:
+                    tree.mmc0_resonance_pt = mmc_resonance.Pt()
+                tree.mmc0_MET = mmc_met.Mod()
+                tree.mmc0_MET_x = mmc_met.X()
+                tree.mmc0_MET_y = mmc_met.Y()
+                tree.mmc0_MET_phi = math.pi - mmc_met.Phi()
+                tree.mmc0_MET_vec.set_from(mmc_met)
 
             mass_vis, mass_col, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)

@@ -482,6 +482,20 @@ class TauSelected(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class NumJets25(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+
+        super(NumJets25, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+
+        self.tree.numJets25 = len([j for j in event.jets if
+            j.pt > 25 * GeV and abs(j.eta) < 4.5])
+        return True
+
+
 class NonIsolatedJet(EventFilter):
     """
     https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=200403

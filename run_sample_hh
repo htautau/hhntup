@@ -23,6 +23,7 @@ cluster.run('HHProcessor.py',
             setup=setup,
             output_path='.',
             student_args=student_args,
+            qsub_name_suffix=args.suffix,
             suffix=args.suffix,
             use_qsub=True,
             qsub_queue='short')

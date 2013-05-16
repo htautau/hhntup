@@ -43,8 +43,6 @@ class EventVariables(TreeModel):
     MET_centrality_boosted = FloatCol()
 
     mass_collinear_tau1_tau2 = FloatCol()
-    # MMC mass
-    mass_mmc_tau1_tau2 = FloatCol()
 
     # new ditaumass package mass
     mass_dtm_tau1_tau2 = DoubleCol()
@@ -89,17 +87,35 @@ class EventVariables(TreeModel):
     dPhi_tau2_MET = FloatCol()
     dPhi_min_tau_MET = FloatCol()
     MET_bisecting = BoolCol()
-
-    MET_mmc = FloatCol()
-    MET_mmc_x = FloatCol()
-    MET_mmc_y = FloatCol()
-    MET_mmc_phi = FloatCol()
-    MET_mmc_vec = Vector2
-
-    mmc_resonance = LorentzVector
-    mmc_resonance_pt = FloatCol()
-
     sumET = FloatCol()
+
+    # MMC mass for all methods
+    mmc0_mass = FloatCol()
+    mmc1_mass = FloatCol()
+    mmc2_mass = FloatCol()
+
+    mmc0_MET = FloatCol()
+    mmc0_MET_x = FloatCol()
+    mmc0_MET_y = FloatCol()
+    mmc0_MET_phi = FloatCol()
+    mmc0_MET_vec = Vector2
+    mmc1_MET = FloatCol()
+    mmc1_MET_x = FloatCol()
+    mmc1_MET_y = FloatCol()
+    mmc1_MET_phi = FloatCol()
+    mmc1_MET_vec = Vector2
+    mmc2_MET = FloatCol()
+    mmc2_MET_x = FloatCol()
+    mmc2_MET_y = FloatCol()
+    mmc2_MET_phi = FloatCol()
+    mmc2_MET_vec = Vector2
+
+    mmc0_resonance = LorentzVector
+    mmc0_resonance_pt = FloatCol()
+    mmc1_resonance = LorentzVector
+    mmc1_resonance_pt = FloatCol()
+    mmc2_resonance = LorentzVector
+    mmc2_resonance_pt = FloatCol()
 
     jet_transformation = LorentzRotation
     jet_beta = Vector3

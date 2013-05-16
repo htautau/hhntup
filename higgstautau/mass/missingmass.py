@@ -40,8 +40,7 @@ class MMC(object):
              tau1, tau2,
              METx, METy, sumET,
              njets,
-             tau2_lep_type=None,
-             method=1):
+             tau2_lep_type=None):
         """
         Missing mass calculation
         returns the most likely mass
@@ -118,14 +117,16 @@ class MMC(object):
         self.tool.SetMetScanParams(0., MET_res, MET_res)
 
         self.tool.RunMissingMassCalculator()
-        MMC_mass = -1
-        MMC_resonance = ROOT.TLorentzVector(0, 0, 0, 0)
-        MMC_met = ROOT.TVector2(0, 0)
-        if self.tool.GetFitStatus() == 1:
-            # MMC output: 1=found solution; 0= no solution
-            MMC_mass = self.tool.GetFittedMass(method)
-            # use method 2 instead of 1 to remove spikes in output
-            MMC_resonance = self.tool.GetResonanceVec(method)
-            MMC_met = self.tool.GetFittedMetVec(method)
-
-        return MMC_mass, MMC_resonance, MMC_met
+        result = {}
+        for method in range(3):
+            MMC_mass = -1
+            MMC_resonance = ROOT.TLorentzVector(0, 0, 0, 0)
+            MMC_met = ROOT.TVector2(0, 0)
+            if self.tool.GetFitStatus() == 1:
+                # MMC output: 1=found solution; 0= no solution
+                MMC_mass = self.tool.GetFittedMass(method)
+                # use method 2 instead of 1 to remove spikes in output
+                MMC_resonance = self.tool.GetResonanceVec(method)
+                MMC_met = self.tool.GetFittedMetVec(method)
+            result[method] = (MMC_mass, MMC_resonance, MMC_met)
+        return result
