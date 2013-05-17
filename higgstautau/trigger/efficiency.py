@@ -353,6 +353,10 @@ class TauTriggerEfficiency(EventFilter):
             wpflag = self.get_id_12(tau)
 
             sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, event.RunNumber, prong, wpflag, eveto))
+
+            #if event.RunNumber == 207528 and event.EventNumber == 2183594:
+            #    print sf, tau.pt, tau.eta, prong, wpflag, eveto
+
             if math.isinf(sf) or math.isnan(sf):
                 log.warning("trigger data efficiency is infinite or NaN! Using 0.")
                 tau.trigger_scale_factor = 0.
