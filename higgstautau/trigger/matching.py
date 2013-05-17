@@ -5,6 +5,7 @@ from atlastools import datasets
 from math import *
 
 from . import utils as triggerutils
+from . import log; log = log[__name__]
 
 
 class TauTriggerMatchIndex(EventFilter):
@@ -194,6 +195,6 @@ class TauTriggerMatchThreshold(EventFilter):
             taus[i][0].trigger_match_thresh = thresholds[i]
             # sanity check THIS SOMETIMES FAILS!
             if taus[i][1].pt < thresholds[i] * GeV:
-                print "WARNING: EF pT %f less than trigger threshold %f" % (
-                        taus[i][1].pt, thresholds[i] * GeV)
+                log.warning("EF pT %f less than trigger threshold %f" % (
+                    taus[i][1].pt, thresholds[i] * GeV))
                 self.tree.tau_trigger_match_error = True
