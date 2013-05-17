@@ -284,6 +284,9 @@ class HHProcessor(ATLASStudent):
             #    count_funcs=count_funcs),
             TauSelected(2,
                 count_funcs=count_funcs),
+            # TODO: update skim with tau eta < 2.47 both calo and lead trk
+            TauEta(2,
+                count_funcs=count_funcs),
             # apply this selection here since skim has lower threshold for data
             TauLeadSublead(
                 lead=35 * GeV,

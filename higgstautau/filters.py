@@ -251,10 +251,9 @@ class TauElectronVeto(EventFilter):
 
         #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
+        # Eta selection already applied by TauEta filter
         event.taus.select(lambda tau:
                 tau.numTrack > 1 or
-                abs(tau.eta) >= 2.47 or
-                (tau.numTrack > 0 and abs(tau.track_eta[0]) >= 2.47) or
                 tau.EleBDTLoose == 0)
         return len(event.taus) >= self.min_taus
 
@@ -321,7 +320,10 @@ class TauEta(EventFilter):
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: abs(tau.eta) < 2.5) # was 2.1
+        # both calo and leading track eta within 2.47
+        event.taus.select(lambda tau:
+                abs(tau.eta) < 2.47 and
+                abs(tau.track_eta[tau.leadtrack_idx]) < 2.47)
         return len(event.taus) >= self.min_taus
 
 

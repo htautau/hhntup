@@ -145,6 +145,8 @@ class EmbeddingBlock(TreeModel):
 
 class RecoTau(FourMomentum):
 
+    index = IntCol(default=-1)
+
     BDTJetScore = FloatCol()
     BDTEleScore = FloatCol()
 
@@ -215,6 +217,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.tau_centrality_product = tau1.centrality * tau2.centrality
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
+
+            outtau.index = intau.index
 
             FourMomentum.set(outtau, intau)
 
