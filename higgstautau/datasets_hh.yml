@@ -11473,7 +11473,7 @@ data12-Muons-207490: !Dataset
   stream: Muons
 data12-Muons-207528: !Dataset
   name: data12-Muons-207528
-  datatype: 0
+  datatype: 2
   treename: tau
   ds: data12_8TeV.00207528.physics_Muons.merge.NTUP_TAU.merge
   dirs: [/cluster/data11/endw/skims/p1344_v2/group.phys-higgs.hhskim.data12_8TeV.00207528.physics_Muons.merge.NTUP_EMBHHIM.r4065_p1278_r4232_p1462.v4.130418104507]

@@ -1081,7 +1081,7 @@ yaml.add_constructor(u'!Dataset', dataset_constructor)
 
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
-        log.info("Loading cross section cache ...")
+        log.info("Loading cross section cache in %s ..." % XSEC_CACHE_FILE)
         XSEC_CACHE = pickle.load(cache)
 
 
