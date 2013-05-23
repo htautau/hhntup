@@ -13,16 +13,16 @@ mc:
     systematics:
         #- JES_Statistical_UP
         #- JES_Statistical_DOWN
-        #- JES_Modelling_UP
-        #- JES_Modelling_DOWN
+        - JES_Modelling_UP
+        - JES_Modelling_DOWN
         - JES_Detector_UP
         - JES_Detector_DOWN
         #- JES_Mixed_UP
         #- JES_Mixed_DOWN
         - JES_EtaModelling_UP
         - JES_EtaModelling_DOWN
-        #- JES_EtaMethod_UP
-        #- JES_EtaMethod_DOWN
+        - JES_EtaMethod_UP
+        - JES_EtaMethod_DOWN
         - JES_PURho_UP
         - JES_PURho_DOWN
         #- JES_PUPt_UP
