@@ -1,6 +1,8 @@
 """
 Event filters common to both hadhad and lephad go here
 """
+import ROOT
+
 from rootpy.tree.filtering import *
 from itertools import ifilter
 from atlastools import utils
@@ -621,4 +623,38 @@ class ggFReweighting(EventFilter):
     def passes(self, event):
 
         self.tree.ggf_weight = reweight_ggf(event, self.dsname)
+        return True
+
+
+class EmbeddingCorrections(EventFilter):
+
+    def __init__(self, tree, passthrough=False, **kwargs):
+
+        super(EmbeddingCorrections, self).__init__(passthrough=passthrough, **kwargs)
+
+        if not passthrough:
+            self.tree = tree
+            from externaltools.bundle_2012 import EmbeddedCorrections
+            from externaltools import TrigMuonEfficiency
+            from externaltools import ElectronEfficiencyCorrection
+            from externaltools.bundle_2012 import HSG4LepLepTriggerSF
+            from externaltools import MuonEfficiencyCorrections
+            self.tool = ROOT.EmbeddedCorrections.Embedded(
+                    EmbeddedCorrections.get_resource('2DMaps.root'),
+                    TrigMuonEfficiency.RESOURCE_PATH,
+                    ElectronEfficiencyCorrection.RESOURCE_PATH,
+                    HSG4LepLepTriggerSF.RESOURCE_PATH,
+                    MuonEfficiencyCorrections.RESOURCE_PATH)
+
+    def passes(self, event):
+
+        self.tool.SetupEmbeddedEvent(
+                event.mc_pt,
+                event.mc_eta,
+                event.mc_phi,
+                event.mc_m,
+                event.mc_pdgId,
+                event.RunNumber)
+        self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
+        self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
         return True

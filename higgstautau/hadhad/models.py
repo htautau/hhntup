@@ -137,6 +137,10 @@ class EventVariables(TreeModel):
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
 
+    # embedding corrections
+    embedding_reco_unfold = FloatCol(default=1.)
+    embedding_dimuon_mass = FloatCol()
+
 
 class EmbeddingBlock(TreeModel):
 
