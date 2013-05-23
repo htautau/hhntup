@@ -349,9 +349,9 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
-            NumJets25(
-                tree=tree,
-                count_funcs=count_funcs),
+            #NumJets25(
+            #    tree=tree,
+            #    count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
@@ -390,7 +390,7 @@ class HHProcessor(ATLASStudent):
         if redo_mmc:
             log.info("will recalculate MMC output")
             # create MMC object
-            mmc = mass.MMC(year=year, channel='hh')
+            mmc = mass.MMC(year=year)
 
         # entering the main event loop...
         for event in chain:

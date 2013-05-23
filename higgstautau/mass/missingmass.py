@@ -4,37 +4,33 @@ from atlastools.units import GeV
 from atlastools import datasets
 import os
 from math import sqrt
+from externaltools import MissingMassCalculator
 
 
 class MMC(object):
 
     INITED = False
 
-    def __init__(self, year, channel):
+    def __init__(self, year):
 
         if MMC.INITED:
             raise RuntimeError("do not create more than one MMC")
         MMC.INITED = True
 
-        assert channel in ('lh', 'hh')
-        assert year in (2011, 2012)
+        self.year = year
 
-        if channel == 'hh':
-            log.info("setting up MMC for hadhad")
-            from externaltools.bundle_2011 import MissingMassCalculator
-            # tag 7 for hh for both years
+        self.tool = ROOT.MissingMassCalculator()
+        self.tool.SetNsigmaMETscan(4.0)
+        self.tool.SetUseTailCleanup(0)
+
+        if year == 2011:
+            log.info("using 2011 MMC calibration set")
+            self.tool.SetCalibrationSet(ROOT.MMCCalibrationSet.MMC2011)
+        elif year == 2012:
+            log.info("using 2012 MMC calibration set")
+            self.tool.SetCalibrationSet(ROOT.MMCCalibrationSet.MMC2012)
         else:
-            log.info("setting up MMC for lephad")
-            from externaltools.bundle_2012 import MissingMassCalculator
-            # tag 9 for lh for both years
-
-        self.tool = ROOT.MissingMassCalculator('JERProviderPlots.root')
-
-        if channel == 'hh':
-            log.info("applying hadhad MMC settings")
-            self.tool.SetAlgorithmVersion(1)
-            self.tool.SetNiterFit2(40)
-            self.tool.SetNsigmaMETscan(4.0)
+            raise ValueError("no MMC calibration for year %d" % year)
 
     def mass(self,
              tau1, tau2,
@@ -111,10 +107,12 @@ class MMC(object):
         met_vec = ROOT.TVector2(METx / GeV, METy / GeV)
         self.tool.SetMetVec(met_vec)
         self.tool.SetSumEt(sumET / GeV)
-        #self.tool.SetNjet25(njets)
+        self.tool.SetNjet25(njets)
 
-        MET_res = 6.14 + 0.5 * sqrt(abs(sumET / GeV)) # sumET can be negative!!
-        self.tool.SetMetScanParams(0., MET_res, MET_res)
+        if self.year == 2012 and njets > 0:
+            # sumET can be negative!!
+            MET_res = 6.14 + 0.5 * sqrt(abs(sumET / GeV))
+            self.tool.SetMetScanParams(0., MET_res, MET_res)
 
         self.tool.RunMissingMassCalculator()
         result = {}
