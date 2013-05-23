@@ -1,7 +1,7 @@
 mc_ztautau:
     name: Ztautau
-    latex: '$Z/\gamma^{*}$'
-    root: 'Z/#gamma^{*}'
+    latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$'
+    root: 'Z/#gamma^{*}#rightarrow#tau_{h}#tau_{h}'
     color: '#00a4ff'
     samples:
         - 'AlpgenJimmyZtautauNp0_pt20.mc11c'
@@ -19,8 +19,8 @@ mc_ztautau:
         - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
 embedded_ztautau:
     name: Ztautau
-    latex: '$Z/\gamma^{*}$ (embedded)'
-    root: 'Z/#gamma^{*} (embedded)'
+    latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$ (embedded)'
+    root: 'Z/#gamma^{*}#rightarrow#tau_{h}#tau_{h} (embedded)'
     color: '#00a4ff'
     samples:
         - 'embed11-hh-isol-mfsim'
