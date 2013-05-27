@@ -3,7 +3,13 @@
 HHSTUDENT ?= HHProcessor
 HHNTUP ?= ntuples/hadhad/HHProcessor
 
-default: clean
+default: clean lib
+
+lib:
+	cd higgstautau/jetcleaning && ./setup.py build_ext --inplace
+
+kill-hung:
+	-./pbs.py | grep HUNG | cut -d " " -f 1 | xargs qdel
 
 hh-ntup-clean:
 	rm -f $(HHNTUP)/$(HHSTUDENT).root
@@ -18,7 +24,6 @@ clean-pyc:
 	rm -f *.pyc
 
 clean: clean-pyc
-	rm -f cutflow.p
 	rm -f student*.root
 	rm -f student*.profile
 	rm -f TPileupReweighting.prw.root
@@ -26,3 +31,5 @@ clean: clean-pyc
 	rm -f supervisor*.log
 	rm -f grid-setup.sh
 	rm -f *.dot
+	rm -f *.e[0-9]*
+	rm -f *.o[0-9]*

@@ -11,18 +11,20 @@ from atlastools.filtering import GRLFilter
 
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel
-from rootpy.types import *
-from rootpy.io import open as ropen
 from rootpy.extern.argparse import ArgumentParser
+from rootpy.io import root_open
 
 from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
+from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
 from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.trigger.emulation import TauTriggerEmulation, update_trigger_trees
-from higgstautau.trigger.matching import TauTriggerMatchIndex, TauTriggerMatchThreshold
+from higgstautau.trigger.emulation import (TauTriggerEmulation,
+                                           update_trigger_trees)
+from higgstautau.trigger.matching import (TauTriggerMatchIndex,
+                                          TauTriggerMatchThreshold)
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
@@ -37,9 +39,6 @@ from higgstautau.hadhad.objects import define_objects
 from higgstautau.corrections import reweight_ggf
 
 import goodruns
-
-
-#ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 
 class hhskim(ATLASStudent):
@@ -89,7 +88,7 @@ class hhskim(ATLASStudent):
             merged_grl = goodruns.GRL()
             for fname in self.files:
                 merged_grl |= goodruns.GRL(
-                        '%s:/Lumi/%s' % (fname, self.metadata.treename))
+                    '%s:/Lumi/%s' % (fname, self.metadata.treename))
             lumi_dir = self.output.mkdir('Lumi')
             lumi_dir.cd()
             xml_string= ROOT.TObjString(merged_grl.str())
@@ -158,18 +157,20 @@ class hhskim(ATLASStudent):
                 year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            #ExtraInfoTree(
-            #   count_funcs=count_funcs)
             trigger_emulation,
             Triggers(
                 year=year,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
+            # TODO: APPLY RANDOM RUN NUMBER HERE FOR MC
             PriVertex(
                 count_funcs=count_funcs),
             LArError(
                 count_funcs=count_funcs),
             TileError(
+                count_funcs=count_funcs),
+            TileTrips(
+                passthrough=year < 2012,
                 count_funcs=count_funcs),
             JetCalibration(
                 datatype=datatype,
@@ -185,9 +186,10 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 verbose=verbose,
                 count_funcs=count_funcs),
-            # the BDT bits are broken in the p1130 production, correct them
+            # The BDT bits are broken in the p1130 production, correct them
             # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
             # PRODUCTION TAG!!!
+            #
             #TauIDpatch(
             #    year=year,
             #    count_funcs=count_funcs),
@@ -195,6 +197,8 @@ class hhskim(ATLASStudent):
             #ElectronIDpatch(
             #    passthrough=year != 2012,
             #    count_funcs=count_funcs),
+            #
+            # The above patches are no longer required
             LArHole(
                 datatype=datatype,
                 count_funcs=count_funcs),
@@ -207,18 +211,18 @@ class hhskim(ATLASStudent):
             MuonVeto(
                 year=year,
                 count_funcs=count_funcs),
+            TauPT(2,
+                thresh=20 * GeV,
+                count_funcs=count_funcs),
+            TauEta(2,
+                count_funcs=count_funcs),
+            TauHasTrack(2,
+                count_funcs=count_funcs),
             TauElectronVeto(2,
                 count_funcs=count_funcs),
             TauMuonVeto(2,
                 count_funcs=count_funcs),
             TauAuthor(2,
-                count_funcs=count_funcs),
-            TauHasTrack(2,
-                count_funcs=count_funcs),
-            TauPT(2,
-                thresh=20 * GeV,
-                count_funcs=count_funcs),
-            TauEta(2,
                 count_funcs=count_funcs),
             TauCrack(2,
                 count_funcs=count_funcs),
@@ -233,24 +237,27 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
-            # select two leading taus at this point
-            # 25/35 for data
-            # 20/30 for MC for TES
+            # Select two leading taus at this point
+            # 25 and 35 for data
+            # 20 and 30 for MC for TES uncertainty
             TauLeadSublead(
                 lead=35 * GeV if datatype == datasets.DATA else 30 * GeV,
                 sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
                 count_funcs=count_funcs),
             TaudR(3.2,
                 count_funcs=count_funcs),
+            TruthMatching(
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
             TauTriggerMatchThreshold(
+                datatype=datatype,
                 tree=tree,
-                passthrough=no_trigger or datatype == datasets.EMBED,
+                passthrough=no_trigger,
                 count_funcs=count_funcs),
             TauTriggerEfficiency(
                 year=year,
                 datatype=datatype,
                 tree=tree,
-                pileup_tool=pileup_tool,
                 tes_systematic=self.args.syst_terms and (
                     Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=no_trigger or datatype == datasets.DATA,
@@ -260,17 +267,18 @@ class hhskim(ATLASStudent):
                 tree=tree,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
-            TruthMatching(
-                passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
             EfficiencyScaleFactors(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
             FakeRateScaleFactors(
                 year=year,
-                passthrough=no_trigger or datatype != datasets.MC
-                            or year == 2012, # wait for new tool
+                datatype=datatype,
+                tes_up_systematic=(self.args.syst_terms and
+                    (Systematics.TES_UP in self.args.syst_terms)),
+                tes_down_systematic=(self.args.syst_terms and
+                    (Systematics.TES_DOWN in self.args.syst_terms)),
+                passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             ggFReweighting(
                 dsname=os.getenv('INPUT_DATASET_NAME', ''),
@@ -280,20 +288,41 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             TauTrackRecounting(
                 year=year,
+                datatype=datatype,
                 count_funcs=count_funcs),
             EmbeddingIsolation(
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            TauJetOverlapRemoval(
+                count_funcs=count_funcs),
+            JetPreselection(
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
+            NonIsolatedJet(
+                tree=tree,
+                passthrough=year < 2012,
+                count_funcs=count_funcs),
+            JetSelection(
+                year=year,
                 count_funcs=count_funcs),
         ])
 
         # set the event filters
         self.filters['event'] = event_filters
 
+        # peek at first tree to determine which branches to exclude
+        with root_open(self.files[0]) as test_file:
+            test_tree = test_file.Get(self.metadata.treename)
+            ignore_branches = test_tree.glob(
+                hhbranches.REMOVE,
+                exclude=hhbranches.KEEP)
+
         # initialize the TreeChain of all input files
         chain = TreeChain(
                 self.metadata.treename,
                 files=self.files,
+                ignore_branches=ignore_branches,
                 events=self.events,
                 onfilechange=onfilechange,
                 filters=event_filters,
@@ -307,9 +336,7 @@ class hhskim(ATLASStudent):
         # set branches to be removed in ignore_branches
         tree.set_buffer(
                 chain._buffer,
-                ignore_branches=chain.glob(
-                    hhbranches.REMOVE,
-                    exclude=hhbranches.KEEP),
+                ignore_branches=ignore_branches,
                 create_branches=True,
                 ignore_duplicates=True,
                 transfer_objects=True,
@@ -350,8 +377,12 @@ class hhskim(ATLASStudent):
             MET = event.MET.et
             sumET = event.MET.sumet
 
+            # TODO: get MMC output for all three methods
             mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2, METx, METy, sumET)
+                    tau1, tau2,
+                    METx, METy, sumET,
+                    len(event.jets),
+                    method=0)
 
             tree.tau_MMC_mass = mmc_mass
             tree.tau_MMC_resonance.set_from(mmc_resonance)

@@ -5,6 +5,8 @@ from rootpy.extern.hep import pdg
 from atlastools.utils import dR
 from atlastools.units import GeV
 
+from .tauid import IDNONE
+
 """
 This module contains "mixin" classes for adding
 functionality to Tree objects ("decorating" them).
@@ -19,6 +21,8 @@ __all__ = [
     'MCTauFourMomentum',
     'MCParticle',
 ]
+
+SF_DEFAULT = 1.
 
 
 class MatchedObject(object):
@@ -112,6 +116,8 @@ class TauFourMomentum(FourMomentum):
 
         super(TauFourMomentum, self).__init__()
 
+        self.id = IDNONE
+
         self.centrality = 0.
         self.centrality_boosted = 0.
 
@@ -122,6 +128,32 @@ class TauFourMomentum(FourMomentum):
         self.min_dr_jet = 9999.
 
         self._pt_nominal = -1111.
+
+        # Move to skim mixin after new skim
+        # fakerate reco scale factors
+        self.fakerate_sf_reco = SF_DEFAULT
+        self.fakerate_sf_reco_high = SF_DEFAULT
+        self.fakerate_sf_reco_low = SF_DEFAULT
+
+        # efficiency scale factor if matches truth
+        self.efficiency_scale_factor = SF_DEFAULT
+        self.efficiency_scale_factor_high = SF_DEFAULT
+        self.efficiency_scale_factor_low = SF_DEFAULT
+
+        # fake rate scale factor for taus that do not match truth
+        self.fakerate_scale_factor = SF_DEFAULT
+        self.fakerate_scale_factor_high = SF_DEFAULT
+        self.fakerate_scale_factor_low = SF_DEFAULT
+
+        # fake rate reco scale factor for taus that do not match truth
+        self.fakerate_scale_factor_reco = SF_DEFAULT
+        self.fakerate_scale_factor_reco_high = SF_DEFAULT
+        self.fakerate_scale_factor_reco_low = SF_DEFAULT
+
+        # trigger efficiency correction
+        self.trigger_scale_factor = SF_DEFAULT
+        self.trigger_scale_factor_high = SF_DEFAULT
+        self.trigger_scale_factor_low = SF_DEFAULT
 
     @property
     def pt_nominal(self):
@@ -196,8 +228,6 @@ class TauFourMomentumSkim(TauFourMomentum):
     def __init__(self):
 
         super(TauFourMomentumSkim, self).__init__()
-
-        SF_DEFAULT = 1.
 
         self.trigger_match_thresh = 0
         self.trigger_match_index = -1

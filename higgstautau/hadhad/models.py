@@ -25,19 +25,24 @@ class EventVariables(TreeModel):
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 
+    # true if both taus pass ID requirements
+    taus_pass = BoolCol()
+
     tau_trigger_match_error = BoolCol(default=False)
 
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
     tau1_x = FloatCol()
     tau2_x = FloatCol()
+    tau_x_product = FloatCol()
+    tau_x_sum = FloatCol()
+    tau_pt_ratio = FloatCol()
+    tau_centrality_product = FloatCol()
 
     MET_centrality = FloatCol()
     MET_centrality_boosted = FloatCol()
 
     mass_collinear_tau1_tau2 = FloatCol()
-    # MMC mass
-    mass_mmc_tau1_tau2 = FloatCol()
 
     # new ditaumass package mass
     mass_dtm_tau1_tau2 = DoubleCol()
@@ -68,6 +73,7 @@ class EventVariables(TreeModel):
     eta_product_jets = FloatCol()
     eta_product_jets_boosted = FloatCol()
 
+    numJets25 = IntCol()
     numJets = IntCol()
     nonisolatedjet = BoolCol()
 
@@ -77,17 +83,39 @@ class EventVariables(TreeModel):
     MET_phi = FloatCol()
     MET_sig = FloatCol()
     MET_vec = Vector2
-
-    MET_mmc = FloatCol()
-    MET_mmc_x = FloatCol()
-    MET_mmc_y = FloatCol()
-    MET_mmc_phi = FloatCol()
-    MET_mmc_vec = Vector2
-
-    mmc_resonance = LorentzVector
-    mmc_resonance_pt = FloatCol()
-
+    dPhi_tau1_MET = FloatCol()
+    dPhi_tau2_MET = FloatCol()
+    dPhi_min_tau_MET = FloatCol()
+    MET_bisecting = BoolCol()
     sumET = FloatCol()
+
+    # MMC mass for all methods
+    mmc0_mass = FloatCol()
+    mmc1_mass = FloatCol()
+    mmc2_mass = FloatCol()
+
+    mmc0_MET = FloatCol()
+    mmc0_MET_x = FloatCol()
+    mmc0_MET_y = FloatCol()
+    mmc0_MET_phi = FloatCol()
+    mmc0_MET_vec = Vector2
+    mmc1_MET = FloatCol()
+    mmc1_MET_x = FloatCol()
+    mmc1_MET_y = FloatCol()
+    mmc1_MET_phi = FloatCol()
+    mmc1_MET_vec = Vector2
+    mmc2_MET = FloatCol()
+    mmc2_MET_x = FloatCol()
+    mmc2_MET_y = FloatCol()
+    mmc2_MET_phi = FloatCol()
+    mmc2_MET_vec = Vector2
+
+    mmc0_resonance = LorentzVector
+    mmc0_resonance_pt = FloatCol()
+    mmc1_resonance = LorentzVector
+    mmc1_resonance_pt = FloatCol()
+    mmc2_resonance = LorentzVector
+    mmc2_resonance_pt = FloatCol()
 
     jet_transformation = LorentzRotation
     jet_beta = Vector3
@@ -104,9 +132,14 @@ class EventVariables(TreeModel):
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
+    vector_sum_pt = FloatCol()
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
+
+    # embedding corrections
+    embedding_reco_unfold = FloatCol(default=1.)
+    embedding_dimuon_mass = FloatCol()
 
 
 class EmbeddingBlock(TreeModel):
@@ -115,6 +148,8 @@ class EmbeddingBlock(TreeModel):
 
 
 class RecoTau(FourMomentum):
+
+    index = IntCol(default=-1)
 
     BDTJetScore = FloatCol()
     BDTEleScore = FloatCol()
@@ -128,6 +163,7 @@ class RecoTau(FourMomentum):
     numTrack = IntCol()
     charge = IntCol()
     jvtxf = FloatCol()
+    seedCalo_centFrac = FloatCol()
 
     centrality = FloatCol()
     centrality_boosted = FloatCol()
@@ -141,6 +177,11 @@ class RecoTau(FourMomentum):
     fakerate_scale_factor = FloatCol(default=1.)
     fakerate_scale_factor_high = FloatCol(default=1.)
     fakerate_scale_factor_low = FloatCol(default=1.)
+
+    # fake rate reco scale factor for taus that do not match truth
+    fakerate_scale_factor_reco = FloatCol(default=1.)
+    fakerate_scale_factor_reco_high = FloatCol(default=1.)
+    fakerate_scale_factor_reco_low = FloatCol(default=1.)
 
     # trigger efficiency correction
     trigger_scale_factor = FloatCol(default=1.)
@@ -175,9 +216,13 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
         tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
-        tree.dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+        # leading pt over subleading pt
+        tree.tau_pt_ratio = tau1.pt / tau2.pt
+        tree.tau_centrality_product = tau1.centrality * tau2.centrality
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
+
+            outtau.index = intau.index
 
             FourMomentum.set(outtau, intau)
 
@@ -193,53 +238,28 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.numTrack = intau.numTrack
             outtau.charge = intau.charge
             outtau.jvtxf = intau.jet_jvtxf
+            outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
             outtau.centrality = intau.centrality
             outtau.centrality = intau.centrality_boosted
 
-            # use SFs exclusively
-            if intau.JetBDTSigTight:
-                if intau.matched:
-                    outtau.efficiency_scale_factor = intau.id_eff_sf_tight
-                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_tight_high
-                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_tight_low
-                else:
-                    outtau.fakerate_scale_factor = intau.fakerate_sf_tight
-                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_tight_high
-                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_tight_low
+            if intau.matched:
+                outtau.efficiency_scale_factor = intau.efficiency_scale_factor
+                outtau.efficiency_scale_factor_high = intau.efficiency_scale_factor_high
+                outtau.efficiency_scale_factor_low = intau.efficiency_scale_factor_low
 
-                outtau.trigger_scale_factor = intau.trigger_eff_sf_tight
-                outtau.trigger_scale_factor_high = intau.trigger_eff_sf_tight_high
-                outtau.trigger_scale_factor_low = intau.trigger_eff_sf_tight_low
-
-            elif intau.JetBDTSigMedium:
-                if intau.matched:
-                    outtau.efficiency_scale_factor = intau.id_eff_sf_medium
-                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_medium_high
-                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_medium_low
-                else:
-                    outtau.fakerate_scale_factor = intau.fakerate_sf_medium
-                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_medium_high
-                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_medium_low
-
-                outtau.trigger_scale_factor = intau.trigger_eff_sf_medium
-                outtau.trigger_scale_factor_high = intau.trigger_eff_sf_medium_high
-                outtau.trigger_scale_factor_low = intau.trigger_eff_sf_medium_low
+                outtau.trigger_scale_factor = intau.trigger_scale_factor
+                outtau.trigger_scale_factor_high = intau.trigger_scale_factor_high
+                outtau.trigger_scale_factor_low = intau.trigger_scale_factor_low
 
             else:
-                if intau.matched:
-                    outtau.efficiency_scale_factor = intau.id_eff_sf_loose
-                    outtau.efficiency_scale_factor_high = intau.id_eff_sf_loose_high
-                    outtau.efficiency_scale_factor_low = intau.id_eff_sf_loose_low
-                else:
-                    outtau.fakerate_scale_factor = intau.fakerate_sf_loose
-                    outtau.fakerate_scale_factor_high = intau.fakerate_sf_loose_high
-                    outtau.fakerate_scale_factor_low = intau.fakerate_sf_loose_low
+                outtau.fakerate_scale_factor = intau.fakerate_scale_factor
+                outtau.fakerate_scale_factor_high = intau.fakerate_scale_factor_high
+                outtau.fakerate_scale_factor_low = intau.fakerate_scale_factor_low
 
-                outtau.trigger_scale_factor = intau.trigger_eff_sf_loose
-                outtau.trigger_scale_factor_high = intau.trigger_eff_sf_loose_high
-                outtau.trigger_scale_factor_low = intau.trigger_eff_sf_loose_low
-
+                outtau.fakerate_scale_factor_reco = intau.fakerate_scale_factor_reco
+                outtau.fakerate_scale_factor_reco_high = intau.fakerate_scale_factor_reco_high
+                outtau.fakerate_scale_factor_reco_low = intau.fakerate_scale_factor_reco_low
 
             outtau.trigger_match_thresh = intau.trigger_match_thresh
 
@@ -302,12 +322,16 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') +
         fourvect_boosted.Boost(tree.parton_beta * -1)
 
         fourvect_vis = getattr(tree, 'trueTau%i_fourvect_vis' % index)
-        fourvect_vis.SetPtEtaPhiM(
-            et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
-            tau.vis_eta,
-            tau.vis_phi,
-            tau.vis_m)
-
-        fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
-        fourvect_vis_boosted.set_from(fourvect_vis)
-        fourvect_vis_boosted.Boost(tree.parton_beta * -1)
+        try:
+            fourvect_vis.SetPtEtaPhiM(
+                et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
+                tau.vis_eta,
+                tau.vis_phi,
+                tau.vis_m)
+        except ValueError:
+            print "DOMAIN ERROR ON TRUTH 4VECT"
+            print tau.vis_Et, tau.vis_eta, tau.vis_m
+        else:
+            fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
+            fourvect_vis_boosted.set_from(fourvect_vis)
+            fourvect_vis_boosted.Boost(tree.parton_beta * -1)

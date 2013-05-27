@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from rootpy.io import open as ropen
+from rootpy.io import root_open as ropen
 from rootpy.tree import Cut
 from rootpy.plotting import Graph
 from ..common import PRONGS, LEVELS, nprong

@@ -4,6 +4,12 @@ from externaltools import PileupReweighting
 from ROOT import Root
 
 
+DATA_SCALE_FACTOR = {
+    2011: 1./0.97,
+    2012: 1./1.11,
+}
+
+
 def get_pileup_reweighting_tool(year, use_defaults=True):
 
     # Initialize the pileup reweighting tool
@@ -18,7 +24,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
                 'lumi/2011/hadhad/'
                 'TPileupReweighting.mc11.prw.root')
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
-        pileup_tool.SetDataScaleFactors(1./0.97)
+        pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
         pileup_tool.AddLumiCalcFile(
                 'lumi/2011/hadhad/'
                 'ilumicalc_histograms_None_178044-191933.root')
@@ -32,7 +38,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
                 'lumi/2012/hadhad/'
                 'TPileupReweighting.mc12.prw.root')
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
-        pileup_tool.SetDataScaleFactors(1./1.11)
+        pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
         pileup_tool.AddLumiCalcFile(
                 'lumi/2012/hadhad/'
                 'ilumicalc_histograms_None_200842-215643.root')
@@ -111,6 +117,20 @@ class PileupReweight(EventFilter):
                 event.RunNumber,
                 event.mc_channel_number,
                 event.averageIntPerXing)
+        return True
+
+
+class PileupDataScale(EventFilter):
+
+    def __init__(self, year, **kwargs):
+
+        self.scale = DATA_SCALE_FACTOR[year]
+        super(PileupDataScale, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        event.averageIntPerXing *= self.scale
+        event.actualIntPerXing *= self.scale
         return True
 
 

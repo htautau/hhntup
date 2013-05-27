@@ -1,3 +1,4 @@
+import time
 import socket
 import os, errno
 import subprocess
@@ -105,7 +106,7 @@ def run(student,
         args = ''
     else:
         args = ' '.join(['--%s %s' % (key, value)
-            for key, value in kwargs.items()]) + ' '
+            for key, value in kwargs.items() if value is not None]) + ' '
 
     if qsub_name_suffix is None:
         qsub_name_suffix = ''
@@ -136,13 +137,14 @@ def run(student,
     hosts = [Host(host) for host in hosts]
     datasets = datasets[:]
 
-    procs = []
+    proc_cmds = []
     while len(datasets) > 0:
         ds = datasets.pop(0)
 
         output_name = os.path.splitext(student)[0] + '.' + ds
-        if 'suffix' in kwargs:
-            output_name += '_%s' % kwargs['suffix']
+        suffix = kwargs.get('suffix', None)
+        if suffix:
+            output_name += '_%s' % suffix
         output_name += '.root'
         output_name = os.path.join(output_path, output_name)
         if os.path.exists(output_name):
@@ -158,15 +160,12 @@ def run(student,
 
         # determine actual number of required CPU cores
         nproc_actual = min(nproc, len(files))
-        if not use_qsub:
-            # load balancing
-            hosts.sort()
-            host = hosts[0]
         cmd = CMD % (nproc_actual, ds)
-        if student_args is not None:
+        if student_args:
             cmd = '%s %s' % (cmd, ' '.join(student_args))
         cmd = "cd %s && %s" % (CWD, cmd)
-        if use_qsub:
+
+        if use_qsub: # use the batch system
             qsub(cmd,
                  queue=qsub_queue,
                  ncpus=nproc_actual,
@@ -174,22 +173,37 @@ def run(student,
                  stderr_path=output_path,
                  stdout_path=output_path,
                  dry_run=dry_run)
-        else: # ssh
-            cmd = "ssh %s '%s'" % (host.name, cmd)
-            print "%s: %s" % (host.name, cmd)
+
+        else: # use simple ssh
+            print cmd
             if not dry_run:
+                proc_cmds.append(cmd)
+
+    if not use_qsub and not dry_run:
+        # use simple ssh with basic load balancing
+        procs = []
+        while True:
+            active = mp.active_children()
+            while len(active) < (2 * len(hosts)) and len(proc_cmds) > 0:
+                hosts.sort()
+                host = hosts[0]
+                cmd = "ssh %s '%s'" % (host.name, proc_cmds.pop(0))
                 proc = mp.Process(target=run_helper, args=(cmd,))
                 proc.start()
                 procs.append(proc)
-            host.njobs += 1
-
-    if not use_qsub and not dry_run:
-        for proc in procs:
-            proc.join()
+                host.njobs += 1
+                # active_children() joins finished procs
+                active = mp.active_children()
+            #print time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+            #print "jobs: %i running %i queued"%(len(active),len(train_processes))
+            if len(proc_cmds) == 0 and len(active) == 0:
+                break
+            time.sleep(10)
 
 
 def run_systematics(channel, student, systematics=None, **kwargs):
 
+    student_args = kwargs.pop('student_args', [])
     for sys_variations in iter_systematics(channel):
         if systematics is not None:
             if sys_variations not in systematics:
@@ -199,7 +213,7 @@ def run_systematics(channel, student, systematics=None, **kwargs):
         print
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
-            student_args=syst.split(),
+            student_args=syst.split() + student_args,
             qsub_name_suffix='_'.join(sys_variations),
             suffix='_'.join(sys_variations),
             **kwargs)
@@ -208,6 +222,7 @@ def run_systematics(channel, student, systematics=None, **kwargs):
 def run_systematics_new(channel, student, datasets, systematics,
         filter_systematics=None, **kwargs):
 
+    student_args = kwargs.pop('student_args', [])
     for sys_variations in systematics:
         if filter_systematics is not None:
             if sys_variations not in filter_systematics:
@@ -215,7 +230,7 @@ def run_systematics_new(channel, student, datasets, systematics,
         syst = '--syst-terms %s' % ','.join(sys_variations)
         run(student,
             datasets=datasets,
-            student_args=syst.split(),
+            student_args=syst.split() + student_args,
             qsub_name_suffix='_'.join(sys_variations),
             suffix='_'.join(sys_variations),
             **kwargs)

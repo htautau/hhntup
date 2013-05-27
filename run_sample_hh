@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+from rootpy.extern.argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('--suffix', default=None)
+parser.add_argument('datasets', nargs='+')
+args, student_args = parser.parse_known_args()
+
+import sys
+import cluster
+
+
+hosts = cluster.get_hosts('hosts.sfu.txt')
+setup = cluster.get_setup('setup.noel.sfu.txt')
+
+cluster.run('HHProcessor.py',
+            db='datasets_hh',
+            datasets=args.datasets,
+            hosts=hosts,
+            nproc=1,
+            nice=10,
+            setup=setup,
+            output_path='.',
+            student_args=student_args,
+            qsub_name_suffix=args.suffix,
+            suffix=args.suffix,
+            use_qsub=True,
+            qsub_queue='short')

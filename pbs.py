@@ -2,6 +2,91 @@
 import subprocess
 from subprocess import call
 import getpass
+import time
+import datetime
+
+
+def print_table(table, sep='  '):
+
+    # Reorganize data by columns
+    cols = zip(*table)
+    # Compute column widths by taking maximum length of values per column
+    col_widths = [max(len(str(value)) for value in col) for col in cols]
+    # Create a suitable format string
+    format = sep.join(['%%-%ds' % width for width in col_widths])
+    # Print each row using the computed format
+    for row in table:
+        print format % tuple(row)
+
+
+class Job(object):
+
+    def __init__(self, id, info):
+
+        self.id = id
+        self.info = info
+
+    def __getattr__(self, attr):
+
+        return self.info[attr]
+
+    @property
+    def name(self):
+
+        return self.info['Job_Name']
+
+    @property
+    def hung(self):
+
+        # is the wall time higher than the CPU time?
+        return self.walltime > self.cputime and self.walltime > 60
+
+    @property
+    def healthy(self):
+
+        return not self.hung
+
+    @property
+    def health_status(self):
+
+        # is the wall time higher than the CPU time?
+        if self.healthy:
+            return 'GOOD'
+        return 'HUNG'
+
+    @property
+    def cputime(self):
+
+        if 'resources_used.cput' not in self.info:
+            return 0
+        x = map(int, self.info['resources_used.cput'].split(':'))
+        return datetime.timedelta(hours=x[0],minutes=x[1],seconds=x[2]).total_seconds()
+
+    @property
+    def walltime(self):
+
+        if 'resources_used.walltime' not in self.info:
+            return 0
+        x = map(int, self.info['resources_used.walltime'].split(':'))
+        return datetime.timedelta(hours=x[0],minutes=x[1],seconds=x[2]).total_seconds()
+
+    @property
+    def host(self):
+
+        if 'exec_host' in self.info:
+            return self.info['exec_host']
+        return '-'
+
+    @property
+    def status(self):
+
+        return (self.id,
+                self.info['job_state'],
+                self.host,
+                self.info['Job_Name'],
+                self.cputime,
+                self.walltime,
+                self.health_status)
 
 
 class PBSMonitor(object):
@@ -32,8 +117,9 @@ class PBSMonitor(object):
             for line in block[1:]:
                 param, value = line.split(' = ')
                 info[param.strip()] = value.strip()
-            self.job_names[info['Job_Name']] = jobid
-            self.jobs[jobid] = info
+            job = Job(jobid, info)
+            self.job_names[job.name] = jobid
+            self.jobs[jobid] = job
 
     def has_jobname(self, name):
 
@@ -41,11 +127,10 @@ class PBSMonitor(object):
 
     def print_jobs(self):
 
-        for id, info in self.jobs.items():
-            if 'exec_host' in info:
-                print id, info['job_state'], info['Job_Name'], info['exec_host']
-            else:
-                print id, info['job_state'], info['Job_Name']
+        rows = []
+        for id, job in sorted(self.jobs.items(), key=lambda item: item[0]):
+            rows.append(job.status)
+        print_table(rows)
 
 
 MONITOR = PBSMonitor()

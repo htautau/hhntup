@@ -1,10 +1,9 @@
 lhc01
+lhc02
 lhc03
 lhc04
-lhc05
-lhc06
 lhc07
 lhc08
-lhc09
 lhc10
 lhc11
+lhc12

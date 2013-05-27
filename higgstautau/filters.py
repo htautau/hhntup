@@ -1,6 +1,8 @@
 """
 Event filters common to both hadhad and lephad go here
 """
+import ROOT
+
 from rootpy.tree.filtering import *
 from itertools import ifilter
 from atlastools import utils
@@ -42,7 +44,52 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
+class MCRunNumber(EventFilter):
+
+    def __init__(self, pileup_tool, **kwargs):
+
+        self.pileup_tool = pileup_tool
+        super(MCRunNumber, self).__init__(**kwargs)
+
+    def passes(self, event):
+
+        # get random run number using the pileup tool
+        event.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        return True
+
+
+class TileTrips(EventFilter):
+    """
+    https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event
+    """
+    def __init__(self, passthrough=False, **kwargs):
+
+        if not passthrough:
+            from externaltools.bundle_2012 import TileTripReader
+            from ROOT import Root
+            self.tool = Root.TTileTripReader()
+        super(TileTrips, self).__init__(passthrough=passthrough, **kwargs)
+
+    def passes(self, event):
+
+        # only apply between G - J
+        if event.RunNumber < 211522:
+            return True
+        if event.RunNumber > 215091:
+            return True
+        # returns false if the event is one with a saturation in a tile cell
+        # (bad MET).
+        return self.tool.checkEvent(
+                event.RunNumber,
+                event.lbn,
+                event.EventNumber)
+
+
 class JetCleaning(EventFilter):
+
+    BAD_TILE = [
+        202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
+    ]
 
     def __init__(self,
                  datatype,
@@ -81,11 +128,10 @@ class JetCleaning(EventFilter):
                     LArQmean=LArQmean):
                 return False
 
-        """ NOT NEEDED IN REPROCESSED 2012 DATA
         if self.datatype == datasets.DATA and self.year == 2012:
             # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
             # Hot Tile calorimeter in period B1 and B2
-            if 202660 <= event.RunNumber <= 203027:
+            if event.RunNumber in JetCleaning.BAD_TILE:
                 # recommendation is to use EM jets
                 for jet in event.jets_EM:
                     _etaphi28 = (
@@ -93,6 +139,7 @@ class JetCleaning(EventFilter):
                         2.65 < jet.phi < 2.75)
                     if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
                         return False
+            # Not required in reprocessed data:
             # Bad FCAL response in periods C1-C8
             # not applied in the skim for now.
             # Need to also apply on MC and choose a random run number with the
@@ -103,7 +150,6 @@ class JetCleaning(EventFilter):
             #            abs(jet.eta) > 3.2 and
             #            1.6 < jet.phi < 3.1):
             #            return False
-        """
         return True
 
 
@@ -207,10 +253,9 @@ class TauElectronVeto(EventFilter):
 
         #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
+        # Eta selection already applied by TauEta filter
         event.taus.select(lambda tau:
                 tau.numTrack > 1 or
-                abs(tau.eta) >= 2.47 or
-                (tau.numTrack > 0 and abs(tau.track_eta[0]) >= 2.47) or
                 tau.EleBDTLoose == 0)
         return len(event.taus) >= self.min_taus
 
@@ -277,7 +322,10 @@ class TauEta(EventFilter):
 
     def passes(self, event):
 
-        event.taus.select(lambda tau: abs(tau.eta) < 2.5) # was 2.1
+        # both calo and leading track eta within 2.47
+        event.taus.select(lambda tau:
+                abs(tau.eta) < 2.47 and
+                abs(tau.track_eta[tau.leadtrack_idx]) < 2.47)
         return len(event.taus) >= self.min_taus
 
 
@@ -438,6 +486,20 @@ class TauSelected(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class NumJets25(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+
+        super(NumJets25, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+
+        self.tree.numJets25 = len([j for j in event.jets if
+            j.pt > 25 * GeV and abs(j.eta) < 4.5])
+        return True
+
+
 class NonIsolatedJet(EventFilter):
     """
     https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=200403
@@ -465,18 +527,15 @@ def jet_selection_2011(jet):
     if not (jet.pt > 25 * GeV):
         return False
 
-    if jet.pt > 50 * GeV:
-        # no JVF cut above 50
-        return True
+    if not (abs(jet.eta) < 4.5):
+        return False
 
     # suppress forward jets
     if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
         return False
 
-    if (abs(jet.eta) < 2.4) and not (jet.jvtxf > 0.75):
-        return False
-
-    if not (abs(jet.eta) < 4.5):
+    # JVF cut on central jets
+    if (abs(jet.eta) < 2.4) and not (abs(jet.jvtxf) > 0.75):
         return False
 
     return True
@@ -489,20 +548,17 @@ def jet_selection_2012(jet):
     if not (jet.pt > 30 * GeV):
         return False
 
-    if jet.pt > 50 * GeV:
-        # no JVF cut above 50
-        return True
+    if not (abs(jet.eta) < 4.5):
+        return False
 
     # suppress forward jets
     if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
         return False
 
-    if (jet.fourvect.Pt() < 50*GeV) and (abs(jet.constscale_eta) < 2.4):
-        if not (jet.jvtxf > 0.5):
+    # JVF cut on central jets below 50 GeV
+    if (jet.fourvect.Pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
+        if not (abs(jet.jvtxf) > 0.5):
             return False
-
-    if not (abs(jet.eta) < 4.5):
-        return False
 
     return True
 
@@ -512,15 +568,17 @@ class JetSelection(EventFilter):
 
     def __init__(self, year, **kwargs):
 
-        self.year = year
+        if year == 2011:
+            self.filter_func = jet_selection_2011
+        elif year == 2012:
+            self.filter_func = jet_selection_2012
+        else:
+            raise ValueError("No jet selection defined for year %d" % year)
         super(JetSelection, self).__init__(**kwargs)
 
     def passes(self, event):
 
-        if self.year == 2011:
-            event.jets.select(jet_selection_2011)
-        elif self.year == 2012:
-            event.jets.select(jet_selection_2012)
+        event.jets.select(self.filter_func)
         return True
 
 
@@ -565,4 +623,38 @@ class ggFReweighting(EventFilter):
     def passes(self, event):
 
         self.tree.ggf_weight = reweight_ggf(event, self.dsname)
+        return True
+
+
+class EmbeddingCorrections(EventFilter):
+
+    def __init__(self, tree, passthrough=False, **kwargs):
+
+        super(EmbeddingCorrections, self).__init__(passthrough=passthrough, **kwargs)
+
+        if not passthrough:
+            self.tree = tree
+            from externaltools.bundle_2012 import EmbeddedCorrections
+            from externaltools import TrigMuonEfficiency
+            from externaltools import ElectronEfficiencyCorrection
+            from externaltools.bundle_2012 import HSG4LepLepTriggerSF
+            from externaltools import MuonEfficiencyCorrections
+            self.tool = ROOT.EmbeddedCorrections.Embedded(
+                    EmbeddedCorrections.get_resource('2DMaps.root'),
+                    TrigMuonEfficiency.RESOURCE_PATH,
+                    ElectronEfficiencyCorrection.RESOURCE_PATH,
+                    HSG4LepLepTriggerSF.RESOURCE_PATH,
+                    MuonEfficiencyCorrections.RESOURCE_PATH)
+
+    def passes(self, event):
+
+        self.tool.SetupEmbeddedEvent(
+                event.mc_pt,
+                event.mc_eta,
+                event.mc_phi,
+                event.mc_m,
+                event.mc_pdgId,
+                event.RunNumber)
+        self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
+        self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
         return True

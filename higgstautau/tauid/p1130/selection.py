@@ -1,4 +1,4 @@
-from rootpy.io import open as ropen
+from rootpy.io import root_open as ropen
 from ..common import nprong, PRONGS, LEVELS
 import os
 

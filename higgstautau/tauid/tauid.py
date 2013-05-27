@@ -1,5 +1,5 @@
 import os
-from rootpy.io import open as ropen
+from rootpy.io import root_open as ropen
 from .p851 import selection, nvtx_to_category, \
     CATEGORIES
 from .common import LEVELS, PRONGS, nprong

@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+
+"""
+Update the database
+"""
+from rootpy.extern.argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('--deep', action='store_true', default=False)
+parser.add_argument('--reset', action='store_true', default=False)
+parser.add_argument('--versioned', action='store_true', default=False)
+parser.add_argument('--validate', action='store_true', default=False)
+parser.add_argument('--validate-pattern', default=None)
+parser.add_argument('--validate-type', default=None)
+parser.add_argument('--validate-year', type=int, default=None)
+parser.add_argument('--info', action='store_true', default=False)
+
+"""
+parser.add_argument('--year', type=int, default=None)
+parser.add_argument('--grl', default=None)
+
+parser.add_argument('--mc-path', default=None)
+parser.add_argument('--mc-prefix', default=None)
+parser.add_argument('--mc-pattern', default='*.root*')
+
+parser.add_argument('--data-path', default=None)
+parser.add_argument('--data-prefix', default=None)
+parser.add_argument('--data-pattern', default='*.root*')
+
+parser.add_argument('--embed-path', default=None)
+parser.add_argument('--embed-prefix', default=None)
+parser.add_argument('--embed-pattern', default='*.root*')
+"""
+parser.add_argument('--name', default='datasets')
+parser.add_argument('--config', default='higgstautau/datasets_config.yml')
+parser.add_argument('-v', '--verbose', action='store_true', default=False)
+parser.add_argument('analysis', choices=('lh', 'hh'))
+args = parser.parse_args()
+
+from higgstautau.datasets import Database
+import yaml
+
+if args.analysis == 'hh':
+    args.versioned = True
+    args.name += '_hh'
+elif args.analysis == 'lh':
+    args.versioned = True
+    args.name += '_lh'
+
+db = Database(
+        name=args.name,
+        verbose=args.verbose)
+
+if args.validate or args.validate_pattern is not None:
+    # check for missing events etc...
+    validate_type = args.validate_type
+    if validate_type is not None:
+        validate_type = args.validate_type.upper()
+        validate_type = eval(validate_type)
+    db.validate(pattern=args.validate_pattern,
+                datatype=validate_type,
+                year=args.validate_year)
+elif args.info:
+    print "%i datasets in database" % len(db)
+    for name in sorted(db.keys()):
+        print db[name]
+        if len(db[name].files) == 0:
+            print "EMPTY DATASET"
+            sys.exit(1)
+
+else:
+    if args.reset:
+        db.clear()
+
+    with open(args.config) as config:
+        config_dict = yaml.load(config)
+        for year, year_config in config_dict.items():
+            if args.analysis not in year_config:
+                continue
+            params = {}
+            params['data_grl'] = year_config['common'].get('grl', None)
+            params.update(year_config[args.analysis])
+            db.scan(year,
+                    deep=args.deep,
+                    versioned=args.versioned,
+                    **params)
+    db.write()

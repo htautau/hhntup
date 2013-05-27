@@ -20,7 +20,7 @@ parser.add_argument('--use-ssh', dest='use_qsub', action='store_false', default=
 parser.add_argument('--warnings-as-errors', action='store_true', default=False)
 parser.add_argument('splits', nargs='*', type=int)
 
-args = parser.parse_args()
+args, student_args = parser.parse_known_args()
 
 import sys
 import os
@@ -43,6 +43,9 @@ CMD = ("%s && ./run --output-path %s "
                args.db,
                args.nice,
                args.nsplit)
+
+if student_args:
+    CMD += " " + " ".join(student_args)
 
 
 def run_sample(sample, systematics=None):

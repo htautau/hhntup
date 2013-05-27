@@ -3,20 +3,51 @@ embedded:
         - TES_UP
         - TES_DOWN
     samples:
-        - 'embed12-hh-mfsim'
+        - 'embed12-HH-IM'
     systematics_samples:
-        'embed12-hh-mfsim':
-            'embed12-hh-mfsup': MFS_UP
-            'embed12-hh-mfsdn': MFS_DOWN
+        'embed12-HH-IM':
+            'embed12-HH-UP': MFS_UP
+            'embed12-HH-DN': MFS_DOWN
             # ISOL systematics included in nominal sample
 mc:
     systematics:
-        - JES_UP
-        - JES_DOWN
+        #- JES_Statistical_UP
+        #- JES_Statistical_DOWN
+        - JES_Modelling_UP
+        - JES_Modelling_DOWN
+        - JES_Detector_UP
+        - JES_Detector_DOWN
+        #- JES_Mixed_UP
+        #- JES_Mixed_DOWN
+        - JES_EtaModelling_UP
+        - JES_EtaModelling_DOWN
+        - JES_EtaMethod_UP
+        - JES_EtaMethod_DOWN
+        - JES_PURho_UP
+        - JES_PURho_DOWN
+        #- JES_PUPt_UP
+        #- JES_PUPt_DOWN
+        #- JES_PUNPV_UP
+        #- JES_PUNPV_DOWN
+        #- JES_PUMu_UP
+        #- JES_PUMu_DOWN
+        - JES_FlavComp_UP
+        - JES_FlavComp_DOWN
+        - JES_FlavResp_UP
+        - JES_FlavResp_DOWN
+        #- JES_BJet_UP
+        #- JES_BJet_DOWN
+        #- JES_NonClosure_UP
+        #- JES_NonClosure_DOWN
+        - JVF_UP
+        - JVF_DOWN
         - TES_UP
         - TES_DOWN
         - JER_UP
     samples:
+        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.mc12a'
+        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp1.mc12a'
+        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp2.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
@@ -56,6 +87,11 @@ mc:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp3.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp4.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp5.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp0.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp1.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp2.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp3.mc12a'
+        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp4.mc12a'
         - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
         - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
         - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'

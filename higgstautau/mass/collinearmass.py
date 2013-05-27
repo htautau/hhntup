@@ -3,16 +3,17 @@ import ROOT
 from rootpy.math.physics.vector import LorentzVector
 
 
-def is_MET_bisecting(dphi, dphi1, dphi2):
+def is_MET_bisecting(dphi_taus, dphi_tau1_MET, dphi_tau2_MET):
     """
     check whether the MET is bisecting the
     two taus in the transverse plane
 
-    dphi = between the 2 taus
-    dphi1 = between tau 1 and MET
-    dphi2 = beteen tau 2 and MET
+    dphi_taus = between the 2 taus
+    dphi_tau1_MET = between tau 1 and MET
+    dphi_tau2_MET = between tau 2 and MET
     """
-    return ((max(dphi1, dphi2) <= dphi) and (dphi1 + dphi2 <= math.pi))
+    return (((max(dphi_tau1_MET, dphi_tau2_MET) <= dphi_taus) and
+            (dphi_tau1_MET + dphi_tau2_MET <= math.pi)))
 
 
 def mass(tau1, tau2, METpx, METpy):

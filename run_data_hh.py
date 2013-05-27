@@ -17,7 +17,7 @@ parser.add_argument('--output-path',
                     default='/cluster/data11/endw/ntuples/running')
 parser.add_argument('--db', default='datasets_hh')
 parser.add_argument('splits', nargs='*', type=int)
-args = parser.parse_args()
+args, student_args = parser.parse_known_args()
 
 setup = cluster.get_setup('setup.noel.sfu.txt')
 
@@ -31,6 +31,9 @@ CMD = ("%s && ./run --output-path %s "
        "--nice %d --split %d:%%d data%d-JetTauEtmiss") % (
                setup, output_path, args.student, args.nproc,
                args.db, args.nice, args.nsplit, args.year)
+
+if student_args:
+    CMD += " " + " ".join(student_args)
 
 for i in xrange(args.nsplit):
     if args.splits and (i + 1) not in args.splits:

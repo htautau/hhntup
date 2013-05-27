@@ -20,7 +20,7 @@ parser.add_argument('--warnings-as-errors', action='store_true', default=False)
 parser.add_argument('--include-embedded', action='store_true', default=False)
 parser.add_argument('samples', nargs='*', default=None)
 
-args = parser.parse_args()
+args, student_args = parser.parse_known_args()
 
 import sys
 import cluster
@@ -45,7 +45,8 @@ if not args.systematics_only:
                 qsub_queue=args.queue,
                 dry_run=args.dry,
                 separate_student_output=True,
-                warnings_as_errors=args.warnings_as_errors)
+                warnings_as_errors=args.warnings_as_errors,
+                student_args=student_args)
 
 if not args.nominal_only:
     if args.systematics is not None:
@@ -71,4 +72,5 @@ if not args.nominal_only:
                     qsub_queue=args.queue,
                     dry_run=args.dry,
                     separate_student_output=True,
-                    warnings_as_errors=args.warnings_as_errors)
+                    warnings_as_errors=args.warnings_as_errors,
+                    student_args=student_args)
