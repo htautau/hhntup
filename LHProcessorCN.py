@@ -20,13 +20,14 @@ from atlastools import datasets
 from atlastools import utils
 from atlastools.units import *
 from atlastools.batch import ATLASStudent
+from atlastools.filtering import GRLFilter
 
 from goodruns import GRL
 import subprocess
 
 YEAR = 2011
 VERBOSE = False
-DO_VBF_OLR = False
+DO_VBF_OLR = True
 VBF_OLR_CONFIG = {
     'ZmumuNp2' : (False, -1, -1, True, 2.1, 210),
     'ZmumuNp3' : (False, -1, -1, True, 2.1, 210),
@@ -92,14 +93,36 @@ VBF_OLR_CONFIG = {
 ## Shape systematics dictionary to access systematics trees
 SYSTEMATICS = {
     ## JES systematics
-    'ATLAS_JES_BASE_DOWN' : 'SystematicsDOWN/JES_BASE',
-    'ATLAS_JES_BASE_UP'   : 'SystematicsUP/JES_BASE',
-    'ATLAS_JES_FLAV_DOWN' : 'SystematicsDOWN/JES_FLAV',
-    'ATLAS_JES_FLAV_UP'   : 'SystematicsUP/JES_FLAV',
-    'ATLAS_JES_FWD_DOWN'  : 'SystematicsDOWN/JES_FWD',
-    'ATLAS_JES_FWD_UP'    : 'SystematicsUP/JES_FWD',
-    'ATLAS_JER_DOWN'      : 'SystematicsDOWN/JER',
-    'ATLAS_JER_UP'        : 'SystematicsUP/JER',
+    'ATLAS_JES_BJet_DOWN'          : 'SystematicsDOWN/JES_BJet',
+    'ATLAS_JES_BJet_UP'            : 'SystematicsUP/JES_BJet',
+    'ATLAS_JES_Detector_DOWN'      : 'SystematicsDOWN/JES_Detector',
+    'ATLAS_JES_Detector_UP'        : 'SystematicsUP/JES_Detector',
+    'ATLAS_JES_EtaMethod_DOWN'     : 'SystematicsDOWN/JES_EtaMethod',
+    'ATLAS_JES_EtaMethod_UP'       : 'SystematicsUP/JES_EtaMethod',
+    'ATLAS_JES_EtaModelling_DOWN'  : 'SystematicsDOWN/JES_EtaModelling',
+    'ATLAS_JES_EtaModelling_UP'    : 'SystematicsUP/JES_EtaModelling',
+    'ATLAS_JES_FlavComp_DOWN'      : 'SystematicsDOWN/JES_FlavComp',
+    'ATLAS_JES_FlavComp_UP'        : 'SystematicsUP/JES_FlavComp',
+    'ATLAS_JES_FlavResp_DOWN'      : 'SystematicsDOWN/JES_FlavResp',
+    'ATLAS_JES_FlavResp_UP'        : 'SystematicsUP/JES_FlavResp',
+    'ATLAS_JES_Mixed_DOWN'         : 'SystematicsDOWN/JES_Mixed',
+    'ATLAS_JES_Mixed_UP'           : 'SystematicsUP/JES_Mixed',
+    'ATLAS_JES_Modelling_DOWN'     : 'SystematicsDOWN/JES_Modelling',
+    'ATLAS_JES_Modelling_UP'       : 'SystematicsUP/JES_Modelling',
+    'ATLAS_JES_PUMu_DOWN'          : 'SystematicsDOWN/JES_PUMu',
+    'ATLAS_JES_PUMu_UP'            : 'SystematicsUP/JES_PUMu',
+    'ATLAS_JES_PUNPV_DOWN'         : 'SystematicsDOWN/JES_PUNPV',
+    'ATLAS_JES_PUNPV_UP'           : 'SystematicsUP/JES_PUNPV',
+    'ATLAS_JES_PUPt_DOWN'          : 'SystematicsDOWN/JES_PUPt',
+    'ATLAS_JES_PUPt_UP'            : 'SystematicsUP/JES_PUPt',
+    'ATLAS_JES_PURho_DOWN'         : 'SystematicsDOWN/JES_PURho',
+    'ATLAS_JES_PURho_UP'           : 'SystematicsUP/JES_PURho',
+    'ATLAS_JES_Statistical_DOWN'   : 'SystematicsDOWN/JES_Statistical',
+    'ATLAS_JES_Statistical_UP'     : 'SystematicsUP/JES_Statistical',
+    'ATLAS_JER_DOWN'               : 'SystematicsDOWN/JER',
+    'ATLAS_JER_UP'                 : 'SystematicsUP/JER',
+    'ATLAS_JVF_DOWN'               : 'SystematicsDOWN/JVF',
+    'ATLAS_JVF_UP'                 : 'SystematicsUP/JVF',
 
     ## TES systematics
     'ATLAS_TAU_ES_DOWN' : 'SystematicsDOWN/TES',
@@ -112,10 +135,16 @@ SYSTEMATICS = {
     'ATLAS_MET_SCALESOFT_UP'   : 'SystematicsUP/METScaleSys',
 
     ## Electron systematics
-    'ATLAS_EL_ES_DOWN'  : 'SystematicsDOWN/EESSys',
-    'ATLAS_EL_ES_UP'    : 'SystematicsUP/EESSys',
-    'ATLAS_EL_RES_DOWN' : 'SystematicsDOWN/ElEnResSys',
-    'ATLAS_EL_RES_UP'   : 'SystematicsUP/ElEnResSys',
+    'ATLAS_EL_ES_LowPt_DOWN'  : 'SystematicsDOWN/ElES_LowPt',
+    'ATLAS_EL_ES_LowPt_UP'    : 'SystematicsUP/ElES_LowPt',
+    'ATLAS_EL_ES_PS_DOWN'     : 'SystematicsDOWN/ElES_PS',
+    'ATLAS_EL_ES_PS_UP'       : 'SystematicsUP/ElES_PS',
+    'ATLAS_EL_ES_R12_DOWN'    : 'SystematicsDOWN/ElES_R12',
+    'ATLAS_EL_ES_R12_UP'      : 'SystematicsUP/ElES_R12',
+    'ATLAS_EL_ES_Zee_DOWN'    : 'SystematicsDOWN/ElES_Zee',
+    'ATLAS_EL_ES_Zee_UP'      : 'SystematicsUP/ElES_Zee',
+    'ATLAS_EL_RES_DOWN'       : 'SystematicsDOWN/ElEnResSys',
+    'ATLAS_EL_RES_UP'         : 'SystematicsUP/ElEnResSys',
 
     ## Muon systematics
     'ATLAS_MU_ES_DOWN' : 'SystematicsDOWN/MuSys',
@@ -172,10 +201,11 @@ class LHProcessorCN(ATLASStudent):
             #onfilechange.append((update_grl, (self, merged_grl,)))
 
         if self.metadata.datatype != datasets.EMBED:
-            merged_cutflow = Hist(1, 0, 1, name='TotalEvents', type='D')
+            merged_cutflow = Hist(2, 1, 3, name='TotalEvents', type='D')
 
             def update_cutflow(student, cutflow, name, file, tree):
                 cutflow[0] += file.TotalEvents[0]
+                cutflow[1] += file.TotalEvents[1]
                 
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
@@ -219,8 +249,8 @@ class LHProcessorCN(ATLASStudent):
                             'lbn']
 
         tree.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
-
         chain.always_read(copied_variables)
+
 
         filter_list = [JetSelection(YEAR)]
 
@@ -237,7 +267,7 @@ class LHProcessorCN(ATLASStudent):
                 if vbf_filter_config[0]:
                     filter_list.append(VBFFilter(vbf_filter_config[1], vbf_filter_config[2]))
                 if vbf_filter_config[3]:
-                    filter_list.append(VBFFilter(vbf_filter_config[4], vbf_filter_config[5]))
+                    filter_list.append(AntiVBFFilter(vbf_filter_config[4], vbf_filter_config[5]))
             
 
         ## Setting event filters
@@ -296,6 +326,7 @@ class LHProcessorCN(ATLASStudent):
 
             tree.is_tau = event.evtsel_is_tau
             #if not event.evtsel_is_dilepVeto: continue
+
 
             ## Convert to private ntuple
             ##########################################################################
@@ -370,22 +401,32 @@ class LHProcessorCN(ATLASStudent):
             numJets50 = 0
             numJets30 = 0
 
-            tree.btag = event.evtsel_MV1
+            tree.btag = False
 
             vector_all = LorentzVector()
+            lead       = LorentzVector()
+            sublead    = LorentzVector()
 
             sorted_jets = []
             
             for jet in event.jets:
                 sorted_jets.append(jet.fourvect)
+                if jet.fourvect.Eta() < 2.5:
+                    if jet.flavor_weight_MV1 > 0.7892:
+                        tree.btag = True
                 if jet.fourvect.Pt() > 30*GeV:
                     numJets30 += 1
                     if jet.fourvect.Pt() > 50*GeV:
                         numJets50 += 1
 
             sorted_jets.sort(key=lambda jet : jet.Pt(), reverse=True)
-            lead    = sorted_jets[0]
-            sublead = sorted_jets[1]
+            if tree.numJets > 0:
+                lead    = sorted_jets[0]
+                tree.leadjet_fourvect = lead
+                if tree.numJets > 1:
+                    sublead = sorted_jets[1]
+                    tree.subleadjet_fourvect = sublead
+                    vector_all += Tau + Lep + lead + sublead
 
             # if tree.numJets > 0:
             #     lead = LorentzVector()
@@ -433,11 +474,11 @@ class LHProcessorCN(ATLASStudent):
             dPhi_MET_tau  = tauPhiVector.DeltaPhi(MET_vect)
             mT = sqrt(2*MET*LepPt*(1 - cos(dPhi_MET_lep)))
             mTtau = sqrt(2*MET*TauPt*(1 - cos(dPhi_MET_tau)))
-            tree.mass_transverse_met_lep = mT
+            tree.mass_transverse_met_lep = mT/GeV
             tree.mass_transverse_met_tau = mTtau
             tree.dphi_met_lep = dPhi_MET_lep
 
-            tree.pt_vector_sum_all = vector_all.Pt()
+            tree.pt_vector_sum_all = max(20.0, vector_all.Pt()/GeV)
 
             #Higgs Pt
             tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau, Lep, MET_vect)
@@ -455,7 +496,7 @@ class LHProcessorCN(ATLASStudent):
                 sumPt += jet.fourvect.Pt()
                 sumJetPt += jet.fourvect.Pt()
 
-            tree.sumPt = sumPt
+            tree.sumPt = sumPt/GeV
 
             #Ditau quantities
             tree.tau_x  = event.evtsel_tau_x1
@@ -504,7 +545,7 @@ class LHProcessorCN(ATLASStudent):
                 jet1_2Vector = Vector2(lead.Px(), lead.Py())
                 jet2_2Vector = Vector2(sublead.Px(), sublead.Py())
 
-                mass_j1_j2 = (lead + sublead).M()
+                mass_j1_j2 = (lead + sublead).M()/GeV
                 eta_product_j1_j2 = lead.Eta() * sublead.Eta()
                 eta_delta_j1_j2 = abs(lead.Eta() - sublead.Eta())
                 
@@ -530,17 +571,6 @@ class LHProcessorCN(ATLASStudent):
             tree.lep_centrality_j1_j2      = lep_centrality_j1_j2
             tree.tau_lep_centrality_j1_j2  = tau_lep_centrality_j1_j2
             tree.true_dphi_resonance_dijet = true_dphi_resonance_dijet
-
-
-            if abs(eta_delta_j1_j2 - event.evtsel_jets_deltaEta) > 0.01 and eta_delta_j1_j2 > 0:
-                print '-------------------------------------------------'
-                print 'deltaEtajj mine = %.3f, common %.3f' % (eta_delta_j1_j2, event.evtsel_jets_deltaEta)
-
-            if abs(eta_product_j1_j2 - event.evtsel_jetEta1_jetEta2) > 0.01 and eta_product_j1_j2 > 0:
-                print 'productEtajj mine = %.3f, common %.3f' % (eta_product_j1_j2, event.evtsel_jetEta1_jetEta2)
-
-            if abs(mass_j1_j2/GeV - event.evtsel_dijet_mass) > 0.01 and mass_j1_j2 > 0:
-                print 'Mjj mine = %.3f, common %.3f' % (mass_j1_j2/GeV, event.evtsel_dijet_mass)
             
 
             ## -- Categories -- ##
@@ -571,6 +601,11 @@ class LHProcessorCN(ATLASStudent):
 
             ## -- True Information -- ##
             tree.true_higgs_mass = (TrueTau + TrueLep).M()
+
+             ## Electroweak Z production, removal of 120 GeV Higgs leak
+            if 'JetsEW1JetQCD15GeVM40_min_n_tchannels' in self.metadata.name:
+                if 115000 < tree.true_higgs_mass < 125000:
+                    continue
             
             
 
