@@ -22,7 +22,6 @@ grid-setup.sh
 *.so
 .svn
 grid-merge
-xsec_cache
 externaltools*
 MC.txt
 clean.sh
