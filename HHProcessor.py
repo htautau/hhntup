@@ -519,6 +519,7 @@ class HHProcessor(ATLASStudent):
             MET_vect = Vector2(METx, METy)
             MET_4vect = LorentzVector()
             MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
+            # TODO: save this in the output ntuple
 
             tree.MET = MET
             tree.MET_x = METx
