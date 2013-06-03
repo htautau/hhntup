@@ -327,7 +327,6 @@ class LHProcessorCN(ATLASStudent):
             tree.is_tau = event.evtsel_is_tau
             #if not event.evtsel_is_dilepVeto: continue
 
-
             ## Convert to private ntuple
             ##########################################################################
 
@@ -340,6 +339,17 @@ class LHProcessorCN(ATLASStudent):
 
             tree.LTT = (LTT and not SLT)
             tree.SLT = (SLT and not LTT)
+
+            ## Dump fake factor
+            if tree.LTT:
+                tree.FF = event.evtsel_weight_FF_LTT
+                tree.FF_up = event.evtsel_sys_ff_ltt_up
+                tree.FF_down = event.evtsel_sys_ff_ltt_down
+            if tree.SLT:
+                tree.FF = event.evtsel_weight_FF_SLT
+                tree.FF_up = event.evtsel_sys_ff_slt_up
+                tree.FF_down = event.evtsel_sys_ff_slt_down
+                
 
             
             ## -- Tau Information -- ##
@@ -478,7 +488,7 @@ class LHProcessorCN(ATLASStudent):
             tree.mass_transverse_met_tau = mTtau
             tree.dphi_met_lep = dPhi_MET_lep
 
-            tree.pt_vector_sum_all = max(20.0, vector_all.Pt()/GeV)
+            tree.pt_vector_sum_all = max(30.0, vector_all.Pt()/GeV)
 
             #Higgs Pt
             tree.ddr_tau_lep, tree.dr_tau_lep, tree.resonance_pt_tau_lep = eventshapes.DeltaDeltaR(Tau, Lep, MET_vect)

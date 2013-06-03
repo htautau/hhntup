@@ -60,6 +60,10 @@ class EventVariables(TreeModel):
     LTT = BoolCol()
     SLT = BoolCol()
 
+    FF = FloatCol()
+    FF_up = FloatCol()
+    FF_down = FloatCol()
+
     is_tau = BoolCol()
 
     subsample1 = BoolCol()

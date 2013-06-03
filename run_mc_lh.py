@@ -7,7 +7,7 @@ parser.add_argument('--student', default='LHProcessorCN.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--queue', default='short')
-parser.add_argument('--output-path', default='/cluster/data05/michel/Ntuples/lephad/2012-p1443-2')
+parser.add_argument('--output-path', default='/cluster/data05/michel/Ntuples/lephad/2012-p1443-3')
 parser.add_argument('--db', default='datasets_lh')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--nominal-only', action='store_true', default=False)
@@ -294,6 +294,27 @@ datasets2012 = [
     'WtaunuNp4_AFII',
     'WtaunuNp5_AFII',
 
+    'WmunuNp0_AP',
+    'WmunuNp1_AP',
+    'WmunuNp2_AP',
+    'WmunuNp3_AP',
+    'WmunuNp4_AP',
+    'WmunuNp5_AP',
+    
+    'WtaunuNp0_AP',
+    'WtaunuNp1_AP',
+    'WtaunuNp2_AP',
+    'WtaunuNp3_AP',
+    'WtaunuNp4_AP',
+    'WtaunuNp5_AP',
+    
+    'WenuNp0_AP',
+    'WenuNp1_AP',
+    'WenuNp2_AP',
+    'WenuNp3_AP',
+    'WenuNp4_AP',
+    'WenuNp5_AP',
+
     'WtaunuNp0',
     'WtaunuNp1',
     'WtaunuNp2',
@@ -407,27 +428,6 @@ datasets2012 = [
     'Ztott2JetsEW1JetQCD15GeVM40_min_n_tchannels',
     'Ztomm2JetsEW1JetQCD15GeVM40_min_n_tchannels',
     
-    ]
-
-datasets2012= [
-    'WmunuNp0_AP',
-    'WmunuNp1_AP',
-    'WmunuNp2_AP',
-    'WmunuNp3_AP',
-    'WmunuNp4_AP',
-    'WmunuNp5_AP',
-    'WtaunuNp0_AP',
-    'WtaunuNp1_AP',
-    'WtaunuNp2_AP',
-    'WtaunuNp3_AP',
-    'WtaunuNp4_AP',
-    'WtaunuNp5_AP',
-    'WenuNp0_AP',
-    'WenuNp1_AP',
-    'WenuNp2_AP',
-    'WenuNp3_AP',
-    'WenuNp4_AP',
-    'WenuNp5_AP',
     ]
 
 datasets = datasets2012
