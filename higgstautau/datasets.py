@@ -908,12 +908,12 @@ class Database(dict):
                                          treename=data_treename,
                                          ds=name,
                                          id=-1,
-                                        # The GRL is the same for both lephad and hadhad analyses
-                                        grl=data_grl,
-                                        dirs=dirs,
-                                        stream=stream,
-                                        file_pattern=data_pattern,
-                                        year=year)
+                                         # The GRL is the same for both lephad and hadhad analyses
+                                         grl=data_grl,
+                                         dirs=dirs,
+                                         stream=stream,
+                                         file_pattern=data_pattern,
+                                         year=year)
 
                     # in each stream create a separate dataset for each period
                     periods = {}
@@ -1003,7 +1003,7 @@ class Dataset(Serializable):
         self.version = version
         self.tag_pattern = tag_pattern
         self.tag = tag
-        self.dirs = dirs
+        self.dirs = sorted(dirs)
         self.file_pattern = file_pattern
         self.grl = grl
         self.year = year
