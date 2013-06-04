@@ -1073,7 +1073,14 @@ class Dataset(Serializable):
 
 def dataset_constructor(loader, node):
 
-    return Dataset(**loader.construct_mapping(node))
+    kwargs = loader.construct_mapping(node)
+    try:
+        return Dataset(**kwargs)
+    except:
+        fields = '\n'.join('%s = %s' % item for item in kwargs.items())
+        log.error("unable to load dataset %s with these fields:\n\n%s\n" %
+                  (kwargs['name'], fields))
+        raise
 
 yaml.add_constructor(u'!Dataset', dataset_constructor)
 
