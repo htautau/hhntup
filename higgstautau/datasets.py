@@ -982,8 +982,7 @@ class Dataset(Serializable):
 
     yaml_tag = u'!Dataset'
 
-    def __init__(self, name, datatype, treename,
-                 ds, dirs,
+    def __init__(self, name, datatype, treename, ds, dirs,
                  file_pattern='*.root*',
                  id=None,
                  category=None,
