@@ -1002,7 +1002,7 @@ class Dataset(Serializable):
         self.version = version
         self.tag_pattern = tag_pattern
         self.tag = tag
-        self.dirs = sorted(dirs)
+        self.dirs = dirs
         self.file_pattern = file_pattern
         self.grl = grl
         self.year = year
@@ -1054,6 +1054,10 @@ class Dataset(Serializable):
     @cached_property
     def files(self):
 
+        if not self.dirs:
+            log.warning(
+                "files requested from dataset %s "
+                "with an empty list of directories" % self.name)
         _files = []
         for dir in self.dirs:
             if not os.path.exists(dir):

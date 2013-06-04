@@ -14,7 +14,10 @@ class Serializable(yaml.YAMLObject):
     def _dict(self):
         dump_dict = OrderedDict()
         for var in inspect.getargspec(self.__init__).args[1:]:
-            dump_dict[var] = getattr(self, var, None)
+            thing = getattr(self, var, None)
+            if isinstance(thing, list):
+                thing = sorted(thing)
+            dump_dict[var] = thing
         return dump_dict
 
     @classmethod
