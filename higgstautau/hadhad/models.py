@@ -3,10 +3,9 @@ This module defines the output branches in the final ntuple
 as TreeModels.
 """
 
-
 from rootpy.tree import TreeModel
-from rootpy.math.physics.vector import LorentzRotation, \
-        LorentzVector, Vector3, Vector2
+from rootpy.math.physics.vector import (
+    LorentzRotation, LorentzVector, Vector3, Vector2)
 from rootpy.types import *
 
 from atlastools.utils import et2pt
@@ -18,7 +17,38 @@ import math
 import ROOT
 
 
-class EventVariables(TreeModel):
+class MMCModel(TreeModel):
+
+    # MMC mass for all methods
+    mmc0_mass = FloatCol()
+    mmc1_mass = FloatCol()
+    mmc2_mass = FloatCol()
+
+    mmc0_MET = FloatCol()
+    mmc0_MET_x = FloatCol()
+    mmc0_MET_y = FloatCol()
+    mmc0_MET_phi = FloatCol()
+    mmc0_MET_vec = Vector2
+    mmc1_MET = FloatCol()
+    mmc1_MET_x = FloatCol()
+    mmc1_MET_y = FloatCol()
+    mmc1_MET_phi = FloatCol()
+    mmc1_MET_vec = Vector2
+    mmc2_MET = FloatCol()
+    mmc2_MET_x = FloatCol()
+    mmc2_MET_y = FloatCol()
+    mmc2_MET_phi = FloatCol()
+    mmc2_MET_vec = Vector2
+
+    mmc0_resonance = LorentzVector
+    mmc0_resonance_pt = FloatCol()
+    mmc1_resonance = LorentzVector
+    mmc1_resonance_pt = FloatCol()
+    mmc2_resonance = LorentzVector
+    mmc2_resonance_pt = FloatCol()
+
+
+class EventVariables(MMCModel):
 
     # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)
@@ -88,34 +118,6 @@ class EventVariables(TreeModel):
     dPhi_min_tau_MET = FloatCol()
     MET_bisecting = BoolCol()
     sumET = FloatCol()
-
-    # MMC mass for all methods
-    mmc0_mass = FloatCol()
-    mmc1_mass = FloatCol()
-    mmc2_mass = FloatCol()
-
-    mmc0_MET = FloatCol()
-    mmc0_MET_x = FloatCol()
-    mmc0_MET_y = FloatCol()
-    mmc0_MET_phi = FloatCol()
-    mmc0_MET_vec = Vector2
-    mmc1_MET = FloatCol()
-    mmc1_MET_x = FloatCol()
-    mmc1_MET_y = FloatCol()
-    mmc1_MET_phi = FloatCol()
-    mmc1_MET_vec = Vector2
-    mmc2_MET = FloatCol()
-    mmc2_MET_x = FloatCol()
-    mmc2_MET_y = FloatCol()
-    mmc2_MET_phi = FloatCol()
-    mmc2_MET_vec = Vector2
-
-    mmc0_resonance = LorentzVector
-    mmc0_resonance_pt = FloatCol()
-    mmc1_resonance = LorentzVector
-    mmc1_resonance_pt = FloatCol()
-    mmc2_resonance = LorentzVector
-    mmc2_resonance_pt = FloatCol()
 
     jet_transformation = LorentzRotation
     jet_beta = Vector3
@@ -300,28 +302,28 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
                                              jet2.fourvect_boosted.Eta())
 
 
-class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') +
-                   (TrueTau + MatchedObject).prefix('trueTau2_')):
+class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
+                   (TrueTau + MatchedObject).prefix('truetau2_')):
 
     @classmethod
     def set(cls, tree, index, tau):
 
-        setattr(tree, 'trueTau%i_nProng' % index, tau.nProng)
-        setattr(tree, 'trueTau%i_nPi0' % index, tau.nPi0)
-        setattr(tree, 'trueTau%i_charge' % index, tau.charge)
+        setattr(tree, 'truetau%i_nProng' % index, tau.nProng)
+        setattr(tree, 'truetau%i_nPi0' % index, tau.nPi0)
+        setattr(tree, 'truetau%i_charge' % index, tau.charge)
 
-        fourvect = getattr(tree, 'trueTau%i_fourvect' % index)
+        fourvect = getattr(tree, 'truetau%i_fourvect' % index)
         fourvect.SetPtEtaPhiM(
             tau.pt,
             tau.eta,
             tau.phi,
             tau.m)
 
-        fourvect_boosted = getattr(tree, 'trueTau%i_fourvect_boosted' % index)
+        fourvect_boosted = getattr(tree, 'truetau%i_fourvect_boosted' % index)
         fourvect_boosted.set_from(fourvect)
         fourvect_boosted.Boost(tree.parton_beta * -1)
 
-        fourvect_vis = getattr(tree, 'trueTau%i_fourvect_vis' % index)
+        fourvect_vis = getattr(tree, 'truetau%i_fourvect_vis' % index)
         try:
             fourvect_vis.SetPtEtaPhiM(
                 et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
@@ -332,6 +334,128 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('trueTau1_') +
             print "DOMAIN ERROR ON TRUTH 4VECT"
             print tau.vis_Et, tau.vis_eta, tau.vis_m
         else:
-            fourvect_vis_boosted = getattr(tree, 'trueTau%i_fourvect_vis_boosted' % index)
+            fourvect_vis_boosted = getattr(tree, 'truetau%i_fourvect_vis_boosted' % index)
             fourvect_vis_boosted.set_from(fourvect_vis)
             fourvect_vis_boosted.Boost(tree.parton_beta * -1)
+
+
+class SkimModel(TreeModel):
+
+    number_of_good_vertices = IntCol()
+    tau_selected = ROOT.vector('bool')
+    tau_numTrack_recounted = ROOT.vector('int')
+    pileup_weight = FloatCol(default=1.)
+    ggf_weight = FloatCol(default=1.)
+
+    @classmethod
+    def reset(cls, tree):
+
+        tree.tau_numTrack_recounted.clear()
+
+    @classmethod
+    def set(cls, tree, tau):
+
+        tree.tau_numTrack_recounted.push_back(
+            tau.numTrack_recounted)
+
+
+class TriggerMatching(TreeModel):
+
+    tau_trigger_match_index = ROOT.vector('int')
+    tau_trigger_match_thresh = ROOT.vector('int')
+    tau_trigger_match_error = BoolCol(default=False)
+
+    @classmethod
+    def reset(cls, tree):
+
+        tree.tau_trigger_match_index.clear()
+        tree.tau_trigger_match_thresh.clear()
+
+    @classmethod
+    def set(cls, tree, tau):
+
+        tree.tau_trigger_match_index.push_back(
+                tau.trigger_match_index)
+        tree.tau_trigger_match_thresh.push_back(
+                tau.trigger_match_thresh)
+
+
+class SkimMassModel(MMCModel):
+
+    tau_collinear_mass = FloatCol()
+    tau_collinear_momentum_fraction = ROOT.vector('float')
+
+    tau_visible_mass = FloatCol()
+
+
+class ScaleFactors(TreeModel):
+
+    # tau id efficiency scale factors
+    id_eff_sf_loose = ROOT.vector('float')
+    id_eff_sf_loose_high = ROOT.vector('float')
+    id_eff_sf_loose_low = ROOT.vector('float')
+
+    id_eff_sf_medium = ROOT.vector('float')
+    id_eff_sf_medium_high = ROOT.vector('float')
+    id_eff_sf_medium_low = ROOT.vector('float')
+
+    id_eff_sf_tight = ROOT.vector('float')
+    id_eff_sf_tight_high = ROOT.vector('float')
+    id_eff_sf_tight_low = ROOT.vector('float')
+
+    # fakerate scale factors
+    fakerate_sf_loose = ROOT.vector('float')
+    fakerate_sf_loose_high = ROOT.vector('float')
+    fakerate_sf_loose_low = ROOT.vector('float')
+
+    fakerate_sf_medium = ROOT.vector('float')
+    fakerate_sf_medium_high = ROOT.vector('float')
+    fakerate_sf_medium_low = ROOT.vector('float')
+
+    fakerate_sf_tight = ROOT.vector('float')
+    fakerate_sf_tight_high = ROOT.vector('float')
+    fakerate_sf_tight_low = ROOT.vector('float')
+
+    # fakerate reco scale factors
+    fakerate_sf_reco_loose = ROOT.vector('float')
+    fakerate_sf_reco_loose_high = ROOT.vector('float')
+    fakerate_sf_reco_loose_low = ROOT.vector('float')
+
+    fakerate_sf_reco_medium = ROOT.vector('float')
+    fakerate_sf_reco_medium_high = ROOT.vector('float')
+    fakerate_sf_reco_medium_low = ROOT.vector('float')
+
+    fakerate_sf_reco_tight = ROOT.vector('float')
+    fakerate_sf_reco_tight_high = ROOT.vector('float')
+    fakerate_sf_reco_tight_low = ROOT.vector('float')
+
+    # trigger efficiency scale factors
+    trigger_eff_sf_loose = ROOT.vector('float')
+    trigger_eff_sf_loose_high = ROOT.vector('float')
+    trigger_eff_sf_loose_low = ROOT.vector('float')
+
+    trigger_eff_sf_medium = ROOT.vector('float')
+    trigger_eff_sf_medium_high = ROOT.vector('float')
+    trigger_eff_sf_medium_low = ROOT.vector('float')
+
+    trigger_eff_sf_tight = ROOT.vector('float')
+    trigger_eff_sf_tight_high = ROOT.vector('float')
+    trigger_eff_sf_tight_low = ROOT.vector('float')
+
+
+class TauCorrections(ScaleFactors.prefix('tau_')):
+
+    @classmethod
+    def reset(cls, tree):
+
+        attrs = ScaleFactors.get_attrs()
+        for name, value in attrs:
+            getattr(tree.tau, name).clear()
+
+    @classmethod
+    def set(cls, tree, tau):
+
+        attrs = ScaleFactors.get_attrs()
+        for name, value in attrs:
+            getattr(tree.tau, name).push_back(getattr(tau, name))
+

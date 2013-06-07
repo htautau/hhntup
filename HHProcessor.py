@@ -182,6 +182,26 @@ class HHProcessor(ATLASStudent):
                 'EventNumber',
                 'lbn']
 
+        if 'ggH' in self.metadata.name or 'VBFH' in self.metadata.name:
+            # branched needed for theory uncertainties
+            # only for VBF and ggH
+            copied_variables += [
+                'jet_antikt4truth_n',
+                'jet_antikt4truth_pt',
+                'jet_antikt4truth_m',
+                'jet_antikt4truth_eta',
+                'jet_antikt4truth_phi',
+                'mc_n',
+                'mc_pdgId',
+                'mc_child_index',
+                'mc_parent_index',
+                'mc_pt',
+                'mc_eta',
+                'mc_phi',
+                'mc_m',
+                'mc_status',
+            ]
+
         tree.set_buffer(
                 chain._buffer,
                 branches=copied_variables,
@@ -237,16 +257,6 @@ class HHProcessor(ATLASStudent):
                 datatype=datatype,
                 verbose=verbose,
                 count_funcs=count_funcs),
-            # the BDT bits are broken in the p1130 production, correct them
-            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
-            # PRODUCTION TAG!!!
-            #TauIDpatch(
-            #    year=year,
-            #    count_funcs=count_funcs),
-            # patch electron ID for 2012
-            #ElectronIDpatch(
-            #    passthrough=year != 2012,
-            #    count_funcs=count_funcs),
             #LArHole(
             #    datatype=datatype,
             #    count_funcs=count_funcs),
@@ -335,9 +345,6 @@ class HHProcessor(ATLASStudent):
                 # no ggf reweighting for 2012 MC
                 passthrough=datatype != datasets.MC or year != 2011,
                 count_funcs=count_funcs),
-            #TauTrackRecounting(
-            #    year=year,
-            #    count_funcs=count_funcs),
             MCWeight(
                 datatype=datatype,
                 tree=tree,
@@ -353,9 +360,6 @@ class HHProcessor(ATLASStudent):
                 count_funcs=count_funcs),
             TauJetOverlapRemoval(
                 count_funcs=count_funcs),
-            #NumJets25(
-            #    tree=tree,
-            #    count_funcs=count_funcs),
             JetPreselection(
                 passthrough=year < 2012,
                 count_funcs=count_funcs),
@@ -387,7 +391,7 @@ class HHProcessor(ATLASStudent):
         ]
 
         """ Associations not currently implemented in rootpy
-        chain.define_association(origin='taus', target='truetaus', prefix='trueTauAssoc_', link='index')
+        chain.define_association(origin='taus', target='truetaus', prefix='truetauAssoc_', link='index')
         chain.define_association(origin='truetaus', target='taus', prefix='tauAssoc_', link='index')
         """
 
@@ -672,16 +676,16 @@ class HHProcessor(ATLASStudent):
                             log.warning("match collision!")
                             tau1.matched_collision = True
                             tau2.matched_collision = True
-                            tree.trueTau1_matched_collision = True
-                            tree.trueTau2_matched_collision = True
+                            tree.truetau1_matched_collision = True
+                            tree.truetau2_matched_collision = True
                             tree.error = True
                         else:
                             unmatched_truth.remove(matching_truth_index)
                             matched_truth.append(matching_truth_index)
                             tau.matched = True
                             tau.matched_dR = tau.trueTauAssoc_dr
-                            setattr(tree, "trueTau%i_matched" % (i+1), 1)
-                            setattr(tree, "trueTau%i_matched_dR" % (i+1),
+                            setattr(tree, "truetau%i_matched" % (i+1), 1)
+                            setattr(tree, "truetau%i_matched_dR" % (i+1),
                                     event.truetaus.getitem(
                                         matching_truth_index).tauAssoc_dr)
                             TrueTauBlock.set(tree, i+1,
@@ -691,8 +695,8 @@ class HHProcessor(ATLASStudent):
                     TrueTauBlock.set(tree, i+1, event.truetaus.getitem(j))
 
                 tree.mass_vis_true_tau1_tau2 = (
-                        tree.trueTau1_fourvect_vis +
-                        tree.trueTau2_fourvect_vis).M()
+                        tree.truetau1_fourvect_vis +
+                        tree.truetau2_fourvect_vis).M()
 
             #############################
             # tau <-> vertex association

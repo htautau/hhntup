@@ -29,9 +29,8 @@ from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.skimming.hadhad import branches as hhbranches
-from higgstautau.skimming.hadhad.models import *
-from higgstautau.hadhad.models import EmbeddingBlock
+from higgstautau.hadhad import branches as hhbranches
+from higgstautau.hadhad.models import *
 from higgstautau.pileup import (PileupTemplates, PileupReweight,
                                 get_pileup_reweighting_tool,
                                 averageIntPerXingPatch)
@@ -96,7 +95,7 @@ class hhskim(ATLASStudent):
             self.output.cd()
 
         # define the model of the output tree
-        Model = SkimModel + TriggerMatching + MassModel + TauCorrections
+        Model = SkimModel + SkimMassModel + TriggerMatching + TauCorrections
 
         if datatype == datasets.EMBED:
             # add embedding systematics branches
@@ -162,7 +161,18 @@ class hhskim(ATLASStudent):
                 year=year,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
+            PileupReweight(
+                tool=pileup_tool,
+                tree=tree,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
             # TODO: APPLY RANDOM RUN NUMBER HERE FOR MC
+            # set the RunNumber in MC to a random run number according to the
+            # pileup tool
+            MCRunNumber(
+                pileup_tool=pileup_tool,
+                passthrough=datatype != datasets.MC,
+                count_funcs=count_funcs),
             PriVertex(
                 count_funcs=count_funcs),
             LArError(
@@ -186,19 +196,6 @@ class hhskim(ATLASStudent):
                 datatype=datatype,
                 verbose=verbose,
                 count_funcs=count_funcs),
-            # The BDT bits are broken in the p1130 production, correct them
-            # DON'T FORGET TO REMOVE THIS WHEN SWITCHING TO A NEWER
-            # PRODUCTION TAG!!!
-            #
-            #TauIDpatch(
-            #    year=year,
-            #    count_funcs=count_funcs),
-            # patch electron ID for 2012
-            #ElectronIDpatch(
-            #    passthrough=year != 2012,
-            #    count_funcs=count_funcs),
-            #
-            # The above patches are no longer required
             LArHole(
                 datatype=datatype,
                 count_funcs=count_funcs),
@@ -262,12 +259,7 @@ class hhskim(ATLASStudent):
                     Systematics.TES_TERMS & self.args.syst_terms),
                 passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
-            PileupReweight(
-                tool=pileup_tool,
-                tree=tree,
-                passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            EfficiencyScaleFactors(
+                        EfficiencyScaleFactors(
                 year=year,
                 passthrough=datatype == datasets.DATA,
                 count_funcs=count_funcs),
@@ -290,7 +282,16 @@ class hhskim(ATLASStudent):
                 year=year,
                 datatype=datatype,
                 count_funcs=count_funcs),
+            MCWeight(
+                datatype=datatype,
+                tree=tree,
+                passthrough=datatype == datasets.DATA,
+                count_funcs=count_funcs),
             EmbeddingIsolation(
+                tree=tree,
+                passthrough=year < 2012 or datatype != datasets.EMBED,
+                count_funcs=count_funcs),
+            EmbeddingCorrections(
                 tree=tree,
                 passthrough=year < 2012 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
@@ -356,44 +357,60 @@ class hhskim(ATLASStudent):
                 validate_log = open('hhskim_validate_embedded_%d.txt' %
                         chain.RunNumber, 'w')
 
-        # create MMC object
-        mmc = mass.MMC(year=year, channel='hh')
+        mmc_objects = [
+            tree.define_object(name='mmc0', prefix='mmc0_'),
+            tree.define_object(name='mmc1', prefix='mmc1_'),
+            tree.define_object(name='mmc2', prefix='mmc2_'),
+        ]
+
+        # create the MMC
+        mmc = mass.MMC(year=year)
 
         self.output.cd()
-        # entering the main event loop...
+
+        #####################
+        # The main event loop
+        #####################
         for event in chain:
 
             assert len(event.taus) == 2
             tree.number_of_good_vertices = len(event.vertices)
             tau1, tau2 = event.taus
 
-
             selected_idx = [tau.index for tau in event.taus]
             selected_idx.sort()
 
-            # missing mass
+            ##########################
+            # MMC Mass
+            ##########################
             METx = event.MET.etx
             METy = event.MET.ety
             MET = event.MET.et
             sumET = event.MET.sumet
 
-            # TODO: get MMC output for all three methods
-            mmc_mass, mmc_resonance, mmc_met = mmc.mass(
-                    tau1, tau2,
-                    METx, METy, sumET,
-                    len(event.jets),
-                    method=0)
+            mmc_result = mmc.mass(
+                tau1, tau2,
+                METx, METy, sumET,
+                njets=len(event.jets))
 
-            tree.tau_MMC_mass = mmc_mass
-            tree.tau_MMC_resonance.set_from(mmc_resonance)
-            if mmc_mass > 0:
-                tree.tau_MMC_resonance_pt = mmc_resonance.Pt()
-            tree.tau_MMC_MET = mmc_met.Mod()
-            tree.tau_MMC_MET_x = mmc_met.X()
-            tree.tau_MMC_MET_y = mmc_met.Y()
-            tree.tau_MMC_MET_phi = math.pi - mmc_met.Phi()
+            for mmc_method, mmc_object in enumerate(mmc_objects):
+                mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
+                if verbose:
+                    log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
 
+                mmc_object.mass = mmc_mass
+                mmc_object.resonance.set_from(mmc_resonance)
+                if mmc_mass > 0:
+                    mmc_object.resonance_pt = mmc_resonance.Pt()
+                mmc_object.MET = mmc_met.Mod()
+                mmc_object.MET_x = mmc_met.X()
+                mmc_object.MET_y = mmc_met.Y()
+                mmc_object.MET_phi = math.pi - mmc_met.Phi()
+                mmc_object.MET_vec.set_from(mmc_met)
+
+            ############################
             # collinear and visible mass
+            ############################
             vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
 
@@ -412,7 +429,9 @@ class hhskim(ATLASStudent):
             TriggerMatching.reset(tree)
             TauCorrections.reset(tree)
 
+            ###################################################
             # set the skim-defined variables in the output tree
+            ###################################################
             for i in xrange(event.tau_n):
                 tau = event.taus.getitem(i)
 
@@ -479,7 +498,9 @@ class hhskim(ATLASStudent):
                 print vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt, "(Soshi)"
                 print
 
+            ######################
             # fill the output tree
+            ######################
             tree.Fill()
 
         self.output.cd()
@@ -489,6 +510,8 @@ class hhskim(ATLASStudent):
             # sort the output by event number for MC
             # sort +2 -3 -n skim2_validate_mc_125205.txt -o skim2_validate_mc_125205.txt
 
+        ###############################################
         # flush any baskets remaining in memory to disk
+        ###############################################
         tree.FlushBaskets()
         tree.Write()
