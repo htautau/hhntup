@@ -16,7 +16,6 @@ __all__ = [
     'FourMomentum',
     'FourMomentumMeV',
     'TauFourMomentum',
-    'TauFourMomentumSkim',
     'ElectronFourMomentum',
     'MCTauFourMomentum',
     'MCParticle',
@@ -155,6 +154,16 @@ class TauFourMomentum(FourMomentum):
         self.trigger_scale_factor_high = SF_DEFAULT
         self.trigger_scale_factor_low = SF_DEFAULT
 
+        # colliniear mass approx
+        self.collinear_momentum_fraction = -9999.
+
+        # track recounting
+        self.numTrack_recounted = -1
+
+        self.trigger_match_thresh = 0
+        self.trigger_match_index = -1
+
+
     @property
     def pt_nominal(self):
 
@@ -221,61 +230,6 @@ class TauFourMomentum(FourMomentum):
     def decay_angle(self):
 
         return self.decay_vect.Angle(self.fourvect)
-
-
-class TauFourMomentumSkim(TauFourMomentum):
-
-    def __init__(self):
-
-        super(TauFourMomentumSkim, self).__init__()
-
-        self.trigger_match_thresh = 0
-        self.trigger_match_index = -1
-
-        # tau id efficiency scale factors
-        self.id_eff_sf_loose = SF_DEFAULT
-        self.id_eff_sf_loose_high = SF_DEFAULT
-        self.id_eff_sf_loose_low = SF_DEFAULT
-
-        self.id_eff_sf_medium = SF_DEFAULT
-        self.id_eff_sf_medium_high = SF_DEFAULT
-        self.id_eff_sf_medium_low = SF_DEFAULT
-
-        self.id_eff_sf_tight = SF_DEFAULT
-        self.id_eff_sf_tight_high = SF_DEFAULT
-        self.id_eff_sf_tight_low = SF_DEFAULT
-
-        # fakerate scale factors
-        self.fakerate_sf_loose = SF_DEFAULT
-        self.fakerate_sf_loose_high = SF_DEFAULT
-        self.fakerate_sf_loose_low = SF_DEFAULT
-
-        self.fakerate_sf_medium = SF_DEFAULT
-        self.fakerate_sf_medium_high = SF_DEFAULT
-        self.fakerate_sf_medium_low = SF_DEFAULT
-
-        self.fakerate_sf_tight = SF_DEFAULT
-        self.fakerate_sf_tight_high = SF_DEFAULT
-        self.fakerate_sf_tight_low = SF_DEFAULT
-
-        # trigger efficiency scale factors
-        self.trigger_eff_sf_loose = SF_DEFAULT
-        self.trigger_eff_sf_loose_high = SF_DEFAULT
-        self.trigger_eff_sf_loose_low = SF_DEFAULT
-
-        self.trigger_eff_sf_medium = SF_DEFAULT
-        self.trigger_eff_sf_medium_high = SF_DEFAULT
-        self.trigger_eff_sf_medium_low = SF_DEFAULT
-
-        self.trigger_eff_sf_tight = SF_DEFAULT
-        self.trigger_eff_sf_tight_high = SF_DEFAULT
-        self.trigger_eff_sf_tight_low = SF_DEFAULT
-
-        # colliniear mass approx
-        self.collinear_momentum_fraction = -9999.
-
-        # track recounting
-        self.numTrack_recounted = -1
 
 
 class MCTauFourMomentum(FourMomentum):

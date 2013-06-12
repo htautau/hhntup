@@ -21,7 +21,7 @@ hh-ntup-merge: hh-ntup-clean
 
 clean-pyc:                                                                      
 	find higgstautau -name "*.pyc" -exec rm {} \;
-	rm *.pyc
+	rm -f *.pyc
 
 clean: clean-pyc
 	rm -f student*.root

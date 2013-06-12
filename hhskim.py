@@ -208,9 +208,9 @@ class hhskim(ATLASStudent):
             TauPT(2,
                 thresh=20 * GeV,
                 count_funcs=count_funcs),
-            TauEta(2,
-                count_funcs=count_funcs),
             TauHasTrack(2,
+                count_funcs=count_funcs),
+            TauEta(2,
                 count_funcs=count_funcs),
             TauElectronVeto(2,
                 count_funcs=count_funcs),
@@ -366,7 +366,7 @@ class hhskim(ATLASStudent):
                     chain.RunNumber, 'w')
 
         # define tree objects
-        define_objects(chain, year, skim=True)
+        define_objects(chain, year)
 
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='tau1', prefix='tau1_')
@@ -623,16 +623,13 @@ class hhskim(ATLASStudent):
             vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)
 
-            tree.tau_visible_mass = vis_mass
-            tree.tau_collinear_mass = collin_mass
+            tree.mass_vis_tau1_tau2 = vis_mass
+            tree.mass_collinear_tau1_tau2 = collin_mass
             tau1.collinear_momentum_fraction = tau1_x
             tau2.collinear_momentum_fraction = tau2_x
 
             if datatype == datasets.MC and year == 2011:
                 tree.ggf_weight = reweight_ggf(event, self.metadata.name)
-
-            tree.tau_selected.clear()
-            tree.tau_collinear_momentum_fraction.clear()
 
             ###########################
             # Match jets to VBF partons
