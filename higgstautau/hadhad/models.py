@@ -3,15 +3,15 @@ This module defines the output branches in the final ntuple
 as TreeModels.
 """
 
-from rootpy.tree import TreeModel
+from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
 from rootpy.math.physics.vector import (
     LorentzRotation, LorentzVector, Vector3, Vector2)
-from rootpy.types import *
 
 from atlastools.utils import et2pt
+from atlastools import datasets
 from atlastools import utils
 
-from ..models import MatchedObject, TrueTau, FourMomentum
+from ..models import MatchedObject, TrueTau, FourMomentum, PartonBlock
 
 import math
 import ROOT
@@ -48,64 +48,16 @@ class MMCModel(TreeModel):
     mmc2_resonance_pt = FloatCol()
 
 
-class EventVariables(MMCModel):
-
-    # event weight given by the PileupReweighting tool
-    pileup_weight = FloatCol(default=1.)
-    mc_weight = FloatCol(default=1.)
-    ggf_weight = FloatCol(default=1.)
-
-    # true if both taus pass ID requirements
-    taus_pass = BoolCol()
-
-    tau_trigger_match_error = BoolCol(default=False)
-
-    theta_tau1_tau2 = FloatCol()
-    cos_theta_tau1_tau2 = FloatCol()
-    tau1_x = FloatCol()
-    tau2_x = FloatCol()
-    tau_x_product = FloatCol()
-    tau_x_sum = FloatCol()
-    tau_pt_ratio = FloatCol()
-    tau_centrality_product = FloatCol()
-
-    MET_centrality = FloatCol()
-    MET_centrality_boosted = FloatCol()
+class MassModel(MMCModel):
 
     mass_collinear_tau1_tau2 = FloatCol()
-
-    # new ditaumass package mass
-    mass_dtm_tau1_tau2 = DoubleCol()
-    mass_dtm_tau1_tau2_scan = DoubleCol()
-
-    mass2_vis_tau1_tau2 = FloatCol()
     mass_vis_tau1_tau2 = FloatCol()
-
     mass_jet1_jet2 = FloatCol()
     mass_vis_true_tau1_tau2 = FloatCol()
     mass_true_quark1_quark2 = FloatCol()
 
-    # did both taus come from the same vertex?
-    tau_same_vertex = BoolCol()
 
-    dR_quarks = FloatCol()
-    dR_truetaus = FloatCol()
-    dR_taus = FloatCol()
-    dR_jets = FloatCol()
-    dR_quark_tau = FloatCol()
-    dR_tau1_tau2 = FloatCol()
-    dEta_tau1_tau2 = FloatCol()
-    dPhi_tau1_tau2 = FloatCol()
-
-    dEta_quarks = FloatCol()
-    dEta_jets = FloatCol()
-    dEta_jets_boosted = FloatCol()
-    eta_product_jets = FloatCol()
-    eta_product_jets_boosted = FloatCol()
-
-    numJets25 = IntCol()
-    numJets = IntCol()
-    nonisolatedjet = BoolCol()
+class METModel(TreeModel):
 
     MET = FloatCol()
     MET_x = FloatCol()
@@ -119,33 +71,15 @@ class EventVariables(MMCModel):
     MET_bisecting = BoolCol()
     sumET = FloatCol()
 
-    jet_transformation = LorentzRotation
-    jet_beta = Vector3
-    parton_beta = Vector3
+    MET_centrality = FloatCol()
+    MET_centrality_boosted = FloatCol()
 
-    error = BoolCol()
-    cutflow = IntCol()
 
-    sphericity = FloatCol()
-    aplanarity = FloatCol()
-
-    sphericity_boosted = FloatCol()
-    aplanarity_boosted = FloatCol()
-
-    sum_pt = FloatCol()
-    sum_pt_full = FloatCol()
-    vector_sum_pt = FloatCol()
-
-    ntrack_pv = IntCol()
-    ntrack_nontau_pv = IntCol()
+class EmbeddingModel(TreeModel):
 
     # embedding corrections
     embedding_reco_unfold = FloatCol(default=1.)
     embedding_dimuon_mass = FloatCol()
-
-
-class EmbeddingBlock(TreeModel):
-
     embedding_isolation = IntCol()
 
 
@@ -201,8 +135,12 @@ class RecoTau(FourMomentum):
     # vertex association
     vertex_prob = FloatCol()
 
+    collinear_momentum_fraction = FloatCol()
+
 
 class RecoJet(FourMomentum):
+
+    index = IntCol(default=-1)
 
     jvtxf = FloatCol()
     BDTJetScore = FloatCol()
@@ -210,6 +148,24 @@ class RecoJet(FourMomentum):
 
 class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                    (RecoTau + MatchedObject).prefix('tau2_')):
+
+    # true if both taus pass ID requirements
+    taus_pass = BoolCol()
+
+    tau_trigger_match_error = BoolCol(default=False)
+
+    # did both taus come from the same vertex?
+    tau_same_vertex = BoolCol()
+
+    theta_tau1_tau2 = FloatCol()
+    cos_theta_tau1_tau2 = FloatCol()
+    tau1_x = FloatCol()
+    tau2_x = FloatCol()
+
+    tau_x_product = FloatCol()
+    tau_x_sum = FloatCol()
+    tau_pt_ratio = FloatCol()
+    tau_centrality_product = FloatCol()
 
     @classmethod
     def set(cls, event, tree, tau1, tau2):
@@ -276,19 +232,30 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             # tau vertex association
             outtau.vertex_prob = intau.vertex_prob
 
+            outtau.collinear_momentum_fraction = intau.collinear_momentum_fraction
+
 
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
                    (RecoJet + MatchedObject).prefix('jet2_')):
+
+    jet_transformation = LorentzRotation
+    jet_beta = Vector3
+    parton_beta = Vector3
+    numJets = IntCol()
+    nonisolatedjet = BoolCol()
 
     @classmethod
     def set(cls, tree, jet1, jet2=None):
 
         FourMomentum.set(tree.jet1, jet1)
         tree.jet1_jvtxf = jet1.jvtxf
+        tree.jet1_index = jet1.index
 
         if jet2 is not None:
+
             FourMomentum.set(tree.jet2, jet2)
             tree.jet2_jvtxf = jet2.jvtxf
+            tree.jet2_index = jet2.index
 
             tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
@@ -339,123 +306,58 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
             fourvect_vis_boosted.Boost(tree.parton_beta * -1)
 
 
-class SkimModel(TreeModel):
+class EventModel(TreeModel):
 
+    RunNumber_random = IntCol()
     number_of_good_vertices = IntCol()
-    tau_selected = ROOT.vector('bool')
-    tau_numTrack_recounted = ROOT.vector('int')
+    averageIntPerXing_scaled = FloatCol()
+    actualIntPerXing_scaled = FloatCol()
+
+    # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)
+    mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 
-    @classmethod
-    def reset(cls, tree):
+    dR_quarks = FloatCol()
+    dR_truetaus = FloatCol()
+    dR_taus = FloatCol()
+    dR_jets = FloatCol()
+    dR_quark_tau = FloatCol()
+    dR_tau1_tau2 = FloatCol()
+    dEta_tau1_tau2 = FloatCol()
+    dPhi_tau1_tau2 = FloatCol()
 
-        tree.tau_numTrack_recounted.clear()
+    dEta_quarks = FloatCol()
+    dEta_jets = FloatCol()
+    dEta_jets_boosted = FloatCol()
+    eta_product_jets = FloatCol()
+    eta_product_jets_boosted = FloatCol()
 
-    @classmethod
-    def set(cls, tree, tau):
+    sphericity = FloatCol()
+    aplanarity = FloatCol()
 
-        tree.tau_numTrack_recounted.push_back(
-            tau.numTrack_recounted)
+    sphericity_boosted = FloatCol()
+    aplanarity_boosted = FloatCol()
 
+    sum_pt = FloatCol()
+    sum_pt_full = FloatCol()
+    vector_sum_pt = FloatCol()
+    resonance_pt = FloatCol()
 
-class TriggerMatching(TreeModel):
+    ntrack_pv = IntCol()
+    ntrack_nontau_pv = IntCol()
 
-    tau_trigger_match_index = ROOT.vector('int')
-    tau_trigger_match_thresh = ROOT.vector('int')
-    tau_trigger_match_error = BoolCol(default=False)
-
-    @classmethod
-    def reset(cls, tree):
-
-        tree.tau_trigger_match_index.clear()
-        tree.tau_trigger_match_thresh.clear()
-
-    @classmethod
-    def set(cls, tree, tau):
-
-        tree.tau_trigger_match_index.push_back(
-                tau.trigger_match_index)
-        tree.tau_trigger_match_thresh.push_back(
-                tau.trigger_match_thresh)
-
-
-class SkimMassModel(MMCModel):
-
-    tau_collinear_mass = FloatCol()
-    tau_collinear_momentum_fraction = ROOT.vector('float')
-
-    tau_visible_mass = FloatCol()
+    error = BoolCol()
 
 
-class ScaleFactors(TreeModel):
+def get_model(datatype, name):
 
-    # tau id efficiency scale factors
-    id_eff_sf_loose = ROOT.vector('float')
-    id_eff_sf_loose_high = ROOT.vector('float')
-    id_eff_sf_loose_low = ROOT.vector('float')
-
-    id_eff_sf_medium = ROOT.vector('float')
-    id_eff_sf_medium_high = ROOT.vector('float')
-    id_eff_sf_medium_low = ROOT.vector('float')
-
-    id_eff_sf_tight = ROOT.vector('float')
-    id_eff_sf_tight_high = ROOT.vector('float')
-    id_eff_sf_tight_low = ROOT.vector('float')
-
-    # fakerate scale factors
-    fakerate_sf_loose = ROOT.vector('float')
-    fakerate_sf_loose_high = ROOT.vector('float')
-    fakerate_sf_loose_low = ROOT.vector('float')
-
-    fakerate_sf_medium = ROOT.vector('float')
-    fakerate_sf_medium_high = ROOT.vector('float')
-    fakerate_sf_medium_low = ROOT.vector('float')
-
-    fakerate_sf_tight = ROOT.vector('float')
-    fakerate_sf_tight_high = ROOT.vector('float')
-    fakerate_sf_tight_low = ROOT.vector('float')
-
-    # fakerate reco scale factors
-    fakerate_sf_reco_loose = ROOT.vector('float')
-    fakerate_sf_reco_loose_high = ROOT.vector('float')
-    fakerate_sf_reco_loose_low = ROOT.vector('float')
-
-    fakerate_sf_reco_medium = ROOT.vector('float')
-    fakerate_sf_reco_medium_high = ROOT.vector('float')
-    fakerate_sf_reco_medium_low = ROOT.vector('float')
-
-    fakerate_sf_reco_tight = ROOT.vector('float')
-    fakerate_sf_reco_tight_high = ROOT.vector('float')
-    fakerate_sf_reco_tight_low = ROOT.vector('float')
-
-    # trigger efficiency scale factors
-    trigger_eff_sf_loose = ROOT.vector('float')
-    trigger_eff_sf_loose_high = ROOT.vector('float')
-    trigger_eff_sf_loose_low = ROOT.vector('float')
-
-    trigger_eff_sf_medium = ROOT.vector('float')
-    trigger_eff_sf_medium_high = ROOT.vector('float')
-    trigger_eff_sf_medium_low = ROOT.vector('float')
-
-    trigger_eff_sf_tight = ROOT.vector('float')
-    trigger_eff_sf_tight_high = ROOT.vector('float')
-    trigger_eff_sf_tight_low = ROOT.vector('float')
-
-
-class TauCorrections(ScaleFactors.prefix('tau_')):
-
-    @classmethod
-    def reset(cls, tree):
-
-        attrs = ScaleFactors.get_attrs()
-        for name, value in attrs:
-            getattr(tree.tau, name).clear()
-
-    @classmethod
-    def set(cls, tree, tau):
-
-        attrs = ScaleFactors.get_attrs()
-        for name, value in attrs:
-            getattr(tree.tau, name).push_back(getattr(tau, name))
-
+    model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
+    if datatype in (datasets.MC, datasets.EMBED):
+        model += TrueTauBlock
+    if datatype == datasets.EMBED:
+        model += EmbeddingModel
+    if datatype == datasets.MC and 'VBF' in name:
+        # add branches for VBF Higgs associated partons
+        model += PartonBlock
+    return model

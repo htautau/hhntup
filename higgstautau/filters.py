@@ -44,17 +44,27 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
-class MCRunNumber(EventFilter):
+class RandomRunNumber(EventFilter):
 
-    def __init__(self, pileup_tool, **kwargs):
+    def __init__(self, tree, datatype, pileup_tool, **kwargs):
 
+        self.tree = tree
         self.pileup_tool = pileup_tool
-        super(MCRunNumber, self).__init__(**kwargs)
+        super(RandomRunNumber, self).__init__(**kwargs)
+        if datatype == datasets.MC:
+            self.passes = self.passes_mc
+        else:
+            self.passes = self.passes_data
 
-    def passes(self, event):
+    def passes_data(self, event):
+
+        self.tree.RunNumber_random = event.RunNumber
+        return True
+
+    def passes_mc(self, event):
 
         # get random run number using the pileup tool
-        event.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        self.tree.RunNumber_random = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
         return True
 
 

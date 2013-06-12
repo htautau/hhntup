@@ -1,3 +1,5 @@
+from atlastools import datasets
+
 from rootpy.tree.filtering import EventFilter
 
 from externaltools import PileupReweighting
@@ -120,17 +122,32 @@ class PileupReweight(EventFilter):
         return True
 
 
-class PileupDataScale(EventFilter):
+class PileupScale(EventFilter):
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, tree, year, datatype, **kwargs):
 
+        self.tree = tree
         self.scale = DATA_SCALE_FACTOR[year]
-        super(PileupDataScale, self).__init__(**kwargs)
+        super(PileupScale, self).__init__(**kwargs)
 
-    def passes(self, event):
+        if datatype in (datasets.DATA, datasets.EMBED):
+            self.passes = self.passes_data
+        elif datatype == datasets.MC:
+            self.passes = self.passes_mc
+        else:
+            raise ValueError("no pileup scale defined for datatype %d" %
+                datatype)
 
-        event.averageIntPerXing *= self.scale
-        event.actualIntPerXing *= self.scale
+    def passes_data(self, event):
+
+        self.tree.averageIntPerXing_scaled = event.averageIntPerXing * self.scale
+        self.tree.actualIntPerXing_scaled = event.actualIntPerXing * self.scale
+        return True
+
+    def passes_mc(self, event):
+
+        self.tree.averageIntPerXing_scaled = event.averageIntPerXing
+        self.tree.actualIntPerXing_scaled = event.actualIntPerXing
         return True
 
 

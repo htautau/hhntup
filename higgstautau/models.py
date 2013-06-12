@@ -2,11 +2,10 @@
 TreeModels common to both lephad and hadhad analyses
 """
 
-from rootpy.tree import TreeModel
-from rootpy.math.physics.vector import LorentzRotation, \
-                                       LorentzVector, \
-                                       Vector3, Vector2
-from rootpy.types import *
+from rootpy.tree import TreeModel, FloatCol, IntCol, BoolCol
+from rootpy.math.physics.vector import (LorentzRotation,
+                                        LorentzVector,
+                                        Vector3, Vector2)
 
 
 class FourMomentum(TreeModel):
