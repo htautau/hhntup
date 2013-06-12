@@ -27,7 +27,7 @@ import subprocess
 
 YEAR = 2011
 VERBOSE = False
-DO_VBF_OLR = True
+DO_VBF_OLR = False
 VBF_OLR_CONFIG = {
     'ZmumuNp2' : (False, -1, -1, True, 2.1, 210),
     'ZmumuNp3' : (False, -1, -1, True, 2.1, 210),
@@ -219,8 +219,7 @@ class LHProcessorCN(ATLASStudent):
                               cache=True,
                               cache_size=10000000,
                               learn_entries=30,
-                              onfilechange=onfilechange,
-                              verbose=True)
+                              onfilechange=onfilechange)
 
         ## Shape systematic variation
         elif len(self.args.syst_terms) == 1:
@@ -230,8 +229,7 @@ class LHProcessorCN(ATLASStudent):
                               cache=True,
                               cache_size=10000000,
                               learn_entries=30,
-                              onfilechange=onfilechange,
-                              verbose=True)
+                              onfilechange=onfilechange)
                 
         else:
             print "ERROR: Too many systematics terms, LHProcessorCN can only handle one at a time."
@@ -248,7 +246,7 @@ class LHProcessorCN(ATLASStudent):
                             'EventNumber',
                             'lbn']
 
-        tree.set_buffer(chain.buffer, branches=copied_variables, create_branches=True, visible=False)
+        tree.set_buffer(chain._buffer, branches=copied_variables, create_branches=True, visible=False)
         chain.always_read(copied_variables)
 
 
@@ -275,7 +273,7 @@ class LHProcessorCN(ATLASStudent):
 
         self.filters['event'] = event_filters
 
-        chain.filters += event_filters
+        chain._filters += event_filters
 
         if self.metadata.datatype != datasets.EMBED:
             cutflow = Cutflow()
@@ -341,14 +339,14 @@ class LHProcessorCN(ATLASStudent):
             tree.SLT = (SLT and not LTT)
 
             ## Dump fake factor
-            if tree.LTT:
-                tree.FF = event.evtsel_weight_FF_LTT
-                tree.FF_up = event.evtsel_sys_ff_ltt_up
-                tree.FF_down = event.evtsel_sys_ff_ltt_down
-            if tree.SLT:
-                tree.FF = event.evtsel_weight_FF_SLT
-                tree.FF_up = event.evtsel_sys_ff_slt_up
-                tree.FF_down = event.evtsel_sys_ff_slt_down
+            # if tree.LTT:
+            #     tree.FF = event.evtsel_weight_FF_LTT
+            #     tree.FF_up = event.evtsel_sys_ff_ltt_up
+            #     tree.FF_down = event.evtsel_sys_ff_ltt_down
+            # if tree.SLT:
+            #     tree.FF = event.evtsel_weight_FF_SLT
+            #     tree.FF_up = event.evtsel_sys_ff_slt_up
+            #     tree.FF_down = event.evtsel_sys_ff_slt_down
                 
 
             
@@ -411,7 +409,7 @@ class LHProcessorCN(ATLASStudent):
             numJets50 = 0
             numJets30 = 0
 
-            tree.btag = False
+            tree.btag = event.evtsel_MV1
 
             vector_all = LorentzVector()
             lead       = LorentzVector()
@@ -421,9 +419,9 @@ class LHProcessorCN(ATLASStudent):
             
             for jet in event.jets:
                 sorted_jets.append(jet.fourvect)
-                if jet.fourvect.Eta() < 2.5:
-                    if jet.flavor_weight_MV1 > 0.7892:
-                        tree.btag = True
+                # if jet.fourvect.Eta() < 2.5:
+                #     if jet.flavor_weight_MV1 > 0.7892:
+                #         tree.btag = True
                 if jet.fourvect.Pt() > 30*GeV:
                     numJets30 += 1
                     if jet.fourvect.Pt() > 50*GeV:
@@ -484,7 +482,7 @@ class LHProcessorCN(ATLASStudent):
             dPhi_MET_tau  = tauPhiVector.DeltaPhi(MET_vect)
             mT = sqrt(2*MET*LepPt*(1 - cos(dPhi_MET_lep)))
             mTtau = sqrt(2*MET*TauPt*(1 - cos(dPhi_MET_tau)))
-            tree.mass_transverse_met_lep = mT/GeV
+            tree.mass_transverse_met_lep = event.evtsel_transverseMass #mT/GeV
             tree.mass_transverse_met_tau = mTtau
             tree.dphi_met_lep = dPhi_MET_lep
 
@@ -584,22 +582,22 @@ class LHProcessorCN(ATLASStudent):
             
 
             ## -- Categories -- ##
-            tree.category_vbf_train = False
-            tree.category_vbf_test = False
-            tree.category_boosted = False
-            tree.category_1j = False
-            tree.category_0j = False
+            tree.category_vbf_train = event.evtsel_is_MVA_VBF_train #False
+            tree.category_vbf_test = event.evtsel_is_MVA_VBF_test #False
+            tree.category_boosted = event.evtsel_is_MVA_boosted #False
+            tree.category_1j = event.evtsel_is_MVA_oneJet #False
+            tree.category_0j = event.evtsel_is_MVA_noJet #False
 
-            if (numJets30 >= 2 and numJets50 >= 1):
-                tree.category_vbf_train = True
-            if (numJets30 >= 2 and numJets50 >= 1 and eta_delta_j1_j2 > 3.0):
-                tree.category_vbf_test = True
-            elif tree.resonance_pt_tau_lep > 100:
-                tree.category_boosted = True
-            elif tree.numJets >= 1:
-                tree.category_1j = True
-            elif tree.numJets == 0:
-                tree.category_0j = True
+            # if (numJets30 >= 2 and numJets50 >= 1):
+            #     tree.category_vbf_train = True
+            # if (numJets30 >= 2 and numJets50 >= 1 and eta_delta_j1_j2 > 3.0):
+            #     tree.category_vbf_test = True
+            # elif tree.resonance_pt_tau_lep > 100:
+            #     tree.category_boosted = True
+            # elif tree.numJets >= 1:
+            #     tree.category_1j = True
+            # elif tree.numJets == 0:
+            #     tree.category_0j = True
 
 
             ## -- Event weights -- ##
@@ -607,6 +605,9 @@ class LHProcessorCN(ATLASStudent):
 
             if tree.category_vbf_test or tree.category_boosted:
                 tree.weight *= event.evtsel_bjet_weight
+
+            if event.evtsel_tau_numTrack==3 and event.evtsel_tau_is_el:
+                tree.weight /= event.evtsel_weight_tau_el_overlap
 
 
             ## -- True Information -- ##

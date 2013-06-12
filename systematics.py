@@ -48,18 +48,18 @@ SYSTEMATICS_HADHAD = [
 # lepton-hadron-only systematics
 SYSTEMATICS_LEPHAD = [
     ## JES systematics
-    ('ATLAS_JES_Detector_DOWN',),
-    ('ATLAS_JES_Detector_UP',),
-    ('ATLAS_JES_EtaModelling_DOWN',),
-    ('ATLAS_JES_EtaModelling_UP',),
-    ('ATLAS_JES_Modelling_DOWN',),
-    ('ATLAS_JES_Modelling_UP',),
+    #('ATLAS_JES_Detector_DOWN',),
+    #('ATLAS_JES_Detector_UP',),
+    #('ATLAS_JES_EtaModelling_DOWN',),
+    #('ATLAS_JES_EtaModelling_UP',),
+    #('ATLAS_JES_Modelling_DOWN',),
+    #('ATLAS_JES_Modelling_UP',),
 
-    ('ATLAS_JER_DOWN',),
-    ('ATLAS_JER_UP',),
+    #('ATLAS_JER_DOWN',),
+    #('ATLAS_JER_UP',),
 
-    ('ATLAS_JVF_DOWN',),
-    ('ATLAS_JVF_UP',),
+    #('ATLAS_JVF_DOWN',),
+    #('ATLAS_JVF_UP',),
 
     ## TES systematics
     ('ATLAS_TAU_ES_DOWN',),
