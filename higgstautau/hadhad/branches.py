@@ -1,6 +1,8 @@
 # branches to ignore in the input tree and not include in the output tree
 
 REMOVE = [
+    "vxp_trk_weight",
+
     "cl_*",
     "ph_*",
 
@@ -69,6 +71,10 @@ REMOVE = [
 
     # don't need pantau info
     "tau_pantau_*",
+
+    # extra tau into we don't need
+    "tau_seedCalo_track_*",
+    "tau_seedCalo_wideTrk_*",
 
     "muonTruth*",
     # needed for JVF syst ONLY IN THE SIGNAL SAMPLES

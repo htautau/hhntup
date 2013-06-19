@@ -70,6 +70,14 @@ class hhskim(ATLASStudent):
         no_grl = self.args.no_grl
         verbose = self.args.student_verbose
         validate = self.args.validate
+        dsname = os.getenv('INPUT_DATASET_NAME', None)
+        if dsname is None:
+            # attempt to guess dsname from dirname
+            if self.files:
+                dsname = os.path.basename(os.path.dirname(self.files[0]))
+        is_signal = 'VBFH' in dsname or 'ggH' in dsname
+        log.info("DATASET: {0}".format(dsname))
+        log.info("IS SIGNAL: {0}".format(is_signal))
 
         # get pileup reweighting tool
         pileup_tool = get_pileup_reweighting_tool(
@@ -104,7 +112,7 @@ class hhskim(ATLASStudent):
         # create the output tree
         outtree = Tree(
             name=self.metadata.treename,
-            model=get_model(datatype, self.metadata.name, prefix='hh_'))
+            model=get_model(datatype, dsname, prefix='hh_'))
         tree = outtree.define_object(name='tree', prefix='hh_')
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='tau1', prefix='tau1_')
@@ -338,6 +346,21 @@ class hhskim(ATLASStudent):
 
         # set the event filters
         self.filters['event'] = event_filters
+
+        if not is_signal:
+            log.warning("removing mc_ block")
+            # remove mc block in non-signal samples
+            hhbranches.REMOVE += [
+                'mc_pt',
+                'mc_phi',
+                'mc_eta',
+                'mc_m',
+                'mc_child_index',
+                'mc_parent_index',
+                'mc_pdgId',
+                'mc_charge',
+                'mc_status',
+            ]
 
         # peek at first tree to determine which branches to exclude
         with root_open(self.files[0]) as test_file:
@@ -644,7 +667,7 @@ class hhskim(ATLASStudent):
             # Match jets to VBF partons
             ###########################
             """
-            if datatype == datasets.MC and 'VBF' in self.metadata.name and year == 2011:
+            if datatype == datasets.MC and 'VBF' in dsname and year == 2011:
                 # get partons (already sorted by eta in hepmc) FIXME!!!
                 parton1, parton2 = hepmc.get_VBF_partons(event)
                 tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
