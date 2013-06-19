@@ -6,46 +6,69 @@ as TreeModels.
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
 from rootpy.math.physics.vector import (
     LorentzRotation, LorentzVector, Vector3, Vector2)
+from rootpy import log
+ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
+        '.*transvers momentum.*')
 
 from atlastools.utils import et2pt
 from atlastools import datasets
 from atlastools import utils
 
-from ..models import MatchedObject, TrueTau, FourMomentum, PartonBlock
+from ..models import MatchedObject
 
 import math
 import ROOT
+from ROOT import TLorentzVector
 
 
-class MMCModel(TreeModel):
+class FourMomentum(TreeModel):
 
-    # MMC mass for all methods
-    mmc0_mass = FloatCol()
-    mmc1_mass = FloatCol()
-    mmc2_mass = FloatCol()
+    pt = FloatCol()
+    p = FloatCol()
+    et = FloatCol()
+    e = FloatCol()
+    eta = FloatCol(default=-1111)
+    phi = FloatCol(default=-1111)
+    m = FloatCol()
 
-    mmc0_MET = FloatCol()
-    mmc0_MET_x = FloatCol()
-    mmc0_MET_y = FloatCol()
-    mmc0_MET_phi = FloatCol()
-    mmc0_MET_vec = Vector2
-    mmc1_MET = FloatCol()
-    mmc1_MET_x = FloatCol()
-    mmc1_MET_y = FloatCol()
-    mmc1_MET_phi = FloatCol()
-    mmc1_MET_vec = Vector2
-    mmc2_MET = FloatCol()
-    mmc2_MET_x = FloatCol()
-    mmc2_MET_y = FloatCol()
-    mmc2_MET_phi = FloatCol()
-    mmc2_MET_vec = Vector2
+    @classmethod
+    def set(cls, this, other):
 
-    mmc0_resonance = LorentzVector
-    mmc0_resonance_pt = FloatCol()
-    mmc1_resonance = LorentzVector
-    mmc1_resonance_pt = FloatCol()
-    mmc2_resonance = LorentzVector
-    mmc2_resonance_pt = FloatCol()
+        if isinstance(other, TLorentzVector):
+            vect = other
+        else:
+            vect = other.fourvect
+        this.pt = vect.Pt()
+        this.p = vect.P()
+        this.et = vect.Et()
+        this.e = vect.E()
+        this.m = vect.M()
+        with ignore_warning:
+            this.phi = vect.Phi()
+            this.eta = vect.Eta()
+
+
+class TrueTau(TreeModel):
+
+    nProng = IntCol(default=-1111)
+    nPi0 = IntCol(default=-1111)
+    charge = IntCol()
+
+
+class MMCOutput(FourMomentum.prefix('resonance_')):
+
+    mass = FloatCol()
+    MET = FloatCol()
+    MET_x = FloatCol()
+    MET_y = FloatCol()
+    MET_phi = FloatCol()
+    MET_vec = Vector2
+
+
+class MMCModel(MMCOutput.prefix('mmc0_'),
+               MMCOutput.prefix('mmc1_'),
+               MMCOutput.prefix('mmc2_')):
+    pass
 
 
 class MassModel(MMCModel):
@@ -70,9 +93,8 @@ class METModel(TreeModel):
     dPhi_min_tau_MET = FloatCol()
     MET_bisecting = BoolCol()
     sumET = FloatCol()
-
     MET_centrality = FloatCol()
-    MET_centrality_boosted = FloatCol()
+    #MET_centrality_boosted = FloatCol()
 
 
 class EmbeddingModel(TreeModel):
@@ -102,7 +124,7 @@ class RecoTau(FourMomentum):
     seedCalo_centFrac = FloatCol()
 
     centrality = FloatCol()
-    centrality_boosted = FloatCol()
+    #centrality_boosted = FloatCol()
 
     # efficiency scale factor if matches truth
     efficiency_scale_factor = FloatCol(default=1.)
@@ -199,7 +221,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
             outtau.centrality = intau.centrality
-            outtau.centrality = intau.centrality_boosted
+            #outtau.centrality_boosted = intau.centrality_boosted
 
             if intau.matched:
                 outtau.efficiency_scale_factor = intau.efficiency_scale_factor
@@ -238,9 +260,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
                    (RecoJet + MatchedObject).prefix('jet2_')):
 
-    jet_transformation = LorentzRotation
-    jet_beta = Vector3
-    parton_beta = Vector3
+    #jet_transformation = LorentzRotation
+    #jet_beta = Vector3
+    #parton_beta = Vector3
     numJets = IntCol()
     nonisolatedjet = BoolCol()
 
@@ -261,12 +283,12 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
 
             tree.dEta_jets = abs(
                     jet1.fourvect.Eta() - jet2.fourvect.Eta())
-            tree.dEta_jets_boosted = abs(
-                    jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+            #tree.dEta_jets_boosted = abs(
+            #        jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
 
             tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
-            tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
-                                             jet2.fourvect_boosted.Eta())
+            #tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
+            #                                 jet2.fourvect_boosted.Eta())
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
@@ -329,15 +351,15 @@ class EventModel(TreeModel):
 
     dEta_quarks = FloatCol()
     dEta_jets = FloatCol()
-    dEta_jets_boosted = FloatCol()
+    #dEta_jets_boosted = FloatCol()
     eta_product_jets = FloatCol()
-    eta_product_jets_boosted = FloatCol()
+    #eta_product_jets_boosted = FloatCol()
 
     sphericity = FloatCol()
     aplanarity = FloatCol()
 
-    sphericity_boosted = FloatCol()
-    aplanarity_boosted = FloatCol()
+    #sphericity_boosted = FloatCol()
+    #aplanarity_boosted = FloatCol()
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
@@ -350,14 +372,16 @@ class EventModel(TreeModel):
     error = BoolCol()
 
 
-def get_model(datatype, name):
+def get_model(datatype, name, prefix=None):
 
     model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
-    if datatype in (datasets.MC, datasets.EMBED):
-        model += TrueTauBlock
+    #if datatype in (datasets.MC, datasets.EMBED):
+    #    model += TrueTauBlock
     if datatype == datasets.EMBED:
         model += EmbeddingModel
-    if datatype == datasets.MC and 'VBF' in name:
-        # add branches for VBF Higgs associated partons
-        model += PartonBlock
+    #if datatype == datasets.MC and 'VBF' in name:
+    #    # add branches for VBF Higgs associated partons
+    #    model += PartonBlock
+    if prefix is not None:
+        return model.prefix(prefix)
     return model

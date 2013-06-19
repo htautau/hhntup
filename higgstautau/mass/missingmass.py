@@ -1,3 +1,4 @@
+from rootpy import log as rlog
 from . import log; log = log[__name__]
 import ROOT
 from atlastools.units import GeV
@@ -5,6 +6,8 @@ from atlastools import datasets
 import os
 from math import sqrt
 from externaltools import MissingMassCalculator
+
+ignore_fit_warning = rlog['/ROOT.Fit'].ignore('Fit data is empty')
 
 
 class MMC(object):
@@ -114,7 +117,8 @@ class MMC(object):
             MET_res = 6.14 + 0.5 * sqrt(abs(sumET / GeV))
             self.tool.SetMetScanParams(0., MET_res, MET_res)
 
-        self.tool.RunMissingMassCalculator()
+        with ignore_fit_warning:
+            self.tool.RunMissingMassCalculator()
         result = {}
         for method in range(3):
             MMC_mass = -1

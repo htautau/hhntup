@@ -1,4 +1,5 @@
 from ..mixins import *
+from . import log; log = log[__name__]
 
 
 def define_objects(tree, year):
@@ -62,7 +63,7 @@ def define_objects(tree, year):
         met = 'MET_RefFinal_STVF_'
     else:
         met = 'MET_RefFinal_BDTMedium_'
-    print "Using %s*" % met
+    log.info("Using %s*" % met)
     tree.define_object(
             name='MET',
             prefix=met)

@@ -102,9 +102,24 @@ class hhskim(ATLASStudent):
         self.output.cd()
 
         # create the output tree
-        tree = Tree(
+        outtree = Tree(
             name=self.metadata.treename,
-            model=get_model(datatype, self.metadata.name))
+            model=get_model(datatype, self.metadata.name, prefix='hh_'))
+        tree = outtree.define_object(name='tree', prefix='hh_')
+        tree.define_object(name='tau', prefix='tau_')
+        tree.define_object(name='tau1', prefix='tau1_')
+        tree.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='jet1', prefix='jet1_')
+        tree.define_object(name='jet2', prefix='jet2_')
+
+        mmc_objects = [
+            tree.define_object(name='mmc0', prefix='mmc0_'),
+            tree.define_object(name='mmc1', prefix='mmc1_'),
+            tree.define_object(name='mmc2', prefix='mmc2_'),
+        ]
+
+        for mmc_obj in mmc_objects:
+            mmc_obj.define_object(name='resonance', prefix='resonance_')
 
         onfilechange = []
         count_funcs = {}
@@ -330,6 +345,9 @@ class hhskim(ATLASStudent):
             ignore_branches = test_tree.glob(
                 hhbranches.REMOVE,
                 exclude=hhbranches.KEEP)
+            ignore_branches_output = test_tree.glob(
+                hhbranches.REMOVE_OUTPUT,
+                exclude=hhbranches.KEEP_OUTPUT)
 
         # initialize the TreeChain of all input files
         chain = TreeChain(
@@ -345,9 +363,9 @@ class hhskim(ATLASStudent):
 
         # include the branches in the input chain in the output tree
         # set branches to be removed in ignore_branches
-        tree.set_buffer(
+        outtree.set_buffer(
             chain._buffer,
-            ignore_branches=ignore_branches,
+            ignore_branches=ignore_branches + ignore_branches_output,
             create_branches=True,
             ignore_duplicates=True,
             transfer_objects=True,
@@ -367,18 +385,6 @@ class hhskim(ATLASStudent):
 
         # define tree objects
         define_objects(chain, year)
-
-        tree.define_object(name='tau', prefix='tau_')
-        tree.define_object(name='tau1', prefix='tau1_')
-        tree.define_object(name='tau2', prefix='tau2_')
-        tree.define_object(name='jet1', prefix='jet1_')
-        tree.define_object(name='jet2', prefix='jet2_')
-
-        mmc_objects = [
-            tree.define_object(name='mmc0', prefix='mmc0_'),
-            tree.define_object(name='mmc1', prefix='mmc1_'),
-            tree.define_object(name='mmc2', prefix='mmc2_'),
-        ]
 
         # create the MMC
         mmc = mass.MMC(year=year)
@@ -402,6 +408,7 @@ class hhskim(ATLASStudent):
             if len(jets) >= 2:
                 jet1, jet2 = jets[:2]
 
+                """
                 # determine boost of system
                 # determine jet CoM frame
                 beta = (jet1.fourvect + jet2.fourvect).BoostVector()
@@ -416,6 +423,7 @@ class hhskim(ATLASStudent):
                 tau2.fourvect_boosted.set_from(tau2.fourvect)
                 tau1.fourvect_boosted.Boost(beta * -1)
                 tau2.fourvect_boosted.Boost(beta * -1)
+                """
 
                 RecoJetBlock.set(tree, jet1, jet2)
 
@@ -437,6 +445,7 @@ class hhskim(ATLASStudent):
                 # aplanarity
                 tree.aplanarity = aplanarity
 
+                """
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                     [tau1.fourvect_boosted,
                      tau2.fourvect_boosted,
@@ -447,6 +456,7 @@ class hhskim(ATLASStudent):
                 tree.sphericity_boosted = sphericity
                 # aplanarity
                 tree.aplanarity_boosted = aplanarity
+                """
 
                 # tau centrality (degree to which they are between the two jets)
                 tau1.centrality = eventshapes.eta_centrality(
@@ -459,6 +469,7 @@ class hhskim(ATLASStudent):
                     jet1.fourvect.Eta(),
                     jet2.fourvect.Eta())
 
+                """
                 # boosted tau centrality
                 tau1.centrality_boosted = eventshapes.eta_centrality(
                     tau1.fourvect_boosted.Eta(),
@@ -469,6 +480,7 @@ class hhskim(ATLASStudent):
                     tau2.fourvect_boosted.Eta(),
                     jet1.fourvect_boosted.Eta(),
                     jet2.fourvect_boosted.Eta())
+                """
 
             elif len(jets) >= 1:
                 jet1 = jets[0]
@@ -516,7 +528,6 @@ class hhskim(ATLASStudent):
             tree.MET_x = METx
             tree.MET_y = METy
             tree.MET_phi = event.MET.phi
-            tree.MET_vec.set_from(MET_vect)
             dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
             dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
             dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
@@ -608,14 +619,12 @@ class hhskim(ATLASStudent):
                     log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
 
                 mmc_object.mass = mmc_mass
-                mmc_object.resonance.set_from(mmc_resonance)
-                if mmc_mass > 0:
-                    mmc_object.resonance_pt = mmc_resonance.Pt()
                 mmc_object.MET = mmc_met.Mod()
                 mmc_object.MET_x = mmc_met.X()
                 mmc_object.MET_y = mmc_met.Y()
                 mmc_object.MET_phi = math.pi - mmc_met.Phi()
-                mmc_object.MET_vec.set_from(mmc_met)
+                if mmc_mass > 0:
+                    FourMomentum.set(mmc_object.resonance, mmc_resonance)
 
             ############################
             # collinear and visible mass
@@ -634,6 +643,7 @@ class hhskim(ATLASStudent):
             ###########################
             # Match jets to VBF partons
             ###########################
+            """
             if datatype == datasets.MC and 'VBF' in self.metadata.name and year == 2011:
                 # get partons (already sorted by eta in hepmc) FIXME!!!
                 parton1, parton2 = hepmc.get_VBF_partons(event)
@@ -648,11 +658,12 @@ class hhskim(ATLASStudent):
                         for parton in (parton1, parton2):
                             if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
                                 setattr(tree, 'jet%i_matched' % i, True)
-
+            """
             ###########################
             # truth matching
             ###########################
-            if datatype == datasets.MC:
+            """
+            if datatype in (datasets.MC, datasets.EMBED):
                 # match only with visible true taus
                 event.truetaus.select(
                         lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
@@ -705,6 +716,7 @@ class hhskim(ATLASStudent):
                 tree.mass_vis_true_tau1_tau2 = (
                         tree.truetau1_fourvect_vis +
                         tree.truetau2_fourvect_vis).M()
+            """
 
             ###########################
             # Fill tau block
@@ -773,7 +785,7 @@ class hhskim(ATLASStudent):
             ######################
             # fill the output tree
             ######################
-            tree.Fill(reset=True)
+            outtree.Fill(reset=True)
 
         self.output.cd()
 
@@ -785,5 +797,5 @@ class hhskim(ATLASStudent):
         ###############################################
         # flush any baskets remaining in memory to disk
         ###############################################
-        tree.FlushBaskets()
-        tree.Write()
+        outtree.FlushBaskets()
+        outtree.Write()
