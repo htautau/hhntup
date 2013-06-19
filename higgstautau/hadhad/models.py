@@ -330,7 +330,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
 
 class EventModel(TreeModel):
 
-    RunNumber_random = IntCol()
+    RunNumber = IntCol()
     number_of_good_vertices = IntCol()
     averageIntPerXing_scaled = FloatCol()
     actualIntPerXing_scaled = FloatCol()

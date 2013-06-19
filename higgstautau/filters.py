@@ -58,13 +58,13 @@ class RandomRunNumber(EventFilter):
 
     def passes_data(self, event):
 
-        self.tree.RunNumber_random = event.RunNumber
+        self.tree.RunNumber = event.RunNumber
         return True
 
     def passes_mc(self, event):
 
         # get random run number using the pileup tool
-        self.tree.RunNumber_random = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
         return True
 
 

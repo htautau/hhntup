@@ -99,13 +99,10 @@ class Triggers(EventFilter):
     See lowest unprescaled triggers here:
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
     """
-    def __init__(self, year, old_skim=False, **kwargs):
+    def __init__(self, year, **kwargs):
 
         if year == 2011:
-            if old_skim:
-                self.passes = self.passes_11_old
-            else:
-                self.passes = self.passes_11
+            self.passes = self.passes_11
         elif year == 2012:
             self.passes = self.passes_12
         else:
@@ -118,17 +115,6 @@ class Triggers(EventFilter):
                 return event.EF_tau29_medium1_tau20_medium1
             elif 188902 <= event.RunNumber <= 191933: # Periods L-M
                 return event.EF_tau29T_medium1_tau20T_medium1
-        except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
-            raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
-
-    def passes_11_old(self, event):
-        try:
-            if 177986 <= event.RunNumber <= 187815: # Periods B-K
-                return event.EF_tau29_medium1_tau20_medium1_EMULATED
-            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
-                return event.EF_tau29T_medium1_tau20T_medium1_EMULATED
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (event.RunNumber, e)
             raise e
