@@ -115,6 +115,7 @@ class RecoTau(FourMomentum):
     JetBDTSigLoose = BoolCol()
     JetBDTSigMedium = BoolCol()
     JetBDTSigTight = BoolCol()
+    id = IntCol()
 
     nPi0 = IntCol()
     seedCalo_numTrack = IntCol()
@@ -187,7 +188,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     tau_x_product = FloatCol()
     tau_x_sum = FloatCol()
     tau_pt_ratio = FloatCol()
-    tau_centrality_product = FloatCol()
 
     @classmethod
     def set(cls, event, tree, tau1, tau2):
@@ -198,11 +198,11 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
         # leading pt over subleading pt
         tree.tau_pt_ratio = tau1.pt / tau2.pt
-        tree.tau_centrality_product = tau1.centrality * tau2.centrality
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
 
             outtau.index = intau.index
+            outtau.id = intau.id
 
             FourMomentum.set(outtau, intau)
 
@@ -332,8 +332,8 @@ class EventModel(TreeModel):
 
     RunNumber = IntCol()
     number_of_good_vertices = IntCol()
-    averageIntPerXing_scaled = FloatCol()
-    actualIntPerXing_scaled = FloatCol()
+    averageIntPerXing = FloatCol()
+    actualIntPerXing = FloatCol()
 
     # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)

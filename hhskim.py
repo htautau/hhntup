@@ -161,12 +161,12 @@ class hhskim(ATLASStudent):
 
         # define the list of event filters
         event_filters = EventFilterList([
-            CoreFlags(
-                count_funcs=count_funcs), #TODO move this below GRL
             GRLFilter(
                 self.grl,
                 passthrough=(
                     no_grl or datatype not in (datasets.DATA, datasets.EMBED)),
+                count_funcs=count_funcs),
+            CoreFlags(
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
                 passthrough=year > 2011 or datatype != datasets.EMBED,
@@ -178,20 +178,21 @@ class hhskim(ATLASStudent):
                 year=year,
                 passthrough=datatype != datasets.MC,
                 count_funcs=count_funcs),
+            RandomRunNumber(
+                tree=tree,
+                datatype=datatype,
+                pileup_tool=pileup_tool,
+                count_funcs=count_funcs),
             trigger_emulation,
             Triggers(
                 year=year,
+                tree=tree,
                 passthrough=no_trigger or datatype == datasets.EMBED,
                 count_funcs=count_funcs),
             PileupReweight(
                 tool=pileup_tool,
                 tree=tree,
                 passthrough=datatype != datasets.MC,
-                count_funcs=count_funcs),
-            RandomRunNumber(
-                tree=tree,
-                datatype=datatype,
-                pileup_tool=pileup_tool,
                 count_funcs=count_funcs),
             PriVertex(
                 count_funcs=count_funcs),
@@ -200,7 +201,7 @@ class hhskim(ATLASStudent):
             TileError(
                 count_funcs=count_funcs),
             TileTrips(
-                passthrough=year < 2012,
+                passthrough=year < 2012 or datatype == datasets.MC,
                 count_funcs=count_funcs),
             JetCalibration(
                 datatype=datatype,
@@ -218,6 +219,7 @@ class hhskim(ATLASStudent):
                 count_funcs=count_funcs),
             LArHole(
                 datatype=datatype,
+                tree=tree,
                 count_funcs=count_funcs),
             JetCleaning(
                 datatype=datatype,
@@ -244,6 +246,7 @@ class hhskim(ATLASStudent):
             TauCrack(2,
                 count_funcs=count_funcs),
             TauLArHole(2,
+                tree=tree,
                 count_funcs=count_funcs),
             TauID_SkimLoose(2,
                 year=year,
@@ -260,11 +263,6 @@ class hhskim(ATLASStudent):
             TauLeadSublead(
                 lead=35 * GeV if datatype == datasets.DATA else 30 * GeV,
                 sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
-                count_funcs=count_funcs),
-            # apply this selection here since skim has lower threshold for data
-            TauLeadSublead(
-                lead=35 * GeV,
-                sublead=25 * GeV,
                 count_funcs=count_funcs),
             # taus are sorted (in decreasing order) by pT from here on
             TauIDSelection(
@@ -301,6 +299,7 @@ class hhskim(ATLASStudent):
             FakeRateScaleFactors(
                 year=year,
                 datatype=datatype,
+                tree=tree,
                 tes_up_systematic=(self.args.syst_terms and
                     (Systematics.TES_UP in self.args.syst_terms)),
                 tes_down_systematic=(self.args.syst_terms and
@@ -308,7 +307,7 @@ class hhskim(ATLASStudent):
                 passthrough=no_trigger or datatype == datasets.DATA,
                 count_funcs=count_funcs),
             ggFReweighting(
-                dsname=os.getenv('INPUT_DATASET_NAME', ''),
+                dsname=dsname,
                 tree=tree,
                 # no ggf reweighting for 2012 MC
                 passthrough=datatype != datasets.MC or year != 2011,

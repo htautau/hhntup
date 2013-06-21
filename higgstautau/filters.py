@@ -184,32 +184,37 @@ def in_lar_hole(eta, phi):
 
 class LArHole(EventFilter):
 
-    def __init__(self, datatype, **kwargs):
+    def __init__(self, datatype, tree, **kwargs):
 
         super(LArHole, self).__init__(**kwargs)
         if datatype in (datasets.DATA, datasets.EMBED):
             self.passes = self.passes_data
         else:
             self.passes = self.passes_mc
+        self.tree = tree
 
     def passes_data(self, event):
 
-        if not 180614 <= event.RunNumber <= 184169:
+        if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
         for jet in event.jets:
-            if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL): continue
-            if in_lar_hole(jet.eta, jet.phi): return False
+            if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL):
+                continue
+            if in_lar_hole(jet.eta, jet.phi):
+                return False
         return True
 
     def passes_mc(self, event):
 
-        if not 180614 <= event.RunNumber <= 184169:
+        if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
         for jet in event.jets:
-            if not jet.pt > 20 * GeV: continue
-            if in_lar_hole(jet.eta, jet.phi): return False
+            if not jet.pt > 20 * GeV:
+                continue
+            if in_lar_hole(jet.eta, jet.phi):
+                return False
         return True
 
 
@@ -469,14 +474,15 @@ class TauCrack(EventFilter):
 
 class TauLArHole(EventFilter):
 
-    def __init__(self, min_taus, **kwargs):
+    def __init__(self, min_taus, tree, **kwargs):
 
         self.min_taus = min_taus
+        self.tree = tree
         super(TauLArHole, self).__init__(**kwargs)
 
     def passes(self, event):
 
-        if not 180614 <= event.RunNumber <= 184169:
+        if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
         event.taus.select(lambda tau:

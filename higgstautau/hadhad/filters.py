@@ -99,7 +99,7 @@ class Triggers(EventFilter):
     See lowest unprescaled triggers here:
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
     """
-    def __init__(self, year, **kwargs):
+    def __init__(self, year, tree, **kwargs):
 
         if year == 2011:
             self.passes = self.passes_11
@@ -107,24 +107,26 @@ class Triggers(EventFilter):
             self.passes = self.passes_12
         else:
             raise ValueError("No triggers defined for year %d" % year)
+        self.tree = tree
         super(Triggers, self).__init__(**kwargs)
 
     def passes_11(self, event):
         try:
-            if 177986 <= event.RunNumber <= 187815: # Periods B-K
+            if 177986 <= self.tree.RunNumber <= 187815: # Periods B-K
                 return event.EF_tau29_medium1_tau20_medium1
-            elif 188902 <= event.RunNumber <= 191933: # Periods L-M
+            elif 188902 <= self.tree.RunNumber <= 191933: # Periods L-M
                 return event.EF_tau29T_medium1_tau20T_medium1
         except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            print "Missing trigger for run %i: %s" % (self.tree.RunNumber, e)
             raise e
-        raise ValueError("No trigger condition defined for run %s" % event.RunNumber)
+        raise ValueError("No trigger condition defined for run %s" %
+                         self.tree.RunNumber)
 
     def passes_12(self, event):
         try:
             return event.EF_tau29Ti_medium1_tau20Ti_medium1
         except AttributeError, e:
-            print "Missing trigger for run %i: %s" % (event.RunNumber, e)
+            print "Missing trigger for run %i: %s" % (self.tree.RunNumber, e)
             raise e
 
         # TODO use tau27Ti_m1_tau18Ti_m1_L2loose for period E
@@ -291,16 +293,21 @@ class EfficiencyScaleFactors(EventFilter):
 
 class FakeRateScaleFactors(EventFilter):
 
-    def __init__(self, year, datatype, tes_up_systematic=False, tes_down_systematic=False, passthrough=False, **kwargs):
+    def __init__(self, year, datatype, tree,
+                 tes_up_systematic=False, tes_down_systematic=False,
+                 passthrough=False, **kwargs):
 
         self.tes_up = tes_up_systematic
         self.tes_down = tes_down_systematic
-        if tes_up_systematic is None: self.tes_up = False
-        if tes_down_systematic is None: self.tes_down = False
+        if tes_up_systematic is None:
+            self.tes_up = False
+        if tes_down_systematic is None:
+            self.tes_down = False
 
         if not passthrough:
             self.year = year % 1000
             self.datatype = datatype
+            self.tree = tree
             if self.year == 11:
                 from externaltools.bundle_2011 import TauFakeRates
                 from ROOT import TauFakeRates as TFR
@@ -347,7 +354,7 @@ class FakeRateScaleFactors(EventFilter):
 
     def passes_2011(self, event):
 
-        if event.RunNumber >= 188902:
+        if self.tree.RunNumber >= 188902:
             trig = "EF_tau%dT_medium1"
         else:
             trig = "EF_tau%d_medium1"
@@ -384,7 +391,7 @@ class FakeRateScaleFactors(EventFilter):
 
             # Get the reco SF
             sf_reco = self.fakerate_tool.getRecoSF(
-                tau.pt, tau.numTrack, event.RunNumber)
+                tau.pt, tau.numTrack, self.tree.RunNumber)
 
             tau.fakerate_scale_factor_reco = sf_reco
             tau.fakerate_scale_factor_reco_high = sf_reco
@@ -405,48 +412,48 @@ class FakeRateScaleFactors(EventFilter):
 
             # using LOOSE lepton veto
             sf_numer = self.fakerate_tool.getEffData(
-                tau.pt, tau.numTrack, event.RunNumber,
+                tau.pt, tau.numTrack, self.tree.RunNumber,
                 wpflag, self.fakerate_ns.LOOSE, trigger)
 
             sf_numer_up = self.fakerate_tool.getEffDataUncertainty(
-                tau.pt, tau.numTrack, event.RunNumber,
+                tau.pt, tau.numTrack, self.tree.RunNumber,
                 wpflag, self.fakerate_ns.LOOSE, trigger, True)
 
             sf_numer_dn = self.fakerate_tool.getEffDataUncertainty(
-                tau.pt, tau.numTrack, event.RunNumber,
+                tau.pt, tau.numTrack, self.tree.RunNumber,
                 wpflag, self.fakerate_ns.LOOSE, trigger, False)
 
             if self.datatype == datasets.MC:
                 sf_denom = self.fakerate_tool.getEffMC(
-                    tau.pt, tau.numTrack, event.RunNumber,
+                    tau.pt, tau.numTrack, self.tree.RunNumber,
                     wpflag, self.fakerate_ns.LOOSE, trigger, tes_down, tes_up)
 
                 sf_denom_up = self.fakerate_tool.getEffMCUncertainty(
-                    tau.pt, tau.numTrack, event.RunNumber,
+                    tau.pt, tau.numTrack, self.tree.RunNumber,
                     wpflag, self.fakerate_ns.LOOSE, trigger, True, tes_down, tes_up)
 
                 sf_denom_dn = self.fakerate_tool.getEffMCUncertainty(
-                    tau.pt, tau.numTrack, event.RunNumber,
+                    tau.pt, tau.numTrack, self.tree.RunNumber,
                     wpflag, self.fakerate_ns.LOOSE, trigger, False, tes_down, tes_up)
 
             else: # embedding: no trigger in denominator
                 sf_denom = self.fakerate_tool.getEffData(
-                    tau.pt, tau.numTrack, event.RunNumber,
+                    tau.pt, tau.numTrack, self.tree.RunNumber,
                     wpflag, self.fakerate_ns.LOOSE,
                     self.fakerate_ns.TRIGGERNONE)
 
                 sf_denom_up = self.fakerate_tool.getEffDataUncertainty(
-                    tau.pt, tau.numTrack, event.RunNumber,
+                    tau.pt, tau.numTrack, self.tree.RunNumber,
                     wpflag, self.fakerate_ns.LOOSE,
                     self.fakerate_ns.TRIGGERNONE, True)
 
                 sf_denom_dn = self.fakerate_tool.getEffDataUncertainty(
-                    tau.pt, tau.numTrack, event.RunNumber,
+                    tau.pt, tau.numTrack, self.tree.RunNumber,
                     wpflag, self.fakerate_ns.LOOSE,
                     self.fakerate_ns.TRIGGERNONE, False)
 
             #log.info("data eff: %f, mc eff %f, wp %s, pt %f, ntrack %d, run: %d, trigger: %d" % (
-            #    sf_data, sf_mc, wp, tau.pt, tau.numTrack, event.RunNumber,
+            #    sf_data, sf_mc, wp, tau.pt, tau.numTrack, self.tree.RunNumber,
             #    tau.trigger_match_thresh))
 
             if sf_numer == 0 or sf_denom == 0:
