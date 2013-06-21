@@ -4,6 +4,7 @@ as TreeModels.
 """
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
+from rootpy import stl
 from rootpy.math.physics.vector import (
     LorentzRotation, LorentzVector, Vector3, Vector2)
 from rootpy import log
@@ -58,11 +59,10 @@ class TrueTau(TreeModel):
 class MMCOutput(FourMomentum.prefix('resonance_')):
 
     mass = FloatCol()
-    MET = FloatCol()
-    MET_x = FloatCol()
-    MET_y = FloatCol()
+    MET_et = FloatCol()
+    MET_etx = FloatCol()
+    MET_ety = FloatCol()
     MET_phi = FloatCol()
-    MET_vec = Vector2
 
 
 class MMCModel(MMCOutput.prefix('mmc0_'),
@@ -82,17 +82,24 @@ class MassModel(MMCModel):
 
 class METModel(TreeModel):
 
-    MET = FloatCol()
-    MET_x = FloatCol()
-    MET_y = FloatCol()
+    MET_et = FloatCol()
+    MET_etx = FloatCol()
+    MET_ety = FloatCol()
+    MET_sumet = FloatCol()
     MET_phi = FloatCol()
     MET_sig = FloatCol()
-    MET_vec = Vector2
+
+    MET_et_original = FloatCol()
+    MET_etx_original = FloatCol()
+    MET_ety_original = FloatCol()
+    MET_sumet_original = FloatCol()
+    MET_phi_original = FloatCol()
+
     dPhi_tau1_MET = FloatCol()
     dPhi_tau2_MET = FloatCol()
     dPhi_min_tau_MET = FloatCol()
     MET_bisecting = BoolCol()
-    sumET = FloatCol()
+
     MET_centrality = FloatCol()
     #MET_centrality_boosted = FloatCol()
 
@@ -368,6 +375,12 @@ class EventModel(TreeModel):
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
+
+    jet_E_original = stl.vector('float')
+    jet_m_original = stl.vector('float')
+    jet_pt_original = stl.vector('float')
+    jet_eta_original = stl.vector('float')
+    jet_phi_original = stl.vector('float')
 
     error = BoolCol()
 

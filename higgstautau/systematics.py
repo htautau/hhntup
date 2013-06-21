@@ -682,29 +682,29 @@ class Systematics(EventFilter):
     JVF_DOWN = -11001
 
     # jets
-#     JES_UP = METUtil.JESUp
-#     JES_DOWN = METUtil.JESDown
+    #JES_UP = METUtil.JESUp
+    #JES_DOWN = METUtil.JESDown
     JER_UP = METUtil.JERUp
     JER_DOWN = METUtil.JERDown # NOT USED!
     JES_TERMS = set([
-#             JES_UP,                 JES_DOWN,
-            JES_Statistical_UP,     JES_Statistical_DOWN,
-            JES_Modelling_UP,       JES_Modelling_DOWN,
-            JES_Detector_UP,        JES_Detector_DOWN,
-            JES_Mixed_UP,           JES_Mixed_DOWN,
-            JES_EtaModelling_UP,    JES_EtaModelling_DOWN,
-            JES_EtaMethod_UP,       JES_EtaMethod_DOWN,
-            JES_PURho_UP,           JES_PURho_DOWN,
-            JES_PUPt_UP,            JES_PUPt_DOWN,
-            JES_PUNPV_UP,           JES_PUNPV_DOWN,
-            JES_PUMu_UP,            JES_PUMu_DOWN,
-            JES_FlavComp_UP,        JES_FlavComp_DOWN,
-            JES_FlavResp_UP,        JES_FlavResp_DOWN,
-            JES_BJet_UP,            JES_BJet_DOWN,
-            JES_NonClosure_UP,      JES_NonClosure_DOWN,
-            JVF_UP,                 JVF_DOWN,
-            JER_UP,                 JER_DOWN,
-        ])
+       #JES_UP,                 JES_DOWN,
+        JES_Statistical_UP,     JES_Statistical_DOWN,
+        JES_Modelling_UP,       JES_Modelling_DOWN,
+        JES_Detector_UP,        JES_Detector_DOWN,
+        JES_Mixed_UP,           JES_Mixed_DOWN,
+        JES_EtaModelling_UP,    JES_EtaModelling_DOWN,
+        JES_EtaMethod_UP,       JES_EtaMethod_DOWN,
+        JES_PURho_UP,           JES_PURho_DOWN,
+        JES_PUPt_UP,            JES_PUPt_DOWN,
+        JES_PUNPV_UP,           JES_PUNPV_DOWN,
+        JES_PUMu_UP,            JES_PUMu_DOWN,
+        JES_FlavComp_UP,        JES_FlavComp_DOWN,
+        JES_FlavResp_UP,        JES_FlavResp_DOWN,
+        JES_BJet_UP,            JES_BJet_DOWN,
+        JES_NonClosure_UP,      JES_NonClosure_DOWN,
+        JVF_UP,                 JVF_DOWN,
+        JER_UP,                 JER_DOWN,
+    ])
 
     # muons
     MERID_UP = METUtil.MERIDUp
@@ -757,6 +757,7 @@ class Systematics(EventFilter):
     def __init__(self,
             datatype,
             year,
+            tree,
             channel='hh',
             terms=None,
             verbose=False,
@@ -769,6 +770,7 @@ class Systematics(EventFilter):
         self.terms = set([])
         self.datatype = datatype
         self.year = year
+        self.tree = tree
         self.channel = channel
         self.verbose = verbose
         self.very_verbose = very_verbose
@@ -986,13 +988,13 @@ class Systematics(EventFilter):
         """
         JETS
         Always use setJetParameters since they may be recalibrated upstream
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         """
-
         if self.channel == 'hh':
             self.met_utility.setJetParameters(
                 event.jet_pt,
                 event.jet_eta,
-                event.jet_phi,
+                self.tree.jet_phi_original,
                 event.jet_E,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
@@ -1025,7 +1027,6 @@ class Systematics(EventFilter):
         """
         ELECTRONS
         """
-
         if self.channel == 'hh':
             if self.terms & Systematics.ELECTRON_TERMS:
                 self.met_utility.setElectronParameters(
@@ -1052,7 +1053,6 @@ class Systematics(EventFilter):
                 event.el_MET_BDTMedium_wpx,
                 event.el_MET_BDTMedium_wpy,
                 event.el_MET_BDTMedium_statusWord)
-
 
 
         if self.terms & Systematics.PHOTON_TERMS:
@@ -1175,6 +1175,12 @@ class Systematics(EventFilter):
                     MET.et(), event.MET_RefFinal_BDTMedium_et)
 
         # update the MET with the shifted value
+        self.tree.MET_etx_original = event.MET_RefFinal_BDTMedium_etx
+        self.tree.MET_ety_original = event.MET_RefFinal_BDTMedium_ety
+        self.tree.MET_et_original = event.MET_RefFinal_BDTMedium_et
+        self.tree.MET_sumet_original = event.MET_RefFinal_BDTMedium_sumet
+        self.tree.MET_phi_original = event.MET_RefFinal_BDTMedium_phi
+
         event.MET_RefFinal_BDTMedium_etx = MET.etx()
         event.MET_RefFinal_BDTMedium_ety = MET.ety()
         event.MET_RefFinal_BDTMedium_et = MET.et()
@@ -1191,11 +1197,12 @@ class Systematics(EventFilter):
         """
         JETS
         Always use setJetParameters since they may be recalibrated upstream
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         """
         self.met_utility.setJetParameters(
             event.jet_pt,
             event.jet_eta,
-            event.jet_phi,
+            self.tree.jet_phi_original,
             event.jet_E,
             event.jet_AntiKt4LCTopo_MET_wet,
             event.jet_AntiKt4LCTopo_MET_wpx,
@@ -1315,6 +1322,12 @@ class Systematics(EventFilter):
                     MET.phi(), event.MET_RefFinal_STVF_phi)
 
         # update the MET with the shifted value
+        self.tree.MET_etx_original = event.MET_RefFinal_STVF_etx
+        self.tree.MET_ety_original = event.MET_RefFinal_STVF_ety
+        self.tree.MET_et_original = event.MET_RefFinal_STVF_et
+        self.tree.MET_sumet_original = event.MET_RefFinal_STVF_sumet
+        self.tree.MET_phi_original = event.MET_RefFinal_STVF_phi
+
         event.MET_RefFinal_STVF_etx = MET.etx()
         event.MET_RefFinal_STVF_ety = MET.ety()
         event.MET_RefFinal_STVF_et = MET.et()

@@ -20,7 +20,7 @@ def define_objects(tree, year):
             name="jets",
             prefix="jet_",
             size="jet_n",
-            mix=FourMomentum)
+            mix=JetFourMomentum)
     tree.define_collection(
             name="jets_EM",
             prefix="jet_AntiKt4TopoEM_",

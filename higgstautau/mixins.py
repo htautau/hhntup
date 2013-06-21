@@ -15,6 +15,7 @@ functionality to Tree objects ("decorating" them).
 __all__ = [
     'FourMomentum',
     'FourMomentumMeV',
+    'JetFourMomentum',
     'TauFourMomentum',
     'ElectronFourMomentum',
     'MCTauFourMomentum',
@@ -107,6 +108,15 @@ class FourMomentumMeV(object):
              self.pt,
              self.eta,
              self.phi)
+
+
+class JetFourMomentum(FourMomentum):
+
+    def __init__(self):
+
+        # needed by the METUtility
+        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
+        self.phi_original = None
 
 
 class TauFourMomentum(FourMomentum):

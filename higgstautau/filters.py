@@ -674,3 +674,27 @@ class EmbeddingCorrections(EventFilter):
         self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
         self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
         return True
+
+
+class JetCopy(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+
+        super(JetCopy, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+
+        tree = self.tree
+        tree.jet_E_original.clear()
+        tree.jet_m_original.clear()
+        tree.jet_pt_original.clear()
+        tree.jet_eta_original.clear()
+        tree.jet_phi_original.clear()
+        for jet in event.jets:
+            tree.jet_E_original.push_back(jet.E)
+            tree.jet_m_original.push_back(jet.m)
+            tree.jet_pt_original.push_back(jet.pt)
+            tree.jet_eta_original.push_back(jet.eta)
+            tree.jet_phi_original.push_back(jet.phi)
+        return True

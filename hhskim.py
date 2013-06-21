@@ -43,6 +43,7 @@ from higgstautau.corrections import reweight_ggf
 from higgstautau import log; log = log[__name__]
 
 import goodruns
+import externaltools
 
 
 class hhskim(ATLASStudent):
@@ -203,6 +204,9 @@ class hhskim(ATLASStudent):
             TileTrips(
                 passthrough=year < 2012 or datatype == datasets.MC,
                 count_funcs=count_funcs),
+            JetCopy(
+                tree=tree,
+                count_funcs=count_funcs),
             JetCalibration(
                 datatype=datatype,
                 year=year,
@@ -215,6 +219,7 @@ class hhskim(ATLASStudent):
                 terms=self.args.syst_terms,
                 year=year,
                 datatype=datatype,
+                tree=tree,
                 verbose=verbose,
                 count_funcs=count_funcs),
             LArHole(
@@ -411,6 +416,9 @@ class hhskim(ATLASStudent):
         # create the MMC
         mmc = mass.MMC(year=year)
 
+        # report which packages have been loaded
+        externaltools.report()
+
         self.output.cd()
 
         #####################
@@ -544,11 +552,10 @@ class hhskim(ATLASStudent):
             MET_vect = Vector2(METx, METy)
             MET_4vect = LorentzVector()
             MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
-            # TODO: save this in the output ntuple
 
-            tree.MET = MET
-            tree.MET_x = METx
-            tree.MET_y = METy
+            tree.MET_et = MET
+            tree.MET_etx = METx
+            tree.MET_ety = METy
             tree.MET_phi = event.MET.phi
             dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
             dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
@@ -563,7 +570,7 @@ class hhskim(ATLASStudent):
                 dPhi_tau2_MET)
 
             sumET = event.MET.sumet
-            tree.sumET = sumET
+            tree.MET_sumet = sumET
             if sumET != 0:
                 tree.MET_sig = ((2. * MET / GeV) /
                         (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
@@ -625,11 +632,6 @@ class hhskim(ATLASStudent):
             ##########################
             # MMC Mass
             ##########################
-            METx = event.MET.etx
-            METy = event.MET.ety
-            MET = event.MET.et
-            sumET = event.MET.sumet
-
             mmc_result = mmc.mass(
                 tau1, tau2,
                 METx, METy, sumET,
@@ -641,9 +643,9 @@ class hhskim(ATLASStudent):
                     log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
 
                 mmc_object.mass = mmc_mass
-                mmc_object.MET = mmc_met.Mod()
-                mmc_object.MET_x = mmc_met.X()
-                mmc_object.MET_y = mmc_met.Y()
+                mmc_object.MET_et = mmc_met.Mod()
+                mmc_object.MET_etx = mmc_met.X()
+                mmc_object.MET_ety = mmc_met.Y()
                 mmc_object.MET_phi = math.pi - mmc_met.Phi()
                 if mmc_mass > 0:
                     FourMomentum.set(mmc_object.resonance, mmc_resonance)
@@ -821,3 +823,4 @@ class hhskim(ATLASStudent):
         ###############################################
         outtree.FlushBaskets()
         outtree.Write()
+        externaltools.report()
