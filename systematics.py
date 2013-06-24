@@ -43,6 +43,24 @@ SYSTEMATICS_COMMON = [
 SYSTEMATICS_HADHAD = [
     ('TAUBDT_UP',),
     ('TAUBDT_DOWN',),
+
+    ## Extra TES systematics
+    ('TES_UP',),
+    ('TES_DOWN',),
+    ('TES_EOP_UP',),
+    ('TES_EOP_DOWN',),
+    ('TES_CTB_UP',),
+    ('TES_CTB_DOWN',),
+    ('TES_Bias_UP',),
+    ('TES_Bias_DOWN',),
+    ('TES_EM_UP',),
+    ('TES_EM_DOWN',),
+    ('TES_LCW_UP',),
+    ('TES_LCW_DOWN',),
+    ('TES_PU_UP',),
+    ('TES_PU_DOWN',),
+    ('TES_OTHERS_UP',),
+    ('TES_OTHERS_DOWN',),
 ] # ADD MORE HERE
 
 # lepton-hadron-only systematics
