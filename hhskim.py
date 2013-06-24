@@ -351,10 +351,20 @@ class hhskim(ATLASStudent):
         # set the event filters
         self.filters['event'] = event_filters
 
+        # peek at first tree to determine which branches to exclude
+        with root_open(self.files[0]) as test_file:
+            test_tree = test_file.Get(self.metadata.treename)
+            ignore_branches = test_tree.glob(
+                hhbranches.REMOVE,
+                exclude=hhbranches.KEEP)
+            ignore_branches_output = test_tree.glob(
+                hhbranches.REMOVE_OUTPUT,
+                exclude=hhbranches.KEEP_OUTPUT)
+
         if not is_signal:
-            log.warning("removing mc_ block")
+            log.warning("removing mc_ block in output")
             # remove mc block in non-signal samples
-            hhbranches.REMOVE += [
+            ignore_branches_output += [
                 'mc_pt',
                 'mc_phi',
                 'mc_eta',
@@ -365,16 +375,6 @@ class hhskim(ATLASStudent):
                 'mc_charge',
                 'mc_status',
             ]
-
-        # peek at first tree to determine which branches to exclude
-        with root_open(self.files[0]) as test_file:
-            test_tree = test_file.Get(self.metadata.treename)
-            ignore_branches = test_tree.glob(
-                hhbranches.REMOVE,
-                exclude=hhbranches.KEEP)
-            ignore_branches_output = test_tree.glob(
-                hhbranches.REMOVE_OUTPUT,
-                exclude=hhbranches.KEEP_OUTPUT)
 
         # initialize the TreeChain of all input files
         chain = TreeChain(
