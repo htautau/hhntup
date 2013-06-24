@@ -8,6 +8,7 @@ from math import sin, sqrt, pow
 
 # local imports
 from . import tauid
+from . import log; log = log[__name__]
 
 from atlastools import utils
 from atlastools import datasets
@@ -993,7 +994,7 @@ class Systematics(EventFilter):
         if self.channel == 'hh':
             self.met_utility.setJetParameters(
                 event.jet_pt,
-                event.jet_eta,
+                self.tree.jet_eta_original,
                 self.tree.jet_phi_original,
                 event.jet_E,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
@@ -1171,8 +1172,8 @@ class Systematics(EventFilter):
         MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
-            print "Recalculated MET: %.3f (original: %.3f)" % (
-                    MET.et(), event.MET_RefFinal_BDTMedium_et)
+            log.info("Recalculated MET: %.3f (original: %.3f)" % (
+                     MET.et(), event.MET_RefFinal_BDTMedium_et))
 
         # update the MET with the shifted value
         self.tree.MET_etx_original = event.MET_RefFinal_BDTMedium_etx
@@ -1199,9 +1200,12 @@ class Systematics(EventFilter):
         Always use setJetParameters since they may be recalibrated upstream
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         """
+        #if self.verbose:
+        #    log.info(', '.join(map(str, self.tree.jet_phi_original)))
+        #    log.info(', '.join(map(str, event.jet_phi)))
         self.met_utility.setJetParameters(
             event.jet_pt,
-            event.jet_eta,
+            self.tree.jet_eta_original,
             self.tree.jet_phi_original,
             event.jet_E,
             event.jet_AntiKt4LCTopo_MET_wet,
@@ -1316,10 +1320,16 @@ class Systematics(EventFilter):
         MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
-            print "Recalculated MET: %.3f (original: %.3f)" % (
-                    MET.et(), event.MET_RefFinal_STVF_et)
-            print "Recalculated MET phi: %.3f (original: %.3f)" % (
-                    MET.phi(), event.MET_RefFinal_STVF_phi)
+            log.info("Run: {0} Event: {1}".format(
+                event.RunNumber,
+                event.EventNumber))
+            log.info("Recalculated MET: %.3f (original: %.3f)" % (
+                     MET.et(), event.MET_RefFinal_STVF_et))
+            log.info("Recalculated MET phi: %.3f (original: %.3f)" % (
+                     MET.phi(), event.MET_RefFinal_STVF_phi))
+            if (abs(MET.et() - event.MET_RefFinal_STVF_et) /
+                    event.MET_RefFinal_STVF_et) > 0.1:
+                log.warning("Large MET difference!")
 
         # update the MET with the shifted value
         self.tree.MET_etx_original = event.MET_RefFinal_STVF_etx
