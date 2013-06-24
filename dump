@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+from rootpy.extern.argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('files', nargs='+')
+parser.add_argument('-t', '--tree', required=True)
+parser.add_argument('-e', '--entries', type=int, default=100)
+parser.add_argument('-s', '--select', default=None)
+parser.add_argument('--select-file', default=None)
+parser.add_argument('-o', '--order-by', default=None)
+args = parser.parse_args()
+
+from rootpy.io import root_open
+from rootpy.tree import Cut
+import os
+
+fields = [
+    'RunNumber',
+    'EventNumber',
+    'hh_MET_et',
+    'hh_MET_bisecting',
+    'hh_MET_phi',
+    'hh_dPhi_min_tau_MET',
+    'hh_tau_same_vertex',
+    'hh_mmc0_mass',
+    'hh_mmc1_mass',
+    'hh_mmc2_mass',
+    'hh_tau1_index',
+    'hh_tau2_index',
+    'hh_dR_tau1_tau2',
+    'hh_tau1_pt',
+    'hh_tau1_eta',
+    'hh_tau1_phi',
+    'hh_tau2_pt',
+    'hh_tau2_eta',
+    'hh_tau2_phi',
+    'hh_tau1_numTrack',
+    'hh_tau2_numTrack',
+    'hh_tau1_numTrack_recounted',
+    'hh_tau2_numTrack_recounted',
+    'hh_tau1_charge',
+    'hh_tau2_charge',
+    'hh_tau1_JetBDTSigMedium',
+    'hh_tau1_JetBDTSigTight',
+    'hh_tau2_JetBDTSigMedium',
+    'hh_tau2_JetBDTSigTight',
+    'hh_mc_weight',
+    'hh_tau1_matched',
+    'hh_tau2_matched',
+    'hh_tau1_efficiency_scale_factor',
+    'hh_tau2_efficiency_scale_factor',
+    'hh_tau1_fakerate_scale_factor',
+    'hh_tau2_fakerate_scale_factor',
+    'hh_tau1_trigger_scale_factor',
+    'hh_tau2_trigger_scale_factor',
+]
+
+if args.order_by is not None:
+    args.order_by = args.order_by.split(',')
+
+if args.select_file is not None:
+    args.select = Cut(args.select) & Cut(open(args.select_file).read().strip())
+
+for filename in args.files:
+    with root_open(filename) as f:
+        print os.path.basename(filename)
+        t = f.Get(args.tree)
+        rec = t.to_array(fields, selection=args.select)
+        if args.order_by is not None:
+            rec.sort(order=args.order_by)
+        rec = rec[:args.entries]
+        read_names = rec.dtype.names
+        print ','.join(read_names)
+        for row in rec:
+            print ','.join(map(str, row))
+        print 
+        print

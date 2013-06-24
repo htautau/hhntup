@@ -3,6 +3,8 @@
 HHSTUDENT ?= HHProcessor
 HHNTUP ?= ntuples/hadhad/HHProcessor
 
+.PHONY: dump
+
 default: clean lib
 
 lib:
@@ -33,3 +35,6 @@ clean: clean-pyc
 	rm -f *.dot
 	rm -f *.e[0-9]*
 	rm -f *.o[0-9]*
+
+dump:
+	@./dump -t tau -s "hh_taus_pass && (RunNumber==207528)" --select-file etc/embed_select_ac.txt -o RunNumber,EventNumber hhskim.embed12_p1344_hadhad.root
