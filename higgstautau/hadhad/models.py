@@ -189,11 +189,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
-    tau1_x = FloatCol()
-    tau2_x = FloatCol()
-
-    tau_x_product = FloatCol()
-    tau_x_sum = FloatCol()
     tau_pt_ratio = FloatCol()
 
     @classmethod
