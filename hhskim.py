@@ -464,6 +464,7 @@ class hhskim(ATLASStudent):
                     tau2.fourvect.DeltaR(jet1.fourvect),
                     tau2.fourvect.DeltaR(jet2.fourvect))
 
+                """
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                     [tau1.fourvect,
                      tau2.fourvect,
@@ -474,6 +475,7 @@ class hhskim(ATLASStudent):
                 tree.sphericity = sphericity
                 # aplanarity
                 tree.aplanarity = aplanarity
+                """
 
                 """
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
@@ -519,6 +521,7 @@ class hhskim(ATLASStudent):
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
 
+                """
                 sphericity, aplanarity = eventshapes.sphericity_aplanarity(
                     [tau1.fourvect,
                      tau2.fourvect,
@@ -528,6 +531,7 @@ class hhskim(ATLASStudent):
                 tree.sphericity = sphericity
                 # aplanarity
                 tree.aplanarity = aplanarity
+                """
 
             #####################################
             # number of tracks from PV minus taus

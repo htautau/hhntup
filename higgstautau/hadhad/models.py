@@ -357,8 +357,8 @@ class EventModel(TreeModel):
     eta_product_jets = FloatCol()
     #eta_product_jets_boosted = FloatCol()
 
-    sphericity = FloatCol()
-    aplanarity = FloatCol()
+    #sphericity = FloatCol()
+    #aplanarity = FloatCol()
 
     #sphericity_boosted = FloatCol()
     #aplanarity_boosted = FloatCol()

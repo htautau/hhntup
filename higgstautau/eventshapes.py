@@ -1,4 +1,3 @@
-import numpy as np
 import math
 from rootpy.math.physics.vector import Vector2
 from ROOT import TMath, TLorentzVector
@@ -8,6 +7,8 @@ def sphericity_aplanarity(vects):
     """
     Calculate the sphericity and aplanarity of a list of TLorentzVectors
     """
+    # delay import so this module may still be used without numpy
+    import numpy as np
 
     # sphericity tensor
     S = np.zeros(shape=(3,3))
@@ -55,7 +56,7 @@ def phi_centrality(vec_a, vec_b, vec_c):
     aPhi = vec_a.Phi()
     bPhi = vec_b.Phi()
     cPhi = vec_c.Phi()
-    
+
     if math.sin(bPhi - aPhi) != 0:
         A = math.sin(cPhi - aPhi)/math.sin(bPhi - aPhi)
         B = math.sin(bPhi - cPhi)/math.sin(bPhi - aPhi)
@@ -75,10 +76,9 @@ def DeltaDeltaR(tau_4vec, lep_4vec, MET_2vec):
     MET_4Vec.SetPtEtaPhiM(MET_2vec.Mod(), 0, MET_2vec.Phi(), 0)
     TauLep = visTauLep + MET_4Vec
     TauLepPt = TauLep.Pt()/1000
-    
+
     expecteddR = 18.5279*TMath.Landau(TauLepPt, -14.8407, 67.7441)
-    
+
     dR = tau_4vec.DeltaR(lep_4vec)
 
     return abs(dR - expecteddR), dR, TauLepPt
-    
