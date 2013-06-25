@@ -483,7 +483,7 @@ class TauSystematic(ObjectSystematic):
 
 class TES(TauSystematic):
 
-    def __init__(self, is_up, np_=TauCorrUncert.TESUncertainty.EOP, infile='TES/mc12_p1344_medium.root', **kwargs):
+    def __init__(self, is_up, np_=TauCorrUncert.TESUncertainty.FINAL, infile='TES/mc12_p1344_medium.root', **kwargs):
 
         super(TES, self).__init__(is_up, **kwargs)
 
