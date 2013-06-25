@@ -1,5 +1,6 @@
 eventviews
 discriminants
+*.nfs*
 *.pyc
 *.root
 *.log
