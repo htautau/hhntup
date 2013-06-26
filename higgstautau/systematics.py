@@ -483,11 +483,11 @@ class TauSystematic(ObjectSystematic):
 
 class TES(TauSystematic):
 
-    def __init__(self, is_up, np_=TauCorrUncert.TESUncertainty.FINAL, infile='TES/mc12_p1344_medium.root', **kwargs):
+    def __init__(self, is_up, np=TauCorrUncert.TESUncertainty.FINAL, infile='TES/mc12_p1344_medium.root', **kwargs):
 
         super(TES, self).__init__(is_up, **kwargs)
 
-        self.np = np_
+        self.np = np
         if self.year == 2011:
             from externaltools.bundle_2011 import TESUncertaintyProvider as TESP
             from ROOT import TESUncertaintyProvider
