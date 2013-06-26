@@ -646,8 +646,26 @@ class Systematics(EventFilter):
     TES_OTHERS_DOWN = -20061
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
-    TES_TERMS = set([TES_UP, TES_DOWN])
-    TAU_TERMS = set([TES_UP, TES_DOWN, TER_UP, TER_DOWN])
+
+    TES_TERMS = set([
+        TES_UP, TES_DOWN,
+        TES_EOP_UP,
+        TES_EOP_DOWN,
+        TES_CTB_UP,
+        TES_CTB_DOWN,
+        TES_Bias_UP,
+        TES_Bias_DOWN,
+        TES_EM_UP,
+        TES_EM_DOWN,
+        TES_LCW_UP,
+        TES_LCW_DOWN,
+        TES_PU_UP,
+        TES_PU_DOWN,
+        TES_OTHERS_UP,
+        TES_OTHERS_DOWN])
+
+    TAU_TERMS = set([TER_UP, TER_DOWN]) | TES_TERMS
+
     TAUBDT_UP = -100
     TAUBDT_DOWN = -101
 
