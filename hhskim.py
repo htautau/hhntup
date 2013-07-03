@@ -874,16 +874,22 @@ class hhskim(ATLASStudent):
             ######################
             outtree.Fill(reset=True)
 
-        self.output.cd()
-
         if validate:
             validate_log.close()
             # sort the output by event number for MC
             # sort +2 -3 -n skim2_validate_mc_125205.txt -o skim2_validate_mc_125205.txt
 
+        externaltools.report()
+
         ###############################################
         # flush any baskets remaining in memory to disk
         ###############################################
+        self.output.cd()
         outtree.FlushBaskets()
         outtree.Write()
-        externaltools.report()
+
+        if local:
+            if datatype == datasets.DATA:
+                xml_string = ROOT.TObjString(merged_grl.str())
+                xml_string.Write('lumi')
+            merged_cutflow.Write()
