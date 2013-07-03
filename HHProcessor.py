@@ -67,95 +67,14 @@ class HHProcessor(ATLASStudent):
                 eval('Systematics.%s' % term) for term in
                 self.args.syst_terms.split(',')])
 
-    @staticmethod
-    def merge(inputs, output, metadata):
-
-        # merge output trees
-        root_output = output + '.root'
-        subprocess.call(['hadd', root_output] + inputs)
-
-        if metadata.datatype == datasets.DATA:
-            # merge GRLs
-            grl = GRL()
-            for input in inputs:
-                grl |= GRL('%s:/lumi' % input)
-            grl.save('%s:/lumi' % root_output)
-
     def work(self):
         """
         This is the one function that all "ATLASStudent"s must implement.
         """
-        datatype = self.metadata.datatype
-        year = self.metadata.year
-        redo_mmc = self.args.redo_mmc
-        #use_numjets25 = self.args.use_numjets25
-        verbose = self.args.student_verbose
-
-        # get pileup reweighting tool
-        pileup_tool = get_pileup_reweighting_tool(
-            year=year,
-            use_defaults=True)
-
-        OutputModel = RecoTauBlock + RecoJetBlock + EventVariables
-
-        if datatype == datasets.MC:
-            # only create truth branches for MC
-            OutputModel += TrueTauBlock
-
-            # add branches for VBF Higgs associated partons
-            if 'VBF' in self.metadata.name:
-                OutputModel += PartonBlock
-
-        if datatype == datasets.EMBED:
-            # add embedding systematics branches
-            OutputModel += EmbeddingBlock
 
         onfilechange = []
         count_funcs = {}
 
-        if datatype in (datasets.MC, datasets.EMBED):
-
-            def mc_weight_count(event):
-                return event.mc_event_weight
-
-            count_funcs = {
-                'mc_weight': mc_weight_count,
-            }
-
-        trigger_config = None
-
-        if datatype != datasets.EMBED:
-            # trigger config tool to read trigger info in the ntuples
-            trigger_config = get_trigger_config()
-
-            # update the trigger config maps on every file change
-            onfilechange.append((update_trigger_config, (trigger_config,)))
-
-        if datatype == datasets.DATA:
-            merged_grl = GRL()
-
-            def update_grl(student, grl, name, file, tree):
-
-                grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
-
-            onfilechange.append((update_grl, (self, merged_grl,)))
-
-        if datatype == datasets.DATA:
-            merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
-        else:
-            merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
-
-        def update_cutflow(student, cutflow, name, file, tree):
-
-            year = student.metadata.year
-            datatype = student.metadata.datatype
-            if datatype == datasets.MC:
-                cutflow[0] += file.cutflow_event[0]
-                cutflow[1] += file.cutflow_event_mc_weight[0]
-            else:
-                cutflow[0] += file.cutflow_event[0]
-
-        onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         # initialize the TreeChain of all input files (each containing one tree named self.metadata.treename)
         chain = TreeChain(

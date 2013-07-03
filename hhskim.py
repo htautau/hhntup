@@ -52,6 +52,7 @@ class hhskim(ATLASStudent):
 
         super(hhskim, self).__init__(**kwargs)
         parser = ArgumentParser()
+        parser.add_argument('--local', action='store_true', default=False)
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--no-trigger', action='store_true', default=False)
         parser.add_argument('--no-grl', action='store_true', default=False)
@@ -63,8 +64,26 @@ class hhskim(ATLASStudent):
                 eval('Systematics.%s' % term) for term in
                 self.args.syst_terms.split(',')])
 
+        def merge(inputs, output, metadata):
+
+            # merge output trees
+            root_output = output + '.root'
+            subprocess.call(['hadd', root_output] + inputs)
+
+            if metadata.datatype == datasets.DATA:
+                # merge GRLs
+                grl = GRL()
+                for input in inputs:
+                    grl |= GRL('%s:/lumi' % input)
+                grl.save('%s:/lumi' % root_output)
+
+        if self.args.local:
+            self.merge = staticmethod(merge)
+
     def work(self):
 
+        local = self.args.local
+        syst_terms = self.args.syst_terms
         datatype = self.metadata.datatype
         year = self.metadata.year
         no_trigger = self.args.no_trigger
@@ -80,33 +99,75 @@ class hhskim(ATLASStudent):
         log.info("DATASET: {0}".format(dsname))
         log.info("IS SIGNAL: {0}".format(is_signal))
 
-        # get pileup reweighting tool
-        pileup_tool = get_pileup_reweighting_tool(
-            year=year,
-            use_defaults=True)
+        onfilechange = []
+        count_funcs = {}
 
-        if datatype != datasets.EMBED:
-            # merge TrigConfTrees
-            metadirname = '%sMeta' % self.metadata.treename
-            trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-            map(trigconfchain.Add, self.files)
-            metadir = self.output.mkdir(metadirname)
-            metadir.cd()
-            trigconfchain.Merge(self.output, -1, 'fast keep')
-            self.output.cd()
+        if datatype in (datasets.MC, datasets.EMBED):
 
-        if datatype == datasets.DATA:
-            # merge GRL XML strings
-            grls = []
-            merged_grl = goodruns.GRL()
-            for fname in self.files:
-                merged_grl |= goodruns.GRL(
-                    '%s:/Lumi/%s' % (fname, self.metadata.treename))
-            lumi_dir = self.output.mkdir('Lumi')
-            lumi_dir.cd()
-            xml_string= ROOT.TObjString(merged_grl.str())
-            xml_string.Write(self.metadata.treename)
-            self.output.cd()
+            def mc_weight_count(event):
+                return event.mc_event_weight
+
+            count_funcs = {
+                'mc_weight': mc_weight_count,
+            }
+
+        pileup_tool = None
+
+        if local:
+            if datatype == datasets.DATA:
+                merged_grl = GRL()
+
+                def update_grl(student, grl, name, file, tree):
+
+                    grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
+
+                onfilechange.append((update_grl, (self, merged_grl,)))
+
+            if datatype == datasets.DATA:
+                merged_cutflow = Hist(1, 0, 1, name='cutflow', type='D')
+            else:
+                merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
+
+            def update_cutflow(student, cutflow, name, file, tree):
+
+                year = student.metadata.year
+                datatype = student.metadata.datatype
+                if datatype == datasets.MC:
+                    cutflow[0] += file.cutflow_event[0]
+                    cutflow[1] += file.cutflow_event_mc_weight[0]
+                else:
+                    cutflow[0] += file.cutflow_event[0]
+
+            onfilechange.append((update_cutflow, (self, merged_cutflow,)))
+
+        else:
+            # get pileup reweighting tool
+            pileup_tool = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True)
+
+            if datatype != datasets.EMBED:
+                # merge TrigConfTrees
+                metadirname = '%sMeta' % self.metadata.treename
+                trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+                map(trigconfchain.Add, self.files)
+                metadir = self.output.mkdir(metadirname)
+                metadir.cd()
+                trigconfchain.Merge(self.output, -1, 'fast keep')
+                self.output.cd()
+
+            if datatype == datasets.DATA:
+                # merge GRL XML strings
+                grls = []
+                merged_grl = goodruns.GRL()
+                for fname in self.files:
+                    merged_grl |= goodruns.GRL(
+                        '%s:/Lumi/%s' % (fname, self.metadata.treename))
+                lumi_dir = self.output.mkdir('Lumi')
+                lumi_dir.cd()
+                xml_string= ROOT.TObjString(merged_grl.str())
+                xml_string.Write(self.metadata.treename)
+                self.output.cd()
 
         self.output.cd()
 
@@ -130,21 +191,9 @@ class hhskim(ATLASStudent):
         for mmc_obj in mmc_objects:
             mmc_obj.define_object(name='resonance', prefix='resonance_')
 
-        onfilechange = []
-        count_funcs = {}
-
-        if datatype in (datasets.MC, datasets.EMBED):
-
-            def mc_weight_count(event):
-                return event.mc_event_weight
-
-            count_funcs = {
-                'mc_weight': mc_weight_count,
-            }
-
         trigger_emulation = TauTriggerEmulation(
             year=year,
-            passthrough=no_trigger or datatype != datasets.MC or year > 2011,
+            passthrough=local or no_trigger or datatype != datasets.MC or year > 2011,
             count_funcs=count_funcs)
 
         if not trigger_emulation.passthrough:
@@ -168,21 +217,23 @@ class hhskim(ATLASStudent):
                     no_grl or datatype not in (datasets.DATA, datasets.EMBED)),
                 count_funcs=count_funcs),
             CoreFlags(
+                passthrough=local,
                 count_funcs=count_funcs),
             EmbeddingPileupPatch(
-                passthrough=year > 2011 or datatype != datasets.EMBED,
+                passthrough=local or year > 2011 or datatype != datasets.EMBED,
                 count_funcs=count_funcs),
             averageIntPerXingPatch(
-                passthrough=year < 2012 or datatype != datasets.MC,
+                passthrough=local or year < 2012 or datatype != datasets.MC,
                 count_funcs=count_funcs),
             PileupTemplates(
                 year=year,
-                passthrough=datatype != datasets.MC,
+                passthrough=local or datatype != datasets.MC,
                 count_funcs=count_funcs),
             RandomRunNumber(
                 tree=tree,
                 datatype=datatype,
                 pileup_tool=pileup_tool,
+                passthrough=local,
                 count_funcs=count_funcs),
             trigger_emulation,
             Triggers(
@@ -193,30 +244,36 @@ class hhskim(ATLASStudent):
             PileupReweight(
                 tool=pileup_tool,
                 tree=tree,
-                passthrough=datatype != datasets.MC,
+                passthrough=local or datatype != datasets.MC,
                 count_funcs=count_funcs),
             PriVertex(
+                passthrough=local,
                 count_funcs=count_funcs),
             LArError(
+                passthrough=local,
                 count_funcs=count_funcs),
             TileError(
+                passthrough=local,
                 count_funcs=count_funcs),
             TileTrips(
+                passthrough=local,
                 passthrough=year < 2012 or datatype == datasets.MC,
                 count_funcs=count_funcs),
             JetCopy(
                 tree=tree,
+                passthrough=local,
                 count_funcs=count_funcs),
             JetCalibration(
                 datatype=datatype,
                 year=year,
                 verbose=verbose,
+                passthrough=local,
                 count_funcs=count_funcs),
             # PUT THE SYSTEMATICS "FILTER" BEFORE
             # ANY FILTERS THAT REFER TO OBJECTS
             # BUT AFTER CALIBRATIONS
             Systematics(
-                terms=self.args.syst_terms,
+                terms=syst_terms,
                 year=year,
                 datatype=datatype,
                 tree=tree,
@@ -320,6 +377,7 @@ class hhskim(ATLASStudent):
             TauTrackRecounting(
                 year=year,
                 datatype=datatype,
+                passthrough=local,
                 count_funcs=count_funcs),
             MCWeight(
                 datatype=datatype,
@@ -361,7 +419,7 @@ class hhskim(ATLASStudent):
                 hhbranches.REMOVE_OUTPUT,
                 exclude=hhbranches.KEEP_OUTPUT)
 
-        if not is_signal:
+        if not is_signal or syst_terms is not None:
             log.warning("removing mc_ block in output")
             # remove mc block and truth jets in non-signal samples
             ignore_branches_output += [
