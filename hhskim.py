@@ -363,7 +363,7 @@ class hhskim(ATLASStudent):
 
         if not is_signal:
             log.warning("removing mc_ block in output")
-            # remove mc block in non-signal samples
+            # remove mc block and truth jets in non-signal samples
             ignore_branches_output += [
                 'mc_pt',
                 'mc_phi',
@@ -374,6 +374,7 @@ class hhskim(ATLASStudent):
                 'mc_pdgId',
                 'mc_charge',
                 'mc_status',
+                'jet_antikt4truth_*',
             ]
 
         # initialize the TreeChain of all input files
