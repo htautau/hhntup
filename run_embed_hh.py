@@ -83,6 +83,7 @@ if not args.systematics_only:
         run_sample(sample)
 
 if not args.nominal_only:
+    # TODO: use args.systematics to filter below
     if args.systematics is not None:
         args.systematics = [
                 tuple(s.upper().split('+')) for s in

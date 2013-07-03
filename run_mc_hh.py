@@ -51,7 +51,7 @@ if not args.systematics_only:
 if not args.nominal_only:
     if args.systematics is not None:
         args.systematics = [
-                tuple(s.upper().split('+')) for s in
+                tuple(s.split('+')) for s in
                 args.systematics.split(',')]
     # systematics
     for datasets, systematics in samples.iter_samples('hadhad', args.year,
