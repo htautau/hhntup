@@ -9,8 +9,9 @@ from atlastools.units import GeV
 from atlastools.batch import ATLASStudent
 from atlastools.filtering import GRLFilter
 
+from rootpy.plotting import Hist
 from rootpy.tree.filtering import EventFilter, EventFilterList
-from rootpy.tree import Tree, TreeChain, TreeModel
+from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
 from rootpy.extern.argparse import ArgumentParser
 from rootpy.io import root_open
 
@@ -72,7 +73,7 @@ class hhskim(ATLASStudent):
 
             if metadata.datatype == datasets.DATA:
                 # merge GRLs
-                grl = GRL()
+                grl = goodruns.GRL()
                 for input in inputs:
                     grl |= GRL('%s:/lumi' % input)
                 grl.save('%s:/lumi' % root_output)
@@ -115,7 +116,7 @@ class hhskim(ATLASStudent):
 
         if local:
             if datatype == datasets.DATA:
-                merged_grl = GRL()
+                merged_grl = goodruns.GRL()
 
                 def update_grl(student, grl, name, file, tree):
 
@@ -174,8 +175,13 @@ class hhskim(ATLASStudent):
         # create the output tree
         outtree = Tree(
             name=self.metadata.treename,
-            model=get_model(datatype, dsname, prefix='hh_'))
-        tree = outtree.define_object(name='tree', prefix='hh_')
+            model=get_model(datatype, dsname, prefix=None if local else 'hh_'))
+
+        if local:
+            tree = outtree
+        else:
+            tree = outtree.define_object(name='tree', prefix='hh_')
+
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='tau1', prefix='tau1_')
         tree.define_object(name='tau2', prefix='tau2_')
@@ -210,204 +216,207 @@ class hhskim(ATLASStudent):
             onfilechange.append((update_trigger_config, (trigger_config,)))
 
         # define the list of event filters
-        event_filters = EventFilterList([
-            GRLFilter(
-                self.grl,
-                passthrough=(
-                    no_grl or datatype not in (datasets.DATA, datasets.EMBED)),
-                count_funcs=count_funcs),
-            CoreFlags(
-                passthrough=local,
-                count_funcs=count_funcs),
-            EmbeddingPileupPatch(
-                passthrough=local or year > 2011 or datatype != datasets.EMBED,
-                count_funcs=count_funcs),
-            averageIntPerXingPatch(
-                passthrough=local or year < 2012 or datatype != datasets.MC,
-                count_funcs=count_funcs),
-            PileupTemplates(
-                year=year,
-                passthrough=local or datatype != datasets.MC,
-                count_funcs=count_funcs),
-            RandomRunNumber(
-                tree=tree,
-                datatype=datatype,
-                pileup_tool=pileup_tool,
-                passthrough=local,
-                count_funcs=count_funcs),
-            trigger_emulation,
-            Triggers(
-                year=year,
-                tree=tree,
-                passthrough=no_trigger or datatype == datasets.EMBED,
-                count_funcs=count_funcs),
-            PileupReweight(
-                tool=pileup_tool,
-                tree=tree,
-                passthrough=local or datatype != datasets.MC,
-                count_funcs=count_funcs),
-            PriVertex(
-                passthrough=local,
-                count_funcs=count_funcs),
-            LArError(
-                passthrough=local,
-                count_funcs=count_funcs),
-            TileError(
-                passthrough=local,
-                count_funcs=count_funcs),
-            TileTrips(
-                passthrough=local,
-                passthrough=year < 2012 or datatype == datasets.MC,
-                count_funcs=count_funcs),
-            JetCopy(
-                tree=tree,
-                passthrough=local,
-                count_funcs=count_funcs),
-            JetCalibration(
-                datatype=datatype,
-                year=year,
-                verbose=verbose,
-                passthrough=local,
-                count_funcs=count_funcs),
-            # PUT THE SYSTEMATICS "FILTER" BEFORE
-            # ANY FILTERS THAT REFER TO OBJECTS
-            # BUT AFTER CALIBRATIONS
-            Systematics(
-                terms=syst_terms,
-                year=year,
-                datatype=datatype,
-                tree=tree,
-                verbose=verbose,
-                count_funcs=count_funcs),
-            LArHole(
-                datatype=datatype,
-                tree=tree,
-                count_funcs=count_funcs),
-            JetCleaning(
-                datatype=datatype,
-                year=year,
-                count_funcs=count_funcs),
-            ElectronVeto(
-                count_funcs=count_funcs),
-            MuonVeto(
-                year=year,
-                count_funcs=count_funcs),
-            TauPT(2,
-                thresh=20 * GeV,
-                count_funcs=count_funcs),
-            TauHasTrack(2,
-                count_funcs=count_funcs),
-            TauEta(2,
-                count_funcs=count_funcs),
-            TauElectronVeto(2,
-                count_funcs=count_funcs),
-            TauMuonVeto(2,
-                count_funcs=count_funcs),
-            TauAuthor(2,
-                count_funcs=count_funcs),
-            TauCrack(2,
-                count_funcs=count_funcs),
-            TauLArHole(2,
-                tree=tree,
-                count_funcs=count_funcs),
-            TauID_SkimLoose(2,
-                year=year,
-                count_funcs=count_funcs),
-            TauTriggerMatchIndex(
-                config=trigger_config,
-                year=year,
-                datatype=datatype,
-                passthrough=no_trigger or datatype == datasets.EMBED,
-                count_funcs=count_funcs),
-            # Select two leading taus at this point
-            # 25 and 35 for data
-            # 20 and 30 for MC for TES uncertainty
-            TauLeadSublead(
-                lead=35 * GeV if datatype == datasets.DATA else 30 * GeV,
-                sublead=25 * GeV if datatype == datasets.DATA else 20 * GeV,
-                count_funcs=count_funcs),
-            # taus are sorted (in decreasing order) by pT from here on
-            TauIDSelection(
-                year=year,
-                tree=tree,
-                count_funcs=count_funcs),
-            TaudR(3.2,
-                count_funcs=count_funcs),
-            TruthMatching(
-                passthrough=datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            TauTriggerMatchThreshold(
-                datatype=datatype,
-                tree=tree,
-                passthrough=no_trigger,
-                count_funcs=count_funcs),
-            TauTriggerEfficiency(
-                year=year,
-                datatype=datatype,
-                tree=tree,
-                tes_systematic=self.args.syst_terms and (
-                    Systematics.TES_TERMS & self.args.syst_terms),
-                passthrough=no_trigger or datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            PileupScale(
-                tree=tree,
-                year=year,
-                datatype=datatype,
-                count_funcs=count_funcs),
-            EfficiencyScaleFactors(
-                year=year,
-                passthrough=datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            FakeRateScaleFactors(
-                year=year,
-                datatype=datatype,
-                tree=tree,
-                tes_up_systematic=(self.args.syst_terms and
-                    (Systematics.TES_UP in self.args.syst_terms)),
-                tes_down_systematic=(self.args.syst_terms and
-                    (Systematics.TES_DOWN in self.args.syst_terms)),
-                passthrough=no_trigger or datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            ggFReweighting(
-                dsname=dsname,
-                tree=tree,
-                # no ggf reweighting for 2012 MC
-                passthrough=datatype != datasets.MC or year != 2011,
-                count_funcs=count_funcs),
-            TauTrackRecounting(
-                year=year,
-                datatype=datatype,
-                passthrough=local,
-                count_funcs=count_funcs),
-            MCWeight(
-                datatype=datatype,
-                tree=tree,
-                passthrough=datatype == datasets.DATA,
-                count_funcs=count_funcs),
-            EmbeddingIsolation(
-                tree=tree,
-                passthrough=year < 2012 or datatype != datasets.EMBED,
-                count_funcs=count_funcs),
-            EmbeddingCorrections(
-                tree=tree,
-                passthrough=year < 2012 or datatype != datasets.EMBED,
-                count_funcs=count_funcs),
-            TauJetOverlapRemoval(
-                count_funcs=count_funcs),
-            JetPreselection(
-                passthrough=year < 2012,
-                count_funcs=count_funcs),
-            NonIsolatedJet(
-                tree=tree,
-                passthrough=year < 2012,
-                count_funcs=count_funcs),
-            JetSelection(
-                year=year,
-                count_funcs=count_funcs),
-        ])
+        if local and syst_terms is None:
+            event_filters = None
+        else:
+            event_filters = EventFilterList([
+                GRLFilter(
+                    self.grl,
+                    passthrough=(
+                        no_grl or datatype not in (datasets.DATA, datasets.EMBED)),
+                    count_funcs=count_funcs),
+                CoreFlags(
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                EmbeddingPileupPatch(
+                    passthrough=local or year > 2011 or datatype != datasets.EMBED,
+                    count_funcs=count_funcs),
+                averageIntPerXingPatch(
+                    passthrough=local or year < 2012 or datatype != datasets.MC,
+                    count_funcs=count_funcs),
+                PileupTemplates(
+                    year=year,
+                    passthrough=local or datatype != datasets.MC,
+                    count_funcs=count_funcs),
+                RandomRunNumber(
+                    tree=tree,
+                    datatype=datatype,
+                    pileup_tool=pileup_tool,
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                trigger_emulation,
+                Triggers(
+                    year=year,
+                    tree=tree,
+                    passthrough=no_trigger or datatype == datasets.EMBED,
+                    count_funcs=count_funcs),
+                PileupReweight(
+                    tool=pileup_tool,
+                    tree=tree,
+                    passthrough=local or datatype != datasets.MC,
+                    count_funcs=count_funcs),
+                PriVertex(
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                LArError(
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                TileError(
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                TileTrips(
+                    passthrough=local or year < 2012 or datatype == datasets.MC,
+                    count_funcs=count_funcs),
+                JetCopy(
+                    tree=tree,
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                JetCalibration(
+                    datatype=datatype,
+                    year=year,
+                    verbose=verbose,
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                # PUT THE SYSTEMATICS "FILTER" BEFORE
+                # ANY FILTERS THAT REFER TO OBJECTS
+                # BUT AFTER CALIBRATIONS
+                Systematics(
+                    terms=syst_terms,
+                    year=year,
+                    datatype=datatype,
+                    tree=tree,
+                    verbose=verbose,
+                    count_funcs=count_funcs),
+                LArHole(
+                    datatype=datatype,
+                    tree=tree,
+                    count_funcs=count_funcs),
+                JetCleaning(
+                    datatype=datatype,
+                    year=year,
+                    count_funcs=count_funcs),
+                ElectronVeto(
+                    count_funcs=count_funcs),
+                MuonVeto(
+                    year=year,
+                    count_funcs=count_funcs),
+                TauPT(2,
+                    thresh=20 * GeV,
+                    count_funcs=count_funcs),
+                TauHasTrack(2,
+                    count_funcs=count_funcs),
+                TauEta(2,
+                    count_funcs=count_funcs),
+                TauElectronVeto(2,
+                    count_funcs=count_funcs),
+                TauMuonVeto(2,
+                    count_funcs=count_funcs),
+                TauAuthor(2,
+                    count_funcs=count_funcs),
+                TauCrack(2,
+                    count_funcs=count_funcs),
+                TauLArHole(2,
+                    tree=tree,
+                    count_funcs=count_funcs),
+                TauID_SkimLoose(2,
+                    year=year,
+                    count_funcs=count_funcs),
+                TauTriggerMatchIndex(
+                    config=trigger_config,
+                    year=year,
+                    datatype=datatype,
+                    passthrough=no_trigger or datatype == datasets.EMBED,
+                    count_funcs=count_funcs),
+                # Select two leading taus at this point
+                # 25 and 35 for data
+                # 20 and 30 for MC for TES uncertainty
+                TauLeadSublead(
+                    lead=35 * GeV if datatype == datasets.DATA or local else 30 * GeV,
+                    sublead=25 * GeV if datatype == datasets.DATA or local else 20 * GeV,
+                    count_funcs=count_funcs),
+                # taus are sorted (in decreasing order) by pT from here on
+                TauIDSelection(
+                    year=year,
+                    tree=tree,
+                    count_funcs=count_funcs),
+                TaudR(3.2,
+                    count_funcs=count_funcs),
+                TruthMatching(
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
+                TauTriggerMatchThreshold(
+                    datatype=datatype,
+                    tree=tree,
+                    passthrough=no_trigger,
+                    count_funcs=count_funcs),
+                TauTriggerEfficiency(
+                    year=year,
+                    datatype=datatype,
+                    tree=tree,
+                    tes_systematic=self.args.syst_terms and (
+                        Systematics.TES_TERMS & self.args.syst_terms),
+                    passthrough=no_trigger or datatype == datasets.DATA,
+                    count_funcs=count_funcs),
+                PileupScale(
+                    tree=tree,
+                    year=year,
+                    datatype=datatype,
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                EfficiencyScaleFactors(
+                    year=year,
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
+                FakeRateScaleFactors(
+                    year=year,
+                    datatype=datatype,
+                    tree=tree,
+                    tes_up_systematic=(self.args.syst_terms and
+                        (Systematics.TES_UP in self.args.syst_terms)),
+                    tes_down_systematic=(self.args.syst_terms and
+                        (Systematics.TES_DOWN in self.args.syst_terms)),
+                    passthrough=no_trigger or datatype == datasets.DATA,
+                    count_funcs=count_funcs),
+                ggFReweighting(
+                    dsname=dsname,
+                    tree=tree,
+                    # no ggf reweighting for 2012 MC
+                    passthrough=datatype != datasets.MC or year != 2011,
+                    count_funcs=count_funcs),
+                TauTrackRecounting(
+                    year=year,
+                    datatype=datatype,
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                MCWeight(
+                    datatype=datatype,
+                    tree=tree,
+                    passthrough=local or datatype == datasets.DATA,
+                    count_funcs=count_funcs),
+                EmbeddingIsolation(
+                    tree=tree,
+                    passthrough=local or year < 2012 or datatype != datasets.EMBED,
+                    count_funcs=count_funcs),
+                EmbeddingCorrections(
+                    tree=tree,
+                    passthrough=year < 2012 or datatype != datasets.EMBED,
+                    count_funcs=count_funcs),
+                TauJetOverlapRemoval(
+                    count_funcs=count_funcs),
+                JetPreselection(
+                    passthrough=year < 2012,
+                    count_funcs=count_funcs),
+                NonIsolatedJet(
+                    tree=tree,
+                    passthrough=year < 2012,
+                    count_funcs=count_funcs),
+                JetSelection(
+                    year=year,
+                    count_funcs=count_funcs),
+            ])
 
-        # set the event filters
-        self.filters['event'] = event_filters
+            # set the event filters
+            self.filters['event'] = event_filters
 
         # peek at first tree to determine which branches to exclude
         with root_open(self.files[0]) as test_file:
@@ -447,10 +456,26 @@ class hhskim(ATLASStudent):
             cache_size=50000000,
             learn_entries=100)
 
+        if local:
+            hh_buffer = TreeBuffer()
+            buffer = TreeBuffer()
+            for name, value in chain._buffer.items():
+                if name.startswith('hh_'):
+                    hh_buffer[name[3:]] = value
+                elif 'hh_' + name not in chain._buffer:
+                    buffer[name] = value
+            outtree.set_buffer(
+                hh_buffer,
+                create_branches=False,
+                visible=True)
+
+        else:
+            buffer = chain._buffer
+
         # include the branches in the input chain in the output tree
         # set branches to be removed in ignore_branches
         outtree.set_buffer(
-            chain._buffer,
+            buffer,
             ignore_branches=ignore_branches + ignore_branches_output,
             create_branches=True,
             ignore_duplicates=True,
@@ -484,6 +509,10 @@ class hhskim(ATLASStudent):
         # The main event loop
         #####################
         for event in chain:
+
+            if local and syst_terms is None:
+                outtree.Fill()
+                continue
 
             # sort taus and jets in decreasing order by pT
             event.taus.sort(key=lambda tau: tau.pt, reverse=True)

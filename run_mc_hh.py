@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('--year', type=int, choices=(11, 12), default=11)
-parser.add_argument('--student', default='HHProcessor.py')
+parser.add_argument('--student', default='hhskim.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--queue', default='short')
