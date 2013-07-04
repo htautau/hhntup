@@ -17,12 +17,12 @@ mc_ztautau:
         #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp3.mc12a'
         #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp4.mc12a'
        
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
 embedded_ztautau:
     name: Ztautau
     latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$ (embedded)'
@@ -43,12 +43,12 @@ ewk:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp4.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp5.mc12a'
 
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp0Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp1Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp2Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp3Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp4Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZmumuNp5Incl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp5Incl_Mll10to60.mc12a'
 
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp1.mc12a'
@@ -109,15 +109,15 @@ diboson:
         - 'Herwig_AUET2CTEQ6L1_WZ.mc12a'
         - 'Herwig_AUET2CTEQ6L1_ZZ.mc12a'
         
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenuenu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenumunu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmenutaunu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunuenu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunumunu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmmunutaunu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunuenu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunumunu.mc12a'
-        - 'gg2WW0240Jimmy_AUET2CT10_WpWmtaunutaunu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmenuenu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmenumunu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmenutaunu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmmunuenu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmmunumunu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmmunutaunu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmtaunuenu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmtaunumunu.mc12a'
+        - 'gg2wwJimmy_AUET2CT10_WpWmtaunutaunu.mc12a'
 others:
     name: Others
     latex: Others

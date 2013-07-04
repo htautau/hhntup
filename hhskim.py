@@ -457,12 +457,16 @@ class hhskim(ATLASStudent):
             learn_entries=100)
 
         if local:
+            copied = [
+                'EventNumber',
+            ]
+
             hh_buffer = TreeBuffer()
             buffer = TreeBuffer()
             for name, value in chain._buffer.items():
                 if name.startswith('hh_'):
                     hh_buffer[name[3:]] = value
-                elif 'hh_' + name not in chain._buffer:
+                elif name in copied:
                     buffer[name] = value
             outtree.set_buffer(
                 hh_buffer,
@@ -470,17 +474,15 @@ class hhskim(ATLASStudent):
                 visible=True)
 
         else:
-            buffer = chain._buffer
-
-        # include the branches in the input chain in the output tree
-        # set branches to be removed in ignore_branches
-        outtree.set_buffer(
-            buffer,
-            ignore_branches=ignore_branches + ignore_branches_output,
-            create_branches=True,
-            ignore_duplicates=True,
-            transfer_objects=True,
-            visible=False)
+            # include the branches in the input chain in the output tree
+            # set branches to be removed in ignore_branches
+            outtree.set_buffer(
+                chain._buffer,
+                ignore_branches=ignore_branches + ignore_branches_output,
+                create_branches=True,
+                ignore_duplicates=True,
+                transfer_objects=True,
+                visible=False)
 
         if validate: # only validate on a single data run or MC channel
             chain.GetEntry(0)
