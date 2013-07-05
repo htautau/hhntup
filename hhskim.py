@@ -2,6 +2,7 @@ import ROOT
 
 import os
 import math
+import subprocess
 
 from atlastools import utils
 from atlastools import datasets
@@ -59,27 +60,30 @@ class hhskim(ATLASStudent):
         parser.add_argument('--no-grl', action='store_true', default=False)
         parser.add_argument('--student-verbose', action='store_true', default=False)
         parser.add_argument('--validate', action='store_true', default=False)
-        self.args = parser.parse_args(options)
-        if self.args.syst_terms is not None:
-            self.args.syst_terms = set([
+        args = parser.parse_args(options)
+        self.args = args
+        if args.syst_terms is not None:
+            args.syst_terms = set([
                 eval('Systematics.%s' % term) for term in
-                self.args.syst_terms.split(',')])
+                args.syst_terms.split(',')])
 
-        def merge(inputs, output, metadata):
+        if args.local:
+            def merge(inputs, output, metadata):
 
-            # merge output trees
-            root_output = output + '.root'
-            subprocess.call(['hadd', root_output] + inputs)
+                # merge output trees
+                root_output = output + '.root'
+                log.info("merging output trees")
+                subprocess.call(['hadd', root_output] + inputs)
 
-            if metadata.datatype == datasets.DATA:
-                # merge GRLs
-                grl = goodruns.GRL()
-                for input in inputs:
-                    grl |= GRL('%s:/lumi' % input)
-                grl.save('%s:/lumi' % root_output)
+                if metadata.datatype == datasets.DATA:
+                    # merge GRLs
+                    log.info("merging GRL fragments")
+                    grl = goodruns.GRL()
+                    for input in inputs:
+                        grl |= goodruns.GRL('%s:/lumi' % input)
+                    grl.save('%s:/lumi' % root_output)
 
-        if self.args.local:
-            self.merge = staticmethod(merge)
+            hhskim.merge = staticmethod(merge)
 
     def work(self):
 
