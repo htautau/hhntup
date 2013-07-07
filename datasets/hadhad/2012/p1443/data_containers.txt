@@ -1,0 +1,10 @@
+data12_8TeV.periodA.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodC.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodG.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodI.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+data12_8TeV.periodL.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
