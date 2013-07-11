@@ -403,7 +403,7 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 EmbeddingCorrections(
                     tree=tree,
-                    passthrough=year < 2012 or datatype != datasets.EMBED,
+                    passthrough=local or year < 2012 or datatype != datasets.EMBED,
                     count_funcs=count_funcs),
                 TauJetOverlapRemoval(
                     count_funcs=count_funcs),
