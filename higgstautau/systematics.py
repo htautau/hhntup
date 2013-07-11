@@ -865,39 +865,71 @@ class Systematics(EventFilter):
                     systematic = JVF(False, sys_util=self)
                 elif term == Systematics.JER_UP:
                     systematic = JER(True, sys_util=self)
-                elif term == Systematics.TES_UP:
-                    systematic = TES(True, sys_util=self)
-                elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, sys_util=self)
 
+                elif term == Systematics.TES_UP:
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root')
+                elif term == Systematics.TES_DOWN:
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EOP_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.EOP, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EOP,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EOP_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.EOP, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EOP,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_CTB_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.CTB, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.CTB,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_CTB_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.CTB, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.CTB,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_Bias_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.Bias, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.Bias,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_Bias_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.Bias, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.Bias,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EM_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.EM, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EM,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EM_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.EM, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EM,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_LCW_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.LCW, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.LCW,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_LCW_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.LCW, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.LCW,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_PU_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.PU, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.PU,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_PU_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.PU, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.PU,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_OTHERS_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.OTHERS, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.OTHERS,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_OTHERS_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.OTHERS, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.OTHERS,
+                            infile='TES/mc12_p1344_medium_split.root')
 
                 elif term == Systematics.EES_UP:
                     systematic = EES(True, sys_util=self,
