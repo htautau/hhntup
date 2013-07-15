@@ -51,6 +51,7 @@
         data_pattern: '*hadhad.root*'
         data_treename: 'tau'
         data_sampletype: 'standard'
+        data_period_containers: True
         embed_path: '/cluster/data11/endw/skims/v7'
         embed_prefix: 'group.phys-higgs.hhskim'
         embed_pattern: '*hadhad.root*'
