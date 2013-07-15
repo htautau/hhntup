@@ -792,7 +792,6 @@ class Database(dict):
                 streams = {}
                 for dir in data_dirs:
                     dirname, basename = os.path.split(dir)
-                    print basename
                     match = re.match(DS_PATTERN, basename)
                     if match:
                         if int(match.group('year')) != (year % 1E3):
