@@ -464,7 +464,6 @@ class hhskim(ATLASStudent):
             copied = [
                 'EventNumber',
             ]
-
             hh_buffer = TreeBuffer()
             buffer = TreeBuffer()
             for name, value in chain._buffer.items():
@@ -476,6 +475,10 @@ class hhskim(ATLASStudent):
                 hh_buffer,
                 create_branches=False,
                 visible=True)
+            outtree.set_buffer(
+                buffer,
+                create_branches=True,
+                visible=False)
 
         else:
             # include the branches in the input chain in the output tree
