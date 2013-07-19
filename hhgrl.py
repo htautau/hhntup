@@ -1,4 +1,5 @@
 from atlastools.batch import ATLASStudent
+from rootpy.io import root_open
 from higgstautau import log; log = log[__name__]
 from goodruns import GRL
 
@@ -12,7 +13,9 @@ class hhgrl(ATLASStudent):
     def work(self):
 
         # merge GRL XML strings
-        merged_grl = GRL()
+        grl = GRL()
         for fname in self.files:
-            merged_grl |= GRL('%s:/Lumi/%s' % (fname, self.metadata.treename))
-        merged_grl.save('grl.xml')
+            with root_open(fname) as f:
+                for key in f.Lumi.keys():
+                    grl |= GRL(str(key.ReadObj().GetString()), from_string=True)
+        grl.save('grl.xml')
