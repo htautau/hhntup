@@ -163,11 +163,13 @@ class hhskim(ATLASStudent):
 
             if datatype == datasets.DATA:
                 # merge GRL XML strings
-                grls = []
                 merged_grl = goodruns.GRL()
                 for fname in self.files:
-                    merged_grl |= goodruns.GRL(
-                        '%s:/Lumi/%s' % (fname, self.metadata.treename))
+                    with root_open(fname) as f:
+                        for key in f.Lumi.keys():
+                            merged_grl |= goodruns.GRL(
+                                str(key.ReadObj().GetString()),
+                                from_string=True)
                 lumi_dir = self.output.mkdir('Lumi')
                 lumi_dir.cd()
                 xml_string= ROOT.TObjString(merged_grl.str())
