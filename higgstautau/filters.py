@@ -491,6 +491,27 @@ class TauLArHole(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class TruthMatching(EventFilter):
+
+    def passes(self, event):
+
+        for tau in event.taus:
+            # CANNOT do the following due to buggy D3PD:
+            # tau.matched = tau.trueTauAssoc_index > -1
+            tau.matched = False
+            tau.matched_dr = 1111.
+            tau.matched_object = None
+            for truetau in event.truetaus:
+                dr = utils.dR(tau.eta, tau.phi, truetau.eta, truetau.phi)
+                if dr < 0.2:
+                    # TODO: handle possible collision!
+                    tau.matched = True
+                    tau.matched_dr = dr
+                    tau.matched_object = truetau
+                    break
+        return True
+
+
 class TauSelected(EventFilter):
 
     def __init__(self, min_taus, **kwargs):

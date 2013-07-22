@@ -60,6 +60,7 @@ class hhskim(ATLASStudent):
         parser.add_argument('--no-grl', action='store_true', default=False)
         parser.add_argument('--student-verbose', action='store_true', default=False)
         parser.add_argument('--validate', action='store_true', default=False)
+        parser.add_argument('--redo-selection', action='store_true', default=False)
         args = parser.parse_args(options)
         self.args = args
         if args.syst_terms is not None:
@@ -95,6 +96,8 @@ class hhskim(ATLASStudent):
         no_grl = self.args.no_grl
         verbose = self.args.student_verbose
         validate = self.args.validate
+        redo_selection = self.args.redo_selection
+
         dsname = os.getenv('INPUT_DATASET_NAME', None)
         if dsname is None:
             # attempt to guess dsname from dirname
@@ -222,7 +225,7 @@ class hhskim(ATLASStudent):
             onfilechange.append((update_trigger_config, (trigger_config,)))
 
         # define the list of event filters
-        if local and syst_terms is None:
+        if local and syst_terms is None and not redo_selection:
             event_filters = None
         else:
             event_filters = EventFilterList([
@@ -757,7 +760,7 @@ class hhskim(ATLASStudent):
             # collinear and visible mass
             ############################
             vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
-                    tau1, tau2, METx, METy)
+                tau1, tau2, METx, METy)
 
             tree.mass_vis_tau1_tau2 = vis_mass
             tree.mass_collinear_tau1_tau2 = collin_mass
@@ -813,6 +816,7 @@ class hhskim(ATLASStudent):
                 unmatched_truth = range(event.truetaus.len())
                 matched_truth = []
                 for i, tau in enumerate((tau1, tau2)):
+                    # TODO: don't use trueTauAssoc_index due to buggy D3PD
                     matching_truth_index = tau.trueTauAssoc_index
                     if matching_truth_index >= 0:
                         unmatched_reco.remove(i)
@@ -851,7 +855,7 @@ class hhskim(ATLASStudent):
 
             # This must come after the RecoJetBlock is filled since
             # that sets the jet_beta for boosting the taus
-            RecoTauBlock.set(event, tree, tau1, tau2)
+            RecoTauBlock.set(event, tree, tau1, tau2, skim=not local)
 
             # TODO UPDATE:
             if validate:

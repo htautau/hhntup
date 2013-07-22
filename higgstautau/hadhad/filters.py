@@ -187,15 +187,6 @@ class TaudR(EventFilter):
         return utils.dR(tau1.eta, tau1.phi, tau2.eta, tau2.phi) < self.dr
 
 
-class TruthMatching(EventFilter):
-
-    def passes(self, event):
-
-        for tau in event.taus:
-            tau.matched = tau.trueTauAssoc_index > -1
-        return True
-
-
 class TauTrackRecounting(EventFilter):
 
     def __init__(self, year, datatype, **kwargs):

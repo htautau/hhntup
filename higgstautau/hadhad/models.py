@@ -192,7 +192,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     tau_pt_ratio = FloatCol()
 
     @classmethod
-    def set(cls, event, tree, tau1, tau2):
+    def set(cls, event, tree, tau1, tau2, skim):
 
         tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
@@ -250,8 +250,11 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.matched_collision = intau.matched_collision
             outtau.min_dr_jet = intau.min_dr_jet
 
-            # track recounting
-            outtau.numTrack_recounted = intau.numTrack_recounted
+            if skim:
+                # track recounting
+                # the track branches are removed by the skim, so this should
+                # only be set in the skim and cannot be recomputed on the skim
+                outtau.numTrack_recounted = intau.numTrack_recounted
 
             # tau vertex association
             outtau.vertex_prob = intau.vertex_prob
