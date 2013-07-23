@@ -1,7 +1,11 @@
 embedded:
     systematics:
-        - TES_UP
-        - TES_DOWN
+        #- TES_UP
+        #- TES_DOWN
+        - TES_TRUE_UP
+        - TES_TRUE_DOWN
+        - TES_FAKE_UP
+        - TES_FAKE_DOWN
         #- TES_EOP_UP
         #- TES_EOP_DOWN
         #- TES_CTB_UP
@@ -56,8 +60,12 @@ mc:
         - JER_UP
         - JVF_UP
         - JVF_DOWN
-        - TES_UP
-        - TES_DOWN
+        #- TES_UP
+        #- TES_DOWN
+        - TES_TRUE_UP
+        - TES_TRUE_DOWN
+        - TES_FAKE_UP
+        - TES_FAKE_DOWN
         #- TES_EOP_UP
         #- TES_EOP_DOWN
         #- TES_CTB_UP

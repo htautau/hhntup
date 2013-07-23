@@ -286,6 +286,11 @@ class hhskim(ATLASStudent):
                     verbose=verbose,
                     passthrough=local,
                     count_funcs=count_funcs),
+                # truth matching must come before systematics due to
+                # TES_TRUE/FAKE
+                TruthMatching(
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
                 # PUT THE SYSTEMATICS "FILTER" BEFORE
                 # ANY FILTERS THAT REFER TO OBJECTS
                 # BUT AFTER CALIBRATIONS
@@ -349,9 +354,6 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     count_funcs=count_funcs),
                 TaudR(3.2,
-                    count_funcs=count_funcs),
-                TruthMatching(
-                    passthrough=datatype == datasets.DATA,
                     count_funcs=count_funcs),
                 TauTriggerMatchThreshold(
                     datatype=datatype,
