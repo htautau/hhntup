@@ -126,7 +126,7 @@ class JES(JetSystematic):
         elif self.year == 2012:
             assert np in self.all_nps and hasattr(self, '_'+np)
             self.np = np
-            self.run_np = getattr(self, '_'+np)
+            self.run_np = getattr(self, '_' + np)
 
             self.jes_tool = MultijetJESUncertaintyProvider(
                 "JES_2012/Moriond2013/MultijetJES_2012.config",
@@ -139,21 +139,27 @@ class JES(JetSystematic):
             raise ValueError('No JES defined for year %d' % year)
 
     def _Statistical(self, jet, event):
-        uncs = [0., 0., 0.]
-        for i in range(3):
-            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Statistical%d" % (i+1), jet.pt, jet.eta)
+        # HACK: use only stat1 for now
+        uncs = [0.]
+        #for i in range(3):
+        uncs[0] = self.jes_tool.getRelUncertComponent(
+            "EffectiveNP_Statistical1", jet.pt, jet.eta)
         return uncs
 
     def _Modelling(self, jet, event):
-        uncs = [0., 0., 0., 0.]
-        for i in range(4):
-            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Modelling%d" % (i+1), jet.pt, jet.eta)
+        # HACK: use only modelling1 for now
+        uncs = [0.]
+        #for i in range(4):
+        uncs[0] = self.jes_tool.getRelUncertComponent(
+            "EffectiveNP_Modelling1", jet.pt, jet.eta)
         return uncs
 
     def _Detector(self, jet, event):
-        uncs = [0., 0., 0.]
-        for i in range(3):
-            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Detector%d" % (i+1), jet.pt, jet.eta)
+        # HACK: use only detector1 for now
+        uncs = [0.]
+        #for i in range(3):
+        uncs[0] = self.jes_tool.getRelUncertComponent(
+            "EffectiveNP_Detector1", jet.pt, jet.eta)
         return uncs
 
     def _Mixed(self, jet, event):
@@ -248,13 +254,15 @@ class JES(JetSystematic):
                             self.sys_util.nvtxjets,
                             event.averageIntPerXing,
                             False) # is b jet
+
         elif self.year == 2012:
             if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
-                uncs =self.run_np(jet, event)
+                uncs = self.run_np(jet, event)
                 if len(uncs) > 1:
                     unc = 0.
-                    for u in uncs: unc += u**2.
+                    for u in uncs:
+                        unc += u**2.
                     unc = unc**0.5
                 else:
                     unc = uncs[0]
