@@ -502,7 +502,7 @@ class TruthMatching(EventFilter):
             tau.matched_dr = 1111.
             tau.matched_object = None
             for truetau in event.truetaus:
-                dr = utils.dR(tau.eta, tau.phi, truetau.eta, truetau.phi)
+                dr = utils.dR(tau.eta, tau.phi, truetau.vis_eta, truetau.vis_phi)
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     tau.matched = True
