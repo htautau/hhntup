@@ -6,6 +6,10 @@ from rootpy.tree import TreeModel, FloatCol, IntCol, BoolCol
 from rootpy.math.physics.vector import (LorentzRotation,
                                         LorentzVector,
                                         Vector3, Vector2)
+<<<<<<< HEAD
+=======
+
+>>>>>>> models
 
 class FourMomentum(TreeModel):
 
