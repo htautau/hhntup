@@ -23,37 +23,36 @@ datasets2011 = [
     ]
 
 datasets2012 = [
-    #'embed12-LH-IM',
+    'data12-PhysCont-periodA.Egamma',
+    'data12-PhysCont-periodA.JetTauEtmiss',
+    'data12-PhysCont-periodA.Muons',
+    'data12-PhysCont-periodB.Egamma',
+    'data12-PhysCont-periodB.JetTauEtmiss',
+    'data12-PhysCont-periodB.Muons',
+    'data12-PhysCont-periodC.Egamma',
+    'data12-PhysCont-periodC.JetTauEtmiss',
+    'data12-PhysCont-periodC.Muons',
+    'data12-PhysCont-periodD.Egamma',
+    'data12-PhysCont-periodD.JetTauEtmiss',
+    'data12-PhysCont-periodD.Muons',
+    'data12-PhysCont-periodE.Egamma',
+    'data12-PhysCont-periodE.JetTauEtmiss',
+    'data12-PhysCont-periodE.Muons',
+    'data12-PhysCont-periodG.Egamma',
+    'data12-PhysCont-periodG.JetTauEtmiss',
+    'data12-PhysCont-periodG.Muons',
+    'data12-PhysCont-periodH.Egamma',
+    'data12-PhysCont-periodH.JetTauEtmiss',
+    'data12-PhysCont-periodH.Muons',
+    'data12-PhysCont-periodI.Egamma',
+    'data12-PhysCont-periodI.JetTauEtmiss',
+    'data12-PhysCont-periodI.Muons',
+    'data12-PhysCont-periodJ.Egamma',
     'data12-PhysCont-periodJ.JetTauEtmiss',
-    #'data12-PhysCont-periodH.Egamma',
-    #'data12-PhysCont-periodJ.Muons',
-    #'data12-PhysCont-periodH.Muons',
-    #'data12-PhysCont-periodA.Muons',
-    #'data12-PhysCont-periodB.Muons',
-    #'data12-PhysCont-periodD.Muons',
-    #'data12-PhysCont-periodA.Egamma',
-    #'data12-PhysCont-periodE.JetTauEtmiss',
-    #'data12-PhysCont-periodI.JetTauEtmiss',
-    #'data12-PhysCont-periodH.JetTauEtmiss',
-    #'data12-PhysCont-periodG.Egamma',
-    #'data12-PhysCont-periodC.Egamma',
-    #'data12-PhysCont-periodL.Egamma',
-    #'data12-PhysCont-periodB.JetTauEtmiss',
-    #'data12-PhysCont-periodG.JetTauEtmiss',
-    #'data12-PhysCont-periodE.Muons',
-    #'data12-PhysCont-periodD.JetTauEtmiss',
-    #'data12-PhysCont-periodC.JetTauEtmiss',
-    #'data12-PhysCont-periodC.Muons',
-    #'data12-PhysCont-periodL.JetTauEtmiss',
-    #'data12-PhysCont-periodG.Muons',
-    #'data12-PhysCont-periodL.Muons',
-    #'data12-PhysCont-periodE.Egamma',
-    #'data12-PhysCont-periodD.Egamma',
-    #'data12-PhysCont-periodA.JetTauEtmiss',
-    #'data12-PhysCont-periodB.Egamma',
-    #'data12-PhysCont-periodI.Muons',
-    #'data12-PhysCont-periodI.Egamma',
-    #'data12-PhysCont-periodJ.Egamma',
+    'data12-PhysCont-periodJ.Muons',
+    'data12-PhysCont-periodL.Egamma',
+    'data12-PhysCont-periodL.JetTauEtmiss',
+    'data12-PhysCont-periodL.Muons',
     ]
 
 datasets = datasets2012
@@ -63,7 +62,7 @@ CWD = os.getcwd()
 for i in xrange(args.nsplit):
     for dataset in datasets:
 
-        CMD = ("%s && ./run --output-path /cluster/data05/michel/Ntuples/lephad/2012-p1443-4 "
+        CMD = ("%s && ./run --output-path /cluster/data05/michel/Ntuples/lephad/2012-5 "
                "-s LHProcessorCN.py -n %d --db datasets_lh "
         "--nice %d --split %d:%%d %s") % (
             setup, args.nproc, args.nice, args.nsplit, dataset)
@@ -73,7 +72,7 @@ for i in xrange(args.nsplit):
             cmd,
             ncpus=args.nproc,
             name= ('LHProcessorCN.data-%s_%d') % (dataset, (i + 1)),
-            stderr_path='/cluster/data05/michel/Ntuples/lephad/2012-p1443-4',
-            stdout_path='/cluster/data05/michel/Ntuples/lephad/2012-p1443-4',
+            stderr_path='/cluster/data05/michel/Ntuples/lephad/2012-5',
+            stdout_path='/cluster/data05/michel/Ntuples/lephad/2012-5',
             queue=args.queue,
             dry_run=args.dry)

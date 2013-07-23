@@ -7,7 +7,6 @@ from rootpy.math.physics.vector import (LorentzRotation,
                                         LorentzVector,
                                         Vector3, Vector2)
 
-
 class FourMomentum(TreeModel):
 
     fourvect = LorentzVector

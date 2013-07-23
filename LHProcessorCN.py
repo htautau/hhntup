@@ -25,70 +25,8 @@ from atlastools.filtering import GRLFilter
 from goodruns import GRL
 import subprocess
 
-YEAR = 2011
+YEAR = 2012
 VERBOSE = False
-DO_VBF_OLR = False
-VBF_OLR_CONFIG = {
-    'ZmumuNp2' : (False, -1, -1, True, 2.1, 210),
-    'ZmumuNp3' : (False, -1, -1, True, 2.1, 210),
-    'ZmumuNp4' : (False, -1, -1, True, 2.1, 210),
-    'ZmumuNp5' : (False, -1, -1, True, 2.1, 210),
-    'ZeeNp2' : (False, -1, -1, True, 2.1, 210),
-    'ZeeNp3' : (False, -1, -1, True, 2.1, 210),
-    'ZeeNp4' : (False, -1, -1, True, 2.1, 210),
-    'ZeeNp5' : (False, -1, -1, True, 2.1, 210),
-    'ZtautauNp2' : (False, -1, -1, True, 2.1, 210),
-    'ZtautauNp3' : (False, -1, -1, True, 2.1, 210),
-    'ZtautauNp4' : (False, -1, -1, True, 2.1, 210),
-    'ZtautauNp5' : (False, -1, -1, True, 2.1, 210),
-    
-    'WtaunuNp3' : (False, -1, -1, True, 3.1, 410),
-    'WtaunuNp4' : (False, -1, -1, True, 3.1, 410),
-    'WtaunuNp5' : (False, -1, -1, True, 3.1, 410),
-    'WenuNp3' : (False, -1, -1, True, 3.1, 410),
-    'WenuNp4' : (False, -1, -1, True, 3.1, 410),
-    'WenuNp5' : (False, -1, -1, True, 3.1, 410),
-    'WmunuNp3' : (False, -1, -1, True, 3.1, 410),
-    'WmunuNp4' : (False, -1, -1, True, 3.1, 410),
-    'WmunuNp5' : (False, -1, -1, True, 3.1, 410),
-
-    
-    'VBF_ZmumuNp2' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZmumuNp3' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZmumuNp4' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZmumuNp5' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZeeNp2' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZeeNp3' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZeeNp4' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ZeeNp5' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ATau_ZtautauNp2' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ATau_ZtautauNp3' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ATau_ZtautauNp4' : (True, 2.1, 210, True, 4.1, 410),
-    'VBF_ATau_ZtautauNp5' : (True, 2.1, 210, True, 4.1, 410),
-
-    'VBF_WtaunuNp3' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WtaunuNp4' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WtaunuNp5' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WenuNp3' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WenuNp4' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WenuNp5' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WmunuNp3' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WmunuNp4' : (True, 3.1, 410, False, -1, -1),
-    'VBF_WmunuNp5' : (True, 3.1, 410, False, -1, -1),
-
-    'TVBF_ZmumuNp2' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZmumuNp3' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZmumuNp4' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZmumuNp5' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZeeNp2' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZeeNp3' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZeeNp4' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ZeeNp5' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ATau_ZtautauNp2' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ATau_ZtautauNp3' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ATau_ZtautauNp4' : (True, 4.1, 410, False, -1, -1),
-    'TVBF_ATau_ZtautauNp5' : (True, 4.1, 410, False, -1, -1),
-}
 
 ## Shape systematics dictionary to access systematics trees
 SYSTEMATICS = {
@@ -101,14 +39,14 @@ SYSTEMATICS = {
     'ATLAS_JES_EtaMethod_UP'       : 'SystematicsUP/JES_EtaMethod',
     'ATLAS_JES_EtaModelling_DOWN'  : 'SystematicsDOWN/JES_EtaModelling',
     'ATLAS_JES_EtaModelling_UP'    : 'SystematicsUP/JES_EtaModelling',
-    'ATLAS_JES_FlavComp_DOWN'      : 'SystematicsDOWN/JES_FlavComp',
-    'ATLAS_JES_FlavComp_UP'        : 'SystematicsUP/JES_FlavComp',
+    'ATLAS_JES_FlavComp_g_DOWN'      : 'SystematicsDOWN/JES_FlavComp',
+    'ATLAS_JES_FlavComp_g_UP'        : 'SystematicsUP/JES_FlavComp',
     'ATLAS_JES_FlavResp_DOWN'      : 'SystematicsDOWN/JES_FlavResp',
     'ATLAS_JES_FlavResp_UP'        : 'SystematicsUP/JES_FlavResp',
     'ATLAS_JES_Mixed_DOWN'         : 'SystematicsDOWN/JES_Mixed',
     'ATLAS_JES_Mixed_UP'           : 'SystematicsUP/JES_Mixed',
-    'ATLAS_JES_Modelling_DOWN'     : 'SystematicsDOWN/JES_Modelling',
-    'ATLAS_JES_Modelling_UP'       : 'SystematicsUP/JES_Modelling',
+    'ATLAS_JES_2012_Modelling1_DOWN'     : 'SystematicsDOWN/JES_Modelling',
+    'ATLAS_JES_2012_Modelling1_UP'       : 'SystematicsUP/JES_Modelling',
     'ATLAS_JES_PUMu_DOWN'          : 'SystematicsDOWN/JES_PUMu',
     'ATLAS_JES_PUMu_UP'            : 'SystematicsUP/JES_PUMu',
     'ATLAS_JES_PUNPV_DOWN'         : 'SystematicsDOWN/JES_PUNPV',
@@ -252,22 +190,6 @@ class LHProcessorCN(ATLASStudent):
 
         filter_list = [JetSelection(YEAR)]
 
-
-        if DO_VBF_OLR:
-            vbf_filter_config = None
-
-            try:
-                vbf_filter_config = VBF_OLR_CONFIG[self.metadata.name]
-            except KeyError:
-                pass
-
-            if vbf_filter_config is not None:
-                if vbf_filter_config[0]:
-                    filter_list.append(VBFFilter(vbf_filter_config[1], vbf_filter_config[2]))
-                if vbf_filter_config[3]:
-                    filter_list.append(AntiVBFFilter(vbf_filter_config[4], vbf_filter_config[5]))
-            
-
         ## Setting event filters
         event_filters = EventFilterList(filter_list)
 
@@ -286,12 +208,21 @@ class LHProcessorCN(ATLASStudent):
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='lep', prefix='lep_')
 
+        ## Get Tau Correction
+        from externaltools.bundle_2012 import TauCorrUncert as TCU
+        from ROOT import TauCorrUncert
+        TauSFCorrections = TauCorrUncert.TauSF(TCU.RESOURCE_PATH)
+
         # entering the main event loop...
         for event in chain:
 
             if self.metadata.datatype != datasets.EMBED:
                 cutflow.reset()
 
+
+            ## -- VBF OLR -- ##
+            if event.evtsel_vbf_overlap_flag:
+                continue
                 
             ## -- Subsample -- ##
                 
@@ -325,6 +256,10 @@ class LHProcessorCN(ATLASStudent):
             tree.is_tau = event.evtsel_is_tau
             #if not event.evtsel_is_dilepVeto: continue
 
+            ## Correct tau ID SF
+            if event.evtsel_tau_is_real and not event.evtsel_tau_is_had:
+                evtsel_weight *= TauSFCorrections.GetIDSF(TauCorrUncert.BDTMEDIUM, event.evtsel_tau_eta, event.evtsel_tau_numTrack)
+
             ## Convert to private ntuple
             ##########################################################################
 
@@ -339,14 +274,14 @@ class LHProcessorCN(ATLASStudent):
             tree.SLT = (SLT and not LTT)
 
             ## Dump fake factor
-            # if tree.LTT:
-            #     tree.FF = event.evtsel_weight_FF_LTT
-            #     tree.FF_up = event.evtsel_sys_ff_ltt_up
-            #     tree.FF_down = event.evtsel_sys_ff_ltt_down
-            # if tree.SLT:
-            #     tree.FF = event.evtsel_weight_FF_SLT
-            #     tree.FF_up = event.evtsel_sys_ff_slt_up
-            #     tree.FF_down = event.evtsel_sys_ff_slt_down
+            if tree.LTT:
+                tree.FF = event.evtsel_weight_FF_LTT
+                tree.FF_up = event.evtsel_sys_ff_ltt_up
+                tree.FF_down = event.evtsel_sys_ff_ltt_down
+            if tree.SLT:
+                tree.FF = event.evtsel_weight_FF_SLT
+                tree.FF_up = event.evtsel_sys_ff_slt_up
+                tree.FF_down = event.evtsel_sys_ff_slt_down
                 
 
             

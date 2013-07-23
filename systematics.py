@@ -70,8 +70,17 @@ SYSTEMATICS_LEPHAD = [
     #('ATLAS_JES_Detector_UP',),
     #('ATLAS_JES_EtaModelling_DOWN',),
     #('ATLAS_JES_EtaModelling_UP',),
-    #('ATLAS_JES_Modelling_DOWN',),
-    #('ATLAS_JES_Modelling_UP',),
+    ('ATLAS_JES_2012_Modelling1_DOWN',),
+    ('ATLAS_JES_2012_Modelling1_UP',),
+    
+    ('ATLAS_JES_FlavComp_g_DOWN',),
+    ('ATLAS_JES_FlavComp_g_UP',),
+    
+    ('ATLAS_JES_FlavResp_DOWN',),
+    ('ATLAS_JES_FlavResp_UP',),
+
+    ('ATLAS_JES_EtaModelling_DOWN',),
+    ('ATLAS_JES_EtaModelling_UP',),
 
     #('ATLAS_JER_DOWN',),
     #('ATLAS_JER_UP',),
