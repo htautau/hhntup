@@ -541,7 +541,7 @@ class hhskim(ATLASStudent):
         #####################
         for event in chain:
 
-            if local and syst_terms is None:
+            if local and syst_terms is None and not redo_selection:
                 outtree.Fill()
                 continue
 
