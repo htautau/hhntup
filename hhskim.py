@@ -439,7 +439,13 @@ class hhskim(ATLASStudent):
             'mc_pdgId',
             'mc_charge',
             'mc_status',
+            'mc_n',
             'jet_antikt4truth_*',
+        ]
+
+        extra_truth_branches = [
+            'mc_event_weight',
+            'mcevt_*',
         ]
 
         # peek at first tree to determine which branches to exclude
@@ -452,6 +458,7 @@ class hhskim(ATLASStudent):
                 hhbranches.REMOVE_OUTPUT,
                 exclude=hhbranches.KEEP_OUTPUT)
             truth_branches = test_tree.glob(truth_branches)
+            extra_truth_branches = test_tree.glob(extra_truth_branches)
 
         # initialize the TreeChain of all input files
         chain = TreeChain(
@@ -472,6 +479,7 @@ class hhskim(ATLASStudent):
 
             if is_signal and syst_terms is None:
                 copied.extend(truth_branches)
+                copied.extend(extra_truth_branches)
 
             hh_buffer = TreeBuffer()
             buffer = TreeBuffer()
