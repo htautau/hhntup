@@ -160,7 +160,7 @@ class TauTriggerMatchThreshold(EventFilter):
 
         if self.datatype == datasets.EMBED:
             assert len(event.taus) == 2
-            assert event.taus[0].pt > event.taus[1].pt
+            assert event.taus[0].pt >= event.taus[1].pt
             # taus are already sorted in descending order by pT by TauLeadSublead
             tau1, tau2 = event.taus
             tau1.trigger_match_thresh = 29
