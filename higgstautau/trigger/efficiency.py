@@ -333,7 +333,7 @@ class TauTriggerEfficiency(EventFilter):
     def passes_12_embed(self, event):
 
         assert len(event.taus) == 2
-        assert event.taus[0].pt > event.taus[1].pt
+        assert event.taus[0].pt >= event.taus[1].pt
         # taus are already sorted in descending order by pT by TauLeadSublead
 
         # new tool only accepts EVnone
