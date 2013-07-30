@@ -136,7 +136,7 @@ class TauTriggerEfficiency(EventFilter):
         """
 
         """
-        if event.RunNumber >= 188902:
+        if self.tree.RunNumber >= 188902:
             assert taus[0][1].EF_tau29T_medium1 == 1
             assert taus[1][1].EF_tau20T_medium1 == 1
         else:
@@ -152,13 +152,13 @@ class TauTriggerEfficiency(EventFilter):
                 continue
 
             if tau.trigger_match_thresh == 20:
-                if event.RunNumber >= 188902:
+                if self.tree.RunNumber >= 188902:
                      corr = self.correct_20T
                 else:
                      corr = self.correct_20
                 thresh.append(20)
             elif tau.trigger_match_thresh == 29:
-                if event.RunNumber >= 188902:
+                if self.tree.RunNumber >= 188902:
                     corr = self.correct_29T
                 else:
                     corr = self.correct_29
@@ -214,7 +214,7 @@ class TauTriggerEfficiency(EventFilter):
             else:
                 prong = 1
 
-            corr = self.corrections[thresh][wpflag][prong][event.RunNumber >= 188902]
+            corr = self.corrections[thresh][wpflag][prong][self.tree.RunNumber >= 188902]
             tau.trigger_scale_factor = abs(corr.get3DMCEff(
                 tau.pt, tau.eta,
                 npileup_vtx, 0))
@@ -239,7 +239,7 @@ class TauTriggerEfficiency(EventFilter):
 
     def passes_12_mc(self, event):
 
-        period = self.get_period_2012(event.RunNumber)
+        period = self.get_period_2012(self.tree.RunNumber)
         thresh = []
 
         # new tool only accepts EVnone
@@ -333,7 +333,7 @@ class TauTriggerEfficiency(EventFilter):
     def passes_12_embed(self, event):
 
         assert len(event.taus) == 2
-        assert event.taus[0].pt > event.taus[1].pt
+        assert event.taus[0].pt >= event.taus[1].pt
         # taus are already sorted in descending order by pT by TauLeadSublead
 
         # new tool only accepts EVnone
@@ -352,9 +352,9 @@ class TauTriggerEfficiency(EventFilter):
 
             wpflag = self.get_id_12(tau)
 
-            sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, event.RunNumber, prong, wpflag, eveto))
+            sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, self.tree.RunNumber, prong, wpflag, eveto))
 
-            #if event.RunNumber == 207528 and event.EventNumber == 2183594:
+            #if self.tree.RunNumber == 207528 and event.EventNumber == 2183594:
             #    print sf, tau.pt, tau.eta, prong, wpflag, eveto
 
             if math.isinf(sf) or math.isnan(sf):
@@ -367,11 +367,11 @@ class TauTriggerEfficiency(EventFilter):
             tau.trigger_scale_factor = sf
 
             # Data stat uncert
-            data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, event.RunNumber, prong, wpflag, eveto))
-            data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, event.RunNumber, prong, wpflag, eveto))
+            data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, self.tree.RunNumber, prong, wpflag, eveto))
+            data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, self.tree.RunNumber, prong, wpflag, eveto))
             # Systematic uncert
-            sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, event.RunNumber, prong, wpflag, eveto))
-            sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, event.RunNumber, prong, wpflag, eveto))
+            sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, self.tree.RunNumber, prong, wpflag, eveto))
+            sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, self.tree.RunNumber, prong, wpflag, eveto))
 
             sigma_up = math.sqrt(math.pow(data_stat_up, 2.) +
                                  math.pow(sys_up, 2.))

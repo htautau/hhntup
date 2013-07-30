@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('--year', type=int, choices=(11, 12), default=11)
-parser.add_argument('--student', default='HHProcessor.py')
+parser.add_argument('--student', default='hhskim.py')
 parser.add_argument('--systematics', default=None)
 parser.add_argument('--nproc', type=int, default=5)
 parser.add_argument('--nsplit', type=int, default=30)
@@ -83,6 +83,7 @@ if not args.systematics_only:
         run_sample(sample)
 
 if not args.nominal_only:
+    # TODO: use args.systematics to filter below
     if args.systematics is not None:
         args.systematics = [
                 tuple(s.upper().split('+')) for s in

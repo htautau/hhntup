@@ -9,6 +9,7 @@ from rootpy.tree.filtering import EventFilter
 from rootpy import ROOTError
 from externaltools import ApplyJetCalibration
 from ROOT import JetCalibrationTool
+from . import log; log = log[__name__]
 
 
 class JetCalibration(EventFilter):
@@ -39,7 +40,7 @@ class JetCalibration(EventFilter):
             else:
                 raise ValueError(
                         "No JES calibration defined for year %d" % year)
-            print "Using JES config %s" % config
+            log.info("Using JES config %s" % config)
             self.config_file = ApplyJetCalibration.get_resource(
                     'CalibrationConfigs/%s' % config)
             self.jes_tool = JetCalibrationTool(

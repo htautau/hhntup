@@ -1,3 +1,5 @@
+from atlastools import datasets
+
 from rootpy.tree.filtering import EventFilter
 
 from externaltools import PileupReweighting
@@ -26,8 +28,8 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
         pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
         pileup_tool.AddLumiCalcFile(
-                'lumi/2011/hadhad/'
-                'ilumicalc_histograms_None_178044-191933.root')
+            'lumi/2011/hadhad/'
+            'ilumicalc_histograms_None_178044-191933.root')
     elif year == 2012:
         if use_defaults:
             pileup_tool.AddConfigFile(
@@ -40,8 +42,8 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
         pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
         pileup_tool.AddLumiCalcFile(
-                'lumi/2012/hadhad/'
-                'ilumicalc_histograms_None_200842-215643.root')
+            'lumi/2012/hadhad/'
+            'ilumicalc_histograms_None_200842-215643.root')
     else:
         raise ValueError('No pileup reweighting defined for year %d' %
                 year)
@@ -68,8 +70,8 @@ class PileupTemplates(EventFilter):
             self.pileup_tool.Initialize()
 
         super(PileupTemplates, self).__init__(
-                passthrough=passthrough,
-                **kwargs)
+            passthrough=passthrough,
+            **kwargs)
 
     def passes(self, event):
 
@@ -98,8 +100,8 @@ class PileupReweight(EventFilter):
             self.tool = tool
 
         super(PileupReweight, self).__init__(
-                passthrough=passthrough,
-                **kwargs)
+            passthrough=passthrough,
+            **kwargs)
 
     def passes(self, event):
 
@@ -114,23 +116,38 @@ class PileupReweight(EventFilter):
                 event.mc_channel_number)
         """
         self.tree.pileup_weight = self.tool.GetCombinedWeight(
-                event.RunNumber,
-                event.mc_channel_number,
-                event.averageIntPerXing)
+            event.RunNumber,
+            event.mc_channel_number,
+            event.averageIntPerXing)
         return True
 
 
-class PileupDataScale(EventFilter):
+class PileupScale(EventFilter):
 
-    def __init__(self, year, **kwargs):
+    def __init__(self, tree, year, datatype, **kwargs):
 
+        self.tree = tree
         self.scale = DATA_SCALE_FACTOR[year]
-        super(PileupDataScale, self).__init__(**kwargs)
+        super(PileupScale, self).__init__(**kwargs)
 
-    def passes(self, event):
+        if datatype in (datasets.DATA, datasets.EMBED):
+            self.passes = self.passes_data
+        elif datatype == datasets.MC:
+            self.passes = self.passes_mc
+        else:
+            raise ValueError("no pileup scale defined for datatype %d" %
+                datatype)
 
-        event.averageIntPerXing *= self.scale
-        event.actualIntPerXing *= self.scale
+    def passes_data(self, event):
+
+        self.tree.averageIntPerXing = event.averageIntPerXing * self.scale
+        self.tree.actualIntPerXing = event.actualIntPerXing * self.scale
+        return True
+
+    def passes_mc(self, event):
+
+        self.tree.averageIntPerXing = event.averageIntPerXing
+        self.tree.actualIntPerXing = event.actualIntPerXing
         return True
 
 

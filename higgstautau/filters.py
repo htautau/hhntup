@@ -44,17 +44,27 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
-class MCRunNumber(EventFilter):
+class RandomRunNumber(EventFilter):
 
-    def __init__(self, pileup_tool, **kwargs):
+    def __init__(self, tree, datatype, pileup_tool, **kwargs):
 
+        self.tree = tree
         self.pileup_tool = pileup_tool
-        super(MCRunNumber, self).__init__(**kwargs)
+        super(RandomRunNumber, self).__init__(**kwargs)
+        if datatype == datasets.MC:
+            self.passes = self.passes_mc
+        else:
+            self.passes = self.passes_data
 
-    def passes(self, event):
+    def passes_data(self, event):
+
+        self.tree.RunNumber = event.RunNumber
+        return True
+
+    def passes_mc(self, event):
 
         # get random run number using the pileup tool
-        event.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
         return True
 
 
@@ -174,32 +184,37 @@ def in_lar_hole(eta, phi):
 
 class LArHole(EventFilter):
 
-    def __init__(self, datatype, **kwargs):
+    def __init__(self, datatype, tree, **kwargs):
 
         super(LArHole, self).__init__(**kwargs)
         if datatype in (datasets.DATA, datasets.EMBED):
             self.passes = self.passes_data
         else:
             self.passes = self.passes_mc
+        self.tree = tree
 
     def passes_data(self, event):
 
-        if not 180614 <= event.RunNumber <= 184169:
+        if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
         for jet in event.jets:
-            if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL): continue
-            if in_lar_hole(jet.eta, jet.phi): return False
+            if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL):
+                continue
+            if in_lar_hole(jet.eta, jet.phi):
+                return False
         return True
 
     def passes_mc(self, event):
 
-        if not 180614 <= event.RunNumber <= 184169:
+        if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
         for jet in event.jets:
-            if not jet.pt > 20 * GeV: continue
-            if in_lar_hole(jet.eta, jet.phi): return False
+            if not jet.pt > 20 * GeV:
+                continue
+            if in_lar_hole(jet.eta, jet.phi):
+                return False
         return True
 
 
@@ -459,20 +474,42 @@ class TauCrack(EventFilter):
 
 class TauLArHole(EventFilter):
 
-    def __init__(self, min_taus, **kwargs):
+    def __init__(self, min_taus, tree, **kwargs):
 
         self.min_taus = min_taus
+        self.tree = tree
         super(TauLArHole, self).__init__(**kwargs)
 
     def passes(self, event):
 
-        if not 180614 <= event.RunNumber <= 184169:
+        if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
         event.taus.select(lambda tau:
                 not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
                  and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
         return len(event.taus) >= self.min_taus
+
+
+class TruthMatching(EventFilter):
+
+    def passes(self, event):
+
+        for tau in event.taus:
+            # CANNOT do the following due to buggy D3PD:
+            # tau.matched = tau.trueTauAssoc_index > -1
+            tau.matched = False
+            tau.matched_dr = 1111.
+            tau.matched_object = None
+            for truetau in event.truetaus:
+                dr = utils.dR(tau.eta, tau.phi, truetau.vis_eta, truetau.vis_phi)
+                if dr < 0.2:
+                    # TODO: handle possible collision!
+                    tau.matched = True
+                    tau.matched_dr = dr
+                    tau.matched_object = truetau
+                    break
+        return True
 
 
 class TauSelected(EventFilter):
@@ -657,4 +694,28 @@ class EmbeddingCorrections(EventFilter):
                 event.RunNumber)
         self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
         self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
+        return True
+
+
+class JetCopy(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+
+        super(JetCopy, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+
+        tree = self.tree
+        tree.jet_E_original.clear()
+        tree.jet_m_original.clear()
+        tree.jet_pt_original.clear()
+        tree.jet_eta_original.clear()
+        tree.jet_phi_original.clear()
+        for jet in event.jets:
+            tree.jet_E_original.push_back(jet.E)
+            tree.jet_m_original.push_back(jet.m)
+            tree.jet_pt_original.push_back(jet.pt)
+            tree.jet_eta_original.push_back(jet.eta)
+            tree.jet_phi_original.push_back(jet.phi)
         return True

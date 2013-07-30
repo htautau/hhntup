@@ -1,4 +1,8 @@
+# branches to ignore in the input tree and not include in the output tree
+
 REMOVE = [
+    "vxp_trk_weight",
+
     "cl_*",
     "ph_*",
 
@@ -7,6 +11,9 @@ REMOVE = [
     # use mc_parent_index and mc_child_index
     "mc_children",
     "mc_parents",
+    "mc_barcode",
+    # don't need vertices
+    "mc_vx_*",
 
     #"jet_AntiKt4TopoEM_*", <== jet cleaning recommendation is with TopoEM jets
     #"jet_AntiKt4LCTopo_*",  <== need these for MET systematics
@@ -18,6 +25,7 @@ REMOVE = [
     "tau_cell_*",
     "tau_cluster_*",
 
+    # don't need the following trigger info
     "EF_2e*",
     "EF_2mu*",
     "EF_2j*",
@@ -31,6 +39,42 @@ REMOVE = [
     "EF_g*",
     "L1_*",
     "L2_*",
+    "trig_L2_*",
+    "trig_EF_trigmuonef*",
+    "trig_EF_trigmugirl*",
+    "EF_b*",
+    "EF_2b*",
+    "*_TileMu_*",
+    "trig_L1_*",
+    "trig_EF_tau_seedCalo*",
+    "trig_EF_tau_otherTrk*",
+    "trig_EF_tau_track*",
+    "trig_RoI_L2_*",
+    "trig_roidescriptor_*",
+    "trig_EF_topocl_*",
+    "trig_EF_jet*",
+    "trig_EF_feb_*",
+    "trig_EF_bjet_*",
+    "trig_RoI_EF_j_*",
+    "trig_RoI_EF_b_*",
+    "trig_RoI_EF_mu_*",
+
+    "tau_jet_*",
+
+    "efo_*",
+
+    "isCalibration",
+    "isSimulation",
+    "isTestBeam",
+
+    "egtruth_*",
+
+    # don't need pantau info
+    "tau_pantau_*",
+
+    # extra tau into we don't need
+    "tau_seedCalo_track_*",
+    "tau_seedCalo_wideTrk_*",
 
     "muonTruth*",
     # needed for JVF syst ONLY IN THE SIGNAL SAMPLES
@@ -49,7 +93,8 @@ REMOVE = [
     "trk_theta_qoverp_err_wrtBL",
     "trk_err_phi_wrtBS",
     "tau_jet_e_TileExt0",
-    "mcevt_pdf1",
+
+    "mcevt_pdf*",
 ]
 
 # override globs above
@@ -113,47 +158,15 @@ KEEP = [
     "mu_staco_nSCTHoles",
     "mu_staco_nTRTHits",
     "mu_staco_nTRTOutliers",
+
+    "tau_jet_jvtxf",
 ]
 
-"""
-+ [ # variables needed for MET patch
-    "tau_pt",
-    "tau_eta",
-    "tau_phi",
-    "tau_MET_wet",
-    "tau_MET_wpx",
-    "tau_MET_wpy",
-    "el_pt",
-    "el_eta",
-    "el_phi",
-    "el_E",
-    "el_MET_wet",
-    "el_MET_wpx",
-    "el_MET_wpy",
-    "ph_pt",
-    "ph_eta",
-    "ph_phi",
-    "ph_pt",
-    "ph_MET_wet",
-    "ph_MET_wpx",
-    "ph_MET_wpy",
-    "jet_pt",
-    "jet_eta",
-    "jet_phi",
-    "jet_pt",
-    "jet_AntiKt4LCTopo_MET_wet",
-    "jet_AntiKt4LCTopo_MET_wpx",
-    "jet_AntiKt4LCTopo_MET_wpy",
-    "tau_JetBDTSigMedium",
-    "tau_EleBDTMedium",
-    "tau_muonVeto",
-    "tau_seedCalo_etHadCalib",
-    "tau_seedCalo_etEMCalib",
-    "jet_jvtxf",
-    "MET_CellOut_Eflow_STVF_etx",
-    "MET_CellOut_Eflow_STVF_ety",
-    "MET_CellOut_Eflow_STVF_sumet",
-    "MET_CellOut_Eflow_STVF_sumet",
-    "MET_CellOut_Eflow_sumet",
+# additional branches to remove only in the output tree
+
+REMOVE_OUTPUT = [
+    'trk_*',
 ]
-"""
+
+# override REMOVE_OUTPUT above
+KEEP_OUTPUT = []

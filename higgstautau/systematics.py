@@ -8,6 +8,7 @@ from math import sin, sqrt, pow
 
 # local imports
 from . import tauid
+from . import log; log = log[__name__]
 
 from atlastools import utils
 from atlastools import datasets
@@ -125,11 +126,11 @@ class JES(JetSystematic):
         elif self.year == 2012:
             assert np in self.all_nps and hasattr(self, '_'+np)
             self.np = np
-            self.run_np = getattr(self, '_'+np)
+            self.run_np = getattr(self, '_' + np)
 
             self.jes_tool = MultijetJESUncertaintyProvider(
                 "JES_2012/Moriond2013/MultijetJES_2012.config",
-#                 "JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
+                #"JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
                 "JES_2012/Moriond2013/InsituJES2012_20NP_ByCategory.config",
                 "AntiKt4TopoLC",
                 "MC12a",
@@ -138,21 +139,27 @@ class JES(JetSystematic):
             raise ValueError('No JES defined for year %d' % year)
 
     def _Statistical(self, jet, event):
-        uncs = [0., 0., 0.]
-        for i in range(3):
-            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Statistical%d" % (i+1), jet.pt, jet.eta)
+        # HACK: use only stat1 for now
+        uncs = [0.]
+        #for i in range(3):
+        uncs[0] = self.jes_tool.getRelUncertComponent(
+            "EffectiveNP_Statistical1", jet.pt, jet.eta)
         return uncs
 
     def _Modelling(self, jet, event):
-        uncs = [0., 0., 0., 0.]
-        for i in range(4):
-            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Modelling%d" % (i+1), jet.pt, jet.eta)
+        # HACK: use only modelling1 for now
+        uncs = [0.]
+        #for i in range(4):
+        uncs[0] = self.jes_tool.getRelUncertComponent(
+            "EffectiveNP_Modelling1", jet.pt, jet.eta)
         return uncs
 
     def _Detector(self, jet, event):
-        uncs = [0., 0., 0.]
-        for i in range(3):
-            uncs[i] = self.jes_tool.getRelUncertComponent("EffectiveNP_Detector%d" % (i+1), jet.pt, jet.eta)
+        # HACK: use only detector1 for now
+        uncs = [0.]
+        #for i in range(3):
+        uncs[0] = self.jes_tool.getRelUncertComponent(
+            "EffectiveNP_Detector1", jet.pt, jet.eta)
         return uncs
 
     def _Mixed(self, jet, event):
@@ -247,13 +254,15 @@ class JES(JetSystematic):
                             self.sys_util.nvtxjets,
                             event.averageIntPerXing,
                             False) # is b jet
+
         elif self.year == 2012:
             if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
-                uncs =self.run_np(jet, event)
+                uncs = self.run_np(jet, event)
                 if len(uncs) > 1:
                     unc = 0.
-                    for u in uncs: unc += u**2.
+                    for u in uncs:
+                        unc += u**2.
                     unc = unc**0.5
                 else:
                     unc = uncs[0]
@@ -482,11 +491,16 @@ class TauSystematic(ObjectSystematic):
 
 class TES(TauSystematic):
 
-    def __init__(self, is_up, np_=TauCorrUncert.TESUncertainty.EOP, infile='TES/mc12_p1344_medium.root', **kwargs):
+    def __init__(self, is_up,
+                 np=TauCorrUncert.TESUncertainty.FINAL,
+                 infile='TES/mc12_p1344_medium.root',
+                 matched_state=None,
+                 **kwargs):
 
         super(TES, self).__init__(is_up, **kwargs)
 
-        self.np = np_
+        self.np = np
+        self.matched_state = matched_state
         if self.year == 2011:
             from externaltools.bundle_2011 import TESUncertaintyProvider as TESP
             from ROOT import TESUncertaintyProvider
@@ -502,6 +516,14 @@ class TES(TauSystematic):
     @TauSystematic.set
     def run(self, tau, event):
 
+        # need nominal pT for trigger efficiency correction
+        tau._pt_nominal = tau.pt
+
+        if self.matched_state is True and not tau.matched:
+            return
+        elif self.matched_state is False and tau.matched:
+            return
+
         pt = tau.pt
         eta = tau.eta
         nProng = tau.nProng
@@ -511,8 +533,6 @@ class TES(TauSystematic):
             shift = 0
         if not self.is_up:
             shift *= -1
-        # need nominal pT for trigger efficiency correction
-        tau._pt_nominal = tau.pt
         tau.pt *= 1. + shift
 
 
@@ -629,6 +649,12 @@ class Systematics(EventFilter):
     # taus
     TES_UP = METUtil.TESUp
     TES_DOWN = METUtil.TESDown
+
+    TES_TRUE_UP = -30000
+    TES_TRUE_DOWN = -30001
+    TES_FAKE_UP = -30010
+    TES_FAKE_DOWN = -30011
+
     TES_EOP_UP = -20000
     TES_EOP_DOWN = -20001
     TES_CTB_UP = -20010
@@ -643,12 +669,37 @@ class Systematics(EventFilter):
     TES_PU_DOWN = -20051
     TES_OTHERS_UP = -20060
     TES_OTHERS_DOWN = -20061
+
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
-    TES_TERMS = set([TES_UP, TES_DOWN])
-    TAU_TERMS = set([TES_UP, TES_DOWN, TER_UP, TER_DOWN])
+
+    TES_TERMS = set([
+        TES_UP, TES_DOWN,
+        TES_TRUE_UP, TES_TRUE_DOWN,
+        TES_FAKE_UP, TES_FAKE_DOWN,
+        TES_EOP_UP,
+        TES_EOP_DOWN,
+        TES_CTB_UP,
+        TES_CTB_DOWN,
+        TES_Bias_UP,
+        TES_Bias_DOWN,
+        TES_EM_UP,
+        TES_EM_DOWN,
+        TES_LCW_UP,
+        TES_LCW_DOWN,
+        TES_PU_UP,
+        TES_PU_DOWN,
+        TES_OTHERS_UP,
+        TES_OTHERS_DOWN])
+
+    TAU_TERMS = set([TER_UP, TER_DOWN]) | TES_TERMS
+
     TAUBDT_UP = -100
     TAUBDT_DOWN = -101
+
+    # jets
+    JES_UP = METUtil.JESUp
+    JES_DOWN = METUtil.JESDown
 
     JES_Statistical_UP = -10000
     JES_Statistical_DOWN = -10001
@@ -678,33 +729,32 @@ class Systematics(EventFilter):
     JES_BJet_DOWN = -10121
     JES_NonClosure_UP = -10130
     JES_NonClosure_DOWN = -10131
+
+    JER_UP = METUtil.JERUp
+    JER_DOWN = METUtil.JERDown # NOT USED!
+
     JVF_UP = -11000
     JVF_DOWN = -11001
 
-    # jets
-#     JES_UP = METUtil.JESUp
-#     JES_DOWN = METUtil.JESDown
-    JER_UP = METUtil.JERUp
-    JER_DOWN = METUtil.JERDown # NOT USED!
     JES_TERMS = set([
-#             JES_UP,                 JES_DOWN,
-            JES_Statistical_UP,     JES_Statistical_DOWN,
-            JES_Modelling_UP,       JES_Modelling_DOWN,
-            JES_Detector_UP,        JES_Detector_DOWN,
-            JES_Mixed_UP,           JES_Mixed_DOWN,
-            JES_EtaModelling_UP,    JES_EtaModelling_DOWN,
-            JES_EtaMethod_UP,       JES_EtaMethod_DOWN,
-            JES_PURho_UP,           JES_PURho_DOWN,
-            JES_PUPt_UP,            JES_PUPt_DOWN,
-            JES_PUNPV_UP,           JES_PUNPV_DOWN,
-            JES_PUMu_UP,            JES_PUMu_DOWN,
-            JES_FlavComp_UP,        JES_FlavComp_DOWN,
-            JES_FlavResp_UP,        JES_FlavResp_DOWN,
-            JES_BJet_UP,            JES_BJet_DOWN,
-            JES_NonClosure_UP,      JES_NonClosure_DOWN,
-            JVF_UP,                 JVF_DOWN,
-            JER_UP,                 JER_DOWN,
-        ])
+        JES_UP,                 JES_DOWN,
+        JES_Statistical_UP,     JES_Statistical_DOWN,
+        JES_Modelling_UP,       JES_Modelling_DOWN,
+        JES_Detector_UP,        JES_Detector_DOWN,
+        JES_Mixed_UP,           JES_Mixed_DOWN,
+        JES_EtaModelling_UP,    JES_EtaModelling_DOWN,
+        JES_EtaMethod_UP,       JES_EtaMethod_DOWN,
+        JES_PURho_UP,           JES_PURho_DOWN,
+        JES_PUPt_UP,            JES_PUPt_DOWN,
+        JES_PUNPV_UP,           JES_PUNPV_DOWN,
+        JES_PUMu_UP,            JES_PUMu_DOWN,
+        JES_FlavComp_UP,        JES_FlavComp_DOWN,
+        JES_FlavResp_UP,        JES_FlavResp_DOWN,
+        JES_BJet_UP,            JES_BJet_DOWN,
+        JES_NonClosure_UP,      JES_NonClosure_DOWN,
+        JVF_UP,                 JVF_DOWN,
+        JER_UP,                 JER_DOWN,
+    ])
 
     # muons
     MERID_UP = METUtil.MERIDUp
@@ -757,6 +807,7 @@ class Systematics(EventFilter):
     def __init__(self,
             datatype,
             year,
+            tree,
             channel='hh',
             terms=None,
             verbose=False,
@@ -769,6 +820,7 @@ class Systematics(EventFilter):
         self.terms = set([])
         self.datatype = datatype
         self.year = year
+        self.tree = tree
         self.channel = channel
         self.verbose = verbose
         self.very_verbose = very_verbose
@@ -778,10 +830,10 @@ class Systematics(EventFilter):
             terms = set(terms)
             self.terms = terms
             for term in terms:
-#                 if term == Systematics.JES_UP:
-#                     systematic = JES(True, sys_util=self)
-#                 elif term == Systematics.JES_DOWN:
-#                     systematic = JES(False, sys_util=self)
+                #if term == Systematics.JES_UP:
+                #    systematic = JES(True, sys_util=self)
+                #elif term == Systematics.JES_DOWN:
+                #    systematic = JES(False, sys_util=self)
                 if term == Systematics.JES_Statistical_UP:
                     systematic = JES(True, np="Statistical", sys_util=self)
                 elif term == Systematics.JES_Statistical_DOWN:
@@ -844,39 +896,94 @@ class Systematics(EventFilter):
                     systematic = JVF(False, sys_util=self)
                 elif term == Systematics.JER_UP:
                     systematic = JER(True, sys_util=self)
+
                 elif term == Systematics.TES_UP:
-                    systematic = TES(True, sys_util=self)
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, sys_util=self)
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root')
+
+                elif term == Systematics.TES_TRUE_UP:
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root',
+                            matched_state=True)
+                elif term == Systematics.TES_TRUE_DOWN:
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root',
+                            matched_state=True)
+
+                elif term == Systematics.TES_FAKE_UP:
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root',
+                            matched_state=False)
+                elif term == Systematics.TES_FAKE_DOWN:
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.FINAL,
+                            infile='TES/mc12_p1344_medium_split.root',
+                            matched_state=False)
 
                 elif term == Systematics.TES_EOP_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.EOP, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EOP,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EOP_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.EOP, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EOP,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_CTB_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.CTB, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.CTB,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_CTB_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.CTB, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.CTB,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_Bias_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.Bias, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.Bias,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_Bias_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.Bias, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.Bias,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EM_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.EM, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EM,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EM_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.EM, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.EM,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_LCW_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.LCW, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.LCW,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_LCW_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.LCW, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.LCW,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_PU_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.PU, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.PU,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_PU_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.PU, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.PU,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_OTHERS_UP:
-                    systematic = TES(True, sys_util=self, np=TauCorrUncert.TESUncertainty.OTHERS, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(True, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.OTHERS,
+                            infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_OTHERS_DOWN:
-                    systematic = TES(False, sys_util=self, np=TauCorrUncert.TESUncertainty.OTHERS, infile='TES/mc12_p1344_medium_split.root')
+                    systematic = TES(False, sys_util=self,
+                            np=TauCorrUncert.TESUncertainty.OTHERS,
+                            infile='TES/mc12_p1344_medium_split.root')
 
                 elif term == Systematics.EES_UP:
                     systematic = EES(True, sys_util=self,
@@ -986,13 +1093,13 @@ class Systematics(EventFilter):
         """
         JETS
         Always use setJetParameters since they may be recalibrated upstream
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         """
-
         if self.channel == 'hh':
             self.met_utility.setJetParameters(
                 event.jet_pt,
-                event.jet_eta,
-                event.jet_phi,
+                self.tree.jet_eta_original,
+                self.tree.jet_phi_original,
                 event.jet_E,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
@@ -1025,7 +1132,6 @@ class Systematics(EventFilter):
         """
         ELECTRONS
         """
-
         if self.channel == 'hh':
             if self.terms & Systematics.ELECTRON_TERMS:
                 self.met_utility.setElectronParameters(
@@ -1052,7 +1158,6 @@ class Systematics(EventFilter):
                 event.el_MET_BDTMedium_wpx,
                 event.el_MET_BDTMedium_wpy,
                 event.el_MET_BDTMedium_statusWord)
-
 
 
         if self.terms & Systematics.PHOTON_TERMS:
@@ -1171,10 +1276,16 @@ class Systematics(EventFilter):
         MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
-            print "Recalculated MET: %.3f (original: %.3f)" % (
-                    MET.et(), event.MET_RefFinal_BDTMedium_et)
+            log.info("Recalculated MET: %.3f (original: %.3f)" % (
+                     MET.et(), event.MET_RefFinal_BDTMedium_et))
 
         # update the MET with the shifted value
+        self.tree.MET_etx_original = event.MET_RefFinal_BDTMedium_etx
+        self.tree.MET_ety_original = event.MET_RefFinal_BDTMedium_ety
+        self.tree.MET_et_original = event.MET_RefFinal_BDTMedium_et
+        self.tree.MET_sumet_original = event.MET_RefFinal_BDTMedium_sumet
+        self.tree.MET_phi_original = event.MET_RefFinal_BDTMedium_phi
+
         event.MET_RefFinal_BDTMedium_etx = MET.etx()
         event.MET_RefFinal_BDTMedium_ety = MET.ety()
         event.MET_RefFinal_BDTMedium_et = MET.et()
@@ -1191,11 +1302,15 @@ class Systematics(EventFilter):
         """
         JETS
         Always use setJetParameters since they may be recalibrated upstream
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         """
+        #if self.verbose:
+        #    log.info(', '.join(map(str, self.tree.jet_phi_original)))
+        #    log.info(', '.join(map(str, event.jet_phi)))
         self.met_utility.setJetParameters(
             event.jet_pt,
-            event.jet_eta,
-            event.jet_phi,
+            self.tree.jet_eta_original,
+            self.tree.jet_phi_original,
             event.jet_E,
             event.jet_AntiKt4LCTopo_MET_wet,
             event.jet_AntiKt4LCTopo_MET_wpx,
@@ -1309,12 +1424,24 @@ class Systematics(EventFilter):
         MET = self.met_utility.getMissingET(METUtil.RefFinal)
 
         if self.verbose:
-            print "Recalculated MET: %.3f (original: %.3f)" % (
-                    MET.et(), event.MET_RefFinal_STVF_et)
-            print "Recalculated MET phi: %.3f (original: %.3f)" % (
-                    MET.phi(), event.MET_RefFinal_STVF_phi)
+            log.info("Run: {0} Event: {1}".format(
+                event.RunNumber,
+                event.EventNumber))
+            log.info("Recalculated MET: %.3f (original: %.3f)" % (
+                     MET.et(), event.MET_RefFinal_STVF_et))
+            log.info("Recalculated MET phi: %.3f (original: %.3f)" % (
+                     MET.phi(), event.MET_RefFinal_STVF_phi))
+            if (abs(MET.et() - event.MET_RefFinal_STVF_et) /
+                    event.MET_RefFinal_STVF_et) > 0.1:
+                log.warning("Large MET difference!")
 
         # update the MET with the shifted value
+        self.tree.MET_etx_original = event.MET_RefFinal_STVF_etx
+        self.tree.MET_ety_original = event.MET_RefFinal_STVF_ety
+        self.tree.MET_et_original = event.MET_RefFinal_STVF_et
+        self.tree.MET_sumet_original = event.MET_RefFinal_STVF_sumet
+        self.tree.MET_phi_original = event.MET_RefFinal_STVF_phi
+
         event.MET_RefFinal_STVF_etx = MET.etx()
         event.MET_RefFinal_STVF_ety = MET.ety()
         event.MET_RefFinal_STVF_et = MET.et()

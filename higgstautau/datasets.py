@@ -47,112 +47,113 @@ import xsec
 
 
 DS_PATTERN = re.compile(
-        '^(?P<prefix>\S+\.)?'
-        '(?P<type>(data|mc))(?P<year>\d+)_(?P<energy>\d+)TeV'
-        '\.(?P<id>\d+)'
-        '\.(?P<name>\w+)'
-        '(\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?))?'
-        '\.(?P<tag>\w+)'
-        '(\.small)?'
-        '(\.v(?P<version>\d+))?'
-        '\.(?P<suffix>\S+)$')
+    '^(?P<prefix>\S+\.)?'
+    '(?P<type>(data|mc))(?P<year>\d+)_(?P<energy>\d+)TeV'
+    '\.(?P<id>(\d+|period[A-Z]))'
+    '\.(?P<name>\w+)'
+    '(\.PhysCont)?'
+    '(\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?))?'
+    '\.(?P<tag>\w+)'
+    '(\.small)?'
+    '(\.v(?P<version>\d+))?'
+    '\.(?P<suffix>\S+)$')
 
 MC_TAG_PATTERN1 = re.compile(
-        '^e(?P<evnt>\d+)_'
-        's(?P<digi>\d+)_'
-        's(?P<digimerge>\d+)_'
-        'r(?P<reco>\d+)_'
-        'r(?P<recomerge>\d+)_'
-        'p(?P<ntup>\d+)$')
+    '^e(?P<evnt>\d+)_'
+    's(?P<digi>\d+)_'
+    's(?P<digimerge>\d+)_'
+    'r(?P<reco>\d+)_'
+    'r(?P<recomerge>\d+)_'
+    'p(?P<ntup>\d+)$')
 
 # not all valid samples have a recomerge tag:
 MC_TAG_PATTERN2 = re.compile(
-        '^e(?P<evnt>\d+)_'
-        '[sa](?P<digi>\d+)_'
-        '[sa](?P<digimerge>\d+)_'
-        'r(?P<reco>\d+)_'
-        'p(?P<ntup>\d+)$')
+    '^e(?P<evnt>\d+)_'
+    '[sa](?P<digi>\d+)_'
+    '[sa](?P<digimerge>\d+)_'
+    'r(?P<reco>\d+)_'
+    'p(?P<ntup>\d+)$')
 
 # Embedded sample pattern
 EMBED_PATTERN11 = re.compile(
-        '^(?P<prefix>\S+)?'
-        'period(?P<period>[A-Z])'
-        '\.DESD_SGLMU'
-        '\.pro(?P<prod>\d+)'
-        '\.embedding-(?P<embedtag>\S+)?'
-        '\.Ztautau_'
-        '(?P<channel>(lh)|(hh))_'
-        '(?P<isol>[a-z]+)_'
-        '(?P<mfs>[a-z]+)_'
-        'rereco_'
-        'p(?P<tag>\d+)_'
-        'EXT0'
-        '(\.(?P<suffix>\S+))?$')
+    '^(?P<prefix>\S+)?'
+    'period(?P<period>[A-Z])'
+    '\.DESD_SGLMU'
+    '\.pro(?P<prod>\d+)'
+    '\.embedding-(?P<embedtag>\S+)?'
+    '\.Ztautau_'
+    '(?P<channel>(lh)|(hh))_'
+    '(?P<isol>[a-z]+)_'
+    '(?P<mfs>[a-z]+)_'
+    'rereco_'
+    'p(?P<tag>\d+)_'
+    'EXT0'
+    '(\.(?P<suffix>\S+))?$')
 
 EMBED_PATTERN12 = re.compile(
-        '^(?P<prefix>\S+)?'
-        'period(?P<period>[A-Z])'
-        '\.DESD_ZMUMU'
-        '\.pro(?P<prod>\d+)'
-        '\.embedding-(?P<embedtag>\S+)?'
-        '\.Ztautau_'
-        '(?P<channel>(lh)|(hh))_'
-        '(((high)|(low))pt_)?'
-        '(?P<mfs>[a-z]+)_'
-        'filter_'
-        'taureco_'
-        'p(?P<tag>\d+)_'
-        'EXT0'
-        '(\.(?P<suffix>\S+))?$')
+    '^(?P<prefix>\S+)?'
+    'period(?P<period>[A-Z])'
+    '\.DESD_ZMUMU'
+    '\.pro(?P<prod>\d+)'
+    '\.embedding-(?P<embedtag>\S+)?'
+    '\.Ztautau_'
+    '(?P<channel>(lh)|(hh))_'
+    '(((high)|(low))pt_)?'
+    '(?P<mfs>[a-z]+)_'
+    'filter_'
+    'taureco_'
+    'p(?P<tag>\d+)_'
+    'EXT0'
+    '(\.(?P<suffix>\S+))?$')
 
 EMBED_PATTERN12_NEW = re.compile(
-        '^(?P<prefix>\S+)?'
-        'data12_8TeV\.'
-        '(?P<run>\d+)\.'
-        'physics_Muons\.merge\.'
-        'NTUP_EMB(?P<channel>(LH)|(HH))'
-        '(?P<sys>(DN)|(IM)|(UP))\.'
-        '(?P<suffix>\S+)')
+    '^(?P<prefix>\S+)?'
+    'data12_8TeV\.'
+    '(?P<run>\d+)\.'
+    'physics_Muons\.merge\.'
+    'NTUP_EMB(?P<channel>(LH)|(HH))'
+    '(?P<sys>(DN)|(IM)|(UP))\.'
+    '(?P<suffix>\S+)')
 
 ## Common lephad ntuple pattern
 CN_MC_PATTERN12 = re.compile(
-        '^(?P<prefix>\S+\.)?'
-        '(?P<id>\d+)'
-        '\.(?P<name>\w+)'
-        '\.(?P<tag>\w+)'
-        '_lhCN'
-        '(v(?P<version1>\d+))?'
-        '(-(?P<version2>\d+))?'
-        '\.(?P<suffix>\S+)$')
+    '^(?P<prefix>\S+\.)?'
+    '(?P<id>\d+)'
+    '\.(?P<name>\w+)'
+    '\.(?P<tag>\w+)'
+    '_lhCN'
+    '(v(?P<version1>\d+))?'
+    '(-(?P<version2>\d+))?'
+    '\.(?P<suffix>\S+)$')
 
 CN_DATA_PATTERN12 = re.compile(
-        '^(?P<prefix>\S+\.)?'
-        'data12_8TeV\.'
-        '(?P<id>\S+)'
-        '\.(?P<name>\w+)'
-        '((\.TunaCont.2013-March-29.v03)?)'
-        '\.(?P<tag>\w+)'
-        '_lhCN'
-        '(v(?P<version1>\d+))?'
-        '(-(?P<version2>\d+))?'
-        '\.(?P<suffix>\S+)$')
+    '^(?P<prefix>\S+\.)?'
+    'data12_8TeV\.'
+    '(?P<id>\S+)'
+    '\.(?P<name>\w+)'
+    '((\.TunaCont.2013-March-29.v03)?)'
+    '\.(?P<tag>\w+)'
+    '_lhCN'
+    '(v(?P<version1>\d+))?'
+    '(-(?P<version2>\d+))?'
+    '\.(?P<suffix>\S+)$')
 
 CN_EMBED_PATTERN12 = re.compile(
-        '^(?P<prefix>\S+\.)?'
-        'data12_8TeV\.'
-        '(?P<id>\S+)'
-        '\.(?P<name>\w+)'
-        '\.TunaCont'
-        '((\.NTUP_EMB)?)'
-        '(?P<channel>(LH)|(HH))'
-        '(?P<mfs>(IM)|(UP)|(DN))'
-        '\.2013-April-25.v00'
-        '\.(?P<tag>\w+)'
-        '_lhCN'
-        '(v(?P<version1>\d+))?'
-        '(-(?P<version2>\d+))?'
-        '(-(?P<version3>\d+))?'
-        '\.(?P<suffix>\S+)$')
+    '^(?P<prefix>\S+\.)?'
+    'data12_8TeV\.'
+    '(?P<id>\S+)'
+    '\.(?P<name>\w+)'
+    '\.TunaCont'
+    '((\.NTUP_EMB)?)'
+    '(?P<channel>(LH)|(HH))'
+    '(?P<mfs>(IM)|(UP)|(DN))'
+    '\.2013-April-25.v00'
+    '\.(?P<tag>\w+)'
+    '_lhCN'
+    '(v(?P<version1>\d+))?'
+    '(-(?P<version2>\d+))?'
+    '(-(?P<version3>\d+))?'
+    '\.(?P<suffix>\S+)$')
 
 """
 MC[11|12][a|b|c|...] categories are defined here
@@ -322,6 +323,7 @@ class Database(dict):
              data_treename=None,
              data_sampletype=None,
              data_grl=None,
+             data_period_containers=False,
              embed_path=None,
              embed_prefix=None,
              embed_pattern=None,
@@ -789,7 +791,8 @@ class Database(dict):
                 # classify dir by stream
                 streams = {}
                 for dir in data_dirs:
-                    match = re.match(DS_PATTERN, dir)
+                    dirname, basename = os.path.split(dir)
+                    match = re.match(DS_PATTERN, basename)
                     if match:
                         if int(match.group('year')) != (year % 1E3):
                             continue
@@ -800,7 +803,8 @@ class Database(dict):
                             streams[stream] = []
                         streams[stream].append(dir)
                     elif self.verbose:
-                        log.warning("not a valid data dataset name: %s" % dir)
+                        log.warning(
+                            "not a valid data dataset name: %s" % basename)
 
                 for stream, dirs in streams.items():
                     name = 'data%d-%s' % (year % 1000, stream)
@@ -816,76 +820,117 @@ class Database(dict):
                                          file_pattern=data_pattern,
                                          year=year)
 
-                    # in each stream create a separate dataset for each run
-                    runs = {}
-                    for dir in dirs:
-                        match = re.match(DS_PATTERN, dir)
-                        if match:
-                            run = int(match.group('id'))
-                            tag = match.group('tag')
-                            if run not in runs:
-                                runs[run] = {
-                                    'tag': tag,
-                                    'dirs': [dir],
-                                    'ds': Database.match_to_ds(match)}
-                            else:
-                                runs[run]['dirs'].append(dir)
-                                if tag != runs[run]['tag']:
-                                    log.warning(
-                                        'multiple copies of run with different '
-                                        'tags: %s' % runs[run]['dirs'])
-                        elif self.verbose:
-                            log.warning(
-                                "not a valid data dataset name: %s" % dir)
-                    # need to use the actual ds name for ds for validation
-                    for run, info in runs.items():
-                        name = 'data%d-%s-%d' % (year % 1000, stream, run)
-                        self[name] = Dataset(name=name,
-                                             datatype=DATA,
-                                             treename=data_treename,
-                                             ds=name,
-                                             id=run,
-                                             grl=data_grl,
-                                             dirs=info['dirs'],
-                                             stream=stream,
-                                             file_pattern=data_pattern,
-                                             year=year)
-                    if USE_PYAMI:
-                        # in each stream create a separate dataset for each period
-                        run_periods = get_periods(amiclient, year=year, level=2)
-                        # ignore subset periods like Ba in 2012
-                        run_periods = [
-                            p.name for p in run_periods if len(p.name) == 1]
-                        period_runs = {}
-                        for period in run_periods:
-                            if period == 'VdM':
-                                continue
-                            _runs = get_runs(amiclient, periods=period, year=year)
-                            for run in _runs:
-                                period_runs[run] = period
+                    if data_period_containers:
+                        # in each stream create a separate dataset for each run
                         periods = {}
-                        for run, info in runs.items():
-                            if run in period_runs:
-                                _period = period_runs[run]
-                            else:
-                                # ignore spurious runs
-                                continue
-                            if _period in periods:
-                                periods[_period] += info['dirs']
-                            else:
-                                periods[_period] = info['dirs'][:]
-                        for period, dirs in periods.items():
-                            name = 'data%d-%s-%s' % (year % 1000, stream, period)
+                        for dir in dirs:
+                            dirname, basename = os.path.split(dir)
+                            match = re.match(DS_PATTERN, basename)
+                            if match:
+                                period = match.group('id')
+                                if not period.startswith('period'):
+                                    continue
+                                tag = match.group('tag')
+                                if period not in periods:
+                                    periods[period] = {
+                                        'tag': tag,
+                                        'dirs': [dir],
+                                        'ds': Database.match_to_ds(match)}
+                                else:
+                                    periods[period]['dirs'].append(dir)
+                                    if tag != periods[period]['tag']:
+                                        log.warning(
+                                            'multiple copies of run with different '
+                                            'tags: %s' % periods[period]['dirs'])
+                            elif self.verbose:
+                                log.warning(
+                                    "not a valid data dataset name: %s" % basename)
+                        # need to use the actual ds name for ds for validation
+                        for period, info in periods.items():
+                            name = 'data%d-%s-%s' % (year % 1000, stream, period[-1])
                             self[name] = Dataset(name=name,
                                                  datatype=DATA,
                                                  treename=data_treename,
                                                  ds=name,
-                                                 id=-1,
+                                                 id=period,
                                                  grl=data_grl,
-                                                 dirs=dirs,
+                                                 dirs=info['dirs'],
                                                  stream=stream,
                                                  file_pattern=data_pattern,
                                                  year=year)
+                    else:
+                        # in each stream create a separate dataset for each run
+                        runs = {}
+                        for dir in dirs:
+                            dirname, basename = os.path.split(dir)
+                            match = re.match(DS_PATTERN, basename)
+                            if match:
+                                run = int(match.group('id'))
+                                tag = match.group('tag')
+                                if run not in runs:
+                                    runs[run] = {
+                                        'tag': tag,
+                                        'dirs': [dir],
+                                        'ds': Database.match_to_ds(match)}
+                                else:
+                                    runs[run]['dirs'].append(dir)
+                                    if tag != runs[run]['tag']:
+                                        log.warning(
+                                            'multiple copies of run with different '
+                                            'tags: %s' % runs[run]['dirs'])
+                            elif self.verbose:
+                                log.warning(
+                                    "not a valid data dataset name: %s" % basename)
+                        # need to use the actual ds name for ds for validation
+                        for run, info in runs.items():
+                            name = 'data%d-%s-%d' % (year % 1000, stream, run)
+                            self[name] = Dataset(name=name,
+                                                 datatype=DATA,
+                                                 treename=data_treename,
+                                                 ds=name,
+                                                 id=run,
+                                                 grl=data_grl,
+                                                 dirs=info['dirs'],
+                                                 stream=stream,
+                                                 file_pattern=data_pattern,
+                                                 year=year)
+
+                        if USE_PYAMI:
+                            # in each stream create a separate dataset for each period
+                            run_periods = get_periods(amiclient, year=year, level=2)
+                            # ignore subset periods like Ba in 2012
+                            run_periods = [
+                                p.name for p in run_periods if len(p.name) == 1]
+                            period_runs = {}
+                            for period in run_periods:
+                                if period == 'VdM':
+                                    continue
+                                _runs = get_runs(amiclient, periods=period, year=year)
+                                for run in _runs:
+                                    period_runs[run] = period
+                            periods = {}
+                            for run, info in runs.items():
+                                if run in period_runs:
+                                    _period = period_runs[run]
+                                else:
+                                    # ignore spurious runs
+                                    continue
+                                if _period in periods:
+                                    periods[_period] += info['dirs']
+                                else:
+                                    periods[_period] = info['dirs'][:]
+                            for period, dirs in periods.items():
+                                name = 'data%d-%s-%s' % (year % 1000, stream, period)
+                                self[name] = Dataset(name=name,
+                                                     datatype=DATA,
+                                                     treename=data_treename,
+                                                     ds=name,
+                                                     id=-1,
+                                                     grl=data_grl,
+                                                     dirs=dirs,
+                                                     stream=stream,
+                                                     file_pattern=data_pattern,
+                                                     year=year)
 
             elif data_sampletype == 'lhCN':
                 year = 2012
