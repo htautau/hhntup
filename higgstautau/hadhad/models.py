@@ -344,6 +344,7 @@ class EventModel(TreeModel):
     pileup_weight = FloatCol(default=1.)
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
+    spin_weight = FloatCol(default=1.)
 
     dR_quarks = FloatCol()
     dR_truetaus = FloatCol()

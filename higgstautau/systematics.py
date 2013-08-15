@@ -494,12 +494,14 @@ class TES(TauSystematic):
     def __init__(self, is_up,
                  np=TauCorrUncert.TESUncertainty.FINAL,
                  infile='TES/mc12_p1344_medium.root',
+                 datatype=None,
                  matched_state=None,
                  **kwargs):
 
         super(TES, self).__init__(is_up, **kwargs)
 
         self.np = np
+        self.datatype = datatype
         self.matched_state = matched_state
         if self.year == 2011:
             from externaltools.bundle_2011 import TESUncertaintyProvider as TESP
@@ -528,7 +530,14 @@ class TES(TauSystematic):
         eta = tau.eta
         nProng = tau.nProng
         # TODO: include 2011 TES in TauCorrUncert and use MeV there also!!!
-        shift = self.tes_tool.GetTESUncertainty(pt, eta, nProng, self.np)
+        t = TauCorrUncert.TESUncertainty
+        if self.np == t.OTHERS and self.datatype in (datasets.DATA, datasets.EMBED):
+            shift = 0.
+            for np in [t.SHOWERMODEL, t.UE, t.DM]: # exclude CLOSURE manually
+                shift += self.tes_tool.GetTESUncertainty(pt, eta, nProng, np)**2.
+            shift = sqrt(shift)
+        else:
+            shift = self.tes_tool.GetTESUncertainty(pt, eta, nProng, self.np)
         if shift < 0:
             shift = 0
         if not self.is_up:
@@ -979,11 +988,13 @@ class Systematics(EventFilter):
                 elif term == Systematics.TES_OTHERS_UP:
                     systematic = TES(True, sys_util=self,
                             np=TauCorrUncert.TESUncertainty.OTHERS,
-                            infile='TES/mc12_p1344_medium_split.root')
+                            infile='TES/mc12_p1344_medium_split.root',
+                            datatype=datatype)
                 elif term == Systematics.TES_OTHERS_DOWN:
                     systematic = TES(False, sys_util=self,
                             np=TauCorrUncert.TESUncertainty.OTHERS,
-                            infile='TES/mc12_p1344_medium_split.root')
+                            infile='TES/mc12_p1344_medium_split.root',
+                            datatype=datatype)
 
                 elif term == Systematics.EES_UP:
                     systematic = EES(True, sys_util=self,

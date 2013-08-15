@@ -34,6 +34,7 @@ from higgstautau.trigger.matching import (TauTriggerMatchIndex,
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.jetcalibration import JetCalibration
+from higgstautau.tauspinner import EmbeddingTauSpinner
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.hadhad import branches as hhbranches
 from higgstautau.hadhad.models import *
@@ -411,6 +412,13 @@ class hhskim(ATLASStudent):
                 EmbeddingCorrections(
                     tree=tree,
                     passthrough=local or year < 2012 or datatype != datasets.EMBED,
+                    count_funcs=count_funcs),
+                EmbeddingTauSpinner(
+                    tree=tree,
+                    datatype=datatype,
+                    year=year,
+                    verbose=verbose,
+                    passthrough=local,
                     count_funcs=count_funcs),
                 TauJetOverlapRemoval(
                     count_funcs=count_funcs),
