@@ -22,3 +22,8 @@ if [ -f ${DIR_HIGGSTAUTAU_SETUP}/externaltools/setup.sh ]
 then
     source ${DIR_HIGGSTAUTAU_SETUP}/externaltools/setup.sh
 fi
+
+if [ -f ${DIR_HIGGSTAUTAU_SETUP}/TauSpinner/setup.sh ]
+then
+    source ${DIR_HIGGSTAUTAU_SETUP}/TauSpinner/setup.sh
+fi
