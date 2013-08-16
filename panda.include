@@ -3,6 +3,7 @@ TauSpinner/pdfs
 TauSpinner/extern
 TauSpinner/extern/lib
 TauSpinner/__init__.py
+TauSpinner/version.txt
 TauSpinner/setup.sh
 *.tar.gz
 *.cfg
