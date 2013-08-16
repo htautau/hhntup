@@ -1,9 +1,16 @@
-JERProviderPlots.root
+TauSpinner/lib
+TauSpinner/pdfs
+TauSpinner/extern
+TauSpinner/extern/lib
+TauSpinner/__init__.py
+TauSpinner/setup.sh
 *.tar.gz
 *.cfg
 *.spec
 *.yml
 *.so
+*.so.*
+*.LHgrid
 deps/*
 higgstautau/pileup/*
 grl/2011/*

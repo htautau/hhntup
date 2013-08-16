@@ -677,22 +677,26 @@ class EmbeddingCorrections(EventFilter):
             from externaltools.bundle_2012 import HSG4LepLepTriggerSF
             from externaltools import MuonEfficiencyCorrections
             self.tool = ROOT.EmbeddedCorrections.Embedded(
-                    EmbeddedCorrections.get_resource('2DMaps.root'),
-                    TrigMuonEfficiency.RESOURCE_PATH,
-                    ElectronEfficiencyCorrection.RESOURCE_PATH,
-                    HSG4LepLepTriggerSF.RESOURCE_PATH,
-                    MuonEfficiencyCorrections.RESOURCE_PATH)
+                EmbeddedCorrections.get_resource('2DMaps.root'),
+                TrigMuonEfficiency.RESOURCE_PATH,
+                ElectronEfficiencyCorrection.RESOURCE_PATH,
+                HSG4LepLepTriggerSF.RESOURCE_PATH,
+                MuonEfficiencyCorrections.RESOURCE_PATH)
 
     def passes(self, event):
 
         self.tool.SetupEmbeddedEvent(
-                event.mc_pt,
-                event.mc_eta,
-                event.mc_phi,
-                event.mc_m,
-                event.mc_pdgId,
-                event.RunNumber)
+            event.mc_pt,
+            event.mc_eta,
+            event.mc_phi,
+            event.mc_m,
+            event.mc_pdgId,
+            event.RunNumber)
+        # Retrieve the unfolding weight
         self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
+        # Access the trigger unfolding weight
+        self.tree.embedding_trigger_weight = self.tool.GetEmbeddingTriggerWeight()
+        # Get the original mass of the dimuon event
         self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
         return True
 

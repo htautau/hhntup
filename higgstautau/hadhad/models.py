@@ -108,8 +108,10 @@ class EmbeddingModel(TreeModel):
 
     # embedding corrections
     embedding_reco_unfold = FloatCol(default=1.)
+    embedding_trigger_weight = FloatCol(default=1.)
     embedding_dimuon_mass = FloatCol()
     embedding_isolation = IntCol()
+    embedding_spin_weight = FloatCol(default=1.)
 
 
 class RecoTau(FourMomentum):
@@ -344,7 +346,6 @@ class EventModel(TreeModel):
     pileup_weight = FloatCol(default=1.)
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
-    spin_weight = FloatCol(default=1.)
 
     dR_quarks = FloatCol()
     dR_truetaus = FloatCol()

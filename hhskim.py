@@ -415,10 +415,7 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 EmbeddingTauSpinner(
                     tree=tree,
-                    datatype=datatype,
-                    year=year,
-                    verbose=verbose,
-                    passthrough=local,
+                    passthrough=local or datatype != datasets.EMBED,
                     count_funcs=count_funcs),
                 TauJetOverlapRemoval(
                     count_funcs=count_funcs),
@@ -506,10 +503,9 @@ class hhskim(ATLASStudent):
                 visible=False)
 
         else:
-            # keep mc block in skim output in:
+            # keep mc block in skim output in
             # signal for theory uncertainty
-            # embedding for spinner tool
-            if (datatype != datasets.EMBED and not is_signal) or syst_terms is not None:
+            if not is_signal or syst_terms is not None:
                 log.warning("removing mc_ block in output")
                 # remove mc block and truth jets in non-signal samples
                 ignore_branches_output.extend(truth_branches)

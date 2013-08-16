@@ -1,5 +1,3 @@
-eventviews
-discriminants
 *.tmp
 *.nfs*
 *.pyc
@@ -9,6 +7,11 @@ discriminants
 .git
 .svn
 tmp*
+.nfs*
+TauSpinner/*
+TauSpinner/extern/*
+eventviews
+discriminants
 docs
 plots
 trigger
