@@ -109,8 +109,8 @@ EMBED_PATTERN12 = re.compile(
 EMBED_PATTERN12_NEW = re.compile(
     '^(?P<prefix>\S+)?'
     'data12_8TeV\.'
-    '(?P<run>\d+)\.'
-    'physics_Muons\.merge\.'
+    'period(?P<period>[A-Z])\.'
+    'physics_Muons\.PhysCont\.'
     'NTUP_EMB(?P<channel>(LH)|(HH))'
     '(?P<sys>(DN)|(IM)|(UP))\.'
     '(?P<suffix>\S+)')
@@ -840,8 +840,9 @@ class Database(dict):
                                     periods[period]['dirs'].append(dir)
                                     if tag != periods[period]['tag']:
                                         log.warning(
-                                            'multiple copies of run with different '
-                                            'tags: %s' % periods[period]['dirs'])
+                                            'multiple copies of period with different '
+                                            'tags: \n%s' %
+                                            ('\n'.join(periods[period]['dirs'])))
                             elif self.verbose:
                                 log.warning(
                                     "not a valid data dataset name: %s" % basename)

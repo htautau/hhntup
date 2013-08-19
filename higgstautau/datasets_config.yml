@@ -41,18 +41,18 @@
     common:
         grl: 'grl/2012/current.xml'
     hh:
-        mc_path: '/cluster/data11/endw/skims/v7'
+        mc_path: '/cluster/data11/endw/skims/current'
         mc_prefix: 'group.phys-higgs.hhskim'
         mc_pattern: '*hadhad.root*'
         mc_treename: 'tau'
         mc_sampletype: 'standard'
-        data_path: '/cluster/data11/endw/skims/v7'
+        data_path: '/cluster/data11/endw/skims/current'
         data_prefix: 'group.phys-higgs.hhskim'
         data_pattern: '*hadhad.root*'
         data_treename: 'tau'
         data_sampletype: 'standard'
         data_period_containers: True
-        embed_path: '/cluster/data11/endw/skims/v7'
+        embed_path: '/cluster/data11/endw/skims/current'
         embed_prefix: 'group.phys-higgs.hhskim'
         embed_pattern: '*hadhad.root*'
         embed_treename: 'tau'
