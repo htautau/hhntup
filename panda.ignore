@@ -8,6 +8,7 @@
 .svn
 tmp*
 .nfs*
+lumi/.git
 TauSpinner/*
 TauSpinner/extern/*
 eventviews
