@@ -38,8 +38,8 @@ class Job(object):
     @property
     def hung(self):
 
-        # is the wall time higher than the CPU time?
-        return self.walltime > self.cputime and self.walltime > 60
+        # is the wall time higher than the CPU time by 50%?
+        return self.walltime > 1.5 * self.cputime and self.walltime > 60
 
     @property
     def healthy(self):
@@ -128,7 +128,8 @@ class PBSMonitor(object):
     def print_jobs(self):
 
         rows = []
-        for id, job in sorted(self.jobs.items(), key=lambda item: item[0]):
+        for id, job in sorted(self.jobs.items(),
+                key=lambda item: int(item[0].split('.')[0])):
             rows.append(job.status)
         print_table(rows)
 
