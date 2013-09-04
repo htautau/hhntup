@@ -1,5 +1,5 @@
 import math
-from rootpy.math.physics.vector import Vector2
+from rootpy.vector import Vector2
 from ROOT import TMath, TLorentzVector
 
 

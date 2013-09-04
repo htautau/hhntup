@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from rootpy.tree.filtering import *
 from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.tree.cutflow import Cutflow
-from rootpy.math.physics.vector import Vector2, LorentzVector
+from rootpy.vector import Vector2, LorentzVector
 from rootpy.plotting import Hist
 from rootpy.io import open as ropen
 

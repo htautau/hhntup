@@ -1,6 +1,6 @@
 import math
 from decorators import cached_property
-from rootpy.math.physics.vector import LorentzVector, Vector3
+from rootpy.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
 from atlastools.utils import dR
 from atlastools.units import GeV

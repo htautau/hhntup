@@ -4,7 +4,7 @@ import math
 from argparse import ArgumentParser
 
 from rootpy.tree import Tree, TreeBuffer, TreeChain, TreeModel
-from rootpy.math.physics.vector import LorentzVector, Vector3
+from rootpy.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
 
 from atlastools import datasets

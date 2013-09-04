@@ -1,6 +1,6 @@
 import math
 import ROOT
-from rootpy.math.physics.vector import LorentzVector
+from rootpy.vector import LorentzVector
 
 
 def is_MET_bisecting(dphi_taus, dphi_tau1_MET, dphi_tau2_MET):

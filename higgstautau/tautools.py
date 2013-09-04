@@ -1,4 +1,4 @@
-from rootpy.math.physics.vector import Vector3, LorentzVector as FourVector
+from rootpy.vector import Vector3, LorentzVector as FourVector
 from rootpy.extern.hep import pdg
 
 from .decorators import cached_property

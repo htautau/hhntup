@@ -1,6 +1,6 @@
 import ROOT
 from rootpy.tree import TreeModel
-from rootpy.math.physics.vector import LorentzVector, Vector3
+from rootpy.vector import LorentzVector, Vector3
 from rootpy.types import *
 from atlastools.utils import dR
 

@@ -3,7 +3,7 @@ TreeModels common to both lephad and hadhad analyses
 """
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, BoolCol
-from rootpy.math.physics.vector import (LorentzRotation,
+from rootpy.vector import (LorentzRotation,
                                         LorentzVector,
                                         Vector3, Vector2)
 

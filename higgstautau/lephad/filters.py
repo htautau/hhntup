@@ -2,7 +2,7 @@ from rootpy.tree.filtering import *
 from itertools import ifilter
 from atlastools import utils
 from atlastools.units import GeV
-from rootpy.math.physics.vector import LorentzVector
+from rootpy.vector import LorentzVector
 from atlastools import datasets
 from math import *
 

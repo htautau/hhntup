@@ -5,7 +5,7 @@ as TreeModels.
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
 from rootpy import stl
-from rootpy.math.physics.vector import (
+from rootpy.vector import (
     LorentzRotation, LorentzVector, Vector3, Vector2)
 from rootpy import log
 ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
