@@ -175,6 +175,8 @@ mc:
         - 'PowHegPyth8_AU2CT10_ggH140_tautauhh.mc12a'
         - 'PowHegPyth8_AU2CT10_ggH145_tautauhh.mc12a'
         - 'PowHegPyth8_AU2CT10_ggH150_tautauhh.mc12a'
+        - 'McAtNloJimmy_AUET2CT10_ggH125_tautau.mc12a'
+        - 'PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.mc12a'
         - 'PowHegPythia8_AU2CT10_VBFH100_tautauhh.mc12a'
         - 'PowHegPythia8_AU2CT10_VBFH105_tautauhh.mc12a'
         - 'PowHegPythia8_AU2CT10_VBFH110_tautauhh.mc12a'
