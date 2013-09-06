@@ -41,7 +41,7 @@ class FourVectModel(TreeModel):
         this.m = vect.M()
         this.phi = vect.Phi()
         this.eta = vect.Eta()
-        this.fourvect.set_from(vect)
+        this.fourvect.copy_from(vect)
 
     @classmethod
     def set_vis(cls, this, other):
@@ -54,7 +54,7 @@ class FourVectModel(TreeModel):
         this.m_vis = vect.M()
         this.phi_vis = vect.Phi()
         this.eta_vis = vect.Eta()
-        this.fourvect_vis.set_from(vect)
+        this.fourvect_vis.copy_from(vect)
 
     @classmethod
     def set_miss(cls, this, other):
@@ -67,7 +67,7 @@ class FourVectModel(TreeModel):
         this.m_miss = vect.M()
         this.phi_miss = vect.Phi()
         this.eta_miss = vect.Eta()
-        this.fourvect_miss.set_from(vect)
+        this.fourvect_miss.copy_from(vect)
 
     @classmethod
     def set_trk(cls, this, other):
@@ -80,7 +80,7 @@ class FourVectModel(TreeModel):
         this.m_trk = vect.M()
         this.phi_trk = vect.Phi()
         this.eta_trk = vect.Eta()
-        this.fourvect_trk.set_from(vect)
+        this.fourvect_trk.copy_from(vect)
 
 
 class DecayVertex(TreeModel):

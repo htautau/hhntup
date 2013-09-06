@@ -475,7 +475,7 @@ class LHProcessor(ATLASStudent):
             MET = MET_vect.Mod()
             tree.MET = MET
             tree.sumET = sumET
-            getattr(tree, 'MET_vect').set_from(MET_vect)
+            getattr(tree, 'MET_vect').copy_from(MET_vect)
             tree.MET_sig = (2. * MET_vect.Mod() / GeV) / (utils.sign(sumET) * sqrt(abs(sumET / GeV)))
 
             #transverse mass

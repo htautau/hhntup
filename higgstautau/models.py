@@ -31,8 +31,8 @@ class FourMomentum(TreeModel):
         this.m = vect.M()
         this.phi = vect.Phi()
         this.eta = vect.Eta()
-        this.fourvect.set_from(vect)
-        this.fourvect_boosted.set_from(other.fourvect_boosted)
+        this.fourvect.copy_from(vect)
+        this.fourvect_boosted.copy_from(other.fourvect_boosted)
 
 
 class TrueTau(TreeModel):
@@ -76,17 +76,17 @@ class PartonBlock((Parton + MatchedObject).prefix('parton1_') + (Parton + Matche
 
         tree.mass_true_quark1_quark2 = (parton1_fourvect + parton2_fourvect).M()
 
-        tree.parton1_fourvect.set_from(parton1_fourvect)
-        tree.parton2_fourvect.set_from(parton2_fourvect)
+        tree.parton1_fourvect.copy_from(parton1_fourvect)
+        tree.parton2_fourvect.copy_from(parton2_fourvect)
 
         beta = (parton1_fourvect + parton2_fourvect).BoostVector()
-        tree.parton_beta.set_from(beta)
+        tree.parton_beta.copy_from(beta)
 
         parton1_fourvect.Boost(beta * -1)
         parton2_fourvect.Boost(beta * -1)
 
-        tree.parton1_fourvect_boosted.set_from(parton1_fourvect)
-        tree.parton2_fourvect_boosted.set_from(parton2_fourvect)
+        tree.parton1_fourvect_boosted.copy_from(parton1_fourvect)
+        tree.parton2_fourvect_boosted.copy_from(parton2_fourvect)
 
         tree.parton1_pdgId = parton1.pdgId
         tree.parton2_pdgId = parton2.pdgId

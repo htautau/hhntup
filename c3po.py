@@ -345,7 +345,7 @@ class c3po(ATLASStudent):
                     tau1, tau2, METx, METy, sumET)
 
             tree.tau_MMC_mass = mmc_mass
-            tree.tau_MMC_resonance.set_from(mmc_resonance)
+            tree.tau_MMC_resonance.copy_from(mmc_resonance)
             if mmc_mass > 0:
                 tree.tau_MMC_resonance_pt = mmc_resonance.Pt()
             tree.tau_MMC_MET = mmc_met.Mod()

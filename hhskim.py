@@ -568,15 +568,15 @@ class hhskim(ATLASStudent):
                 # determine boost of system
                 # determine jet CoM frame
                 beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-                tree.jet_beta.set_from(beta)
+                tree.jet_beta.copy_from(beta)
 
-                jet1.fourvect_boosted.set_from(jet1.fourvect)
-                jet2.fourvect_boosted.set_from(jet2.fourvect)
+                jet1.fourvect_boosted.copy_from(jet1.fourvect)
+                jet2.fourvect_boosted.copy_from(jet2.fourvect)
                 jet1.fourvect_boosted.Boost(beta * -1)
                 jet2.fourvect_boosted.Boost(beta * -1)
 
-                tau1.fourvect_boosted.set_from(tau1.fourvect)
-                tau2.fourvect_boosted.set_from(tau2.fourvect)
+                tau1.fourvect_boosted.copy_from(tau1.fourvect)
+                tau2.fourvect_boosted.copy_from(tau2.fourvect)
                 tau1.fourvect_boosted.Boost(beta * -1)
                 tau2.fourvect_boosted.Boost(beta * -1)
                 """

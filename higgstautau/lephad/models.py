@@ -180,11 +180,11 @@ class RecoTauLepBlock((RecoTau).prefix('tau_') + (RecoLepton).prefix('lep_')):
         setattr(tree, 'tau_EleBDTtight', tau.EleBDTTight)
         setattr(tree, 'tau_numTrack', tau.numTrack)
         setattr(tree, 'tau_charge', tau.charge)
-        getattr(tree, 'tau_fourvect').set_from(tau.fourvect)
+        getattr(tree, 'tau_fourvect').copy_from(tau.fourvect)
 
         #Set lepton variables
         setattr(tree, 'lep_charge', lep.charge)
-        getattr(tree, 'lep_fourvect').set_from(lep.fourvect)
+        getattr(tree, 'lep_fourvect').copy_from(lep.fourvect)
         tree.lep_leptype = leptype
 
         #Calculate muon isolation

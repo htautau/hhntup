@@ -316,7 +316,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
             tau.m)
 
         fourvect_boosted = getattr(tree, 'truetau%i_fourvect_boosted' % index)
-        fourvect_boosted.set_from(fourvect)
+        fourvect_boosted.copy_from(fourvect)
         fourvect_boosted.Boost(tree.parton_beta * -1)
 
         fourvect_vis = getattr(tree, 'truetau%i_fourvect_vis' % index)
@@ -331,7 +331,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
             print tau.vis_Et, tau.vis_eta, tau.vis_m
         else:
             fourvect_vis_boosted = getattr(tree, 'truetau%i_fourvect_vis_boosted' % index)
-            fourvect_vis_boosted.set_from(fourvect_vis)
+            fourvect_vis_boosted.copy_from(fourvect_vis)
             fourvect_vis_boosted.Boost(tree.parton_beta * -1)
 
 

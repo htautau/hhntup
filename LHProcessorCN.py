@@ -292,7 +292,7 @@ class LHProcessorCN(ATLASStudent):
             TauEta = event.evtsel_tau_eta
             TauPhi = event.evtsel_tau_phi
             Tau.SetPtEtaPhiM(TauPt, TauEta, TauPhi, 0)
-            getattr(tree, 'tau_fourvect').set_from(Tau)
+            getattr(tree, 'tau_fourvect').copy_from(Tau)
 
             TrueTau = LorentzVector()
             TrueTauPt  = event.evtsel_truethad_pt
@@ -322,7 +322,7 @@ class LHProcessorCN(ATLASStudent):
             LepEta = event.evtsel_lep_eta
             LepPhi = event.evtsel_lep_phi
             Lep.SetPtEtaPhiM(LepPt, LepEta, LepPhi, 0)
-            getattr(tree, 'lep_fourvect').set_from(Lep)
+            getattr(tree, 'lep_fourvect').copy_from(Lep)
 
             TrueLep = LorentzVector()
             TrueLepPt  = event.evtsel_truetlep_pt
@@ -400,7 +400,7 @@ class LHProcessorCN(ATLASStudent):
             MET_vect = Vector2(METx, METy)
             MET = MET_vect.Mod()
             tree.MET = MET
-            getattr(tree, 'MET_vect').set_from(MET_vect)
+            getattr(tree, 'MET_vect').copy_from(MET_vect)
             
             if tree.numJets > 1:
                 MET_4vect = LorentzVector()

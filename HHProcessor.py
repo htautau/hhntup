@@ -418,15 +418,15 @@ class HHProcessor(ATLASStudent):
                 # determine boost of system
                 # determine jet CoM frame
                 beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-                tree.jet_beta.set_from(beta)
+                tree.jet_beta.copy_from(beta)
 
-                jet1.fourvect_boosted.set_from(jet1.fourvect)
-                jet2.fourvect_boosted.set_from(jet2.fourvect)
+                jet1.fourvect_boosted.copy_from(jet1.fourvect)
+                jet2.fourvect_boosted.copy_from(jet2.fourvect)
                 jet1.fourvect_boosted.Boost(beta * -1)
                 jet2.fourvect_boosted.Boost(beta * -1)
 
-                tau1.fourvect_boosted.set_from(tau1.fourvect)
-                tau2.fourvect_boosted.set_from(tau2.fourvect)
+                tau1.fourvect_boosted.copy_from(tau1.fourvect)
+                tau2.fourvect_boosted.copy_from(tau2.fourvect)
                 tau1.fourvect_boosted.Boost(beta * -1)
                 tau2.fourvect_boosted.Boost(beta * -1)
 
@@ -529,7 +529,7 @@ class HHProcessor(ATLASStudent):
             tree.MET_x = METx
             tree.MET_y = METy
             tree.MET_phi = event.MET.phi
-            tree.MET_vec.set_from(MET_vect)
+            tree.MET_vec.copy_from(MET_vect)
             dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
             dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
             dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
@@ -589,14 +589,14 @@ class HHProcessor(ATLASStudent):
                         log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
 
                     mmc_object.mass = mmc_mass
-                    mmc_object.resonance.set_from(mmc_resonance)
+                    mmc_object.resonance.copy_from(mmc_resonance)
                     if mmc_mass > 0:
                         mmc_object.resonance_pt = mmc_resonance.Pt()
                     mmc_object.MET = mmc_met.Mod()
                     mmc_object.MET_x = mmc_met.X()
                     mmc_object.MET_y = mmc_met.Y()
                     mmc_object.MET_phi = math.pi - mmc_met.Phi()
-                    mmc_object.MET_vec.set_from(mmc_met)
+                    mmc_object.MET_vec.copy_from(mmc_met)
 
             else:
                 # use MMC values from skim
@@ -605,14 +605,14 @@ class HHProcessor(ATLASStudent):
                 mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
 
                 tree.mmc0_mass = mmc_mass
-                tree.mmc0_resonance.set_from(mmc_resonance)
+                tree.mmc0_resonance.copy_from(mmc_resonance)
                 if mmc_mass > 0:
                     tree.mmc0_resonance_pt = mmc_resonance.Pt()
                 tree.mmc0_MET = mmc_met.Mod()
                 tree.mmc0_MET_x = mmc_met.X()
                 tree.mmc0_MET_y = mmc_met.Y()
                 tree.mmc0_MET_phi = math.pi - mmc_met.Phi()
-                tree.mmc0_MET_vec.set_from(mmc_met)
+                tree.mmc0_MET_vec.copy_from(mmc_met)
 
             mass_vis, mass_col, tau1_x, tau2_x = mass.collinearmass(
                     tau1, tau2, METx, METy)

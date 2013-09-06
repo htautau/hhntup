@@ -271,7 +271,7 @@ class C3POProcessor(ATLASStudent):
             mmc_met = Vector2(event.tau_MMC_MET_x, event.tau_MMC_MET_y)
 
             tree.mass_mmc_tau1_tau2 = mmc_mass
-            tree.mmc_resonance.set_from(mmc_resonance)
+            tree.mmc_resonance.copy_from(mmc_resonance)
             if mmc_mass > 0:
                 tree.mmc_resonance_pt = mmc_resonance.Pt()
             tree.MET_mmc = mmc_met.Mod()
