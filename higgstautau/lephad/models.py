@@ -119,6 +119,7 @@ class EventVariables(TreeModel):
 
     weight = FloatCol()
     nvtx = IntCol()
+    #score = FloatCol()
 
     true_higgs_mass = FloatCol()
     true_dphi_resonance_dijet = FloatCol()

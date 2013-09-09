@@ -124,6 +124,7 @@ CN_MC_PATTERN12 = re.compile(
     '_lhCN'
     '(v(?P<version1>\d+))?'
     '(-(?P<version2>\d+))?'
+    '(-(?P<version3>\d+))?'
     '\.(?P<suffix>\S+)$')
 
 CN_DATA_PATTERN12 = re.compile(
@@ -143,12 +144,12 @@ CN_EMBED_PATTERN12 = re.compile(
     'data12_8TeV\.'
     '(?P<id>\S+)'
     '\.(?P<name>\w+)'
-    '\.TunaCont'
+    '\.PhysCont'
     '((\.NTUP_EMB)?)'
     '(?P<channel>(LH)|(HH))'
     '(?P<mfs>(IM)|(UP)|(DN))'
-    '\.2013-April-25.v00'
-    '\.(?P<tag>\w+)'
+    '\.grp14_v02'
+    '\_(?P<tag>\w+)'
     '_lhCN'
     '(v(?P<version1>\d+))?'
     '(-(?P<version2>\d+))?'

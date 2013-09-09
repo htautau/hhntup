@@ -8,13 +8,13 @@ from rootpy.tree import Tree, TreeBuffer, TreeChain
 from rootpy.tree.cutflow import Cutflow
 from rootpy.vector import Vector2, LorentzVector
 from rootpy.plotting import Hist
-from rootpy.io import open as ropen
 
 from higgstautau.mixins import *
 from higgstautau.lephad.models import *
 from higgstautau.lephad.filters import *
 from higgstautau import eventshapes
 from higgstautau.systematics import Systematics
+from higgstautau.lephad.correctiontools import FFReweighting
 
 from atlastools import datasets
 from atlastools import utils
@@ -33,20 +33,20 @@ SYSTEMATICS = {
     ## JES systematics
     'ATLAS_JES_BJet_DOWN'          : 'SystematicsDOWN/JES_BJet',
     'ATLAS_JES_BJet_UP'            : 'SystematicsUP/JES_BJet',
-    'ATLAS_JES_Detector_DOWN'      : 'SystematicsDOWN/JES_Detector',
-    'ATLAS_JES_Detector_UP'        : 'SystematicsUP/JES_Detector',
+    'ATLAS_JES_Detector1_DOWN'      : 'SystematicsDOWN/JES_Detector1',
+    'ATLAS_JES_Detector1_UP'        : 'SystematicsUP/JES_Detector1',
     'ATLAS_JES_EtaMethod_DOWN'     : 'SystematicsDOWN/JES_EtaMethod',
     'ATLAS_JES_EtaMethod_UP'       : 'SystematicsUP/JES_EtaMethod',
     'ATLAS_JES_EtaModelling_DOWN'  : 'SystematicsDOWN/JES_EtaModelling',
     'ATLAS_JES_EtaModelling_UP'    : 'SystematicsUP/JES_EtaModelling',
-    'ATLAS_JES_FlavComp_g_DOWN'      : 'SystematicsDOWN/JES_FlavComp',
-    'ATLAS_JES_FlavComp_g_UP'        : 'SystematicsUP/JES_FlavComp',
+    'ATLAS_JES_FlavComp_DOWN'      : 'SystematicsDOWN/JES_FlavComp',
+    'ATLAS_JES_FlavComp_UP'        : 'SystematicsUP/JES_FlavComp',
     'ATLAS_JES_FlavResp_DOWN'      : 'SystematicsDOWN/JES_FlavResp',
     'ATLAS_JES_FlavResp_UP'        : 'SystematicsUP/JES_FlavResp',
     'ATLAS_JES_Mixed_DOWN'         : 'SystematicsDOWN/JES_Mixed',
     'ATLAS_JES_Mixed_UP'           : 'SystematicsUP/JES_Mixed',
-    'ATLAS_JES_2012_Modelling1_DOWN'     : 'SystematicsDOWN/JES_Modelling',
-    'ATLAS_JES_2012_Modelling1_UP'       : 'SystematicsUP/JES_Modelling',
+    'ATLAS_JES_2012_Modelling1_DOWN'     : 'SystematicsDOWN/JES_Modelling1',
+    'ATLAS_JES_2012_Modelling1_UP'       : 'SystematicsUP/JES_Modelling1',
     'ATLAS_JES_PUMu_DOWN'          : 'SystematicsDOWN/JES_PUMu',
     'ATLAS_JES_PUMu_UP'            : 'SystematicsUP/JES_PUMu',
     'ATLAS_JES_PUNPV_DOWN'         : 'SystematicsDOWN/JES_PUNPV',
@@ -55,16 +55,16 @@ SYSTEMATICS = {
     'ATLAS_JES_PUPt_UP'            : 'SystematicsUP/JES_PUPt',
     'ATLAS_JES_PURho_DOWN'         : 'SystematicsDOWN/JES_PURho',
     'ATLAS_JES_PURho_UP'           : 'SystematicsUP/JES_PURho',
-    'ATLAS_JES_Statistical_DOWN'   : 'SystematicsDOWN/JES_Statistical',
-    'ATLAS_JES_Statistical_UP'     : 'SystematicsUP/JES_Statistical',
+    'ATLAS_JES_Statistical1_DOWN'   : 'SystematicsDOWN/JES_Statistical1',
+    'ATLAS_JES_Statistical1_UP'     : 'SystematicsUP/JES_Statistical1',
     'ATLAS_JER_DOWN'               : 'SystematicsDOWN/JER',
     'ATLAS_JER_UP'                 : 'SystematicsUP/JER',
     'ATLAS_JVF_DOWN'               : 'SystematicsDOWN/JVF',
     'ATLAS_JVF_UP'                 : 'SystematicsUP/JVF',
 
     ## TES systematics
-    'ATLAS_TAU_ES_DOWN' : 'SystematicsDOWN/TES',
-    'ATLAS_TAU_ES_UP'   : 'SystematicsUP/TES',
+    'ATLAS_TES_2012_DOWN' : 'SystematicsDOWN/TES',
+    'ATLAS_TES_2012_UP'   : 'SystematicsUP/TES',
 
     ## MET systematics
     'ATLAS_MET_RESOSOFT_DOWN'  : 'SystematicsDOWN/METResSys',
@@ -150,6 +150,8 @@ class LHProcessorCN(ATLASStudent):
         ## initialize the TreeChain of all input files
 
         ## Nominal
+        ## Shape systematic variation
+        self.systematic = None
         if self.args.syst_terms is None:
             chain = TreeChain(self.metadata.treename,
                               files=self.files,
@@ -158,16 +160,27 @@ class LHProcessorCN(ATLASStudent):
                               cache_size=10000000,
                               learn_entries=30,
                               onfilechange=onfilechange)
-
-        ## Shape systematic variation
+            
         elif len(self.args.syst_terms) == 1:
-            chain = TreeChain(SYSTEMATICS[self.args.syst_terms[0]],
-                              files=self.files,
-                              events=self.events,
-                              cache=True,
-                              cache_size=10000000,
-                              learn_entries=30,
-                              onfilechange=onfilechange)
+            self.systematic = self.args.syst_terms[0]
+            if self.systematic in SYSTEMATICS.keys():
+                chain = TreeChain(SYSTEMATICS[self.systematic],
+                                  files=self.files,
+                                  events=self.events,
+                                  cache=True,
+                                  cache_size=10000000,
+                                  learn_entries=30,
+                                  onfilechange=onfilechange)
+
+            else:
+                chain = TreeChain(self.metadata.treename,
+                                  files=self.files,
+                                  events=self.events,
+                                  cache=True,
+                                  cache_size=10000000,
+                                  learn_entries=30,
+                                  onfilechange=onfilechange)
+                
                 
         else:
             print "ERROR: Too many systematics terms, LHProcessorCN can only handle one at a time."
@@ -208,10 +221,14 @@ class LHProcessorCN(ATLASStudent):
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='lep', prefix='lep_')
 
-        ## Get Tau Correction
-        from externaltools.bundle_2012 import TauCorrUncert as TCU
-        from ROOT import TauCorrUncert
-        TauSFCorrections = TauCorrUncert.TauSF(TCU.RESOURCE_PATH)
+        ## Get FF reweighting
+        ff = FFReweighting()
+
+        ## Skip VBF overlap removal?
+        skip_vbf_overlap = self.metadata.name in ['WtaunuNp0_AP', 'WtaunuNp1_AP', 'WtaunuNp2_AP', 'WtaunuNp3_AP', 'WtaunuNp4_AP', 'WtaunuNp5_AP',
+                                                  'WmunuNp0_AP',  'WmunuNp1_AP',  'WmunuNp2_AP',  'WmunuNp3_AP',  'WmunuNp4_AP',  'WmunuNp5_AP',
+                                                  'WenuNp0_AP',   'WenuNp1_AP',   'WenuNp2_AP',   'WenuNp3_AP',   'WenuNp4_AP',   'WenuNp5_AP']
+
 
         # entering the main event loop...
         for event in chain:
@@ -221,9 +238,10 @@ class LHProcessorCN(ATLASStudent):
 
 
             ## -- VBF OLR -- ##
-            if event.evtsel_vbf_overlap_flag:
-                continue
-                
+            if not skip_vbf_overlap:
+                if event.evtsel_vbf_overlap_flag:
+                    continue
+
             ## -- Subsample -- ##
                 
             ## Initialize the subsample flags
@@ -254,11 +272,8 @@ class LHProcessorCN(ATLASStudent):
                 continue
 
             tree.is_tau = event.evtsel_is_tau
-            #if not event.evtsel_is_dilepVeto: continue
 
-            ## Correct tau ID SF
-            if event.evtsel_tau_is_real and not event.evtsel_tau_is_had:
-                evtsel_weight *= TauSFCorrections.GetIDSF(TauCorrUncert.BDTMEDIUM, event.evtsel_tau_eta, event.evtsel_tau_numTrack)
+
 
             ## Convert to private ntuple
             ##########################################################################
@@ -370,24 +385,6 @@ class LHProcessorCN(ATLASStudent):
                     sublead = sorted_jets[1]
                     tree.subleadjet_fourvect = sublead
                     vector_all += Tau + Lep + lead + sublead
-
-            # if tree.numJets > 0:
-            #     lead = LorentzVector()
-            #     lead.SetPtEtaPhiM(event.evtsel_jet_leading_pt*GeV,
-            #                       event.evtsel_jet_leading_eta,
-            #                       event.evtsel_jet_leading_phi,
-            #                       event.evtsel_jet_leading_m*GeV)
-            #     tree.leadjet_fourvect = lead
-
-            #     if tree.numJets > 1:
-            #         sublead = LorentzVector()
-            #         sublead.SetPtEtaPhiM(event.evtsel_jet_subleading_pt*GeV,
-            #                              event.evtsel_jet_subleading_eta,
-            #                              event.evtsel_jet_subleading_phi,
-            #                              event.evtsel_jet_subleading_m*GeV)
-            #         tree.subleadjet_fourvect = sublead
-            #         vector_all += Tau + Lep + lead + sublead
-
             
 
             tree.numJets50 = numJets50
@@ -517,23 +514,20 @@ class LHProcessorCN(ATLASStudent):
             
 
             ## -- Categories -- ##
-            tree.category_vbf_train = event.evtsel_is_MVA_VBF_train #False
-            tree.category_vbf_test = event.evtsel_is_MVA_VBF_test #False
-            tree.category_boosted = event.evtsel_is_MVA_boosted #False
-            tree.category_1j = event.evtsel_is_MVA_oneJet #False
-            tree.category_0j = event.evtsel_is_MVA_noJet #False
+            tree.category_vbf_train = event.evtsel_is_MVA_VBF and tree.SLT
+            tree.category_vbf_test = event.evtsel_is_MVA_VBF and tree.SLT
+            tree.category_boosted = event.evtsel_is_MVA_boosted and tree.SLT
+            tree.category_1j = event.evtsel_is_MVA_oneJet or ((event.evtsel_jets_num > 0) and (event.evtsel_is_MVA_VBF or event.evtsel_is_MVA_boosted) and tree.LTT)
+            tree.category_0j = event.evtsel_is_MVA_noJet or ((event.evtsel_jets_num == 0) and (event.evtsel_is_MVA_VBF or event.evtsel_is_MVA_boosted) and tree.LTT)
 
-            # if (numJets30 >= 2 and numJets50 >= 1):
-            #     tree.category_vbf_train = True
-            # if (numJets30 >= 2 and numJets50 >= 1 and eta_delta_j1_j2 > 3.0):
-            #     tree.category_vbf_test = True
-            # elif tree.resonance_pt_tau_lep > 100:
-            #     tree.category_boosted = True
-            # elif tree.numJets >= 1:
-            #     tree.category_1j = True
-            # elif tree.numJets == 0:
-            #     tree.category_0j = True
+            category = 'other'
+            if tree.category_vbf_test:
+                category = 'vbf'
+            if tree.category_boosted:
+                category = 'boosted'
 
+            ## -- BDT score -- ##
+            #tree.score = event.evtsel_BDT_score
 
             ## -- Event weights -- ##
             tree.weight = event.evtsel_weight
@@ -541,19 +535,69 @@ class LHProcessorCN(ATLASStudent):
             if tree.category_vbf_test or tree.category_boosted:
                 tree.weight *= event.evtsel_bjet_weight
 
-            if event.evtsel_tau_numTrack==3 and event.evtsel_tau_is_el:
-                tree.weight /= event.evtsel_weight_tau_el_overlap
+            ## -- W jets Pythia MC weights -- ##
+            tree.weight *= event.evtsel_weight_PythiaW
 
-
+            ## -- Embedding isolation -- ##
+            embedding_iso_nominal = event.emb_82_px > 0
+            embedding_iso_up      = event.emb_82_py > 0
+            embedding_iso_dn      = embedding_iso_nominal
+            if not embedding_iso_up and embedding_iso_nominal:
+                embedding_iso_dn *= 2
+            
             ## -- True Information -- ##
             tree.true_higgs_mass = (TrueTau + TrueLep).M()
 
              ## Electroweak Z production, removal of 120 GeV Higgs leak
-            if 'JetsEW1JetQCD15GeVM40_min_n_tchannels' in self.metadata.name:
+            if 'EWK_min_n_tchannels' in self.metadata.name:
                 if 115000 < tree.true_higgs_mass < 125000:
                     continue
+
+
+            ## -- Systematics -- ##
+
+            ## W Pythia reweighting
+            if self.systematic == 'ATlAS_ANA_LH12_01jet_Wlnu_DETA_UP':
+                tree.weight *= event.evtsel_sys_sf_PythiaW_deta_up
+
+            if self.systematic == 'ATlAS_ANA_LH12_01jet_Wlnu_DETA_DOWN':
+                tree.weight *= event.evtsel_sys_sf_PythiaW_deta_dn
+
+            if self.systematic == 'ATlAS_ANA_LH12_01jet_Wlnu_PTRAT_UP':
+                tree.weight *= event.evtsel_sys_sf_PythiaW_pt_ratio_up
+
+            if self.systematic == 'ATlAS_ANA_LH12_01jet_Wlnu_PTRAT_DOWN':
+                tree.weight *= event.evtsel_sys_sf_PythiaW_pt_ratio_dn
+
+                
+            ## Embedding isolation
+            if self.metadata.datatype == datasets.EMBED:
+                if self.systematic == 'ATLAS_ANA_EMB_ISOL_UP':
+                    tree.weight *= embedding_iso_up
+                elif self.systematic == 'ATLAS_ANA_EMB_ISOL_DOWN':
+                    tree.weight *= embedding_iso_dn
+                else:
+                    tree.weight *= embedding_iso_nominal
+
+
+            ## Fake factor
+            if not tree.is_tau:
+                if self.systematic == 'ATLAS_ANA_LH12_SR_FF_UP':
+                    tree.weight *= tree.FF_up
+
+                if self.systematic == 'ATLAS_ANA_LH12_SR_FF_DOWN':
+                    tree.weight *= tree.FF_down
+
             
-            
+            ## Fake factor correction
+            if not tree.is_tau and self.metadata.datatype == datasets.DATA:
+                if self.systematic == 'ATLAS_ANA_LH12_SR_FFRW_UP':
+                    tree.weight *= ff.get(category, tree, 1)
+                elif self.systematic == 'ATLAS_ANA_LH12_SR_FFRW_DOWN':
+                    tree.weight *= ff.get(category, tree, -1)
+                else:
+                    tree.weight *= ff.get(category, tree)
+
 
             # fill output ntuple
             if self.metadata.datatype != datasets.EMBED:

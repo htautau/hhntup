@@ -68,13 +68,12 @@ SYSTEMATICS_LEPHAD = [
     ## JES systematics
     #('ATLAS_JES_Detector_DOWN',),
     #('ATLAS_JES_Detector_UP',),
-    #('ATLAS_JES_EtaModelling_DOWN',),
-    #('ATLAS_JES_EtaModelling_UP',),
+    
     ('ATLAS_JES_2012_Modelling1_DOWN',),
     ('ATLAS_JES_2012_Modelling1_UP',),
     
-    ('ATLAS_JES_FlavComp_g_DOWN',),
-    ('ATLAS_JES_FlavComp_g_UP',),
+    ('ATLAS_JES_FlavComp_DOWN',),
+    ('ATLAS_JES_FlavComp_UP',),
     
     ('ATLAS_JES_FlavResp_DOWN',),
     ('ATLAS_JES_FlavResp_UP',),
@@ -85,12 +84,12 @@ SYSTEMATICS_LEPHAD = [
     #('ATLAS_JER_DOWN',),
     #('ATLAS_JER_UP',),
 
-    #('ATLAS_JVF_DOWN',),
-    #('ATLAS_JVF_UP',),
+    ('ATLAS_JVF_DOWN',),
+    ('ATLAS_JVF_UP',),
 
     ## TES systematics
-    ('ATLAS_TAU_ES_DOWN',),
-    ('ATLAS_TAU_ES_UP',),
+    ('ATLAS_TES_2012_DOWN',),
+    ('ATLAS_TES_2012_UP',),
 
     ## MET systematics
     #('ATLAS_MET_RESOSOFT_DOWN',),
@@ -107,6 +106,21 @@ SYSTEMATICS_LEPHAD = [
     ## Muon systematics
     #('ATLAS_MU_ES_DOWN',),
     #('ATLAS_MU_ES_UP',),
+
+    # ('ATLAS_ANA_LH12_01jet_Wlnu_DETA_UP',),
+    # ('ATLAS_ANA_LH12_01jet_Wlnu_DETA_DOWN',),
+    # ('ATLAS_ANA_LH12_01jet_Wlnu_PTRAT_UP',),
+    # ('ATLAS_ANA_LH12_01jet_Wlnu_PTRAT_DOWN',),
+
+    # ('ATLAS_ANA_EMB_ISOL_UP',),
+    # ('ATLAS_ANA_EMB_ISOL_DOWN',),
+
+    # ('ATLAS_ANA_LH12_SR_FF_UP',),
+    # ('ATLAS_ANA_LH12_SR_FF_DOWN',),
+
+    # ('ATLAS_ANA_LH12_SR_FFRW_UP',),
+    # ('ATLAS_ANA_LH12_SR_FFRW_DOWN',),
+    
 ] # ADD MORE HERE
 
 SYSTEMATICS = {

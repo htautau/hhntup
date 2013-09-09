@@ -6,7 +6,7 @@ from atlastools import datasets
 from math import *
 import os
 
-from ROOT import std, TLorentzVector, TFile, Double, Long
+from ROOT import std, TLorentzVector, TFile, Double, Long, TVector2
 from higgstautau.mixins import *
 from externaltools import MissingETUtility
 from ROOT import METUtility
@@ -1029,3 +1029,56 @@ def TauTriggerSF(tool1, tool2, tool3, Tau, nvtx, runNumber, year, lep, pileup_to
     return sf, errup, errdown
             
         
+#################################################
+# Special FF corrections
+#################################################
+class FFReweighting:
+    """
+    A class to reweigh the fake factor events
+    """
+
+    ## ------------------------------------------------- ##
+    def __init__(self):
+        """
+        Constructor, load the input files, keep around
+        """
+
+        self.vbf_file     = TFile('higgstautau/lephad/AntiReweight_VBF.root')
+        self.boosted_file = TFile('higgstautau/lephad/AntiReweight_Boost087.root')
+
+        self.vbf_weights     = self.vbf_file.Get('metontau')
+        self.boosted_weights = self.boosted_file.Get('metontau')
+
+
+    ## ------------------------------------------------- ##
+    def get(self, category, tree, systematic=0):
+        """
+        returns the correction weight
+        """
+
+        weight = 1.0
+        if systematic == -1:
+            return weight
+        
+        ## Calculate the metontau quantity
+        met_phi = tree.MET_vect.Phi()
+        tau_phi = tree.tau_fourvect.Phi()
+        tau_pt  = tree.tau_fourvect.Pt()
+        met     = tree.MET
+
+        x = cos(abs(TVector2.Phi_mpi_pi(tau_phi - met_phi)))*(met/tau_pt)
+
+        if category == 'vbf':
+            weight = self.vbf_weights.GetBinContent(self.vbf_weights.FindBin(x))
+            if systematic == 1:
+                if x > 0: weight = 0.5
+                else:     weight = 1.5
+
+        if category == 'boosted':
+            weight = self.boosted_weights.GetBinContent(self.boosted_weights.FindBin(x))
+            if systematic == 1:
+                if x > 0: weight = 0.8
+                else:     weight = 1.2
+
+        return weight
+                
