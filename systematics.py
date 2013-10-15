@@ -2,7 +2,7 @@ import copy
 
 # common systematics
 SYSTEMATICS_COMMON = [
-#     ('JES_UP',),
+    #('JES_UP',),
     ('JES_Statistical_UP',),
     ('JES_Modelling_UP',),
     ('JES_Detector_UP',),
@@ -19,7 +19,7 @@ SYSTEMATICS_COMMON = [
     ('JES_NonClosure_UP',),
     ('JVF_UP',),
     ('TES_UP',),
-#     ('JES_DOWN',),
+    #('JES_DOWN',),
     ('JES_Statistical_DOWN',),
     ('JES_Modelling_DOWN',),
     ('JES_Detector_DOWN',),
@@ -61,6 +61,13 @@ SYSTEMATICS_HADHAD = [
     ('TES_PU_DOWN',),
     ('TES_OTHERS_UP',),
     ('TES_OTHERS_DOWN',),
+
+    # MET systematics
+    ('MET_RESOSOFTTERMS_UP',),
+    ('MET_RESOSOFTTERMS_DOWN',),
+
+    ('MET_SCALESOFTTERMS_UP',),
+    ('MET_SCALESOFTTERMS_DOWN',),
 ] # ADD MORE HERE
 
 # lepton-hadron-only systematics
@@ -68,13 +75,13 @@ SYSTEMATICS_LEPHAD = [
     ## JES systematics
     #('ATLAS_JES_Detector_DOWN',),
     #('ATLAS_JES_Detector_UP',),
-    
+
     ('ATLAS_JES_2012_Modelling1_DOWN',),
     ('ATLAS_JES_2012_Modelling1_UP',),
-    
+
     ('ATLAS_JES_FlavComp_DOWN',),
     ('ATLAS_JES_FlavComp_UP',),
-    
+
     ('ATLAS_JES_FlavResp_DOWN',),
     ('ATLAS_JES_FlavResp_UP',),
 
@@ -120,7 +127,7 @@ SYSTEMATICS_LEPHAD = [
 
     # ('ATLAS_ANA_LH12_SR_FFRW_UP',),
     # ('ATLAS_ANA_LH12_SR_FFRW_DOWN',),
-    
+
 ] # ADD MORE HERE
 
 SYSTEMATICS = {

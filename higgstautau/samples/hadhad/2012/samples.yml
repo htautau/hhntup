@@ -80,6 +80,10 @@ mc:
         #- TES_PU_DOWN
         #- TES_OTHERS_UP
         #- TES_OTHERS_DOWN
+        - MET_RESOSOFTTERMS_UP
+        - MET_RESOSOFTTERMS_DOWN
+        - MET_SCALESOFTTERMS_UP
+        - MET_SCALESOFTTERMS_DOWN
     samples:
         - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.mc12a'
         - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp1.mc12a'

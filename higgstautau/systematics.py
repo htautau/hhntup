@@ -794,20 +794,23 @@ class Systematics(EventFilter):
     #ALLCLUSTERS_DOWN = METUtil.AllClustersDown
 
     # soft terms
-    RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
-    RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
+    MET_RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
+    MET_RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
 
-    RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
-    RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
+    MET_RESOSOFTTERMS_PTHARD_UPDOWN = METUtil.ResoSoftTermsUpDown_ptHard
+    MET_RESOSOFTTERMS_PTHARD_DOWNUP = METUtil.ResoSoftTermsDownUp_ptHard
 
-    SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
-    SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
+    MET_SCALESOFTTERMS_PTHARD_UP = METUtil.ScaleSoftTermsUp_ptHard
+    MET_SCALESOFTTERMS_PTHARD_DOWN = METUtil.ScaleSoftTermsDown_ptHard
 
-    RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
-    RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
+    MET_RESOSOFTTERMS_UP = METUtil.ResoSoftTermsUp
+    MET_RESOSOFTTERMS_DOWN = METUtil.ResoSoftTermsDown
 
-    SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
-    SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
+    MET_SCALESOFTTERMS_UP = METUtil.ScaleSoftTermsUp
+    MET_SCALESOFTTERMS_DOWN = METUtil.ScaleSoftTermsDown
+    MET_TERMS = set([
+        MET_RESOSOFTTERMS_UP, MET_RESOSOFTTERMS_DOWN,
+        MET_SCALESOFTTERMS_UP, MET_SCALESOFTTERMS_DOWN])
 
     # pileup (deprecated 1.1.0)
     #PILEUP_UP = METUtil.PileupUp
@@ -839,6 +842,7 @@ class Systematics(EventFilter):
             terms = set(terms)
             self.terms = terms
             for term in terms:
+                systematic = None
                 #if term == Systematics.JES_UP:
                 #    systematic = JES(True, sys_util=self)
                 #elif term == Systematics.JES_DOWN:
@@ -1010,9 +1014,10 @@ class Systematics(EventFilter):
                     systematic = TauBDT(True, sys_util=self)
                 elif term == Systematics.TAUBDT_DOWN:
                     systematic = TauBDT(False, sys_util=self)
-                else:
+                elif term not in Systematics.MET_TERMS:
                     raise ValueError("systematic not supported")
-                self.systematics.append(systematic)
+                if systematic is not None:
+                    self.systematics.append(systematic)
 
         # Initialise your METUtility object
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtility
@@ -1052,6 +1057,24 @@ class Systematics(EventFilter):
         #        MuonMomentumCorrections.RESOURCE_PATH)
         #self.muonTool.UseScale(1)
         #self.muonTool.UseImprovedCombine()
+
+    def get_met(self):
+
+        util = self.met_utility
+        multisyst = METUtil.MultiSyst()
+        if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
+            multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_UP)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
+            multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_DOWN)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
+            multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_UP)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
+            multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_DOWN)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        return util.getMissingET(METUtil.RefFinal)
 
     def passes(self, event):
 
@@ -1284,7 +1307,7 @@ class Systematics(EventFilter):
             event.MET_CellOut_BDTMedium_ety,
             event.MET_CellOut_BDTMedium_sumet)
 
-        MET = self.met_utility.getMissingET(METUtil.RefFinal)
+        MET = self.get_met()
 
         if self.verbose:
             log.info("Recalculated MET: %.3f (original: %.3f)" % (
@@ -1432,7 +1455,7 @@ class Systematics(EventFilter):
             event.MET_CellOut_Eflow_STVF_ety,
             event.MET_CellOut_Eflow_STVF_sumet)
 
-        MET = self.met_utility.getMissingET(METUtil.RefFinal)
+        MET = self.get_met()
 
         if self.verbose:
             log.info("Run: {0} Event: {1}".format(
