@@ -142,10 +142,10 @@ class hhskim(ATLASStudent):
                 year = student.metadata.year
                 datatype = student.metadata.datatype
                 if datatype == datasets.MC:
-                    cutflow[0] += file.cutflow_event[0]
-                    cutflow[1] += file.cutflow_event_mc_weight[0]
+                    cutflow[1].value += file.cutflow_event[1].value
+                    cutflow[2].value += file.cutflow_event_mc_weight[1].value
                 else:
-                    cutflow[0] += file.cutflow_event[0]
+                    cutflow[1].value += file.cutflow_event[1].value
 
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
