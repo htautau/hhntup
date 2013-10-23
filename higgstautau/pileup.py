@@ -6,6 +6,7 @@ from externaltools import PileupReweighting
 from ROOT import Root
 
 
+# https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
 DATA_SCALE_FACTOR = {
     2011: 1./0.97,
     2012: 1./1.11,
@@ -25,7 +26,6 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2011/hadhad/'
                 'TPileupReweighting.mc11.prw.root')
-        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
         pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
         pileup_tool.AddLumiCalcFile(
             'lumi/2011/hadhad/'
@@ -39,7 +39,6 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2012/hadhad/'
                 'TPileupReweighting.mc12.prw.root')
-        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
         pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
         pileup_tool.AddLumiCalcFile(
             'lumi/2012/hadhad/'
@@ -123,7 +122,9 @@ class PileupReweight(EventFilter):
 
 
 class PileupScale(EventFilter):
-
+    """
+    TODO scale MC instead of data!
+    """
     def __init__(self, tree, year, datatype, **kwargs):
 
         self.tree = tree
