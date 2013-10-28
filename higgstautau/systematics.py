@@ -19,10 +19,12 @@ from rootpy.tree.filtering import EventFilter
 import ROOT
 
 # ATLAS tools imports
-from externaltools import MissingETUtility
-from externaltools import MuonMomentumCorrections
+from externaltools.bundle_2011 import MissingETUtility
+from externaltools.bundle_2011 import MuonMomentumCorrections
+#from externaltools import MissingETUtility
+#from externaltools import MuonMomentumCorrections
 from externaltools import JetUncertainties
-from externaltools import JetResolution
+from externaltools.bundle_2011 import JetResolution
 from externaltools import egammaAnalysisUtils
 # TCU will soon support both 2011 and 2012
 from externaltools.bundle_2012 import TauCorrUncert as TCU
@@ -31,7 +33,7 @@ from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool20
 # MissingETUtility
 from ROOT import METUtility
 from ROOT import METUtil
-from ROOT import MissingETTags
+#from ROOT import MissingETTags
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
 # JVF
@@ -114,20 +116,19 @@ class JES(JetSystematic):
         # Tag assumed: JetUncertainties-00-05-09-02
         super(JES, self).__init__(is_up, **kwargs)
 
-        self.jes_tool = None
+        assert np in self.all_nps and hasattr(self, '_'+np)
+        self.np = np
+        self.run_np = getattr(self, '_' + np)
 
+        self.jes_tool = None
         if self.year == 2011:
             self.jes_tool = MultijetJESUncertaintyProvider(
                 "JES_2011/Final/MultijetJES_2011.config",
-                "JES_2011/Final/InsituJES2011_AllNuisanceParameters.config",
-                "AntiKt4LCTopoJets",
+                "JES_2011/Final/InsituJES2011_17NP_ByCategory.config",
+                "AntiKt4TopoLC",
                 "MC11c",
                 JetUncertainties.RESOURCE_PATH)
         elif self.year == 2012:
-            assert np in self.all_nps and hasattr(self, '_'+np)
-            self.np = np
-            self.run_np = getattr(self, '_' + np)
-
             self.jes_tool = MultijetJESUncertaintyProvider(
                 "JES_2012/Moriond2013/MultijetJES_2012.config",
                 #"JES_2012/Moriond2013/InsituJES2012_AllNuisanceParameters.config",
@@ -222,38 +223,55 @@ class JES(JetSystematic):
         # aren't used.
         shift = 0.
         if self.year == 2011:
-            if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
+#             if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
+# 
+#                 # delta R cut needed to apply close-by jets uncertainty
+#                 drmin=9999
+#                 for otherjet in event.jets:
+#                     if otherjet.emscale_pt > 7000:
+#                         if jet.index != otherjet.index:
+#                             dr = utils.dR(jet.eta, jet.phi,
+#                                           otherjet.eta,
+#                                           otherjet.phi)
+#                             if dr < drmin:
+#                                 drmin = dr
+# 
+#                 # TODO: shift is symmetric (is_up argument is not needed)
+#                 if self.is_up:
+#                     shift = self.jes_tool.getRelUncert(
+#                             jet.pt,
+#                             jet.eta,
+#                             drmin,
+#                             True, # is up
+#                             self.sys_util.nvtxjets,
+#                             event.averageIntPerXing,
+#                             False) # is b jet
+#                 else:
+#                     shift = -1 * self.jes_tool.getRelUncert(
+#                             jet.pt,
+#                             jet.eta,
+#                             drmin,
+#                             False, # is up
+#                             self.sys_util.nvtxjets,
+#                             event.averageIntPerXing,
+#                             False) # is b jet
+            if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
-                # delta R cut needed to apply close-by jets uncertainty
-                drmin=9999
-                for otherjet in event.jets:
-                    if otherjet.emscale_pt > 7000:
-                        if jet.index != otherjet.index:
-                            dr = utils.dR(jet.eta, jet.phi,
-                                          otherjet.eta,
-                                          otherjet.phi)
-                            if dr < drmin:
-                                drmin = dr
-
-                # TODO: shift is symmetric (is_up argument is not needed)
-                if self.is_up:
-                    shift = self.jes_tool.getRelUncert(
-                            jet.pt,
-                            jet.eta,
-                            drmin,
-                            True, # is up
-                            self.sys_util.nvtxjets,
-                            event.averageIntPerXing,
-                            False) # is b jet
+                uncs = self.run_np(jet, event)
+                if len(uncs) > 1:
+                    unc = 0.
+                    for u in uncs:
+                        unc += u**2.
+                    unc = unc**0.5
                 else:
-                    shift = -1 * self.jes_tool.getRelUncert(
-                            jet.pt,
-                            jet.eta,
-                            drmin,
-                            False, # is up
-                            self.sys_util.nvtxjets,
-                            event.averageIntPerXing,
-                            False) # is b jet
+                    unc = uncs[0]
+
+                if abs(max(uncs)) < abs(min(uncs)):
+                    unc = -unc; # set total to sign of max
+                if self.is_up:
+                    shift = unc;
+                else:
+                    shift = -unc;
 
         elif self.year == 2012:
             if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
@@ -345,9 +363,15 @@ class JER(JetSystematic):
     def __init__(self, is_up, **kwargs):
 
         # Tag assumed: JetResolution-01-00-00
-        self.jer_tool = JERProvider(
-            "AntiKt4LCTopoJES", "Truth",
-            JetResolution.get_resource('JERProviderPlots.root'))
+        if self.year == 2011:
+            self.jer_tool = JERProvider(
+                "AntiKt4LCTopoJES", "Truth",
+                JetResolution.get_resource('JERProviderPlots_2011.root'))
+            self.jer_tool.is7TeV(True)
+        else:
+            self.jer_tool = JERProvider(
+                "AntiKt4LCTopoJES", "Truth",
+                JetResolution.get_resource('JERProviderPlots.root'))
         self.jer_tool.init()
         # Note on use of ROOT random number generators:
         # TRandom and TRandom2 have many documented deficiencies.
@@ -1029,17 +1053,17 @@ class Systematics(EventFilter):
                 year == 2012, # is 2012
                 year == 2012) # is STVF
 
-        # Turn on (off) the relevant MET terms
-        # These are the terms required for MET_RefFinal(_BDTMedium)
-        self.met_utility.defineMissingET(
-                True,  # RefEle
-                True,  # RefGamma
-                True,  # RefTau
-                True,  # RefJet
-                True,  # RefMuon
-                True,  # MuonTotal
-                True,  # Soft
-            )
+            # Turn on (off) the relevant MET terms
+            # These are the terms required for MET_RefFinal(_BDTMedium)
+            self.met_utility.defineMissingET(
+                    True,  # RefEle
+                    True,  # RefGamma
+                    True,  # RefTau
+                    True,  # RefJet
+                    True,  # RefMuon
+                    True,  # MuonTotal
+                    True,  # Soft
+                )
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
         #self.met_utility.setSoftJetCut(20e3)
@@ -1061,20 +1085,31 @@ class Systematics(EventFilter):
     def get_met(self):
 
         util = self.met_utility
-        multisyst = METUtil.MultiSyst()
-        if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
-            multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_UP)
-            return util.getMissingET(METUtil.RefFinal, multisyst)
-        elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
-            multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_DOWN)
-            return util.getMissingET(METUtil.RefFinal, multisyst)
-        elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
-            multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_UP)
-            return util.getMissingET(METUtil.RefFinal, multisyst)
-        elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
-            multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_DOWN)
-            return util.getMissingET(METUtil.RefFinal, multisyst)
-        return util.getMissingET(METUtil.RefFinal)
+        if self.year == 2011:
+            if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
+                return util.getMissingET(METUtil.RefFinal, METUtil.ScaleSoftTermsUp)
+            elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
+                return util.getMissingET(METUtil.RefFinal, METUtil.ScaleSoftTermsDown)
+            elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
+                return util.getMissingET(METUtil.RefFinal, METUtil.ResoSoftTermsUp)
+            elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
+                return util.getMissingET(METUtil.RefFinal, METUtil.ResoSoftTermsDown)
+            return util.getMissingET(METUtil.RefFinal)
+        elif self.year == 2012:
+            multisyst = METUtil.MultiSyst()
+            if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
+                multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_UP)
+                return util.getMissingET(METUtil.RefFinal, multisyst)
+            elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
+                multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_DOWN)
+                return util.getMissingET(METUtil.RefFinal, multisyst)
+            elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
+                multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_UP)
+                return util.getMissingET(METUtil.RefFinal, multisyst)
+            elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
+                multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_DOWN)
+                return util.getMissingET(METUtil.RefFinal, multisyst)
+            return util.getMissingET(METUtil.RefFinal)
 
     def passes(self, event):
 
@@ -1140,7 +1175,7 @@ class Systematics(EventFilter):
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-            #self.met_utility.setOriJetParameters(event.jet_pt)
+            self.met_utility.setOriJetParameters(self.tree.jet_pt_original)
 
         if self.channel == 'lh':
             self.met_utility.setJetParameters(

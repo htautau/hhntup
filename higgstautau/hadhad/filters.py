@@ -25,22 +25,23 @@ class TauIDSelection(EventFilter):
         super(TauIDSelection, self).__init__(**kwargs)
 
     def passes_2011(self, event):
+        return self.passes_2012(event)
 
-        tau1, tau2 = event.taus
-        if not (tau1.JetBDTSigLoose and tau2.JetBDTSigLoose):
-            return False
-        # signal region is: both taus medium
-        # need loose taus for OSFF model
-        if tau1.JetBDTSigMedium:
-            tau1.id = IDMEDIUM
-        else:
-            tau1.id = IDLOOSE
-        if tau2.JetBDTSigMedium:
-            tau2.id = IDMEDIUM
-        else:
-            tau2.id = IDLOOSE
-        self.tree.taus_pass = tau1.JetBDTSigMedium and tau2.JetBDTSigMedium
-        return True
+#         tau1, tau2 = event.taus
+#         if not (tau1.JetBDTSigLoose and tau2.JetBDTSigLoose):
+#             return False
+#         # signal region is: both taus medium
+#         # need loose taus for OSFF model
+#         if tau1.JetBDTSigMedium:
+#             tau1.id = IDMEDIUM
+#         else:
+#             tau1.id = IDLOOSE
+#         if tau2.JetBDTSigMedium:
+#             tau2.id = IDMEDIUM
+#         else:
+#             tau2.id = IDLOOSE
+#         self.tree.taus_pass = tau1.JetBDTSigMedium and tau2.JetBDTSigMedium
+#         return True
 
     def passes_2012(self, event):
 
