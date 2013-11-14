@@ -1,8 +1,7 @@
 mc_ztautau:
     name: Ztautau
-    latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$'
-    root: 'Z/#gamma^{*}#rightarrow#tau_{h}#tau_{h}'
-    color: '#00a4ff'
+    latex: '$Z\rightarrow\tau\tau$'
+    root: 'Z#rightarrow#tau#tau'
     samples:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp1.mc12a'
@@ -25,16 +24,14 @@ mc_ztautau:
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
 embedded_ztautau:
     name: Ztautau
-    latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$ (embedded)'
-    root: 'Z/#gamma^{*}#rightarrow#tau_{h}#tau_{h} (embedded)'
-    color: '#00a4ff'
+    latex: '$Z\rightarrow\tau\tau$'
+    root: 'Z#rightarrow#tau#tau'
     samples:
         - 'embed12-HH-IM'
 ewk:
     name: EW
     latex: EW
     root: EW
-    color: '#ff9f71'
     samples:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp0.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp1.mc12a'
@@ -88,7 +85,6 @@ top:
     name: Top
     latex: Top
     root: Top
-    color: '#0000ff'
     samples:
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
@@ -103,7 +99,6 @@ diboson:
     name: Diboson
     latex: Diboson
     root: Diboson
-    color: '#ffd075'
     samples:
         - 'Herwig_AUET2CTEQ6L1_WW.mc12a'
         - 'Herwig_AUET2CTEQ6L1_WZ.mc12a'
@@ -122,7 +117,6 @@ others:
     name: Others
     latex: Others
     root: Others
-    color: '#ff7700'
     samples:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp0.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp1.mc12a'
