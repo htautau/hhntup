@@ -22,6 +22,17 @@ mc_ztautau:
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
+mc_ztautau_dy:
+    name: Ztautau_DY
+    latex: '$Z\rightarrow\tau\tau$'
+    root: '#font[52]{Z}#rightarrow#tau#tau'
+    samples:
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
 embedded_ztautau:
     name: Ztautau
     latex: '$Z\rightarrow\tau\tau$'
