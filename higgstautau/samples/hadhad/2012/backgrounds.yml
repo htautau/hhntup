@@ -1,7 +1,7 @@
 mc_ztautau:
     name: Ztautau
     latex: '$Z\rightarrow\tau\tau$'
-    root: 'Z#rightarrow#tau#tau'
+    root: '#font[52]{Z}#rightarrow#tau#tau'
     samples:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp1.mc12a'
@@ -25,7 +25,7 @@ mc_ztautau:
 embedded_ztautau:
     name: Ztautau
     latex: '$Z\rightarrow\tau\tau$'
-    root: 'Z#rightarrow#tau#tau'
+    root: '#font[52]{Z}#rightarrow#tau#tau'
     samples:
         - 'embed12-HH-IM'
 ewk:
