@@ -275,7 +275,7 @@ class hhskim(ATLASStudent):
                     passthrough=local,
                     count_funcs=count_funcs),
                 TileTrips(
-                    passthrough=local or year < 2012 or datatype == datasets.MC,
+                    passthrough=local or datatype == datasets.MC,
                     count_funcs=count_funcs),
                 JetCopy(
                     tree=tree,

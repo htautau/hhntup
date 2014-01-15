@@ -75,7 +75,7 @@ class TileTrips(EventFilter):
     def __init__(self, passthrough=False, **kwargs):
 
         if not passthrough:
-            from externaltools.bundle_2012 import TileTripReader
+            from externaltools import TileTripReader
             from ROOT import Root
             self.tool = Root.TTileTripReader()
         super(TileTrips, self).__init__(passthrough=passthrough, **kwargs)
@@ -83,16 +83,16 @@ class TileTrips(EventFilter):
     def passes(self, event):
 
         # only apply between G - J
-        if event.RunNumber < 211522:
-            return True
-        if event.RunNumber > 215091:
-            return True
+        #if event.RunNumber < 211522:
+        #    return True
+        #if event.RunNumber > 215091:
+        #    return True
         # returns false if the event is one with a saturation in a tile cell
         # (bad MET).
         return self.tool.checkEvent(
-                event.RunNumber,
-                event.lbn,
-                event.EventNumber)
+            event.RunNumber,
+            event.lbn,
+            event.EventNumber)
 
 
 class JetCleaning(EventFilter):
