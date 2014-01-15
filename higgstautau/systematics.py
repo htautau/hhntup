@@ -19,12 +19,10 @@ from rootpy.tree.filtering import EventFilter
 import ROOT
 
 # ATLAS tools imports
-from externaltools.bundle_2011 import MissingETUtility
-from externaltools.bundle_2011 import MuonMomentumCorrections
-#from externaltools import MissingETUtility
-#from externaltools import MuonMomentumCorrections
+from externaltools import MissingETUtility
+from externaltools import MuonMomentumCorrections
 from externaltools import JetUncertainties
-from externaltools.bundle_2011 import JetResolution
+from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
 from externaltools import TauCorrUncert as TCU
 from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool2012
@@ -216,80 +214,61 @@ class JES(JetSystematic):
 
     @JetSystematic.set
     def run(self, jet, event):
-
         # Safest to assume nothing about the uncertainties on soft jets.
         # These will go into SoftJets anyhow, and so the JES systematics
         # aren't used.
         shift = 0.
-        if self.year == 2011:
-#             if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
-# 
-#                 # delta R cut needed to apply close-by jets uncertainty
-#                 drmin=9999
-#                 for otherjet in event.jets:
-#                     if otherjet.emscale_pt > 7000:
-#                         if jet.index != otherjet.index:
-#                             dr = utils.dR(jet.eta, jet.phi,
-#                                           otherjet.eta,
-#                                           otherjet.phi)
-#                             if dr < drmin:
-#                                 drmin = dr
-# 
-#                 # TODO: shift is symmetric (is_up argument is not needed)
-#                 if self.is_up:
-#                     shift = self.jes_tool.getRelUncert(
-#                             jet.pt,
-#                             jet.eta,
-#                             drmin,
-#                             True, # is up
-#                             self.sys_util.nvtxjets,
-#                             event.averageIntPerXing,
-#                             False) # is b jet
-#                 else:
-#                     shift = -1 * self.jes_tool.getRelUncert(
-#                             jet.pt,
-#                             jet.eta,
-#                             drmin,
-#                             False, # is up
-#                             self.sys_util.nvtxjets,
-#                             event.averageIntPerXing,
-#                             False) # is b jet
-            if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
+        # OLD 2011 code
+        #if self.year == 2011:
+        #     if jet.pt > 20e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
+        #
+        #         # delta R cut needed to apply close-by jets uncertainty
+        #         drmin=9999
+        #         for otherjet in event.jets:
+        #             if otherjet.emscale_pt > 7000:
+        #                 if jet.index != otherjet.index:
+        #                     dr = utils.dR(jet.eta, jet.phi,
+        #                                   otherjet.eta,
+        #                                   otherjet.phi)
+        #                     if dr < drmin:
+        #                         drmin = dr
+        #
+        #         # TODO: shift is symmetric (is_up argument is not needed)
+        #         if self.is_up:
+        #             shift = self.jes_tool.getRelUncert(
+        #                     jet.pt,
+        #                     jet.eta,
+        #                     drmin,
+        #                     True, # is up
+        #                     self.sys_util.nvtxjets,
+        #                     event.averageIntPerXing,
+        #                     False) # is b jet
+        #         else:
+        #             shift = -1 * self.jes_tool.getRelUncert(
+        #                     jet.pt,
+        #                     jet.eta,
+        #                     drmin,
+        #                     False, # is up
+        #                     self.sys_util.nvtxjets,
+        #                     event.averageIntPerXing,
+        #                     False) # is b jet
+        if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
 
-                uncs = self.run_np(jet, event)
-                if len(uncs) > 1:
-                    unc = 0.
-                    for u in uncs:
-                        unc += u**2.
-                    unc = unc**0.5
-                else:
-                    unc = uncs[0]
+            uncs = self.run_np(jet, event)
+            if len(uncs) > 1:
+                unc = 0.
+                for u in uncs:
+                    unc += u**2.
+                unc = unc**0.5
+            else:
+                unc = uncs[0]
 
-                if abs(max(uncs)) < abs(min(uncs)):
-                    unc = -unc; # set total to sign of max
-                if self.is_up:
-                    shift = unc;
-                else:
-                    shift = -unc;
-
-        elif self.year == 2012:
-            if jet.pt > 15e3 and jet.pt < 7000e3 and abs(jet.eta) < 4.5:
-
-                uncs = self.run_np(jet, event)
-                if len(uncs) > 1:
-                    unc = 0.
-                    for u in uncs:
-                        unc += u**2.
-                    unc = unc**0.5
-                else:
-                    unc = uncs[0]
-
-                if abs(max(uncs)) < abs(min(uncs)):
-                    unc = -unc; # set total to sign of max
-                if self.is_up:
-                    shift = unc;
-                else:
-                    shift = -unc;
+            if abs(max(uncs)) < abs(min(uncs)):
+                unc = -unc; # set total to sign of max
+            if self.is_up:
+                shift = unc;
+            else:
+                shift = -unc;
         jet.pt *= 1. + shift
 
 
