@@ -214,7 +214,7 @@ class EfficiencyScaleFactors(EventFilter):
                 self.passes = self.passes_2011
             elif year == 2012:
                 log.info("will apply 2012 ID SFs")
-                from externaltools.bundle_2012 import TauCorrUncert as TCU
+                from externaltools import TauCorrUncert as TCU
                 from ROOT import TauCorrUncert
                 self.tool = TauCorrUncert.TauSF(TCU.RESOURCE_PATH)
                 self.tool_ns = TauCorrUncert
