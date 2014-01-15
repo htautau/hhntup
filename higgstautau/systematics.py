@@ -26,8 +26,7 @@ from externaltools.bundle_2011 import MuonMomentumCorrections
 from externaltools import JetUncertainties
 from externaltools.bundle_2011 import JetResolution
 from externaltools import egammaAnalysisUtils
-# TCU will soon support both 2011 and 2012
-from externaltools.bundle_2012 import TauCorrUncert as TCU
+from externaltools import TauCorrUncert as TCU
 from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool2012
 
 # MissingETUtility
