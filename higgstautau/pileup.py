@@ -2,7 +2,7 @@ from atlastools import datasets
 
 from rootpy.tree.filtering import EventFilter
 
-from externaltools import PileupReweighting
+from externaltools.bundle_2011 import PileupReweighting
 from ROOT import Root
 
 

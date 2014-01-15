@@ -2,7 +2,7 @@ import copy
 
 # common systematics
 SYSTEMATICS_COMMON = [
-    #('JES_UP',),
+    ('JES_UP',),
     ('JES_Statistical_UP',),
     ('JES_Modelling_UP',),
     ('JES_Detector_UP',),
@@ -19,7 +19,7 @@ SYSTEMATICS_COMMON = [
     ('JES_NonClosure_UP',),
     ('JVF_UP',),
     ('TES_UP',),
-    #('JES_DOWN',),
+    ('JES_DOWN',),
     ('JES_Statistical_DOWN',),
     ('JES_Modelling_DOWN',),
     ('JES_Detector_DOWN',),

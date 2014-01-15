@@ -147,6 +147,7 @@ KEEP = [
     "mu_staco_loose",
     "mu_staco_medium",
     "mu_staco_tight",
+    "mu_staco_isCombinedMuon",
     "mu_staco_isSegmentTaggedMuon",
     "mu_staco_expectBLayerHit",
     "mu_staco_nBLHits",
