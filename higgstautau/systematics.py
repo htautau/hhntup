@@ -30,7 +30,7 @@ from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool20
 # MissingETUtility
 from ROOT import METUtility
 from ROOT import METUtil
-#from ROOT import MissingETTags
+from ROOT import MissingETTags
 # JetUncertainties
 from ROOT import MultijetJESUncertaintyProvider
 # JVF
