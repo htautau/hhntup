@@ -1153,7 +1153,7 @@ class Systematics(EventFilter):
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
                 event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
 
-            self.met_utility.setOriJetParameters(self.tree.jet_pt_original)
+            #self.met_utility.setOriJetParameters(self.tree.jet_pt_original)
 
         if self.channel == 'lh':
             self.met_utility.setJetParameters(

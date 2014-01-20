@@ -338,12 +338,15 @@ class FakeRateScaleFactors(EventFilter):
         raise ValueError("tau is not loose, medium, or tight")
 
     def passes_2011(self, event):
+        assert len(event.taus) == 2
+        assert event.taus[0].pt >= event.taus[1].pt
+
         if self.tree.RunNumber >= 188902:
             trig = "EF_tau%dT_medium1"
         else:
             trig = "EF_tau%d_medium1"
 
-        for tau in event.taus:
+        for tau, thresh in zip(event.taus, (29, 20)):
 
             # fakerate only applies to taus that don't match truth
             if tau.matched:
@@ -353,20 +356,23 @@ class FakeRateScaleFactors(EventFilter):
 
             sf = self.fakerate_tool.getScaleFactor(
                 tau.pt, wpflag,
-                trig % tau.trigger_match_thresh)
+                trig % thresh)
             tau.fakerate_sf = sf
             tau.fakerate_sf_high = (sf +
                 self.fakerate_tool.getScaleFactorUncertainty(
                     tau.pt, wpflag,
-                    trig % tau.trigger_match_thresh, True))
+                    trig % thresh, True))
             tau.fakerate_sf_low = (sf -
                 self.fakerate_tool.getScaleFactorUncertainty(
                     tau.pt, wpflag,
-                    trig % tau.trigger_match_thresh, False))
+                    trig % thresh, False))
         return True
 
     def passes_2012(self, event):
-        for tau in event.taus:
+        assert len(event.taus) == 2
+        assert event.taus[0].pt >= event.taus[1].pt
+
+        for tau, trigger in zip(event.taus, [self.fakerate_ns.TAU29Ti, self.fakerate_ns.TAU20Ti]):
             # fakerate only applies to taus that don't match truth
             if tau.matched:
                 continue
@@ -382,14 +388,6 @@ class FakeRateScaleFactors(EventFilter):
 
             tes_up = self.tes_up
             tes_down = self.tes_down
-
-            if tau.trigger_match_thresh == 20:
-                trigger = self.fakerate_ns.TAU20Ti
-            elif tau.trigger_match_thresh == 29:
-                trigger = self.fakerate_ns.TAU29Ti
-            else:
-                raise ValueError("trigger threshold %d not understood" %
-                    tau.trigger_match_thresh)
 
             # using LOOSE lepton veto
             sf_numer = self.fakerate_tool.getEffData(

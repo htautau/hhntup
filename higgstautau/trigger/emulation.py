@@ -19,7 +19,7 @@ class TauTriggerEmulation(EventFilter):
     def __init__(self, year, passthrough=False, **kwargs):
 
         if not passthrough:
-            from externaltools.bundle_2011 import TauTriggerEmulation as TTE
+            from externaltools import TauTriggerEmulation as TTE
             from ROOT import CoEPP
 
             self.year = year
