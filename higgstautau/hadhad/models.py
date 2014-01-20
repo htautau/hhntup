@@ -23,7 +23,6 @@ from ROOT import TLorentzVector
 
 
 class FourMomentum(TreeModel):
-
     pt = FloatCol()
     p = FloatCol()
     et = FloatCol()
@@ -34,7 +33,6 @@ class FourMomentum(TreeModel):
 
     @classmethod
     def set(cls, this, other):
-
         if isinstance(other, TLorentzVector):
             vect = other
         else:
@@ -50,14 +48,12 @@ class FourMomentum(TreeModel):
 
 
 class TrueTau(TreeModel):
-
     nProng = IntCol(default=-1111)
     nPi0 = IntCol(default=-1111)
     charge = IntCol()
 
 
 class MMCOutput(FourMomentum.prefix('resonance_')):
-
     mass = FloatCol()
     MET_et = FloatCol()
     MET_etx = FloatCol()
@@ -72,7 +68,6 @@ class MMCModel(MMCOutput.prefix('mmc0_'),
 
 
 class MassModel(MMCModel):
-
     mass_collinear_tau1_tau2 = FloatCol()
     mass_vis_tau1_tau2 = FloatCol()
     mass_jet1_jet2 = FloatCol()
@@ -81,7 +76,6 @@ class MassModel(MMCModel):
 
 
 class METModel(TreeModel):
-
     MET_et = FloatCol()
     MET_etx = FloatCol()
     MET_ety = FloatCol()
@@ -105,7 +99,6 @@ class METModel(TreeModel):
 
 
 class EmbeddingModel(TreeModel):
-
     # embedding corrections
     embedding_reco_unfold = FloatCol(default=1.)
     embedding_trigger_weight = FloatCol(default=1.)
@@ -115,7 +108,6 @@ class EmbeddingModel(TreeModel):
 
 
 class RecoTau(FourMomentum):
-
     index = IntCol(default=-1)
 
     BDTJetScore = FloatCol()
@@ -134,29 +126,46 @@ class RecoTau(FourMomentum):
     seedCalo_centFrac = FloatCol()
 
     centrality = FloatCol()
-    #centrality_boosted = FloatCol()
 
     # efficiency scale factor if matches truth
-    efficiency_scale_factor = FloatCol(default=1.)
-    efficiency_scale_factor_high = FloatCol(default=1.)
-    efficiency_scale_factor_low = FloatCol(default=1.)
+    id_sf = FloatCol(default=1.)
+    id_sf_high = FloatCol(default=1.)
+    id_sf_low = FloatCol(default=1.)
+    id_sf_stat_high = FloatCol(default=1.)
+    id_sf_stat_low = FloatCol(default=1.)
+    id_sf_sys_high = FloatCol(default=1.)
+    id_sf_sys_low = FloatCol(default=1.)
+
+    # trigger efficiency
+    trigger_sf = FloatCol(default=1.)
+    trigger_sf_high = FloatCol(default=1.)
+    trigger_sf_low = FloatCol(default=1.)
+    trigger_sf_mc_stat_high = FloatCol(default=1.)
+    trigger_sf_mc_stat_low = FloatCol(default=1.)
+    trigger_sf_data_stat_high = FloatCol(default=1.)
+    trigger_sf_data_stat_low = FloatCol(default=1.)
+    trigger_sf_sys_high = FloatCol(default=1.)
+    trigger_sf_sys_low = FloatCol(default=1.)
+
+    trigger_eff = FloatCol(default=1.)
+    trigger_eff_high = FloatCol(default=1.)
+    trigger_eff_low = FloatCol(default=1.)
+    trigger_eff_stat_high = FloatCol(default=1.)
+    trigger_eff_stat_low = FloatCol(default=1.)
+    trigger_eff_sys_high = FloatCol(default=1.)
+    trigger_eff_sys_low = FloatCol(default=1.)
 
     # fake rate scale factor for taus that do not match truth
-    fakerate_scale_factor = FloatCol(default=1.)
-    fakerate_scale_factor_high = FloatCol(default=1.)
-    fakerate_scale_factor_low = FloatCol(default=1.)
+    fakerate_sf = FloatCol(default=1.)
+    fakerate_sf_high = FloatCol(default=1.)
+    fakerate_sf_low = FloatCol(default=1.)
 
     # fake rate reco scale factor for taus that do not match truth
-    fakerate_scale_factor_reco = FloatCol(default=1.)
-    fakerate_scale_factor_reco_high = FloatCol(default=1.)
-    fakerate_scale_factor_reco_low = FloatCol(default=1.)
+    fakerate_sf_reco = FloatCol(default=1.)
+    fakerate_sf_reco_high = FloatCol(default=1.)
+    fakerate_sf_reco_low = FloatCol(default=1.)
 
-    # trigger efficiency correction
-    trigger_scale_factor = FloatCol(default=1.)
-    trigger_scale_factor_high = FloatCol(default=1.)
-    trigger_scale_factor_low = FloatCol(default=1.)
-
-    trigger_match_thresh = IntCol(default=0)
+    #trigger_match_thresh = IntCol(default=0)
 
     # overlap checking
     min_dr_jet = FloatCol(default=9999)
@@ -171,7 +180,6 @@ class RecoTau(FourMomentum):
 
 
 class RecoJet(FourMomentum):
-
     index = IntCol(default=-1)
 
     jvtxf = FloatCol()
@@ -195,7 +203,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
     @classmethod
     def set(cls, event, tree, tau1, tau2, skim):
-
         tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
@@ -225,27 +232,44 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
             outtau.centrality = intau.centrality
-            #outtau.centrality_boosted = intau.centrality_boosted
 
             if intau.matched:
-                outtau.efficiency_scale_factor = intau.efficiency_scale_factor
-                outtau.efficiency_scale_factor_high = intau.efficiency_scale_factor_high
-                outtau.efficiency_scale_factor_low = intau.efficiency_scale_factor_low
+                outtau.id_sf = intau.id_sf
+                outtau.id_sf_high = intau.id_sf_high
+                outtau.id_sf_low = intau.id_sf_low
+                outtau.id_sf_stat_high = intau.id_sf_stat_high
+                outtau.id_sf_stat_low = intau.id_sf_stat_low
+                outtau.id_sf_sys_high = intau.id_sf_sys_high
+                outtau.id_sf_sys_low = intau.id_sf_sys_low
 
-                outtau.trigger_scale_factor = intau.trigger_scale_factor
-                outtau.trigger_scale_factor_high = intau.trigger_scale_factor_high
-                outtau.trigger_scale_factor_low = intau.trigger_scale_factor_low
+                outtau.trigger_sf = intau.trigger_sf
+                outtau.trigger_sf_high = intau.trigger_sf_high
+                outtau.trigger_sf_low = intau.trigger_sf_low
+                outtau.trigger_sf_mc_stat_high = intau.trigger_sf_mc_stat_high
+                outtau.trigger_sf_mc_stat_low = intau.trigger_sf_mc_stat_low
+                outtau.trigger_sf_data_stat_high = intau.trigger_sf_data_stat_high
+                outtau.trigger_sf_data_stat_low = intau.trigger_sf_data_stat_low
+                outtau.trigger_sf_sys_high = intau.trigger_sf_sys_high
+                outtau.trigger_sf_sys_low = intau.trigger_sf_sys_low
+
+                outtau.trigger_eff = intau.trigger_eff
+                outtau.trigger_eff_high = intau.trigger_eff_high
+                outtau.trigger_eff_low = intau.trigger_eff_low
+                outtau.trigger_eff_stat_high = intau.trigger_eff_stat_high
+                outtau.trigger_eff_stat_low = intau.trigger_eff_stat_low
+                outtau.trigger_eff_sys_high = intau.trigger_eff_sys_high
+                outtau.trigger_eff_sys_low = intau.trigger_eff_sys_low
 
             else:
-                outtau.fakerate_scale_factor = intau.fakerate_scale_factor
-                outtau.fakerate_scale_factor_high = intau.fakerate_scale_factor_high
-                outtau.fakerate_scale_factor_low = intau.fakerate_scale_factor_low
+                outtau.fakerate_sf = intau.fakerate_sf
+                outtau.fakerate_sf_high = intau.fakerate_sf_high
+                outtau.fakerate_sf_low = intau.fakerate_sf_low
 
-                outtau.fakerate_scale_factor_reco = intau.fakerate_scale_factor_reco
-                outtau.fakerate_scale_factor_reco_high = intau.fakerate_scale_factor_reco_high
-                outtau.fakerate_scale_factor_reco_low = intau.fakerate_scale_factor_reco_low
+                outtau.fakerate_sf_reco = intau.fakerate_sf_reco
+                outtau.fakerate_sf_reco_high = intau.fakerate_sf_reco_high
+                outtau.fakerate_sf_reco_low = intau.fakerate_sf_reco_low
 
-            outtau.trigger_match_thresh = intau.trigger_match_thresh
+            #outtau.trigger_match_thresh = intau.trigger_match_thresh
 
             outtau.matched = intau.matched
             outtau.matched_dR = intau.matched_dR
@@ -266,7 +290,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
                    (RecoJet + MatchedObject).prefix('jet2_')):
-
     #jet_transformation = LorentzRotation
     #jet_beta = Vector3
     #parton_beta = Vector3
@@ -275,7 +298,6 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
 
     @classmethod
     def set(cls, tree, jet1, jet2=None):
-
         FourMomentum.set(tree.jet1, jet1)
         tree.jet1_jvtxf = jet1.jvtxf
         tree.jet1_index = jet1.index
@@ -303,7 +325,6 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
 
     @classmethod
     def set(cls, tree, index, tau):
-
         setattr(tree, 'truetau%i_nProng' % index, tau.nProng)
         setattr(tree, 'truetau%i_nPi0' % index, tau.nPi0)
         setattr(tree, 'truetau%i_charge' % index, tau.charge)
@@ -336,6 +357,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
 
 
 class EventModel(TreeModel):
+    trigger = BoolCol(default=True)
 
     RunNumber = IntCol()
     number_of_good_vertices = IntCol()
@@ -386,7 +408,6 @@ class EventModel(TreeModel):
 
 
 def get_model(datatype, name, prefix=None):
-
     model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
     #if datatype in (datasets.MC, datasets.EMBED):
     #    model += TrueTauBlock

@@ -35,46 +35,37 @@ class MatchedObject(object):
         self.matched_object = None
 
     def matches(self, other, thresh=.2):
-
         return self.dr(other) < thresh
 
     def dr(self, other):
-
         return dR(self.eta, self.phi, other.eta, other.phi)
 
     def dr_vect(self, other):
-
         return dR(self.eta, self.phi, other.Eta(), other.Phi())
 
     def angle_vect(self, other):
-
         return self.fourvect.Angle(other)
 
     def matches_vect(self, vect, thresh=.2):
-
         return self.dr_vect(vect) < thresh
 
 
 class FourMomentum(MatchedObject):
 
     def __init__(self):
-
         self.fourvect_boosted = LorentzVector()
         super(FourMomentum, self).__init__()
 
     @cached_property
     def fourvect(self):
-
         vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
         return vect
 
     def __repr__(self):
-
         return self.__str__()
 
     def __str__(self):
-
         return "%s (m: %.3f MeV, pt: %.1f MeV, eta: %.2f, phi: %.2f)" % \
             (self.__class__.__name__,
              self.m,
@@ -86,22 +77,18 @@ class FourMomentum(MatchedObject):
 class FourMomentumMeV(object):
 
     def __init__(self):
-
         self.fourvect_boosted = LorentzVector()
 
     @cached_property
     def fourvect(self):
-
         vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt*GeV, self.eta, self.phi, self.m)
         return vect
 
     def __repr__(self):
-
         return self.__str__()
 
     def __str__(self):
-
         return "%s (m: %.3f MeV, pt: %.1f MeV, eta: %.2f, phi: %.2f)" % \
             (self.__class__.__name__,
              self.m,
@@ -113,7 +100,6 @@ class FourMomentumMeV(object):
 class JetFourMomentum(FourMomentum):
 
     def __init__(self):
-
         # needed by the METUtility
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         self.phi_original = None
@@ -122,13 +108,11 @@ class JetFourMomentum(FourMomentum):
 class TauFourMomentum(FourMomentum):
 
     def __init__(self):
-
         super(TauFourMomentum, self).__init__()
 
         self.id = IDNONE
 
         self.centrality = 0.
-        self.centrality_boosted = 0.
 
         # vertex association
         self.vertex_prob = 0.
@@ -138,31 +122,43 @@ class TauFourMomentum(FourMomentum):
 
         self._pt_nominal = -1111.
 
-        # Move to skim mixin after new skim
-        # fakerate reco scale factors
+        # efficiency scale factor if matches truth
+        self.id_sf = SF_DEFAULT
+        self.id_sf_high = SF_DEFAULT
+        self.id_sf_low = SF_DEFAULT
+        self.id_sf_stat_high = SF_DEFAULT
+        self.id_sf_stat_low = SF_DEFAULT
+        self.id_sf_sys_high = SF_DEFAULT
+        self.id_sf_sys_low = SF_DEFAULT
+
+        # trigger efficiency
+        self.trigger_sf = SF_DEFAULT
+        self.trigger_sf_high = SF_DEFAULT
+        self.trigger_sf_low = SF_DEFAULT
+        self.trigger_sf_mc_stat_high = SF_DEFAULT
+        self.trigger_sf_mc_stat_low = SF_DEFAULT
+        self.trigger_sf_data_stat_high = SF_DEFAULT
+        self.trigger_sf_data_stat_low = SF_DEFAULT
+        self.trigger_sf_sys_high = SF_DEFAULT
+        self.trigger_sf_sys_low = SF_DEFAULT
+
+        self.trigger_eff = SF_DEFAULT
+        self.trigger_eff_high = SF_DEFAULT
+        self.trigger_eff_low = SF_DEFAULT
+        self.trigger_eff_stat_high = SF_DEFAULT
+        self.trigger_eff_stat_low = SF_DEFAULT
+        self.trigger_eff_sys_high = SF_DEFAULT
+        self.trigger_eff_sys_low = SF_DEFAULT
+
+        # fake rate scale factor for taus that do not match truth
+        self.fakerate_sf = SF_DEFAULT
+        self.fakerate_sf_high = SF_DEFAULT
+        self.fakerate_sf_low = SF_DEFAULT
+
+        # fake rate reco scale factor for taus that do not match truth
         self.fakerate_sf_reco = SF_DEFAULT
         self.fakerate_sf_reco_high = SF_DEFAULT
         self.fakerate_sf_reco_low = SF_DEFAULT
-
-        # efficiency scale factor if matches truth
-        self.efficiency_scale_factor = SF_DEFAULT
-        self.efficiency_scale_factor_high = SF_DEFAULT
-        self.efficiency_scale_factor_low = SF_DEFAULT
-
-        # fake rate scale factor for taus that do not match truth
-        self.fakerate_scale_factor = SF_DEFAULT
-        self.fakerate_scale_factor_high = SF_DEFAULT
-        self.fakerate_scale_factor_low = SF_DEFAULT
-
-        # fake rate reco scale factor for taus that do not match truth
-        self.fakerate_scale_factor_reco = SF_DEFAULT
-        self.fakerate_scale_factor_reco_high = SF_DEFAULT
-        self.fakerate_scale_factor_reco_low = SF_DEFAULT
-
-        # trigger efficiency correction
-        self.trigger_scale_factor = SF_DEFAULT
-        self.trigger_scale_factor_high = SF_DEFAULT
-        self.trigger_scale_factor_low = SF_DEFAULT
 
         # colliniear mass approx
         self.collinear_momentum_fraction = -9999.
@@ -170,31 +166,20 @@ class TauFourMomentum(FourMomentum):
         # track recounting
         self.numTrack_recounted = -1
 
-        self.trigger_match_thresh = 0
-        self.trigger_match_index = -1
-
+        #self.trigger_match_thresh = 0
+        #self.trigger_match_index = -1
 
     @property
     def pt_nominal(self):
-
         if self._pt_nominal != -1111.:
             return self._pt_nominal
         return self.pt
 
     @cached_property
     def fourvect(self):
-
         vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
         return vect
-
-    """
-    @cached_property
-    def fourvect_trk(self):
-
-        vect = LorentzVector()
-        #for itrk in self.
-    """
 
     @cached_property
     def leadtrack_idx(self):
@@ -212,7 +197,6 @@ class TauFourMomentum(FourMomentum):
 
     @cached_property
     def privtx(self):
-
         return Vector3(
                 self.privtx_x,
                 self.privtx_y,
@@ -220,7 +204,6 @@ class TauFourMomentum(FourMomentum):
 
     @cached_property
     def secvtx(self):
-
         return Vector3(
                 self.secvtx_x,
                 self.secvtx_y,
@@ -228,17 +211,14 @@ class TauFourMomentum(FourMomentum):
 
     @cached_property
     def decay_vect(self):
-
         return self.secvtx - self.privtx
 
     @cached_property
     def decay_length(self):
-
         return self.decay_vect.Mag()
 
     @cached_property
     def decay_angle(self):
-
         return self.decay_vect.Angle(self.fourvect)
 
 
@@ -246,7 +226,6 @@ class MCTauFourMomentum(FourMomentum):
 
     @cached_property
     def fourvect(self):
-
         vect = LorentzVector()
         vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
         return vect
@@ -256,7 +235,6 @@ class ElectronFourMomentum(FourMomentum):
 
     @cached_property
     def fourvect(self):
-
         if ((self.nSCTHits + self.nPixHits) < 4):
             # electron with low number of tracker hits
             eta = self.cl_eta
@@ -275,32 +253,26 @@ class ElectronFourMomentum(FourMomentum):
 class MCParticle(FourMomentum):
 
     def __init__(self):
-
         self._particle = pdg.GetParticle(self.pdgId)
         FourMomentum.__init__(self)
 
     @cached_property
     def num_children(self):
-
         return len(self.child_index)
 
     @cached_property
     def num_parents(self):
-
         return len(self.parent_index)
 
     def get_child(self, index):
-
         index = self.child_index[index]
         return getattr(self.tree, self.name)[index]
 
     def get_parent(self, index):
-
         index = self.parent_index[index]
         return getattr(self.tree, self.name)[index]
 
     def iter_children(self):
-
         try:
             for child in self.child_index:
                 yield getattr(self.tree, self.name)[child]
@@ -308,7 +280,6 @@ class MCParticle(FourMomentum):
             pass
 
     def iter_parents(self):
-
         try:
             for parent in self.parent_index:
                 yield getattr(self.tree, self.name)[parent]
@@ -316,7 +287,6 @@ class MCParticle(FourMomentum):
             pass
 
     def traverse_children(self):
-
         try:
             for child in self.iter_children():
                 yield child
@@ -326,7 +296,6 @@ class MCParticle(FourMomentum):
             pass
 
     def traverse_parents(self):
-
         try:
             for parent in self.iter_parents():
                 yield parent
@@ -336,12 +305,10 @@ class MCParticle(FourMomentum):
             pass
 
     def is_stable(self):
-
         return self.status == 1
 
     @cached_property
     def first_self(self):
-
         for parent in self.iter_parents():
             if parent.pdgId == self.pdgId:
                 return parent.first_self
@@ -349,7 +316,6 @@ class MCParticle(FourMomentum):
 
     @cached_property
     def last_self(self):
-
         for child in self.iter_children():
             if child.pdgId == self.pdgId:
                 return child.last_self
@@ -357,7 +323,6 @@ class MCParticle(FourMomentum):
 
     @cached_property
     def final_state(self):
-
         if self.is_stable():
             return [self]
         return [particle for particle in self.traverse_children()
@@ -365,7 +330,6 @@ class MCParticle(FourMomentum):
 
     @cached_property
     def fourvect(self):
-
         vect = LorentzVector()
         vect.SetPtEtaPhiM(
                 self.pt,
@@ -376,9 +340,7 @@ class MCParticle(FourMomentum):
         return vect
 
     def export_graphvis(self, out_file=None):
-
         def particle_to_str(particle):
-
             return ('%s\\n'
                     'mass = %.3f MeV\\n'
                     'pt = %.3f GeV\\n'
@@ -392,7 +354,6 @@ class MCParticle(FourMomentum):
                     particle.status)
 
         def recurse(particle, parent=None):
-
             out_file.write('%d [label="%s"] ;\n' % (
                 particle.barcode, particle_to_str(particle)))
 
@@ -426,11 +387,9 @@ class MCParticle(FourMomentum):
             return out_file
 
     def __repr__(self):
-
         return self.__str__()
 
     def __str__(self):
-
         return ("%s ("
                 "status: %d, "
                 "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f, "

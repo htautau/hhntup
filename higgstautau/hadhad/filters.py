@@ -14,7 +14,6 @@ from . import log; log = log[__name__]
 class TauIDSelection(EventFilter):
 
     def __init__(self, year, tree, **kwargs):
-
         self.tree = tree
         if year == 2011:
             self.passes = self.passes_2011
@@ -25,30 +24,17 @@ class TauIDSelection(EventFilter):
         super(TauIDSelection, self).__init__(**kwargs)
 
     def passes_2011(self, event):
-        return self.passes_2012(event)
-
-#         tau1, tau2 = event.taus
-#         if not (tau1.JetBDTSigLoose and tau2.JetBDTSigLoose):
-#             return False
-#         # signal region is: both taus medium
-#         # need loose taus for OSFF model
-#         if tau1.JetBDTSigMedium:
-#             tau1.id = IDMEDIUM
-#         else:
-#             tau1.id = IDLOOSE
-#         if tau2.JetBDTSigMedium:
-#             tau2.id = IDMEDIUM
-#         else:
-#             tau2.id = IDLOOSE
-#         self.tree.taus_pass = tau1.JetBDTSigMedium and tau2.JetBDTSigMedium
-#         return True
+        tau1, tau2 = event.taus
+        # signal region is: both taus medium
+        if tau1.JetBDTSigMedium and tau2.JetBDTSigMedium:
+            tau1.id = IDMEDIUM
+            tau2.id = IDMEDIUM
+            return True
+        return False
 
     def passes_2012(self, event):
-
         # taus must be sorted in descending order by pT
         tau1, tau2 = event.taus
-        if not (tau1.JetBDTSigLoose and tau2.JetBDTSigLoose):
-            return False
         # signal region is: both medium with at least one being tight
         if ((tau1.JetBDTSigMedium and tau2.JetBDTSigMedium) and
             (tau1.JetBDTSigTight or tau2.JetBDTSigTight)):
@@ -67,19 +53,13 @@ class TauIDSelection(EventFilter):
             else:
                 tau1.id = IDMEDIUM
                 tau2.id = IDTIGHT
-            self.tree.taus_pass = True
-        else:
-            # need loose taus for OSFF model
-            tau1.id = IDLOOSE
-            tau2.id = IDLOOSE
-            self.tree.taus_pass = False
-        return True
+            return True
+        return False
 
 
 class TauLeadSublead(EventFilter):
 
     def __init__(self, lead=35*GeV, sublead=25*GeV, **kwargs):
-
         super(TauLeadSublead, self).__init__(**kwargs)
         # Leading and subleading tau pT thresholds
         self.lead = lead
@@ -100,18 +80,39 @@ class Triggers(EventFilter):
     See lowest unprescaled triggers here:
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
     """
-    def __init__(self, year, tree, **kwargs):
-
+    def __init__(self, year, tree, datatype, passthrough=False, **kwargs):
+        if (not passthrough) and datatype == datasets.EMBED:
+            raise ValueError("Cannot apply trigger on embedding samples")
         if year == 2011:
-            self.passes = self.passes_11
+            if datatype == datasets.MC:
+                self.passes = self.passes_11_mc
+            else:
+                self.passes = self.passes_11_data
         elif year == 2012:
-            self.passes = self.passes_12
+            if datatype == datasets.MC:
+                self.passes = self.passes_12_mc
+            else:
+                self.passes = self.passes_12_data
         else:
             raise ValueError("No triggers defined for year %d" % year)
         self.tree = tree
-        super(Triggers, self).__init__(**kwargs)
+        super(Triggers, self).__init__(passthrough=passthrough, **kwargs)
 
-    def passes_11(self, event):
+    def passes_11_mc(self, event):
+        try:
+            if 177986 <= self.tree.RunNumber <= 187815: # Periods B-K
+                self.tree.trigger = event.EF_tau29_medium1_tau20_medium1 == 1
+                return True
+            elif 188902 <= self.tree.RunNumber <= 191933: # Periods L-M
+                self.tree.trigger = event.EF_tau29T_medium1_tau20T_medium1 == 1
+                return True
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (self.tree.RunNumber, e)
+            raise e
+        raise ValueError("No trigger condition defined for run %s" %
+                         self.tree.RunNumber)
+
+    def passes_11_data(self, event):
         try:
             if 177986 <= self.tree.RunNumber <= 187815: # Periods B-K
                 return event.EF_tau29_medium1_tau20_medium1
@@ -123,13 +124,22 @@ class Triggers(EventFilter):
         raise ValueError("No trigger condition defined for run %s" %
                          self.tree.RunNumber)
 
-    def passes_12(self, event):
+    def passes_12_mc(self, event):
+        try:
+            self.tree.trigger = event.EF_tau29Ti_medium1_tau20Ti_medium1 == 1
+            return True
+        except AttributeError, e:
+            print "Missing trigger for run %i: %s" % (self.tree.RunNumber, e)
+            raise e
+        # TODO use tau27Ti_m1_tau18Ti_m1_L2loose for period E
+        # need emulaion, SFs for this
+
+    def passes_12_data(self, event):
         try:
             return event.EF_tau29Ti_medium1_tau20Ti_medium1
         except AttributeError, e:
             print "Missing trigger for run %i: %s" % (self.tree.RunNumber, e)
             raise e
-
         # TODO use tau27Ti_m1_tau18Ti_m1_L2loose for period E
         # need emulaion, SFs for this
 
@@ -155,12 +165,10 @@ from ..filters import muon_has_good_track
 class MuonVeto(EventFilter):
 
     def __init__(self, year, **kwargs):
-
         self.year = year
         super(MuonVeto, self).__init__(**kwargs)
 
     def passes(self, event):
-
        for muon in event.muons:
            if muon.pt <= 10 * GeV:
                continue
@@ -177,12 +185,10 @@ class MuonVeto(EventFilter):
 class TaudR(EventFilter):
 
     def __init__(self, dr=3.2, **kwargs):
-
         super(TaudR, self).__init__(**kwargs)
         self.dr = dr
 
     def passes(self, event):
-
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         return utils.dR(tau1.eta, tau1.phi, tau2.eta, tau2.phi) < self.dr
@@ -191,13 +197,11 @@ class TaudR(EventFilter):
 class TauTrackRecounting(EventFilter):
 
     def __init__(self, year, datatype, **kwargs):
-
         self.year = year
         self.datatype = datatype
         super(TauTrackRecounting, self).__init__(**kwargs)
 
     def passes(self, event):
-
         for tau in event.taus:
             tau.numTrack_recounted = track_counting.count_tracks(
                     tau, event, self.year, self.datatype)
@@ -207,7 +211,6 @@ class TauTrackRecounting(EventFilter):
 class EfficiencyScaleFactors(EventFilter):
 
     def __init__(self, year, passthrough=False, **kwargs):
-
         if not passthrough:
             if year == 2011:
                 log.info("will apply 2011 ID SFs")
@@ -225,7 +228,6 @@ class EfficiencyScaleFactors(EventFilter):
             passthrough=passthrough, **kwargs)
 
     def get_id_2011(self, tau):
-
         if tau.id == IDLOOSE:
             return 'loose'
         elif tau.id == IDMEDIUM:
@@ -235,7 +237,6 @@ class EfficiencyScaleFactors(EventFilter):
         raise ValueError("tau is not loose, medium, or tight")
 
     def get_id_2012(self, tau):
-
         if tau.id == IDLOOSE:
             return self.tool_ns.BDTLOOSE
         elif tau.id == IDMEDIUM:
@@ -245,41 +246,36 @@ class EfficiencyScaleFactors(EventFilter):
         raise ValueError("tau is not loose, medium, or tight")
 
     def passes_2011(self, event):
-
         for tau in event.taus:
-
             if not tau.matched:
                 continue
-
             wp = self.get_id_2011(tau)
-
             # efficiency scale factor
             effic_sf, err = tauid.effic_sf_uncert_exc(wp, tau, 2011)
-            tau.efficiency_scale_factor =  effic_sf
-            tau.efficiency_scale_factor_high = effic_sf + err
-            tau.efficiency_scale_factor_low = effic_sf - err
-
+            tau.id_sf =  effic_sf
+            tau.id_sf_high = effic_sf + err
+            tau.id_sf_low = effic_sf - err
+            tau.id_sf_stat_high = effic_sf
+            tau.id_sf_stat_low = effic_sf
+            tau.id_sf_sys_high = effic_sf
+            tau.id_sf_sys_low = effic_sf
         return True
 
     def passes_2012(self, event):
-
         for tau in event.taus:
-
             if not tau.matched:
                 continue
-
             wp = self.get_id_2012(tau)
-
             sf = self.tool.GetIDSF(wp, tau.eta, tau.numTrack, tau.pt)
             sf_stat = self.tool.GetIDStatUnc(wp, tau.eta, tau.numTrack, tau.pt)
             sf_sys = self.tool.GetIDSysUnc(wp, tau.eta, tau.numTrack, tau.pt)
-
-            sf_uncert = sqrt(sf_stat**2 + sf_sys**2)
-
-            tau.efficiency_scale_factor =  sf
-            tau.efficiency_scale_factor_high = sf + sf_uncert
-            tau.efficiency_scale_factor_low = sf - sf_uncert
-
+            tau.id_sf =  sf
+            tau.id_sf_high = sf
+            tau.id_sf_low = sf
+            tau.id_sf_stat_high = sf + sf_stat
+            tau.id_sf_stat_low = sf - sf_stat
+            tau.id_sf_sys_high = sf + sf_sys
+            tau.id_sf_sys_low = sf - sf_sys
         return True
 
 
@@ -288,7 +284,6 @@ class FakeRateScaleFactors(EventFilter):
     def __init__(self, year, datatype, tree,
                  tes_up_systematic=False, tes_down_systematic=False,
                  passthrough=False, **kwargs):
-
         self.tes_up = tes_up_systematic
         self.tes_down = tes_down_systematic
         if tes_up_systematic is None:
@@ -320,10 +315,9 @@ class FakeRateScaleFactors(EventFilter):
                 raise ValueError("No fakerates defined for year %d" % year)
 
         super(FakeRateScaleFactors, self).__init__(
-                passthrough=passthrough, **kwargs)
+            passthrough=passthrough, **kwargs)
 
     def get_id_2011(self, tau):
-
         # 2011 fake rates are inclusive
         if tau.id == IDLOOSE:
             return 'Loose'
@@ -334,7 +328,6 @@ class FakeRateScaleFactors(EventFilter):
         raise ValueError("tau is not loose, medium, or tight")
 
     def get_id_2012(self, tau):
-
         # 2012 fake rates are exclusive
         if tau.JetBDTSigTight:
             return self.fakerate_ns.TIGHT
@@ -345,7 +338,6 @@ class FakeRateScaleFactors(EventFilter):
         raise ValueError("tau is not loose, medium, or tight")
 
     def passes_2011(self, event):
-
         if self.tree.RunNumber >= 188902:
             trig = "EF_tau%dT_medium1"
         else:
@@ -360,34 +352,31 @@ class FakeRateScaleFactors(EventFilter):
             wpflag = self.get_id_2011(tau)
 
             sf = self.fakerate_tool.getScaleFactor(
+                tau.pt, wpflag,
+                trig % tau.trigger_match_thresh)
+            tau.fakerate_sf = sf
+            tau.fakerate_sf_high = (sf +
+                self.fakerate_tool.getScaleFactorUncertainty(
                     tau.pt, wpflag,
-                    trig % tau.trigger_match_thresh)
-            tau.fakerate_scale_factor = sf
-            tau.fakerate_scale_factor_high = (sf +
-                    self.fakerate_tool.getScaleFactorUncertainty(
-                        tau.pt, wpflag,
-                        trig % tau.trigger_match_thresh, True))
-            tau.fakerate_scale_factor_low = (sf -
-                    self.fakerate_tool.getScaleFactorUncertainty(
-                        tau.pt, wpflag,
-                        trig % tau.trigger_match_thresh, False))
+                    trig % tau.trigger_match_thresh, True))
+            tau.fakerate_sf_low = (sf -
+                self.fakerate_tool.getScaleFactorUncertainty(
+                    tau.pt, wpflag,
+                    trig % tau.trigger_match_thresh, False))
         return True
 
     def passes_2012(self, event):
-
         for tau in event.taus:
-
             # fakerate only applies to taus that don't match truth
             if tau.matched:
                 continue
-
             # Get the reco SF
             sf_reco = self.fakerate_tool.getRecoSF(
                 tau.pt, tau.numTrack, self.tree.RunNumber)
-
-            tau.fakerate_scale_factor_reco = sf_reco
-            tau.fakerate_scale_factor_reco_high = sf_reco
-            tau.fakerate_scale_factor_reco_low = sf_reco
+            tau.fakerate_sf_reco = sf_reco
+            # NOTE: no uncertainty on this SF
+            tau.fakerate_sf_reco_high = sf_reco
+            tau.fakerate_sf_reco_low = sf_reco
 
             wpflag = self.get_id_2012(tau)
 
@@ -449,10 +438,11 @@ class FakeRateScaleFactors(EventFilter):
             #    tau.trigger_match_thresh))
 
             if sf_numer == 0 or sf_denom == 0:
-                log.warning("fake rate bug: efficiency == 0")
-                sf = 1.
-                sf_high = 1.
-                sf_low = 1.
+                log.warning("fake rate bug: efficiency == 0, using sf of 0")
+                sf = 0.
+                sf_high = 0.
+                sf_low = 0.
+
             else:
                 sf = sf_numer / sf_denom
 
@@ -470,10 +460,9 @@ class FakeRateScaleFactors(EventFilter):
             if sf_low < 0:
                 sf_low = 0.
 
-            tau.fakerate_scale_factor = sf
+            tau.fakerate_sf = sf
             # uncertainty
-            tau.fakerate_scale_factor_high = sf_high
-            tau.fakerate_scale_factor_low = sf_low
+            tau.fakerate_sf_high = sf_high
+            tau.fakerate_sf_low = sf_low
             #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
-
         return True

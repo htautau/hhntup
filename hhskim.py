@@ -57,7 +57,6 @@ class hhskim(ATLASStudent):
         parser = ArgumentParser()
         parser.add_argument('--local', action='store_true', default=False)
         parser.add_argument('--syst-terms', default=None)
-        parser.add_argument('--no-trigger', action='store_true', default=False)
         parser.add_argument('--no-grl', action='store_true', default=False)
         parser.add_argument('--student-verbose', action='store_true', default=False)
         parser.add_argument('--validate', action='store_true', default=False)
@@ -93,7 +92,6 @@ class hhskim(ATLASStudent):
         syst_terms = self.args.syst_terms
         datatype = self.metadata.datatype
         year = self.metadata.year
-        no_trigger = self.args.no_trigger
         no_grl = self.args.no_grl
         verbose = self.args.student_verbose
         validate = self.args.validate
@@ -209,7 +207,7 @@ class hhskim(ATLASStudent):
 
         trigger_emulation = TauTriggerEmulation(
             year=year,
-            passthrough=local or no_trigger or datatype != datasets.MC or year > 2011,
+            passthrough=local or datatype != datasets.MC or year > 2011,
             count_funcs=count_funcs)
 
         if not trigger_emulation.passthrough:
@@ -258,7 +256,8 @@ class hhskim(ATLASStudent):
                 Triggers(
                     year=year,
                     tree=tree,
-                    passthrough=no_trigger or datatype == datasets.EMBED,
+                    datatype=datatype,
+                    passthrough=datatype == datasets.EMBED,
                     count_funcs=count_funcs),
                 PileupReweight(
                     tool=pileup_tool,
@@ -333,15 +332,14 @@ class hhskim(ATLASStudent):
                 TauLArHole(2,
                     tree=tree,
                     count_funcs=count_funcs),
-                TauID_SkimLoose(2,
-                    year=year,
+                TauIDLoose(2,
                     count_funcs=count_funcs),
-                TauTriggerMatchIndex(
-                    config=trigger_config,
-                    year=year,
-                    datatype=datatype,
-                    passthrough=no_trigger or datatype == datasets.EMBED,
-                    count_funcs=count_funcs),
+                #TauTriggerMatchIndex(
+                #    config=trigger_config,
+                #    year=year,
+                #    datatype=datatype,
+                #    passthrough=datatype == datasets.EMBED,
+                #    count_funcs=count_funcs),
                 # Select two leading taus at this point
                 # 25 and 35 for data
                 # 20 and 30 for MC for TES uncertainty
@@ -356,18 +354,17 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TaudR(3.2,
                     count_funcs=count_funcs),
-                TauTriggerMatchThreshold(
-                    datatype=datatype,
-                    tree=tree,
-                    passthrough=no_trigger,
-                    count_funcs=count_funcs),
+                #TauTriggerMatchThreshold(
+                #    datatype=datatype,
+                #    tree=tree,
+                #    count_funcs=count_funcs),
                 TauTriggerEfficiency(
                     year=year,
                     datatype=datatype,
                     tree=tree,
                     tes_systematic=self.args.syst_terms and (
                         Systematics.TES_TERMS & self.args.syst_terms),
-                    passthrough=no_trigger or datatype == datasets.DATA,
+                    passthrough=datatype == datasets.DATA,
                     count_funcs=count_funcs),
                 PileupScale(
                     tree=tree,
@@ -387,7 +384,7 @@ class hhskim(ATLASStudent):
                         (Systematics.TES_UP in self.args.syst_terms)),
                     tes_down_systematic=(self.args.syst_terms and
                         (Systematics.TES_DOWN in self.args.syst_terms)),
-                    passthrough=no_trigger or datatype == datasets.DATA,
+                    passthrough=datatype == datasets.DATA,
                     count_funcs=count_funcs),
                 ggFReweighting(
                     dsname=dsname,

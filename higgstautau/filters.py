@@ -15,12 +15,10 @@ from . import jetcleaning
 
 
 def primary_vertex_selection(vxp):
-
     return vxp.type == 1 and vxp.nTracks >= 4
 
 
 def pileup_vertex_selection(vxp):
-
     return vxp.type == 3 and vxp.nTracks >= 2
 
 
@@ -32,7 +30,6 @@ def vertex_selection(vxp):
 class PriVertex(EventFilter):
 
     def passes(self, event):
-
         event.vertices.select(vertex_selection)
         return any(ifilter(primary_vertex_selection, event.vertices))
 
@@ -40,14 +37,12 @@ class PriVertex(EventFilter):
 class CoreFlags(EventFilter):
 
     def passes(self, event):
-
         return (event.coreFlags & 0x40000) == 0
 
 
 class RandomRunNumber(EventFilter):
 
     def __init__(self, tree, datatype, pileup_tool, **kwargs):
-
         self.tree = tree
         self.pileup_tool = pileup_tool
         super(RandomRunNumber, self).__init__(**kwargs)
@@ -57,12 +52,10 @@ class RandomRunNumber(EventFilter):
             self.passes = self.passes_data
 
     def passes_data(self, event):
-
         self.tree.RunNumber = event.RunNumber
         return True
 
     def passes_mc(self, event):
-
         # get random run number using the pileup tool
         self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
         return True
@@ -73,7 +66,6 @@ class TileTrips(EventFilter):
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/DataPreparationCheckListForPhysicsAnalysis#Rejection_of_bad_corrupted_event
     """
     def __init__(self, passthrough=False, **kwargs):
-
         if not passthrough:
             from externaltools import TileTripReader
             from ROOT import Root
@@ -81,7 +73,6 @@ class TileTrips(EventFilter):
         super(TileTrips, self).__init__(passthrough=passthrough, **kwargs)
 
     def passes(self, event):
-
         # only apply between G - J
         #if event.RunNumber < 211522:
         #    return True
@@ -108,7 +99,6 @@ class JetCleaning(EventFilter):
                  pt_thresh=20*GeV,
                  eta_max=4.5,
                  **kwargs):
-
         super(JetCleaning, self).__init__(**kwargs)
         self.year = year
         self.datatype = datatype
@@ -117,10 +107,8 @@ class JetCleaning(EventFilter):
         self.eta_max = eta_max
 
     def passes(self, event):
-
         # using LC jets
         for jet in event.jets:
-
             if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max: continue
             LArQmean = jet.AverageLArQF / 65535.0
             chf = jet.sumPtTrk / jet.pt
@@ -166,26 +154,22 @@ class JetCleaning(EventFilter):
 class LArError(EventFilter):
 
     def passes(self, event):
-
         return event.larError != 2
 
 
 class TileError(EventFilter):
 
     def passes(self, event):
-
         return event.tileError != 2
 
 
 def in_lar_hole(eta, phi):
-
     return (-0.2 < eta < 1.6) and (-0.988 < phi < -0.392)
 
 
 class LArHole(EventFilter):
 
     def __init__(self, datatype, tree, **kwargs):
-
         super(LArHole, self).__init__(**kwargs)
         if datatype in (datasets.DATA, datasets.EMBED):
             self.passes = self.passes_data
@@ -194,7 +178,6 @@ class LArHole(EventFilter):
         self.tree = tree
 
     def passes_data(self, event):
-
         if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
@@ -206,7 +189,6 @@ class LArHole(EventFilter):
         return True
 
     def passes_mc(self, event):
-
         if not 180614 <= self.tree.RunNumber <= 184169:
             return True
 
@@ -221,7 +203,6 @@ class LArHole(EventFilter):
 class JetCrackVeto(EventFilter):
 
     def passes(self, event):
-
         for jet in event.jets:
             if jet.pt <= 20 * GeV: continue
             if 1.3 < abs(jet.eta) < 1.7: return False
@@ -229,7 +210,6 @@ class JetCrackVeto(EventFilter):
 
 
 def muon_has_good_track(muon, year=2011):
-
     if year == 2011:
         #pix_min = 2
         #sct_min = 6
@@ -262,12 +242,10 @@ def muon_has_good_track(muon, year=2011):
 class TauElectronVeto(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         super(TauElectronVeto, self).__init__(**kwargs)
         self.min_taus = min_taus
 
     def passes(self, event):
-
         #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
         # Eta selection already applied by TauEta filter
@@ -280,12 +258,10 @@ class TauElectronVeto(EventFilter):
 class TauMuonVeto(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         super(TauMuonVeto, self).__init__(**kwargs)
         self.min_taus = min_taus
 
     def passes(self, event):
-
         event.taus.select(lambda tau: tau.muonVeto == 0)
         return len(event.taus) >= self.min_taus
 
@@ -293,12 +269,10 @@ class TauMuonVeto(EventFilter):
 class TauHasTrack(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         super(TauHasTrack, self).__init__(**kwargs)
         self.min_taus = min_taus
 
     def passes(self, event):
-
         event.taus.select(lambda tau: tau.numTrack > 0)
         return len(event.taus) >= self.min_taus
 
@@ -306,12 +280,10 @@ class TauHasTrack(EventFilter):
 class TauAuthor(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         super(TauAuthor, self).__init__(**kwargs)
         self.min_taus = min_taus
 
     def passes(self, event):
-
         event.taus.select(lambda tau: tau.author != 2)
         return len(event.taus) >= self.min_taus
 
@@ -319,13 +291,11 @@ class TauAuthor(EventFilter):
 class TauPT(EventFilter):
 
     def __init__(self, min_taus, thresh=20 * GeV, **kwargs):
-
         self.min_taus = min_taus
         self.thresh = thresh
         super(TauPT, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.taus.select(lambda tau: tau.pt > self.thresh)
         return len(event.taus) >= self.min_taus
 
@@ -333,12 +303,10 @@ class TauPT(EventFilter):
 class TauEta(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(TauEta, self).__init__(**kwargs)
 
     def passes(self, event):
-
         # both calo and leading track eta within 2.47
         event.taus.select(lambda tau:
                 abs(tau.eta) < 2.47 and
@@ -349,12 +317,10 @@ class TauEta(EventFilter):
 class TauJVF(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(TauJVF, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.taus.select(lambda tau: True if
                 abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
         return len(event.taus) >= self.min_taus
@@ -363,12 +329,10 @@ class TauJVF(EventFilter):
 class Tau1Track3Track(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(Tau1Track3Track, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.taus.select(lambda tau: tau.numTrack in (1, 3))
         return len(event.taus) >= self.min_taus
 
@@ -379,7 +343,6 @@ class Tau1P3P(EventFilter):
     """
 
     def passes(self, event):
-
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
 
@@ -398,65 +361,32 @@ class Tau1P3P(EventFilter):
 class TauCharge(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(TauCharge, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.taus.select(lambda tau: abs(tau.charge) == 1)
-        return len(event.taus) >= self.min_taus
-
-
-class TauID_SkimLoose(EventFilter):
-
-    def __init__(self, min_taus, year, **kwargs):
-
-        self.min_taus = min_taus
-        if year == 2011:
-            self.passes = self.passes_11
-        elif year == 2012:
-            self.passes = self.passes_12
-        else:
-            raise ValueError("no TauID_SkimLoose defined for year %d" % year)
-        super(TauID_SkimLoose, self).__init__(**kwargs)
-
-    def passes_11(self, event):
-
-        # BDT loose OR LLH loose
-        event.taus.select(lambda tau:
-                tau.tauLlhLoose == 1 or tau.JetBDTSigLoose == 1)
-        return len(event.taus) >= self.min_taus
-
-    def passes_12(self, event):
-
-        # BDT loose
-        event.taus.select(lambda tau: tau.JetBDTSigLoose == 1)
         return len(event.taus) >= self.min_taus
 
 
 class TauIDLoose(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(TauIDLoose, self).__init__(**kwargs)
 
     def passes(self, event):
-
-        event.taus.select(lambda tau: tau.JetBDTSigLoose)
+        event.taus.select(lambda tau: tau.JetBDTSigLoose == 1)
         return len(event.taus) >= self.min_taus
 
 
 class TauIDMedium(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(TauIDMedium, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.taus.select(lambda tau: tau.JetBDTSigMedium)
         return len(event.taus) >= self.min_taus
 
@@ -464,12 +394,10 @@ class TauIDMedium(EventFilter):
 class TauCrack(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
-
         self.min_taus = min_taus
         super(TauCrack, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.taus.select(lambda tau: not (1.37 < abs(tau.track_eta[tau.leadtrack_idx]) < 1.52))
         return len(event.taus) >= self.min_taus
 
@@ -477,16 +405,13 @@ class TauCrack(EventFilter):
 class TauLArHole(EventFilter):
 
     def __init__(self, min_taus, tree, **kwargs):
-
         self.min_taus = min_taus
         self.tree = tree
         super(TauLArHole, self).__init__(**kwargs)
 
     def passes(self, event):
-
         if not 180614 <= self.tree.RunNumber <= 184169:
             return True
-
         event.taus.select(lambda tau:
                 not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
                  and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
@@ -496,7 +421,6 @@ class TauLArHole(EventFilter):
 class TruthMatching(EventFilter):
 
     def passes(self, event):
-
         for tau in event.taus:
             # CANNOT do the following due to buggy D3PD:
             # tau.matched = tau.trueTauAssoc_index > -1
@@ -528,12 +452,10 @@ class TauSelected(EventFilter):
 class NumJets25(EventFilter):
 
     def __init__(self, tree, **kwargs):
-
         super(NumJets25, self).__init__(**kwargs)
         self.tree = tree
 
     def passes(self, event):
-
         self.tree.numJets25 = len([j for j in event.jets if
             j.pt > 25 * GeV and abs(j.eta) < 4.5])
         return True
@@ -544,12 +466,10 @@ class NonIsolatedJet(EventFilter):
     https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=200403
     """
     def __init__(self, tree, **kwargs):
-
         super(NonIsolatedJet, self).__init__(**kwargs)
         self.tree = tree
 
     def passes(self, event):
-
         # only write flag instead of vetoing the event so this
         # can be turned on and off after
         self.tree.nonisolatedjet = False
@@ -606,7 +526,6 @@ class JetSelection(EventFilter):
     """Selects jets of good quality, keep event in any case"""
 
     def __init__(self, year, **kwargs):
-
         if year == 2011:
             self.filter_func = jet_selection_2011
         elif year == 2012:
@@ -616,7 +535,6 @@ class JetSelection(EventFilter):
         super(JetSelection, self).__init__(**kwargs)
 
     def passes(self, event):
-
         event.jets.select(self.filter_func)
         return True
 
@@ -624,7 +542,6 @@ class JetSelection(EventFilter):
 class JetPreselection(EventFilter):
 
     def passes(self, event):
-
         event.jets.select(lambda jet: jet.pt > 20 * GeV)
         return True
 
@@ -632,13 +549,11 @@ class JetPreselection(EventFilter):
 class MCWeight(EventFilter):
 
     def __init__(self, datatype, tree, **kwargs):
-
         self.datatype = datatype
         self.tree = tree
         super(MCWeight, self).__init__(**kwargs)
 
     def passes(self, event):
-
         # set the event weights
         if self.datatype == datasets.MC:
             self.tree.mc_weight = event.mc_event_weight
@@ -654,13 +569,11 @@ class MCWeight(EventFilter):
 class ggFReweighting(EventFilter):
 
     def __init__(self, dsname, tree, **kwargs):
-
         self.dsname = dsname
         self.tree = tree
         super(ggFReweighting, self).__init__(**kwargs)
 
     def passes(self, event):
-
         self.tree.ggf_weight = reweight_ggf(event, self.dsname)
         return True
 
@@ -668,7 +581,6 @@ class ggFReweighting(EventFilter):
 class EmbeddingCorrections(EventFilter):
 
     def __init__(self, tree, passthrough=False, **kwargs):
-
         super(EmbeddingCorrections, self).__init__(passthrough=passthrough, **kwargs)
 
         if not passthrough:
@@ -686,7 +598,6 @@ class EmbeddingCorrections(EventFilter):
                 MuonEfficiencyCorrections.RESOURCE_PATH)
 
     def passes(self, event):
-
         self.tool.SetupEmbeddedEvent(
             event.mc_pt,
             event.mc_eta,
@@ -706,12 +617,10 @@ class EmbeddingCorrections(EventFilter):
 class JetCopy(EventFilter):
 
     def __init__(self, tree, **kwargs):
-
         super(JetCopy, self).__init__(**kwargs)
         self.tree = tree
 
     def passes(self, event):
-
         tree = self.tree
         tree.jet_E_original.clear()
         tree.jet_m_original.clear()

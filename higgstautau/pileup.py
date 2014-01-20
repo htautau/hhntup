@@ -14,7 +14,6 @@ DATA_SCALE_FACTOR = {
 
 
 def get_pileup_reweighting_tool(year, use_defaults=True):
-
     # Initialize the pileup reweighting tool
     pileup_tool = Root.TPileupReweighting()
     if year == 2011:
@@ -58,7 +57,6 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
 class PileupTemplates(EventFilter):
 
     def __init__(self, year, passthrough=False, **kwargs):
-
         if not passthrough:
             # initialize the pileup reweighting tool
             self.pileup_tool = Root.TPileupReweighting()
@@ -73,7 +71,6 @@ class PileupTemplates(EventFilter):
             **kwargs)
 
     def passes(self, event):
-
         self.pileup_tool.Fill(
             event.RunNumber,
             event.mc_channel_number,
@@ -82,7 +79,6 @@ class PileupTemplates(EventFilter):
         return True
 
     def finalize(self):
-
         if not self.passthrough:
             # write the pileup reweighting file
             self.pileup_tool.WriteToFile()
@@ -93,17 +89,14 @@ class PileupReweight(EventFilter):
     Currently only implements hadhad reweighting
     """
     def __init__(self, tool, tree, passthrough=False, **kwargs):
-
         if not passthrough:
             self.tree = tree
             self.tool = tool
-
         super(PileupReweight, self).__init__(
             passthrough=passthrough,
             **kwargs)
 
     def passes(self, event):
-
         # set the pileup and period weights
         """
         self.tree.pileup_weight = self.tool.GetPrimaryWeight(
@@ -126,7 +119,6 @@ class PileupScale(EventFilter):
     TODO scale MC instead of data!
     """
     def __init__(self, tree, year, datatype, **kwargs):
-
         self.tree = tree
         self.scale = DATA_SCALE_FACTOR[year]
         super(PileupScale, self).__init__(**kwargs)
@@ -140,13 +132,11 @@ class PileupScale(EventFilter):
                 datatype)
 
     def passes_data(self, event):
-
         self.tree.averageIntPerXing = event.averageIntPerXing * self.scale
         self.tree.actualIntPerXing = event.actualIntPerXing * self.scale
         return True
 
     def passes_mc(self, event):
-
         self.tree.averageIntPerXing = event.averageIntPerXing
         self.tree.actualIntPerXing = event.actualIntPerXing
         return True
@@ -165,9 +155,7 @@ class averageIntPerXingPatch(EventFilter):
 
     averageIntPerXing = (isSimulation && lbn==1 && int(averageIntPerXing+0.5)==1) ? 0. : averageIntPerXing;
     """
-
     def passes(self, event):
-
         if event.lbn == 1 and int(event.averageIntPerXing + 0.5) == 1:
             event.averageIntPerXing = 0.
         return True
