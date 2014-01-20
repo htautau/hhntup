@@ -366,6 +366,9 @@ class EventModel(TreeModel):
 
     # event weight given by the PileupReweighting tool
     pileup_weight = FloatCol(default=1.)
+    pileup_weight_high = FloatCol(default=1.)
+    pileup_weight_low = FloatCol(default=1.)
+
     mc_weight = FloatCol(default=1.)
     ggf_weight = FloatCol(default=1.)
 

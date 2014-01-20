@@ -7,9 +7,9 @@ from ROOT import Root
 
 
 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
-DATA_SCALE_FACTOR = {
-    2011: 1./0.97,
-    2012: 1./1.11,
+PU_RESCALE = {
+    2011: (0.97, 0.01),
+    2012: (1.09, 0.04),
 }
 
 
@@ -25,7 +25,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2011/hadhad/'
                 'TPileupReweighting.mc11.prw.root')
-        pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
+        #pileup_tool.SetDataScaleFactors(1. / PU_RESCALE[year][0])
         pileup_tool.AddLumiCalcFile(
             'lumi/2011/hadhad/'
             'ilumicalc_histograms_None_178044-191933.root')
@@ -38,13 +38,13 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2012/hadhad/'
                 'TPileupReweighting.mc12.prw.root')
-        pileup_tool.SetDataScaleFactors(DATA_SCALE_FACTOR[year])
+        #pileup_tool.SetDataScaleFactors(1. / PU_RESCALE[year][0])
         pileup_tool.AddLumiCalcFile(
             'lumi/2012/hadhad/'
             'ilumicalc_histograms_None_200842-215643.root')
     else:
-        raise ValueError('No pileup reweighting defined for year %d' %
-                year)
+        raise ValueError(
+            'No pileup reweighting defined for year %d' % year)
     # discard unrepresented data (with mu not simulated in MC)
     pileup_tool.SetUnrepresentedDataAction(2)
     pileup_tool.Initialize()
@@ -65,7 +65,6 @@ class PileupTemplates(EventFilter):
             elif year == 2012:
                 self.pileup_tool.UsePeriodConfig("MC12a")
             self.pileup_tool.Initialize()
-
         super(PileupTemplates, self).__init__(
             passthrough=passthrough,
             **kwargs)
@@ -88,8 +87,9 @@ class PileupReweight(EventFilter):
     """
     Currently only implements hadhad reweighting
     """
-    def __init__(self, tool, tree, passthrough=False, **kwargs):
+    def __init__(self, year, tool, tree, passthrough=False, **kwargs):
         if not passthrough:
+            self.scale, self.scale_uncert = PU_RESCALE[year]
             self.tree = tree
             self.tool = tool
         super(PileupReweight, self).__init__(
@@ -110,19 +110,24 @@ class PileupReweight(EventFilter):
         self.tree.pileup_weight = self.tool.GetCombinedWeight(
             event.RunNumber,
             event.mc_channel_number,
-            event.averageIntPerXing)
+            event.averageIntPerXing * self.scale)
+        self.tree.pileup_weight_high = self.tool.GetCombinedWeight(
+            event.RunNumber,
+            event.mc_channel_number,
+            event.averageIntPerXing * (self.scale + self.scale_uncert))
+        self.tree.pileup_weight_low = self.tool.GetCombinedWeight(
+            event.RunNumber,
+            event.mc_channel_number,
+            event.averageIntPerXing * (self.scale - self.scale_uncert))
         return True
 
 
 class PileupScale(EventFilter):
-    """
-    TODO scale MC instead of data!
-    """
+
     def __init__(self, tree, year, datatype, **kwargs):
         self.tree = tree
-        self.scale = DATA_SCALE_FACTOR[year]
+        self.scale = PU_RESCALE[year][0]
         super(PileupScale, self).__init__(**kwargs)
-
         if datatype in (datasets.DATA, datasets.EMBED):
             self.passes = self.passes_data
         elif datatype == datasets.MC:
@@ -132,13 +137,13 @@ class PileupScale(EventFilter):
                 datatype)
 
     def passes_data(self, event):
-        self.tree.averageIntPerXing = event.averageIntPerXing * self.scale
-        self.tree.actualIntPerXing = event.actualIntPerXing * self.scale
+        self.tree.averageIntPerXing = event.averageIntPerXing
+        self.tree.actualIntPerXing = event.actualIntPerXing
         return True
 
     def passes_mc(self, event):
-        self.tree.averageIntPerXing = event.averageIntPerXing
-        self.tree.actualIntPerXing = event.actualIntPerXing
+        self.tree.averageIntPerXing = event.averageIntPerXing * self.scale
+        self.tree.actualIntPerXing = event.actualIntPerXing * self.scale
         return True
 
 

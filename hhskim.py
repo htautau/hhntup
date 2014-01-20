@@ -260,6 +260,7 @@ class hhskim(ATLASStudent):
                     passthrough=datatype == datasets.EMBED,
                     count_funcs=count_funcs),
                 PileupReweight(
+                    year=year,
                     tool=pileup_tool,
                     tree=tree,
                     passthrough=local or datatype != datasets.MC,
