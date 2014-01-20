@@ -417,11 +417,9 @@ class hhskim(ATLASStudent):
                 TauJetOverlapRemoval(
                     count_funcs=count_funcs),
                 JetPreselection(
-                    passthrough=year < 2012,
                     count_funcs=count_funcs),
                 NonIsolatedJet(
                     tree=tree,
-                    passthrough=year < 2012,
                     count_funcs=count_funcs),
                 JetSelection(
                     year=year,
