@@ -1,2 +1,0 @@
-group.phys-higgs.periodA.DESD_SGLMU.pro13.embedding-02-42.Ztautau_hh_isol_mfsim_rereco_p1130_EXT0/
-group.phys-higgs.periodB.DESD_SGLMU.pro13.embedding-02-42.Ztautau_hh_isol_mfsim_rereco_p1130_EXT0/
