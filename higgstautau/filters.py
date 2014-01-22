@@ -579,7 +579,7 @@ class ggFReweighting(EventFilter):
 
 
 class EmbeddingCorrections(EventFilter):
-
+    # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauEmbeddedCorrections2013
     def __init__(self, tree, passthrough=False, **kwargs):
         super(EmbeddingCorrections, self).__init__(passthrough=passthrough, **kwargs)
 
