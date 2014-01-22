@@ -6,8 +6,6 @@ Based on original implementation by Daniele:
 https://twiki.cern.ch/twiki/bin/view/Main/DanieleZanziTauSpinner
 """
 from rootpy.tree.filtering import EventFilter
-from TauSpinner import TauSpinnerTool, D3PD_MC
-
 from . import log; log = log[__name__]
 
 
@@ -22,14 +20,16 @@ class EmbeddingTauSpinner(EventFilter):
             **kwargs)
 
         if not passthrough:
+            from TauSpinner import TauSpinnerTool, D3PD_MC
             self.tree = tree
+            self.d3pd_mc = D3PD_MC
             self.spin_tool = TauSpinnerTool()
             self.spin_tool.initialize()
 
     def passes(self, event):
         # If passthrough is True (not embedding )then this
         # method is never called
-        d3pd_mc = D3PD_MC()
+        d3pd_mc = self.d3pd_mc()
         d3pd_mc.set_addresses(
            event['mc_n'],
            event.mc_pt,
