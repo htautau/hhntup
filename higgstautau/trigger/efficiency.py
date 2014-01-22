@@ -263,7 +263,7 @@ class TauTriggerEfficiency(EventFilter):
             # data efficiency
             eff = abs(ttc.getDataEff(tau.pt, tau.eta, 0, self.tree.RunNumber, prong, wpflag, eveto))
 
-            if math.isinf(sf) or math.isnan(sf):
+            if math.isinf(eff) or math.isnan(eff):
                 log.warning("trigger data efficiency is infinite or NaN! Using 0.")
                 tau.trigger_eff = 0.
                 tau.trigger_eff_high = 0.
@@ -274,15 +274,15 @@ class TauTriggerEfficiency(EventFilter):
                 tau.trigger_eff_sys_low = 0.
 
             else:
-                tau.trigger_eff = sf
-                tau.trigger_eff_high = sf
-                tau.trigger_eff_low = sf
+                tau.trigger_eff = eff
+                tau.trigger_eff_high = eff
+                tau.trigger_eff_low = eff
 
                 # Data stat uncert
-                data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, self.tree.RunNumber, prong, wpflag, eveto))
-                data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, self.tree.RunNumber, prong, wpflag, eveto))
-                tau.trigger_eff_stat_high = sf + data_stat_up
-                tau.trigger_eff_stat_low = sf - data_stat_dn
+                stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, self.tree.RunNumber, prong, wpflag, eveto))
+                stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, self.tree.RunNumber, prong, wpflag, eveto))
+                tau.trigger_eff_stat_high = eff + stat_up
+                tau.trigger_eff_stat_low = eff - stat_dn
 
                 # Systematic uncert
                 sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, self.tree.RunNumber, prong, wpflag, eveto))
@@ -393,9 +393,9 @@ class TauTriggerEfficiency(EventFilter):
 
             wpflag = self.get_id_12(tau)
 
-            sf = abs(ttc.getDataEff(tau.pt, tau.eta, 0, self.tree.RunNumber, prong, wpflag, eveto))
+            eff = abs(ttc.getDataEff(tau.pt, tau.eta, 0, self.tree.RunNumber, prong, wpflag, eveto))
 
-            if math.isinf(sf) or math.isnan(sf):
+            if math.isinf(eff) or math.isnan(eff):
                 log.warning("trigger data efficiency is infinite or NaN! Using 0.")
                 tau.trigger_eff = 0.
                 tau.trigger_sf_high = 0.
@@ -408,20 +408,20 @@ class TauTriggerEfficiency(EventFilter):
                 tau.trigger_sf_sys_low = 0.
 
             else:
-                tau.trigger_eff = sf
-                tau.trigger_eff_high = sf
-                tau.trigger_eff_low = sf
+                tau.trigger_eff = eff
+                tau.trigger_eff_high = eff
+                tau.trigger_eff_low = eff
 
                 # Data stat uncert
-                data_stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, self.tree.RunNumber, prong, wpflag, eveto))
-                data_stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, self.tree.RunNumber, prong, wpflag, eveto))
-                tau.trigger_eff_stat_high = sf + data_stat_up
-                tau.trigger_eff_stat_low = sf - data_stat_dn
+                stat_up = abs(ttc.getDataEff(tau.pt, tau.eta, 1, self.tree.RunNumber, prong, wpflag, eveto))
+                stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, self.tree.RunNumber, prong, wpflag, eveto))
+                tau.trigger_eff_stat_high = eff + stat_up
+                tau.trigger_eff_stat_low = eff - stat_dn
 
                 # Systematic uncert
                 sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, self.tree.RunNumber, prong, wpflag, eveto))
                 sys_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -2, self.tree.RunNumber, prong, wpflag, eveto))
-                tau.trigger_eff_sys_high = sf + sys_up
-                tau.trigger_eff_sys_low = sf - sys_dn
+                tau.trigger_eff_sys_high = eff + sys_up
+                tau.trigger_eff_sys_low = eff - sys_dn
 
         return True
