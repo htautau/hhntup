@@ -13,7 +13,7 @@ PU_RESCALE = {
 }
 
 
-def get_pileup_reweighting_tool(year, use_defaults=True):
+def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
     # Initialize the pileup reweighting tool
     pileup_tool = Root.TPileupReweighting()
     if year == 2011:
@@ -25,10 +25,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2011/hadhad/'
                 'TPileupReweighting.mc11.prw.root')
-        #pileup_tool.SetDataScaleFactors(1. / PU_RESCALE[year][0])
-        pileup_tool.AddLumiCalcFile(
-            'lumi/2011/hadhad/'
-            'ilumicalc_histograms_None_178044-191933.root')
+        lumicalc_file = 'lumi/2011/hadhad/ilumicalc_histograms_None_178044-191933.root'
     elif year == 2012:
         if use_defaults:
             pileup_tool.AddConfigFile(
@@ -38,13 +35,21 @@ def get_pileup_reweighting_tool(year, use_defaults=True):
             pileup_tool.AddConfigFile(
                 'lumi/2012/hadhad/'
                 'TPileupReweighting.mc12.prw.root')
-        #pileup_tool.SetDataScaleFactors(1. / PU_RESCALE[year][0])
-        pileup_tool.AddLumiCalcFile(
-            'lumi/2012/hadhad/'
-            'ilumicalc_histograms_None_200842-215643.root')
+        lumicalc_file = 'lumi/2012/hadhad/ilumicalc_histograms_None_200842-215643.root'
     else:
         raise ValueError(
             'No pileup reweighting defined for year %d' % year)
+    rescale, rescale_error = PU_RESCALE[year]
+    if systematic is None:
+        pileup_tool.SetDataScaleFactors(1. / rescale)
+    elif systematic == 'high':
+        pileup_tool.SetDataScaleFactors(1. / (rescale + rescale_error))
+    elif systematic == 'low':
+        pileup_tool.SetDataScaleFactors(1. / (rescale - rescale_error))
+    else:
+        raise ValueError(
+            "pileup systematic '{0}' not understood".format(systematic))
+    pileup_tool.AddLumiCalcFile(lumicalc_file)
     # discard unrepresented data (with mu not simulated in MC)
     pileup_tool.SetUnrepresentedDataAction(2)
     pileup_tool.Initialize()
@@ -87,11 +92,12 @@ class PileupReweight(EventFilter):
     """
     Currently only implements hadhad reweighting
     """
-    def __init__(self, year, tool, tree, passthrough=False, **kwargs):
+    def __init__(self, year, tool, tool_high, tool_low, tree, passthrough=False, **kwargs):
         if not passthrough:
-            self.scale, self.scale_uncert = PU_RESCALE[year]
             self.tree = tree
             self.tool = tool
+            self.tool_high = tool_high
+            self.tool_low = tool_low
         super(PileupReweight, self).__init__(
             passthrough=passthrough,
             **kwargs)
@@ -110,15 +116,15 @@ class PileupReweight(EventFilter):
         self.tree.pileup_weight = self.tool.GetCombinedWeight(
             event.RunNumber,
             event.mc_channel_number,
-            event.averageIntPerXing * self.scale)
-        self.tree.pileup_weight_high = self.tool.GetCombinedWeight(
+            event.averageIntPerXing)
+        self.tree.pileup_weight_high = self.tool_high.GetCombinedWeight(
             event.RunNumber,
             event.mc_channel_number,
-            event.averageIntPerXing * (self.scale + self.scale_uncert))
-        self.tree.pileup_weight_low = self.tool.GetCombinedWeight(
+            event.averageIntPerXing)
+        self.tree.pileup_weight_low = self.tool_low.GetCombinedWeight(
             event.RunNumber,
             event.mc_channel_number,
-            event.averageIntPerXing * (self.scale - self.scale_uncert))
+            event.averageIntPerXing)
         return True
 
 

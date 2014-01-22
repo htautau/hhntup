@@ -52,7 +52,6 @@ import externaltools
 class hhskim(ATLASStudent):
 
     def __init__(self, options, **kwargs):
-
         super(hhskim, self).__init__(**kwargs)
         parser = ArgumentParser()
         parser.add_argument('--local', action='store_true', default=False)
@@ -70,12 +69,10 @@ class hhskim(ATLASStudent):
 
         if args.local:
             def merge(inputs, output, metadata):
-
                 # merge output trees
                 root_output = output + '.root'
                 log.info("merging output trees")
                 subprocess.call(['hadd', root_output] + inputs)
-
                 if metadata.datatype == datasets.DATA:
                     # merge GRLs
                     log.info("merging GRL fragments")
@@ -87,7 +84,6 @@ class hhskim(ATLASStudent):
             hhskim.merge = staticmethod(merge)
 
     def work(self):
-
         local = self.args.local
         syst_terms = self.args.syst_terms
         datatype = self.metadata.datatype
@@ -119,13 +115,14 @@ class hhskim(ATLASStudent):
             }
 
         pileup_tool = None
+        pileup_tool_high = None
+        pileup_tool_low = None
 
         if local:
             if datatype == datasets.DATA:
                 merged_grl = goodruns.GRL()
 
                 def update_grl(student, grl, name, file, tree):
-
                     grl |= str(file.Get('Lumi/%s' % student.metadata.treename).GetString())
 
                 onfilechange.append((update_grl, (self, merged_grl,)))
@@ -136,7 +133,6 @@ class hhskim(ATLASStudent):
                 merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
 
             def update_cutflow(student, cutflow, name, file, tree):
-
                 year = student.metadata.year
                 datatype = student.metadata.datatype
                 if datatype == datasets.MC:
@@ -152,6 +148,14 @@ class hhskim(ATLASStudent):
             pileup_tool = get_pileup_reweighting_tool(
                 year=year,
                 use_defaults=True)
+            pileup_tool_high = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True,
+                systematic='high')
+            pileup_tool_low = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True,
+                systematic='low')
 
             if datatype != datasets.EMBED:
                 # merge TrigConfTrees
@@ -262,6 +266,8 @@ class hhskim(ATLASStudent):
                 PileupReweight(
                     year=year,
                     tool=pileup_tool,
+                    tool_high=pileup_tool_high,
+                    tool_low=pileup_tool_low,
                     tree=tree,
                     passthrough=local or datatype != datasets.MC,
                     count_funcs=count_funcs),
