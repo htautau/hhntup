@@ -11,12 +11,12 @@ mc_ztautau:
         - 'AlpgenJimmyZtautauNp4_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp5_pt20.mc11c'
 
-        - 'AlpgenJimmyZtautauNp0_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp1_Mll10to40_pt20.mc11c'
+        - 'AlpJimZtautauNp0_Mll10to40_pt20.mc11c'
+        - 'AlpJimZtautauNp1_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp3_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp4_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp5_Mll10to40_pt20.mc11c'
+        - 'AlpJimZtautauNp3_Mll10to40_pt20.mc11c'
+        - 'AlpJimZtautauNp4_Mll10to40_pt20.mc11c'
+        - 'AlpJimZtautauNp5_Mll10to40_pt20.mc11c'
 embedded_ztautau:
     name: Ztautau
     latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$ (embedded)'
@@ -156,11 +156,11 @@ others:
         - 'AlpgenJimmyZmumuNp5_pt20.mc11c'
 
         - 'AlpgenJimmyZmumuNp0_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp1_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp2_Mll10to40_pt20.mc11c'
+        - 'AlpJimZmumuNp1_Mll10to40_pt20.mc11c'
+        - 'AlpJimZmumuNp2_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZmumuNp3_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZmumuNp4_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp5_Mll10to40_pt20.mc11c'
+        - 'AlpJimZmumuNp5_Mll10to40_pt20.mc11c'
 
         - 'AlpgenJimmyZeeNp0_pt20.mc11c'
         - 'AlpgenJimmyZeeNp1_pt20.mc11c'
@@ -169,11 +169,11 @@ others:
         - 'AlpgenJimmyZeeNp4_pt20.mc11c'
         - 'AlpgenJimmyZeeNp5_pt20.mc11c'
 
-        - 'AlpgenJimmyZeeNp0_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp1_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp2_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp3_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp4_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimZeeNp0_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimZeeNp1_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimZeeNp2_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimZeeNp3_Mll10to40_pt20.mc11c'
+        - 'AlpgenJimZeeNp4_Mll10to40_pt20.mc11c'
         - 'AlpgenJimmyZeeNp5_Mll10to40_pt20.mc11c'
 
         - 'AlpgenJimmyWtaunuNp0_pt20.mc11c'
