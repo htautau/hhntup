@@ -710,9 +710,9 @@ class hhskim(ATLASStudent):
                 tree.MET_sig = -1.
 
             tree.MET_centrality = eventshapes.phi_centrality(
-                    tau1.fourvect,
-                    tau2.fourvect,
-                    MET_vect)
+                tau1.fourvect,
+                tau2.fourvect,
+                MET_vect)
 
             tree.number_of_good_vertices = len(event.vertices)
             tau1, tau2 = event.taus
