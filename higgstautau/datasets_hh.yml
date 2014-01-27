@@ -2392,7 +2392,8 @@ AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a: !Dataset
     /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.107670.AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.merge.NTUP_TAU.e1571_s1499_s1504_r3658_r3549_p1344.v21.140122120330,
     /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.107670.AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.merge.NTUP_TAU.e1571_s1499_s1504_r3658_r3549_p1344.v21.140122181202,
     /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.107670.AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.merge.NTUP_TAU.e1571_s1499_s1504_r3658_r3549_p1344.v21.140123092706,
-    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.107670.AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.merge.NTUP_TAU.e1571_s1499_s1504_r3658_r3549_p1344.v21.140123223738]
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.107670.AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.merge.NTUP_TAU.e1571_s1499_s1504_r3658_r3549_p1344.v21.140123223738,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.107670.AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.merge.NTUP_TAU.e1571_s1499_s1504_r3658_r3549_p1344.v21.140127095411]
   file_pattern: '*hadhad.root*'
   id: 107670
   category: mc12a
@@ -2501,7 +2502,8 @@ AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.169547.AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.merge.NTUP_TAU.e1776_a188_a171_r3549_p1344
-  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.169547.AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.merge.NTUP_TAU.e1776_a188_a171_r3549_p1344.v21.140122120158]
+  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.169547.AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.merge.NTUP_TAU.e1776_a188_a171_r3549_p1344.v21.140122120158,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.169547.AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.merge.NTUP_TAU.e1776_a188_a171_r3549_p1344.v21.140127095215]
   file_pattern: '*hadhad.root*'
   id: 169547
   category: mc12a
@@ -2961,7 +2963,9 @@ AlpgenPythia_Auto_P2011C_ZmumuNp1.mc12a: !Dataset
     /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140123092422,
     /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140123223522,
     /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140123232541,
-    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140124020630]
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140124020630,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140127095002,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpgenPythia_Auto_P2011C_ZmumuNp1.merge.NTUP_TAU.e1880_s1581_s1586_r3658_r3549_p1344.v21.140127102824]
   file_pattern: '*hadhad.root*'
   id: 147114
   category: mc12a
@@ -3670,6 +3674,21 @@ AlpgenPythia_P2011C_ZtautauNp5.mc12a: !Dataset
   grl: null
   year: 2012
   stream: null
+Herwig_AUET2CTEQ6L1_WW.mc12a: !Dataset
+  name: Herwig_AUET2CTEQ6L1_WW.mc12a
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.105985.Herwig_AUET2CTEQ6L1_WW.merge.NTUP_TAU.e1350_s1499_s1504_r3658_r3549_p1344
+  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.105985.Herwig_AUET2CTEQ6L1_WW.merge.NTUP_TAU.e1350_s1499_s1504_r3658_r3549_p1344.v21.140127103703]
+  file_pattern: '*hadhad.root*'
+  id: 105985
+  category: mc12a
+  version: 21
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e1350_s1499_s1504_r3658_r3549_p1344
+  grl: null
+  year: 2012
+  stream: null
 Herwig_AUET2CTEQ6L1_WZ.mc12a: !Dataset
   name: Herwig_AUET2CTEQ6L1_WZ.mc12a
   datatype: 1
@@ -4321,7 +4340,8 @@ PowHegPythia8_AU2CT10_VBFH120_tautauhh.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.161616.PowHegPythia8_AU2CT10_VBFH120_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3753_r3549_p1344
-  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161616.PowHegPythia8_AU2CT10_VBFH120_tautauhh.e1217_s1469_s1470_r3753_r3549_p1344.v21.140122120451]
+  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161616.PowHegPythia8_AU2CT10_VBFH120_tautauhh.e1217_s1469_s1470_r3753_r3549_p1344.v21.140122120451,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161616.PowHegPythia8_AU2CT10_VBFH120_tautauhh.e1217_s1469_s1470_r3753_r3549_p1344.v21.140127095641]
   file_pattern: '*hadhad.root*'
   id: 161616
   category: mc12a
@@ -4566,7 +4586,8 @@ PowHegPythia8_AU2CT10_ggH145_tautauhh.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.161581.PowHegPythia8_AU2CT10_ggH145_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1344
-  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161581.PowHegPythia8_AU2CT10_ggH145_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v21.140122120157]
+  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161581.PowHegPythia8_AU2CT10_ggH145_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v21.140122120157,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161581.PowHegPythia8_AU2CT10_ggH145_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v21.140127095254]
   file_pattern: '*hadhad.root*'
   id: 161581
   category: mc12a
@@ -4581,7 +4602,8 @@ PowHegPythia8_AU2CT10_ggH150_tautauhh.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.161582.PowHegPythia8_AU2CT10_ggH150_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3752_r3549_p1344
-  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161582.PowHegPythia8_AU2CT10_ggH150_tautauhh.e1217_s1469_s1470_r3752_r3549_p1344.v21.140122120249]
+  dirs: [/cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161582.PowHegPythia8_AU2CT10_ggH150_tautauhh.e1217_s1469_s1470_r3752_r3549_p1344.v21.140122120249,
+    /cluster/data11/endw/skims/current/group.phys-higgs.hhskim.mc12_8TeV.161582.PowHegPythia8_AU2CT10_ggH150_tautauhh.e1217_s1469_s1470_r3752_r3549_p1344.v21.140127095349]
   file_pattern: '*hadhad.root*'
   id: 161582
   category: mc12a
