@@ -190,6 +190,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                    (RecoTau + MatchedObject).prefix('tau2_')):
 
     # true if both taus pass ID requirements
+    # TODO: remove
     taus_pass = BoolCol()
 
     tau_trigger_match_error = BoolCol(default=False)

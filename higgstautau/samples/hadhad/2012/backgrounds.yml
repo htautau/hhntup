@@ -150,12 +150,12 @@ others:
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp4.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp5.mc12a'
 
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp3Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp4Excl_Mll10to60.mc12a'
-        - 'AlpgenJimmy_Auto_AUET2CTEQ6L1_ZeeNp5Incl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp5Incl_Mll10to60.mc12a'
 
         - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp0.mc12a'
         - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp1.mc12a'
@@ -186,7 +186,7 @@ others:
         - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWtaunu.mc12a'
         - 'McAtNloJimmy_AUET2CT10_SingleTopWtChanIncl.mc12a'
         - 'McAtNloJimmy_AUET2CT10_ttbar_allhad.mc12a'
-        - 'McAtNloJimmy_CT10_ttbar_LeptonFilter.mc12a'
+        - 'McAtNloJim_CT10_ttbar_LeptonFilter.mc12a'
         
         - 'Herwig_AUET2CTEQ6L1_WW.mc12a'
         - 'Herwig_AUET2CTEQ6L1_WZ.mc12a'
