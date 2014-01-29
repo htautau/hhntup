@@ -1,8 +1,7 @@
 mc_ztautau:
     name: Ztautau
-    latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$'
-    root: 'Z/#gamma^{*}#rightarrow#tau_{h}#tau_{h}'
-    color: '#00a4ff'
+    latex: '$Z\rightarrow\tau\tau$'
+    root: '#font[52]{Z}#rightarrow#tau#tau'
     samples:
         - 'AlpgenJimmyZtautauNp0_pt20.mc11c'
         - 'AlpgenJimmyZtautauNp1_pt20.mc11c'
@@ -19,16 +18,14 @@ mc_ztautau:
         - 'AlpJimZtautauNp5_Mll10to40_pt20.mc11c'
 embedded_ztautau:
     name: Ztautau
-    latex: '$Z/\gamma^{*}\rightarrow\tau_{h}\tau_{h}$ (embedded)'
-    root: 'Z/#gamma^{*}#rightarrow#tau_{h}#tau_{h} (embedded)'
-    color: '#00a4ff'
+    latex: '$Z\rightarrow\tau\tau$'
+    root: '#font[52]{Z}#rightarrow#tau#tau'
     samples:
         - 'embed11-hh-isol-mfsim'
 ewk:
     name: EW
     latex: EW
     root: EW
-    color: '#ff9f71'
     samples:
         - 'AlpgenJimmyZmumuNp0_pt20.mc11c'
         - 'AlpgenJimmyZmumuNp1_pt20.mc11c'
@@ -82,7 +79,6 @@ top:
     name: Top
     latex: Top
     root: Top
-    color: '#0000ff'
     samples:
         - 'st_schan_enu_AcerMC.mc11c'
         - 'st_schan_munu_AcerMC.mc11c'
@@ -97,7 +93,6 @@ diboson:
     name: Diboson
     latex: Diboson
     root: Diboson
-    color: '#ffd075'
     samples:
         - 'gg2WW0240_JIMMY_WW_enuenu.mc11c'
         - 'gg2WW0240_JIMMY_WW_enumunu.mc11c'
@@ -146,7 +141,6 @@ others:
     name: Others
     latex: Others
     root: Others
-    color: '#ff7700'
     samples:
         - 'AlpgenJimmyZmumuNp0_pt20.mc11c'
         - 'AlpgenJimmyZmumuNp1_pt20.mc11c'
