@@ -422,6 +422,7 @@ class hhskim(ATLASStudent):
                     passthrough=local or year < 2012 or datatype != datasets.EMBED,
                     count_funcs=count_funcs),
                 EmbeddingTauSpinner(
+                    year=year,
                     tree=tree,
                     passthrough=local or datatype != datasets.EMBED,
                     count_funcs=count_funcs),
