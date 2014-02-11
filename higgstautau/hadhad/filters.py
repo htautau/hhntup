@@ -208,7 +208,7 @@ class TauTrackRecounting(EventFilter):
         return True
 
 
-class EfficiencyScaleFactors(EventFilter):
+class TauIDScaleFactors(EventFilter):
 
     def __init__(self, year, passthrough=False, **kwargs):
         if not passthrough:
@@ -224,7 +224,7 @@ class EfficiencyScaleFactors(EventFilter):
                 self.passes = self.passes_2012
             else:
                 raise ValueError("No efficiency SFs for year %d" % year)
-        super(EfficiencyScaleFactors, self).__init__(
+        super(TauIDScaleFactors, self).__init__(
             passthrough=passthrough, **kwargs)
 
     def get_id_2011(self, tau):
@@ -266,9 +266,9 @@ class EfficiencyScaleFactors(EventFilter):
             if not tau.matched:
                 continue
             wp = self.get_id_2012(tau)
-            sf = self.tool.GetIDSF(wp, tau.eta, tau.numTrack, tau.pt)
-            sf_stat = self.tool.GetIDStatUnc(wp, tau.eta, tau.numTrack, tau.pt)
-            sf_sys = self.tool.GetIDSysUnc(wp, tau.eta, tau.numTrack, tau.pt)
+            sf = self.tool.GetIDSF(wp, tau.eta, tau.numTrack)
+            sf_stat = self.tool.GetIDStatUnc(wp, tau.eta, tau.numTrack)
+            sf_sys = self.tool.GetIDSysUnc(wp, tau.eta, tau.numTrack)
             tau.id_sf =  sf
             tau.id_sf_high = sf
             tau.id_sf_low = sf
@@ -279,7 +279,7 @@ class EfficiencyScaleFactors(EventFilter):
         return True
 
 
-class FakeRateScaleFactors(EventFilter):
+class TauFakeRateScaleFactors(EventFilter):
 
     def __init__(self, year, datatype, tree,
                  tes_up_systematic=False, tes_down_systematic=False,
@@ -314,7 +314,7 @@ class FakeRateScaleFactors(EventFilter):
             else:
                 raise ValueError("No fakerates defined for year %d" % year)
 
-        super(FakeRateScaleFactors, self).__init__(
+        super(TauFakeRateScaleFactors, self).__init__(
             passthrough=passthrough, **kwargs)
 
     def get_id_2011(self, tau):

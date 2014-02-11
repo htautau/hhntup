@@ -295,7 +295,8 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 # in situ TES shift for 2012 data
                 TauEnergyShift(
-                    passthrough=datatype != datasets.DATA or year < 2012),
+                    passthrough=datatype != datasets.DATA or year < 2012,
+                    count_funcs=count_funcs),
                 # truth matching must come before systematics due to
                 # TES_TRUE/FAKE
                 TruthMatching(
@@ -382,11 +383,11 @@ class hhskim(ATLASStudent):
                     datatype=datatype,
                     passthrough=local,
                     count_funcs=count_funcs),
-                EfficiencyScaleFactors(
+                TauIDScaleFactors(
                     year=year,
                     passthrough=datatype == datasets.DATA,
                     count_funcs=count_funcs),
-                FakeRateScaleFactors(
+                TauFakeRateScaleFactors(
                     year=year,
                     datatype=datatype,
                     tree=tree,
