@@ -391,7 +391,7 @@ class hhskim(ATLASStudent):
                         (Systematics.TES_UP in self.args.syst_terms)),
                     tes_down_systematic=(self.args.syst_terms and
                         (Systematics.TES_DOWN in self.args.syst_terms)),
-                    passthrough=datatype == datasets.DATA,
+                    passthrough=datatype in (datasets.DATA, datasets.EMBED),
                     count_funcs=count_funcs),
                 ggFReweighting(
                     dsname=dsname,
