@@ -60,6 +60,7 @@ class hhskim(ATLASStudent):
         parser.add_argument('--student-verbose', action='store_true', default=False)
         parser.add_argument('--validate', action='store_true', default=False)
         parser.add_argument('--redo-selection', action='store_true', default=False)
+        parser.add_argument('--nominal-values', action='store_true', default=False)
         args = parser.parse_args(options)
         self.args = args
         if args.syst_terms is not None:
@@ -92,6 +93,7 @@ class hhskim(ATLASStudent):
         verbose = self.args.student_verbose
         validate = self.args.validate
         redo_selection = self.args.redo_selection
+        nominal_values = self.args.nominal_values
 
         dsname = os.getenv('INPUT_DATASET_NAME', None)
         if dsname is None:
@@ -291,11 +293,11 @@ class hhskim(ATLASStudent):
                     datatype=datatype,
                     year=year,
                     verbose=verbose,
-                    passthrough=local,
+                    passthrough=local or nominal_values,
                     count_funcs=count_funcs),
                 # in situ TES shift for 2012 data
                 TauEnergyShift(
-                    passthrough=datatype != datasets.DATA or year < 2012,
+                    passthrough=datatype != datasets.DATA or year < 2012 or nominal_values,
                     count_funcs=count_funcs),
                 # truth matching must come before systematics due to
                 # TES_TRUE/FAKE
