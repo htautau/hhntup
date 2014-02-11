@@ -449,6 +449,25 @@ class TauSelected(EventFilter):
         return len(event.taus) >= self.min_taus
 
 
+class TauEnergyShift(EventFilter):
+    """
+    in situ TES shift for 8TeV 2012 data
+    """
+    def __init__(self, *args, **kwargs):
+        from externaltools import TauCorrUncert as TCU
+        from ROOT import TauCorrUncert
+        self.tool = TauCorrUncert.TESUncertainty(
+            TCU.get_resource('TES/mc12_p1344_medium.root'))
+        super(TauEnergyShift, self).__init__(*args, **kwargs)
+
+    def passes(self, event):
+        shift_func = self.tool.GetTESShift
+        for tau in event.taus:
+            shift = shift_func(tau.pt, tau.numTrack)
+            tau.pt *= 1. + shift
+        return True
+
+
 class NumJets25(EventFilter):
 
     def __init__(self, tree, **kwargs):

@@ -293,6 +293,9 @@ class hhskim(ATLASStudent):
                     verbose=verbose,
                     passthrough=local,
                     count_funcs=count_funcs),
+                # in situ TES shift for 2012 data
+                TauEnergyShift(
+                    passthrough=datatype != datasets.DATA or year < 2012),
                 # truth matching must come before systematics due to
                 # TES_TRUE/FAKE
                 TruthMatching(
