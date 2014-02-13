@@ -1,4 +1,5 @@
 from rootpy.tree.filtering import EventFilter
+from . import log; log = log[__name__]
 
 
 class EmbeddingPileupPatch(EventFilter):
@@ -13,12 +14,10 @@ class EmbeddingPileupPatch(EventFilter):
                 averageIntPerXing = p.fourvect.Pz()
                 break
         if averageIntPerXing is not None:
-            #print 'Current value %f' % event.averageIntPerXing
             event.averageIntPerXing = averageIntPerXing
-            #print 'Proposed value %f' % averageIntPerXing
-            #print 'Accepted value %f' % event.averageIntPerXing
         else:
-            print "pdgID 39 not found! Skipping event..."
+            log.warning("pdgID 39 not found! Skipping event...")
+            # ignore event
             return None
         return True
 
@@ -48,7 +47,8 @@ class EmbeddingIsolation(EventFilter):
                         isolation = 2
                 break
         if not found:
-            print "pdgID 82 not found! Skipping event..."
+            log.warning("pdgID 82 not found! Skipping event...")
+            # ignore event
             return None
         self.tree.embedding_isolation = isolation
         return True
