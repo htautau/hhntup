@@ -220,13 +220,11 @@ class METRecalculation(EventFilter):
         for tau in event.taus:
             # event.taus only contains selected taus at this point
             match = False
-            matched_idx = []
             for jet in event.jets:
                 # event.jets contains all jets
                 # Does this jet match the tau?
                 if dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.4:
                     match = True
-                    matched_idx.append(jet.index)
                     # Loop through subjets to find the JVF jets used for STVF
                     for k in xrange(jet.AntiKt4LCTopo_MET_wet.size()):
                         # If the subjet is a JVF jet, set weight to 0
@@ -236,9 +234,6 @@ class METRecalculation(EventFilter):
                             jet.AntiKt4LCTopo_MET_wpy[k] = 0.0
             # If the tau has a matching jet, set the tau weights to 1
             if match:
-                log.warning(
-                    "RefAntiTau MET patch was applied. "
-                    "Matching jets: {0}".format(', '.join(map(str, matched_idx))))
                 tau.MET_statusWord[0] = 1
                 tau.MET_wet[0] = 1.0
                 tau.MET_wpx[0] = 1.0
