@@ -132,13 +132,14 @@ class TauTriggerEfficiency(EventFilter):
             # correct for TES variations (only on nominal)
             # pt_nominal should equal pt when TES is not applied
             if self.tes_systematic:
-                #print "%f %f" % (tau.pt, tau.pt_nominal)
+                #log.info("{0} {1}".format(tau.pt, tau.pt_nominal))
                 sf = abs(
                     corr.getSF(tau.pt, 0) *
                     corr.getMCEff(tau.pt, 0) /
                     corr.getMCEff(tau.pt_nominal, 0))
             else:
                 sf = abs(corr.getSF(tau.pt, 0))
+
             tau.trigger_sf = sf
             tau.trigger_sf_high = abs(corr.getSF(tau.pt, 1))
             tau.trigger_sf_low = abs(corr.getSF(tau.pt, -1))
@@ -149,13 +150,10 @@ class TauTriggerEfficiency(EventFilter):
             tau.trigger_sf_sys_high = sf
             tau.trigger_sf_sys_low = sf
 
-            eff = corr.getDataEff(tau.pt, 0)
-            eff_errup = corr.getDataEff(tau.pt, 1)
-            eff_errdn = corr.getDataEff(tau.pt, -1)
-
+            eff = abs(corr.getDataEff(tau.pt, 0))
             tau.trigger_eff = eff
-            tau.trigger_eff_high = eff + eff_errup
-            tau.trigger_eff_low = eff - eff_errdn
+            tau.trigger_eff_high = abs(corr.getDataEff(tau.pt, 1))
+            tau.trigger_eff_low = abs(corr.getDataEff(tau.pt, -1))
             tau.trigger_eff_stat_high = eff
             tau.trigger_eff_stat_low = eff
             tau.trigger_eff_sys_high = eff
@@ -198,24 +196,22 @@ class TauTriggerEfficiency(EventFilter):
             mc_eff = abs(corr.get3DMCEff(
                 tau.pt, tau.eta,
                 npileup_vtx, 0))
-            mc_eff_errup = abs(corr.get3DMCEff(
+            mc_eff_high = abs(corr.get3DMCEff(
                 tau.pt, tau.eta,
                 npileup_vtx, 1))
-            mc_eff_errdn = abs(corr.get3DMCEff(
+            mc_eff_low = abs(corr.get3DMCEff(
                 tau.pt, tau.eta,
                 npileup_vtx, -1))
 
             sf = corr.getSF(tau.pt, 0)
-            sf_errup = corr.getSF(tau.pt, 1)
-            sf_errdn = corr.getSF(tau.pt, -1)
+            sf_high = corr.getSF(tau.pt, 1)
+            sf_low = corr.getSF(tau.pt, -1)
 
             eff = mc_eff * sf
-            try:
-                eff_high = eff + eff * sqrt((mc_eff_errup / mc_eff)**2 + (sf_errup / sf)**2)
-                eff_low = eff - eff * sqrt((mc_eff_errdn / mc_eff)**2 + (sf_errdn / sf)**2)
-            except ZeroDivisionError:
-                eff_high = 0.
-                eff_low = 0.
+            eff_high = mc_eff_high * sf_high
+            eff_low = mc_eff_low * sf_low
+
+            #log.info("{0} {1} {2}".format(eff, eff_high, eff_low))
 
             tau.trigger_eff = eff
             tau.trigger_eff_high = eff_high
