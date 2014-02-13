@@ -3,6 +3,9 @@
 from . import log; log = log[__name__]
 from .systematics import Systematics
 
+# atlastools imports
+from atlastools.utils import dR
+
 # rootpy imports
 from rootpy.tree.filtering import EventFilter
 
@@ -209,6 +212,33 @@ class METRecalculation(EventFilter):
         return True
 
     def passes_12(self, event):
+        # AntiTau MET calculation from Alex Tuna
+        # If AntiTau matches a JVF jet, clear the corresponding jet weights
+        # and set the tau weights to 1.0.
+        # This must be applied after the tau selection but before the jet selection
+        assert(len(event.taus) == 2)
+        for tau in event.taus:
+            # event.taus only contains selected taus at this point
+            match = False
+            for jet in event.jets:
+                # event.jets contains all jets
+                # Does this jet match the tau?
+                if dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.4:
+                    match = True
+                    # Loop through subjets to find the JVF jets used for STVF
+                    for k in xrange(jet.AntiKt4LCTopo_MET_wet.size()):
+                        # If the subjet is a JVF jet, set weight to 0
+                        if jet.AntiKt4LCTopo_MET_statusWord[k] == (0x3300 | 0x0001):
+                            jet.AntiKt4LCTopo_MET_wet[k] = 0.0
+                            jet.AntiKt4LCTopo_MET_wpx[k] = 0.0
+                            jet.AntiKt4LCTopo_MET_wpy[k] = 0.0
+            # If the tau has a matching jet, set the tau weights to 1
+            if match:
+                log.warning("RefAntiTau MET patch was applied")
+                tau.MET_statusWord[0] = 1
+                tau.MET_wet[0] = 1.0
+                tau.MET_wpx[0] = 1.0
+                tau.MET_wpy[0] = 1.0
 
         # this must be put before setting the jets parameters
         self.tool.setJetPUcode(MissingETTags.JPU_JET_JVFCUT)

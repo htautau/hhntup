@@ -4,7 +4,6 @@ from rootpy.tree.filtering import EventFilter
 class EmbeddingPileupPatch(EventFilter):
 
     def passes(self, event):
-
         # fix averageIntPerXing
         # HACK: stored in pz of mc particle with pdg ID 39
         # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
@@ -14,12 +13,10 @@ class EmbeddingPileupPatch(EventFilter):
                 averageIntPerXing = p.fourvect.Pz()
                 break
         if averageIntPerXing is not None:
-
             #print 'Current value %f' % event.averageIntPerXing
             event.averageIntPerXing = averageIntPerXing
             #print 'Proposed value %f' % averageIntPerXing
             #print 'Accepted value %f' % event.averageIntPerXing
-
         else:
             print "pdgID 39 not found! Skipping event..."
             return None
@@ -32,12 +29,10 @@ class EmbeddingIsolation(EventFilter):
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
     """
     def __init__(self, tree, **kwargs):
-
         self.tree = tree
         super(EmbeddingIsolation, self).__init__(**kwargs)
 
     def passes(self, event):
-
         # no isolation
         isolation = 0
         found = False
