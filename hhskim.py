@@ -33,6 +33,7 @@ from higgstautau.trigger.matching import (TauTriggerMatchIndex,
                                           TauTriggerMatchThreshold)
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
+from higgstautau.met import METRecalculation
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.tauspinner import EmbeddingTauSpinner
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
@@ -252,6 +253,9 @@ class hhskim(ATLASStudent):
                     year=year,
                     passthrough=local or datatype != datasets.MC,
                     count_funcs=count_funcs),
+                RandomSeed(
+                    datatype=datatype,
+                    count_funcs=count_funcs),
                 RandomRunNumber(
                     tree=tree,
                     datatype=datatype,
@@ -304,6 +308,9 @@ class hhskim(ATLASStudent):
                 TruthMatching(
                     passthrough=datatype == datasets.DATA,
                     count_funcs=count_funcs),
+                NvtxJets(
+                    tree=tree,
+                    count_funcs=count_funcs),
                 # PUT THE SYSTEMATICS "FILTER" BEFORE
                 # ANY FILTERS THAT REFER TO OBJECTS
                 # BUT AFTER CALIBRATIONS
@@ -313,6 +320,7 @@ class hhskim(ATLASStudent):
                     datatype=datatype,
                     tree=tree,
                     verbose=verbose,
+                    passthrough=not local or not syst_terms,
                     count_funcs=count_funcs),
                 LArHole(
                     datatype=datatype,
@@ -427,6 +435,15 @@ class hhskim(ATLASStudent):
                     year=year,
                     tree=tree,
                     passthrough=local or datatype != datasets.EMBED,
+                    count_funcs=count_funcs),
+                # put MET recalculation after tau selection but before tau-jet
+                # overlap removal and jet selection because of the RefAntiTau
+                # MET correction
+                METRecalculation(
+                    terms=syst_terms,
+                    year=year,
+                    tree=tree,
+                    verbose=verbose,
                     count_funcs=count_funcs),
                 TauJetOverlapRemoval(
                     count_funcs=count_funcs),

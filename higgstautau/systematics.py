@@ -52,6 +52,7 @@ class ObjectSystematic(object):
 
     def __init__(self, sys_util):
         self.sys_util = sys_util
+        self.tree = sys_util.tree
         self.verbose = sys_util.verbose
         self.year = sys_util.year
 
@@ -172,10 +173,10 @@ class JES(JetSystematic):
         return [ self.jes_tool.getRelPileupRhoTopology(jet.pt, jet.eta) ]
 
     def _PUPt(self, jet, event):
-        return [ self.jes_tool.getRelPileupPtTerm(jet.pt, jet.eta, self.sys_util.nvtxjets, event.averageIntPerXing) ]
+        return [ self.jes_tool.getRelPileupPtTerm(jet.pt, jet.eta, self.tree.nvtxjets, event.averageIntPerXing) ]
 
     def _PUNPV(self, jet, event):
-        return [ self.jes_tool.getRelNPVOffsetTerm(jet.pt, jet.eta, self.sys_util.nvtxjets) ]
+        return [ self.jes_tool.getRelNPVOffsetTerm(jet.pt, jet.eta, self.tree.nvtxjets) ]
 
     def _PUMu(self, jet, event):
         return [ self.jes_tool.getRelMuOffsetTerm(jet.pt, jet.eta, event.averageIntPerXing) ]
@@ -643,7 +644,6 @@ class Systematics(EventFilter):
             tree,
             terms=None,
             verbose=False,
-            very_verbose=False,
             **kwargs):
 
         super(Systematics, self).__init__(**kwargs)
@@ -654,7 +654,6 @@ class Systematics(EventFilter):
         self.year = year
         self.tree = tree
         self.verbose = verbose
-        self.very_verbose = very_verbose
 
         if terms is not None:
             # remove possible duplicates
@@ -731,398 +730,99 @@ class Systematics(EventFilter):
 
                 elif term == Systematics.TES_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.FINAL,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.FINAL,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        infile='TES/mc12_p1344_medium_split.root')
 
                 elif term == Systematics.TES_TRUE_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.FINAL,
-                            infile='TES/mc12_p1344_medium_split.root',
-                            matched_state=True)
+                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        infile='TES/mc12_p1344_medium_split.root',
+                        matched_state=True)
                 elif term == Systematics.TES_TRUE_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.FINAL,
-                            infile='TES/mc12_p1344_medium_split.root',
-                            matched_state=True)
+                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        infile='TES/mc12_p1344_medium_split.root',
+                        matched_state=True)
 
                 elif term == Systematics.TES_FAKE_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.FINAL,
-                            infile='TES/mc12_p1344_medium_split.root',
-                            matched_state=False)
+                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        infile='TES/mc12_p1344_medium_split.root',
+                        matched_state=False)
                 elif term == Systematics.TES_FAKE_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.FINAL,
-                            infile='TES/mc12_p1344_medium_split.root',
-                            matched_state=False)
+                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        infile='TES/mc12_p1344_medium_split.root',
+                        matched_state=False)
 
                 elif term == Systematics.TES_EOP_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.EOP,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.EOP,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EOP_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.EOP,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.EOP,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_CTB_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.CTB,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.CTB,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_CTB_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.CTB,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.CTB,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_Bias_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.Bias,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.Bias,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_Bias_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.Bias,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.Bias,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EM_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.EM,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.EM,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_EM_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.EM,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.EM,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_LCW_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.LCW,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.LCW,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_LCW_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.LCW,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.LCW,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_PU_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.PU,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.PU,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_PU_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.PU,
-                            infile='TES/mc12_p1344_medium_split.root')
+                        np=TauCorrUncert.TESUncertainty.PU,
+                        infile='TES/mc12_p1344_medium_split.root')
                 elif term == Systematics.TES_OTHERS_UP:
                     systematic = TES(True, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.OTHERS,
-                            infile='TES/mc12_p1344_medium_split.root',
-                            datatype=datatype)
+                        np=TauCorrUncert.TESUncertainty.OTHERS,
+                        infile='TES/mc12_p1344_medium_split.root',
+                        datatype=datatype)
                 elif term == Systematics.TES_OTHERS_DOWN:
                     systematic = TES(False, sys_util=self,
-                            np=TauCorrUncert.TESUncertainty.OTHERS,
-                            infile='TES/mc12_p1344_medium_split.root',
-                            datatype=datatype)
+                        np=TauCorrUncert.TESUncertainty.OTHERS,
+                        infile='TES/mc12_p1344_medium_split.root',
+                        datatype=datatype)
                 elif term not in Systematics.MET_TERMS:
                     raise ValueError("systematic not supported")
                 if systematic is not None:
                     self.systematics.append(systematic)
 
-        # Initialise your METUtility object
-        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtility
-        self.met_utility = METUtility()
-
-        # configure
-        self.met_utility.configMissingET(
-            year == 2012, # is 2012
-            year == 2012) # is STVF
-
-        # Turn on (off) the relevant MET terms
-        # These are the terms required for MET_RefFinal(_BDTMedium)
-        self.met_utility.defineMissingET(
-            True,  # RefEle
-            True,  # RefGamma
-            True,  # RefTau
-            True,  # RefJet
-            True,  # RefMuon
-            True,  # MuonTotal
-            True,  # Soft
-            )
-
-        # The threshold below which jets enter the SoftJets term (JES is not applied)
-        #self.met_utility.setSoftJetCut(20e3)
-
-        # Whether to use MUID muons (otherwise STACO).
-        self.met_utility.setIsMuid(False)
-
-        # Whether METUtility should scream at you over every little thing
-        self.met_utility.setVerbosity(self.very_verbose)
-
-    def get_met(self):
-
-        util = self.met_utility
-        if self.year == 2011:
-            if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ScaleSoftTermsUp)
-            elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ScaleSoftTermsDown)
-            elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ResoSoftTermsUp)
-            elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ResoSoftTermsDown)
-            return util.getMissingET(METUtil.RefFinal)
-        elif self.year == 2012:
-            multisyst = METUtil.MultiSyst()
-            if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
-                multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_UP)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
-                multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_DOWN)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
-                multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_UP)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
-                multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_DOWN)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            return util.getMissingET(METUtil.RefFinal)
-
     def passes(self, event):
-
-        # reset the METUtility
-        self.met_utility.reset()
-
-        # Check for a good primary vertex
-        # This is needed for jet and soft term systematics
-        goodPV = False
-        nvtxsoftmet = 0
-        self.nvtxjets = 0
-
-        # Most D3PDs contain the vx_type branch, but some don't.
-        # Those which don't are most likely skimmed, and require at least 1
-        # primary vertex for all events.
-        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z)
-        # check should be applied to the first vertex in the collection.
-        # Otherwise, you should ensure that the vx_type branch is available.
-        for vertex in event.vertices:
-            if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
-                goodPV = True
-        if goodPV:
-            for vertex in event.vertices:
-                if vertex.nTracks > 2:
-                    nvtxsoftmet += 1
-                if vertex.nTracks > 1:
-                    self.nvtxjets += 1
-
-        # These set up the systematic "SoftTerms_ptHard"
-        self.met_utility.setNvtx(nvtxsoftmet)
-
-        # ResoSoftTerms uses gRandom for smearing.
-        # Set the seed here however you like.
-        if self.datatype in (datasets.DATA, datasets.EMBED):
-            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
-        else:
-            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
-
         for systematic in self.systematics:
             systematic.run(event)
-
-        if self.year == 2012:
-            return self.passes_12(event)
-        elif self.year == 2011:
-            return self.passes_11(event)
-        else:
-            raise ValueError("No MET defined for year %d" % self.year)
-
-    def passes_11(self, event):
-        """
-        JETS
-        Always use setJetParameters since they may be recalibrated upstream
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
-        """
-        self.met_utility.setJetParameters(
-            event.jet_pt,
-            self.tree.jet_eta_original,
-            self.tree.jet_phi_original,
-            event.jet_E,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
-
-        #self.met_utility.setOriJetParameters(self.tree.jet_pt_original)
-
-        # Taus
-        self.met_utility.setTauParameters(
-            event.tau_pt,
-            event.tau_eta,
-            event.tau_phi,
-            event.tau_MET_BDTMedium_wet,
-            event.tau_MET_BDTMedium_wpx,
-            event.tau_MET_BDTMedium_wpy,
-            event.tau_MET_BDTMedium_statusWord)
-
-        # Electrons
-        self.met_utility.setMETTerm(
-            METUtil.RefEle,
-            event.MET_RefEle_BDTMedium_etx,
-            event.MET_RefEle_BDTMedium_ety,
-            event.MET_RefEle_BDTMedium_sumet)
-
-        # Muons
-        self.met_utility.setMETTerm(
-            METUtil.MuonTotal,
-            event.MET_Muon_Total_Staco_BDTMedium_etx,
-            event.MET_Muon_Total_Staco_BDTMedium_ety,
-            event.MET_Muon_Total_Staco_BDTMedium_sumet)
-
-        # Note that RefMuon is not rebuilt from muons
-        # -- it is a calorimeter term.
-        self.met_utility.setMETTerm(
-            METUtil.RefMuon,
-            event.MET_RefMuon_Staco_BDTMedium_etx,
-            event.MET_RefMuon_Staco_BDTMedium_ety,
-            event.MET_RefMuon_Staco_BDTMedium_sumet)
-
-        # Photons
-        self.met_utility.setMETTerm(
-            METUtil.RefGamma,
-            event.MET_RefGamma_BDTMedium_etx,
-            event.MET_RefGamma_BDTMedium_ety,
-            event.MET_RefGamma_BDTMedium_sumet)
-
-        """
-        self.met_utility.setMETTerm(
-            METUtil.SoftJets,
-            event.MET_SoftJets_BDTMedium_etx,
-            event.MET_SoftJets_BDTMedium_ety,
-            event.MET_SoftJets_BDTMedium_sumet)
-        """
-
-        # Soft terms
-        self.met_utility.setMETTerm(
-            METUtil.SoftTerms,
-            event.MET_CellOut_BDTMedium_etx,
-            event.MET_CellOut_BDTMedium_ety,
-            event.MET_CellOut_BDTMedium_sumet)
-
-        MET = self.get_met()
-
-        if self.verbose:
-            log.info("Run: {0} Event: {1}".format(
-                event.RunNumber,
-                event.EventNumber))
-            log.info("Recalculated MET: %.3f (original: %.3f)" % (
-                     MET.et(), event.MET_RefFinal_BDTMedium_et))
-            log.info("Recalculated MET phi: %.3f (original: %.3f)" % (
-                     MET.phi(), event.MET_RefFinal_BDTMedium_phi))
-            if (abs(MET.et() - event.MET_RefFinal_BDTMedium_et) /
-                    event.MET_RefFinal_BDTMedium_et) > 0.1:
-                log.warning("Large MET difference!")
-
-        # update the MET with the shifted value
-        self.tree.MET_etx_original = event.MET_RefFinal_BDTMedium_etx
-        self.tree.MET_ety_original = event.MET_RefFinal_BDTMedium_ety
-        self.tree.MET_et_original = event.MET_RefFinal_BDTMedium_et
-        self.tree.MET_sumet_original = event.MET_RefFinal_BDTMedium_sumet
-        self.tree.MET_phi_original = event.MET_RefFinal_BDTMedium_phi
-
-        event.MET_RefFinal_BDTMedium_etx = MET.etx()
-        event.MET_RefFinal_BDTMedium_ety = MET.ety()
-        event.MET_RefFinal_BDTMedium_et = MET.et()
-        event.MET_RefFinal_BDTMedium_sumet = MET.sumet()
-        event.MET_RefFinal_BDTMedium_phi = MET.phi()
-
-        return True
-
-    def passes_12(self, event):
-
-        # this must be put before setting the jets parameters
-        self.met_utility.setJetPUcode(MissingETTags.JPU_JET_JVFCUT)
-
-        """
-        JETS
-        Always use setJetParameters since they may be recalibrated upstream
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
-        """
-        self.met_utility.setJetParameters(
-            event.jet_pt,
-            self.tree.jet_eta_original,
-            self.tree.jet_phi_original,
-            event.jet_E,
-            event.jet_AntiKt4LCTopo_MET_wet,
-            event.jet_AntiKt4LCTopo_MET_wpx,
-            event.jet_AntiKt4LCTopo_MET_wpy,
-            event.jet_AntiKt4LCTopo_MET_statusWord)
-
-        #self.met_utility.setOriJetParameters(event.jet_pt)
-
-        # Taus
-        self.met_utility.setTauParameters(
-            event.tau_pt,
-            event.tau_eta,
-            event.tau_phi,
-            event.tau_MET_wet,
-            event.tau_MET_wpx,
-            event.tau_MET_wpy,
-            event.tau_MET_statusWord)
-
-        # Electrons
-        self.met_utility.setMETTerm(
-            METUtil.RefEle,
-            event.MET_RefEle_etx,
-            event.MET_RefEle_ety,
-            event.MET_RefEle_sumet)
-
-        # Muons
-        self.met_utility.setMETTerm(
-            METUtil.MuonTotal,
-            event.MET_Muon_Total_Staco_etx,
-            event.MET_Muon_Total_Staco_ety,
-            event.MET_Muon_Total_Staco_sumet)
-
-        # Note that RefMuon is not rebuilt from muons
-        # -- it is a calorimeter term.
-        #self.met_utility.setMETTerm(
-        #    METUtil.RefMuon,
-        #    event.MET_RefMuon_Staco_etx,
-        #    event.MET_RefMuon_Staco_ety,
-        #    event.MET_RefMuon_Staco_sumet)
-
-        # Photons
-        self.met_utility.setMETTerm(
-            METUtil.RefGamma,
-            event.MET_RefGamma_etx,
-            event.MET_RefGamma_ety,
-            event.MET_RefGamma_sumet)
-
-        # Soft terms
-        self.met_utility.setMETTerm(
-            METUtil.SoftTerms,
-            event.MET_CellOut_Eflow_STVF_etx,
-            event.MET_CellOut_Eflow_STVF_ety,
-            event.MET_CellOut_Eflow_STVF_sumet)
-
-        MET = self.get_met()
-
-        if self.verbose:
-            log.info("Run: {0} Event: {1}".format(
-                event.RunNumber,
-                event.EventNumber))
-            log.info("Recalculated MET: %.3f (original: %.3f)" % (
-                     MET.et(), event.MET_RefFinal_STVF_et))
-            log.info("Recalculated MET phi: %.3f (original: %.3f)" % (
-                     MET.phi(), event.MET_RefFinal_STVF_phi))
-            if (abs(MET.et() - event.MET_RefFinal_STVF_et) /
-                    event.MET_RefFinal_STVF_et) > 0.1:
-                log.warning("Large MET difference!")
-
-        # update the MET with the shifted value
-        self.tree.MET_etx_original = event.MET_RefFinal_STVF_etx
-        self.tree.MET_ety_original = event.MET_RefFinal_STVF_ety
-        self.tree.MET_et_original = event.MET_RefFinal_STVF_et
-        self.tree.MET_sumet_original = event.MET_RefFinal_STVF_sumet
-        self.tree.MET_phi_original = event.MET_RefFinal_STVF_phi
-
-        event.MET_RefFinal_STVF_etx = MET.etx()
-        event.MET_RefFinal_STVF_ety = MET.ety()
-        event.MET_RefFinal_STVF_et = MET.et()
-        event.MET_RefFinal_STVF_sumet = MET.sumet()
-        event.MET_RefFinal_STVF_phi = MET.phi()
-
         return True

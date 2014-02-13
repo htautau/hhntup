@@ -40,6 +40,22 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
+class RandomSeed(EventFilter):
+
+    def __init__(self, datatype, **kwargs):
+        super(RandomSeed, self).__init__(**kwargs)
+        self.datatype = datatype
+
+    def passes(self, event):
+        # ResoSoftTerms uses gRandom for smearing.
+        # Set the seed here however you like.
+        if self.datatype in (datasets.DATA, datasets.EMBED):
+            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
+        else:
+            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
+        return True
+
+
 class RandomRunNumber(EventFilter):
 
     def __init__(self, tree, datatype, pileup_tool, **kwargs):
@@ -58,6 +74,38 @@ class RandomRunNumber(EventFilter):
     def passes_mc(self, event):
         # get random run number using the pileup tool
         self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        return True
+
+
+class NvtxJets(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+        super(NvtxJets, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+        # Check for a good primary vertex
+        # This is needed for jet and soft term systematics
+        goodPV = False
+        nvtxsoftmet = 0
+        nvtxjets = 0
+        # Most D3PDs contain the vx_type branch, but some don't.
+        # Those which don't are most likely skimmed, and require at least 1
+        # primary vertex for all events.
+        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z)
+        # check should be applied to the first vertex in the collection.
+        # Otherwise, you should ensure that the vx_type branch is available.
+        for vertex in event.vertices:
+            if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
+                goodPV = True
+        if goodPV:
+            for vertex in event.vertices:
+                if vertex.nTracks > 2:
+                    nvtxsoftmet += 1
+                if vertex.nTracks > 1:
+                    nvtxjets += 1
+        self.tree.nvtxsoftmet = nvtxsoftmet
+        self.tree.nvtxjets = nvtxjets
         return True
 
 
