@@ -9,8 +9,8 @@
 tmp*
 .nfs*
 lumi/.git
-TauSpinner/*
-TauSpinner/extern/*
+TauSpinnerTool/*
+TauSpinnerTool/extern/*
 eventviews
 discriminants
 docs

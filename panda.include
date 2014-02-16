@@ -1,10 +1,10 @@
-TauSpinner/lib
-TauSpinner/pdfs
-TauSpinner/extern
-TauSpinner/extern/lib
-TauSpinner/__init__.py
-TauSpinner/version.txt
-TauSpinner/setup.sh
+TauSpinnerTool/lib
+TauSpinnerTool/pdfs
+TauSpinnerTool/extern
+TauSpinnerTool/extern/lib
+TauSpinnerTool/__init__.py
+TauSpinnerTool/version.txt
+TauSpinnerTool/setup.sh
 *.tar.gz
 *.cfg
 *.spec
