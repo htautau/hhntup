@@ -169,6 +169,7 @@ mc:
         #- 'McAtNloJimmy_AUET2CT10_ttbar_allhad.mc12a'
         #- 'McAtNloJim_CT10_ttbar_LeptonFilter.mc12a'
         - 'PowhegPythia_P2011C_ttbar.mc12a'
+        - 'TTbar_MT1725_allhad_PowHeg_Pythia_P2011C.mc12a'
         - 'PowHegPythia8_AU2CT10_ggH100_tautauhh.mc12a'
         - 'PowHegPythia8_AU2CT10_ggH105_tautauhh.mc12a'
         - 'PowHegPythia8_AU2CT10_ggH110_tautauhh.mc12a'
