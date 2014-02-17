@@ -234,6 +234,14 @@ class hhskim(ATLASStudent):
         if local and syst_terms is None and not redo_selection:
             event_filters = None
         else:
+            tau_ntrack_recounted_use_ntup = False
+            if year > 2011:
+                # peek at first tree to determine if the extended number of
+                # tracks is already stored
+                with root_open(self.files[0]) as test_file:
+                    test_tree = test_file.Get(self.metadata.treename)
+                    tau_ntrack_recounted_use_ntup = 'tau_out_track_n_extended' in test_tree
+
             event_filters = EventFilterList([
                 GRLFilter(
                     self.grl,
@@ -415,7 +423,7 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauTrackRecounting(
                     year=year,
-                    datatype=datatype,
+                    use_ntup_value=tau_ntrack_recounted_use_ntup,
                     passthrough=local,
                     count_funcs=count_funcs),
                 MCWeight(

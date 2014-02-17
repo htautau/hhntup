@@ -196,15 +196,21 @@ class TaudR(EventFilter):
 
 class TauTrackRecounting(EventFilter):
 
-    def __init__(self, year, datatype, **kwargs):
-        self.year = year
-        self.datatype = datatype
+    def __init__(self, year, use_ntup_value=False, **kwargs):
         super(TauTrackRecounting, self).__init__(**kwargs)
+        if year > 2011:
+            if use_ntup_value:
+                log.info("TauTrackRecounting using value from NTUP")
+                self.count_func = track_counting.count_tracks_2012_p1443
+            else:
+                self.count_func = track_counting.count_tracks_2012
+        else:
+            self.count_func = track_counting.count_tracks_2011
 
     def passes(self, event):
+        count_func = self.count_func
         for tau in event.taus:
-            tau.numTrack_recounted = track_counting.count_tracks(
-                    tau, event, self.year, self.datatype)
+            tau.numTrack_recounted = count_func(tau, event)
         return True
 
 

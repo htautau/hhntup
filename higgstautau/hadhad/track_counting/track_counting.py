@@ -2,17 +2,11 @@ from atlastools import utils
 from atlastools import datasets
 from math import sin, tan, log
 
-
-def count_tracks(tau, event, year, datatype):
-
-    year = year % 1000
-    if year == 11:
-        return count_tracks_2011(tau, event)
-    elif year == 12:
-        if datatype in (datasets.DATA, datasets.EMBED):
-            return count_tracks_2012_data(tau, event)
-        return count_tracks_2012(tau, event)
-    raise ValueError('No track recounting defined for year %d' % year)
+__all__ = [
+    'count_tracks_2011',
+    'count_tracks_2012',
+    'count_tracks_2012_p1443',
+]
 
 
 def count_tracks_2011(tau, event):
@@ -23,27 +17,21 @@ def count_tracks_2011(tau, event):
     threshold = 4.
 
     for trk in event.tracks:
-
         dR = utils.dR(tau.eta, tau.phi, trk.eta, trk.phi)
-
         if (dR > 0.2 and dR < 0.6 and trk.pt / 1000.0 > 0.5
             and abs(trk.d0_wrtPV) < 1.0
             and abs(trk.z0_wrtPV * sin(trk.theta)) < 1.5
             and (trk.nPixHits + trk.nPixHoles) > 1
             and (trk.nPixHits + trk.nPixHoles + trk.nSCTHits + trk.nSCTHoles) > 6):
             iCheckKtTrack = 0.
-
             for j in xrange(tau.track_atTJVA_n):
                 dR1 = utils.dR(tau.track_atTJVA_eta[j], tau.track_atTJVA_phi[j],
                                trk.eta, trk.phi)
                 ptdR1 = tau.track_atTJVA_pt[j] * dR1 / trk.pt
-
                 if ptdR1 > iCheckKtTrack:
                     iCheckKtTrack = ptdR1
-
             if iCheckKtTrack < threshold:
                 nOuterKtTrack += 1
-
     return tau.track_atTJVA_n + nOuterKtTrack
 
 
@@ -53,7 +41,6 @@ def count_tracks_2012(tau, event):
     """
     nOuterKtTrack1 = 0
     tau_index = tau.index
-
     for trk in event.tracks:
         sinth  = sin(trk.atTJVA_theta[tau_index])
         trkpt  = sinth / abs(trk.atTJVA_qoverp[tau_index])
@@ -82,6 +69,5 @@ def count_tracks_2012(tau, event):
     return nOuterKtTrack1 + tau.track_atTJVA_n
 
 
-def count_tracks_2012_data(tau, event):
-
+def count_tracks_2012_p1443(tau, event):
     return tau.out_track_n_extended
