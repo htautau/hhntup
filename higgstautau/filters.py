@@ -216,7 +216,9 @@ def in_lar_hole(eta, phi):
 
 
 class LArHole(EventFilter):
-
+    """
+    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2011#LAr_Hole
+    """
     def __init__(self, datatype, tree, **kwargs):
         super(LArHole, self).__init__(**kwargs)
         if datatype in (datasets.DATA, datasets.EMBED):
@@ -228,7 +230,6 @@ class LArHole(EventFilter):
     def passes_data(self, event):
         if not 180614 <= self.tree.RunNumber <= 184169:
             return True
-
         for jet in event.jets:
             if not jet.pt > 20 * GeV * (1 - jet.BCH_CORR_JET) / (1 - jet.BCH_CORR_CELL):
                 continue
@@ -239,7 +240,6 @@ class LArHole(EventFilter):
     def passes_mc(self, event):
         if not 180614 <= self.tree.RunNumber <= 184169:
             return True
-
         for jet in event.jets:
             if not jet.pt > 20 * GeV:
                 continue
