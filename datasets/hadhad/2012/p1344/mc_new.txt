@@ -7,12 +7,16 @@ mc12_8TeV.117049.TTbar_MT1725_allhad_PowHeg_Pythia_P2011C.merge.NTUP_TAU.e2075_s
 #mc12_8TeV.105204.McAtNloJimmy_AUET2CT10_ttbar_allhad.merge.NTUP_TAU.e1576_s1499_s1504_r3658_r3549_p1344/
 
 # Single top Wt
-mc12_8TeV.108346.McAtNloJimmy_AUET2CT10_SingleTopWtChanIncl.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
+mc12_8TeV.110140.PowhegPythia_P2011C_st_Wtchan_incl_DR.merge.NTUP_TAU.e1743_s1581_s1586_r3658_r3549_p1344/
+# OLD MC@NLO
+#mc12_8TeV.108346.McAtNloJimmy_AUET2CT10_SingleTopWtChanIncl.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
 
 # Single top s-channel
-mc12_8TeV.108343.McAtNloJimmy_AUET2CT10_SingleTopSChanWenu.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
-mc12_8TeV.108344.McAtNloJimmy_AUET2CT10_SingleTopSChanWmunu.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
-mc12_8TeV.108345.McAtNloJimmy_AUET2CT10_SingleTopSChanWtaunu.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
+mc12_8TeV.110119.PowhegPythia_P2011C_st_schan_lep.merge.NTUP_TAU.e1720_s1581_s1586_r3658_r3549_p1344/
+# OLD MC@NLO
+#mc12_8TeV.108343.McAtNloJimmy_AUET2CT10_SingleTopSChanWenu.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
+#mc12_8TeV.108344.McAtNloJimmy_AUET2CT10_SingleTopSChanWmunu.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
+#mc12_8TeV.108345.McAtNloJimmy_AUET2CT10_SingleTopSChanWtaunu.merge.NTUP_TAU.e1525_s1499_s1504_r3658_r3549_p1344/
 
 # Single top t-channel
 mc12_8TeV.117360.AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.merge.NTUP_TAU.e1346_s1499_s1504_r3658_r3549_p1344/
