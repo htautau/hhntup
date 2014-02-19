@@ -646,7 +646,7 @@ class EmbeddingCorrections(EventFilter):
             from externaltools import MuonEfficiencyCorrections
             self.tool = ROOT.EmbeddedCorrections.Embedded(
                 EmbeddedCorrections.get_resource('2DMaps.root'),
-                TrigMuonEfficiency.RESOURCE_PATH,
+                EmbeddedCorrections.RESOURCE_PATH,
                 ElectronEfficiencyCorrection.RESOURCE_PATH,
                 HSG4LepLepTriggerSF.RESOURCE_PATH,
                 MuonEfficiencyCorrections.RESOURCE_PATH)
