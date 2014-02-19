@@ -451,6 +451,7 @@ class hhskim(ATLASStudent):
                     terms=syst_terms,
                     year=year,
                     tree=tree,
+                    refantitau=not nominal_values,
                     verbose=verbose,
                     count_funcs=count_funcs),
                 TauJetOverlapRemoval(

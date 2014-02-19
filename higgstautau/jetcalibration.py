@@ -17,13 +17,13 @@ class JetCalibration(EventFilter):
     This class applies jet calibrations
     """
     def __init__(self, datatype, year,
-            verbose=False,
-            passthrough=False,
-            **kwargs):
+                 verbose=False,
+                 passthrough=False,
+                 **kwargs):
 
         super(JetCalibration, self).__init__(
-                passthrough=passthrough,
-                **kwargs)
+            passthrough=passthrough,
+            **kwargs)
 
         if not passthrough:
             self.year = year
@@ -39,20 +39,18 @@ class JetCalibration(EventFilter):
                 # use JES_Full2012dataset_Preliminary_AFII_Jan13.config for fastsim MC
             else:
                 raise ValueError(
-                        "No JES calibration defined for year %d" % year)
+                    "No JES calibration defined for year %d" % year)
             log.info("Using JES config %s" % config)
             self.config_file = ApplyJetCalibration.get_resource(
-                    'CalibrationConfigs/%s' % config)
+                'CalibrationConfigs/%s' % config)
             self.jes_tool = JetCalibrationTool(
-                    self.algo,
-                    self.config_file,
-                    self.isdata)
+                self.algo,
+                self.config_file,
+                self.isdata)
 
     def passes(self, event):
-
         # For the pile-up correction, we need mu and NPV(2+ tracks)
         mu = event.averageIntPerXing
-
         # count the number of vertices with 2 or more tracks
         NPV = 0
         for vertex in event.vertices:
@@ -112,20 +110,17 @@ class JetCalibration(EventFilter):
                     raise e
         else:
             raise ValueError('Invalid year in jet calibration: %d' % self.year)
-
         if self.verbose:
             print "JETS AFTER RECALIBRATION"
             self.print_jets(event)
-
         return True
 
     def print_jets(self, event):
-
         for i in xrange(event.jet_n):
             # use raw access to D3PD branches as an extra check
             print "E: %.3f pT: %.3f eta: %.5f phi: %.5f M: %.3f" % (
-                    event.jet_E[i],
-                    event.jet_pt[i],
-                    event.jet_eta[i],
-                    event.jet_phi[i],
-                    event.jet_m[i])
+                event.jet_E[i],
+                event.jet_pt[i],
+                event.jet_eta[i],
+                event.jet_phi[i],
+                event.jet_m[i])

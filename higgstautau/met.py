@@ -24,15 +24,17 @@ class METRecalculation(EventFilter):
                  year,
                  tree,
                  terms=None,
+                 refantitau=True,
                  verbose=False,
                  very_verbose=False,
                  **kwargs):
 
         super(METRecalculation, self).__init__(**kwargs)
 
-        self.terms = set([])
+        self.terms = terms or set()
         self.year = year
         self.tree = tree
+        self.refantitau = refantitau
         self.verbose = verbose
         self.very_verbose = very_verbose
 
@@ -45,17 +47,20 @@ class METRecalculation(EventFilter):
             year == 2012, # is 2012
             year == 2012) # is STVF
 
-        # Turn on (off) the relevant MET terms
-        # These are the terms required for MET_RefFinal(_BDTMedium)
-        self.tool.defineMissingET(
-            True,  # RefEle
-            True,  # RefGamma
-            True,  # RefTau
-            True,  # RefJet
-            True,  # RefMuon
-            True,  # MuonTotal
-            True,  # Soft
-            )
+        if year == 2011:
+            # In 2012, we always rebuild MET from AOD, so the RefMuon term is
+            # not computed. However, for 2011 data, you should activate the
+            # RefMuon term and fill the term.
+            # These are the terms required for MET_RefFinal(_BDTMedium)
+            self.tool.defineMissingET(
+                True,  # RefEle
+                True,  # RefGamma
+                True,  # RefTau
+                True,  # RefJet
+                True,  # RefMuon
+                True,  # MuonTotal
+                True,  # Soft
+                )
 
         # The threshold below which jets enter the SoftJets term (JES is not applied)
         #self.tool.setSoftJetCut(20e3)
@@ -67,7 +72,6 @@ class METRecalculation(EventFilter):
         self.tool.setVerbosity(self.very_verbose)
 
     def get_met(self):
-
         util = self.tool
         if self.year == 2011:
             if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
@@ -96,13 +100,10 @@ class METRecalculation(EventFilter):
             return util.getMissingET(METUtil.RefFinal)
 
     def passes(self, event):
-
         # reset the METUtility
         self.tool.reset()
-
         # These set up the systematic "SoftTerms_ptHard"
         self.tool.setNvtx(self.tree.nvtxsoftmet)
-
         if self.year == 2012:
             return self.passes_12(event)
         elif self.year == 2011:
@@ -116,15 +117,20 @@ class METRecalculation(EventFilter):
         Always use setJetParameters since they may be recalibrated upstream
         https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         """
+        # Due to the jet weights being encoded slightly differently in 2011
+        # reconstruction, you need to provide one extra argument, i.e. the jet
+        # pT directly from the D3PD, so that the correct jets can be included
+        # in the RefJet term, while soft jets (pT<20) will not be.
         self.tool.setJetParameters(
-            event.jet_pt,
+            event.jet_pt, # recalibrated pT
             self.tree.jet_eta_original,
             self.tree.jet_phi_original,
             event.jet_E,
             event.jet_AntiKt4LCTopo_MET_BDTMedium_wet,
             event.jet_AntiKt4LCTopo_MET_BDTMedium_wpx,
             event.jet_AntiKt4LCTopo_MET_BDTMedium_wpy,
-            event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord)
+            event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord,
+            self.tree.jet_pt_original) # <== extra argument for 2011
 
         #self.tool.setOriJetParameters(self.tree.jet_pt_original)
 
@@ -152,6 +158,7 @@ class METRecalculation(EventFilter):
             event.MET_Muon_Total_Staco_BDTMedium_ety,
             event.MET_Muon_Total_Staco_BDTMedium_sumet)
 
+        # Muons
         # Note that RefMuon is not rebuilt from muons
         # -- it is a calorimeter term.
         self.tool.setMETTerm(
@@ -167,20 +174,16 @@ class METRecalculation(EventFilter):
             event.MET_RefGamma_BDTMedium_ety,
             event.MET_RefGamma_BDTMedium_sumet)
 
-        """
-        self.tool.setMETTerm(
-            METUtil.SoftJets,
-            event.MET_SoftJets_BDTMedium_etx,
-            event.MET_SoftJets_BDTMedium_ety,
-            event.MET_SoftJets_BDTMedium_sumet)
-        """
-
         # Soft terms
+        # In most 2011 samples, the SoftJets and CellOut components of the MET
+        # are provided as separate pieces, but we since moved to a combined
+        # treatment of both. Hence, you will need to manually sum the two
+        # components when providing them to METUtility, like so:
         self.tool.setMETTerm(
             METUtil.SoftTerms,
-            event.MET_CellOut_BDTMedium_etx,
-            event.MET_CellOut_BDTMedium_ety,
-            event.MET_CellOut_BDTMedium_sumet)
+            event.MET_SoftJets_BDTMedium_etx + event.MET_CellOut_BDTMedium_etx,
+            event.MET_SoftJets_BDTMedium_ety + event.MET_CellOut_BDTMedium_ety,
+            event.MET_SoftJets_BDTMedium_sumet + event.MET_CellOut_BDTMedium_sumet)
 
         MET = self.get_met()
 
@@ -212,32 +215,33 @@ class METRecalculation(EventFilter):
         return True
 
     def passes_12(self, event):
-        # AntiTau MET calculation from Alex Tuna
-        # If a selected tau matches a JVF jet, clear the corresponding jet weights
-        # and set the tau weights to 1.0.
-        # This must be applied after the tau selection but before the jet selection
-        assert(len(event.taus) == 2)
-        for tau in event.taus:
-            # event.taus only contains selected taus at this point
-            match = False
-            for jet in event.jets:
-                # event.jets contains all jets
-                # Does this jet match the tau?
-                if dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.4:
-                    match = True
-                    # Loop through subjets to find the JVF jets used for STVF
-                    for k in xrange(jet.AntiKt4LCTopo_MET_wet.size()):
-                        # If the subjet is a JVF jet, set weight to 0
-                        if jet.AntiKt4LCTopo_MET_statusWord[k] == (0x3300 | 0x0001):
-                            jet.AntiKt4LCTopo_MET_wet[k] = 0.0
-                            jet.AntiKt4LCTopo_MET_wpx[k] = 0.0
-                            jet.AntiKt4LCTopo_MET_wpy[k] = 0.0
-            # If the tau has a matching jet, set the tau weights to 1
-            if match:
-                tau.MET_statusWord[0] = 1
-                tau.MET_wet[0] = 1.0
-                tau.MET_wpx[0] = 1.0
-                tau.MET_wpy[0] = 1.0
+        if self.refantitau:
+            # AntiTau MET calculation from Alex Tuna
+            # If a selected tau matches a JVF jet, clear the corresponding jet weights
+            # and set the tau weights to 1.0.
+            # This must be applied after the tau selection but before the jet selection
+            assert(len(event.taus) == 2)
+            for tau in event.taus:
+                # event.taus only contains selected taus at this point
+                match = False
+                for jet in event.jets:
+                    # event.jets contains all jets
+                    # Does this jet match the tau?
+                    if dR(tau.eta, tau.phi, jet.eta, jet.phi) < 0.4:
+                        match = True
+                        # Loop through subjets to find the JVF jets used for STVF
+                        for k in xrange(jet.AntiKt4LCTopo_MET_wet.size()):
+                            # If the subjet is a JVF jet, set weight to 0
+                            if jet.AntiKt4LCTopo_MET_statusWord[k] == (0x3300 | 0x0001):
+                                jet.AntiKt4LCTopo_MET_wet[k] = 0.0
+                                jet.AntiKt4LCTopo_MET_wpx[k] = 0.0
+                                jet.AntiKt4LCTopo_MET_wpy[k] = 0.0
+                # If the tau has a matching jet, set the tau weights to 1
+                if match:
+                    tau.MET_statusWord[0] = 1
+                    tau.MET_wet[0] = 1.0
+                    tau.MET_wpx[0] = 1.0
+                    tau.MET_wpy[0] = 1.0
 
         # this must be put before setting the jets parameters
         self.tool.setJetPUcode(MissingETTags.JPU_JET_JVFCUT)
@@ -282,14 +286,6 @@ class METRecalculation(EventFilter):
             event.MET_Muon_Total_Staco_etx,
             event.MET_Muon_Total_Staco_ety,
             event.MET_Muon_Total_Staco_sumet)
-
-        # Note that RefMuon is not rebuilt from muons
-        # -- it is a calorimeter term.
-        #self.tool.setMETTerm(
-        #    METUtil.RefMuon,
-        #    event.MET_RefMuon_Staco_etx,
-        #    event.MET_RefMuon_Staco_ety,
-        #    event.MET_RefMuon_Staco_sumet)
 
         # Photons
         self.tool.setMETTerm(
