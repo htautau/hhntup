@@ -59,6 +59,7 @@ class hhskim(ATLASStudent):
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--no-grl', action='store_true', default=False)
         parser.add_argument('--student-verbose', action='store_true', default=False)
+        parser.add_argument('--student-very-verbose', action='store_true', default=False)
         parser.add_argument('--validate', action='store_true', default=False)
         parser.add_argument('--redo-selection', action='store_true', default=False)
         parser.add_argument('--nominal-values', action='store_true', default=False)
@@ -92,6 +93,7 @@ class hhskim(ATLASStudent):
         year = self.metadata.year
         no_grl = self.args.no_grl
         verbose = self.args.student_verbose
+        very_verbose = self.args.student_very_verbose
         validate = self.args.validate
         redo_selection = self.args.redo_selection
         nominal_values = self.args.nominal_values
@@ -304,7 +306,7 @@ class hhskim(ATLASStudent):
                 JetCalibration(
                     datatype=datatype,
                     year=year,
-                    verbose=verbose,
+                    verbose=very_verbose,
                     passthrough=local or nominal_values,
                     count_funcs=count_funcs),
                 # in situ TES shift for 2012 data
@@ -328,7 +330,7 @@ class hhskim(ATLASStudent):
                     datatype=datatype,
                     tree=tree,
                     verbose=verbose,
-                    passthrough=not local or not syst_terms,
+                    passthrough=not syst_terms,
                     count_funcs=count_funcs),
                 LArHole(
                     tree=tree,
@@ -453,6 +455,7 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     refantitau=not nominal_values,
                     verbose=verbose,
+                    very_verbose=very_verbose,
                     count_funcs=count_funcs),
                 TauJetOverlapRemoval(
                     count_funcs=count_funcs),
