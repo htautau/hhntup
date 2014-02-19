@@ -331,8 +331,8 @@ class hhskim(ATLASStudent):
                     passthrough=not local or not syst_terms,
                     count_funcs=count_funcs),
                 LArHole(
-                    datatype=datatype,
                     tree=tree,
+                    passthrough=year > 2011,
                     count_funcs=count_funcs),
                 JetCleaning(
                     datatype=datatype,

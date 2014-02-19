@@ -60,7 +60,6 @@ if not args.skim:
     sys.exit(0)
 
 for skim_name in args.skim:
-
     skim = metadata[skim_name]
     dataset = skim['dataset']
     student = skim['student']
@@ -84,7 +83,7 @@ for skim_name in args.skim:
         opts = ''
         if args.grid_test:
             opts += ' --test'
-        if args.yall:
+        if args.yall or args.local_test:
             opts += ' --yall'
         cmd = SUBMIT_CMD % locals()
 
@@ -94,7 +93,7 @@ for skim_name in args.skim:
     print
     print cmd
     print
-    if args.yall or raw_input("Is this OK? Y/[n] ") == 'Y':
+    if args.yall or args.local_test or raw_input("Is this OK? Y/[n] ") == 'Y':
         try:
             call(cmd, shell=True)
         except KeyboardInterrupt:
