@@ -30,7 +30,6 @@ submitLarge.sh
 submitProcessor.sh
 submitSmall.sh
 higgstautau/lephad/external
-panda.cfg
 *.dot
 *.h5
 *.e*
