@@ -41,7 +41,7 @@ class TauTriggerEfficiency(EventFilter):
             self.tree = tree
 
             if self.year == 11:
-                from externaltools.bundle_2011 import TauTriggerCorrections
+                from externaltools import TauTriggerCorrections
                 base = TauTriggerCorrections.RESOURCE_PATH
 
                 if datatype == datasets.MC:
@@ -77,7 +77,7 @@ class TauTriggerEfficiency(EventFilter):
                     raise ValueError("datatype is not EMBED or MC")
 
             elif self.year == 12:
-                from externaltools.bundle_2012 import TrigTauEfficiency
+                from externaltools import TrigTauEfficiency
                 base = os.path.join(TrigTauEfficiency.RESOURCE_PATH,
                         'benchmark_menu')
 

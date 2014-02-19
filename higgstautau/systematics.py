@@ -25,7 +25,7 @@ from externaltools import JetUncertainties
 from externaltools import JetResolution
 from externaltools import egammaAnalysisUtils
 from externaltools import TauCorrUncert as TCU
-from externaltools.bundle_2012 import JVFUncertaintyTool as JVFUncertaintyTool2012
+from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
 
 # MissingETUtility
 from ROOT import METUtility

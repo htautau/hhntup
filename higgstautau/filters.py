@@ -639,10 +639,10 @@ class EmbeddingCorrections(EventFilter):
 
         if not passthrough:
             self.tree = tree
-            from externaltools.bundle_2012 import EmbeddedCorrections
+            from externaltools import EmbeddedCorrections
             from externaltools import TrigMuonEfficiency
             from externaltools import ElectronEfficiencyCorrection
-            from externaltools.bundle_2012 import HSG4LepLepTriggerSF
+            from externaltools import HSG4LepLepTriggerSF
             from externaltools import MuonEfficiencyCorrections
             self.tool = ROOT.EmbeddedCorrections.Embedded(
                 EmbeddedCorrections.get_resource('2DMaps.root'),
