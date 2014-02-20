@@ -153,7 +153,8 @@ AlpJimWmunuNp0_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107690.AlpJimWmunuNp0_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v23.140219031342,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v23.140219131107,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v23.140219131157]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v23.140219131157,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v23.140220121637]
   file_pattern: '*hadhad.root*'
   id: 107690
   category: mc11c
@@ -1763,7 +1764,8 @@ AlpPyth_Auto_P2011C_ZmumuNp1.mc12a: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpPyth_Auto_P2011C_ZmumuNp1.e1880_s1581_s1586_r3658_r3549_p1344.v23.140219133152,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpPyth_Auto_P2011C_ZmumuNp1.e1880_s1581_s1586_r3658_r3549_p1344.v23.140219170353,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpPyth_Auto_P2011C_ZmumuNp1.e1880_s1581_s1586_r3658_r3549_p1344.v23.140219201524,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpPyth_Auto_P2011C_ZmumuNp1.e1880_s1581_s1586_r3658_r3549_p1344.v23.140220000805]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpPyth_Auto_P2011C_ZmumuNp1.e1880_s1581_s1586_r3658_r3549_p1344.v23.140220000805,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.147114.AlpPyth_Auto_P2011C_ZmumuNp1.e1880_s1581_s1586_r3658_r3549_p1344.v23.140220123439]
   file_pattern: '*hadhad.root*'
   id: 147114
   category: mc12a
@@ -3451,7 +3453,8 @@ Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc12a: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e1982_s1581_s1586_r3658_r3549_p1344.v23.140219133022,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e1982_s1581_s1586_r3658_r3549_p1344.v23.140219170340,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e1982_s1581_s1586_r3658_r3549_p1344.v23.140219201515,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e1982_s1581_s1586_r3658_r3549_p1344.v23.140220000703]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e1982_s1581_s1586_r3658_r3549_p1344.v23.140220000703,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.mc12_8TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e1982_s1581_s1586_r3658_r3549_p1344.v23.140220123458]
   file_pattern: '*hadhad.root*'
   id: 167723
   category: mc12a
@@ -7333,6 +7336,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134916,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219135648,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219171653,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125956,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodC.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035430,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodC.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035644,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodC.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035802,
@@ -7350,6 +7354,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219042045,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219042440,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219171704,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125947,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035427,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035601,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035730,
@@ -7361,6 +7366,8 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040852,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219041205,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134844,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220124914,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125908,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodG.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035415,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodG.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035534,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodG.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035646,
@@ -7370,6 +7377,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035538,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035701,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035852,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125030,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodI.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035415,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodI.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035535,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodI.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035654,
@@ -7387,6 +7395,7 @@ data12-JetTauEtmiss: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040027,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040413,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134530,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125317,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodL.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035431,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodL.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035613]
   file_pattern: '*hadhad.root*'
@@ -7442,7 +7451,8 @@ data12-JetTauEtmiss-B: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134435,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134916,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219135648,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219171653]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219171653,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125956]
   file_pattern: '*hadhad.root*'
   id: periodB
   category: null
@@ -7487,7 +7497,8 @@ data12-JetTauEtmiss-D: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219041831,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219042045,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219042440,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219171704]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219171704,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodD.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125947]
   file_pattern: '*hadhad.root*'
   id: periodD
   category: null
@@ -7512,7 +7523,9 @@ data12-JetTauEtmiss-E: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040703,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040852,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219041205,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134844]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134844,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220124914,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodE.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125908]
   file_pattern: '*hadhad.root*'
   id: periodE
   category: null
@@ -7549,7 +7562,8 @@ data12-JetTauEtmiss-H: !Dataset
   dirs: [/cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035418,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035538,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035701,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035852]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035852,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodH.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125030]
   file_pattern: '*hadhad.root*'
   id: periodH
   category: null
@@ -7594,7 +7608,8 @@ data12-JetTauEtmiss-J: !Dataset
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219035739,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040027,
     /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219040413,
-    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134530]
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140219134530,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.data12_8TeV.periodJ.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443.v23.140220125317]
   file_pattern: '*hadhad.root*'
   id: periodJ
   category: null
