@@ -618,8 +618,7 @@ class Database(dict):
                                                      treename=embed_treename,
                                                      ds=name,
                                                      id=1,
-                                                     # The GRL is the same for both lephad and hadhad analyses
-                                                     grl=None,
+                                                     grl=data_grl,
                                                      dirs=mfs_dirs,
                                                      file_pattern=embed_pattern,
                                                      year=year)
@@ -653,7 +652,7 @@ class Database(dict):
                                                                 treename=embed_treename,
                                                                 ds=period_name,
                                                                 id=1,
-                                                                grl=None,
+                                                                grl=data_grl,
                                                                 dirs=info['dirs'],
                                                                 file_pattern=embed_pattern,
                                                                 year=year)
@@ -682,8 +681,7 @@ class Database(dict):
                                                  treename=embed_treename,
                                                  ds=name,
                                                  id=1,
-                                                 # The GRL is the same for both lephad and hadhad analyses
-                                                 grl=None,
+                                                 grl=data_grl,
                                                  dirs=mfs_dirs,
                                                  file_pattern=embed_pattern,
                                                  year=year)
@@ -716,7 +714,7 @@ class Database(dict):
                                                             treename=embed_treename,
                                                             ds=period_name,
                                                             id=1,
-                                                            grl=None,
+                                                            grl=data_grl,
                                                             dirs=info['dirs'],
                                                             file_pattern=embed_pattern,
                                                             year=year)
@@ -765,8 +763,7 @@ class Database(dict):
                                              treename=embed_treename,
                                              ds=name,
                                              id=1,
-                                             # The GRL is the same for both lephad and hadhad analyses
-                                             grl=None,
+                                             grl=data_grl,
                                              dirs=mfs_dirs,
                                              file_pattern=embed_pattern,
                                              year=year)

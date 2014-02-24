@@ -47,9 +47,8 @@ elif args.analysis == 'lh':
     args.versioned = True
     args.name += '_lh'
 
-db = Database(
-        name=args.name,
-        verbose=args.verbose)
+db = Database(name=args.name,
+              verbose=args.verbose)
 
 if args.validate or args.validate_pattern is not None:
     # check for missing events etc...
