@@ -434,13 +434,11 @@ class TauSystematic(ObjectSystematic):
 class TES(TauSystematic):
 
     def __init__(self, is_up,
-                 np=TauCorrUncert.TESUncertainty.FINAL,
-                 datatype=None,
+                 np='TOTAL',
                  matched_state=None,
                  **kwargs):
         super(TES, self).__init__(is_up, **kwargs)
-        self.np = np
-        self.datatype = datatype
+        self.np = getattr(TauCorrUncert.TESUncertainty, np)
         self.matched_state = matched_state
         if self.year == 2011:
             input = TCU.get_resource('TES/mc11.root')
@@ -455,29 +453,16 @@ class TES(TauSystematic):
     def run(self, tau, event):
         # need nominal pT for trigger efficiency correction
         tau._pt_nominal = tau.pt
-
         if self.matched_state is True and not tau.matched:
             return
         elif self.matched_state is False and tau.matched:
             return
-
-        pt = tau.pt
-        eta = tau.eta
-        nProng = tau.nProng
-        # TODO: include 2011 TES in TauCorrUncert and use MeV there also!!!
-        t = TauCorrUncert.TESUncertainty
-        if self.np == t.OTHERS and self.datatype in (datasets.DATA, datasets.EMBED):
-            shift = 0.
-            for np in [t.SHOWERMODEL, t.UE, t.DM]: # exclude CLOSURE manually
-                shift += self.tes_tool.GetTESUncertainty(pt, eta, nProng, np)**2.
-            shift = sqrt(shift)
+        shift = self.tes_tool.GetTESUncertainty(
+            tau.pt, tau.eta, tau.numTrack, self.np)
+        if self.is_up:
+            tau.pt *= 1. + shift
         else:
-            shift = self.tes_tool.GetTESUncertainty(pt, eta, nProng, self.np)
-        if shift < 0:
-            shift = 0
-        if not self.is_up:
-            shift *= -1
-        tau.pt *= 1. + shift
+            tau.pt *= 1. - shift
 
 
 class Systematics(EventFilter):
@@ -486,50 +471,38 @@ class Systematics(EventFilter):
     NONE = METUtil.None
 
     # taus
-    TES_UP = METUtil.TESUp
-    TES_DOWN = METUtil.TESDown
+    # TES 2011
+    TES_TRUE_FINAL_UP = -30000
+    TES_TRUE_FINAL_DOWN = -30001
+    TES_FAKE_FINAL_UP = -30002
+    TES_FAKE_FINAL_DOWN = -30003
+    # TES 2012
+    TES_TRUE_INSITUINTERPOL_UP = -30004
+    TES_TRUE_INSITUINTERPOL_DOWN = -30005
+    TES_TRUE_SINGLEPARTICLEINTERPOL_UP = -30006
+    TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN = -30007
+    TES_TRUE_MODELING_UP = -30008
+    TES_TRUE_MODELING_DOWN = -30009
+    TES_FAKE_TOTAL_UP = -30010
+    TES_FAKE_TOTAL_DOWN = -30011
 
-    TES_TRUE_UP = -30000
-    TES_TRUE_DOWN = -30001
-    TES_FAKE_UP = -30010
-    TES_FAKE_DOWN = -30011
-
-    TES_EOP_UP = -20000
-    TES_EOP_DOWN = -20001
-    TES_CTB_UP = -20010
-    TES_CTB_DOWN = -20011
-    TES_Bias_UP = -20020
-    TES_Bias_DOWN = -20021
-    TES_EM_UP = -20030
-    TES_EM_DOWN = -20031
-    TES_LCW_UP = -20040
-    TES_LCW_DOWN = -20041
-    TES_PU_UP = -20050
-    TES_PU_DOWN = -20051
-    TES_OTHERS_UP = -20060
-    TES_OTHERS_DOWN = -20061
+    TES_TERMS = set([
+        TES_TRUE_FINAL_UP,
+        TES_TRUE_FINAL_DOWN,
+        TES_FAKE_FINAL_UP,
+        TES_FAKE_FINAL_DOWN,
+        TES_TRUE_INSITUINTERPOL_UP = -30004
+        TES_TRUE_INSITUINTERPOL_DOWN = -30005
+        TES_TRUE_SINGLEPARTICLEINTERPOL_UP = -30006
+        TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN = -30007
+        TES_TRUE_MODELING_UP = -30008
+        TES_TRUE_MODELING_DOWN = -30009
+        TES_FAKE_TOTAL_UP = -30010
+        TES_FAKE_TOTAL_DOWN = -30011
+    ])
 
     TER_UP = METUtil.TERUp
     TER_DOWN = METUtil.TERDown
-
-    TES_TERMS = set([
-        TES_UP, TES_DOWN,
-        TES_TRUE_UP, TES_TRUE_DOWN,
-        TES_FAKE_UP, TES_FAKE_DOWN,
-        TES_EOP_UP,
-        TES_EOP_DOWN,
-        TES_CTB_UP,
-        TES_CTB_DOWN,
-        TES_Bias_UP,
-        TES_Bias_DOWN,
-        TES_EM_UP,
-        TES_EM_DOWN,
-        TES_LCW_UP,
-        TES_LCW_DOWN,
-        TES_PU_UP,
-        TES_PU_DOWN,
-        TES_OTHERS_UP,
-        TES_OTHERS_DOWN])
 
     TAU_TERMS = set([TER_UP, TER_DOWN]) | TES_TERMS
 
@@ -604,10 +577,6 @@ class Systematics(EventFilter):
     CER_UP = METUtil.CERUp
     CER_DOWN = METUtil.CERDown
 
-    # deprecated 1.1.0
-    #ALLCLUSTERS_UP = METUtil.AllClustersUp
-    #ALLCLUSTERS_DOWN = METUtil.AllClustersDown
-
     # soft terms
     MET_RESOSOFTTERMS_PTHARD_UP = METUtil.ResoSoftTermsUp_ptHard
     MET_RESOSOFTTERMS_PTHARD_DOWN = METUtil.ResoSoftTermsDown_ptHard
@@ -626,10 +595,6 @@ class Systematics(EventFilter):
     MET_TERMS = set([
         MET_RESOSOFTTERMS_UP, MET_RESOSOFTTERMS_DOWN,
         MET_SCALESOFTTERMS_UP, MET_SCALESOFTTERMS_DOWN])
-
-    # pileup (deprecated 1.1.0)
-    #PILEUP_UP = METUtil.PileupUp
-    #PILEUP_DOWN = METUtil.PileupDown
 
     def __init__(self,
             datatype,
@@ -723,79 +688,61 @@ class Systematics(EventFilter):
                 elif term == Systematics.JER_UP:
                     systematic = JER(True, sys_util=self)
 
-                # Basic TES up and down
-                elif term == Systematics.TES_UP:
+                # TES 2011 true up and down
+                elif term == Systematics.TES_TRUE_FINAL_UP:
                     systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.FINAL)
-                elif term == Systematics.TES_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.FINAL)
-
-                # TES true up and down
-                elif term == Systematics.TES_TRUE_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        np='FINAL',
                         matched_state=True)
-                elif term == Systematics.TES_TRUE_DOWN:
+                elif term == Systematics.TES_TRUE_FINAL_DOWN:
                     systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        np='FINAL',
                         matched_state=True)
 
-                # TES fake up and down
-                elif term == Systematics.TES_FAKE_UP:
+                # TES 2012 true up and down
+                elif term == Systematics.TES_TRUE_INSITUINTERPOL_UP:
                     systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.FINAL,
-                        matched_state=False)
-                elif term == Systematics.TES_FAKE_DOWN:
+                        np='INSITUINTERPOL',
+                        matched_state=True)
+                elif term == Systematics.TES_TRUE_INSITUINTERPOL_DOWN:
                     systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.FINAL,
+                        np='INSITUINTERPOL',
+                        matched_state=True)
+                elif term == Systematics.TES_TRUE_SINGLEPARTICLEINTERPOL_UP:
+                    systematic = TES(True, sys_util=self,
+                        np='SINGLEPARTICLEINTERPOL',
+                        matched_state=True)
+                elif term == Systematics.TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN:
+                    systematic = TES(False, sys_util=self,
+                        np='SINGLEPARTICLEINTERPOL',
+                        matched_state=True)
+                elif term == Systematics.TES_TRUE_MODELING_UP:
+                    systematic = TES(True, sys_util=self,
+                        np='MODELING',
+                        matched_state=True)
+                elif term == Systematics.TES_TRUE_MODELING_DOWN:
+                    systematic = TES(False, sys_util=self,
+                        np='MODELING',
+                        matched_state=True)
+
+                # TES 2011 fake up and down
+                elif term == Systematics.TES_FAKE_FINAL_UP:
+                    systematic = TES(True, sys_util=self,
+                        np='FINAL',
+                        matched_state=False)
+                elif term == Systematics.TES_FAKE_FINAL_DOWN:
+                    systematic = TES(False, sys_util=self,
+                        np='FINAL',
                         matched_state=False)
 
-                # Other TES terms
-                elif term == Systematics.TES_EOP_UP:
+                # TES 2012 fake up and down
+                elif term == Systematics.TES_FAKE_TOTAL_UP:
                     systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.EOP)
-                elif term == Systematics.TES_EOP_DOWN:
+                        np='TOTAL',
+                        matched_state=False)
+                elif term == Systematics.TES_FAKE_TOTAL_DOWN:
                     systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.EOP)
-                elif term == Systematics.TES_CTB_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.CTB)
-                elif term == Systematics.TES_CTB_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.CTB)
-                elif term == Systematics.TES_Bias_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.Bias)
-                elif term == Systematics.TES_Bias_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.Bias)
-                elif term == Systematics.TES_EM_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.EM)
-                elif term == Systematics.TES_EM_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.EM)
-                elif term == Systematics.TES_LCW_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.LCW)
-                elif term == Systematics.TES_LCW_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.LCW)
-                elif term == Systematics.TES_PU_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.PU)
-                elif term == Systematics.TES_PU_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.PU)
-                elif term == Systematics.TES_OTHERS_UP:
-                    systematic = TES(True, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.OTHERS,
-                        datatype=datatype)
-                elif term == Systematics.TES_OTHERS_DOWN:
-                    systematic = TES(False, sys_util=self,
-                        np=TauCorrUncert.TESUncertainty.OTHERS,
-                        datatype=datatype)
+                        np='TOTAL',
+                        matched_state=False)
 
                 # MET terms handled in met.py
                 elif term not in Systematics.MET_TERMS:

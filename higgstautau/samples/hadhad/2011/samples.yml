@@ -1,7 +1,10 @@
 embedded:
     systematics:
-        - TES_UP
-        - TES_DOWN
+        - TES_TRUE_FINAL_UP
+        - TES_TRUE_FINAL_DOWN
+
+        - TES_FAKE_FINAL_UP
+        - TES_FAKE_FINAL_DOWN
     samples:
         - 'embed11-hh-isol-mfsim'
     systematics_samples:
@@ -12,120 +15,156 @@ embedded:
             'embed11-hh-tightisol-mfsim': ISOL_UP
 mc:
     systematics:
-        - TES_UP
-        - TES_DOWN
-        - JES_UP
-        - JES_DOWN
+        - TES_TRUE_FINAL_UP
+        - TES_TRUE_FINAL_DOWN
+
+        - TES_FAKE_FINAL_UP
+        - TES_FAKE_FINAL_DOWN
+
+        #- JES_Statistical_UP
+        #- JES_Statistical_DOWN
+        - JES_Modelling_UP
+        - JES_Modelling_DOWN
+        - JES_Detector_UP
+        - JES_Detector_DOWN
+        #- JES_Mixed_UP
+        #- JES_Mixed_DOWN
+        - JES_EtaModelling_UP
+        - JES_EtaModelling_DOWN
+        - JES_EtaMethod_UP
+        - JES_EtaMethod_DOWN
+        - JES_PURho_UP
+        - JES_PURho_DOWN
+        #- JES_PUPt_UP
+        #- JES_PUPt_DOWN
+        #- JES_PUNPV_UP
+        #- JES_PUNPV_DOWN
+        #- JES_PUMu_UP
+        #- JES_PUMu_DOWN
+        - JES_FlavComp_UP
+        - JES_FlavComp_DOWN
+        - JES_FlavResp_UP
+        - JES_FlavResp_DOWN
+        #- JES_BJet_UP
+        #- JES_BJet_DOWN
+        #- JES_NonClosure_UP
+        #- JES_NonClosure_DOWN
+
         - JER_UP
+        
+        - MET_RESOSOFTTERMS_UP
+        - MET_RESOSOFTTERMS_DOWN
+        - MET_SCALESOFTTERMS_UP
+        - MET_SCALESOFTTERMS_DOWN
     samples:
-        - 'AlpgenJimmyZtautauNp0_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp1_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp2_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp3_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp4_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp5_pt20.mc11c'
+        - 'AlpJimZtautauNp0_pt20.mc11c'
+        - 'AlpJimZtautauNp1_pt20.mc11c'
+        - 'AlpJimZtautauNp2_pt20.mc11c'
+        - 'AlpJimZtautauNp3_pt20.mc11c'
+        - 'AlpJimZtautauNp4_pt20.mc11c'
+        - 'AlpJimZtautauNp5_pt20.mc11c'
         - 'AlpJimZtautauNp0_Mll10to40_pt20.mc11c'
         - 'AlpJimZtautauNp1_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZtautauNp2_Mll10to40_pt20.mc11c'
+        - 'AlpJimZtautauNp2_Mll10to40_pt20.mc11c'
         - 'AlpJimZtautauNp3_Mll10to40_pt20.mc11c'
         - 'AlpJimZtautauNp4_Mll10to40_pt20.mc11c'
         - 'AlpJimZtautauNp5_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp0_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp1_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp2_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp3_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp4_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp5_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp0_Mll10to40_pt20.mc11c'
+        - 'AlpJimZmumuNp0_pt20.mc11c'
+        - 'AlpJimZmumuNp1_pt20.mc11c'
+        - 'AlpJimZmumuNp2_pt20.mc11c'
+        - 'AlpJimZmumuNp3_pt20.mc11c'
+        - 'AlpJimZmumuNp4_pt20.mc11c'
+        - 'AlpJimZmumuNp5_pt20.mc11c'
+        - 'AlpJimZmumuNp0_Mll10to40_pt20.mc11c'
         - 'AlpJimZmumuNp1_Mll10to40_pt20.mc11c'
         - 'AlpJimZmumuNp2_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp3_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZmumuNp4_Mll10to40_pt20.mc11c'
+        - 'AlpJimZmumuNp3_Mll10to40_pt20.mc11c'
+        - 'AlpJimZmumuNp4_Mll10to40_pt20.mc11c'
         - 'AlpJimZmumuNp5_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp0_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp1_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp2_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp3_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp4_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp5_pt20.mc11c'
-        - 'AlpgenJimZeeNp0_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimZeeNp1_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimZeeNp2_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimZeeNp3_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimZeeNp4_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyZeeNp5_Mll10to40_pt20.mc11c'
-        - 'AlpgenJimmyWtaunuNp0_pt20.mc11c'
-        - 'AlpgenJimmyWtaunuNp1_pt20.mc11c'
-        - 'AlpgenJimmyWtaunuNp2_pt20.mc11c'
-        - 'AlpgenJimmyWtaunuNp3_pt20.mc11c'
-        - 'AlpgenJimmyWtaunuNp4_pt20.mc11c'
-        - 'AlpgenJimmyWtaunuNp5_pt20.mc11c'
-        - 'AlpgenJimmyWmunuNp0_pt20.mc11c'
-        - 'AlpgenJimmyWmunuNp1_pt20.mc11c'
-        - 'AlpgenJimmyWmunuNp2_pt20.mc11c'
-        - 'AlpgenJimmyWmunuNp3_pt20.mc11c'
-        - 'AlpgenJimmyWmunuNp4_pt20.mc11c'
-        - 'AlpgenJimmyWmunuNp5_pt20.mc11c'
-        - 'AlpgenJimmyWenuNp0_pt20.mc11c'
-        - 'AlpgenJimmyWenuNp1_pt20.mc11c'
-        - 'AlpgenJimmyWenuNp2_pt20.mc11c'
-        - 'AlpgenJimmyWenuNp3_pt20.mc11c'
-        - 'AlpgenJimmyWenuNp4_pt20.mc11c'
-        - 'AlpgenJimmyWenuNp5_pt20.mc11c'
+        - 'AlpJimZeeNp0_pt20.mc11c'
+        - 'AlpJimZeeNp1_pt20.mc11c'
+        - 'AlpJimZeeNp2_pt20.mc11c'
+        - 'AlpJimZeeNp3_pt20.mc11c'
+        - 'AlpJimZeeNp4_pt20.mc11c'
+        - 'AlpJimZeeNp5_pt20.mc11c'
+        - 'AlpJimZeeNp0_Mll10to40_pt20.mc11c'
+        - 'AlpJimZeeNp1_Mll10to40_pt20.mc11c'
+        - 'AlpJimZeeNp2_Mll10to40_pt20.mc11c'
+        - 'AlpJimZeeNp3_Mll10to40_pt20.mc11c'
+        - 'AlpJimZeeNp4_Mll10to40_pt20.mc11c'
+        - 'AlpJimZeeNp5_Mll10to40_pt20.mc11c'
+        - 'AlpJimWtaunuNp0_pt20.mc11c'
+        - 'AlpJimWtaunuNp1_pt20.mc11c'
+        - 'AlpJimWtaunuNp2_pt20.mc11c'
+        - 'AlpJimWtaunuNp3_pt20.mc11c'
+        - 'AlpJimWtaunuNp4_pt20.mc11c'
+        - 'AlpJimWtaunuNp5_pt20.mc11c'
+        - 'AlpJimWmunuNp0_pt20.mc11c'
+        - 'AlpJimWmunuNp1_pt20.mc11c'
+        - 'AlpJimWmunuNp2_pt20.mc11c'
+        - 'AlpJimWmunuNp3_pt20.mc11c'
+        - 'AlpJimWmunuNp4_pt20.mc11c'
+        - 'AlpJimWmunuNp5_pt20.mc11c'
+        - 'AlpJimWenuNp0_pt20.mc11c'
+        - 'AlpJimWenuNp1_pt20.mc11c'
+        - 'AlpJimWenuNp2_pt20.mc11c'
+        - 'AlpJimWenuNp3_pt20.mc11c'
+        - 'AlpJimWenuNp4_pt20.mc11c'
+        - 'AlpJimWenuNp5_pt20.mc11c'
 
-        - 'st_schan_Powheg_Pythia_P2011C'
+        - 'st_schan_Pow_Pyth_P2011C'
         - 'st_tchan_enu_AcerMC.mc11c'
         - 'st_tchan_munu_AcerMC.mc11c'
         - 'st_tchan_taunu_AcerMC.mc11c'
-        - 'TTbar_PowHeg_Pythia_P2011C.mc11c'
-        - 'TTbar_FullHad_PowHeg_Pythia_P2011C.mc11c'
-        - 'st_Wtchan_incl_DR_PowHeg_Pythia_P2011C.mc11c'
+        - 'TTbar_Pow_Pyth_P2011C.mc11c'
+        - 'TTbar_FullHad_Pow_Pyth_P2011C.mc11c'
+        - 'st_Wtchan_incl_DR_Pow_Pyth_P2011C.mc11c'
         
-        - 'ZZ_Herwig.mc11c'
-        - 'WZ_Herwig.mc11c'
-        - 'WW_Herwig.mc11c'
+        - 'ZZ_Her.mc11c'
+        - 'WZ_Her.mc11c'
+        - 'WW_Her.mc11c'
         
-        - 'PowHegPythia_ggH100_tautauhh.mc11c'
-        - 'PowHegPythia_ggH105_tautauhh.mc11c'
-        - 'PowHegPythia_ggH110_tautauhh.mc11c'
-        - 'PowHegPythia_ggH115_tautauhh.mc11c'
-        - 'PowHegPythia_ggH120_tautauhh.mc11c'
-        - 'PowHegPythia_ggH125_tautauhh.mc11c'
-        - 'PowHegPythia_ggH130_tautauhh.mc11c'
-        - 'PowHegPythia_ggH135_tautauhh.mc11c'
-        - 'PowHegPythia_ggH140_tautauhh.mc11c'
-        - 'PowHegPythia_ggH145_tautauhh.mc11c'
-        - 'PowHegPythia_ggH150_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH100_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH105_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH110_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH115_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH120_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH125_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH130_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH135_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH140_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH145_tautauhh.mc11c'
-        - 'PowHegPythia_VBFH150_tautauhh.mc11c'
-        - 'PythiaWH100_tautauhh.mc11c'
-        - 'PythiaWH105_tautauhh.mc11c'
-        - 'PythiaWH110_tautauhh.mc11c'
-        - 'PythiaWH115_tautauhh.mc11c'
-        - 'PythiaWH120_tautauhh.mc11c'
-        - 'PythiaWH125_tautauhh.mc11c'
-        - 'PythiaWH130_tautauhh.mc11c'
-        - 'PythiaWH135_tautauhh.mc11c'
-        - 'PythiaWH140_tautauhh.mc11c'
-        - 'PythiaWH145_tautauhh.mc11c'
-        - 'PythiaWH150_tautauhh.mc11c'
-        - 'PythiaZH100_tautauhh.mc11c'
-        - 'PythiaZH105_tautauhh.mc11c'
-        - 'PythiaZH110_tautauhh.mc11c'
-        - 'PythiaZH115_tautauhh.mc11c'
-        - 'PythiaZH120_tautauhh.mc11c'
-        - 'PythiaZH125_tautauhh.mc11c'
-        - 'PythiaZH130_tautauhh.mc11c'
-        - 'PythiaZH135_tautauhh.mc11c'
-        - 'PythiaZH140_tautauhh.mc11c'
-        - 'PythiaZH145_tautauhh.mc11c'
-        - 'PythiaZH150_tautauhh.mc11c'
+        - 'PowPyth_ggH100_tautauhh.mc11c'
+        - 'PowPyth_ggH105_tautauhh.mc11c'
+        - 'PowPyth_ggH110_tautauhh.mc11c'
+        - 'PowPyth_ggH115_tautauhh.mc11c'
+        - 'PowPyth_ggH120_tautauhh.mc11c'
+        - 'PowPyth_ggH125_tautauhh.mc11c'
+        - 'PowPyth_ggH130_tautauhh.mc11c'
+        - 'PowPyth_ggH135_tautauhh.mc11c'
+        - 'PowPyth_ggH140_tautauhh.mc11c'
+        - 'PowPyth_ggH145_tautauhh.mc11c'
+        - 'PowPyth_ggH150_tautauhh.mc11c'
+        - 'PowPyth_VBFH100_tautauhh.mc11c'
+        - 'PowPyth_VBFH105_tautauhh.mc11c'
+        - 'PowPyth_VBFH110_tautauhh.mc11c'
+        - 'PowPyth_VBFH115_tautauhh.mc11c'
+        - 'PowPyth_VBFH120_tautauhh.mc11c'
+        - 'PowPyth_VBFH125_tautauhh.mc11c'
+        - 'PowPyth_VBFH130_tautauhh.mc11c'
+        - 'PowPyth_VBFH135_tautauhh.mc11c'
+        - 'PowPyth_VBFH140_tautauhh.mc11c'
+        - 'PowPyth_VBFH145_tautauhh.mc11c'
+        - 'PowPyth_VBFH150_tautauhh.mc11c'
+        - 'PythWH100_tautauhh.mc11c'
+        - 'PythWH105_tautauhh.mc11c'
+        - 'PythWH110_tautauhh.mc11c'
+        - 'PythWH115_tautauhh.mc11c'
+        - 'PythWH120_tautauhh.mc11c'
+        - 'PythWH125_tautauhh.mc11c'
+        - 'PythWH130_tautauhh.mc11c'
+        - 'PythWH135_tautauhh.mc11c'
+        - 'PythWH140_tautauhh.mc11c'
+        - 'PythWH145_tautauhh.mc11c'
+        - 'PythWH150_tautauhh.mc11c'
+        - 'PythZH100_tautauhh.mc11c'
+        - 'PythZH105_tautauhh.mc11c'
+        - 'PythZH110_tautauhh.mc11c'
+        - 'PythZH115_tautauhh.mc11c'
+        - 'PythZH120_tautauhh.mc11c'
+        - 'PythZH125_tautauhh.mc11c'
+        - 'PythZH130_tautauhh.mc11c'
+        - 'PythZH135_tautauhh.mc11c'
+        - 'PythZH140_tautauhh.mc11c'
+        - 'PythZH145_tautauhh.mc11c'
+        - 'PythZH150_tautauhh.mc11c'

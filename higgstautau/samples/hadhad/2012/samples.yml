@@ -1,25 +1,14 @@
 embedded:
     systematics:
-        #- TES_UP
-        #- TES_DOWN
-        - TES_TRUE_UP
-        - TES_TRUE_DOWN
-        - TES_FAKE_UP
-        - TES_FAKE_DOWN
-        #- TES_EOP_UP
-        #- TES_EOP_DOWN
-        #- TES_CTB_UP
-        #- TES_CTB_DOWN
-        #- TES_Bias_UP
-        #- TES_Bias_DOWN
-        #- TES_EM_UP
-        #- TES_EM_DOWN
-        #- TES_LCW_UP
-        #- TES_LCW_DOWN
-        #- TES_PU_UP
-        #- TES_PU_DOWN
-        #- TES_OTHERS_UP
-        #- TES_OTHERS_DOWN
+        - TES_TRUE_INSITUINTERPOL_UP
+        - TES_TRUE_INSITUINTERPOL_DOWN
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_UP
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
+        - TES_TRUE_MODELING_UP
+        - TES_TRUE_MODELING_DOWN
+
+        - TES_FAKE_TOTAL_UP
+        - TES_FAKE_TOTAL_DOWN
     samples:
         - 'embed12-HH-IM'
     systematics_samples:
@@ -29,6 +18,16 @@ embedded:
             # ISOL systematics included in nominal sample
 mc:
     systematics:
+        - TES_TRUE_INSITUINTERPOL_UP
+        - TES_TRUE_INSITUINTERPOL_DOWN
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_UP
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
+        - TES_TRUE_MODELING_UP
+        - TES_TRUE_MODELING_DOWN
+
+        - TES_FAKE_TOTAL_UP
+        - TES_FAKE_TOTAL_DOWN
+
         #- JES_Statistical_UP
         #- JES_Statistical_DOWN
         - JES_Modelling_UP
@@ -57,81 +56,64 @@ mc:
         #- JES_BJet_DOWN
         #- JES_NonClosure_UP
         #- JES_NonClosure_DOWN
+        
         - JER_UP
+
         - JVF_UP
         - JVF_DOWN
-        #- TES_UP
-        #- TES_DOWN
-        - TES_TRUE_UP
-        - TES_TRUE_DOWN
-        - TES_FAKE_UP
-        - TES_FAKE_DOWN
-        #- TES_EOP_UP
-        #- TES_EOP_DOWN
-        #- TES_CTB_UP
-        #- TES_CTB_DOWN
-        #- TES_Bias_UP
-        #- TES_Bias_DOWN
-        #- TES_EM_UP
-        #- TES_EM_DOWN
-        #- TES_LCW_UP
-        #- TES_LCW_DOWN
-        #- TES_PU_UP
-        #- TES_PU_DOWN
-        #- TES_OTHERS_UP
-        #- TES_OTHERS_DOWN
+
         - MET_RESOSOFTTERMS_UP
         - MET_RESOSOFTTERMS_DOWN
         - MET_SCALESOFTTERMS_UP
         - MET_SCALESOFTTERMS_DOWN
     samples:
-        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp0.mc12a'
-        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp1.mc12a'
-        - 'AlpgenPythia_AUET2CTEQ6L1_WqqbarNp2.mc12a'
-        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
-        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
-        - 'AcerMCPythia_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp0.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp1.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp2.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp3.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp4.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WenuNp5.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp0.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp1.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp2.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp3.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp4.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WmunuNp5.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp0.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp1.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp2.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp3.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp4.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_WtaunuNp5.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp0.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp1.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp2.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp3.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp4.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZeeNp5.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp0.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp1.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp2.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp3.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp4.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZmumuNp5.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp0.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp1.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp2.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp3.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp4.mc12a'
-        - 'AlpgenJimmy_AUET2CTEQ6L1_ZtautauNp5.mc12a'
-        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp0.mc12a'
-        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp1.mc12a'
-        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp2.mc12a'
-        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp3.mc12a'
-        #- 'AlpgenJimmy_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp4.mc12a'
+        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
+        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
+        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WenuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WenuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WenuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WenuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WenuNp4.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WenuNp5.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WmunuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WmunuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WmunuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WmunuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WmunuNp4.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WmunuNp5.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WtaunuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WtaunuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WtaunuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WtaunuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WtaunuNp4.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WtaunuNp5.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZeeNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZeeNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZeeNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZeeNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZeeNp4.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZeeNp5.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZmumuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZmumuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZmumuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZmumuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZmumuNp4.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZmumuNp5.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZtautauNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZtautauNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZtautauNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZtautauNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZtautauNp4.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_ZtautauNp5.mc12a'
+        #- 'AlpJim_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp0.mc12a'
+        #- 'AlpJim_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp1.mc12a'
+        #- 'AlpJim_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp2.mc12a'
+        #- 'AlpJim_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp3.mc12a'
+        #- 'AlpJim_Auto_AUET2CTEQ6L1_VBF_ATau_ZtautauNp4.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'
@@ -150,69 +132,69 @@ mc:
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmenuenu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmenumunu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmenutaunu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmmunuenu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmmunumunu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmmunutaunu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmtaunuenu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmtaunumunu.mc12a'
-        - 'gg2wwJimmy_AUET2CT10_WpWmtaunutaunu.mc12a'
-        - 'Herwig_AUET2CTEQ6L1_WW.mc12a'
-        - 'Herwig_AUET2CTEQ6L1_WZ.mc12a'
-        - 'Herwig_AUET2CTEQ6L1_ZZ.mc12a'
-        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWenu.mc12a'
-        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWmunu.mc12a'
-        - 'McAtNloJimmy_AUET2CT10_SingleTopSChanWtaunu.mc12a'
-        - 'McAtNloJimmy_AUET2CT10_SingleTopWtChanIncl.mc12a'
-        #- 'McAtNloJimmy_AUET2CT10_ttbar_allhad.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmenutaunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmmunuenu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmmunumunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmmunutaunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunuenu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunumunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc12a'
+        - 'Her_AUET2CTEQ6L1_WW.mc12a'
+        - 'Her_AUET2CTEQ6L1_WZ.mc12a'
+        - 'Her_AUET2CTEQ6L1_ZZ.mc12a'
+        - 'McAtNloJim_AUET2CT10_SingleTopSChanWenu.mc12a'
+        - 'McAtNloJim_AUET2CT10_SingleTopSChanWmunu.mc12a'
+        - 'McAtNloJim_AUET2CT10_SingleTopSChanWtaunu.mc12a'
+        - 'McAtNloJim_AUET2CT10_SingleTopWtChanIncl.mc12a'
+        #- 'McAtNloJim_AUET2CT10_ttbar_allhad.mc12a'
         #- 'McAtNloJim_CT10_ttbar_LeptonFilter.mc12a'
-        - 'PowhegPythia_P2011C_ttbar.mc12a'
-        - 'TTbar_MT1725_allhad_PowHeg_Pythia_P2011C.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH100_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH105_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH110_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH115_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH120_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH125_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH130_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH135_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH140_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH145_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_ggH150_tautauhh.mc12a'
-        - 'McAtNloJimmy_AUET2CT10_ggH125_tautau.mc12a'
-        - 'PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH100_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH105_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH110_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH115_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH120_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH125_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH130_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH135_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH140_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH145_tautauhh.mc12a'
-        - 'PowHegPythia8_AU2CT10_VBFH150_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH100_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH105_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH110_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH115_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH120_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH125_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH130_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH135_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH140_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH145_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_WH150_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH100_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH105_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH110_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH115_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH120_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH125_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH130_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH135_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH140_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH145_tautauhh.mc12a'
-        - 'Pythia8_AU2CTEQ6L1_ZH150_tautauhh.mc12a'
+        - 'PowhegPyth_P2011C_ttbar.mc12a'
+        - 'TTbar_MT1725_allhad_Pow_Pyth_P2011C.mc12a'
+        - 'PowPyth8_AU2CT10_ggH100_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH105_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH110_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH115_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH120_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH130_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH135_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH140_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH145_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH150_tautauhh.mc12a'
+        - 'McAtNloJim_AUET2CT10_ggH125_tautau.mc12a'
+        - 'PowhegJim_AUET2CT10_ggH125_tautauInclusive.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH100_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH105_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH110_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH115_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH120_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH130_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH135_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH140_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH145_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH150_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH100_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH105_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH110_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH115_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH120_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH125_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH130_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH135_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH140_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH145_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH150_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH100_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH105_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH110_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH115_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH120_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH125_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH130_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH135_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH140_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH145_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH150_tautauhh.mc12a'
