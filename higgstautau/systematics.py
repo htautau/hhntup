@@ -336,6 +336,7 @@ class JVF(JetSystematic):
 class JER(JetSystematic):
 
     def __init__(self, is_up, **kwargs):
+        super(JER, self).__init__(is_up, **kwargs)
         # Tag assumed: JetResolution-01-00-00
         if self.year == 2011:
             self.jer_tool = JERProvider(
@@ -352,7 +353,6 @@ class JER(JetSystematic):
         # TRandom3 is generally considered safely usable.
         # Also note that ROOT's gRandom calls TRandom3.
         self.jetrandom = ROOT.TRandom3()
-        super(JER, self).__init__(is_up, **kwargs)
 
     @JetSystematic.set
     def run(self, jet, event):
