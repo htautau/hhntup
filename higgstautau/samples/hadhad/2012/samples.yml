@@ -67,13 +67,6 @@ mc:
         - MET_SCALESOFTTERMS_UP
         - MET_SCALESOFTTERMS_DOWN
     samples:
-        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
-        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
-        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
-        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
-        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
-        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
-        
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
         - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.mc12a'
@@ -129,6 +122,18 @@ mc:
         - 'AlpPyth_Auto_P2011C_WtaunuNp3.mc12a'
         - 'AlpPyth_Auto_P2011C_WtaunuNp4.mc12a'
         - 'AlpPyth_Auto_P2011C_WtaunuNp5incl.mc12a'
+        
+        - 'Her_AUET2CTEQ6L1_WZ.mc12a'
+        - 'Her_AUET2CTEQ6L1_ZZ.mc12a'
+   
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp3.mc12a'
 
         - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc12a'
@@ -139,17 +144,23 @@ mc:
         - 'gg2wwJim_AUET2CT10_WpWmtaunuenu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmtaunumunu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc12a'
-        - 'Her_AUET2CTEQ6L1_WW.mc12a'
-        - 'Her_AUET2CTEQ6L1_WZ.mc12a'
-        - 'Her_AUET2CTEQ6L1_ZZ.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWenu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWmunu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWtaunu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopWtChanIncl.mc12a'
-        #- 'McAtNloJim_AUET2CT10_ttbar_allhad.mc12a'
-        #- 'McAtNloJim_CT10_ttbar_LeptonFilter.mc12a'
+
+        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
+        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
+        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
+
+        - 'Sherpa_CT10_Ztoee.mc12a'
+        - 'Sherpa_CT10_Ztomm.mc12a'
+        - 'Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc12a'
+        
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
+        - 'PowhegPyth_P2011C_st_schan_lep.mc12a'
+        - 'PowhegPyth_P2011C_st_Wtchan_incl_DR.mc12a'
         - 'PowhegPyth_P2011C_ttbar.mc12a'
         - 'TTbar_MT1725_allhad_Pow_Pyth_P2011C.mc12a'
+
         - 'PowPyth8_AU2CT10_ggH100_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_ggH105_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_ggH110_tautauhh.mc12a'
@@ -161,8 +172,8 @@ mc:
         - 'PowPyth8_AU2CT10_ggH140_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_ggH145_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_ggH150_tautauhh.mc12a'
-        - 'McAtNloJim_AUET2CT10_ggH125_tautau.mc12a'
-        - 'PowhegJim_AUET2CT10_ggH125_tautauInclusive.mc12a'
+        #- 'McAtNloJim_AUET2CT10_ggH125_tautau.mc12a'
+        #- 'PowhegJim_AUET2CT10_ggH125_tautauInclusive.mc12a'
         - 'PowPyth8_AU2CT10_VBFH100_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_VBFH105_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_VBFH110_tautauhh.mc12a'

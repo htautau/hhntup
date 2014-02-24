@@ -68,6 +68,10 @@ ewk:
         - 'AlpPyth_Auto_P2011C_WtaunuNp3.mc12a'
         - 'AlpPyth_Auto_P2011C_WtaunuNp4.mc12a'
         - 'AlpPyth_Auto_P2011C_WtaunuNp5incl.mc12a'
+
+        - 'Sherpa_CT10_Ztoee2JetsEW1JetQCD15GeVM40_min_n_tchannels.mc12a'
+        - 'Sherpa_CT10_Ztomm2JetsEW1JetQCD15GeVM40_min_n_tchannels.mc12a'
+        - 'Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc12a'
 top:
     name: Top
     latex: Top
@@ -76,13 +80,8 @@ top:
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWenu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWmunu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWtaunu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopWtChanIncl.mc12a'
-        
-        #- 'McAtNloJim_AUET2CT10_ttbar_allhad.mc12a'
-        #- 'McAtNloJim_CT10_ttbar_LeptonFilter.mc12a'
+        - 'PowPyth_P2011C_st_schan_lep.mc12a'
+        - 'PowPyth_P2011C_st_Wtchan_incl_DR.mc12a'
         - 'PowPyth_P2011C_ttbar.mc12a'
         - 'TTbar_MT1725_allhad_Pow_Pyth_P2011C.mc12a'
 diboson:
@@ -90,10 +89,18 @@ diboson:
     latex: Diboson
     root: Diboson
     samples:
-        - 'Her_AUET2CTEQ6L1_WW.mc12a'
         - 'Her_AUET2CTEQ6L1_WZ.mc12a'
         - 'Her_AUET2CTEQ6L1_ZZ.mc12a'
         
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp3.mc12a'
+
         - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmenutaunu.mc12a'
@@ -154,20 +161,23 @@ others:
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWenu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWmunu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopSChanWtaunu.mc12a'
-        - 'McAtNloJim_AUET2CT10_SingleTopWtChanIncl.mc12a'
-
-        #- 'McAtNloJim_AUET2CT10_ttbar_allhad.mc12a'
-        #- 'McAtNloJim_CT10_ttbar_LeptonFilter.mc12a'
+        - 'PowPyth_P2011C_st_schan_lep.mc12a'
+        - 'PowPyth_P2011C_st_Wtchan_incl_DR.mc12a'
         - 'PowPyth_P2011C_ttbar.mc12a'
         - 'TTbar_MT1725_allhad_Pow_Pyth_P2011C.mc12a'
         
-        - 'Her_AUET2CTEQ6L1_WW.mc12a'
         - 'Her_AUET2CTEQ6L1_WZ.mc12a'
         - 'Her_AUET2CTEQ6L1_ZZ.mc12a'
-    
+   
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp3.mc12a'
+
         - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmenutaunu.mc12a'
@@ -181,3 +191,7 @@ others:
         - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
         - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
         - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
+
+        - 'Sherpa_CT10_Ztoee.mc12a'
+        - 'Sherpa_CT10_Ztomm.mc12a'
+        - 'Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc12a'
