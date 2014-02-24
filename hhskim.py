@@ -111,7 +111,6 @@ class hhskim(ATLASStudent):
         count_funcs = {}
 
         if datatype in (datasets.MC, datasets.EMBED):
-
             def mc_weight_count(event):
                 return event.mc_event_weight
 
@@ -411,10 +410,12 @@ class hhskim(ATLASStudent):
                     year=year,
                     datatype=datatype,
                     tree=tree,
-                    tes_up_systematic=(self.args.syst_terms and
-                        (Systematics.TES_UP in self.args.syst_terms)),
-                    tes_down_systematic=(self.args.syst_terms and
-                        (Systematics.TES_DOWN in self.args.syst_terms)),
+                    tes_up=(self.args.syst_terms and
+                        (Systematics.TES_FAKE_TOTAL_UP in self.args.syst_terms or
+                         Systematics.TES_FAKE_FINAL_UP in self.args.syst_terms)),
+                    tes_down=(self.args.syst_terms and
+                        (Systematics.TES_FAKE_TOTAL_DOWN in self.args.syst_terms or
+                         Systematics.TES_FAKE_FINAL_DOWN in self.args.syst_terms)),
                     passthrough=datatype in (datasets.DATA, datasets.EMBED),
                     count_funcs=count_funcs),
                 ggFReweighting(

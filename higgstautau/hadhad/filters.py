@@ -288,15 +288,12 @@ class TauIDScaleFactors(EventFilter):
 class TauFakeRateScaleFactors(EventFilter):
 
     def __init__(self, year, datatype, tree,
-                 tes_up_systematic=False, tes_down_systematic=False,
+                 tes_up=False, tes_down=False,
                  passthrough=False, **kwargs):
-        self.tes_up = tes_up_systematic
-        self.tes_down = tes_down_systematic
-        if tes_up_systematic is None:
-            self.tes_up = False
-        if tes_down_systematic is None:
-            self.tes_down = False
-
+        self.tes_up = tes_up
+        self.tes_down = tes_down
+        log.info("TauFakeRateScaleFactors: TES UP {0}".format(tes_up))
+        log.info("TauFakeRateScaleFactors: TES DOWN {0}".format(tes_down))
         if not passthrough:
             self.year = year % 1000
             self.datatype = datatype
