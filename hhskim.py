@@ -57,7 +57,6 @@ class hhskim(ATLASStudent):
         parser = ArgumentParser()
         parser.add_argument('--local', action='store_true', default=False)
         parser.add_argument('--syst-terms', default=None)
-        parser.add_argument('--no-grl', action='store_true', default=False)
         parser.add_argument('--student-verbose', action='store_true', default=False)
         parser.add_argument('--student-very-verbose', action='store_true', default=False)
         parser.add_argument('--validate', action='store_true', default=False)
@@ -91,7 +90,6 @@ class hhskim(ATLASStudent):
         syst_terms = self.args.syst_terms
         datatype = self.metadata.datatype
         year = self.metadata.year
-        no_grl = self.args.no_grl
         verbose = self.args.student_verbose
         very_verbose = self.args.student_very_verbose
         validate = self.args.validate
@@ -247,7 +245,7 @@ class hhskim(ATLASStudent):
                 GRLFilter(
                     self.grl,
                     passthrough=(
-                        no_grl or datatype not in (datasets.DATA, datasets.EMBED)),
+                        local or (datatype not in (datasets.DATA, datasets.EMBED))),
                     count_funcs=count_funcs),
                 CoreFlags(
                     passthrough=local,
@@ -310,7 +308,7 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 # in situ TES shift for 2012 data
                 TauEnergyShift(
-                    passthrough=datatype != datasets.DATA or year < 2012 or nominal_values,
+                    passthrough=local or datatype != datasets.DATA or year < 2012 or nominal_values,
                     count_funcs=count_funcs),
                 # truth matching must come before systematics due to
                 # TES_TRUE/FAKE
