@@ -145,9 +145,9 @@ mc:
         - 'gg2wwJim_AUET2CT10_WpWmtaunumunu.mc12a'
         - 'gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc12a'
 
-        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
-        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
-        - 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
+        #- 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
+        #- 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
+        #- 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
 
         - 'Sherpa_CT10_Ztoee.mc12a'
         - 'Sherpa_CT10_Ztomm.mc12a'
