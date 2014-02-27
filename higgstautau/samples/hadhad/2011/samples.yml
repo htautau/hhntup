@@ -31,10 +31,13 @@ mc:
         #- JES_Mixed_DOWN
         - JES_EtaModelling_UP
         - JES_EtaModelling_DOWN
-        - JES_EtaMethod_UP
-        - JES_EtaMethod_DOWN
-        - JES_PURho_UP
-        - JES_PURho_DOWN
+        
+        # NOT FOR 7TeV???
+        #- JES_EtaMethod_UP
+        #- JES_EtaMethod_DOWN
+        #- JES_PURho_UP
+        #- JES_PURho_DOWN
+
         #- JES_PUPt_UP
         #- JES_PUPt_DOWN
         #- JES_PUNPV_UP
