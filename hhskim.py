@@ -68,7 +68,6 @@ class hhskim(ATLASStudent):
             args.syst_terms = set([
                 eval('Systematics.%s' % term) for term in
                 args.syst_terms.split(',')])
-
         if args.local:
             def merge(inputs, output, metadata):
                 # merge output trees

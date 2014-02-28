@@ -73,31 +73,20 @@ class METRecalculation(EventFilter):
 
     def get_met(self):
         util = self.tool
-        if self.year == 2011:
-            if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ScaleSoftTermsUp)
-            elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ScaleSoftTermsDown)
-            elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ResoSoftTermsUp)
-            elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
-                return util.getMissingET(METUtil.RefFinal, METUtil.ResoSoftTermsDown)
-            return util.getMissingET(METUtil.RefFinal)
-        elif self.year == 2012:
-            multisyst = METUtil.MultiSyst()
-            if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
-                multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_UP)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
-                multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_DOWN)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
-                multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_UP)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
-                multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_DOWN)
-                return util.getMissingET(METUtil.RefFinal, multisyst)
-            return util.getMissingET(METUtil.RefFinal)
+        multisyst = METUtil.MultiSyst()
+        if Systematics.MET_SCALESOFTTERMS_UP in self.terms:
+            multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_UP)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        elif Systematics.MET_SCALESOFTTERMS_DOWN in self.terms:
+            multisyst.setSyst(Systematics.MET_SCALESOFTTERMS_DOWN)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        elif Systematics.MET_RESOSOFTTERMS_UP in self.terms:
+            multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_UP)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        elif Systematics.MET_RESOSOFTTERMS_DOWN in self.terms:
+            multisyst.setSyst(Systematics.MET_RESOSOFTTERMS_DOWN)
+            return util.getMissingET(METUtil.RefFinal, multisyst)
+        return util.getMissingET(METUtil.RefFinal)
 
     def passes(self, event):
         # reset the METUtility
