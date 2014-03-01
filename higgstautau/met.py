@@ -119,8 +119,6 @@ class METRecalculation(EventFilter):
             event.jet_AntiKt4LCTopo_MET_BDTMedium_statusWord,
             self.tree.jet_pt_original) # <== extra argument for 2011
 
-        #self.tool.setOriJetParameters(self.tree.jet_pt_original)
-
         # Taus
         self.tool.setTauParameters(
             event.tau_pt,
@@ -204,9 +202,9 @@ class METRecalculation(EventFilter):
     def passes_12(self, event):
         if self.refantitau:
             # AntiTau MET calculation from Alex Tuna
-            # If a selected tau matches a JVF jet, clear the corresponding jet weights
-            # and set the tau weights to 1.0.
-            # This must be applied after the tau selection but before the jet selection
+            # If a selected tau matches a JVF jet, clear the corresponding jet
+            # weights and set the tau weights to 1.0. This must be applied
+            # after the tau selection but before the jet selection
             assert(len(event.taus) == 2)
             for tau in event.taus:
                 # event.taus only contains selected taus at this point
@@ -233,11 +231,9 @@ class METRecalculation(EventFilter):
         # this must be put before setting the jets parameters
         self.tool.setJetPUcode(MissingETTags.JPU_JET_JVFCUT)
 
-        """
-        JETS
-        Always use setJetParameters since they may be recalibrated upstream
-        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
-        """
+        # JETS
+        # Always use setJetParameters since they may be recalibrated upstream
+        # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         self.tool.setJetParameters(
             event.jet_pt,
             self.tree.jet_eta_original,
@@ -247,8 +243,6 @@ class METRecalculation(EventFilter):
             event.jet_AntiKt4LCTopo_MET_wpx,
             event.jet_AntiKt4LCTopo_MET_wpy,
             event.jet_AntiKt4LCTopo_MET_statusWord)
-
-        #self.tool.setOriJetParameters(event.jet_pt)
 
         # Taus
         self.tool.setTauParameters(
