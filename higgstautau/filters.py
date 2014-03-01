@@ -12,6 +12,7 @@ from .corrections import reweight_ggf
 from .units import GeV
 from . import jetcleaning
 from . import utils
+from . import log; log = log[__name__]
 
 from goodruns import GRL
 
