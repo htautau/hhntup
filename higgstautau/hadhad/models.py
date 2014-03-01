@@ -316,8 +316,8 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
             #    jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
 
             tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
-            #tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
-            #                                 jet2.fourvect_boosted.Eta())
+            #tree.eta_product_jets_boosted = (
+            #    jet1.fourvect_boosted.Eta() * jet2.fourvect_boosted.Eta())
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
