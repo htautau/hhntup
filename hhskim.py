@@ -1,9 +1,14 @@
+# Author: Noel Dawe
 import ROOT
 
 import os
 import math
 import subprocess
 
+import goodruns
+import externaltools
+
+# rootpy imports
 from rootpy.plotting import Hist
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
@@ -14,6 +19,7 @@ from rootpy.io import root_open
 #import logging
 #log["/ROOT"].show_stack(min_level=logging.WARNING)
 
+# local imports
 from higgstautau import hepmc
 from higgstautau import tautools
 from higgstautau import eventshapes
@@ -23,33 +29,30 @@ from higgstautau.batch import ATLASStudent
 from higgstautau.units import GeV
 from higgstautau.mixins import *
 from higgstautau.filters import *
+from higgstautau.hadhad import branches as hhbranches
+from higgstautau.hadhad.objects import define_objects
+from higgstautau.hadhad.models import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
 from higgstautau.mass import is_MET_bisecting
 from higgstautau.overlap import TauJetOverlapRemoval
 from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
-from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.trigger.emulation import (TauTriggerEmulation,
-                                           update_trigger_trees)
-from higgstautau.trigger.matching import (TauTriggerMatchIndex,
-                                          TauTriggerMatchThreshold)
-from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.systematics import Systematics
 from higgstautau.met import METRecalculation
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.tauspinner import EmbeddingTauSpinner
 from higgstautau.patches import ElectronIDpatch, TauIDpatch
-from higgstautau.hadhad import branches as hhbranches
-from higgstautau.hadhad.models import *
-from higgstautau.pileup import (PileupTemplates, PileupReweight,
-                                get_pileup_reweighting_tool,
-                                averageIntPerXingPatch, PileupScale)
-from higgstautau.hadhad.objects import define_objects
+from higgstautau.trigger import update_trigger_config, get_trigger_config
+from higgstautau.trigger.efficiency import TauTriggerEfficiency
+from higgstautau.trigger.emulation import (
+    TauTriggerEmulation, update_trigger_trees)
+#from higgstautau.trigger.matching import (
+#    TauTriggerMatchIndex, TauTriggerMatchThreshold)
+from higgstautau.pileup import (
+    PileupTemplates, PileupReweight, get_pileup_reweighting_tool,
+    averageIntPerXingPatch, PileupScale)
 from higgstautau.corrections import reweight_ggf
 from higgstautau import log; log = log[__name__]
-
-import goodruns
-import externaltools
 
 
 class hhskim(ATLASStudent):
@@ -61,7 +64,6 @@ class hhskim(ATLASStudent):
         parser.add_argument('--syst-terms', default=None)
         parser.add_argument('--student-verbose', action='store_true', default=False)
         parser.add_argument('--student-very-verbose', action='store_true', default=False)
-        parser.add_argument('--validate', action='store_true', default=False)
         parser.add_argument('--redo-selection', action='store_true', default=False)
         parser.add_argument('--nominal-values', action='store_true', default=False)
         args = parser.parse_args(options)
@@ -87,29 +89,36 @@ class hhskim(ATLASStudent):
             hhskim.merge = staticmethod(merge)
 
     def work(self):
+        # get argument values
         local = self.args.local
         syst_terms = self.args.syst_terms
         datatype = self.metadata.datatype
         year = self.metadata.year
         verbose = self.args.student_verbose
         very_verbose = self.args.student_very_verbose
-        validate = self.args.validate
         redo_selection = self.args.redo_selection
         nominal_values = self.args.nominal_values
 
+        # get the dataset name
         dsname = os.getenv('INPUT_DATASET_NAME', None)
         if dsname is None:
             # attempt to guess dsname from dirname
             if self.files:
                 dsname = os.path.basename(os.path.dirname(self.files[0]))
+
+        # is this a signal sample?
+        # if so we will also keep some truth information in the output below
         is_signal = 'VBFH' in dsname or 'ggH' in dsname
         log.info("DATASET: {0}".format(dsname))
         log.info("IS SIGNAL: {0}".format(is_signal))
 
+        # onfilechange will contain a list of functions to be called as the
+        # chain rolls over to each new file
         onfilechange = []
         count_funcs = {}
 
         if datatype != datasets.DATA:
+            # count the weighted number of events
             def mc_weight_count(event):
                 return event.mc_event_weight
 
@@ -117,12 +126,17 @@ class hhskim(ATLASStudent):
                 'mc_weight': mc_weight_count,
             }
 
+        # three instances of the pileup reweighting tool are created to write
+        # out the nominal, high and low pileup weights
         pileup_tool = None
         pileup_tool_high = None
         pileup_tool_low = None
 
         if local:
+            # local means running on the skims, the output of this script
+            # running on the grid
             if datatype == datasets.DATA:
+                # merge the GRL fragments
                 merged_grl = goodruns.GRL()
 
                 def update_grl(student, grl, name, file, tree):
@@ -136,6 +150,7 @@ class hhskim(ATLASStudent):
                 merged_cutflow = Hist(2, 0, 2, name='cutflow', type='D')
 
             def update_cutflow(student, cutflow, name, file, tree):
+                # record a cut-flow
                 year = student.metadata.year
                 datatype = student.metadata.datatype
                 cutflow[1].value += file.cutflow_event[1].value
@@ -367,6 +382,8 @@ class hhskim(ATLASStudent):
                 TauLArHole(2,
                     tree=tree,
                     count_funcs=count_funcs),
+                # before selecting the leading and subleading taus
+                # be sure to only consider good candidates
                 TauIDMedium(2,
                     count_funcs=count_funcs),
                 #TauTriggerMatchIndex(
@@ -573,18 +590,6 @@ class hhskim(ATLASStudent):
                 transfer_objects=True,
                 visible=False)
 
-        if validate: # only validate on a single data run or MC channel
-            chain.GetEntry(0)
-            if datatype == datasets.MC:
-                validate_log = open('hhskim_validate_mc_%d.txt' %
-                    chain.mc_channel_number, 'w')
-            elif datatype == datasets.DATA:
-                validate_log = open('hhskim_validate_data_%d.txt' %
-                    chain.RunNumber, 'w')
-            else:
-                validate_log = open('hhskim_validate_embedded_%d.txt' %
-                    chain.RunNumber, 'w')
-
         # define tree objects
         define_objects(chain, year)
 
@@ -596,9 +601,9 @@ class hhskim(ATLASStudent):
 
         self.output.cd()
 
-        #####################
         # The main event loop
-        #####################
+        # the event filters above are automatically run for each event and only
+        # the surviving events are looped on
         for event in chain:
 
             if local and syst_terms is None and not redo_selection:
@@ -926,85 +931,17 @@ class hhskim(ATLASStudent):
                         tree.truetau2_fourvect_vis).M()
             """
 
-            ###########################
-            # Fill tau block
-            ###########################
-
+            # Fill the tau block
             # This must come after the RecoJetBlock is filled since
             # that sets the jet_beta for boosting the taus
             RecoTauBlock.set(event, tree, tau1, tau2, skim=not local)
 
-            # TODO UPDATE:
-            if validate:
-                if datatype == datasets.MC:
-                    print >> validate_log, event.mc_channel_number,
-                print >> validate_log, event.RunNumber, event.EventNumber,
-                print >> validate_log, "%.4f" % tree.pileup_weight,
-                for idx in selected_idx:
-                    print >> validate_log, idx, tree.tau_trigger_match_thresh[idx],
-                print >> validate_log
-
-                print "/" * 60
-                print "/" * 60
-
-                print "entry:", event._entry.value
-                print "EventNumber:", event.EventNumber
-                print
-                print "Pileup weight:", tree.pileup_weight
-                print
-                print "trigger scale factors (taus ordered by decreasing pT):"
-                for i, tau in enumerate(event.taus):
-                    print
-                    print "tau %d:" % (i + 1)
-                    print "BDT ID Loose %d, Medium %d, Tight %d" % (
-                        tau.JetBDTSigLoose,
-                        tau.JetBDTSigMedium,
-                        tau.JetBDTSigTight)
-                    print "pT: %f" % tau.pt
-                    print "matched trigger threshold: %d" % tau.trigger_match_thresh
-                    print "matched trigger index: %d" % tau.trigger_match_index
-
-                    loose = tau.trigger_eff_sf_loose
-                    loose_high = tau.trigger_eff_sf_loose_high
-                    loose_low = tau.trigger_eff_sf_loose_low
-
-                    medium = tau.trigger_eff_sf_medium
-                    medium_high = tau.trigger_eff_sf_medium_high
-                    medium_low = tau.trigger_eff_sf_medium_low
-
-                    tight = tau.trigger_eff_sf_tight
-                    tight_high = tau.trigger_eff_sf_tight_high
-                    tight_low = tau.trigger_eff_sf_tight_low
-
-                    fmt = "%s: %f (high: %f low: %f)"
-                    print fmt % ('loose', loose, loose_high, loose_low)
-                    print fmt % ('medium', medium, medium_high, medium_low)
-                    print fmt % ('tight', tight, tight_high, tight_low)
-                print
-                print "mass:"
-                # print out values for comparing with Soshi's code
-                vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt = \
-                        mass.collinearmass_alt(tau1, tau2, METx, METy)
-                print "vis_mass", "coll_mass", "x1", "x2"
-                print vis_mass, collin_mass, tau1_x, tau2_x, "(me)"
-                print vis_mass_alt, collin_mass_alt, tau1_x_alt, tau2_x_alt, "(Soshi)"
-                print
-
-            ######################
             # fill the output tree
-            ######################
             outtree.Fill(reset=True)
-
-        if validate:
-            validate_log.close()
-            # sort the output by event number for MC
-            # sort +2 -3 -n skim2_validate_mc_125205.txt -o skim2_validate_mc_125205.txt
 
         externaltools.report()
 
-        ###############################################
         # flush any baskets remaining in memory to disk
-        ###############################################
         self.output.cd()
         outtree.FlushBaskets()
         outtree.Write()
