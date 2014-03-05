@@ -2,6 +2,7 @@
 *.nfs*
 *.pyc
 *.root
+*.profile
 *.log
 *.png
 .git

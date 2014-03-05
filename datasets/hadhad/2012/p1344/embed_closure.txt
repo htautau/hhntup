@@ -1,0 +1,4 @@
+group.phys-higgs.Pythia8.e1169_s1469_s1470_r3658.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_filter_MCEmbedding_hhdn_p1344_EXT0/
+group.phys-higgs.Pythia8.e1169_s1469_s1470_r3658.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_filter_MCEmbedding_hhup_p1344_EXT0/
+group.phys-higgs.Pythia8.e1169_s1469_s1470_r3658.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_filter_MCEmbedding2_hh_p1344_EXT0/
+mc12_8TeV.147808.PowhegPythia8_AU2CT10_Ztautau.merge.NTUP_TAU.e1169_s1469_s1470_r3542_r3549_p1344/
