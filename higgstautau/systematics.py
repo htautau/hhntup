@@ -346,7 +346,7 @@ class JER(JetSystematic):
         else:
             self.jer_tool = JERProvider(
                 "AntiKt4LCTopoJES", "Truth",
-                JetResolution.get_resource('JERProviderPlots.root'))
+                JetResolution.get_resource('JERProviderPlots_2012.root'))
         self.jer_tool.init()
         # Note on use of ROOT random number generators:
         # TRandom and TRandom2 have many documented deficiencies.
