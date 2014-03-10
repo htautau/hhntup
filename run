@@ -46,10 +46,10 @@ args, user_args = parser.parse_known_args()
 
 import sys
 import os
-from atlastools.batch import ATLASSupervisor
-import multiprocessing
-from higgstautau import datasets
 import random
+import multiprocessing
+from higgstautau.batch import ATLASSupervisor
+from higgstautau import datasets
 
 sys.path.insert(0,'.')
 

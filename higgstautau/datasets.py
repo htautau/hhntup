@@ -22,19 +22,22 @@ except ImportError:
     log.warning("pyAMI is not installed. "
                 "Cross section retrieval will be disabled.")
 
-import sys
-from rootpy.io import root_open as ropen, DoesNotExist
+from rootpy.io import root_open, DoesNotExist
+from rootpy.data.dataset import Fileset
+
 import multiprocessing as mp
 from multiprocessing import Pool, cpu_count
+
+import sys
 from operator import itemgetter
 import logging
-
 import re
 import glob
 import os
 import cPickle as pickle
 import atexit
 import fnmatch
+from collections import namedtuple
 
 import yaml
 
@@ -43,6 +46,7 @@ from .yaml_utils import Serializable
 from . import xsec
 
 DATA, MC, EMBED = range(3)
+ATLASFileset = namedtuple('ATLASFileset', Fileset._fields + ('year', 'grl',))
 
 DS_PATTERN = re.compile(
     '^(?P<prefix>\S+\.)?'
@@ -1165,7 +1169,7 @@ def validate_single(args, child=True):
         events = 0
         for fname in root_files:
             try:
-                with ropen(fname) as rfile:
+                with root_open(fname) as rfile:
                     try: # skimmed dataset
                         events += int(rfile.cutflow_event[0])
                     except DoesNotExist: # unskimmed dataset

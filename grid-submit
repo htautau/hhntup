@@ -64,8 +64,7 @@ from contextlib import closing
 import commands
 import atexit
 import re
-from atlastools import log
-log = log['grid-submit']
+from higgstautau import log; log = log['grid-submit']
 
 
 def humanize_bytes(bytes, precision=1):

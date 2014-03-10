@@ -29,11 +29,11 @@ import ROOT
 import glob
 import rootpy
 rootpy.log.basic_config_colorized()
-from atlastools.batch import ATLASSupervisor
-from atlastools import datasets
-from atlastools.datasets import ATLASFileset
-from atlastools import utils
-from atlastools import log; log = log['grid-batch']
+from higgstautau.batch import ATLASSupervisor
+from higgstautau import datasets
+from higgstautau.datasets import ATLASFileset
+from higgstautau import utils
+from higgstautau import log; log = log['grid-batch']
 import multiprocessing
 import yaml
 from configobj import ConfigObj, flatten_errors
