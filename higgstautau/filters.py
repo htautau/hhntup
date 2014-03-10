@@ -5,13 +5,30 @@ import ROOT
 
 from rootpy.tree.filtering import *
 from itertools import ifilter
-from atlastools import utils
-from atlastools.units import GeV
-from atlastools import datasets
 from math import *
 
+from . import datasets
 from .corrections import reweight_ggf
+from .units import GeV
 from . import jetcleaning
+from . import utils
+
+from goodruns import GRL
+
+
+class GRLFilter(EventFilter):
+
+    def __init__(self, grl, **kwargs):
+        super(GRLFilter, self).__init__(**kwargs)
+        if isinstance(grl, GRL):
+            self.grl = grl
+        else:
+            self.grl = GRL(grl)
+
+    def passes(self, event):
+        if not self.grl:
+            return False
+        return (event.RunNumber, event.lbn) in self.grl
 
 
 def primary_vertex_selection(vxp):

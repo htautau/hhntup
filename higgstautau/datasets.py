@@ -22,7 +22,6 @@ except ImportError:
     log.warning("pyAMI is not installed. "
                 "Cross section retrieval will be disabled.")
 
-
 import sys
 from rootpy.io import root_open as ropen, DoesNotExist
 import multiprocessing as mp
@@ -37,13 +36,13 @@ import cPickle as pickle
 import atexit
 import fnmatch
 
-from decorators import cached_property
 import yaml
-from yaml_utils import Serializable
 
-from atlastools.datasets import DATA, MC, EMBED
-import xsec
+from .decorators import cached_property
+from .yaml_utils import Serializable
+from . import xsec
 
+DATA, MC, EMBED = range(3)
 
 DS_PATTERN = re.compile(
     '^(?P<prefix>\S+\.)?'

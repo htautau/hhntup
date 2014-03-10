@@ -5,6 +5,4 @@
     tree = string(default=tau)
     type = option(DATA, MC, EMBED, default=MC)
     year = integer(default=11)
-    class = option(SIGNAL, BACKGROUND, default=BACKGROUND)
-    label = option(TAU, ELEC, MUON, JET, default=TAU)
     weight = float(default=1.)

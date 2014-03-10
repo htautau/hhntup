@@ -6,9 +6,7 @@ import subprocess
 
 from atlastools import utils
 from atlastools import datasets
-from atlastools.units import GeV
 from atlastools.batch import ATLASStudent
-from atlastools.filtering import GRLFilter
 
 from rootpy.plotting import Hist
 from rootpy.tree.filtering import EventFilter, EventFilterList
@@ -19,6 +17,7 @@ from rootpy.io import root_open
 from higgstautau import hepmc
 from higgstautau import tautools
 from higgstautau import eventshapes
+from higgstautau.units import GeV
 from higgstautau.mixins import *
 from higgstautau.filters import *
 from higgstautau.hadhad.filters import *
