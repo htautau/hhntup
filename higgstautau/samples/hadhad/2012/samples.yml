@@ -59,8 +59,8 @@ mc:
         
         - JER_UP
 
-        - JVF_UP
-        - JVF_DOWN
+        #- JVF_UP
+        #- JVF_DOWN
 
         - MET_RESOSOFTTERMS_UP
         - MET_RESOSOFTTERMS_DOWN
