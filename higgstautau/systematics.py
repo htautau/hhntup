@@ -9,10 +9,10 @@ from math import sin, sqrt, pow
 # local imports
 from . import tauid
 from . import log; log = log[__name__]
+from . import utils
+from . import datasets
 
-from atlastools import utils
-from atlastools import datasets
-
+# rootpy imports
 from rootpy.tree.filtering import EventFilter
 
 # ROOT imports

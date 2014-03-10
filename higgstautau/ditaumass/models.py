@@ -2,9 +2,8 @@ import ROOT
 from rootpy.tree import TreeModel
 from rootpy.vector import LorentzVector, Vector3
 from rootpy.types import *
-from atlastools.utils import dR
 
-from ..utils import is_visible
+from ..utils import is_visible, dR
 
 
 class MatchedObject(TreeModel):

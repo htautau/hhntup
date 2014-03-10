@@ -4,10 +4,6 @@ import os
 import math
 import subprocess
 
-from atlastools import utils
-from atlastools import datasets
-from atlastools.batch import ATLASStudent
-
 from rootpy.plotting import Hist
 from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
@@ -17,6 +13,9 @@ from rootpy.io import root_open
 from higgstautau import hepmc
 from higgstautau import tautools
 from higgstautau import eventshapes
+from higgstautau import datasets
+from higgstautau import utils
+from higgstautau.batch import ATLASStudent
 from higgstautau.units import GeV
 from higgstautau.mixins import *
 from higgstautau.filters import *

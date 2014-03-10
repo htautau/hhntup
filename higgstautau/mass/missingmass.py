@@ -1,8 +1,10 @@
 from rootpy import log as rlog
 from . import log; log = log[__name__]
 import ROOT
-from atlastools.units import GeV
-from atlastools import datasets
+
+from ..units import GeV
+from .. import datasets
+
 import os
 from math import sqrt
 from externaltools import MissingMassCalculator

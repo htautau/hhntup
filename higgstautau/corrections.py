@@ -1,5 +1,5 @@
 import re
-from atlastools.units import GeV
+from .units import GeV
 from externaltools import ggFReweighting
 ggFResources = ggFReweighting.RESOURCE_PATH
 from ROOT import ggFReweighting

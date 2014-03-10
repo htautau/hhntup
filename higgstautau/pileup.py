@@ -1,10 +1,9 @@
-from atlastools import datasets
-
 from rootpy.tree.filtering import EventFilter
 
 from externaltools import PileupReweighting
 from ROOT import Root
 
+from . import datasets
 
 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
 PU_RESCALE = {

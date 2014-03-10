@@ -11,10 +11,9 @@ from rootpy import log
 ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
         '.*transvers momentum.*')
 
-from atlastools.utils import et2pt
-from atlastools import datasets
-from atlastools import utils
-
+from ..utils import et2pt
+from .. import datasets
+from .. import utils
 from ..models import MatchedObject
 
 import math

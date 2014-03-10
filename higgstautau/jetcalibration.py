@@ -4,12 +4,14 @@ See instructions here:
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ApplyJetCalibration2011
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ApplyJetCalibration2012
 """
-from atlastools import datasets
 from rootpy.tree.filtering import EventFilter
 from rootpy import ROOTError
+
 from externaltools import ApplyJetCalibration
 from ROOT import JetCalibrationTool
+
 from . import log; log = log[__name__]
+from . import datasets
 
 
 class JetCalibration(EventFilter):

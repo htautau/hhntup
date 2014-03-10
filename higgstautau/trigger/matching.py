@@ -1,11 +1,12 @@
 from rootpy.tree.filtering import EventFilter
-from atlastools import utils
-from atlastools.units import GeV
-from atlastools import datasets
+
 from math import *
 
 from . import utils as triggerutils
 from . import log; log = log[__name__]
+from .. import utils
+from ..units import GeV
+from .. import datasets
 
 
 class TauTriggerMatchIndex(EventFilter):

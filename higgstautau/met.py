@@ -2,9 +2,7 @@
 # local imports
 from . import log; log = log[__name__]
 from .systematics import Systematics
-
-# atlastools imports
-from atlastools.utils import dR
+from .utils import dR
 
 # rootpy imports
 from rootpy.tree.filtering import EventFilter

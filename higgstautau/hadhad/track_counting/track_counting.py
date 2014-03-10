@@ -1,6 +1,6 @@
-from atlastools import utils
-from atlastools import datasets
 from math import sin, tan, log
+
+from ... import utils
 
 __all__ = [
     'count_tracks_2011',

@@ -4,11 +4,11 @@ from math import sqrt
 from operator import itemgetter
 import ROOT
 from rootpy.tree.filtering import *
-from atlastools.units import GeV
-from atlastools import datasets
 
 from ..filters import pileup_vertex_selection
 from ..tauid import IDLOOSE, IDMEDIUM, IDTIGHT
+from ..units import GeV
+from .. import datasets
 from . import log; log = log[__name__]
 
 
