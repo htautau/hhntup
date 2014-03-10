@@ -1,0 +1,137 @@
+#!/usr/bin/env python
+
+from goodruns.extern.argparse import ArgumentParser
+
+parser = ArgumentParser(usage="%(prog)s [args] file1,file2,file3...")
+parser.add_argument('-v', '--verbose', action="store_true",
+                  help="verbose", default=False)
+parser.add_argument('-e', '--events', type=int,
+                  help="number of events to process", default=-1)
+parser.add_argument('-d', '--dataset',
+                  help="name of dataset being processed", required=True)
+parser.add_argument('-m', '--metadata',
+                  help="YAML file containing dataset definitions", required=True)
+parser.add_argument('-s', '--student',
+                  help="the file (excluding .py extension) containing a"
+                       "class of the same name inheriting from rootpy.batch.Student", required=True)
+parser.add_argument('--profile', action='store_true',
+                  help="profile execution time of each student's work method", default=False)
+parser.add_argument('--anti-match',
+                  help="skip files matching this expression")
+parser.add_argument('--match',
+                  help="use files matching this expression")
+parser.add_argument('files', nargs='+')
+args, user_args = parser.parse_known_args()
+
+import sys
+import os
+import ROOT
+import glob
+import rootpy
+rootpy.log.basic_config_colorized()
+from atlastools.batch import ATLASSupervisor
+from atlastools import datasets
+from atlastools.datasets import ATLASFileset
+from atlastools import utils
+from atlastools import log; log = log['grid-batch']
+import multiprocessing
+import yaml
+from configobj import ConfigObj, flatten_errors
+from validate import Validator
+from fnmatch import fnmatch
+
+sys.path.insert(0,'.')
+
+files = []
+for path in args.files:
+    if os.path.isdir(path):
+        files += utils.all_files_matching(path, '*.root*')
+    else:
+        files += path.split(',')
+args.files = files
+
+files = []
+for file in args.files:
+    if args.match:
+        if fnmatch(file, args.match):
+            keep = True
+        else:
+            keep = False
+    else:
+        keep = True
+    if args.anti_match:
+        if fnmatch(file, args.anti_match):
+            keep = False
+    if keep:
+        files.append(file)
+args.files = files
+
+if args.metadata.endswith('.yml'):
+    with open(args.metadata, 'r') as configfile:
+        metadata = yaml.load(configfile)
+else:
+    configspec = os.path.splitext(args.metadata)[0]+'.spec'
+    if not os.path.isfile(configspec):
+        sys.exit('%s does not exist' % configspec)
+    metadata = ConfigObj(args.metadata, configspec=configspec)
+    validator = Validator()
+    result = metadata.validate(validator, preserve_errors=True)
+    if result != True:
+        for entry in flatten_errors(metadata, result):
+            # each entry is a tuple
+            section_list, key, error = entry
+            if key is not None:
+                section_list.append(key)
+            else:
+                section_list.append('[missing section]')
+            section_string = ', '.join(section_list)
+            if error == False:
+                error = 'Missing value or section.'
+            print section_string, ' = ', error
+        sys.exit(1)
+
+if args.dataset not in metadata:
+    sys.exit("dataset %s not defined in metadata!" % args.dataset)
+meta = metadata[args.dataset]
+
+fileset = ATLASFileset(
+    name = args.dataset,
+    title = datasets.labels[meta["label"]],
+    label = None,
+    datatype = datasets.types[meta["type"]],
+    year = meta.get('year', None),
+    classtype = datasets.classes[meta["class"]],
+    treename = meta["tree"],
+    weight = meta["weight"],
+    files = args.files,
+    grl = meta.get('grl', None),
+    tags = None,
+    meta = None,
+    properties = None
+)
+
+for key, value in meta.items():
+    log.info('{0} = {1}'.format(key, value))
+
+parent_connection, child_connection = multiprocessing.Pipe()
+
+supervisor = ATLASSupervisor(
+    student = args.student,
+    outputname = args.dataset,
+    files = fileset.files,
+    metadata = fileset,
+    nstudents = 1,
+    connection = child_connection,
+    gridmode = True,
+    grl = fileset.grl,
+    events = args.events,
+    profile = args.profile,
+    options = user_args)
+
+try:
+    supervisor.start()
+    supervisor.join()
+except KeyboardInterrupt, SystemExit:
+    print "Cleaning up..."
+    parent_connection.send(None)
+    supervisor.join()

@@ -1,0 +1,368 @@
+#!/usr/bin/env python
+
+from rootpy.extern.argparse import ArgumentParser
+import multiprocessing
+
+parser = ArgumentParser(usage="%(prog)s [args] samplename1 samplename2 ...")
+parser.add_argument('--nproc', type=int,
+                    default=multiprocessing.cpu_count(),
+                    help="maximum number of simultaneous job submissions")
+parser.add_argument('-m', '--meta', dest='metadata',
+                    help='YAML file containing dataset metadata',
+                    default='datasets.yml')
+parser.add_argument('-v', '--version',
+                    type=int,
+                    help='output dataset version number',
+                    default=1)
+parser.add_argument('-s', '--student',
+                    help='the file (excluding .py extension) containing a '
+                         'class of the same name inheriting '
+                         'from rootpy.batch.Student', required=True)
+parser.add_argument('--student-args',
+                    help='args to pass along to the student',
+                    default='')
+parser.add_argument('-u', '--user',
+                    help='your grid dataset username or group name i.e. user.jdoe or group.phys-higgs',
+                    required=True)
+parser.add_argument('--no-site', action='store_true',
+                    help='override site in metadata and let the grid decide')
+parser.add_argument('--no-default-output', action='store_true',
+                    help='do not assume an output ROOT file by default')
+parser.add_argument('-o', '--outputs',
+                    help='extra output files separated by ","')
+parser.add_argument('-g', '--get', action='store_true',
+                    help='download datasets')
+parser.add_argument('-d', '--dest', default='.',
+                    help='directory in which to download the datasets')
+parser.add_argument('--merge', action='store_true',
+                    help='merge outputs on the grid')
+parser.add_argument('--test', action='store_true',
+                    help='only submit one job as a test')
+parser.add_argument('--suffix', default=None,
+                    help='suffix to add to the output dataset name')
+parser.add_argument('--yall', action='store_true', default=False,
+                    help='answer yes to all questions')
+parser.add_argument('-f', '--filter', default=None,
+                    help='only submit jobs on datasets matching this glob')
+parser.add_argument('datasets', nargs="+")
+args, user_args = parser.parse_known_args()
+
+import yaml
+from configobj import ConfigObj, flatten_errors
+from validate import Validator
+import sys
+import fnmatch
+import os
+from glob import glob
+import subprocess
+import shlex
+import tarfile
+import uuid
+import time
+from cStringIO import StringIO
+from contextlib import closing
+import commands
+import atexit
+import re
+from atlastools import log
+log = log['grid-submit']
+
+
+def humanize_bytes(bytes, precision=1):
+    abbrevs = (
+        (1<<50L, 'PB'),
+        (1<<40L, 'TB'),
+        (1<<30L, 'GB'),
+        (1<<20L, 'MB'),
+        (1<<10L, 'kB'),
+        (1, 'bytes')
+    )
+    if bytes == 1:
+        return '1 byte'
+    for factor, suffix in abbrevs:
+        if bytes >= factor:
+            break
+    return '%.*f %s' % (precision, bytes / factor, suffix)
+
+
+def run(command, queue):
+    output = StringIO()
+    print >> output, "executing:"
+    print >> output, command
+    args = shlex.split(command)
+    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout, stderr = p.communicate()
+    print >> output, stdout
+    queue.put(output.getvalue())
+
+
+if args.metadata.endswith('.yml'):
+    with open(args.metadata, 'r') as configfile:
+        metadata = yaml.load(configfile)
+else:
+    configspec = os.path.splitext(args.metadata)[0]+'.spec'
+    if not os.path.isfile(configspec):
+        sys.exit('%s does not exist' % configspec)
+    metadata = ConfigObj(args.metadata, configspec=configspec)
+    validator = Validator()
+    result = metadata.validate(validator, preserve_errors=True)
+    if result != True:
+        for entry in flatten_errors(metadata, result):
+            # each entry is a tuple
+            section_list, key, error = entry
+            if key is not None:
+                section_list.append(key)
+            else:
+                section_list.append('[missing section]')
+            section_string = ', '.join(section_list)
+            if error == False:
+                error = 'Missing value or section.'
+            print section_string, ' = ', error
+        sys.exit(1)
+
+if not args.get:
+    
+    # check for panda client
+    status, result = commands.getstatusoutput('prun')
+    if 'command not found' in result:
+        sys.exit('pandaclient is not setup and prun is not in PATH. '
+                 'Please setup pandaclient first.')
+    import pkg_resources
+    import shutil
+    import stat
+    filename = 'grid-setup.sh'
+    print
+    print "Copying %s from atlastools..." % filename
+    setup_script = pkg_resources.resource_filename('atlastools', 'etc/%s' % filename)
+    shutil.copyfile(setup_script, filename)
+    os.chmod(filename, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |\
+                       stat.S_IRGRP | stat.S_IROTH)
+    subprocess.call('./%s local' % filename, shell=True)
+
+    print "tarring up current directory..."
+    print "ignoring files/directories matching pattern in panda.ignore"
+    ignore_files = [] 
+    if os.path.isfile('panda.ignore'):
+        with open('panda.ignore') as f:
+            ignore_files = [os.path.normpath(line.strip()) for line in f.readlines()]
+
+    print "overriding any ignored files/directories if matching pattern in panda.include" 
+    include_files = []
+    if os.path.isfile('panda.include'):
+        with open('panda.include') as f:
+            include_files = [os.path.normpath(line.strip()) for line in f.readlines()]
+
+    # determine which files to include in tar
+    tar_files = []
+    for dirpath, dirnames, filenames in os.walk('.', followlinks=True):
+        ignore_dirs = []
+        for dirname in dirnames:
+            fullpath = os.path.normpath(os.path.join(dirpath, dirname))
+            include = True
+            for pattern in ignore_files:
+                if fnmatch.fnmatch(fullpath, pattern):
+                    include = False
+                    break
+            # include_files will override ignore_files
+            if not include:
+                for pattern in include_files:
+                    if fnmatch.fnmatch(fullpath, pattern):
+                        include = True
+                        break
+            if not include:
+                print "- %s" % fullpath
+                ignore_dirs.append(dirname)
+        # don't traverse ignored directories
+        for ignore_dir in ignore_dirs:
+            dirnames.remove(ignore_dir)
+        for filename in filenames:
+            include = True
+            fullpath = os.path.normpath(os.path.join(dirpath, filename))
+            for pattern in ignore_files:
+                if fnmatch.fnmatch(fullpath, pattern):
+                    include = False
+                    break
+            # include_files will override ignore_files
+            if not include:
+                for pattern in include_files:
+                    if fnmatch.fnmatch(fullpath, pattern):
+                        include = True
+                        break
+            if include:
+                print "+ {0} {1}".format(humanize_bytes(os.path.getsize(fullpath)).ljust(12), fullpath)
+                tar_files.append(fullpath)
+            else:
+                print "- {0} {1}".format(' ' * 12, fullpath)
+    
+    if not args.yall:
+        print
+        if raw_input("Is this OK? Y/n: ") != 'Y':
+            subprocess.call('./grid-setup.sh clean', shell=True)
+            sys.exit(1)
+    
+    # create tar file of PWD
+    tar_name = '%s.tar.gz' % uuid.uuid4().hex
+    with closing(tarfile.open(tar_name, 'w:gz')) as tar:
+        for name in tar_files:
+            tar.add(name)
+
+    @atexit.register
+    def cleanup():
+
+        subprocess.call('./grid-setup.sh clean', shell=True)
+        os.unlink(tar_name)
+
+sorted_datasets = sorted(metadata.keys())
+
+# expand globs
+datasets = []
+for dataset in args.datasets:
+    if '*' in dataset:
+        datasets += fnmatch.filter(sorted_datasets, dataset)
+    else:
+        datasets.append(dataset)
+
+# remove possible .py extension
+args.student = os.path.splitext(args.student)[0]
+userpattern = re.compile('^(user|group)\.(?P<user>[^\.]+)\.')
+
+longds = False
+jobs = {}
+for dataset in datasets:
+    if not dataset in metadata:
+        sys.exit("dataset %s not defined in metadata %s" % (dataset, args.metadata))
+    inDS = metadata[dataset]['container']
+    if type(inDS) not in (list, tuple):
+        if os.path.isfile(inDS):
+            with open(inDS) as f:
+                inDS = [s.strip() for s in f.readlines()]
+                inDS = [s for s in inDS if not s.startswith('#')]
+                inDS = [s for s in inDS if s]
+    if type(inDS) not in (list, tuple):
+        inDS = [inDS]
+    if args.filter is not None:
+        inDS = fnmatch.filter(inDS, args.filter)
+    for panda_inDS in inDS:
+        ds_name = panda_inDS.strip('/').replace('*','_')
+        usermatch = re.match(userpattern, ds_name)
+        if usermatch:
+            ds_name = ds_name[len(usermatch.group(0)):]
+        panda_outDS = '%s.%s.%s' % (args.user, args.student, ds_name)
+        if args.suffix:
+            panda_outDS += '.' + args.suffix
+        if args.test:
+            panda_outDS += '_test%s' % uuid.uuid4().hex[:6]
+        else:
+            panda_outDS += '.v%i' % args.version
+        # shorten names
+        panda_outDS = panda_outDS.replace('merge.NTUP_TAU.', '')
+        panda_outDS = panda_outDS.replace('merge.NTUP_TAUMEDIUM.', '')
+        panda_outDS = panda_outDS.replace('Alpgen', 'Alp')
+        panda_outDS = panda_outDS.replace('Jimmy', 'Jim')
+        panda_outDS = panda_outDS.replace('JIMMY', 'Jim')
+        panda_outDS = panda_outDS.replace('Pythia', 'Pyth')
+        panda_outDS = panda_outDS.replace('Herwig', 'Her')
+        panda_outDS = panda_outDS.replace('PowHeg', 'Pow')
+        panda_outDS = panda_outDS.replace('Powheg', 'Pow')
+        panda_outDS = panda_outDS.replace('e1169_s1469_s1470_r3658.', '')
+        panda_outDS = panda_outDS.replace('filter_', '')
+        panda_outDS = panda_outDS.replace('2JetsEW1JetQCD15GeVM40_min_n_tchannels', '')
+        if len(panda_outDS) > 131:
+            print
+            print "DATASET NAME TOO LONG ({0:d} characters): {1}".format(len(panda_outDS), panda_outDS)
+            longds = True
+            continue
+        if args.get:
+            if not os.path.isdir(args.dest):
+                sys.exit("destination path %s does not exist" % args.dest)
+            jobs[panda_outDS] = 'cd %s; run -e grid dq2-get -T 3,8 %s/; cd -' % (args.dest, panda_outDS)
+        else:
+            panda_site = None
+            if ':' in panda_inDS:
+                panda_inDS, panda_site = panda_inDS.split(':') 
+            panda_bexec = './grid-setup.sh build'
+            # `which python` is needed since setuptools rewrites the shebang
+            # the sheband specified in the buildjob won't be the same as in the worker job
+            panda_exec = (
+                'source grid-setup.sh worker; '
+                'export INPUT_DATASET_NAME=%s; '
+                'python ./user-python/bin/grid-batch --dataset %s '
+                '--metadata %s --student %s %s %%IN' % (
+                    panda_inDS, dataset, args.metadata,
+                    args.student, args.student_args))
+            if args.no_default_output:
+                if not args.outputs:
+                    raise RuntimeError(
+                        "--no-default-output requires --outputs to be specified")
+                panda_outputs = args.outputs
+            else:
+                panda_outputs = '%s.%s.root' % (args.student, dataset)
+                if args.outputs is not None:
+                    panda_outputs = ','.join([panda_outputs, args.outputs])
+            command = [
+                'prun',
+                '--bexec "%s"' % panda_bexec,
+                '--exec "%s"' % panda_exec,
+                '--inDS %s' % panda_inDS,
+                '--outDS %s' % panda_outDS,
+                '--outputs %s' % panda_outputs,
+                '--inTarBall %s' % tar_name
+            ]
+            if args.merge:
+                command += ['--mergeOutput',
+                            '--mergeScript "source grid-setup.sh worker; python \`which grid-merge\` -o %OUT -i %IN"']
+            if panda_site is not None and '--site' not in user_args and not args.no_site:
+                command.append('--site %s' % panda_site)
+            command = ' '.join(command)
+            if user_args:
+                command += ' %s' % ' '.join(user_args)
+            jobs[panda_inDS] = {'out': panda_outDS, 'cmd': command}
+            if args.test:
+                break
+    if args.test:
+        break
+
+if longds:
+    sys.exit(1)
+
+print
+if args.get: 
+    print "Will download these datasets:"
+    for name in jobs:
+        print name
+    if not args.yall:
+        print
+        if raw_input("Is this OK? Y/n: ") != 'Y':
+            sys.exit(1) 
+    commands = jobs.values()
+    print "Downloading %i datasets ..." % len(commands)
+else:
+    print "Will submit these jobs:"
+    print
+    commands = []
+    for inds, info in jobs.items():
+        print "%s => %s (%s)" % (inds, info['out'], info['cmd'])
+        print
+        commands.append(info['cmd'])
+    if not args.yall:
+        if raw_input("Is this OK? Y/n: ") != 'Y':
+            sys.exit(1)
+        print
+    print "Submitting %i jobs ..." % len(commands)
+
+processes = []
+output_queue = multiprocessing.Queue()
+while True:
+    active = multiprocessing.active_children()
+    while len(active) < args.nproc and len(commands) > 0:
+        p = multiprocessing.Process(args=(commands.pop(), output_queue), target=run)
+        p.start()
+        processes.append(p)
+        active = multiprocessing.active_children()
+    while not output_queue.empty():
+        print time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+        print "%i jobs submitting and %i queued" % (len(active), len(commands))
+        print output_queue.get()
+    if len(commands) == 0 and len(active) == 0:
+        break
+    time.sleep(1)
