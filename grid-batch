@@ -96,13 +96,9 @@ meta = metadata[args.dataset]
 
 fileset = ATLASFileset(
     name = args.dataset,
-    title = datasets.labels[meta["label"]],
-    label = None,
-    datatype = datasets.types[meta["type"]],
+    datatype = datasets.TYPES[meta["type"]],
     year = meta.get('year', None),
-    classtype = datasets.classes[meta["class"]],
     treename = meta["tree"],
-    weight = meta["weight"],
     files = args.files,
     grl = meta.get('grl', None),
     tags = None,

@@ -23,7 +23,6 @@ except ImportError:
                 "Cross section retrieval will be disabled.")
 
 from rootpy.io import root_open, DoesNotExist
-from rootpy.data.dataset import Fileset
 
 import multiprocessing as mp
 from multiprocessing import Pool, cpu_count
@@ -46,7 +45,56 @@ from .yaml_utils import Serializable
 from . import xsec
 
 DATA, MC, EMBED = range(3)
+
+Namedset = namedtuple('Namedset',
+                      'name tags meta properties')
+Dataset = namedtuple('Dataset',
+                     Namedset._fields + ('datatype',))
+
+
+class Fileset(namedtuple('Fileset', Dataset._fields + ('files', 'treename'))):
+
+    def split(self, partitions):
+        files = self.files[:]
+        fileset_files = [[] for _ in xrange(partitions)]
+        while len(files) > 0:
+            for fileset in fileset_files:
+                if len(files) > 0:
+                    fileset.append(files.pop(0))
+                else:
+                    break
+        mydict = self._asdict()
+        filesets = []
+        for fileset in fileset_files:
+            mydict['files'] = fileset
+            filesets.append(Fileset(**mydict))
+        return filesets
+
+
+class Treeset(namedtuple('Treeset', Dataset._fields + ('trees',))):
+
+    def GetEntries(self, *args, **kwargs):
+        return sum([tree.GetEntries(*args, **kwargs) for tree in self.trees])
+
+    def Scale(self, value):
+        for tree in self.trees:
+            tree.Scale(value)
+
+    def __iter__(self):
+        for tree in self.trees:
+            yield tree
+
+    def Draw(self, *args, **kwargs):
+        for tree in self.trees:
+            tree.Draw(*args, **kwargs)
+
 ATLASFileset = namedtuple('ATLASFileset', Fileset._fields + ('year', 'grl',))
+
+TYPES = {
+    'DATA' : DATA,
+    'MC'   : MC,
+    'EMBED': EMBED,
+}
 
 DS_PATTERN = re.compile(
     '^(?P<prefix>\S+\.)?'
