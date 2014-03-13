@@ -91,7 +91,8 @@ class PileupReweight(EventFilter):
     """
     Currently only implements hadhad reweighting
     """
-    def __init__(self, year, tool, tool_high, tool_low, tree, passthrough=False, **kwargs):
+    def __init__(self, year, tool, tool_high, tool_low,
+                 tree, passthrough=False, **kwargs):
         if not passthrough:
             self.tree = tree
             self.tool = tool
@@ -135,7 +136,7 @@ class PileupScale(EventFilter):
         super(PileupScale, self).__init__(**kwargs)
         if datatype in (datasets.DATA, datasets.EMBED):
             self.passes = self.passes_data
-        elif datatype == datasets.MC:
+        elif datatype in (datasets.MC, datasets.MCEMBED):
             self.passes = self.passes_mc
         else:
             raise ValueError("no pileup scale defined for datatype %d" %

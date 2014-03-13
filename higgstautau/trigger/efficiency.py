@@ -55,7 +55,7 @@ class TauTriggerEfficiency(EventFilter):
                         'triggerSF_EF_tau29T_medium1.root'))
                     self.passes = self.passes_11_mc
 
-                elif datatype == datasets.EMBED:
+                elif datatype in (datasets.EMBED, datasets.MCEMBED):
                     # use the 3D param
                     self.corrections = {}
                     for thresh in (29, 20):
@@ -81,7 +81,7 @@ class TauTriggerEfficiency(EventFilter):
                 base = os.path.join(TrigTauEfficiency.RESOURCE_PATH,
                         'benchmark_menu')
 
-                if datatype in (datasets.MC, datasets.EMBED):
+                if datatype in (datasets.MC, datasets.EMBED, datasets.MCEMBED):
                     self.ttc_20 = ROOT.TrigTauEfficiency()
                     status = self.ttc_20.loadInputFile(os.path.join(base,
                         'triggerSF_EF_tau20Ti_medium1.root'))

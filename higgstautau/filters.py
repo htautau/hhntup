@@ -79,7 +79,7 @@ class RandomRunNumber(EventFilter):
         self.tree = tree
         self.pileup_tool = pileup_tool
         super(RandomRunNumber, self).__init__(**kwargs)
-        if datatype == datasets.MC:
+        if datatype in (datasets.MC, datasets.MCEMBED):
             self.passes = self.passes_mc
         else:
             self.passes = self.passes_data

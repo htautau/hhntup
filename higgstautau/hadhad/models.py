@@ -415,9 +415,9 @@ class EventModel(TreeModel):
 
 def get_model(datatype, name, prefix=None):
     model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
-    #if datatype in (datasets.MC, datasets.EMBED):
+    #if datatype != datasets.DATA:
     #    model += TrueTauBlock
-    if datatype == datasets.EMBED:
+    if datatype in (datasets.EMBED, datasets.MCEMBED):
         model += EmbeddingModel
     #if datatype == datasets.MC and 'VBF' in name:
     #    # add branches for VBF Higgs associated partons

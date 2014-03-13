@@ -44,7 +44,15 @@ from .decorators import cached_property
 from .yaml_utils import Serializable
 from . import xsec
 
-DATA, MC, EMBED = range(3)
+# data types
+DATA, MC, EMBED, MCEMBED = range(4)
+
+TYPES = {
+    'DATA':    DATA,
+    'MC':      MC,
+    'EMBED':   EMBED,
+    'MCEMBED': MCEMBED,
+}
 
 Namedset = namedtuple('Namedset',
                       'name tags meta properties')
@@ -89,12 +97,6 @@ class Treeset(namedtuple('Treeset', Dataset._fields + ('trees',))):
             tree.Draw(*args, **kwargs)
 
 ATLASFileset = namedtuple('ATLASFileset', Fileset._fields + ('year', 'grl',))
-
-TYPES = {
-    'DATA' : DATA,
-    'MC'   : MC,
-    'EMBED': EMBED,
-}
 
 DS_PATTERN = re.compile(
     '^(?P<prefix>\S+\.)?'

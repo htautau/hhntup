@@ -105,7 +105,7 @@ class hhskim(ATLASStudent):
         onfilechange = []
         count_funcs = {}
 
-        if datatype in (datasets.MC, datasets.EMBED):
+        if datatype != datasets.DATA:
             def mc_weight_count(event):
                 return event.mc_event_weight
 
@@ -134,11 +134,9 @@ class hhskim(ATLASStudent):
             def update_cutflow(student, cutflow, name, file, tree):
                 year = student.metadata.year
                 datatype = student.metadata.datatype
-                if datatype == datasets.MC:
-                    cutflow[1].value += file.cutflow_event[1].value
+                cutflow[1].value += file.cutflow_event[1].value
+                if datatype != datasets.DATA:
                     cutflow[2].value += file.cutflow_event_mc_weight[1].value
-                else:
-                    cutflow[1].value += file.cutflow_event[1].value
 
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
@@ -156,7 +154,7 @@ class hhskim(ATLASStudent):
                 use_defaults=True,
                 systematic='low')
 
-            if datatype != datasets.EMBED:
+            if datatype not in (datasets.EMBED, datasets.MCEMBED):
                 # merge TrigConfTrees
                 metadirname = '%sMeta' % self.metadata.treename
                 trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
@@ -219,10 +217,9 @@ class hhskim(ATLASStudent):
 
         trigger_config = None
 
-        if datatype != datasets.EMBED:
+        if datatype not in (datasets.EMBED, datasets.MCEMBED):
             # trigger config tool to read trigger info in the ntuples
             trigger_config = get_trigger_config()
-
             # update the trigger config maps on every file change
             onfilechange.append((update_trigger_config, (trigger_config,)))
 
@@ -236,22 +233,26 @@ class hhskim(ATLASStudent):
                 # tracks is already stored
                 with root_open(self.files[0]) as test_file:
                     test_tree = test_file.Get(self.metadata.treename)
-                    tau_ntrack_recounted_use_ntup = 'tau_out_track_n_extended' in test_tree
+                    tau_ntrack_recounted_use_ntup = (
+                        'tau_out_track_n_extended' in test_tree)
 
             event_filters = EventFilterList([
                 GRLFilter(
                     self.grl,
                     passthrough=(
-                        local or (datatype not in (datasets.DATA, datasets.EMBED))),
+                        local or (
+                            datatype not in (datasets.DATA, datasets.EMBED))),
                     count_funcs=count_funcs),
                 CoreFlags(
                     passthrough=local,
                     count_funcs=count_funcs),
                 EmbeddingPileupPatch(
-                    passthrough=local or year > 2011 or datatype != datasets.EMBED,
+                    passthrough=(
+                        local or year > 2011 or datatype != datasets.EMBED),
                     count_funcs=count_funcs),
                 averageIntPerXingPatch(
-                    passthrough=local or year < 2012 or datatype != datasets.MC,
+                    passthrough=(
+                        local or year < 2012 or datatype != datasets.MC),
                     count_funcs=count_funcs),
                 PileupTemplates(
                     year=year,
@@ -271,7 +272,7 @@ class hhskim(ATLASStudent):
                     year=year,
                     tree=tree,
                     datatype=datatype,
-                    passthrough=datatype == datasets.EMBED,
+                    passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
                     count_funcs=count_funcs),
                 PileupReweight(
                     year=year,
@@ -279,7 +280,9 @@ class hhskim(ATLASStudent):
                     tool_high=pileup_tool_high,
                     tool_low=pileup_tool_low,
                     tree=tree,
-                    passthrough=local or datatype != datasets.MC,
+                    passthrough=(
+                        local or (
+                            datatype not in (datasets.MC, datasets.MCEMBED))),
                     count_funcs=count_funcs),
                 PriVertex(
                     passthrough=local,
@@ -291,7 +294,8 @@ class hhskim(ATLASStudent):
                     passthrough=local,
                     count_funcs=count_funcs),
                 TileTrips(
-                    passthrough=local or datatype == datasets.MC,
+                    passthrough=(
+                        local or datatype in (datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 JetCopy(
                     tree=tree,
@@ -305,7 +309,9 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 # in situ TES shift for 2012 data
                 TauEnergyShift(
-                    passthrough=local or datatype != datasets.DATA or year < 2012 or nominal_values,
+                    passthrough=(
+                        local or datatype != datasets.DATA
+                        or year < 2012 or nominal_values),
                     count_funcs=count_funcs),
                 # truth matching must come before systematics due to
                 # TES_TRUE/FAKE
@@ -369,8 +375,12 @@ class hhskim(ATLASStudent):
                 # 25 and 35 for data
                 # 20 and 30 for MC for TES uncertainty
                 TauLeadSublead(
-                    lead=35 * GeV if datatype == datasets.DATA or local else 30 * GeV,
-                    sublead=25 * GeV if datatype == datasets.DATA or local else 20 * GeV,
+                    lead=(
+                        35 * GeV if datatype == datasets.DATA or local
+                        else 30 * GeV),
+                    sublead=(
+                        25 * GeV if datatype == datasets.DATA or local
+                        else 20 * GeV),
                     count_funcs=count_funcs),
                 # taus are sorted (in decreasing order) by pT from here on
                 TauIDSelection(
@@ -431,16 +441,22 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 EmbeddingIsolation(
                     tree=tree,
-                    passthrough=local or year < 2012 or datatype != datasets.EMBED,
+                    passthrough=(
+                        local or year < 2012 or
+                        datatype not in (datasets.EMBED, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 EmbeddingCorrections(
                     tree=tree,
-                    passthrough=local or year < 2012 or datatype != datasets.EMBED,
+                    passthrough=(
+                        local or year < 2012 or
+                        datatype not in (datasets.EMBED, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 EmbeddingTauSpinner(
                     year=year,
                     tree=tree,
-                    passthrough=local or datatype != datasets.EMBED,
+                    passthrough=(
+                        local or datatype not in (
+                            datasets.EMBED, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 # put MET recalculation after tau selection but before tau-jet
                 # overlap removal and jet selection because of the RefAntiTau
