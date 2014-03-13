@@ -120,23 +120,12 @@ else:
         sys.exit(1)
 
 if not args.get:
-    
     # check for panda client
     status, result = commands.getstatusoutput('prun')
     if 'command not found' in result:
         sys.exit('pandaclient is not setup and prun is not in PATH. '
                  'Please setup pandaclient first.')
-    import pkg_resources
-    import shutil
-    import stat
-    filename = 'grid-setup.sh'
-    print
-    print "Copying %s from atlastools..." % filename
-    setup_script = pkg_resources.resource_filename('atlastools', 'etc/%s' % filename)
-    shutil.copyfile(setup_script, filename)
-    os.chmod(filename, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |\
-                       stat.S_IRGRP | stat.S_IROTH)
-    subprocess.call('./%s local' % filename, shell=True)
+    subprocess.call('./grid-setup.sh local', shell=True)
 
     print "tarring up current directory..."
     print "ignoring files/directories matching pattern in panda.ignore"
@@ -285,7 +274,7 @@ for dataset in datasets:
             panda_exec = (
                 'source grid-setup.sh worker; '
                 'export INPUT_DATASET_NAME=%s; '
-                'python ./user-python/bin/grid-batch --dataset %s '
+                'python ./grid-batch --dataset %s '
                 '--metadata %s --student %s %s %%IN' % (
                     panda_inDS, dataset, args.metadata,
                     args.student, args.student_args))
@@ -308,8 +297,10 @@ for dataset in datasets:
                 '--inTarBall %s' % tar_name
             ]
             if args.merge:
-                command += ['--mergeOutput',
-                            '--mergeScript "source grid-setup.sh worker; python \`which grid-merge\` -o %OUT -i %IN"']
+                command += [
+                    '--mergeOutput',
+                    '--mergeScript "source grid-setup.sh worker; ./grid-merge -o %OUT -i %IN"'
+                ]
             if panda_site is not None and '--site' not in user_args and not args.no_site:
                 command.append('--site %s' % panda_site)
             command = ' '.join(command)
