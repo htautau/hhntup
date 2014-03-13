@@ -653,7 +653,6 @@ class EmbeddingCorrections(EventFilter):
     # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauEmbeddedCorrections2013
     def __init__(self, tree, passthrough=False, **kwargs):
         super(EmbeddingCorrections, self).__init__(passthrough=passthrough, **kwargs)
-
         if not passthrough:
             self.tree = tree
             from externaltools import EmbeddedCorrections
@@ -675,7 +674,8 @@ class EmbeddingCorrections(EventFilter):
             event.mc_phi,
             event.mc_m,
             event.mc_pdgId,
-            event.RunNumber)
+            # possibly a random run number (for MC embedding)
+            self.tree.RunNumber)
         # Retrieve the unfolding weight
         self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
         # Access the trigger unfolding weight
