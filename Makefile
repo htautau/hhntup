@@ -31,7 +31,6 @@ clean: clean-pyc
 	rm -f TPileupReweighting.prw.root
 	rm -f nohup.out
 	rm -f supervisor*.log
-	rm -f grid-setup.sh
 	rm -f *.dot
 	rm -f *.e[0-9]*
 	rm -f *.o[0-9]*
