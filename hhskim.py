@@ -415,10 +415,10 @@ class hhskim(ATLASStudent):
                     year=year,
                     datatype=datatype,
                     tree=tree,
-                    tes_up=(self.args.syst_terms and
+                    tes_up=(self.args.syst_terms is not None and
                         (Systematics.TES_FAKE_TOTAL_UP in self.args.syst_terms or
                          Systematics.TES_FAKE_FINAL_UP in self.args.syst_terms)),
-                    tes_down=(self.args.syst_terms and
+                    tes_down=(self.args.syst_terms is not None and
                         (Systematics.TES_FAKE_TOTAL_DOWN in self.args.syst_terms or
                          Systematics.TES_FAKE_FINAL_DOWN in self.args.syst_terms)),
                     passthrough=datatype in (datasets.DATA, datasets.EMBED),

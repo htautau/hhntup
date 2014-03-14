@@ -318,7 +318,6 @@ class TauFakeRateScaleFactors(EventFilter):
                 log.info("will apply 2012 fake rate scale factors")
             else:
                 raise ValueError("No fakerates defined for year %d" % year)
-
         super(TauFakeRateScaleFactors, self).__init__(
             passthrough=passthrough, **kwargs)
 
