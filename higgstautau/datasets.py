@@ -208,13 +208,11 @@ CN_EMBED_PATTERN12 = re.compile(
     '(-(?P<version3>\d+))?'
     '\.(?P<suffix>\S+)$')
 
-"""
-MC[11|12][a|b|c|...] categories are defined here
-Each MC dataset is automatically classified
-acccording to these categories by matching the reco
-and merge tags of the dataset name
-"""
-# order by decreasing preference
+# MC[11|12][a|b|c|...] categories are defined here
+# Each MC dataset is automatically classified
+# acccording to these categories by matching the reco
+# and merge tags of the dataset name.
+# Order by decreasing preference:
 MC_CATEGORIES = {
     'mc11a': {'reco':  (2730, 2731),
               'merge': (2780, 2700)},
@@ -227,21 +225,15 @@ MC_CATEGORIES = {
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-
-"""
-Any datasets which don't have the provenance stored properly in AMI
-should be hardcoded here (it happens)
-"""
+# Any datasets which don't have the provenance stored properly in AMI
+# should be hardcoded here (it happens)
 DS_NOPROV = {}
 
-"""
-Cross-sections are cached so that we don't need to keep asking AMI
-for them over and over
-"""
+# Cross-sections are cached so that we don't need to keep asking AMI
+# for them over and over
 XSEC_CACHE_FILE = os.path.join(HERE, 'xsec_cache')
 XSEC_CACHE_MODIFIED = False
 XSEC_CACHE = {}
-
 
 if USE_PYAMI:
     amiclient = AMIClient()
@@ -291,7 +283,6 @@ class Database(dict):
                 match.group('tag'))
 
     def __init__(self, name='datasets', verbose=False, stream=None):
-
         super(Database, self).__init__()
         self.name = name
         self.verbose = verbose
@@ -309,18 +300,15 @@ class Database(dict):
             self.stream = stream
 
     def write(self):
-
         if self.modified:
             with open(self.filepath, 'w') as db:
                 log.info("Saving database '%s' ..." % self.name)
                 yaml.dump(dict(self), db)
 
     def reset(self):
-
         return self.clear()
 
     def clear(self):
-
         # erase all datasets in database
         log.info("Resetting database '%s' ..." % self.name)
         super(Database, self).clear()
@@ -1048,13 +1036,11 @@ class Database(dict):
                                              year=year)
 
     def __setitem__(self, name, ds):
-
         if self.verbose:
             print >> self.stream, str(ds)
         super(Database, self).__setitem__(name, ds)
 
     def search(self, pattern):
-
         data = []
         patterns = pattern
         if not isinstance(pattern, (list, tuple)):
@@ -1088,7 +1074,6 @@ class Dataset(Serializable):
                  grl=None,
                  year=None,
                  stream=None):
-
         self.name = name
         self.datatype = datatype
         self.treename = treename
@@ -1105,7 +1090,6 @@ class Dataset(Serializable):
         self.stream = stream
 
     def __repr__(self):
-
         return ("%s(name=%r, datatype=%r, treename=%r, "
                 "id=%r, ds=%r, category=%r, version=%r, "
                 "tag_pattern=%r, tag=%r, dirs=%r, "
@@ -1118,7 +1102,6 @@ class Dataset(Serializable):
 
     @cached_property
     def xsec_kfact_effic(self):
-
         global XSEC_CACHE_MODIFIED
         year = self.year % 1E3
         if self.datatype == DATA:
@@ -1126,7 +1109,6 @@ class Dataset(Serializable):
         if year in XSEC_CACHE and self.name in XSEC_CACHE[year]:
             log.warning("using cached cross section for dataset %s" % self.ds)
             return XSEC_CACHE[year][self.name]
-
         try:
             return xsec.xsec_kfact_effic(self.year, self.id)
         except KeyError:
@@ -1134,7 +1116,6 @@ class Dataset(Serializable):
                         "Looking it up in AMI instead. AMI cross sections can be very"
                         "wrong! You have been warned!"
                         % self.ds)
-
         if USE_PYAMI:
             if self.ds in DS_NOPROV:
                 xs, effic = get_dataset_xsec_effic(amiclient, DS_NOPROV[self.ds])
@@ -1149,7 +1130,6 @@ class Dataset(Serializable):
 
     @cached_property
     def files(self):
-
         if not self.dirs:
             log.warning(
                 "files requested from dataset %s "
@@ -1164,14 +1144,12 @@ class Dataset(Serializable):
         return _files
 
     def __str__(self):
-
         return "%s (%d files):\n\t%s" % (
                 self.name,
                 len(self.files),
                 self.ds)
 
 def dataset_constructor(loader, node):
-
     kwargs = loader.construct_mapping(node)
     try:
         return Dataset(**kwargs)
@@ -1183,7 +1161,6 @@ def dataset_constructor(loader, node):
 
 yaml.add_constructor(u'!Dataset', dataset_constructor)
 
-
 if os.path.isfile(XSEC_CACHE_FILE):
     with open(XSEC_CACHE_FILE) as cache:
         log.info("Loading cross section cache in %s ..." % XSEC_CACHE_FILE)
@@ -1192,7 +1169,6 @@ if os.path.isfile(XSEC_CACHE_FILE):
 
 @atexit.register
 def write_cache():
-
     if XSEC_CACHE_MODIFIED:
         with open(XSEC_CACHE_FILE, 'w') as cache:
             log.info("Saving cross-section cache to disk...")
@@ -1200,17 +1176,13 @@ def write_cache():
 
 
 def validate_single(args, child=True):
-
     if child:
         from cStringIO import StringIO
-
         sys.stdout = out = StringIO()
         sys.stderr = out
-
     name = args[0]
     info = args[1]
     complete = True
-
     try:
         dirs = info.dirs
         root_files = []
@@ -1272,7 +1244,6 @@ def get_all_dirs_under(path, prefix=None):
     """
     dirs = []
     for dirpath, dirnames, filenames in os.walk(path):
-
         _dirnames = []
         for dirname in dirnames:
             fullpath = os.path.join(dirpath, dirname)
@@ -1293,5 +1264,4 @@ def get_all_dirs_under(path, prefix=None):
                 dirs.append(fullpath)
         # only recurse on directories containing subdirectories
         dirnames = _dirnames
-
     return dirs

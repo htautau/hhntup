@@ -207,3 +207,6 @@ mc:
         - 'Pyth8_AU2CTEQ6L1_ZH140_tautauhh.mc12a'
         - 'Pyth8_AU2CTEQ6L1_ZH145_tautauhh.mc12a'
         - 'Pyth8_AU2CTEQ6L1_ZH150_tautauhh.mc12a'
+
+        # for MC embedding closure
+        - 'PowPyth8_AU2CT10_Ztautau.mc12a'
