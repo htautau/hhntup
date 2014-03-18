@@ -9046,6 +9046,62 @@ gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc12a: !Dataset
   grl: null
   year: 2012
   stream: null
+mcembed12-hh: !Dataset
+  name: mcembed12-hh
+  datatype: 3
+  treename: tau
+  ds: mcembed12-hh
+  dirs: [/cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding2_hh_p1344_EXT0.v23.140303013010,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding2_hh_p1344_EXT0.v23.140313165406]
+  file_pattern: '*hadhad.root*'
+  id: 1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: null
+  year: 2012
+  stream: null
+mcembed12-hhdn: !Dataset
+  name: mcembed12-hhdn
+  datatype: 3
+  treename: tau
+  ds: mcembed12-hhdn
+  dirs: [/cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhdn_p1344_EXT0.v23.140303013003,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhdn_p1344_EXT0.v23.140303013105,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhdn_p1344_EXT0.v23.140313165410,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhdn_p1344_EXT0.v23.140313165509,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhdn_p1344_EXT0.v23.140314143654,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhdn_p1344_EXT0.v23.140314143654_r1]
+  file_pattern: '*hadhad.root*'
+  id: 1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: null
+  year: 2012
+  stream: null
+mcembed12-hhup: !Dataset
+  name: mcembed12-hhup
+  datatype: 3
+  treename: tau
+  ds: mcembed12-hhup
+  dirs: [/cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhup_p1344_EXT0.v23.140303013016,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhup_p1344_EXT0.v23.140303013107,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhup_p1344_EXT0.v23.140313165414,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhup_p1344_EXT0.v23.140313165510,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhup_p1344_EXT0.v23.140314143521,
+    /cluster/data11/endw/skims/v23/group.phys-higgs.hhskim.Pyth8.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_MCEmbedding_hhup_p1344_EXT0.v23.140314143521_r1]
+  file_pattern: '*hadhad.root*'
+  id: 1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: null
+  year: 2012
+  stream: null
 st_Wtchan_incl_DR_Pow_Pyth_P2011C.mc11c: !Dataset
   name: st_Wtchan_incl_DR_Pow_Pyth_P2011C.mc11c
   datatype: 1
