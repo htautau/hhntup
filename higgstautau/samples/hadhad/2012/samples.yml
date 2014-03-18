@@ -210,3 +210,6 @@ mc:
 
         # for MC embedding closure
         - 'PowPyth8_AU2CT10_Ztautau.mc12a'
+        - 'mcembed12-hh'
+        - 'mcembed12-hhup'
+        - 'mcembed12-hhdn'
