@@ -149,7 +149,6 @@ class Triggers(EventFilter):
 class ElectronVeto(EventFilter):
 
     def passes(self, event):
-
         for el in event.electrons:
             pt = el.cl_E / cosh(el.tracketa)
             if pt <= 15 * GeV: continue
