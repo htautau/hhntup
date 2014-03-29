@@ -29,8 +29,6 @@ for year, energy in ((11, 7), (12, 8)):
             line = line.split()
             sampleid = int(line[0])
             xsec, kfact, effic = map(float, line[1:-1])
-            if year == 11:
-                xsec *= 1E3
             if sampleid not in SAMPLES[year]:
                 SAMPLES[year][sampleid] = {}
             else:

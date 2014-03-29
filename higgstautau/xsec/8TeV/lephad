@@ -1,6 +1,7 @@
 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MC12ATauTauPub2014
 # https://indico.cern.ch/event/298355/contribution/3/material/slides/0.pdf
-#DSID  xsec  kfac  filter  name
+#DSID  xsec [pb]  kfac  filter  name
+
 #Top
 117050  252.89  1.0  0.543  mc12_8TeV.117050.PowhegPythia_P2011C_ttbar.merge.AOD.e1728_s1581_s1586_r3658_r3549
 117049  252.89  1.0  0.457  mc12_8TeV.117049.TTbar_MT1725_allhad_PowHeg_Pythia_P2011C.merge.NTUP_TAU.e2075_s1581_s1586_r3658_r3549_p1344

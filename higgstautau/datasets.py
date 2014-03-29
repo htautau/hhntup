@@ -237,7 +237,7 @@ DS_NOPROV = {}
 
 # Cross-sections are cached so that we don't need to keep asking AMI
 # for them over and over
-XSEC_CACHE_FILE = os.path.join(HERE, 'xsec_cache')
+XSEC_CACHE_FILE = os.path.join(HERE, 'xsec', 'cache.pickle')
 XSEC_CACHE_MODIFIED = False
 XSEC_CACHE = {}
 
