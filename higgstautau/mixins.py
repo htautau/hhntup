@@ -101,6 +101,7 @@ class FourMomentumMeV(object):
 class JetFourMomentum(FourMomentum):
 
     def __init__(self):
+        super(JetFourMomentum, self).__init__()
         # needed by the METUtility
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         self.phi_original = None
