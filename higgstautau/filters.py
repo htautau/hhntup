@@ -265,7 +265,11 @@ class JetCrackVeto(EventFilter):
         return True
 
 
-def muon_has_good_track(muon, year=2011):
+def muon_has_good_track(muon, year):
+    """
+    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesRel17MC11a
+    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesData2012
+    """
     if year == 2011:
         pix_min = 2
         sct_min = 6
