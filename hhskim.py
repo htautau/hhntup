@@ -108,7 +108,11 @@ class hhskim(ATLASStudent):
 
         # is this a signal sample?
         # if so we will also keep some truth information in the output below
-        is_signal = 'VBFH' in dsname or 'ggH' in dsname
+        is_signal = (
+            '_VBFH' in dsname or
+            '_ggH' in dsname or
+            '_ZH' in dsname or
+            '_WH' in dsname)
         log.info("DATASET: {0}".format(dsname))
         log.info("IS SIGNAL: {0}".format(is_signal))
 
