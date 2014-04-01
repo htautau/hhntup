@@ -386,6 +386,7 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauLArHole(2,
                     tree=tree,
+                    passthrough=year > 2011,
                     count_funcs=count_funcs),
                 # before selecting the leading and subleading taus
                 # be sure to only consider good candidates

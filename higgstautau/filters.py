@@ -306,8 +306,8 @@ class TauElectronVeto(EventFilter):
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
         # Eta selection already applied by TauEta filter
         event.taus.select(lambda tau:
-                tau.numTrack > 1 or
-                tau.EleBDTLoose == 0)
+            tau.numTrack > 1 or
+            tau.EleBDTLoose == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -365,8 +365,8 @@ class TauEta(EventFilter):
     def passes(self, event):
         # both calo and leading track eta within 2.47
         event.taus.select(lambda tau:
-                abs(tau.eta) < 2.47 and
-                abs(tau.track_eta[tau.leadtrack_idx]) < 2.47)
+            abs(tau.eta) < 2.47 and
+            abs(tau.track_eta[tau.leadtrack_idx]) < 2.47)
         return len(event.taus) >= self.min_taus
 
 
@@ -378,7 +378,7 @@ class TauJVF(EventFilter):
 
     def passes(self, event):
         event.taus.select(lambda tau: True if
-                abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
+            abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
         return len(event.taus) >= self.min_taus
 
 
@@ -397,20 +397,16 @@ class Tau1P3P(EventFilter):
     """
     Only keep 1P + 3P and 3P + 3P
     """
-
     def passes(self, event):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
-
         # 1P + 3P
         if (tau1.numTrack == 1 and tau2.numTrack == 3) or \
            (tau1.numTrack == 3 and tau2.numTrack == 1):
             return True
-
         # 3P + 3P
         if tau1.numTrack == 3 and tau2.numTrack == 3:
             return True
-
         return False
 
 
@@ -454,7 +450,9 @@ class TauCrack(EventFilter):
         super(TauCrack, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: not (1.37 < abs(tau.track_eta[tau.leadtrack_idx]) < 1.52))
+        event.taus.select(
+            lambda tau: not (
+                1.37 <= abs(tau.track_eta[tau.leadtrack_idx]) <= 1.52))
         return len(event.taus) >= self.min_taus
 
 
@@ -469,7 +467,7 @@ class TauLArHole(EventFilter):
         if not 180614 <= self.tree.RunNumber <= 184169:
             return True
         event.taus.select(lambda tau:
-                not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
+            not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
                  and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
         return len(event.taus) >= self.min_taus
 
