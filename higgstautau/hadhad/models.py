@@ -311,9 +311,9 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
             tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
             tree.dEta_jets = abs(
-                    jet1.fourvect.Eta() - jet2.fourvect.Eta())
+                jet1.fourvect.Eta() - jet2.fourvect.Eta())
             #tree.dEta_jets_boosted = abs(
-            #        jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+            #    jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
 
             tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
             #tree.eta_product_jets_boosted = (jet1.fourvect_boosted.Eta() *
@@ -384,10 +384,10 @@ class EventModel(TreeModel):
     dEta_tau1_tau2 = FloatCol()
     dPhi_tau1_tau2 = FloatCol()
 
-    dEta_quarks = FloatCol()
-    dEta_jets = FloatCol()
+    dEta_quarks = FloatCol(default=-1)
+    dEta_jets = FloatCol(default=-1)
     #dEta_jets_boosted = FloatCol()
-    eta_product_jets = FloatCol()
+    eta_product_jets = FloatCol(default=-1E10)
     #eta_product_jets_boosted = FloatCol()
 
     #sphericity = FloatCol()
