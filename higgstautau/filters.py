@@ -565,12 +565,13 @@ def jet_selection_2011(jet):
         return False
 
     # suppress forward jets
-    if (2.5 < abs(jet.eta) < 3.5) and not (jet.pt > 30 * GeV):
+    if (abs(jet.eta) > 2.4) and not (jet.pt > 30 * GeV):
         return False
 
     # JVF cut on central jets
-    if (abs(jet.eta) < 2.4) and not (abs(jet.jvtxf) > 0.75):
-        return False
+    #if (abs(jet.eta) < 2.4) and not (abs(jet.jvtxf) > 0.75):
+    #    return False
+    # NO JVFUncertaintyTool for 2011!
 
     return True
 
@@ -590,7 +591,7 @@ def jet_selection_2012(jet):
         return False
 
     # JVF cut on central jets below 50 GeV
-    if (jet.fourvect.Pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
+    if (jet.pt < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
         if not (abs(jet.jvtxf) > 0.5):
             return False
 
