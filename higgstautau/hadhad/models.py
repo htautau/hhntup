@@ -409,14 +409,14 @@ class EventModel(TreeModel):
     eta_product_jets = FloatCol(default=-1E10)
     eta_product_jets_boosted = FloatCol(default=-1E10)
 
-    sphericity = FloatCol(default=-1)
-    aplanarity = FloatCol(default=-1)
+    #sphericity = FloatCol(default=-1)
+    #aplanarity = FloatCol(default=-1)
 
-    sphericity_boosted = FloatCol(default=-1)
-    aplanarity_boosted = FloatCol(default=-1)
+    #sphericity_boosted = FloatCol(default=-1)
+    #aplanarity_boosted = FloatCol(default=-1)
 
-    sphericity_full = FloatCol(default=-1)
-    aplanarity_full = FloatCol(default=-1)
+    #sphericity_full = FloatCol(default=-1)
+    #aplanarity_full = FloatCol(default=-1)
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
