@@ -859,60 +859,6 @@ class hhskim(ATLASStudent):
             #                if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
             #                    setattr(tree, 'jet%i_matched' % i, True)
 
-            ###########################
-            # truth matching
-            ###########################
-            #if datatype in (datasets.MC, datasets.EMBED):
-            #    # match only with visible true taus
-            #    event.truetaus.select(
-            #            lambda tau: tau.vis_Et > 10 * GeV and abs(tau.vis_eta) < 2.5)
-            #    if len(event.truetaus) > 2:
-            #        log.warning("too many true taus: %i" % len(event.truetaus))
-            #        for truetau in event.truetaus:
-            #            print "truth (pT: %.4f, eta: %.4f, phi: %.4f)" % (
-            #                    truetau.pt, truetau.eta, truetau.phi),
-            #            if truetau.tauAssoc_index >= 0:
-            #                matched_tau = event.taus.getitem(truetau.tauAssoc_index)
-            #                print " ==> reco (pT: %.4f, eta: %.4f, phi: %.4f)" % (
-            #                        matched_tau.pt, matched_tau.eta, matched_tau.phi),
-            #                print "dR = %.4f" % truetau.tauAssoc_dr
-            #            else:
-            #                print ""
-            #        tree.error = True
-            #    unmatched_reco = range(2)
-            #    unmatched_truth = range(event.truetaus.len())
-            #    matched_truth = []
-            #    for i, tau in enumerate((tau1, tau2)):
-            #        # TODO: don't use trueTauAssoc_index due to buggy D3PD
-            #        matching_truth_index = tau.trueTauAssoc_index
-            #        if matching_truth_index >= 0:
-            #            unmatched_reco.remove(i)
-            #            # check that this tau / true tau was not previously matched
-            #            if (matching_truth_index not in unmatched_truth or
-            #                matching_truth_index in matched_truth):
-            #                log.warning("match collision!")
-            #                tau1.matched_collision = True
-            #                tau2.matched_collision = True
-            #                tree.truetau1_matched_collision = True
-            #                tree.truetau2_matched_collision = True
-            #                tree.error = True
-            #            else:
-            #                unmatched_truth.remove(matching_truth_index)
-            #                matched_truth.append(matching_truth_index)
-            #                tau.matched = True
-            #                tau.matched_dR = tau.trueTauAssoc_dr
-            #                setattr(tree, "truetau%i_matched" % (i+1), 1)
-            #                setattr(tree, "truetau%i_matched_dR" % (i+1),
-            #                        event.truetaus.getitem(
-            #                            matching_truth_index).tauAssoc_dr)
-            #                TrueTauBlock.set(tree, i+1,
-            #                        event.truetaus.getitem(matching_truth_index))
-            #    for i, j in zip(unmatched_reco, unmatched_truth):
-            #        TrueTauBlock.set(tree, i+1, event.truetaus.getitem(j))
-            #    tree.mass_vis_true_tau1_tau2 = (
-            #            tree.truetau1_fourvect_vis +
-            #            tree.truetau2_fourvect_vis).M()
-
             # Fill the tau block
             # This must come after the RecoJetBlock is filled since
             # that sets the jet_beta for boosting the taus
