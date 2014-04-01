@@ -215,6 +215,7 @@ class hhskim(ATLASStudent):
         tree.define_object(name='tau2', prefix='tau2_')
         tree.define_object(name='jet1', prefix='jet1_')
         tree.define_object(name='jet2', prefix='jet2_')
+        tree.define_object(name='jet3', prefix='jet3_')
 
         mmc_objects = [
             tree.define_object(name='mmc0', prefix='mmc0_'),
@@ -618,6 +619,7 @@ class hhskim(ATLASStudent):
             # tau2 is the subleading tau
             tau1, tau2 = event.taus
             jets = list(event.jets)
+            jet1, jet2, jet3 = None, None, None
 
             if len(jets) >= 2:
                 jet1, jet2 = jets[:2]
@@ -636,8 +638,6 @@ class hhskim(ATLASStudent):
                 tau2.fourvect_boosted.copy_from(tau2.fourvect)
                 tau1.fourvect_boosted.Boost(beta * -1)
                 tau2.fourvect_boosted.Boost(beta * -1)
-
-                RecoJetBlock.set(tree, jet1, jet2)
 
                 tau1.min_dr_jet = min(
                     tau1.fourvect.DeltaR(jet1.fourvect),
@@ -690,9 +690,16 @@ class hhskim(ATLASStudent):
                     jet1.fourvect_boosted.Eta(),
                     jet2.fourvect_boosted.Eta())
 
-            elif len(jets) >= 1:
+                # 3rd leading jet
+                if len(jets) >= 3:
+                    jet3 = jets[2]
+                    jet3.fourvect_boosted.copy_from(jet3.fourvect)
+                    jet3.fourvect_boosted.Boost(beta * -1)
+
+                RecoJetBlock.set(tree, jet1, jet2, jet3)
+
+            elif len(jets) == 1:
                 jet1 = jets[0]
-                RecoJetBlock.set(tree, jet1)
 
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
@@ -706,6 +713,20 @@ class hhskim(ATLASStudent):
                 tree.sphericity = sphericity
                 # aplanarity
                 tree.aplanarity = aplanarity
+
+                RecoJetBlock.set(tree, jet1)
+
+            # mass of ditau + leading jet system
+            if jet1 is not None:
+                tree.mass_tau1_tau2_jet1 = (
+                    tau1.fourvect + tau2.fourvect + jet1.fourvect).M()
+
+            # full sphericity and aplanarity
+            sphericity_full, aplanarity_full = eventshapes.sphericity_aplanarity(
+                [tau1.fourvect, tau2.fourvect] + [jet.fourvect for jet in jets])
+
+            tree.sphericity_full = sphericity_full
+            tree.aplanarity_full = aplanarity_full
 
             #####################################
             # number of tracks from PV minus taus
@@ -754,7 +775,7 @@ class hhskim(ATLASStudent):
             tree.MET_sumet = sumET
             if sumET != 0:
                 tree.MET_sig = ((2. * MET / GeV) /
-                        (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
+                    (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
             else:
                 tree.MET_sig = -1.
 
@@ -792,6 +813,12 @@ class hhskim(ATLASStudent):
             tree.vector_sum_pt = sum(
                 [tau1.fourvect, tau2.fourvect] +
                 [jet.fourvect for jet in jets[:2]] +
+                [MET_4vect]).Pt()
+
+            # vector sum pT with all selected jets and MET
+            tree.vector_sum_pt_full = sum(
+                [tau1.fourvect, tau2.fourvect] +
+                [jet.fourvect for jet in jets] +
                 [MET_4vect]).Pt()
 
             # resonance pT

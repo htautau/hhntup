@@ -14,6 +14,7 @@ ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
 from ..utils import et2pt
 from .. import datasets
 from .. import utils
+from .. import eventshapes
 from ..models import MatchedObject
 
 import math
@@ -69,9 +70,10 @@ class MMCModel(MMCOutput.prefix('mmc0_'),
 class MassModel(MMCModel):
     mass_collinear_tau1_tau2 = FloatCol()
     mass_vis_tau1_tau2 = FloatCol()
-    mass_jet1_jet2 = FloatCol()
-    mass_vis_true_tau1_tau2 = FloatCol()
-    mass_true_quark1_quark2 = FloatCol()
+    mass_jet1_jet2 = FloatCol(default=-1E10)
+    mass_tau1_tau2_jet1 = FloatCol(default=-1E10)
+    #mass_vis_true_tau1_tau2 = FloatCol()
+    #mass_true_quark1_quark2 = FloatCol()
 
 
 class METModel(TreeModel):
@@ -93,8 +95,8 @@ class METModel(TreeModel):
     dPhi_min_tau_MET = FloatCol()
     MET_bisecting = BoolCol()
 
-    MET_centrality = FloatCol()
-    MET_centrality_boosted = FloatCol()
+    MET_centrality = FloatCol(default=-1E10)
+    MET_centrality_boosted = FloatCol(default=-1E10)
 
 
 class EmbeddingModel(TreeModel):
@@ -124,8 +126,8 @@ class RecoTau(FourMomentum):
     jvtxf = FloatCol()
     seedCalo_centFrac = FloatCol()
 
-    centrality = FloatCol()
-    centrality_boosted = FloatCol()
+    centrality = FloatCol(default=-1E10)
+    centrality_boosted = FloatCol(default=-1E10)
 
     # efficiency scale factor if matches truth
     id_sf = FloatCol(default=1.)
@@ -181,9 +183,7 @@ class RecoTau(FourMomentum):
 
 class RecoJet(FourMomentum):
     index = IntCol(default=-1)
-
     jvtxf = FloatCol()
-    BDTJetScore = FloatCol()
 
 
 class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
@@ -286,16 +286,19 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.collinear_momentum_fraction = intau.collinear_momentum_fraction
 
 
-class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
-                   (RecoJet + MatchedObject).prefix('jet2_')):
+class RecoJetBlock(RecoJet.prefix('jet1_') +
+                   RecoJet.prefix('jet2_') +
+                   RecoJet.prefix('jet3_')):
     #jet_transformation = LorentzRotation
     jet_beta = Vector3
     #parton_beta = Vector3
     numJets = IntCol()
     nonisolatedjet = BoolCol()
+    jet3_centrality = FloatCol(default=-1E10)
+    jet3_centrality_boosted = FloatCol(default=-1E10)
 
     @classmethod
-    def set(cls, tree, jet1, jet2=None):
+    def set(cls, tree, jet1, jet2=None, jet3=None):
         FourMomentum.set(tree.jet1, jet1)
         tree.jet1_jvtxf = jet1.jvtxf
         tree.jet1_index = jet1.index
@@ -317,6 +320,23 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
         tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
         tree.eta_product_jets_boosted = (
             jet1.fourvect_boosted.Eta() * jet2.fourvect_boosted.Eta())
+
+        if jet3 is None:
+            return
+
+        FourMomentum.set(tree.jet3, jet3)
+        tree.jet3_jvtxf = jet3.jvtxf
+        tree.jet3_index = jet3.index
+
+        # eta centrality of 3rd leading jet
+        tree.jet3_centrality = eventshapes.eta_centrality(
+            jet3.fourvect.Eta(),
+            jet1.fourvect.Eta(),
+            jet2.fourvect.Eta())
+        tree.jet3_centrality_boosted = eventshapes.eta_centrality(
+            jet3.fourvect_boosted.Eta(),
+            jet1.fourvect_boosted.Eta(),
+            jet2.fourvect_boosted.Eta())
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
@@ -387,17 +407,21 @@ class EventModel(TreeModel):
     dEta_jets = FloatCol(default=-1)
     dEta_jets_boosted = FloatCol()
     eta_product_jets = FloatCol(default=-1E10)
-    eta_product_jets_boosted = FloatCol()
+    eta_product_jets_boosted = FloatCol(default=-1E10)
 
-    sphericity = FloatCol()
-    aplanarity = FloatCol()
+    sphericity = FloatCol(default=-1)
+    aplanarity = FloatCol(default=-1)
 
-    sphericity_boosted = FloatCol()
-    aplanarity_boosted = FloatCol()
+    sphericity_boosted = FloatCol(default=-1)
+    aplanarity_boosted = FloatCol(default=-1)
+
+    sphericity_full = FloatCol(default=-1)
+    aplanarity_full = FloatCol(default=-1)
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
     vector_sum_pt = FloatCol()
+    vector_sum_pt_full = FloatCol()
     resonance_pt = FloatCol()
 
     ntrack_pv = IntCol()
