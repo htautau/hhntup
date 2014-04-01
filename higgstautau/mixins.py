@@ -114,6 +114,7 @@ class TauFourMomentum(FourMomentum):
         self.id = IDNONE
 
         self.centrality = 0.
+        self.centrality_boosted = 0.
 
         # vertex association
         self.vertex_prob = 0.

@@ -624,18 +624,18 @@ class hhskim(ATLASStudent):
 
                 # determine boost of system
                 # determine jet CoM frame
-                #beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-                #tree.jet_beta.copy_from(beta)
+                beta = (jet1.fourvect + jet2.fourvect).BoostVector()
+                tree.jet_beta.copy_from(beta)
 
-                #jet1.fourvect_boosted.copy_from(jet1.fourvect)
-                #jet2.fourvect_boosted.copy_from(jet2.fourvect)
-                #jet1.fourvect_boosted.Boost(beta * -1)
-                #jet2.fourvect_boosted.Boost(beta * -1)
+                jet1.fourvect_boosted.copy_from(jet1.fourvect)
+                jet2.fourvect_boosted.copy_from(jet2.fourvect)
+                jet1.fourvect_boosted.Boost(beta * -1)
+                jet2.fourvect_boosted.Boost(beta * -1)
 
-                #tau1.fourvect_boosted.copy_from(tau1.fourvect)
-                #tau2.fourvect_boosted.copy_from(tau2.fourvect)
-                #tau1.fourvect_boosted.Boost(beta * -1)
-                #tau2.fourvect_boosted.Boost(beta * -1)
+                tau1.fourvect_boosted.copy_from(tau1.fourvect)
+                tau2.fourvect_boosted.copy_from(tau2.fourvect)
+                tau1.fourvect_boosted.Boost(beta * -1)
+                tau2.fourvect_boosted.Boost(beta * -1)
 
                 RecoJetBlock.set(tree, jet1, jet2)
 
@@ -646,27 +646,27 @@ class hhskim(ATLASStudent):
                     tau2.fourvect.DeltaR(jet1.fourvect),
                     tau2.fourvect.DeltaR(jet2.fourvect))
 
-                #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
-                #    [tau1.fourvect,
-                #     tau2.fourvect,
-                #     jet1.fourvect,
-                #     jet2.fourvect])
+                sphericity, aplanarity = eventshapes.sphericity_aplanarity(
+                    [tau1.fourvect,
+                     tau2.fourvect,
+                     jet1.fourvect,
+                     jet2.fourvect])
 
-                ## sphericity
-                #tree.sphericity = sphericity
-                ## aplanarity
-                #tree.aplanarity = aplanarity
+                # sphericity
+                tree.sphericity = sphericity
+                # aplanarity
+                tree.aplanarity = aplanarity
 
-                #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
-                #    [tau1.fourvect_boosted,
-                #     tau2.fourvect_boosted,
-                #     jet1.fourvect_boosted,
-                #     jet2.fourvect_boosted])
+                sphericity_boosted, aplanarity_boosted = eventshapes.sphericity_aplanarity(
+                    [tau1.fourvect_boosted,
+                     tau2.fourvect_boosted,
+                     jet1.fourvect_boosted,
+                     jet2.fourvect_boosted])
 
-                ## sphericity
-                #tree.sphericity_boosted = sphericity
-                ## aplanarity
-                #tree.aplanarity_boosted = aplanarity
+                # sphericity
+                tree.sphericity_boosted = sphericity_boosted
+                # aplanarity
+                tree.aplanarity_boosted = aplanarity_boosted
 
                 # tau centrality (degree to which they are between the two jets)
                 tau1.centrality = eventshapes.eta_centrality(
@@ -679,16 +679,16 @@ class hhskim(ATLASStudent):
                     jet1.fourvect.Eta(),
                     jet2.fourvect.Eta())
 
-                ## boosted tau centrality
-                #tau1.centrality_boosted = eventshapes.eta_centrality(
-                #    tau1.fourvect_boosted.Eta(),
-                #    jet1.fourvect_boosted.Eta(),
-                #    jet2.fourvect_boosted.Eta())
+                # boosted tau centrality
+                tau1.centrality_boosted = eventshapes.eta_centrality(
+                    tau1.fourvect_boosted.Eta(),
+                    jet1.fourvect_boosted.Eta(),
+                    jet2.fourvect_boosted.Eta())
 
-                #tau2.centrality_boosted = eventshapes.eta_centrality(
-                #    tau2.fourvect_boosted.Eta(),
-                #    jet1.fourvect_boosted.Eta(),
-                #    jet2.fourvect_boosted.Eta())
+                tau2.centrality_boosted = eventshapes.eta_centrality(
+                    tau2.fourvect_boosted.Eta(),
+                    jet1.fourvect_boosted.Eta(),
+                    jet2.fourvect_boosted.Eta())
 
             elif len(jets) >= 1:
                 jet1 = jets[0]
@@ -697,15 +697,15 @@ class hhskim(ATLASStudent):
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
 
-                #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
-                #    [tau1.fourvect,
-                #     tau2.fourvect,
-                #     jet1.fourvect])
+                sphericity, aplanarity = eventshapes.sphericity_aplanarity(
+                    [tau1.fourvect,
+                     tau2.fourvect,
+                     jet1.fourvect])
 
-                ## sphericity
-                #tree.sphericity = sphericity
-                ## aplanarity
-                #tree.aplanarity = aplanarity
+                # sphericity
+                tree.sphericity = sphericity
+                # aplanarity
+                tree.aplanarity = aplanarity
 
             #####################################
             # number of tracks from PV minus taus
@@ -730,6 +730,9 @@ class hhskim(ATLASStudent):
             MET_vect = Vector2(METx, METy)
             MET_4vect = LorentzVector()
             MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
+            MET_4vect_boosted = LorentzVector()
+            MET_4vect_boosted.copy_from(MET_4vect)
+            MET_4vect_boosted.Boost(beta * -1)
 
             tree.MET_et = MET
             tree.MET_etx = METx
@@ -759,6 +762,10 @@ class hhskim(ATLASStudent):
                 tau1.fourvect,
                 tau2.fourvect,
                 MET_vect)
+            tree.MET_centrality_boosted = eventshapes.phi_centrality(
+                tau1.fourvect_boosted,
+                tau2.fourvect_boosted,
+                MET_4vect_boosted)
 
             tree.number_of_good_vertices = len(event.vertices)
             tau1, tau2 = event.taus

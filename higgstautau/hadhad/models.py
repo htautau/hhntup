@@ -94,7 +94,7 @@ class METModel(TreeModel):
     MET_bisecting = BoolCol()
 
     MET_centrality = FloatCol()
-    #MET_centrality_boosted = FloatCol()
+    MET_centrality_boosted = FloatCol()
 
 
 class EmbeddingModel(TreeModel):
@@ -125,6 +125,7 @@ class RecoTau(FourMomentum):
     seedCalo_centFrac = FloatCol()
 
     centrality = FloatCol()
+    centrality_boosted = FloatCol()
 
     # efficiency scale factor if matches truth
     id_sf = FloatCol(default=1.)
@@ -188,11 +189,7 @@ class RecoJet(FourMomentum):
 class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                    (RecoTau + MatchedObject).prefix('tau2_')):
 
-    # true if both taus pass ID requirements
-    # TODO: remove
-    taus_pass = BoolCol()
-
-    tau_trigger_match_error = BoolCol(default=False)
+    #tau_trigger_match_error = BoolCol(default=False)
 
     # did both taus come from the same vertex?
     tau_same_vertex = BoolCol()
@@ -232,6 +229,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
             outtau.centrality = intau.centrality
+            outtau.centrality_boosted = intau.centrality_boosted
 
             if intau.matched:
                 outtau.id_sf = intau.id_sf
@@ -291,7 +289,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
                    (RecoJet + MatchedObject).prefix('jet2_')):
     #jet_transformation = LorentzRotation
-    #jet_beta = Vector3
+    jet_beta = Vector3
     #parton_beta = Vector3
     numJets = IntCol()
     nonisolatedjet = BoolCol()
@@ -302,22 +300,23 @@ class RecoJetBlock((RecoJet + MatchedObject).prefix('jet1_') +
         tree.jet1_jvtxf = jet1.jvtxf
         tree.jet1_index = jet1.index
 
-        if jet2 is not None:
+        if jet2 is None:
+            return
 
-            FourMomentum.set(tree.jet2, jet2)
-            tree.jet2_jvtxf = jet2.jvtxf
-            tree.jet2_index = jet2.index
+        FourMomentum.set(tree.jet2, jet2)
+        tree.jet2_jvtxf = jet2.jvtxf
+        tree.jet2_index = jet2.index
 
-            tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
+        tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
-            tree.dEta_jets = abs(
-                jet1.fourvect.Eta() - jet2.fourvect.Eta())
-            #tree.dEta_jets_boosted = abs(
-            #    jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+        tree.dEta_jets = abs(
+            jet1.fourvect.Eta() - jet2.fourvect.Eta())
+        tree.dEta_jets_boosted = abs(
+            jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
 
-            tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
-            #tree.eta_product_jets_boosted = (
-            #    jet1.fourvect_boosted.Eta() * jet2.fourvect_boosted.Eta())
+        tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
+        tree.eta_product_jets_boosted = (
+            jet1.fourvect_boosted.Eta() * jet2.fourvect_boosted.Eta())
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
@@ -386,15 +385,15 @@ class EventModel(TreeModel):
 
     dEta_quarks = FloatCol(default=-1)
     dEta_jets = FloatCol(default=-1)
-    #dEta_jets_boosted = FloatCol()
+    dEta_jets_boosted = FloatCol()
     eta_product_jets = FloatCol(default=-1E10)
-    #eta_product_jets_boosted = FloatCol()
+    eta_product_jets_boosted = FloatCol()
 
-    #sphericity = FloatCol()
-    #aplanarity = FloatCol()
+    sphericity = FloatCol()
+    aplanarity = FloatCol()
 
-    #sphericity_boosted = FloatCol()
-    #aplanarity_boosted = FloatCol()
+    sphericity_boosted = FloatCol()
+    aplanarity_boosted = FloatCol()
 
     sum_pt = FloatCol()
     sum_pt_full = FloatCol()
