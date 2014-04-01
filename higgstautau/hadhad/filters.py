@@ -135,12 +135,18 @@ class ElectronVeto(EventFilter):
     def passes(self, event):
         for el in event.electrons:
             pt = el.cl_E / cosh(el.tracketa)
-            if pt <= 15 * GeV: continue
-            if not ((abs(el.tracketa) < 1.37) or (1.52 < abs(el.tracketa) < 2.47)): continue
-            if el.author not in (1, 3): continue
-            if not abs(el.charge) == 1: continue
-            if el.mediumPP != 1: continue
-            if (el.OQ & 1446) != 0: continue
+            if pt <= 15 * GeV:
+                continue
+            if not ((abs(el.tracketa) < 1.37) or (1.52 < abs(el.tracketa) < 2.47)):
+                continue
+            if el.author not in (1, 3):
+                continue
+            if not abs(el.charge) == 1:
+                continue
+            if el.mediumPP != 1:
+                continue
+            if (el.OQ & 1446) != 0:
+                continue
             return False
         return True
 
