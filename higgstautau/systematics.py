@@ -280,56 +280,23 @@ class JVF(JetSystematic):
 
     @JetSystematic.set
     def run(self, jet, event):
-        """ From Melbourne's framework...:
-        TLorentzVector jet;
-        TLorentzVector aux_trueJet;
-        std::vector<TLorentzVector> trueJets;
-
-        for (int k=0; k < ao->truejet.n; k++)
-        {
-            aux_trueJet.SetPtEtaPhiM(   ao->truejet.pt->at(k),
-                                        ao->truejet.eta->at(k),
-                                        ao->truejet.phi->at(k),
-                                        ao->truejet.m->at(k));
-            if (aux_trueJet.Pt()<= 10000) continue;
-            trueJets.push_back(aux_trueJet);
-        }
-
-
-        for (int j=0; j < ao->jet.n; j++)
-        {
-            jet.SetPtEtaPhiM(ao->jet.pt->at(j),  ao->jet.eta->at(j),  ao->jet.phi->at(j),  ao->jet.m->at(j));
-
-            if (jet.Pt()>= 50000. || fabs(jet.Eta()) >= 2.4) continue;
-
-            //Verify is the jet is classified as a PU or HS jet
-            bool isPU = jvf_uncertainty_tool->isPileUpJet(jet, trueJets);
-
-            double eta_det = ao->jet.constscale_eta->at(j);
-            double JVFcutNominal = 0.5;
-            float jvf_cut_sys = jvf_uncertainty_tool->getJVFcut(JVFcutNominal, isPU, jet.Pt(), eta_det, flag);
-
-            //change variation from the jvf_cut to the jet jvf value
-            //easier to implement in the current framework, where the jvf_cut is always fixed to 0.5
-            float jvf_cut_diff = jvf_cut_sys - JVFcutNominal;
-            ao->jet.jvtxf->at(j)  =  ao->jet.jvtxf->at(j) - jvf_cut_diff;
-        }
-        """
         # JVF is only used in a certain range, so only correct for those
-        if jet.pt < 50e3 and abs(jet.eta) < 2.4:
+        if jet.pt < 50e3 and abs(jet.constscale_eta) < 2.4:
             truejets = VectorTLorentzVector()
             truejets_cache = []
             for truejet in event.truejets:
                 if truejet.pt > 10e3:
                     t = TLorentzVector()
-                    t.SetPtEtaPhiM(truejet.pt, truejet.eta, truejet.phi, truejet.m)
+                    t.SetPtEtaPhiM(truejet.pt, truejet.eta,
+                                   truejet.phi, truejet.m)
                     truejets.push_back(t)
                     truejets_cache.append(t)
-
             j = TLorentzVector()
             j.SetPtEtaPhiM(jet.pt, jet.eta, jet.phi, jet.m)
             isPU = self.jvf_tool.isPileUpJet(j, truejets)
-            jvf_cut_sys = self.jvf_tool.getJVFcut(self.JVFcutNominal, isPU, jet.pt, jet.constscale_eta, self.is_up)
+            jvf_cut_sys = self.jvf_tool.getJVFcut(
+                self.JVFcutNominal, isPU,
+                jet.pt, jet.constscale_eta, self.is_up)
             jvf_cut_diff = jvf_cut_sys - self.JVFcutNominal
             jet.jvtxf -= jvf_cut_diff
 
