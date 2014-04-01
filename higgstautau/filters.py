@@ -442,7 +442,7 @@ class TauIDMedium(EventFilter):
         super(TauIDMedium, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.JetBDTSigMedium)
+        event.taus.select(lambda tau: tau.JetBDTSigMedium == 1)
         return len(event.taus) >= self.min_taus
 
 

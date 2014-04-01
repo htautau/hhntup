@@ -9,6 +9,10 @@ from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
 from rootpy.extern.argparse import ArgumentParser
 from rootpy.io import root_open
+# Show stack traces for ROOT warning messages
+#from rootpy import log
+#import logging
+#log["/ROOT"].show_stack(min_level=logging.WARNING)
 
 from higgstautau import hepmc
 from higgstautau import tautools
@@ -363,7 +367,7 @@ class hhskim(ATLASStudent):
                 TauLArHole(2,
                     tree=tree,
                     count_funcs=count_funcs),
-                TauIDLoose(2,
+                TauIDMedium(2,
                     count_funcs=count_funcs),
                 #TauTriggerMatchIndex(
                 #    config=trigger_config,
@@ -373,7 +377,7 @@ class hhskim(ATLASStudent):
                 #    count_funcs=count_funcs),
                 # Select two leading taus at this point
                 # 25 and 35 for data
-                # 20 and 30 for MC for TES uncertainty
+                # 20 and 30 for MC to leave room for TES uncertainty
                 TauLeadSublead(
                     lead=(
                         35 * GeV if datatype == datasets.DATA or local
@@ -384,7 +388,6 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 # taus are sorted (in decreasing order) by pT from here on
                 TauIDSelection(
-                    year=year,
                     tree=tree,
                     count_funcs=count_funcs),
                 TaudR(3.2,

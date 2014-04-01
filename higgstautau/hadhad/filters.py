@@ -15,27 +15,11 @@ from . import log; log = log[__name__]
 
 class TauIDSelection(EventFilter):
 
-    def __init__(self, year, tree, **kwargs):
-        self.tree = tree
-        if year == 2011:
-            self.passes = self.passes_2011
-        elif year == 2012:
-            self.passes = self.passes_2012
-        else:
-            raise ValueError('no tau ID selection defined for year %d' % year)
+    def __init__(self, tree, **kwargs):
         super(TauIDSelection, self).__init__(**kwargs)
+        self.tree = tree
 
-    def passes_2011(self, event):
-        tau1, tau2 = event.taus
-        # signal region is: both taus medium
-        if tau1.JetBDTSigMedium and tau2.JetBDTSigMedium:
-            tau1.id = IDMEDIUM
-            tau2.id = IDMEDIUM
-            return True
-        return False
-
-    def passes_2012(self, event):
-        # taus must be sorted in descending order by pT
+    def passes(self, event):
         tau1, tau2 = event.taus
         # signal region is: both medium with at least one being tight
         if ((tau1.JetBDTSigMedium and tau2.JetBDTSigMedium) and

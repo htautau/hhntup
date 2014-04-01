@@ -9,7 +9,7 @@ from rootpy.vector import (
     LorentzRotation, LorentzVector, Vector3, Vector2)
 from rootpy import log
 ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
-        '.*transvers momentum.*')
+    '.*transvers momentum.*')
 
 from ..utils import et2pt
 from .. import datasets
