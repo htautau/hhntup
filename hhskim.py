@@ -625,6 +625,7 @@ class hhskim(ATLASStudent):
             tau1, tau2 = event.taus
             jets = list(event.jets)
             jet1, jet2, jet3 = None, None, None
+            beta = None
 
             if len(jets) >= 2:
                 jet1, jet2 = jets[:2]
@@ -758,7 +759,8 @@ class hhskim(ATLASStudent):
             MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
             MET_4vect_boosted = LorentzVector()
             MET_4vect_boosted.copy_from(MET_4vect)
-            MET_4vect_boosted.Boost(beta * -1)
+            if beta is not None:
+                MET_4vect_boosted.Boost(beta * -1)
 
             tree.MET_et = MET
             tree.MET_etx = METx
