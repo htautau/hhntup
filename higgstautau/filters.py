@@ -178,7 +178,8 @@ class JetCleaning(EventFilter):
     def passes(self, event):
         # using LC jets
         for jet in event.jets:
-            if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max: continue
+            if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max:
+                continue
             LArQmean = jet.AverageLArQF / 65535.0
             chf = jet.sumPtTrk / jet.pt
             if jetcleaning.is_bad(
@@ -195,7 +196,7 @@ class JetCleaning(EventFilter):
                     LArQmean=LArQmean):
                 return False
 
-        if self.datatype == datasets.DATA and self.year == 2012:
+        if (self.datatype in (datasets.DATA, datasets.EMBED)) and self.year == 2012:
             # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
             # Hot Tile calorimeter in period B1 and B2
             if event.RunNumber in JetCleaning.BAD_TILE:
