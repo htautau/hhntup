@@ -11,6 +11,7 @@ from . import tauid
 from . import log; log = log[__name__]
 from . import utils
 from . import datasets
+from .units import GeV
 
 # rootpy imports
 from rootpy.tree.filtering import EventFilter
@@ -306,11 +307,13 @@ class JER(JetSystematic):
         super(JER, self).__init__(is_up, **kwargs)
         # Tag assumed: JetResolution-01-00-00
         if self.year == 2011:
+            log.info("Using 2011 JER config")
             self.jer_tool = JERProvider(
                 "AntiKt4LCTopoJES", "Truth",
                 JetResolution.get_resource('JERProviderPlots_2011.root'))
             self.jer_tool.is7TeV(True)
         else:
+            log.info("Using 2012 JER config")
             self.jer_tool = JERProvider(
                 "AntiKt4LCTopoJES", "Truth",
                 JetResolution.get_resource('JERProviderPlots_2012.root'))
@@ -325,49 +328,19 @@ class JER(JetSystematic):
     def run(self, jet, event):
         """
         Note: The JERDown shift is essentially meaningless.
-        If one is smearing central values, then there is an alternate
-        definition, i.e. from r16:
-
-        S = self.jerTool.getRelResolutionData(pt/1e3,eta)
-        SMC = self.jerTool.getRelResolutionMC(pt/1e3,eta)
-        U = self.jerTool.getResolutionUncert(pt/1e3,eta)
-        smearingFactorMC = sqrt( S*S - SMC*SMC )
-        smearingFactorSystUp = sqrt( (S+U)*(S+U) - SMC*SMC )
-        smearingFactorSystDown = (S-U > SMC) ? sqrt( (S+U)*(S+U) - SMC*SMC ) : 0
-
-        float jerShift = jetRandom.Gaus(1,smearingFactorMC)
-        float jerShiftUp = jetRandom.Gaus(1,smearingFactorSystUp)/jerShift
-        float jerShiftDown = jetRandom.Gaus(1,smearingFactorSystDown)/jerShift
-
-        jet_smeared_pt = pt*jerShift
-        jerUp.push_back(jerShiftUp-1)
-        jerDown.push_back(jerShiftDown-1)
-
-        This means that we smear the MC jets to match the resolution in data
-        for central values, or the resolution +/- uncertainty.
-        The standard practice is only to use res + uncertainty.
+        https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/JetEnergyResolutionProvider2012
         """
-        shift = 0.
+        shift = 1.
         # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
-        if jet.pt > 20e3 and jet.pt < 5000e3:
-            pt = jet.pt
-            eta = jet.eta
-            if abs(eta) > 4.5:
-                eta = 4.49 if eta > 0 else -4.49
-
-            S = self.jer_tool.getRelResolutionMC(pt/1e3,eta)
-            U = self.jer_tool.getResolutionUncert(pt/1e3,eta)
-            smearingFactorSyst = sqrt(pow(S+U,2)-pow(S,2))
-
+        if jet.pt > 20 * GeV and jet.pt < 10000 * GeV:
+            smear = self.jer_tool.getSmearingFactorMC(jet.pt, jet.eta)
             # You can set the seed however you like, but if reproducibility
             # is required, setting it to something like object phi ensures
             # a good mix of randomness and reproducibility.
-            self.jetrandom.SetSeed(int(1.e5 * abs(jet.phi)))
-            shift = self.jetrandom.Gaus(0, smearingFactorSyst)
+            self.jetrandom.SetSeed(int(1E5 * abs(jet.phi)))
+            shift = self.jetrandom.Gaus(1., smear)
 
-        if not self.is_up:
-            shift *= -1
-        jet.pt *= 1. + shift
+        jet.pt *= shift
 
 
 class TauSystematic(ObjectSystematic):
