@@ -106,6 +106,9 @@ class JetFourMomentum(FourMomentum):
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         self.phi_original = None
 
+        self.BCDMedium = False
+        self.BCDTight = False
+
 
 class TauFourMomentum(FourMomentum):
 
@@ -122,6 +125,9 @@ class TauFourMomentum(FourMomentum):
 
         # overlap checking
         self.min_dr_jet = 9999.
+
+        self.BCDMedium = False
+        self.BCDTight = False
 
         self._pt_nominal = -1111.
 

@@ -506,6 +506,14 @@ class hhskim(ATLASStudent):
                 JetSelection(
                     year=year,
                     count_funcs=count_funcs),
+                RecoJetTrueTauMatching(
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
+                BCHCleaning(
+                    tree=tree,
+                    passthrough=year == 2011,
+                    datatype=datatype,
+                    count_funcs=count_funcs),
             ])
 
             # set the event filters

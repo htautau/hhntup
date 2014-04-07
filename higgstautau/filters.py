@@ -16,6 +16,7 @@ from . import log; log = log[__name__]
 
 from goodruns import GRL
 
+BCH_TOOLS = []
 
 class GRLFilter(EventFilter):
 
@@ -87,6 +88,70 @@ class NvtxJets(EventFilter):
                     nvtxjets += 1
         self.tree.nvtxsoftmet = nvtxsoftmet
         self.tree.nvtxjets = nvtxjets
+        return True
+
+
+class BCHCleaning(EventFilter):
+    """
+    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/BCHCleaningTool
+    """
+    def __init__(self, tree, passthrough, datatype, **kwargs):
+        if not passthrough:
+            from externaltools import TileTripReader
+            from externaltools import BCHCleaningTool
+            from ROOT import Root
+            from ROOT import BCHTool
+            self.tree = tree
+            self.datatype = datatype
+            self.tiletool = Root.TTileTripReader()
+            self.tiletool.setTripFile(TileTripReader.get_resource("CompleteTripList_2011-2012.root"))
+            self.bchtool_data = BCHTool.BCHCleaningToolRoot()
+            self.bchtool_mc = BCHTool.BCHCleaningToolRoot()
+            self.bchtool_data.InitializeTool(True, self.tiletool, BCHCleaningTool.get_resource("FractionsRejectedJetsMC.root"))
+            self.bchtool_mc.InitializeTool(False, self.tiletool, BCHCleaningTool.get_resource("FractionsRejectedJetsMC.root"))
+            BCH_TOOLS.append(self.bchtool_data)
+            BCH_TOOLS.append(self.bchtool_mc)
+        super(BCHCleaning, self).__init__(passthrough=passthrough, **kwargs)
+
+    def passes(self, event):
+        if self.datatype in (datasets.DATA, datasets.MC, datasets.MCEMBED):
+            if self.datatype is datasets.DATA:
+                jet_tool = self.bchtool_data
+                runnumber = event.RunNumber
+                lbn = event.lbn
+            elif self.datatype in (datasets.MC, datasets.MCEMBED):
+                jet_tool = self.bchtool_mc
+                runnumber = self.tree.RunNumber
+                lbn = self.tree.lbn
+#             jet_tool.SetSeed(314159 + event.EventNumber * 2)
+            for jet in event.jets:
+                jet.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+            for tau in event.taus:
+                tau.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+
+        elif self.datatype is datasets.EMBED:
+            # Do truth-matching to find out if MC taus
+#             self.bchtool_data.SetSeed(314159 + event.EventNumber * 2)
+#             self.bchtool_mc.SetSeed(314159 + event.EventNumber * 3)
+            runnumber = event.RunNumber
+            lbn = event.lbn
+            for jet in event.jets:
+                if jet.matched:
+                    jet_tool = self.bchtool_mc
+                else:
+                    jet_tool = self.bchtool_data
+                jet.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+            for tau in event.taus:
+                if tau.matched:
+                    jet_tool = self.bchtool_mc
+                else:
+                    jet_tool = self.bchtool_data
+                tau.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+
         return True
 
 
@@ -457,6 +522,23 @@ class TruthMatching(EventFilter):
                     break
         return True
 
+
+class RecoJetTrueTauMatching(EventFilter):
+
+    def passes(self, event):
+        for jet in event.jets:
+            jet.matched = False
+            jet.matched_dr = 1111.
+            jet.matched_object = None
+            for truetau in event.truetaus:
+                dr = utils.dR(jet.eta, jet.phi, truetau.vis_eta, truetau.vis_phi)
+                if dr < 0.2:
+                    # TODO: handle possible collision!
+                    jet.matched = True
+                    jet.matched_dr = dr
+                    jet.matched_object = truetau
+                    break
+        return True
 
 class TauSelected(EventFilter):
 

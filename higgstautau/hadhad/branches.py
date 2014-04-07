@@ -59,7 +59,7 @@ REMOVE = [
     "trig_RoI_EF_b_*",
     "trig_RoI_EF_mu_*",
 
-    "tau_jet_*",
+#     "tau_jet_*",
 
     "efo_*",
 
@@ -167,6 +167,7 @@ KEEP = [
 
 REMOVE_OUTPUT = [
     'trk_*',
+    "tau_jet_*",
 ]
 
 # override REMOVE_OUTPUT above

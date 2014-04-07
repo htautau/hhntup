@@ -2,6 +2,7 @@ import ROOT
 from rootpy.tree.filtering import EventFilter
 from . import datasets
 from .pileup import PILEUP_TOOLS
+from .filters import BCH_TOOLS
 
 RANDOMS = []
 
@@ -35,6 +36,9 @@ class RandomSeed(EventFilter):
         for pileup_tool in PILEUP_TOOLS:
             # same seeds for all pileup tools
             pileup_tool.SetRandomSeed(seed + idx)
+        for bch_tool in BCH_TOOLS:
+            # same seeds for all pileup tools
+            bch_tool.SetSeed(seed + idx)
         return True
 
 
@@ -56,4 +60,5 @@ class RandomRunNumber(EventFilter):
     def passes_mc(self, event):
         # get random run number using the pileup tool
         self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        self.tree.lbn = self.pileup_tool.GetRandomLumiBlockNumber(self.tree.RunNumber)
         return True
