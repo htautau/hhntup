@@ -58,43 +58,6 @@ class CoreFlags(EventFilter):
         return (event.coreFlags & 0x40000) == 0
 
 
-class RandomSeed(EventFilter):
-
-    def __init__(self, datatype, **kwargs):
-        super(RandomSeed, self).__init__(**kwargs)
-        self.datatype = datatype
-
-    def passes(self, event):
-        # ResoSoftTerms uses gRandom for smearing.
-        # Set the seed here however you like.
-        if self.datatype in (datasets.DATA, datasets.EMBED):
-            ROOT.gRandom.SetSeed(int(event.RunNumber * event.EventNumber))
-        else:
-            ROOT.gRandom.SetSeed(int(event.mc_channel_number * event.EventNumber))
-        return True
-
-
-class RandomRunNumber(EventFilter):
-
-    def __init__(self, tree, datatype, pileup_tool, **kwargs):
-        self.tree = tree
-        self.pileup_tool = pileup_tool
-        super(RandomRunNumber, self).__init__(**kwargs)
-        if datatype in (datasets.MC, datasets.MCEMBED):
-            self.passes = self.passes_mc
-        else:
-            self.passes = self.passes_data
-
-    def passes_data(self, event):
-        self.tree.RunNumber = event.RunNumber
-        return True
-
-    def passes_mc(self, event):
-        # get random run number using the pileup tool
-        self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
-        return True
-
-
 class NvtxJets(EventFilter):
 
     def __init__(self, tree, **kwargs):

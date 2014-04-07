@@ -52,6 +52,7 @@ from higgstautau.pileup import (
     PileupTemplates, PileupReweight, get_pileup_reweighting_tool,
     averageIntPerXingPatch, PileupScale)
 from higgstautau.corrections import reweight_ggf
+from higgstautau.rand import RandomRunNumber, RandomSeed
 from higgstautau import log; log = log[__name__]
 
 

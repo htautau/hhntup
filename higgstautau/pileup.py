@@ -11,6 +11,8 @@ PU_RESCALE = {
     2012: (1.09, 0.04),
 }
 
+PILEUP_TOOLS = []
+
 
 def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
     # Initialize the pileup reweighting tool
@@ -55,6 +57,8 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
     # set the random seed used by the GetRandomRunNumber and
     # GetRandomPeriodNumber methods
     pileup_tool.SetRandomSeed(1777)
+    # register
+    PILEUP_TOOLS.append(pileup_tool)
     return pileup_tool
 
 

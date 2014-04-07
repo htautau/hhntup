@@ -12,6 +12,7 @@ from . import log; log = log[__name__]
 from . import utils
 from . import datasets
 from .units import GeV
+from .rand import get_random
 
 # rootpy imports
 from rootpy.tree.filtering import EventFilter
@@ -318,11 +319,7 @@ class JER(JetSystematic):
                 "AntiKt4LCTopoJES", "Truth",
                 JetResolution.get_resource('JERProviderPlots_2012.root'))
         self.jer_tool.init()
-        # Note on use of ROOT random number generators:
-        # TRandom and TRandom2 have many documented deficiencies.
-        # TRandom3 is generally considered safely usable.
-        # Also note that ROOT's gRandom calls TRandom3.
-        self.jetrandom = ROOT.TRandom3()
+        self.jetrandom = get_random()
 
     @JetSystematic.set
     def run(self, jet, event):
@@ -334,12 +331,7 @@ class JER(JetSystematic):
         # Allowable range is > 10 GeV, but anything below 20 enters SoftJets
         if jet.pt > 20 * GeV and jet.pt < 10000 * GeV:
             smear = self.jer_tool.getSmearingFactorMC(jet.pt, jet.eta)
-            # You can set the seed however you like, but if reproducibility
-            # is required, setting it to something like object phi ensures
-            # a good mix of randomness and reproducibility.
-            self.jetrandom.SetSeed(int(1E5 * abs(jet.phi)))
             shift = self.jetrandom.Gaus(1., smear)
-
         jet.pt *= shift
 
 
