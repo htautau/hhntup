@@ -26,6 +26,7 @@ class RandomSeed(EventFilter):
             seed = int(event.RunNumber + event.EventNumber)
         else:
             seed = int(event.mc_channel_number + event.EventNumber)
+        # METUtility uses gRandom
         ROOT.gRandom.SetSeed(seed)
         idx = 1
         for random in RANDOMS:
