@@ -129,7 +129,6 @@ def qsub(cmd,
          stdout_path=None,
          name=None,
          dry_run=False):
-
     MONITOR.update()
     kwargs = {}
     if name is not None:
@@ -141,7 +140,7 @@ def qsub(cmd,
         kwargs['-e'] = stderr_path
     if stdout_path is not None:
         kwargs['-o'] = stdout_path
-    args = ' '.join(['%s %s' % arg for arg in kwargs.items()])
+    args = ' '.join(['%s "%s"' % arg for arg in kwargs.items()])
     cmd = "echo '%s' | qsub -q %s %s -l ncpus=%d" % (
            cmd, queue, args, ncpus)
     print cmd

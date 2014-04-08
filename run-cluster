@@ -8,5 +8,6 @@ from pbs import qsub
 setup = cluster.get_setup(os.path.join(
     os.path.dirname(cluster.__file__), 'setup.noel.sfu.txt'))
 cmd = ' '.join(sys.argv[1:])
+name = cmd.replace(" ", "_")
 cmd = "cd %s && %s && %s" % (os.getcwd(), setup, cmd)
-qsub(cmd)
+qsub(cmd, name=name)
