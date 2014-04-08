@@ -1,3 +1,5 @@
+# https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MC12APAPER2014
+
 # ttbar 1 lepton filter
 mc12_8TeV.117050.PowhegPythia_P2011C_ttbar.merge.NTUP_TAU.e1728_s1581_s1586_r3658_r3549_p1443/
 # ttbar fully hadronic
