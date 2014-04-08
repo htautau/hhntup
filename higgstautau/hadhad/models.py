@@ -407,18 +407,17 @@ class EventModel(TreeModel):
     pileup_weight_low = FloatCol(default=1.)
 
     mc_weight = FloatCol(default=1.)
-    ggf_weight = FloatCol(default=1.)
 
-    dR_quarks = FloatCol()
-    dR_truetaus = FloatCol()
-    dR_taus = FloatCol()
-    dR_jets = FloatCol()
-    dR_quark_tau = FloatCol()
+    #dR_quarks = FloatCol()
+    #dR_truetaus = FloatCol()
+    #dR_taus = FloatCol()
+    #dR_jets = FloatCol()
+    #dR_quark_tau = FloatCol()
     dR_tau1_tau2 = FloatCol()
     dEta_tau1_tau2 = FloatCol()
     dPhi_tau1_tau2 = FloatCol()
 
-    dEta_quarks = FloatCol(default=-1)
+    #dEta_quarks = FloatCol(default=-1)
     dEta_jets = FloatCol(default=-1)
     dEta_jets_boosted = FloatCol()
     eta_product_jets = FloatCol(default=-1E10)
@@ -438,6 +437,7 @@ class EventModel(TreeModel):
     vector_sum_pt = FloatCol()
     vector_sum_pt_full = FloatCol()
     resonance_pt = FloatCol()
+    true_resonance_pt = FloatCol()
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()

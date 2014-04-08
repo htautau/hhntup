@@ -756,3 +756,27 @@ class JetCopy(EventFilter):
             tree.jet_eta_original.push_back(jet.eta)
             tree.jet_phi_original.push_back(jet.phi)
         return True
+
+
+class HiggsPT(EventFilter):
+
+    def __init__(self, year, tree, **kwargs):
+        super(HiggsPT, self).__init__(**kwargs)
+        self.tree = tree
+        if year == 2011:
+            self.status = 2
+        elif year == 2012:
+            self.status = 62
+        else:
+            raise ValueError("No HiggsPT defined for year {0}".format(year))
+
+    def passes(self, event):
+        pt = 0
+        status = self.status
+        for mc in event.mc:
+            if mc.pdgId == 25 and mc.status == status:
+                pt = mc.pt
+                break
+        self.tree.true_resonance_pt = pt
+        log.info(str(pt))
+        return True

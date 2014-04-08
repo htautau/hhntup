@@ -109,7 +109,7 @@ class hhskim(ATLASStudent):
 
         # is this a signal sample?
         # if so we will also keep some truth information in the output below
-        is_signal = (
+        is_signal = datatype == datasets.MC and (
             '_VBFH' in dsname or
             '_ggH' in dsname or
             '_ZH' in dsname or
@@ -450,11 +450,10 @@ class hhskim(ATLASStudent):
                          Systematics.TES_FAKE_FINAL_DOWN in self.args.syst_terms)),
                     passthrough=datatype in (datasets.DATA, datasets.EMBED),
                     count_funcs=count_funcs),
-                ggFReweighting(
-                    dsname=dsname,
+                HiggsPT(
+                    year=year,
                     tree=tree,
-                    # no ggf reweighting for 2012 MC
-                    passthrough=datatype != datasets.MC or year != 2011,
+                    passthrough=not is_signal,
                     count_funcs=count_funcs),
                 TauTrackRecounting(
                     year=year,
