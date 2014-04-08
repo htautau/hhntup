@@ -119,7 +119,7 @@ class BCHCleaning(EventFilter):
                 jet_tool = self.bchtool_data
                 runnumber = event.RunNumber
                 lbn = event.lbn
-            elif self.datatype in (datasets.MC, datasets.MCEMBED):
+            else:
                 jet_tool = self.bchtool_mc
                 runnumber = self.tree.RunNumber
                 lbn = self.tree.lbn
