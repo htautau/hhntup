@@ -778,5 +778,4 @@ class HiggsPT(EventFilter):
                 pt = mc.pt
                 break
         self.tree.true_resonance_pt = pt
-        log.info(str(pt))
         return True
