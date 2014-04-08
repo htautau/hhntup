@@ -2,6 +2,7 @@ import ROOT
 from rootpy.tree.filtering import EventFilter
 from . import datasets
 from .pileup import PILEUP_TOOLS
+from .filters import BCH_TOOLS
 
 RANDOMS = []
 
@@ -29,7 +30,7 @@ class RandomSeed(EventFilter):
         # METUtility uses gRandom
         ROOT.gRandom.SetSeed(seed)
         idx = 1
-        for random in RANDOMS:
+        for random in RANDOMS + BCH_TOOLS:
             random.SetSeed(seed + idx)
             idx += 1
         for pileup_tool in PILEUP_TOOLS:
@@ -56,4 +57,5 @@ class RandomRunNumber(EventFilter):
     def passes_mc(self, event):
         # get random run number using the pileup tool
         self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        self.tree.lbn = self.pileup_tool.GetRandomLumiBlockNumber(self.tree.RunNumber)
         return True
