@@ -5,7 +5,7 @@ ggFResources = ggFReweighting.RESOURCE_PATH
 from ROOT import ggFReweighting
 
 #################################################
-#ggF reweighting
+# ggF reweighting DO NOT USE THIS ANYMORE
 #################################################
 
 
