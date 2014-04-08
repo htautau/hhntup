@@ -126,8 +126,8 @@ class RecoTau(FourMomentum):
     jvtxf = FloatCol()
     seedCalo_centFrac = FloatCol()
 
-    BCDMedium = BoolCol()
-    BCDTight = BoolCol()
+    BCHMedium = BoolCol()
+    BCHTight = BoolCol()
 
     centrality = FloatCol(default=-1E10)
     centrality_boosted = FloatCol(default=-1E10)
@@ -188,8 +188,8 @@ class RecoJet(FourMomentum):
     index = IntCol(default=-1)
     jvtxf = FloatCol()
     BDTJetScore = FloatCol()
-    BCDMedium = BoolCol()
-    BCDTight = BoolCol()
+    BCHMedium = BoolCol()
+    BCHTight = BoolCol()
 
 
 class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
@@ -234,8 +234,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.jvtxf = intau.jet_jvtxf
             outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
-            outtau.BCDMedium = intau.BCDMedium
-            outtau.BCDTight = intau.BCDTight
+            outtau.BCHMedium = intau.BCHMedium
+            outtau.BCHTight = intau.BCHTight
 
             outtau.centrality = intau.centrality
             outtau.centrality_boosted = intau.centrality_boosted
@@ -311,8 +311,8 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
         FourMomentum.set(tree.jet1, jet1)
         tree.jet1_jvtxf = jet1.jvtxf
         tree.jet1_index = jet1.index
-        tree.jet1_BCDMedium = jet1.BCDMedium
-        tree.jet1_BCDTight = jet1.BCDTight
+        tree.jet1_BCHMedium = jet1.BCHMedium
+        tree.jet1_BCHTight = jet1.BCHTight
 
         if jet2 is None:
             return
@@ -320,8 +320,8 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
         FourMomentum.set(tree.jet2, jet2)
         tree.jet2_jvtxf = jet2.jvtxf
         tree.jet2_index = jet2.index
-        tree.jet2_BCDMedium = jet2.BCDMedium
-        tree.jet2_BCDTight = jet2.BCDTight
+        tree.jet2_BCHMedium = jet2.BCHMedium
+        tree.jet2_BCHTight = jet2.BCHTight
 
         tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
@@ -340,8 +340,8 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
         FourMomentum.set(tree.jet3, jet3)
         tree.jet3_jvtxf = jet3.jvtxf
         tree.jet3_index = jet3.index
-        tree.jet3_BCDMedium = jet3.BCDMedium
-        tree.jet3_BCDTight = jet3.BCDTight
+        tree.jet3_BCHMedium = jet3.BCHMedium
+        tree.jet3_BCHTight = jet3.BCHTight
 
         # eta centrality of 3rd leading jet
         tree.jet3_centrality = eventshapes.eta_centrality(

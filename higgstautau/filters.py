@@ -115,7 +115,7 @@ class BCHCleaning(EventFilter):
 
     def passes(self, event):
         if self.datatype in (datasets.DATA, datasets.MC, datasets.MCEMBED):
-            if self.datatype is datasets.DATA:
+            if self.datatype == datasets.DATA:
                 jet_tool = self.bchtool_data
                 runnumber = event.RunNumber
                 lbn = event.lbn
@@ -123,18 +123,18 @@ class BCHCleaning(EventFilter):
                 jet_tool = self.bchtool_mc
                 runnumber = self.tree.RunNumber
                 lbn = self.tree.lbn
-#             jet_tool.SetSeed(314159 + event.EventNumber * 2)
+                #jet_tool.SetSeed(314159 + event.EventNumber * 2)
             for jet in event.jets:
-                jet.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
-                jet.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
             for tau in event.taus:
-                tau.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
-                tau.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
 
-        elif self.datatype is datasets.EMBED:
+        elif self.datatype == datasets.EMBED:
             # Do truth-matching to find out if MC taus
-#             self.bchtool_data.SetSeed(314159 + event.EventNumber * 2)
-#             self.bchtool_mc.SetSeed(314159 + event.EventNumber * 3)
+            #self.bchtool_data.SetSeed(314159 + event.EventNumber * 2)
+            #self.bchtool_mc.SetSeed(314159 + event.EventNumber * 3)
             runnumber = event.RunNumber
             lbn = event.lbn
             for jet in event.jets:
@@ -142,15 +142,15 @@ class BCHCleaning(EventFilter):
                     jet_tool = self.bchtool_mc
                 else:
                     jet_tool = self.bchtool_data
-                jet.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
-                jet.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
             for tau in event.taus:
                 if tau.matched:
                     jet_tool = self.bchtool_mc
                 else:
                     jet_tool = self.bchtool_data
-                tau.BCDMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
-                tau.BCDMedium = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
 
         return True
 
