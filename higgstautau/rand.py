@@ -30,15 +30,12 @@ class RandomSeed(EventFilter):
         # METUtility uses gRandom
         ROOT.gRandom.SetSeed(seed)
         idx = 1
-        for random in RANDOMS:
+        for random in RANDOMS + BCH_TOOLS:
             random.SetSeed(seed + idx)
             idx += 1
         for pileup_tool in PILEUP_TOOLS:
             # same seeds for all pileup tools
             pileup_tool.SetRandomSeed(seed + idx)
-        for bch_tool in BCH_TOOLS:
-            # same seeds for all pileup tools
-            bch_tool.SetSeed(seed + idx)
         return True
 
 
