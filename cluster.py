@@ -16,35 +16,28 @@ HOSTNAME = socket.gethostname()
 class Host(object):
 
     def __init__(self, name):
-
         self.name = name
         self.njobs = 0
 
     @property
     def load(self):
-
         return get_load(self.name)
 
     def load_metric(self):
-
         return self.load * (self.njobs + 1) + self.njobs
 
     def __cmp__(self, other):
-
         return cmp(self.load_metric(),
                    other.load_metric())
 
     def __str__(self):
-
         return "%s(%.3f:%d)" % (self.name, self.load, self.njobs)
 
     def __repr__(self):
-
         return str(self)
 
 
 def get_load(host):
-
     # normalize by the number of CPUs
     cmd = ('python -c "import os; print (os.getloadavg()[0] / '
            'open(\\"/proc/cpuinfo\\").read().count(\\"processor\\t:\\"))"')
@@ -56,7 +49,6 @@ def get_load(host):
 
 
 def get_hosts(filename):
-
     hosts = None
     with open(filename) as f:
         hosts = [line.strip() for line in f.readlines()]
@@ -64,14 +56,12 @@ def get_hosts(filename):
 
 
 def get_setup(filename):
-
     with open(filename) as f:
         return ' && '.join([line.strip() for line
                             in f.readlines()])
 
 
 def mkdir_p(path):
-
     try:
         os.makedirs(path)
     except OSError as exc: # Python >2.5
@@ -81,7 +71,6 @@ def mkdir_p(path):
 
 
 def run_helper(cmd):
-
     subprocess.call(cmd, shell=True)
 
 
@@ -134,7 +123,6 @@ def run(student,
         CMD = "%s && %s" % (setup, CMD)
     CWD = os.getcwd()
 
-    hosts = [Host(host) for host in hosts]
     datasets = datasets[:]
 
     proc_cmds = []
@@ -181,6 +169,7 @@ def run(student,
 
     if not use_qsub and not dry_run:
         # use simple ssh with basic load balancing
+        hosts = [Host(host) for host in hosts]
         procs = []
         while True:
             active = mp.active_children()
@@ -202,7 +191,6 @@ def run(student,
 
 
 def run_systematics(channel, student, systematics=None, **kwargs):
-
     student_args = kwargs.pop('student_args', [])
     for sys_variations in iter_systematics(channel):
         if systematics is not None:
@@ -220,8 +208,7 @@ def run_systematics(channel, student, systematics=None, **kwargs):
 
 
 def run_systematics_new(channel, student, datasets, systematics,
-        filter_systematics=None, **kwargs):
-
+                        filter_systematics=None, **kwargs):
     student_args = kwargs.pop('student_args', [])
     for sys_variations in systematics:
         if filter_systematics is not None:

@@ -7,7 +7,6 @@ import datetime
 
 
 def print_table(table, sep='  '):
-
     # Reorganize data by columns
     cols = zip(*table)
     # Compute column widths by taking maximum length of values per column
@@ -22,33 +21,27 @@ def print_table(table, sep='  '):
 class Job(object):
 
     def __init__(self, id, info):
-
         self.id = id
         self.info = info
 
     def __getattr__(self, attr):
-
         return self.info[attr]
 
     @property
     def name(self):
-
         return self.info['Job_Name']
 
     @property
     def hung(self):
-
         # is the wall time higher than the CPU time by 50%?
         return self.walltime > 1.5 * self.cputime and self.walltime > 60
 
     @property
     def healthy(self):
-
         return not self.hung
 
     @property
     def health_status(self):
-
         # is the wall time higher than the CPU time?
         if self.healthy:
             return 'GOOD'
@@ -56,7 +49,6 @@ class Job(object):
 
     @property
     def cputime(self):
-
         if 'resources_used.cput' not in self.info:
             return 0
         x = map(int, self.info['resources_used.cput'].split(':'))
@@ -64,7 +56,6 @@ class Job(object):
 
     @property
     def walltime(self):
-
         if 'resources_used.walltime' not in self.info:
             return 0
         x = map(int, self.info['resources_used.walltime'].split(':'))
@@ -72,14 +63,12 @@ class Job(object):
 
     @property
     def host(self):
-
         if 'exec_host' in self.info:
             return self.info['exec_host']
         return '-'
 
     @property
     def status(self):
-
         return (self.id,
                 self.info['job_state'],
                 self.host,
@@ -92,14 +81,12 @@ class Job(object):
 class PBSMonitor(object):
 
     def __init__(self):
-
         self.user = getpass.getuser()
         self.jobs = {}
         self.job_names = {}
         self.update()
 
     def update(self):
-
         qstat = subprocess.Popen(
             ['qstat', '-f', '-1'],
             stdout=subprocess.PIPE).communicate()[0]
@@ -122,11 +109,9 @@ class PBSMonitor(object):
             self.jobs[jobid] = job
 
     def has_jobname(self, name):
-
         return name in self.job_names
 
     def print_jobs(self):
-
         rows = []
         for id, job in sorted(self.jobs.items(),
                 key=lambda item: int(item[0].split('.')[0])):
@@ -165,5 +150,4 @@ def qsub(cmd,
 
 
 if __name__ == '__main__':
-
     MONITOR.print_jobs()
