@@ -307,6 +307,8 @@ class TauTriggerEfficiency(EventFilter):
                     tau.trigger_sf_mc_stat_low = 0.
                     tau.trigger_sf_data_stat_high = 0.
                     tau.trigger_sf_data_stat_low = 0.
+                    tau.trigger_sf_stat_high = 0.
+                    tau.trigger_sf_stat_low = 0.
                     tau.trigger_sf_sys_high = 0.
                     tau.trigger_sf_sys_low = 0.
 
@@ -318,6 +320,8 @@ class TauTriggerEfficiency(EventFilter):
                     tau.trigger_sf_mc_stat_low = sf
                     tau.trigger_sf_data_stat_high = sf
                     tau.trigger_sf_data_stat_low = sf
+                    tau.trigger_sf_stat_high = sf
+                    tau.trigger_sf_stat_low = sf
                     tau.trigger_sf_sys_high = sf
                     tau.trigger_sf_sys_low = sf
 
@@ -340,6 +344,8 @@ class TauTriggerEfficiency(EventFilter):
                     tau.trigger_sf_mc_stat_low = 0.
                     tau.trigger_sf_data_stat_high = 0.
                     tau.trigger_sf_data_stat_low = 0.
+                    tau.trigger_sf_stat_high = 0.
+                    tau.trigger_sf_stat_low = 0.
                     tau.trigger_sf_sys_high = 0.
                     tau.trigger_sf_sys_low = 0.
 
@@ -359,6 +365,12 @@ class TauTriggerEfficiency(EventFilter):
                     mc_stat_dn = abs(ttc.getSF(tau.pt, tau.eta, -2, period, prong, wpflag, eveto))
                     tau.trigger_sf_mc_stat_high = sf + mc_stat_up
                     tau.trigger_sf_mc_stat_low = sf - mc_stat_dn
+
+                    # combined stat uncert
+                    stat_up = sqrt(mc_stat_up**2 + data_stat_up**2)
+                    stat_dn = sqrt(mc_stat_dn**2 + data_stat_dn**2)
+                    tau.trigger_sf_stat_high = sf + stat_up
+                    tau.trigger_sf_stat_low = sf - stat_dn
 
                     # Systematic uncert
                     sys_up = abs(ttc.getSF(tau.pt, tau.eta, 3, period, prong, wpflag, eveto))
@@ -394,14 +406,12 @@ class TauTriggerEfficiency(EventFilter):
             if math.isinf(eff) or math.isnan(eff):
                 log.warning("trigger data efficiency is infinite or NaN! Using 0.")
                 tau.trigger_eff = 0.
-                tau.trigger_sf_high = 0.
-                tau.trigger_sf_low = 0.
-                tau.trigger_sf_mc_stat_high = 0.
-                tau.trigger_sf_mc_stat_low = 0.
-                tau.trigger_sf_data_stat_high = 0.
-                tau.trigger_sf_data_stat_low = 0.
-                tau.trigger_sf_sys_high = 0.
-                tau.trigger_sf_sys_low = 0.
+                tau.trigger_eff_high = 0.
+                tau.trigger_eff_low = 0.
+                tau.trigger_eff_stat_high = 0.
+                tau.trigger_eff_stat_low = 0.
+                tau.trigger_eff_sys_high = 0.
+                tau.trigger_eff_sys_low = 0.
 
             else:
                 tau.trigger_eff = eff

@@ -148,6 +148,8 @@ class TauFourMomentum(FourMomentum):
         self.trigger_sf_mc_stat_low = SF_DEFAULT
         self.trigger_sf_data_stat_high = SF_DEFAULT
         self.trigger_sf_data_stat_low = SF_DEFAULT
+        self.trigger_sf_stat_high = SF_DEFAULT
+        self.trigger_sf_stat_low = SF_DEFAULT
         self.trigger_sf_sys_high = SF_DEFAULT
         self.trigger_sf_sys_low = SF_DEFAULT
 

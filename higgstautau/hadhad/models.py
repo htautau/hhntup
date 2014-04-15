@@ -149,6 +149,8 @@ class RecoTau(FourMomentum):
     trigger_sf_mc_stat_low = FloatCol(default=1.)
     trigger_sf_data_stat_high = FloatCol(default=1.)
     trigger_sf_data_stat_low = FloatCol(default=1.)
+    trigger_sf_stat_high = FloatCol(default=1.)
+    trigger_sf_stat_low = FloatCol(default=1.)
     trigger_sf_sys_high = FloatCol(default=1.)
     trigger_sf_sys_low = FloatCol(default=1.)
 
