@@ -4,6 +4,7 @@ Event filters common to both hadhad and lephad go here
 import ROOT
 
 from rootpy.tree.filtering import *
+from rootpy.extern.hep import pdg
 from itertools import ifilter
 from math import *
 
@@ -772,10 +773,26 @@ class HiggsPT(EventFilter):
 
     def passes(self, event):
         pt = 0
+        higgs = None
         status = self.status
         for mc in event.mc:
             if mc.pdgId == 25 and mc.status == status:
                 pt = mc.pt
+                higgs = mc
                 break
         self.tree.true_resonance_pt = pt
+        # Only consider taus here since there are very soft photons radiated
+        # off the taus but included as children of the Higgs
+        higgs_children = [mc for mc in higgs.iter_children()
+                          if mc.pdgId in (pdg.tau_plus, pdg.tau_minus)]
+        # The number of anti kt R = 0.4 truth jets with pT>25 GeV, not
+        # originating from the decay products of the Higgs boson.
+        # Start from the AntiKt4Truth collection. Reject any jet with pT<25
+        # GeV. Reject any jet withing dR < 0.4 of any electron, tau, photon or
+        # parton (directly) produced in the Higgs decay.
+        jets = [jet for jet in event.truejets if jet.pt >= 25 * GeV
+                and not any([obj for obj in higgs_children if
+                             utils.dR(jet.eta, jet.phi, obj.eta, obj.phi) < 0.4])]
+        # Count the number of remaining jets
+        self.tree.num_true_jets_no_overlap = len(jets)
         return True

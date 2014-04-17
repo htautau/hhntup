@@ -403,14 +403,10 @@ class MCParticle(FourMomentum):
     def __str__(self):
         return ("%s ("
                 "status: %d, "
-                "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f, "
-                "x: %.4f, y: %.4f, z: %.4f)") % \
+                "m: %.3f MeV, pt: %.1f GeV, eta: %.2f, phi: %.2f" %
             (self._particle.GetName(),
              self.status,
              #self._particle.Mass() * GeV,
              self.m,
              self.pt / GeV,
-             self.eta, self.phi,
-             self.vx_x,
-             self.vx_y,
-             self.vx_z)
+             self.eta, self.phi))
