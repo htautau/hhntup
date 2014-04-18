@@ -765,7 +765,7 @@ class HiggsPT(EventFilter):
         super(HiggsPT, self).__init__(**kwargs)
         self.tree = tree
         if year == 2011:
-            self.status = (2, 10902)
+            self.status = (2, 10902, 62)
         elif year == 2012:
             self.status = (62,)
         else:
