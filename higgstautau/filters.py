@@ -765,9 +765,9 @@ class HiggsPT(EventFilter):
         super(HiggsPT, self).__init__(**kwargs)
         self.tree = tree
         if year == 2011:
-            self.status = 2
+            self.status = (2, 10902)
         elif year == 2012:
-            self.status = 62
+            self.status = (62,)
         else:
             raise ValueError("No HiggsPT defined for year {0}".format(year))
 
@@ -776,7 +776,7 @@ class HiggsPT(EventFilter):
         higgs = None
         status = self.status
         for mc in event.mc:
-            if mc.pdgId == 25 and mc.status == status:
+            if mc.pdgId == 25 and mc.status in status:
                 pt = mc.pt
                 higgs = mc
                 break
