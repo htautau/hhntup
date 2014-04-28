@@ -95,6 +95,16 @@ diboson:
         - 'ZZ_Her.mc11c'
         - 'WZ_Her.mc11c'
         - 'WW_Her.mc11c'
+        
+        - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmenutaunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmmunumunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmmunuenu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmmunutaunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunuenu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunumunu.mc11c'
 others:
     name: Others
     latex: Others
@@ -160,3 +170,13 @@ others:
         - 'ZZ_Her.mc11c'
         - 'WZ_Her.mc11c'
         - 'WW_Her.mc11c'
+
+        - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmenutaunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmmunumunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmmunuenu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmmunutaunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunuenu.mc11c'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunumunu.mc11c'

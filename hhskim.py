@@ -453,7 +453,7 @@ class hhskim(ATLASStudent):
                 HiggsPT(
                     year=year,
                     tree=tree,
-                    passthrough=not is_signal,
+                    passthrough=not is_signal or local,
                     count_funcs=count_funcs),
                 TauTrackRecounting(
                     year=year,
