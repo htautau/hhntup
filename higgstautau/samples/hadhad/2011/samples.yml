@@ -117,7 +117,7 @@ mc:
         
         - 'TTbar_Pow_Pyth_P2011C.mc11c'
         - 'TTbar_FullHad_Pow_Pyth_P2011C.mc11c'
-        - 'st_schan_Powheg_Pyth_P2011C.mc11c'
+        - 'st_schan_Pow_Pyth_P2011C.mc11c'
         - 'st_tchan_enu_AcerMC.mc11c'
         - 'st_tchan_munu_AcerMC.mc11c'
         - 'st_tchan_taunu_AcerMC.mc11c'

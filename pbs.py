@@ -133,7 +133,7 @@ def qsub(cmd,
     kwargs = {}
     if name is not None:
         if MONITOR.has_jobname(name):
-            print "a job with the name %s already exists" % name
+            print "job {0} already exists".format(name)
             return
         kwargs['-N'] = name
     if stderr_path is not None:
