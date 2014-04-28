@@ -156,9 +156,9 @@ mc:
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
         - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
-        - 'PowhegPyth_P2011C_st_schan_lep.mc12a'
-        - 'PowhegPyth_P2011C_st_Wtchan_incl_DR.mc12a'
-        - 'PowhegPyth_P2011C_ttbar.mc12a'
+        - 'PowPyth_P2011C_st_schan_lep.mc12a'
+        - 'PowPyth_P2011C_st_Wtchan_incl_DR.mc12a'
+        - 'PowPyth_P2011C_ttbar.mc12a'
         - 'TTbar_MT1725_allhad_Pow_Pyth_P2011C.mc12a'
 
         - 'PowPyth8_AU2CT10_ggH100_tautauhh.mc12a'
