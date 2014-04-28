@@ -6,7 +6,6 @@ Installation
 You need to install these packages:
 
 * `rootpy <https://github.com/rootpy/rootpy>`_
-* `atlastools <https://github.com/ndawe/atlastools>`_
 * `goodruns <http://pypi.python.org/pypi/goodruns/2.0>`_
 
 Download each package with::
@@ -39,7 +38,7 @@ such as ``~/python-modules`` or where you keep your python package sources.
 Now build the C extension module for jet cleaning in the higgstautau package::
 
    cd higgstautau/jetcleaning
-   ./setup.py build_ext --inplace 
+   ./setup.py build_ext --inplace
 
 Before submitting grid jobs be sure to create a panda.[user].cfg and then::
 

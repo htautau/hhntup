@@ -35,8 +35,8 @@ import sys
 import os
 import glob
 import yaml
-from atlastools.batch import ATLASSupervisor
-from atlastools import datasets
+from higgstautau.batch import ATLASSupervisor
+from higgstautau import datasets
 import multiprocessing
 from configobj import ConfigObj, flatten_errors
 from validate import Validator
