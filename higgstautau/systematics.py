@@ -275,7 +275,6 @@ class JVF(JetSystematic):
 
     def __init__(self, is_up, JVFcutNominal=0.5, **kwargs):
         self.JVFcutNominal = JVFcutNominal
-
         # Tag assumed: JVFUncertaintyTool-00-00-03
         self.jvf_tool = JVFUncertaintyTool("AntiKt4LCTopo")
         super(JVF, self).__init__(is_up, **kwargs)
@@ -293,14 +292,13 @@ class JVF(JetSystematic):
                                    truejet.phi, truejet.m)
                     truejets.push_back(t)
                     truejets_cache.append(t)
-            j = TLorentzVector()
-            j.SetPtEtaPhiM(jet.pt, jet.eta, jet.phi, jet.m)
-            isPU = self.jvf_tool.isPileUpJet(j, truejets)
+            isPU = self.jvf_tool.isPileUpJet(jet.fourvect, truejets)
             jvf_cut_sys = self.jvf_tool.getJVFcut(
                 self.JVFcutNominal, isPU,
                 jet.pt, jet.constscale_eta, self.is_up)
             jvf_cut_diff = jvf_cut_sys - self.JVFcutNominal
             jet.jvtxf -= jvf_cut_diff
+
 
 class JER(JetSystematic):
 
