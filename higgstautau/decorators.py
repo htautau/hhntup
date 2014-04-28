@@ -133,4 +133,3 @@ if __name__ == "__main__":
     t = Test()
     assert t.inc_add(2) == t.inc_add(2)
     assert Test.inc_add(t, 2) != Test.inc_add(t, 2)
-

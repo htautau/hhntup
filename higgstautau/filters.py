@@ -11,6 +11,7 @@ from math import *
 from . import datasets
 from .corrections import reweight_ggf
 from .units import GeV
+from .tautools import TauDecay
 from . import jetcleaning
 from . import utils
 from . import log; log = log[__name__]
@@ -775,24 +776,30 @@ class HiggsPT(EventFilter):
         pt = 0
         higgs = None
         status = self.status
+        # find the Higgs
         for mc in event.mc:
             if mc.pdgId == 25 and mc.status in status:
                 pt = mc.pt
                 higgs = mc
                 break
+        if higgs is None:
+            raise RuntimeError("Higgs not found!")
         self.tree.true_resonance_pt = pt
         # Only consider taus here since there are very soft photons radiated
         # off the taus but included as children of the Higgs
-        higgs_children = [mc for mc in higgs.iter_children()
-                          if mc.pdgId in (pdg.tau_plus, pdg.tau_minus)]
+        true_taus = [TauDecay(mc).fourvect_visible
+                     for mc in higgs.iter_children()
+                     if mc.pdgId in (pdg.tau_plus, pdg.tau_minus)
+                     and mc.status in (2, 11, 195)]
         # The number of anti kt R = 0.4 truth jets with pT>25 GeV, not
         # originating from the decay products of the Higgs boson.
         # Start from the AntiKt4Truth collection. Reject any jet with pT<25
         # GeV. Reject any jet withing dR < 0.4 of any electron, tau, photon or
         # parton (directly) produced in the Higgs decay.
         jets = [jet for jet in event.truejets if jet.pt >= 25 * GeV
-                and not any([obj for obj in higgs_children if
-                             utils.dR(jet.eta, jet.phi, obj.eta, obj.phi) < 0.4])]
+                and not any([tau for tau in true_taus if
+                             utils.dR(jet.eta, jet.phi,
+                                      tau.Eta(), tau.Phi()) < 0.4])]
         # Count the number of remaining jets
         self.tree.num_true_jets_no_overlap = len(jets)
         return True

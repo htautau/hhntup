@@ -16,7 +16,6 @@ MC tau decays in the MC block of D3PDs.
 class TauDecay(object):
 
     def __init__(self, initial_state):
-
         # get tau just before decay
         self.init = initial_state.last_self
 
@@ -109,48 +108,40 @@ class TauDecay(object):
 
     @cached_property
     def has_charged_rho(self):
-
         if pdg.rho_plus in self.child_pdgid_freq:
             return True
         return False
 
     @cached_property
     def has_a1(self):
-
         if pdg.a_1_plus in self.child_pdgid_freq:
             return True
         return False
 
     @cached_property
     def prod_vertex(self):
-
         return Vector3(self.init.vx_x,
                        self.init.vx_y,
                        self.init.vx_z)
 
     @property
     def privtx(self):
-
         return self.prod_vertex
 
     @property
     def privtx_x(self):
-
         return self.init.vx_x
 
     @property
     def privtx_y(self):
-
         return self.init.vx_y
 
     @property
     def privtx_z(self):
-
         return self.init.vx_z
 
     @cached_property
     def decay_vertex(self):
-
         nu_tau = None
         # use production vertex of nu_tau
         last_tau = self.init.last_self
@@ -165,88 +156,71 @@ class TauDecay(object):
                        nu_tau.vx_z)
     @property
     def secvtx(self):
-
         return self.decay_vertex
 
     @property
     def secvtx_x(self):
-
         return self.decay_vertex.X()
 
     @property
     def secvtx_y(self):
-
         return self.decay_vertex.Y()
 
     @property
     def secvtx_z(self):
-
         return self.decay_vertex.Z()
 
     @cached_property
     def decay_vect(self):
-
         return self.decay_vertex - self.prod_vertex
 
     @cached_property
     def decay_length(self):
-
         return self.decay_vect.Mag()
 
     @cached_property
     def decay_angle(self):
-
         return self.decay_vect.Angle(self.fourvect_visible)
 
     @cached_property
     def npi0(self):
-
         if pdg.pi0 in self.child_pdgid_freq:
             return self.child_pdgid_freq[pdg.pi0]
         return 0
 
     @cached_property
     def nneutrals(self):
-
         return self.npi0 + len(self.neutral_kaons)
 
     @cached_property
     def charge(self):
-
         return self.init.charge
 
     @cached_property
     def fourvect(self):
-
         return self.init.fourvect
 
     @cached_property
     def fourvect_visible(self):
-
         return self.fourvect - self.fourvect_missing
 
     @cached_property
     def fourvect_missing(self):
-
         missing = FourVector()
         return missing + sum([p.fourvect for p in self.neutrinos])
 
     @cached_property
     def dr_vistau_nu(self):
-
         return self.fourvect_visible.DeltaR(self.fourvect_missing)
 
     @cached_property
     def dtheta3d_vistau_nu(self):
-
         return self.fourvect_visible.Angle(self.fourvect_missing)
 
     def __str__(self):
-
         return self.__repr__()
 
     def __repr__(self):
-
         output = StringIO.StringIO()
         print >> output, "initial state:"
         print >> output, self.init
@@ -261,7 +235,6 @@ class TauDecay(object):
 
 
 def get_particles(event, pdgid, num_expected=None):
-
     if not isinstance(pdgid, (list, tuple)):
         pdgid = [pdgid]
     particles = []
@@ -277,8 +250,12 @@ def get_tau_decays(event, parent_pdgid=None, status=None, num_expected=None):
     """
     Get all taus and their decay products
 
-    parent_pdgid: pdgid or list of pdgids of accepted parent particles
-    status: accepted status
+    Parameters
+    ----------
+    parent_pdgid: int or list or int
+        pdgid or list of pdgids of accepted parent particles
+    status: int or list of int
+        accepted status codes
     """
     if parent_pdgid is not None:
         if not isinstance(parent_pdgid, (list, tuple)):
@@ -290,7 +267,7 @@ def get_tau_decays(event, parent_pdgid=None, status=None, num_expected=None):
         # 2 for Pythia, 11 for Herwig, 195 for AlpgenJimmy
         status=(2, 11, 195)
     decays = []
-    # TODO speed this up by recursing from primary interaction
+    # find all taus
     for mc in event.mc:
         if mc.pdgId in (pdg.tau_plus, pdg.tau_minus) and mc.status in status:
             if parent_pdgid is not None:
