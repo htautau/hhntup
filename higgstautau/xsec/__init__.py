@@ -5,23 +5,11 @@ import os
 
 __HERE = os.path.dirname(os.path.abspath(__file__))
 
-SAMPLE_NAMES = {}
 SAMPLES = {}
 
 for year, energy in ((11, 7), (12, 8)):
-    # read sampleid
-    SAMPLE_NAMES[year] = {}
-    with open(os.path.join(__HERE, '%dTeV' % energy, 'sampleid.txt')) as f:
-        for line in f.readlines():
-            if line.startswith('#'):
-                continue
-            sampleid, name = line.split()[:2]
-            sampleid = int(sampleid)
-            SAMPLE_NAMES[sampleid] = name
-
     SAMPLES[year] = {}
-    # read lephad
-    with open(os.path.join(__HERE, '%dTeV' % energy, 'lephad')) as f:
+    with open(os.path.join(__HERE, '%dTeV.txt' % energy)) as f:
         for line in f.readlines():
             line = line.strip()
             if not line or line.startswith('#'):
