@@ -16,18 +16,14 @@ for year, energy in ((11, 7), (12, 8)):
                 continue
             line = line.split()
             sampleid = int(line[0])
-            xsec, kfact, effic = map(float, line[1:-1])
+            xsec, kfact, effic = map(float, line[2].split('*'))
             if sampleid not in SAMPLES[year]:
                 SAMPLES[year][sampleid] = {}
             else:
                 raise ValueError("duplicate sample {0} in {1}".format(
                     line, f.name))
             SAMPLES[year][sampleid]['lephad'] = {
-                'xsec': xsec,
-                'effic': effic,
-                'kfact': kfact,
-                'prod': xsec * kfact / effic,
-            }
+                'xsec': xsec, 'effic': effic, 'kfact': kfact}
 
 
 def xsec_kfact_effic(year, id):

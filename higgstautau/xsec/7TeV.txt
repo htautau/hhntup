@@ -2,87 +2,92 @@
 # https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MC11C
 # https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/TopPhys/TopPhysUtils/TopDataPreparation/trunk/data/AMIXSection-MC11.data
 # https://indico.cern.ch/event/298355/contribution/3/material/slides/0.pdf
-# DSID  xsec [pb]  kfac  filter  name
+# DSID events xsec[pb]*kfac*filter lumi name
 
-#TOP  
-117050  147.44 1.202 0.54304 mc11_7TeV.117050.TTbar_PowHeg_Pythia_P2011C.merge.NTUP_TAUMEDIUM.e1377_s1372_s1370_r3108_r3109_p851/
-117049  147.44 1.203 0.45697 mc11_7TeV.117049.TTbar_FullHad_PowHeg_Pythia_P2011C.merge.NTUP_TAUMEDIUM.e1440_s1372_s1370_r3108_r3109_p851/
-110140  14.343 1.097 1.0 mc11_7TeV.110140.st_Wtchan_incl_DR_PowHeg_Pythia_P2011C.merge.NTUP_TAUMEDIUM.e1778_s1372_s1370_r3108_r3109_p851/
-110119  1.349 1.112 1.0 mc11_7TeV.110119.st_schan_Powheg_Pythia_P2011C.merge.NTUP_TAUMEDIUM.e1778_s1372_s1370_r3108_r3109_p851/
-
-117360 8.06 0.865 1.0 mc11_7TeV.117360.st_tchan_enu_AcerMC.merge.NTUP_TAUMEDIUM.e835_s1310_s1300_r3043_r2993_p851/
-117361 8.06 0.865 1.0 mc11_7TeV.117361.st_tchan_munu_AcerMC.merge.NTUP_TAUMEDIUM.e835_s1310_s1300_r3043_r2993_p851/
-117362 8.06 0.865 1.0 mc11_7TeV.117362.st_tchan_taunu_AcerMC.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851/
+#TOP
+117050   10000k  177.3*1.0*0.543     103.8  mc11_7TeV.117050.TTbar_PowHeg_Pythia_P2011C.merge.AOD.e1377_s1372_s1370_r3108_r3109/
+117049   9500k   177.3*1.0*0.457     117.2  mc11_7TeV.117049.TTbar_FullHad_PowHeg_Pythia_P2011C.merge.AOD.e1440_s1372_s1370_r3108_r3109/
+110140   945k    15.74*1.0*1.0       60.0   mc11_7TeV.110140.st_Wtchan_incl_DR_PowHeg_Pythia_P2011C.merge.AOD.e1778_s1372_s1370_r3108_r3109/
+110119   900k    1.50*1.0*1.0        600.0  mc11_7TeV.110119.st_schan_Powheg_Pythia_P2011C.merge.AOD.e1778_s1372_s1370_r3108_r3109/
+117360   1000k   6.97*1.0*1.0        143.4  mc11_7TeV.117360.st_tchan_enu_AcerMC.merge.AOD.e835_s1310_s1300_r3043_r2993/
+117361   1000k   6.97*1.0*1.0        143.4  mc11_7TeV.117361.st_tchan_munu_AcerMC.merge.AOD.e835_s1310_s1300_r3043_r2993/
+117362   1000k   6.97*1.0*1.0        143.4  mc11_7TeV.117362.st_tchan_taunu_AcerMC.merge.AOD.e825_s1310_s1300_r3043_r2993/
 
 #Diboson
-105985  11.5003 1.48 1.0 mc11_7TeV.105985.WW_Herwig.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851/
-105986  0.9722 1.3 1.0 mc11_7TeV.105986.ZZ_Herwig.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851/
-105987  3.4641 1.6 1.0 mc11_7TeV.105987.WZ_Herwig.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851/
+105985   2490k   44.569*1.0*0.38947  143.4  mc11_7TeV.105985.WW_Herwig.merge.AOD.e825_s1310_s1300_r3043_r2993/
+105986   250k    6.49*1.0*0.21319    180.6  mc11_7TeV.105986.ZZ_Herwig.merge.AOD.e825_s1310_s1300_r3043_r2993/
+105987   1000k   17.936*1.0*0.30847  180.7  mc11_7TeV.105987.WZ_Herwig.merge.AOD.e825_s1310_s1300_r3043_r2993/
+169471   30k     0.0175*1.0*1.0      1714.2 mc11_7TeV.169471.gg2wwJimmy_AUET2CT10_WpWmenuenu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169472   30k     0.0152*1.0*1.0      1973.6 mc11_7TeV.169472.gg2wwJimmy_AUET2CT10_WpWmenumunu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169473   30k     0.0152*1.0*1.0      1973.6 mc11_7TeV.169473.gg2wwJimmy_AUET2CT10_WpWmenutaunu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169474   30k     0.0152*1.0*1.0      1973.6 mc11_7TeV.169474.gg2wwJimmy_AUET2CT10_WpWmmunumunu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169475   30k     0.0175*1.0*1.0      1714.2 mc11_7TeV.169475.gg2wwJimmy_AUET2CT10_WpWmmunuenu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169476   30k     0.0152*1.0*1.0      1973.6 mc11_7TeV.169476.gg2wwJimmy_AUET2CT10_WpWmmunutaunu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169477   30k     0.0152*1.0*1.0      1973.6 mc11_7TeV.169477.gg2wwJimmy_AUET2CT10_WpWmtaunutaunu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169478   30k     0.0152*1.0*1.0      1973.6 mc11_7TeV.169478.gg2wwJimmy_AUET2CT10_WpWmtaunuenu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
+169479   30k     0.0175*1.0*1.0      1714.2 mc11_7TeV.169479.gg2wwJimmy_AUET2CT10_WpWmtaunumunu.merge.AOD.e1954_s1570_s1571_r3108_r3109/
 
-#EWK Z+2jets sample  
-125950  0.44702 1.0 1.0  mc11_7TeV.125950.SherpaZtoee2JetsEW2JetsQCD15GeVM40.merge.AOD.e943_s1310_s1300_r3043_r2993
-125951  0.44585 1.0 1.0  mc11_7TeV.125951.SherpaZtomm2JetsEW2JetsQCD15GeVM40.merge.AOD.e943_s1310_s1300_r3043_r2993
-125952  0.44445 1.0 1.0  mc11_7TeV.125952.SherpaZtott2JetsEW2JetsQCD15GeVM40.merge.AOD.e943_s1310_s1300_r3043_r2993
-125956  0.47727 1.0 1.0  mc11_7TeV.125956.SherpaZtoee2JetsEW2JetsQCD15GeVM07to40.merge.AOD.e950_s1310_s1300_r3043_r2993
-125957  0.47712 1.0 1.0  mc11_7TeV.125957.SherpaZtomm2JetsEW2JetsQCD15GeVM07to40.merge.AOD.e950_s1310_s1300_r3043_r2993
-125958  0.46924 1.0 1.0  mc11_7TeV.125958.SherpaZtott2JetsEW2JetsQCD15GeVM07to40.merge.AOD.e950_s1310_s1300_r3043_r2993  
-
-#Z+jets 
-107650  668.32 1.25 1.000  mc11_7TeV.107650.AlpgenJimmyZeeNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107651  134.36 1.25 1.000  mc11_7TeV.107651.AlpgenJimmyZeeNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107652  40.542 1.25 1.000  mc11_7TeV.107652.AlpgenJimmyZeeNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107653  11.160 1.25 1.000  mc11_7TeV.107653.AlpgenJimmyZeeNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107654  2.88 1.25 1.000    mc11_7TeV.107654.AlpgenJimmyZeeNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107655  0.83 1.25 1.000     mc11_7TeV.107655.AlpgenJimmyZeeNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107660  668.68 1.25 1.000  mc11_7TeV.107660.AlpgenJimmyZmumuNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107661  134.14 1.25 1.000  mc11_7TeV.107661.AlpgenJimmyZmumuNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107662  40.33 1.25 1.000   mc11_7TeV.107662.AlpgenJimmyZmumuNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107663  11.19 1.25 1.000   mc11_7TeV.107663.AlpgenJimmyZmumuNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107664  2.75 1.25 1.000    mc11_7TeV.107664.AlpgenJimmyZmumuNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107665  0.77 1.25 1.000  mc11_7TeV.107665.AlpgenJimmyZmumuNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107670  668.40 1.25 1.000  mc11_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107671  134.81 1.25 1.000  mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107672  40.36 1.25 1.000   mc11_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107673  11.25 1.25 1.000   mc11_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107674  2.79 1.25 1.000    mc11_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107675  0.77 1.25 1.000     mc11_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
+#EWK Z+2jets sample
+129921   500k    0.28130*1.0*1.0     1777.4 mc11_7TeV.129921.Sherpa_CT10_Ztoee2JetsEW1JetQCD15GeVM40_min_n_tchannels.merge.AOD.e2687_s1570_s1571_r3108_r3109/
+129922   500k    0.28051*1.0*1.0     1782.4 mc11_7TeV.129922.Sherpa_CT10_Ztomm2JetsEW1JetQCD15GeVM40_min_n_tchannels.merge.AOD.e2687_s1570_s1571_r3108_r3109/
+167723   500k    0.28145*1.0*1.0     1776.5 mc11_7TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.merge.AOD.e2687_s1570_s1571_r3108_r3109/
 
 #DYZ+jets
-116250  3055.2 1.22 1.000  mc11_7TeV.116250.AlpgenJimmyZeeNp0_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116251  84.92 1.22 1.000   mc11_7TeV.116251.AlpgenJimmyZeeNp1_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116252  41.40 1.22 1.000   mc11_7TeV.116252.AlpgenJimmyZeeNp2_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116253  8.38 1.22 1.000    mc11_7TeV.116253.AlpgenJimmyZeeNp3_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116254  1.85 1.22 1.000    mc11_7TeV.116254.AlpgenJimmyZeeNp4_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116255  0.46 1.22 1.000     mc11_7TeV.116255.AlpgenJimmyZeeNp5_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116260  3054.9 1.22 1.000  mc11_7TeV.116260.AlpgenJimmyZmumuNp0_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116261  84.87 1.22 1.000   mc11_7TeV.116261.AlpgenJimmyZmumuNp1_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116262  41.45 1.22 1.000   mc11_7TeV.116262.AlpgenJimmyZmumuNp2_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116263  8.38 1.22 1.000    mc11_7TeV.116263.AlpgenJimmyZmumuNp3_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116264  1.85 1.22 1.000    mc11_7TeV.116264.AlpgenJimmyZmumuNp4_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116265  0.46 1.22 1.000     mc11_7TeV.116265.AlpgenJimmyZmumuNp5_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993
-116270  3055.1 1.22 1.000  mc11_7TeV.116270.AlpgenJimmyZtautauNp0_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116271  84.93 1.22 1.000   mc11_7TeV.116271.AlpgenJimmyZtautauNp1_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116272  41.47 1.22 1.000   mc11_7TeV.116272.AlpgenJimmyZtautauNp2_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116273  8.36 1.22 1.000    mc11_7TeV.116273.AlpgenJimmyZtautauNp3_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116274  1.85 1.22 1.000    mc11_7TeV.116274.AlpgenJimmyZtautauNp4_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
-116275  0.46 1.22 1.000     mc11_7TeV.116275.AlpgenJimmyZtautauNp5_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993
+116250   995k    3055.2*1.22*1.000   .2      mc11_7TeV.116250.AlpgenJimmyZeeNp0_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116251   300k    84.92*1.22*1.000    2.8     mc11_7TeV.116251.AlpgenJimmyZeeNp1_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116252   1000k   41.445*1.22*1.0     19.7    mc11_7TeV.116252.AlpgenJimmyZeeNp2_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116253   150k    8.3888*1.22*1.0     14.6    mc11_7TeV.116253.AlpgenJimmyZeeNp3_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116254   40k     1.8654*1.22*1.0     17.5    mc11_7TeV.116254.AlpgenJimmyZeeNp4_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116255   10k     0.4583*1.22*1.0     17.8    mc11_7TeV.116255.AlpgenJimmyZeeNp5_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116260   1000k   3054.9*1.22*1.000   .2      mc11_7TeV.116260.AlpgenJimmyZmumuNp0_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116261   300k    84.87*1.22*1.000    2.8     mc11_7TeV.116261.AlpgenJimmyZmumuNp1_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116262   1000k   41.428*1.22*1.0     19.7    mc11_7TeV.116262.AlpgenJimmyZmumuNp2_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116263   150k    8.3705*1.22*1.0     14.6    mc11_7TeV.116263.AlpgenJimmyZmumuNp3_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116264   40k     1.8554*1.22*1.0     17.6    mc11_7TeV.116264.AlpgenJimmyZmumuNp4_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116265   10k     0.4543*1.22*1.0     18.0    mc11_7TeV.116265.AlpgenJimmyZmumuNp5_Mll10to40_pt20.merge.AOD.e944_s1310_s1300_r3043_r2993/
+116270   1000k   3055.1*1.22*1.000   .2      mc11_7TeV.116270.AlpgenJimmyZtautauNp0_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116271   300k    84.93*1.22*1.000    2.8     mc11_7TeV.116271.AlpgenJimmyZtautauNp1_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116272   500k    41.47*1.22*1.000    9.8     mc11_7TeV.116272.AlpgenJimmyZtautauNp2_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116273   150k    8.36*1.22*1.000     14.7    mc11_7TeV.116273.AlpgenJimmyZtautauNp3_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116274   40k     1.85*1.22*1.000     17.7    mc11_7TeV.116274.AlpgenJimmyZtautauNp4_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
+116275   10k     0.46*1.22*1.000     17.8    mc11_7TeV.116275.AlpgenJimmyZtautauNp5_Mll10to40_pt20.merge.AOD.e959_s1310_s1300_r3043_r2993/
 
-#W+jets 
-107680  6921.6 1.20 1.000  mc11_7TeV.107680.AlpgenJimmyWenuNp0_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107681  1304.3 1.20 1.000  mc11_7TeV.107681.AlpgenJimmyWenuNp1_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107682  378.29 1.20 1.000  mc11_7TeV.107682.AlpgenJimmyWenuNp2_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107683  101.43 1.20 1.000  mc11_7TeV.107683.AlpgenJimmyWenuNp3_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107684  25.870 1.20 1.000  mc11_7TeV.107684.AlpgenJimmyWenuNp4_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107685  6.92 1.20 1.000    mc11_7TeV.107685.AlpgenJimmyWenuNp5_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107690  6919.6 1.20 1.000  mc11_7TeV.107690.AlpgenJimmyWmunuNp0_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107691  1304.2 1.20 1.000  mc11_7TeV.107691.AlpgenJimmyWmunuNp1_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107692  377.83 1.20 1.000  mc11_7TeV.107692.AlpgenJimmyWmunuNp2_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107693  101.88 1.20 1.000  mc11_7TeV.107693.AlpgenJimmyWmunuNp3_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107694  25.64 1.20 1.000   mc11_7TeV.107694.AlpgenJimmyWmunuNp4_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107695  7.04 1.20 1.000    mc11_7TeV.107695.AlpgenJimmyWmunuNp5_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993
-107700  6918.6 1.20 1.000  mc11_7TeV.107700.AlpgenJimmyWtaunuNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107701  1303.2 1.20 1.000  mc11_7TeV.107701.AlpgenJimmyWtaunuNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107702  377.63 1.20 1.000  mc11_7TeV.107702.AlpgenJimmyWtaunuNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107703  101.51 1.20 1.000  mc11_7TeV.107703.AlpgenJimmyWtaunuNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107704  25.639 1.20 1.000  mc11_7TeV.107704.AlpgenJimmyWtaunuNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
-107705  6.9932 1.20 1.000  mc11_7TeV.107705.AlpgenJimmyWtaunuNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993
+#Z+jets
+107650   6620k   669.6*1.25*1.0      7.9     mc11_7TeV.107650.AlpgenJimmyZeeNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107651   1335k   134.52*1.25*1.0     7.9     mc11_7TeV.107651.AlpgenJimmyZeeNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107652   2005k   40.706*1.25*1.0     39.4    mc11_7TeV.107652.AlpgenJimmyZeeNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107653   550k    11.262*1.25*1.0     39.0    mc11_7TeV.107653.AlpgenJimmyZeeNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107654   150k    2.8447*1.25*1.0     42.1    mc11_7TeV.107654.AlpgenJimmyZeeNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107655   50k     0.75691*1.25*1.0    52.8    mc11_7TeV.107655.AlpgenJimmyZeeNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107660   6620k   669.56*1.25*1.0     7.9     mc11_7TeV.107660.AlpgenJimmyZmumuNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107661   1335k   134.55*1.25*1.0     7.9     mc11_7TeV.107661.AlpgenJimmyZmumuNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107662   2000k   40.642*1.25*1.0     39.3    mc11_7TeV.107662.AlpgenJimmyZmumuNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107663   550k    11.279*1.25*1.0     39.0    mc11_7TeV.107663.AlpgenJimmyZmumuNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107664   150k    2.837*1.25*1.0      42.2    mc11_7TeV.107664.AlpgenJimmyZmumuNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107665   50k     0.76123*1.25*1.0    52.5    mc11_7TeV.107665.AlpgenJimmyZmumuNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107670   10615k  669.55*1.25*1.0     12.6    mc11_7TeV.107670.AlpgenJimmyZtautauNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107671   3335k   134.66*1.25*1.0     19.8    mc11_7TeV.107671.AlpgenJimmyZtautauNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107672   1005k   40.647*1.25*1.0     19.7    mc11_7TeV.107672.AlpgenJimmyZtautauNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107673   510k    11.256*1.25*1.0     36.2    mc11_7TeV.107673.AlpgenJimmyZtautauNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107674   145k    2.8444*1.25*1.0     40.7    mc11_7TeV.107674.AlpgenJimmyZtautauNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107675   45k     0.7577*1.25*1.0     47.5    mc11_7TeV.107675.AlpgenJimmyZtautauNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+
+#W+jets
+107680   6955k   6930.5*1.20*1.0     .8      mc11_7TeV.107680.AlpgenJimmyWenuNp0_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107681   5000k   1305.3*1.20*1.0     3.1     mc11_7TeV.107681.AlpgenJimmyWenuNp1_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107682   3770k   378.13*1.20*1.0     8.3     mc11_7TeV.107682.AlpgenJimmyWenuNp2_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107683   1010k   101.86*1.20*1.0     8.2     mc11_7TeV.107683.AlpgenJimmyWenuNp3_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107684   745k    25.68*1.20*1.0      24.1    mc11_7TeV.107684.AlpgenJimmyWenuNp4_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107685   420k    6.9941*1.20*1.0     50.0    mc11_7TeV.107685.AlpgenJimmyWenuNp5_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107690   6965k   6932.4*1.20*1.0     .8      mc11_7TeV.107690.AlpgenJimmyWmunuNp0_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107691   4995k   1305.9*1.20*1.0     3.1     mc11_7TeV.107691.AlpgenJimmyWmunuNp1_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107692   3770k   378.07*1.20*1.0     8.3     mc11_7TeV.107692.AlpgenJimmyWmunuNp2_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107693   1010k   101.85*1.20*1.0     8.2     mc11_7TeV.107693.AlpgenJimmyWmunuNp3_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107694   755k    25.72*1.20*1.0      24.4    mc11_7TeV.107694.AlpgenJimmyWmunuNp4_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107695   420k    6.9999*1.20*1.0     50.0    mc11_7TeV.107695.AlpgenJimmyWmunuNp5_pt20.merge.AOD.e825_s1299_s1300_r3043_r2993/
+107700   3420k   6932.2*1.20*1.0     .4      mc11_7TeV.107700.AlpgenJimmyWtaunuNp0_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107701   2500k   1304.9*1.20*1.0     1.5     mc11_7TeV.107701.AlpgenJimmyWtaunuNp1_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107702   3755k   377.93*1.20*1.0     8.2     mc11_7TeV.107702.AlpgenJimmyWtaunuNp2_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107703   1010k   101.96*1.20*1.0     8.2     mc11_7TeV.107703.AlpgenJimmyWtaunuNp3_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107704   250k    25.708*1.20*1.0     8.1     mc11_7TeV.107704.AlpgenJimmyWtaunuNp4_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
+107705   65k     6.9994*1.20*1.0     7.7     mc11_7TeV.107705.AlpgenJimmyWtaunuNp5_pt20.merge.AOD.e835_s1299_s1300_r3043_r2993/
