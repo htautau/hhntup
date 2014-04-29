@@ -5,6 +5,9 @@ import ROOT
 
 from rootpy.tree.filtering import *
 from rootpy.extern.hep import pdg
+from rootpy import stl
+VectorTLorentzVector = stl.vector("TLorentzVector")
+
 from itertools import ifilter
 from math import *
 
@@ -18,7 +21,9 @@ from . import log; log = log[__name__]
 
 from goodruns import GRL
 
+
 BCH_TOOLS = []
+
 
 class GRLFilter(EventFilter):
 
@@ -735,6 +740,32 @@ class EmbeddingCorrections(EventFilter):
         self.tree.embedding_trigger_weight = self.tool.GetEmbeddingTriggerWeight()
         # Get the original mass of the dimuon event
         self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
+        return True
+
+
+class JetIsPileup(EventFilter):
+    """
+    must be applied before any jet selection
+    """
+    def __init__(self, **kwargs):
+        super(JetIsPileup, self).__init__(**kwargs)
+        if not self.passthrough:
+            from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
+            from ROOT import JVFUncertaintyTool
+            self.tool = JVFUncertaintyTool("AntiKt4LCTopo")
+
+    def passes(self, event):
+        # collect truth jets
+        truejets = VectorTLorentzVector()
+        for truejet in event.truejets:
+            if truejet.pt > 10e3:
+                truejets.push_back(truejet.fourvect)
+        # reset
+        event.jet_ispileup.clear()
+        # test each jet
+        for jet in event.jets:
+            ispileup = self.tool.isPileUpJet(jet.fourvect, truejets)
+            event.jet_ispileup.push_back(ispileup)
         return True
 
 

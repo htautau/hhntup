@@ -37,9 +37,6 @@ from ROOT import MissingETTags
 from ROOT import MultijetJESUncertaintyProvider
 # JVF
 from ROOT import JVFUncertaintyTool
-from ROOT import TLorentzVector # needed for JVF
-from rootpy import stl
-VectorTLorentzVector = stl.vector("TLorentzVector")
 # JetResolution
 from ROOT import JERProvider
 # egammaAnalysisUtils
@@ -283,18 +280,8 @@ class JVF(JetSystematic):
     def run(self, jet, event):
         # JVF is only used in a certain range, so only correct for those
         if jet.pt < 50e3 and abs(jet.constscale_eta) < 2.4:
-            truejets = VectorTLorentzVector()
-            truejets_cache = []
-            for truejet in event.truejets:
-                if truejet.pt > 10e3:
-                    t = TLorentzVector()
-                    t.SetPtEtaPhiM(truejet.pt, truejet.eta,
-                                   truejet.phi, truejet.m)
-                    truejets.push_back(t)
-                    truejets_cache.append(t)
-            isPU = self.jvf_tool.isPileUpJet(jet.fourvect, truejets)
             jvf_cut_sys = self.jvf_tool.getJVFcut(
-                self.JVFcutNominal, isPU,
+                self.JVFcutNominal, jet.ispileup,
                 jet.pt, jet.constscale_eta, self.is_up)
             jvf_cut_diff = jvf_cut_sys - self.JVFcutNominal
             jet.jvtxf -= jvf_cut_diff

@@ -1,4 +1,4 @@
-data12_8TeV.periodA.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
+#data12_8TeV.periodA.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/
 # https://twiki.cern.ch/twiki/bin/view/AtlasProtected/HSG4DPDs#Known_issues
 data12_8TeV.periodA.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444/
 data12_8TeV.periodB.physics_JetTauEtmiss.PhysCont.NTUP_TAU.grp14_v01_p1443/

@@ -14,6 +14,7 @@ from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
 from rootpy.extern.argparse import ArgumentParser
 from rootpy.io import root_open
+from rootpy import stl
 # Show stack traces for ROOT warning messages
 #from rootpy import log
 #import logging
@@ -326,6 +327,11 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     passthrough=local,
                     count_funcs=count_funcs),
+                JetIsPileup(
+                    passthrough=(
+                        local or year < 2012 or
+                        datatype not in (datasets.MC, datasets.MCEMBED)),
+                    count_funcs=count_funcs),
                 JetCalibration(
                     datatype=datatype,
                     year=year,
@@ -518,25 +524,6 @@ class hhskim(ATLASStudent):
             # set the event filters
             self.filters['event'] = event_filters
 
-        truth_branches = [
-            'mc_pt',
-            'mc_phi',
-            'mc_eta',
-            'mc_m',
-            'mc_child_index',
-            'mc_parent_index',
-            'mc_pdgId',
-            'mc_charge',
-            'mc_status',
-            'mc_n',
-            'jet_antikt4truth_*',
-        ]
-
-        extra_truth_branches = [
-            'mc_event_weight',
-            'mcevt_*',
-        ]
-
         # peek at first tree to determine which branches to exclude
         with root_open(self.files[0]) as test_file:
             test_tree = test_file.Get(self.metadata.treename)
@@ -546,8 +533,6 @@ class hhskim(ATLASStudent):
             ignore_branches_output = test_tree.glob(
                 hhbranches.REMOVE_OUTPUT,
                 exclude=hhbranches.KEEP_OUTPUT)
-            truth_branches = test_tree.glob(truth_branches)
-            extra_truth_branches = test_tree.glob(extra_truth_branches)
 
         # initialize the TreeChain of all input files
         chain = TreeChain(
@@ -566,10 +551,6 @@ class hhskim(ATLASStudent):
                 'EventNumber',
             ]
 
-            if is_signal and syst_terms is None:
-                copied.extend(truth_branches)
-                copied.extend(extra_truth_branches)
-
             hh_buffer = TreeBuffer()
             buffer = TreeBuffer()
             for name, value in chain._buffer.items():
@@ -587,12 +568,12 @@ class hhskim(ATLASStudent):
                 visible=False)
 
         else:
-            # keep mc block in skim output in
-            # signal for theory uncertainty
-            if not is_signal or syst_terms is not None:
-                log.warning("removing mc_ block in output")
-                # remove mc block and truth jets in non-signal samples
-                ignore_branches_output.extend(truth_branches)
+            # additional decorations on existing objects
+            if year > 2011 and datatype in (datasets.MC, datasets.MCEMBED):
+                class Decorations(TreeModel):
+                    jet_ispileup = stl.vector('bool')
+
+                chain.set_buffer(Decorations(), create_branches=True)
 
             # include the branches in the input chain in the output tree
             # set branches to be removed in ignore_branches
