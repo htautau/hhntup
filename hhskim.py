@@ -52,7 +52,6 @@ from higgstautau.trigger.emulation import (
 from higgstautau.pileup import (
     PileupTemplates, PileupReweight, get_pileup_reweighting_tool,
     averageIntPerXingPatch, PileupScale)
-from higgstautau.corrections import reweight_ggf
 from higgstautau.rand import RandomRunNumber, RandomSeed
 from higgstautau import log; log = log[__name__]
 
@@ -872,9 +871,6 @@ class hhskim(ATLASStudent):
             tree.mass_collinear_tau1_tau2 = collin_mass
             tau1.collinear_momentum_fraction = tau1_x
             tau2.collinear_momentum_fraction = tau2_x
-
-            if datatype == datasets.MC and year == 2011:
-                tree.ggf_weight = reweight_ggf(event, self.metadata.name)
 
             ###########################
             # Match jets to VBF partons
