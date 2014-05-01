@@ -59,8 +59,8 @@ mc:
         
         - JER_UP
 
-        #- JVF_UP
-        #- JVF_DOWN
+        - JVF_UP
+        - JVF_DOWN
 
         - MET_RESOSOFTTERMS_UP
         - MET_RESOSOFTTERMS_DOWN
@@ -209,7 +209,7 @@ mc:
         - 'Pyth8_AU2CTEQ6L1_ZH150_tautauhh.mc12a'
 
         # for MC embedding closure
-        - 'PowPyth8_AU2CT10_Ztautau.mc12a'
-        - 'mcembed12-hh'
-        - 'mcembed12-hhup'
-        - 'mcembed12-hhdn'
+        #- 'PowPyth8_AU2CT10_Ztautau.mc12a'
+        #- 'mcembed12-hh'
+        #- 'mcembed12-hhup'
+        #- 'mcembed12-hhdn'
