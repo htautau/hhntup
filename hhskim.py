@@ -512,11 +512,11 @@ class hhskim(ATLASStudent):
                     year=year,
                     count_funcs=count_funcs),
                 RecoJetTrueTauMatching(
-                    passthrough=datatype == datasets.DATA,
+                    passthrough=datatype == datasets.DATA or local,
                     count_funcs=count_funcs),
                 BCHCleaning(
                     tree=tree,
-                    passthrough=year == 2011,
+                    passthrough=year == 2011 or local,
                     datatype=datatype,
                     count_funcs=count_funcs),
             ])
