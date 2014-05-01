@@ -233,7 +233,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.seedCalo_numTrack = intau.seedCalo_numTrack
             outtau.numTrack = intau.numTrack
             outtau.charge = intau.charge
-            outtau.jvtxf = intau.jet_jvtxf
+            #outtau.jvtxf = intau.jet_jvtxf
             outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
             outtau.BCHMedium = intau.BCHMedium

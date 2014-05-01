@@ -125,8 +125,12 @@ class hhskim(ATLASStudent):
 
         if datatype != datasets.DATA:
             # count the weighted number of events
-            def mc_weight_count(event):
-                return event.mc_event_weight
+            if local:
+                def mc_weight_count(event):
+                    return event.hh_mc_weight
+            else:
+                def mc_weight_count(event):
+                    return event.mc_event_weight
 
             count_funcs = {
                 'mc_weight': mc_weight_count,
