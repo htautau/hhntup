@@ -189,9 +189,6 @@ class TileTrips(EventFilter):
 
 class JetCleaning(EventFilter):
 
-    # TODO:
-    # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/BCHCleaningTool
-
     BAD_TILE = [
         202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
     ]
