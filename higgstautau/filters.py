@@ -544,6 +544,7 @@ class RecoJetTrueTauMatching(EventFilter):
                     break
         return True
 
+
 class TauSelected(EventFilter):
 
     def __init__(self, min_taus, **kwargs):

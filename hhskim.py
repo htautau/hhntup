@@ -330,11 +330,9 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     passthrough=local,
                     count_funcs=count_funcs),
-                JetIsPileup(
-                    passthrough=(
-                        local or year < 2012 or
-                        datatype not in (datasets.MC, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
+                # IMPORTANT!
+                # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
+                # jet.fourvect since jet.fourvect IS CACHED!
                 JetCalibration(
                     datatype=datatype,
                     year=year,
@@ -358,6 +356,8 @@ class hhskim(ATLASStudent):
                 # PUT THE SYSTEMATICS "FILTER" BEFORE
                 # ANY FILTERS THAT REFER TO OBJECTS
                 # BUT AFTER CALIBRATIONS
+                # Systematics must also come before anything that refers to
+                # thing.fourvect since fourvect is cached!
                 Systematics(
                     terms=syst_terms,
                     year=year,
@@ -365,6 +365,11 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     verbose=verbose,
                     passthrough=not syst_terms,
+                    count_funcs=count_funcs),
+                JetIsPileup(
+                    passthrough=(
+                        local or year < 2012 or
+                        datatype not in (datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 LArHole(
                     tree=tree,
