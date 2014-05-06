@@ -269,7 +269,22 @@ class JES(JetSystematic):
 
 
 class JVF(JetSystematic):
+    """
+    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JVFUncertaintyTool
 
+    Notes
+    =====
+    Assume that all jets are real, hard-scatter jets when applying the JVF
+    systematic shift.
+
+    It have been observed that the JVF is well modelled for hard-scatter jets
+    in MC while for pile-up jets this is not the case. Much of the JVF mismodelling
+    is attributed to the overestimation of the pile-up jet multiplicity. Given this
+    and the fact that the strategy of the JetEtmiss group is to provide support for
+    real qcd jets, it was decided to assume that all jets are real, hard-scatter
+    jets when applying the JVF systematic shift.  Therefore the function
+    isPileUpJet() won't be used.
+    """
     def __init__(self, is_up, JVFcutNominal=0.5, **kwargs):
         self.JVFcutNominal = JVFcutNominal
         # Tag assumed: JVFUncertaintyTool-00-00-03
@@ -280,8 +295,10 @@ class JVF(JetSystematic):
     def run(self, jet, event):
         # JVF is only used in a certain range, so only correct for those
         if jet.pt < 50e3 and abs(jet.constscale_eta) < 2.4:
+            # Assume that all jets are real, hard-scatter jets when applying
+            # the JVF systematic shift (2nd arg = False)
             jvf_cut_sys = self.jvf_tool.getJVFcut(
-                self.JVFcutNominal, jet.ispileup,
+                self.JVFcutNominal, False,
                 jet.pt, jet.constscale_eta, self.is_up)
             jvf_cut_diff = jvf_cut_sys - self.JVFcutNominal
             jet.jvtxf -= jvf_cut_diff

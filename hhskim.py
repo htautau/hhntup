@@ -788,10 +788,6 @@ class hhskim(ATLASStudent):
                 MET_4vect_boosted)
 
             tree.number_of_good_vertices = len(event.vertices)
-            tau1, tau2 = event.taus
-
-            selected_idx = [tau.index for tau in event.taus]
-            selected_idx.sort()
 
             ##########################
             # Jet and sum pt variables
