@@ -455,5 +455,9 @@ class TauFakeRateScaleFactors(EventFilter):
             # uncertainty
             tau.fakerate_sf_high = sf_high
             tau.fakerate_sf_low = sf_low
+            if sf != 0:
+                # NP is mostly stat uncert
+                tau.fakerate_sf_stat_scale_high = sf_high / sf
+                tau.fakerate_sf_stat_scale_low = sf_low / sf
             #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
         return True

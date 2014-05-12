@@ -166,6 +166,9 @@ class TauFourMomentum(FourMomentum):
         self.fakerate_sf_high = SF_DEFAULT
         self.fakerate_sf_low = SF_DEFAULT
 
+        self.fakerate_sf_stat_scale_high = SF_DEFAULT
+        self.fakerate_sf_stat_scale_low = SF_DEFAULT
+
         # fake rate reco scale factor for taus that do not match truth
         self.fakerate_sf_reco = SF_DEFAULT
         self.fakerate_sf_reco_high = SF_DEFAULT

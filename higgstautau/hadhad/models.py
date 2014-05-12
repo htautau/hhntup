@@ -167,6 +167,9 @@ class RecoTau(FourMomentum):
     fakerate_sf_high = FloatCol(default=1.)
     fakerate_sf_low = FloatCol(default=1.)
 
+    fakerate_sf_stat_scale_high = FloatCol(default=1.)
+    fakerate_sf_stat_scale_low = FloatCol(default=1.)
+
     # fake rate reco scale factor for taus that do not match truth
     fakerate_sf_reco = FloatCol(default=1.)
     fakerate_sf_reco_high = FloatCol(default=1.)
@@ -275,6 +278,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.fakerate_sf = intau.fakerate_sf
                 outtau.fakerate_sf_high = intau.fakerate_sf_high
                 outtau.fakerate_sf_low = intau.fakerate_sf_low
+
+                outtau.fakerate_sf_stat_scale_high = intau.fakerate_sf_stat_scale_high
+                outtau.fakerate_sf_stat_scale_low = intau.fakerate_sf_stat_scale_low
 
                 outtau.fakerate_sf_reco = intau.fakerate_sf_reco
                 outtau.fakerate_sf_reco_high = intau.fakerate_sf_reco_high
