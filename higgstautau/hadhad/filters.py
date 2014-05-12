@@ -271,6 +271,10 @@ class TauIDScaleFactors(EventFilter):
             tau.id_sf_low = sf
             tau.id_sf_stat_high = sf + sf_stat
             tau.id_sf_stat_low = sf - sf_stat
+
+            tau.id_sf_stat_scale_high = tau.id_sf_stat_high / sf
+            tau.id_sf_stat_scale_low = tau.id_sf_stat_low / sf
+
             tau.id_sf_sys_high = sf + sf_sys
             tau.id_sf_sys_low = sf - sf_sys
         return True

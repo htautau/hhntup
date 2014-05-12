@@ -138,6 +138,8 @@ class RecoTau(FourMomentum):
     id_sf_low = FloatCol(default=1.)
     id_sf_stat_high = FloatCol(default=1.)
     id_sf_stat_low = FloatCol(default=1.)
+    id_sf_stat_scale_high = FloatCol(default=1.)
+    id_sf_stat_scale_low = FloatCol(default=1.)
     id_sf_sys_high = FloatCol(default=1.)
     id_sf_sys_low = FloatCol(default=1.)
 
@@ -251,6 +253,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.id_sf_low = intau.id_sf_low
                 outtau.id_sf_stat_high = intau.id_sf_stat_high
                 outtau.id_sf_stat_low = intau.id_sf_stat_low
+                outtau.id_sf_stat_scale_high = intau.id_sf_stat_scale_high
+                outtau.id_sf_stat_scale_low = intau.id_sf_stat_scale_low
                 outtau.id_sf_sys_high = intau.id_sf_sys_high
                 outtau.id_sf_sys_low = intau.id_sf_sys_low
 

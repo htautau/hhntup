@@ -137,6 +137,8 @@ class TauFourMomentum(FourMomentum):
         self.id_sf_low = SF_DEFAULT
         self.id_sf_stat_high = SF_DEFAULT
         self.id_sf_stat_low = SF_DEFAULT
+        self.id_sf_stat_scale_high = SF_DEFAULT
+        self.id_sf_stat_scale_low = SF_DEFAULT
         self.id_sf_sys_high = SF_DEFAULT
         self.id_sf_sys_low = SF_DEFAULT
 
