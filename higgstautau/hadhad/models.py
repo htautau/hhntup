@@ -258,6 +258,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.trigger_sf_mc_stat_low = intau.trigger_sf_mc_stat_low
                 outtau.trigger_sf_data_stat_high = intau.trigger_sf_data_stat_high
                 outtau.trigger_sf_data_stat_low = intau.trigger_sf_data_stat_low
+                outtau.trigger_sf_stat_high = intau.trigger_sf_stat_high
+                outtau.trigger_sf_stat_low = intau.trigger_sf_stat_low
                 outtau.trigger_sf_sys_high = intau.trigger_sf_sys_high
                 outtau.trigger_sf_sys_low = intau.trigger_sf_sys_low
 
