@@ -181,6 +181,10 @@ class RecoTau(FourMomentum):
     fakerate_sf_reco_high = FloatCol(default=1.)
     fakerate_sf_reco_low = FloatCol(default=1.)
 
+    # combined stat uncert
+    sf_stat_scale_high = FloatCol(default=1.)
+    sf_stat_scale_low = FloatCol(default=1.)
+
     #trigger_match_thresh = IntCol(default=0)
 
     # overlap checking
@@ -216,7 +220,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     tau_pt_ratio = FloatCol()
 
     @classmethod
-    def set(cls, event, tree, tau1, tau2, skim):
+    def set(cls, event, tree, datatype, tau1, tau2, skim):
         tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
@@ -286,13 +290,32 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.trigger_eff_sys_high = intau.trigger_eff_sys_high
                 outtau.trigger_eff_sys_low = intau.trigger_eff_sys_low
 
+                # combined stat uncert
+                # summed in quadrature
+                if datatype == datasets.EMBED:
+                    stat_high = 1. + math.sqrt((intau.trigger_eff_stat_scale_high - 1)**2 +
+                                               (intau.id_sf_stat_scale_high - 1)**2)
+                    stat_low = 1. - math.sqrt((intau.trigger_eff_stat_scale_low - 1)**2 +
+                                              (intau.id_sf_stat_scale_low - 1)**2)
+                else:
+                    stat_high = 1. + math.sqrt((intau.trigger_sf_stat_scale_high - 1)**2 +
+                                               (intau.id_sf_stat_scale_high - 1)**2)
+                    stat_low = 1. - math.sqrt((intau.trigger_sf_stat_scale_low - 1)**2 +
+                                              (intau.id_sf_stat_scale_low - 1)**2)
+
+                outtau.sf_stat_scale_high = stat_high
+                outtau.sf_stat_scale_low = stat_low
+
             else:
                 outtau.fakerate_sf = intau.fakerate_sf
                 outtau.fakerate_sf_high = intau.fakerate_sf_high
                 outtau.fakerate_sf_low = intau.fakerate_sf_low
-
                 outtau.fakerate_sf_stat_scale_high = intau.fakerate_sf_stat_scale_high
                 outtau.fakerate_sf_stat_scale_low = intau.fakerate_sf_stat_scale_low
+
+                # combined stat uncert
+                outtau.sf_stat_scale_high = intau.fakerate_sf_stat_scale_high
+                outtau.sf_stat_scale_low = intau.fakerate_sf_stat_scale_low
 
                 outtau.fakerate_sf_reco = intau.fakerate_sf_reco
                 outtau.fakerate_sf_reco_high = intau.fakerate_sf_reco_high

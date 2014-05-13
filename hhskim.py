@@ -893,7 +893,7 @@ class hhskim(ATLASStudent):
             # Fill the tau block
             # This must come after the RecoJetBlock is filled since
             # that sets the jet_beta for boosting the taus
-            RecoTauBlock.set(event, tree, tau1, tau2, skim=not local)
+            RecoTauBlock.set(event, tree, datatype, tau1, tau2, skim=not local)
 
             # fill the output tree
             outtree.Fill(reset=True)
