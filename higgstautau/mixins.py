@@ -152,6 +152,8 @@ class TauFourMomentum(FourMomentum):
         self.trigger_sf_data_stat_low = SF_DEFAULT
         self.trigger_sf_stat_high = SF_DEFAULT
         self.trigger_sf_stat_low = SF_DEFAULT
+        self.trigger_sf_stat_scale_high = SF_DEFAULT
+        self.trigger_sf_stat_scale_low = SF_DEFAULT
         self.trigger_sf_sys_high = SF_DEFAULT
         self.trigger_sf_sys_low = SF_DEFAULT
 
@@ -161,7 +163,7 @@ class TauFourMomentum(FourMomentum):
         self.trigger_eff_stat_high = SF_DEFAULT
         self.trigger_eff_stat_low = SF_DEFAULT
         self.trigger_eff_stat_scale_high = SF_DEFAULT
-        self.trigger_eff_stat_scale_high = SF_DEFAULT
+        self.trigger_eff_stat_scale_low = SF_DEFAULT
         self.trigger_eff_sys_high = SF_DEFAULT
         self.trigger_eff_sys_low = SF_DEFAULT
 
@@ -169,7 +171,6 @@ class TauFourMomentum(FourMomentum):
         self.fakerate_sf = SF_DEFAULT
         self.fakerate_sf_high = SF_DEFAULT
         self.fakerate_sf_low = SF_DEFAULT
-
         self.fakerate_sf_stat_scale_high = SF_DEFAULT
         self.fakerate_sf_stat_scale_low = SF_DEFAULT
 
@@ -354,7 +355,7 @@ class MCParticle(FourMomentum):
                 self.eta,
                 self.phi,
                 self.m)
-        #        self._particle.Mass() * GeV)
+        #       self._particle.Mass() * GeV)
         return vect
 
     def export_graphvis(self, out_file=None):

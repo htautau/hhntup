@@ -377,7 +377,9 @@ class TauFakeRateScaleFactors(EventFilter):
             sf_reco = self.fakerate_tool.getRecoSF(
                 tau.pt, tau.numTrack, self.tree.RunNumber)
             tau.fakerate_sf_reco = sf_reco
-            # NOTE: no uncertainty on this SF
+            # NOTE: no uncertainty on this SF?
+            # KG: yes there are, but getRecoSF didn't get updated to access them.
+            # It's small so we will ignore it
             tau.fakerate_sf_reco_high = sf_reco
             tau.fakerate_sf_reco_low = sf_reco
 

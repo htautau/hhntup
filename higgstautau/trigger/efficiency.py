@@ -371,6 +371,9 @@ class TauTriggerEfficiency(EventFilter):
                     stat_dn = sqrt(mc_stat_dn**2 + data_stat_dn**2)
                     tau.trigger_sf_stat_high = sf + stat_up
                     tau.trigger_sf_stat_low = sf - stat_dn
+                    if sf != 0:
+                        tau.trigger_sf_stat_scale_high = (sf + stat_up) / sf
+                        tau.trigger_sf_stat_scale_low = (sf - stat_dn) / sf
 
                     # Systematic uncert
                     sys_up = abs(ttc.getSF(tau.pt, tau.eta, 3, period, prong, wpflag, eveto))
@@ -425,8 +428,9 @@ class TauTriggerEfficiency(EventFilter):
                 stat_dn = abs(ttc.getDataEff(tau.pt, tau.eta, -1, self.tree.RunNumber, prong, wpflag, eveto))
                 tau.trigger_eff_stat_high = eff + stat_up
                 tau.trigger_eff_stat_low = eff - stat_dn
-                tau.trigger_eff_stat_scale_high = (eff + stat_up) / eff
-                tau.trigger_eff_stat_scale_low = (eff - stat_dn) / eff
+                if eff != 0:
+                    tau.trigger_eff_stat_scale_high = (eff + stat_up) / eff
+                    tau.trigger_eff_stat_scale_low = (eff - stat_dn) / eff
 
                 # Systematic uncert
                 sys_up = abs(ttc.getDataEff(tau.pt, tau.eta, 2, self.tree.RunNumber, prong, wpflag, eveto))
