@@ -292,7 +292,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
                 # combined stat uncert
                 # summed in quadrature
-                if datatype == datasets.EMBED:
+                if datatype in (datasets.EMBED, datasets.MCEMBED):
                     stat_high = 1. + math.sqrt((intau.trigger_eff_stat_scale_high - 1)**2 +
                                                (intau.id_sf_stat_scale_high - 1)**2)
                     stat_low = 1. - math.sqrt((intau.trigger_eff_stat_scale_low - 1)**2 +
