@@ -161,6 +161,8 @@ class RecoTau(FourMomentum):
     trigger_eff_low = FloatCol(default=1.)
     trigger_eff_stat_high = FloatCol(default=1.)
     trigger_eff_stat_low = FloatCol(default=1.)
+    trigger_eff_stat_scale_high = FloatCol(default=1.)
+    trigger_eff_stat_scale_low = FloatCol(default=1.)
     trigger_eff_sys_high = FloatCol(default=1.)
     trigger_eff_sys_low = FloatCol(default=1.)
 
@@ -275,6 +277,8 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.trigger_eff_low = intau.trigger_eff_low
                 outtau.trigger_eff_stat_high = intau.trigger_eff_stat_high
                 outtau.trigger_eff_stat_low = intau.trigger_eff_stat_low
+                outtau.trigger_eff_stat_scale_high = intau.trigger_eff_stat_scale_high
+                outtau.trigger_eff_stat_scale_low = intau.trigger_eff_stat_scale_low
                 outtau.trigger_eff_sys_high = intau.trigger_eff_sys_high
                 outtau.trigger_eff_sys_low = intau.trigger_eff_sys_low
 
