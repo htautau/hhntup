@@ -138,8 +138,6 @@ class RecoTau(FourMomentum):
     id_sf_low = FloatCol(default=1.)
     id_sf_stat_high = FloatCol(default=1.)
     id_sf_stat_low = FloatCol(default=1.)
-    id_sf_stat_scale_high = FloatCol(default=1.)
-    id_sf_stat_scale_low = FloatCol(default=1.)
     id_sf_sys_high = FloatCol(default=1.)
     id_sf_sys_low = FloatCol(default=1.)
 
@@ -168,22 +166,37 @@ class RecoTau(FourMomentum):
     trigger_eff_sys_high = FloatCol(default=1.)
     trigger_eff_sys_low = FloatCol(default=1.)
 
+    trigger_sf_stat_scale_PeriodA_high = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodA_low = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodBD_Barrel_high = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodBD_Barrel_low = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodBD_EndCap_high = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodBD_EndCap_low = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodEM_Barrel_high = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodEM_Barrel_low = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodEM_EndCap_high = FloatCol(default=1.)
+    trigger_sf_stat_scale_PeriodEM_EndCap_low = FloatCol(default=1.)
+
+    trigger_eff_stat_scale_PeriodA_high = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodA_low = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodBD_Barrel_high = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodBD_Barrel_low = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodBD_EndCap_high = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodBD_EndCap_low = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodEM_Barrel_high = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodEM_Barrel_low = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodEM_EndCap_high = FloatCol(default=1.)
+    trigger_eff_stat_scale_PeriodEM_EndCap_low = FloatCol(default=1.)
+
     # fake rate scale factor for taus that do not match truth
     fakerate_sf = FloatCol(default=1.)
     fakerate_sf_high = FloatCol(default=1.)
     fakerate_sf_low = FloatCol(default=1.)
 
-    fakerate_sf_stat_scale_high = FloatCol(default=1.)
-    fakerate_sf_stat_scale_low = FloatCol(default=1.)
-
     # fake rate reco scale factor for taus that do not match truth
     fakerate_sf_reco = FloatCol(default=1.)
     fakerate_sf_reco_high = FloatCol(default=1.)
     fakerate_sf_reco_low = FloatCol(default=1.)
-
-    # combined stat uncert
-    sf_stat_scale_high = FloatCol(default=1.)
-    sf_stat_scale_low = FloatCol(default=1.)
 
     #trigger_match_thresh = IntCol(default=0)
 
@@ -261,8 +274,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.id_sf_low = intau.id_sf_low
                 outtau.id_sf_stat_high = intau.id_sf_stat_high
                 outtau.id_sf_stat_low = intau.id_sf_stat_low
-                outtau.id_sf_stat_scale_high = intau.id_sf_stat_scale_high
-                outtau.id_sf_stat_scale_low = intau.id_sf_stat_scale_low
                 outtau.id_sf_sys_high = intau.id_sf_sys_high
                 outtau.id_sf_sys_low = intau.id_sf_sys_low
 
@@ -290,32 +301,43 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 outtau.trigger_eff_sys_high = intau.trigger_eff_sys_high
                 outtau.trigger_eff_sys_low = intau.trigger_eff_sys_low
 
-                # combined stat uncert
-                # summed in quadrature
-                if datatype in (datasets.EMBED, datasets.MCEMBED):
-                    stat_high = 1. + math.sqrt((intau.trigger_eff_stat_scale_high - 1)**2 +
-                                               (intau.id_sf_stat_scale_high - 1)**2)
-                    stat_low = 1. - math.sqrt((intau.trigger_eff_stat_scale_low - 1)**2 +
-                                              (intau.id_sf_stat_scale_low - 1)**2)
-                else:
-                    stat_high = 1. + math.sqrt((intau.trigger_sf_stat_scale_high - 1)**2 +
-                                               (intau.id_sf_stat_scale_high - 1)**2)
-                    stat_low = 1. - math.sqrt((intau.trigger_sf_stat_scale_low - 1)**2 +
-                                              (intau.id_sf_stat_scale_low - 1)**2)
-
-                outtau.sf_stat_scale_high = stat_high
-                outtau.sf_stat_scale_low = stat_low
+                # partitioned trigger stat NP
+                # same bins as in TrigTauEfficiency
+                if 200804 <= tree.RunNumber <= 201556:
+                    # period A eta inclusive
+                    outtau.trigger_sf_stat_scale_PeriodA_high = intau.trigger_sf_stat_scale_high
+                    outtau.trigger_sf_stat_scale_PeriodA_low = intau.trigger_sf_stat_scale_low
+                    outtau.trigger_eff_stat_scale_PeriodA_high = intau.trigger_eff_stat_scale_high
+                    outtau.trigger_eff_stat_scale_PeriodA_low = intau.trigger_eff_stat_scale_low
+                elif 202660 <= tree.RunNumber <= 209025:
+                    # period B-D
+                    if abs(intau.eta) <= 1.5:
+                        outtau.trigger_sf_stat_scale_PeriodBD_Barrel_high = intau.trigger_sf_stat_scale_high
+                        outtau.trigger_sf_stat_scale_PeriodBD_Barrel_low = intau.trigger_sf_stat_scale_low
+                        outtau.trigger_eff_stat_scale_PeriodBD_Barrel_high = intau.trigger_eff_stat_scale_high
+                        outtau.trigger_eff_stat_scale_PeriodBD_Barrel_low = intau.trigger_eff_stat_scale_low
+                    else:
+                        outtau.trigger_sf_stat_scale_PeriodBD_EndCap_high = intau.trigger_sf_stat_scale_high
+                        outtau.trigger_sf_stat_scale_PeriodBD_EndCap_low = intau.trigger_sf_stat_scale_low
+                        outtau.trigger_eff_stat_scale_PeriodBD_EndCap_high = intau.trigger_eff_stat_scale_high
+                        outtau.trigger_eff_stat_scale_PeriodBD_EndCap_low = intau.trigger_eff_stat_scale_low
+                elif 209074 <= tree.RunNumber <= 216432:
+                    # period E-M
+                    if abs(intau.eta) <= 1.5:
+                        outtau.trigger_sf_stat_scale_PeriodEM_Barrel_high = intau.trigger_sf_stat_scale_high
+                        outtau.trigger_sf_stat_scale_PeriodEM_Barrel_low = intau.trigger_sf_stat_scale_low
+                        outtau.trigger_eff_stat_scale_PeriodEM_Barrel_high = intau.trigger_eff_stat_scale_high
+                        outtau.trigger_eff_stat_scale_PeriodEM_Barrel_low = intau.trigger_eff_stat_scale_low
+                    else:
+                        outtau.trigger_sf_stat_scale_PeriodEM_EndCap_high = intau.trigger_sf_stat_scale_high
+                        outtau.trigger_sf_stat_scale_PeriodEM_EndCap_low = intau.trigger_sf_stat_scale_low
+                        outtau.trigger_eff_stat_scale_PeriodEM_EndCap_high = intau.trigger_eff_stat_scale_high
+                        outtau.trigger_eff_stat_scale_PeriodEM_EndCap_low = intau.trigger_eff_stat_scale_low
 
             else:
                 outtau.fakerate_sf = intau.fakerate_sf
                 outtau.fakerate_sf_high = intau.fakerate_sf_high
                 outtau.fakerate_sf_low = intau.fakerate_sf_low
-                outtau.fakerate_sf_stat_scale_high = intau.fakerate_sf_stat_scale_high
-                outtau.fakerate_sf_stat_scale_low = intau.fakerate_sf_stat_scale_low
-
-                # combined stat uncert
-                outtau.sf_stat_scale_high = intau.fakerate_sf_stat_scale_high
-                outtau.sf_stat_scale_low = intau.fakerate_sf_stat_scale_low
 
                 outtau.fakerate_sf_reco = intau.fakerate_sf_reco
                 outtau.fakerate_sf_reco_high = intau.fakerate_sf_reco_high

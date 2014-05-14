@@ -137,8 +137,6 @@ class TauFourMomentum(FourMomentum):
         self.id_sf_low = SF_DEFAULT
         self.id_sf_stat_high = SF_DEFAULT
         self.id_sf_stat_low = SF_DEFAULT
-        self.id_sf_stat_scale_high = SF_DEFAULT
-        self.id_sf_stat_scale_low = SF_DEFAULT
         self.id_sf_sys_high = SF_DEFAULT
         self.id_sf_sys_low = SF_DEFAULT
 
@@ -152,31 +150,27 @@ class TauFourMomentum(FourMomentum):
         self.trigger_sf_data_stat_low = SF_DEFAULT
         self.trigger_sf_stat_high = SF_DEFAULT
         self.trigger_sf_stat_low = SF_DEFAULT
-        self.trigger_sf_stat_scale_high = SF_DEFAULT
-        self.trigger_sf_stat_scale_low = SF_DEFAULT
         self.trigger_sf_sys_high = SF_DEFAULT
         self.trigger_sf_sys_low = SF_DEFAULT
+
+        self.trigger_sf_stat_scale_high = SF_DEFAULT
+        self.trigger_sf_stat_scale_low = SF_DEFAULT
 
         self.trigger_eff = SF_DEFAULT
         self.trigger_eff_high = SF_DEFAULT
         self.trigger_eff_low = SF_DEFAULT
         self.trigger_eff_stat_high = SF_DEFAULT
         self.trigger_eff_stat_low = SF_DEFAULT
-        self.trigger_eff_stat_scale_high = SF_DEFAULT
-        self.trigger_eff_stat_scale_low = SF_DEFAULT
         self.trigger_eff_sys_high = SF_DEFAULT
         self.trigger_eff_sys_low = SF_DEFAULT
+
+        self.trigger_eff_stat_scale_high = SF_DEFAULT
+        self.trigger_eff_stat_scale_low = SF_DEFAULT
 
         # fake rate scale factor for taus that do not match truth
         self.fakerate_sf = SF_DEFAULT
         self.fakerate_sf_high = SF_DEFAULT
         self.fakerate_sf_low = SF_DEFAULT
-        self.fakerate_sf_stat_scale_high = SF_DEFAULT
-        self.fakerate_sf_stat_scale_low = SF_DEFAULT
-
-        # quadrature sum of trigger, id and fakerate stat uncerts
-        self.sf_stat_scale_high = SF_DEFAULT
-        self.sf_stat_scale_low = SF_DEFAULT
 
         # fake rate reco scale factor for taus that do not match truth
         self.fakerate_sf_reco = SF_DEFAULT

@@ -271,10 +271,6 @@ class TauIDScaleFactors(EventFilter):
             tau.id_sf_low = sf
             tau.id_sf_stat_high = sf + sf_stat
             tau.id_sf_stat_low = sf - sf_stat
-
-            tau.id_sf_stat_scale_high = tau.id_sf_stat_high / sf
-            tau.id_sf_stat_scale_low = tau.id_sf_stat_low / sf
-
             tau.id_sf_sys_high = sf + sf_sys
             tau.id_sf_sys_low = sf - sf_sys
         return True
@@ -461,9 +457,5 @@ class TauFakeRateScaleFactors(EventFilter):
             # uncertainty
             tau.fakerate_sf_high = sf_high
             tau.fakerate_sf_low = sf_low
-            if sf != 0:
-                # NP is mostly stat uncert
-                tau.fakerate_sf_stat_scale_high = sf_high / sf
-                tau.fakerate_sf_stat_scale_low = sf_low / sf
             #log.info("sf: %f, high: %f, low: %f" % (sf, sf_high, sf_low))
         return True
