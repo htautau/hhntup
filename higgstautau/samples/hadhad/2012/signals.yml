@@ -14,6 +14,12 @@ gg:
         - 'PowPyth8_AU2CT10_ggH140_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_ggH145_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_ggH150_tautauhh.mc12a'
+gg_bch:
+    name: gghtautau_bch
+    latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
+    root: 'ggH#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_BCH.mc12b'
 vbf:
     name: vbfhtautau
     latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'
@@ -30,6 +36,12 @@ vbf:
         - 'PowPyth8_AU2CT10_VBFH140_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_VBFH145_tautauhh.mc12a'
         - 'PowPyth8_AU2CT10_VBFH150_tautauhh.mc12a'
+vbf_bch:
+    name: vbfhtautau_bch
+    latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'
+    root: 'VBF H#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_BCH.mc12b'
 wh:
     name: whtautau
     latex: '$WH\rightarrow\tau_{h}\tau_{h}$'

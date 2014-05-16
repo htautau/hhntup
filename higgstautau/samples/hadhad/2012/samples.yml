@@ -213,3 +213,7 @@ mc:
         #- 'mcembed12-hh'
         #- 'mcembed12-hhup'
         #- 'mcembed12-hhdn'
+        
+        # for BCH comparison
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_BCH.mc12b'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_BCH.mc12b'
