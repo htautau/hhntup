@@ -1,0 +1,4 @@
+# samples with BCH correctly simulated
+# https://espace.cern.ch/atlas-project-HSG4/HTauTauLH/Lists/Moriond%202013/Attachments/148/Tuna-2014-05-13-BCH.pdf
+mc12_8TeV.161577.PowHegPythia8_AU2CT10_ggH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r5470_r4540_p1344/
+mc12_8TeV.161617.PowHegPythia8_AU2CT10_VBFH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r5470_r4540_p1344/

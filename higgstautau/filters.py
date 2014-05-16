@@ -832,3 +832,16 @@ class HiggsPT(EventFilter):
         # Count the number of remaining jets
         self.tree.num_true_jets_no_overlap = len(jets)
         return True
+
+
+class BCHSampleRunNumber(EventFilter):
+    """
+    d3pd.RunNumber=195848 tells the tool that the sample was made with mc12b
+    pileup conditions. Our BCH samples were made with identical pileup
+    conditions, but for reasons unclear, they were assigned
+    d3pd.RunNumber=212399, and the pileup tool does not know what to do with
+    this RunNumber.
+    """
+    def passes(self, event):
+        event.RunNumber = 195848
+        return True

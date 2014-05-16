@@ -4,6 +4,7 @@ from externaltools import PileupReweighting
 from ROOT import Root
 
 from . import datasets
+from . import log; log = log[__name__]
 
 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
 PU_RESCALE = {
@@ -15,6 +16,7 @@ PILEUP_TOOLS = []
 
 
 def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
+    # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ExtendedPileupReweighting
     # Initialize the pileup reweighting tool
     pileup_tool = Root.TPileupReweighting()
     if year == 2011:
@@ -31,7 +33,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
         if use_defaults:
             pileup_tool.AddConfigFile(
                 PileupReweighting.get_resource(
-                    'mc12a_defaults.prw.root'))
+                    'mc12ab_defaults.prw.root'))
         else:
             pileup_tool.AddConfigFile(
                 'lumi/2012/hadhad/'
@@ -107,16 +109,7 @@ class PileupReweight(EventFilter):
             **kwargs)
 
     def passes(self, event):
-        # set the pileup and period weights
-        """
-        self.tree.pileup_weight = self.tool.GetPrimaryWeight(
-                event.RunNumber,
-                event.mc_channel_number,
-                event.averageIntPerXing)
-        self.tree.period_weight = self.tool.GetPeriodWeight(
-                event.RunNumber,
-                event.mc_channel_number)
-        """
+        # set the pileup weights
         self.tree.pileup_weight = self.tool.GetCombinedWeight(
             event.RunNumber,
             event.mc_channel_number,
@@ -129,6 +122,10 @@ class PileupReweight(EventFilter):
             event.RunNumber,
             event.mc_channel_number,
             event.averageIntPerXing)
+        #log.info("Run: {0}".format(event.RunNumber))
+        #log.info("Channel: {0}".format(event.mc_channel_number))
+        #log.info("mu: {0}".format(event.averageIntPerXing))
+        #log.info("Weight: {0}".format(self.tree.pileup_weight))
         return True
 
 

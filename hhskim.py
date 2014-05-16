@@ -117,6 +117,11 @@ class hhskim(ATLASStudent):
         log.info("DATASET: {0}".format(dsname))
         log.info("IS SIGNAL: {0}".format(is_signal))
 
+        # is this a BCH-fixed sample? (temporary)
+        is_bch_sample = 'r5470_r4540_p1344' in dsname
+        if is_bch_sample:
+            log.warning("this is a BCH-fixed r5470 sample")
+
         # onfilechange will contain a list of functions to be called as the
         # chain rolls over to each new file
         onfilechange = []
@@ -285,10 +290,15 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 PileupTemplates(
                     year=year,
-                    passthrough=local or datatype != datasets.MC,
+                    passthrough=(
+                        local or is_bch_sample or datatype not in (
+                            datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 RandomSeed(
                     datatype=datatype,
+                    count_funcs=count_funcs),
+                BCHSampleRunNumber(
+                    passthrough=not is_bch_sample,
                     count_funcs=count_funcs),
                 RandomRunNumber(
                     tree=tree,
