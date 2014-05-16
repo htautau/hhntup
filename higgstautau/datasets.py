@@ -227,7 +227,9 @@ MC_CATEGORIES = {
     'mc11c': {'reco':  (3043, 3060, 3108),
               'merge': (3109, 3063, 2993)},
     'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542, 3549),
-              'merge': (3549,)}}
+              'merge': (3549,)},
+    'mc12b': {'reco': (5470,),
+              'merge': (4540,)}}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
