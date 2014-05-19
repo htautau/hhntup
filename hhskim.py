@@ -699,8 +699,6 @@ class hhskim(ATLASStudent):
                     jet3.fourvect_boosted.copy_from(jet3.fourvect)
                     jet3.fourvect_boosted.Boost(beta * -1)
 
-                RecoJetBlock.set(tree, jet1, jet2, jet3)
-
             elif len(jets) == 1:
                 jet1 = jets[0]
 
@@ -717,7 +715,7 @@ class hhskim(ATLASStudent):
                 # aplanarity
                 #tree.aplanarity = aplanarity
 
-                RecoJetBlock.set(tree, jet1)
+            RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
 
             # mass of ditau + leading jet system
             if jet1 is not None:

@@ -374,51 +374,79 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
     jet3_centrality_boosted = FloatCol(default=-1E10)
 
     @classmethod
-    def set(cls, tree, jet1, jet2=None, jet3=None):
-        FourMomentum.set(tree.jet1, jet1)
-        tree.jet1_jvtxf = jet1.jvtxf
-        tree.jet1_index = jet1.index
-        tree.jet1_BCHMedium = jet1.BCHMedium
-        tree.jet1_BCHTight = jet1.BCHTight
+    def set(cls, tree, jet1, jet2=None, jet3=None, local=False):
 
-        if jet2 is None:
-            return
+        if jet1 is not None:
+            FourMomentum.set(tree.jet1, jet1)
+            tree.jet1_jvtxf = jet1.jvtxf
+            tree.jet1_index = jet1.index
+            tree.jet1_BCHMedium = jet1.BCHMedium
+            tree.jet1_BCHTight = jet1.BCHTight
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if jet selection changed
+            tree['jet1_pt'].reset()
+            tree['jet1_p'].reset()
+            tree['jet1_et'].reset()
+            tree['jet1_e'].reset()
+            tree['jet1_m'].reset()
+            tree['jet1_phi'].reset()
+            tree['jet1_eta'].reset()
 
-        FourMomentum.set(tree.jet2, jet2)
-        tree.jet2_jvtxf = jet2.jvtxf
-        tree.jet2_index = jet2.index
-        tree.jet2_BCHMedium = jet2.BCHMedium
-        tree.jet2_BCHTight = jet2.BCHTight
+        if jet2 is not None:
+            FourMomentum.set(tree.jet2, jet2)
+            tree.jet2_jvtxf = jet2.jvtxf
+            tree.jet2_index = jet2.index
+            tree.jet2_BCHMedium = jet2.BCHMedium
+            tree.jet2_BCHTight = jet2.BCHTight
 
-        tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
+            tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
-        tree.dEta_jets = abs(
-            jet1.fourvect.Eta() - jet2.fourvect.Eta())
-        tree.dEta_jets_boosted = abs(
-            jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
+            tree.dEta_jets = abs(
+                jet1.fourvect.Eta() - jet2.fourvect.Eta())
+            tree.dEta_jets_boosted = abs(
+                jet1.fourvect_boosted.Eta() - jet2.fourvect_boosted.Eta())
 
-        tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
-        tree.eta_product_jets_boosted = (
-            jet1.fourvect_boosted.Eta() * jet2.fourvect_boosted.Eta())
+            tree.eta_product_jets = jet1.fourvect.Eta() * jet2.fourvect.Eta()
+            tree.eta_product_jets_boosted = (
+                jet1.fourvect_boosted.Eta() * jet2.fourvect_boosted.Eta())
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if jet selection changed
+            tree['jet2_pt'].reset()
+            tree['jet2_p'].reset()
+            tree['jet2_et'].reset()
+            tree['jet2_e'].reset()
+            tree['jet2_m'].reset()
+            tree['jet2_phi'].reset()
+            tree['jet2_eta'].reset()
 
-        if jet3 is None:
-            return
+        if jet3 is not None:
+            FourMomentum.set(tree.jet3, jet3)
+            tree.jet3_jvtxf = jet3.jvtxf
+            tree.jet3_index = jet3.index
+            tree.jet3_BCHMedium = jet3.BCHMedium
+            tree.jet3_BCHTight = jet3.BCHTight
 
-        FourMomentum.set(tree.jet3, jet3)
-        tree.jet3_jvtxf = jet3.jvtxf
-        tree.jet3_index = jet3.index
-        tree.jet3_BCHMedium = jet3.BCHMedium
-        tree.jet3_BCHTight = jet3.BCHTight
-
-        # eta centrality of 3rd leading jet
-        tree.jet3_centrality = eventshapes.eta_centrality(
-            jet3.fourvect.Eta(),
-            jet1.fourvect.Eta(),
-            jet2.fourvect.Eta())
-        tree.jet3_centrality_boosted = eventshapes.eta_centrality(
-            jet3.fourvect_boosted.Eta(),
-            jet1.fourvect_boosted.Eta(),
-            jet2.fourvect_boosted.Eta())
+            # eta centrality of 3rd leading jet
+            tree.jet3_centrality = eventshapes.eta_centrality(
+                jet3.fourvect.Eta(),
+                jet1.fourvect.Eta(),
+                jet2.fourvect.Eta())
+            tree.jet3_centrality_boosted = eventshapes.eta_centrality(
+                jet3.fourvect_boosted.Eta(),
+                jet1.fourvect_boosted.Eta(),
+                jet2.fourvect_boosted.Eta())
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if jet selection changed
+            tree['jet3_pt'].reset()
+            tree['jet3_p'].reset()
+            tree['jet3_et'].reset()
+            tree['jet3_e'].reset()
+            tree['jet3_m'].reset()
+            tree['jet3_phi'].reset()
+            tree['jet3_eta'].reset()
 
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
