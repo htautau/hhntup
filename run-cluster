@@ -10,4 +10,6 @@ setup = cluster.get_setup(os.path.join(
 cmd = ' '.join(sys.argv[1:])
 name = cmd.replace(" ", "_")
 cmd = "cd %s && %s && %s" % (os.getcwd(), setup, cmd)
-qsub(cmd, name=name)
+qsub(cmd,
+     name=name,
+     ppn=int(os.getenv('PPN', 1)))
