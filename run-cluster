@@ -12,4 +12,5 @@ name = cmd.replace(" ", "_")
 cmd = "cd %s && %s && %s" % (os.getcwd(), setup, cmd)
 qsub(cmd,
      name=name,
+     queue=os.getenv('QUEUE', 'medium'),
      ppn=int(os.getenv('PPN', 1)))
