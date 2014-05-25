@@ -620,8 +620,8 @@ def jet_selection_2011(jet):
         return False
 
     # JVF cut on central jets
-    if (abs(jet.eta) < 2.4) and not (abs(jet.jvtxf) > 0.75):
-        return False
+    #if (abs(jet.eta) < 2.4) and not (abs(jet.jvtxf) > 0.75):
+    #    return False
     # NO JVFUncertaintyTool for 2011!
 
     return True
