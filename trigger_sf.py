@@ -89,7 +89,7 @@ triggers = [
     ('EF_tau29Ti_medium1', 'red'),
 ]
 
-pt = np.linspace(20000, 100000, 200)
+pt = np.linspace(20000, 100000, 1000)
 
 
 def draw_curve_8(_func, name, title, ylow, yhigh, num_errs=1):
@@ -99,14 +99,17 @@ def draw_curve_8(_func, name, title, ylow, yhigh, num_errs=1):
         tool = ROOT.TrigTauEfficiency()
         tool.loadInputFile(os.path.join(base, 'triggerSF_{0}.root'.format(trigger)))
         func = getattr(tool, _func)
-        eff = map(lambda x: func(x, eta, 0, period, prong, wpflag, eveto), pt)
+        eff = np.array(map(lambda x: func(x, eta, 0, period, prong, wpflag, eveto), pt))
         errs_low = []
         errs_high = []
         for ierr in xrange(num_errs):
-            eff_low = map(lambda x: func(x, eta, -1, period, prong, wpflag, eveto), pt)
-            eff_high = map(lambda x: func(x, eta, 1, period, prong, wpflag, eveto), pt)
+            eff_low = np.array(map(lambda x: func(x, eta, -1, period, prong, wpflag, eveto), pt))
+            eff_high = np.array(map(lambda x: func(x, eta, 1, period, prong, wpflag, eveto), pt))
             errs_low.append(eff_low)
             errs_high.append(eff_high)
+        # quadrature sum of error
+        eff_low = np.sqrt(np.sum([np.power(err, 2) for err in errs_low], axis=0))
+        eff_high = np.sqrt(np.sum([np.power(err, 2) for err in errs_high], axis=0))
         graph = Graph(len(pt), name=trigger)
         for i, (p, e, e_low, e_high) in enumerate(zip(pt, eff, eff_low, eff_high)):
             graph.SetPoint(i, p / 1000, e)
@@ -118,7 +121,8 @@ def draw_curve_8(_func, name, title, ylow, yhigh, num_errs=1):
         graphs.append(graph)
     c = Canvas()
     leg = Legend(len(graphs),
-        pad=c, topmargin=0.4, leftmargin=0.3, textsize=25, margin=0.2)
+        pad=c, topmargin=0.6, leftmargin=0.3,
+        textsize=25, margin=0.2)
     for i, g in enumerate(graphs):
         if i == 0:
             g.Draw('3AL')
