@@ -262,9 +262,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             #outtau.jvtxf = intau.jet_jvtxf
             outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
-            outtau.BCHMedium = intau.BCHMedium
-            outtau.BCHTight = intau.BCHTight
-
             outtau.centrality = intau.centrality
             outtau.centrality_boosted = intau.centrality_boosted
 
@@ -355,6 +352,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                 # the track branches are removed by the skim, so this should
                 # only be set in the skim and cannot be recomputed on the skim
                 outtau.numTrack_recounted = intau.numTrack_recounted
+                # BCH cleaning only computed in skim
+                outtau.BCHMedium = intau.BCHMedium
+                outtau.BCHTight = intau.BCHTight
 
             # tau vertex association
             outtau.vertex_prob = intau.vertex_prob

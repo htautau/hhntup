@@ -156,7 +156,7 @@ def run(student,
         if use_qsub: # use the batch system
             qsub(cmd,
                  queue=qsub_queue,
-                 ncpus=nproc_actual,
+                 ppn=nproc_actual,
                  name=student.strip('.py') + '.' + ds + qsub_name_suffix,
                  stderr_path=output_path,
                  stdout_path=output_path,

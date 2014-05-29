@@ -126,9 +126,6 @@ class TauFourMomentum(FourMomentum):
         # overlap checking
         self.min_dr_jet = 9999.
 
-        self.BCHMedium = False
-        self.BCHTight = False
-
         self._pt_nominal = -1111.
 
         # efficiency scale factor if matches truth
@@ -180,11 +177,18 @@ class TauFourMomentum(FourMomentum):
         # colliniear mass approx
         self.collinear_momentum_fraction = -9999.
 
+        #self.trigger_match_thresh = 0
+        #self.trigger_match_index = -1
+
+        # FOLLOWING ONLY COMPUTED IN SKIM
+
         # track recounting
         self.numTrack_recounted = -1
 
-        #self.trigger_match_thresh = 0
-        #self.trigger_match_index = -1
+        # BCH cleaning
+        self.BCHMedium = False
+        self.BCHTight = False
+
 
     @property
     def pt_nominal(self):
@@ -215,16 +219,16 @@ class TauFourMomentum(FourMomentum):
     @cached_property
     def privtx(self):
         return Vector3(
-                self.privtx_x,
-                self.privtx_y,
-                self.privtx_z)
+            self.privtx_x,
+            self.privtx_y,
+            self.privtx_z)
 
     @cached_property
     def secvtx(self):
         return Vector3(
-                self.secvtx_x,
-                self.secvtx_y,
-                self.secvtx_z)
+            self.secvtx_x,
+            self.secvtx_y,
+            self.secvtx_z)
 
     @cached_property
     def decay_vect(self):
