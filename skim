@@ -26,13 +26,14 @@ source setup.sh && ./grid-batch --dataset %(dataset)s --metadata datasets.cfg
 """
 
 SUBMIT_CMD = """\
-./grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
+./grid-submit -u user.qbuat -m datasets.cfg -s %(student)s -v %(version)s
 %(opts)s
 %(student_args)s
 %(dataset)s
---official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
+%(options)s
 %(dest)s
 """
+#--official --voms=atlas:/atlas/phys-higgs/Role=production 
 
 configspec = 'skims.spec'
 if not os.path.isfile(configspec):
