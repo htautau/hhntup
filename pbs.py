@@ -125,6 +125,9 @@ MONITOR = PBSMonitor()
 def qsub(cmd,
          queue='medium',
          ppn=1,
+         mem=None,
+         vmem=None,
+         pmem=None,
          stderr_path=None,
          stdout_path=None,
          name=None,
@@ -141,8 +144,15 @@ def qsub(cmd,
     if stdout_path is not None:
         kwargs['-o'] = stdout_path
     args = ' '.join(['%s "%s"' % arg for arg in kwargs.items()])
-    cmd = "echo '%s' | qsub -q %s %s -l nodes=1:ppn=%d" % (
-        cmd, queue, args, ppn)
+    resources = 'nodes=1:ppn={0:d}'.format(ppn)
+    if mem is not None:
+        resources += ',mem={0}'.format(mem)
+    if vmem is not None:
+        resources += ',vmem={0}'.format(vmem)
+    if pmem is not None:
+        resources += ',pmem={0}'.format(pmem)
+    cmd = "echo '{0}' | qsub -q {1} {2} -l {3}".format(
+        cmd, queue, args, resources)
     print cmd
     if not dry_run:
         call(cmd, shell=True)
