@@ -106,6 +106,7 @@ class JetFourMomentum(FourMomentum):
         # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MissingETUtilityFAQ#If_I_recalibrate_correct_my_anal
         self.phi_original = None
 
+        # ONLY COMPUTED IN SKIM!
         self.BCHMedium = False
         self.BCHTight = False
 

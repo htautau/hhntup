@@ -233,7 +233,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     tau_pt_ratio = FloatCol()
 
     @classmethod
-    def set(cls, event, tree, datatype, tau1, tau2, skim):
+    def set(cls, event, tree, datatype, tau1, tau2, local=False):
         tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
@@ -347,7 +347,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.matched_collision = intau.matched_collision
             outtau.min_dr_jet = intau.min_dr_jet
 
-            if skim:
+            if not local:
                 # track recounting
                 # the track branches are removed by the skim, so this should
                 # only be set in the skim and cannot be recomputed on the skim
@@ -380,8 +380,12 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
             FourMomentum.set(tree.jet1, jet1)
             tree.jet1_jvtxf = jet1.jvtxf
             tree.jet1_index = jet1.index
-            tree.jet1_BCHMedium = jet1.BCHMedium
-            tree.jet1_BCHTight = jet1.BCHTight
+
+            if not local:
+                # only computed in skim!
+                tree.jet1_BCHMedium = jet1.BCHMedium
+                tree.jet1_BCHTight = jet1.BCHTight
+
         elif local:
             # zero the fourvect
             # avoid ghost values from skim if jet selection changed
@@ -397,8 +401,11 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
             FourMomentum.set(tree.jet2, jet2)
             tree.jet2_jvtxf = jet2.jvtxf
             tree.jet2_index = jet2.index
-            tree.jet2_BCHMedium = jet2.BCHMedium
-            tree.jet2_BCHTight = jet2.BCHTight
+
+            if not local:
+                # only computed in skim!
+                tree.jet2_BCHMedium = jet2.BCHMedium
+                tree.jet2_BCHTight = jet2.BCHTight
 
             tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
@@ -425,8 +432,11 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
             FourMomentum.set(tree.jet3, jet3)
             tree.jet3_jvtxf = jet3.jvtxf
             tree.jet3_index = jet3.index
-            tree.jet3_BCHMedium = jet3.BCHMedium
-            tree.jet3_BCHTight = jet3.BCHTight
+
+            if not local:
+                # only computed in skim!
+                tree.jet3_BCHMedium = jet3.BCHMedium
+                tree.jet3_BCHTight = jet3.BCHTight
 
             # eta centrality of 3rd leading jet
             tree.jet3_centrality = eventshapes.eta_centrality(
