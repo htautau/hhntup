@@ -4,6 +4,22 @@ from subprocess import call
 import getpass
 import time
 import datetime
+import os
+import errno
+
+
+def mkdir_p(path):
+    """
+    mkdir -p functionality
+    http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+    """
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 
 def print_table(table, sep='  '):
@@ -155,6 +171,10 @@ def qsub(cmd,
         cmd, queue, args, resources)
     print cmd
     if not dry_run:
+        if stderr_path and not os.path.exists(stderr_path):
+            mkdir_p(stderr_path)
+        if stdout_path and not os.path.exists(stdout_path):
+            mkdir_p(stdout_path)
         call(cmd, shell=True)
 
 

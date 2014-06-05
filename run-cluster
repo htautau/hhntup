@@ -10,10 +10,17 @@ setup = cluster.get_setup(os.path.join(
 cmd = ' '.join(sys.argv[1:])
 name = cmd.replace(" ", "_")
 cmd = "cd %s && %s && %s" % (os.getcwd(), setup, cmd)
+
+log_path = os.getenv('PBS_LOG', None)
+stderr_path = log_path or os.getenv('PBS_STDERR', None)
+stdout_path = log_path or os.getenv('PBS_STDOUT', None)
+
 qsub(cmd,
      name=name,
      queue=os.getenv('PBS_QUEUE', 'medium'),
      ppn=int(os.getenv('PBS_PPN', 1)),
      mem=os.getenv('PBS_MEM', None),
      pmem=os.getenv('PBS_PMEM', None),
-     vmem=os.getenv('PBS_VMEM', None))
+     vmem=os.getenv('PBS_VMEM', None),
+     stdout_path=stdout_path,
+     stderr_path=stderr_path)
