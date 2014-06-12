@@ -52,10 +52,12 @@ class RandomRunNumber(EventFilter):
 
     def passes_data(self, event):
         self.tree.RunNumber = event.RunNumber
+        self.tree.lbn = event.lbn
         return True
 
     def passes_mc(self, event):
         # get random run number using the pileup tool
-        self.tree.RunNumber = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
-        self.tree.lbn = self.pileup_tool.GetRandomLumiBlockNumber(self.tree.RunNumber)
+        random_run = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        self.tree.RunNumber = random_run
+        self.tree.lbn = self.pileup_tool.GetRandomLumiBlockNumber(random_run)
         return True

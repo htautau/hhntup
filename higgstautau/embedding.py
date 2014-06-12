@@ -1,6 +1,8 @@
 from rootpy.tree.filtering import EventFilter
 from . import log; log = log[__name__]
 
+import ROOT
+
 
 class EmbeddingPileupPatch(EventFilter):
 
@@ -51,4 +53,65 @@ class EmbeddingIsolation(EventFilter):
             # ignore event
             return None
         self.tree.embedding_isolation = isolation
+        return True
+
+
+class EmbeddingCorrections(EventFilter):
+    # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HiggsToTauTauEmbeddedCorrections2013
+    def __init__(self, tree, year, passthrough=False, **kwargs):
+        super(EmbeddingCorrections, self).__init__(passthrough=passthrough, **kwargs)
+        self.year = year
+        self.tree = tree
+        if not passthrough:
+            from externaltools import EmbeddedCorrections
+            from externaltools import TrigMuonEfficiency
+            from externaltools import ElectronEfficiencyCorrection
+            from externaltools import HSG4LepLepTriggerSF
+            from externaltools import MuonEfficiencyCorrections
+            if year == 2011:
+                self.tool = ROOT.EmbeddedCorrections.Embedded7TeV(
+                    EmbeddedCorrections.get_resource('2DMaps_7TeV.root'),
+                    TrigMuonEfficiency.RESOURCE_PATH,
+                    ElectronEfficiencyCorrection.RESOURCE_PATH,
+                    'muon_trigger_sf_mc11c.root',
+                    'rel17p0.v01',
+                    EmbeddedCorrections.get_resource('TriggerEventNumberDimuons7TeV.root'),
+                    EmbeddedCorrections.get_resource('trigeff_2011.root'))
+            else:
+                self.tool = ROOT.EmbeddedCorrections.Embedded(
+                    EmbeddedCorrections.get_resource('2DMaps.root'),
+                    TrigMuonEfficiency.RESOURCE_PATH,
+                    'muon_trigger_sf_2012_AtoL.p1328.root',
+                    ElectronEfficiencyCorrection.RESOURCE_PATH,
+                    HSG4LepLepTriggerSF.RESOURCE_PATH,
+                    MuonEfficiencyCorrections.RESOURCE_PATH,
+                    'STACO_CB_plus_ST_2012_SF.txt.gz')
+
+    def passes(self, event):
+        if self.year == 2011:
+            self.tool.SetupEmbeddedEvent(
+                event.mc_pt,
+                event.mc_eta,
+                event.mc_phi,
+                event.mc_m,
+                event.mc_pdgId,
+                # possibly a random run number (for MC embedding)
+                self.tree.RunNumber,
+                event.EventNumber,
+                self.tree.lbn)
+        else:
+            self.tool.SetupEmbeddedEvent(
+                event.mc_pt,
+                event.mc_eta,
+                event.mc_phi,
+                event.mc_m,
+                event.mc_pdgId,
+                # possibly a random run number (for MC embedding)
+                self.tree.RunNumber)
+        # Retrieve the unfolding weight
+        self.tree.embedding_reco_unfold = self.tool.GetEmbeddingRecoUnfolding()
+        # Access the trigger unfolding weight
+        self.tree.embedding_trigger_weight = self.tool.GetEmbeddingTriggerWeight()
+        # Get the original mass of the dimuon event
+        self.tree.embedding_dimuon_mass = self.tool.GetOriginalZ().M()
         return True

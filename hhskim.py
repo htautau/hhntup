@@ -37,7 +37,8 @@ from higgstautau.hadhad.filters import *
 from higgstautau import mass
 from higgstautau.mass import is_MET_bisecting
 from higgstautau.overlap import TauJetOverlapRemoval
-from higgstautau.embedding import EmbeddingPileupPatch, EmbeddingIsolation
+from higgstautau.embedding import (
+    EmbeddingPileupPatch, EmbeddingIsolation, EmbeddingCorrections)
 from higgstautau.systematics import Systematics
 from higgstautau.met import METRecalculation
 from higgstautau.jetcalibration import JetCalibration
@@ -497,8 +498,9 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 EmbeddingCorrections(
                     tree=tree,
+                    year=year,
                     passthrough=(
-                        local or year < 2012 or
+                        local or
                         datatype not in (datasets.EMBED, datasets.MCEMBED)),
                     count_funcs=count_funcs),
                 EmbeddingTauSpinner(

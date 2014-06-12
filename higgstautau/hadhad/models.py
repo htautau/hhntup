@@ -499,6 +499,7 @@ class EventModel(TreeModel):
     trigger = BoolCol(default=True)
 
     RunNumber = IntCol()
+    lbn = IntCol()
     number_of_good_vertices = IntCol()
     averageIntPerXing = FloatCol()
     actualIntPerXing = FloatCol()
