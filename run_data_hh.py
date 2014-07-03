@@ -29,8 +29,8 @@ CWD = os.getcwd()
 CMD = ("%s && ./run --output-path %s "
        "-s %s -n %d --db %s "
        "--nice %d --split %d:%%d data%d-JetTauEtmiss") % (
-               setup, output_path, args.student, args.nproc,
-               args.db, args.nice, args.nsplit, args.year)
+            setup, output_path, args.student, args.nproc,
+            args.db, args.nice, args.nsplit, args.year)
 
 if student_args:
     CMD += " " + " ".join(student_args)
@@ -45,7 +45,7 @@ for i in xrange(args.nsplit):
         continue
     cluster.qsub(
         cmd,
-        ncpus=args.nproc,
+        ppn=args.nproc,
         name='%s.data%d_%d' % (student_name, args.year, i + 1),
         stderr_path=output_path,
         stdout_path=output_path,

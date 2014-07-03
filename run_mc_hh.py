@@ -32,7 +32,7 @@ setup = cluster.get_setup('setup.noel.sfu.txt')
 if not args.systematics_only:
     # nominal values
     datasets = samples.samples('hadhad', args.year, args.samples,
-            include_embedded=args.include_embedded)
+                               include_embedded=args.include_embedded)
     cluster.run(args.student,
                 db=args.db,
                 datasets=datasets,
@@ -57,20 +57,21 @@ if not args.nominal_only:
     for datasets, systematics in samples.iter_samples('hadhad', args.year,
             args.samples, systematics=True,
             include_embedded=args.include_embedded):
-        cluster.run_systematics_new('HADHAD',
-                    args.student,
-                    db=args.db,
-                    systematics=systematics,
-                    filter_systematics=args.systematics,
-                    datasets=datasets,
-                    hosts=hosts,
-                    nproc=args.nproc,
-                    nice=args.nice,
-                    setup=setup,
-                    output_path=args.output_path,
-                    use_qsub=args.use_qsub,
-                    qsub_queue=args.queue,
-                    dry_run=args.dry,
-                    separate_student_output=True,
-                    warnings_as_errors=args.warnings_as_errors,
-                    student_args=student_args)
+        cluster.run_systematics_new(
+            'HADHAD',
+            args.student,
+            db=args.db,
+            systematics=systematics,
+            filter_systematics=args.systematics,
+            datasets=datasets,
+            hosts=hosts,
+            nproc=args.nproc,
+            nice=args.nice,
+            setup=setup,
+            output_path=args.output_path,
+            use_qsub=args.use_qsub,
+            qsub_queue=args.queue,
+            dry_run=args.dry,
+            separate_student_output=True,
+            warnings_as_errors=args.warnings_as_errors,
+            student_args=student_args)

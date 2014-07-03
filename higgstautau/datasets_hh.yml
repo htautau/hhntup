@@ -7796,17 +7796,17 @@ embed11-hh-isol-mfsdn: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165825,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165843,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165722,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170025,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165848,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170040,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170105,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165818,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170043,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165921,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170132]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010411,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010437,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010550,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010449,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010620,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010641,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010514,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010624,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010714]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7821,7 +7821,7 @@ embed11-hh-isol-mfsdn-B: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-B
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165825]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010411]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7836,7 +7836,7 @@ embed11-hh-isol-mfsdn-D: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-D
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165843]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010437]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7851,7 +7851,7 @@ embed11-hh-isol-mfsdn-E: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-E
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165722]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7866,7 +7866,7 @@ embed11-hh-isol-mfsdn-F: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-F
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170025]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010550]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7881,7 +7881,7 @@ embed11-hh-isol-mfsdn-G: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-G
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165848]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010449]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7896,7 +7896,7 @@ embed11-hh-isol-mfsdn-H: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-H
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170040]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010620]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7911,7 +7911,7 @@ embed11-hh-isol-mfsdn-I: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-I
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170105]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010641]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7926,7 +7926,7 @@ embed11-hh-isol-mfsdn-J: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-J
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165818]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010514]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7941,7 +7941,7 @@ embed11-hh-isol-mfsdn-K: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-K
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170043]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010624]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7956,7 +7956,7 @@ embed11-hh-isol-mfsdn-L: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-L
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417165921]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7971,7 +7971,7 @@ embed11-hh-isol-mfsdn-M: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsdn-M
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v28.140417170132]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsdn_rereco_p851_EXT0.v31.140612010714]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -7986,17 +7986,18 @@ embed11-hh-isol-mfsim: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165903,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165851,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165921,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165921,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165901,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165856,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165940,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165902,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417170059,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417170124,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165938]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010435,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010513,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010359,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010359,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010529,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010538,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010412,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010557,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010638,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612210603,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010556]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8011,7 +8012,7 @@ embed11-hh-isol-mfsim-B: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-B
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165903]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8026,7 +8027,7 @@ embed11-hh-isol-mfsim-D: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-D
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165851]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010435]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8041,7 +8042,7 @@ embed11-hh-isol-mfsim-E: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-E
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165921]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010513]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8056,7 +8057,7 @@ embed11-hh-isol-mfsim-F: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-F
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165921]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010359]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8071,7 +8072,7 @@ embed11-hh-isol-mfsim-G: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-G
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165901]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010359]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8086,7 +8087,7 @@ embed11-hh-isol-mfsim-H: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-H
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165856]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010529]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8101,7 +8102,7 @@ embed11-hh-isol-mfsim-I: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-I
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165940]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010538]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8116,7 +8117,7 @@ embed11-hh-isol-mfsim-J: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-J
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165902]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010412]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8131,7 +8132,7 @@ embed11-hh-isol-mfsim-K: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-K
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417170059]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010557]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8146,7 +8147,8 @@ embed11-hh-isol-mfsim-L: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-L
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417170124]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010638,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612210603]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8161,7 +8163,7 @@ embed11-hh-isol-mfsim-M: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsim-M
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v28.140417165938]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsim_rereco_p851_EXT0.v31.140612010556]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8176,17 +8178,18 @@ embed11-hh-isol-mfsup: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165920,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165925,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165957,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170043,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170029,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165749,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165816,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165744,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170021,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170140,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165939]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010411,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010525,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010531,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010621,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010554,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010411,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010416,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010550,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010716,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612210738,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8201,7 +8204,7 @@ embed11-hh-isol-mfsup-B: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-B
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165920]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010411]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8216,7 +8219,7 @@ embed11-hh-isol-mfsup-D: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-D
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165925]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010525]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8231,7 +8234,7 @@ embed11-hh-isol-mfsup-E: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-E
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165957]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010531]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8246,7 +8249,7 @@ embed11-hh-isol-mfsup-F: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-F
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170043]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010621]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8261,7 +8264,7 @@ embed11-hh-isol-mfsup-G: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-G
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170029]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010554]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8276,7 +8279,7 @@ embed11-hh-isol-mfsup-H: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-H
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165749]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010411]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8291,7 +8294,7 @@ embed11-hh-isol-mfsup-I: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-I
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165816]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010416]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8306,7 +8309,7 @@ embed11-hh-isol-mfsup-J: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-J
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165744]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8321,7 +8324,7 @@ embed11-hh-isol-mfsup-K: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-K
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170021]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010550]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8336,7 +8339,8 @@ embed11-hh-isol-mfsup-L: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-L
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417170140]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010716,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612210738]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8351,7 +8355,7 @@ embed11-hh-isol-mfsup-M: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-isol-mfsup-M
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v28.140417165939]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_isol_mfsup_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8366,17 +8370,19 @@ embed11-hh-noisol-mfsim: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165954,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170053,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165801,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170022,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165921,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170011,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170012,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165847,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170100,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170047,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170018]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010533,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612163041,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010602,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010411,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010356,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010552,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010545,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010521,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010639,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010552,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612210614]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8391,7 +8397,8 @@ embed11-hh-noisol-mfsim-B: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-B
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165954]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010533,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612163041]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8406,7 +8413,7 @@ embed11-hh-noisol-mfsim-D: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-D
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170053]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010602]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8421,7 +8428,7 @@ embed11-hh-noisol-mfsim-E: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-E
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165801]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010411]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8436,7 +8443,7 @@ embed11-hh-noisol-mfsim-F: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-F
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170022]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8451,7 +8458,7 @@ embed11-hh-noisol-mfsim-G: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-G
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165921]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010356]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8466,7 +8473,7 @@ embed11-hh-noisol-mfsim-H: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-H
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170011]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010552]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8481,7 +8488,7 @@ embed11-hh-noisol-mfsim-I: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-I
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170012]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010545]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8496,7 +8503,7 @@ embed11-hh-noisol-mfsim-J: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-J
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417165847]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010521]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8511,7 +8518,7 @@ embed11-hh-noisol-mfsim-K: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-K
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170100]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010639]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8526,7 +8533,7 @@ embed11-hh-noisol-mfsim-L: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-L
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170047]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8541,7 +8548,8 @@ embed11-hh-noisol-mfsim-M: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-noisol-mfsim-M
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v28.140417170018]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612010552,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_noisol_mfsim_rereco_p851_EXT0.v31.140612210614]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8556,17 +8564,17 @@ embed11-hh-tightisol-mfsim: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165924,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417170043,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165752,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165948,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165835,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165958,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165852,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165946,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165919,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417170123,
-    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165826]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010514,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010556,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010411,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010530,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010347,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010541,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010352,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010524,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010432,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010642,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010416]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8581,7 +8589,7 @@ embed11-hh-tightisol-mfsim-B: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-B
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165924]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodB.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010514]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8596,7 +8604,7 @@ embed11-hh-tightisol-mfsim-D: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-D
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417170043]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodD.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010556]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8611,7 +8619,7 @@ embed11-hh-tightisol-mfsim-E: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-E
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165752]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodE.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010411]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8626,7 +8634,7 @@ embed11-hh-tightisol-mfsim-F: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-F
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165948]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodF.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010530]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8641,7 +8649,7 @@ embed11-hh-tightisol-mfsim-G: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-G
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165835]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodG.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010347]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8656,7 +8664,7 @@ embed11-hh-tightisol-mfsim-H: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-H
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165958]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodH.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010541]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8671,7 +8679,7 @@ embed11-hh-tightisol-mfsim-I: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-I
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165852]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodI.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010352]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8686,7 +8694,7 @@ embed11-hh-tightisol-mfsim-J: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-J
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165946]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodJ.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010524]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8701,7 +8709,7 @@ embed11-hh-tightisol-mfsim-K: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-K
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165919]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodK.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010432]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8716,7 +8724,7 @@ embed11-hh-tightisol-mfsim-L: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-L
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417170123]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodL.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010642]
   file_pattern: '*.root*'
   id: 1
   category: null
@@ -8731,7 +8739,7 @@ embed11-hh-tightisol-mfsim-M: !Dataset
   datatype: 2
   treename: tau
   ds: embed11-hh-tightisol-mfsim-M
-  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v28.140417165826]
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.periodM.DESD_SGLMU.pro10.embedding-02-41.Ztautau_hh_tightisol_mfsim_rereco_p851_EXT0.v31.140612010416]
   file_pattern: '*.root*'
   id: 1
   category: null

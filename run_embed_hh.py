@@ -69,7 +69,7 @@ def run_sample(sample, systematics=None):
             continue
         cluster.qsub(
             cmd,
-            ncpus=args.nproc,
+            ppn=args.nproc,
             name=job_name,
             stderr_path=output_path,
             stdout_path=output_path,
