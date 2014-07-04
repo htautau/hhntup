@@ -15,11 +15,11 @@ Dependencies
 
    pip install --user goodruns
 
-* `PyYAML <https://pypi.python.org/pypi/PyYAML>`::
+* `PyYAML <https://pypi.python.org/pypi/PyYAML>`_::
 
    pip install --user pyyaml
 
-* `ConfigObj <http://www.voidspace.org.uk/python/configobj.html>`::
+* `ConfigObj <http://www.voidspace.org.uk/python/configobj.html>`_::
 
    pip install --user configobj
 
