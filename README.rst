@@ -3,12 +3,14 @@
 Dependencies
 ------------
 
-You need to install/clone these packages:
+You need to install/clone/checkout these packages:
 
 * `rootpy <https://github.com/rootpy/rootpy>`_
 * `goodruns <http://pypi.python.org/pypi/goodruns>`_
 * `externaltools <https://github.com/htautau/externaltools>`_
 * `lumi <https://github.com/htautau/lumi>`_
+* `TauSpinnerTool
+  <https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/TauID/TauSpinnerTool>`_
 
 and be sure to use at least Python version 2.6 (2.7 is preferred).
 
