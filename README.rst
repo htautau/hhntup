@@ -12,7 +12,12 @@ You need to install/clone/checkout these packages:
 * `TauSpinnerTool
   <https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/TauID/TauSpinnerTool>`_
 
-and be sure to use at least Python version 2.6 (2.7 is preferred).
+Place externaltools, lumi, and TauSpinnerTool in the same directory containing
+hhntup. Install rootpy and goodruns into your ``PYTHONUSERBASE`` directory,
+usually ``~/.local`` with ``python setup.py install --user`` from inside each
+package.
+
+Use at least Python version 2.6 (2.7 is preferred).
 
 
 Build and setup
