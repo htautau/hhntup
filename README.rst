@@ -3,7 +3,7 @@
 Dependencies
 ------------
 
-You need to install/clone/checkout these packages:
+* Latest 5.X `ROOT <http://root.cern.ch/drupal/>`_ with PyROOT enabled.
 
 * `rootpy <https://github.com/rootpy/rootpy>`_::
 
