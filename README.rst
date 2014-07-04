@@ -1,7 +1,7 @@
 .. -*- mode: rst -*-
 
 Dependencies
-============
+------------
 
 You need to install these packages:
 
