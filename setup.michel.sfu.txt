@@ -1,3 +1,0 @@
-export ROOT_VERSION=5.34.03
-source /atlas/software/bleedingedge/setup.sh
-source /cluster/data05/michel/externaltools/externaltools/setup.sh

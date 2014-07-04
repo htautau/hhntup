@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#./run-data --year 12 --nsplit 50 --local $@
+#./run-embed --nominal-only --year 12 --nsplit 30 --local $@
+#./run-mc --nominal-only --year 12 --local $@
+#./run-embed --systematics-only --year 12 --nsplit 30 --local $@
+#./run-mc --systematics-only --year 12 --local $@
+
+#./run-data --year 11 --nsplit 40 --local $@
+./run-embed --nominal-only --year 11 --nsplit 10 --local $@
+#./run-mc --nominal-only --year 11 --local $@
+./run-embed --systematics-only --year 11 --nsplit 10 --local $@
+#./run-mc --systematics-only --year 11 --local $@
+
+# for theory uncertainty:
+#./run-mc --nominal-only --year 12 --local --redo-selection \
+#McAtNloJimmy_AUET2CT10_ggH125_tautau.mc12a \
+#PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.mc12a \

@@ -1,6 +1,3 @@
-"""
-Event filters common to both hadhad and lephad go here
-"""
 import ROOT
 
 from rootpy.tree.filtering import *
