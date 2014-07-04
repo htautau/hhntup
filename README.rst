@@ -15,6 +15,14 @@ Dependencies
 
    pip install --user goodruns
 
+* `PyYAML <https://pypi.python.org/pypi/PyYAML>`::
+
+   pip install --user pyyaml
+
+* `ConfigObj <http://www.voidspace.org.uk/python/configobj.html>`::
+
+   pip install --user configobj
+
 * `externaltools <https://github.com/htautau/externaltools>`_::
 
    git clone git://github.com/htautau/externaltools.git
