@@ -10,6 +10,10 @@ You need to install these packages:
 
 and be sure to use at least Python version 2.6 (2.7 is preferred).
 
+
+Build and setup
+---------------
+
 Now build the C extension module for jet cleaning in the higgstautau package::
 
    make lib
@@ -17,3 +21,28 @@ Now build the C extension module for jet cleaning in the higgstautau package::
 Before running tests locally::
 
    source setup.sh
+
+
+Skimming
+--------
+
+The skimming is performed by the ``hhskim.py`` script.
+
+Run the skims on the grid (after setting up the panda client and your VOMS
+proxy with the phys-higgs production role)::
+
+    ./skim --yall mc11_hadhad mc12_hadhad data11_hadhad data12_hadhad embed11_hadhad embed12_hadhad
+
+
+Creating ntuples
+----------------
+
+After the skims are finished and downloaded, update the paths in
+``higgstautau/datasets_config.yml`` and update the datasets database::
+
+    ./dsdb --reset hh
+
+Then launch the batch jobs that create all the analysis ntuples (nominal and
+systematics) with::
+
+    ./run-all
