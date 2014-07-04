@@ -5,18 +5,38 @@ Dependencies
 
 You need to install/clone/checkout these packages:
 
-* `rootpy <https://github.com/rootpy/rootpy>`_
-* `goodruns <http://pypi.python.org/pypi/goodruns>`_
-* `externaltools <https://github.com/htautau/externaltools>`_
-* `lumi <https://github.com/htautau/lumi>`_
-* `TauSpinnerTool
-  <https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/TauID/TauSpinnerTool>`_
+* `rootpy <https://github.com/rootpy/rootpy>`_::
 
-Install rootpy and goodruns into your ``PYTHONUSERBASE`` directory,
-usually ``~/.local`` with ``python setup.py install --user`` from inside each
-package. Place externaltools, lumi, and TauSpinnerTool in the same directory containing
-hhntup. See the README in externaltools and TauSpinnerTool for further
-instructions. Use at least Python version 2.6 (2.7 is preferred).
+   git clone git://github.com/rootpy/rootpy.git
+   cd rootpy
+   python setup.py install --user
+
+* `goodruns <http://pypi.python.org/pypi/goodruns>`_::
+
+   pip install --user goodruns
+
+* `externaltools <https://github.com/htautau/externaltools>`_::
+
+   git clone git://github.com/htautau/externaltools.git
+
+* `lumi <https://github.com/htautau/lumi>`_::
+
+   git clone git://github.com/htautau/lumi.git
+
+* `hhntup <https://github.com/htautau/hhntup>`_::
+
+   git clone git://github.com/htautau/hhntup.git
+
+* `TauSpinnerTool
+  <https://svnweb.cern.ch/trac/atlasoff/browser/PhysicsAnalysis/TauID/TauSpinnerTool>`_::
+
+   svn co svn+ssh://${USER}@svn.cern.ch/reps/atlasoff/PhysicsAnalysis/TauID/TauSpinnerTool/trunk TauSpinnerTool
+
+
+Place externaltools, lumi, and TauSpinnerTool in the same directory containing
+hhntup to satisfy the symlinks in hhana. See the README in externaltools and
+TauSpinnerTool for further instructions. Use at least Python version 2.6 (2.7
+is preferred).
 
 
 Build and setup
