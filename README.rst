@@ -31,7 +31,9 @@ The skimming is performed by the ``hhskim.py`` script.
 Run the skims on the grid (after setting up the panda client and your VOMS
 proxy with the phys-higgs production role)::
 
-    ./skim --yall mc11_hadhad mc12_hadhad data11_hadhad data12_hadhad embed11_hadhad embed12_hadhad
+    ./skim --yall mc11_hadhad mc12_hadhad \
+                  data11_hadhad data12_hadhad \
+                  embed11_hadhad embed12_hadhad
 
 
 Creating ntuples
