@@ -26,9 +26,9 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
                     'mc11b_defaults.prw.root'))
         else:
             pileup_tool.AddConfigFile(
-                'lumi/2011/hadhad/'
+                'lumi/2011/'
                 'TPileupReweighting.mc11.prw.root')
-        lumicalc_file = 'lumi/2011/hadhad/ilumicalc_histograms_None_178044-191933.root'
+        lumicalc_file = 'lumi/2011/ilumicalc_histograms_None_178044-191933.root'
     elif year == 2012:
         if use_defaults:
             pileup_tool.AddConfigFile(
@@ -36,9 +36,9 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
                     'mc12ab_defaults.prw.root'))
         else:
             pileup_tool.AddConfigFile(
-                'lumi/2012/hadhad/'
+                'lumi/2012/'
                 'TPileupReweighting.mc12.prw.root')
-        lumicalc_file = 'lumi/2012/hadhad/ilumicalc_histograms_None_200842-215643.root'
+        lumicalc_file = 'lumi/2012/ilumicalc_histograms_None_200842-215643.root'
     else:
         raise ValueError(
             'No pileup reweighting defined for year %d' % year)
