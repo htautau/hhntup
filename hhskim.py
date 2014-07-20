@@ -220,7 +220,9 @@ class hhskim(ATLASStudent):
         self.output.cd()
 
         # create the output tree
-        model = get_model(datatype, dsname, prefix=None if local else 'hh_')
+        model = get_model(datatype, dsname,
+                          prefix=None if local else 'hh_',
+                          is_inclusive_signal=is_inclusive_signal)
         log.info("Output Model:\n\n{0}\n\n".format(model))
         outtree = Tree(name=self.metadata.treename,
                        model=model)
@@ -545,6 +547,10 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     passthrough=year == 2011 or local,
                     datatype=datatype,
+                    count_funcs=count_funcs),
+                ClassifyInclusiveHiggsSample(
+                    tree=tree,
+                    passthrough=not is_inclusive_signal,
                     count_funcs=count_funcs),
             ])
 

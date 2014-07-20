@@ -482,7 +482,11 @@ class EventModel(TreeModel):
     error = BoolCol()
 
 
-def get_model(datatype, name, prefix=None):
+class InclusiveHiggsModel(TreeModel):
+    higgs_decay_channel = IntCol(default=-1)
+
+
+def get_model(datatype, name, prefix=None, is_inclusive_signal=False):
     model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
     if datatype in (datasets.EMBED, datasets.MCEMBED):
         model += EmbeddingModel
@@ -491,6 +495,8 @@ def get_model(datatype, name, prefix=None):
     #if datatype == datasets.MC and 'VBF' in name:
     #    # add branches for VBF Higgs associated partons
     #    model += PartonBlock
+    if is_inclusive_signal:
+        model += InclusiveHiggsModel
     if prefix is not None:
         return model.prefix(prefix)
     return model
