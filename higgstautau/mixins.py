@@ -4,7 +4,8 @@ from decorators import cached_property
 from rootpy.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
 
-from .utils import dR
+from . import log; log = log[__name__]
+from .utils import dR, et2pt
 from .units import GeV
 from .tauid import IDNONE
 
@@ -29,10 +30,9 @@ SF_DEFAULT = 1.
 class MatchedObject(object):
 
     def __init__(self):
-
         self.matched = False
         self.matched_dR = 9999.
-        self.matched_collision = False
+        #self.matched_collision = False
         self.matched_object = None
 
     def matches(self, other, thresh=.2):
@@ -247,9 +247,17 @@ class TauFourMomentum(FourMomentum):
 class MCTauFourMomentum(FourMomentum):
 
     @cached_property
-    def fourvect(self):
+    def fourvect_vis(self):
         vect = LorentzVector()
-        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        try:
+            vect.SetPtEtaPhiM(
+                et2pt(self.vis_Et, self.vis_eta, self.vis_m),
+                self.eta, self.phi, self.m)
+        except ValueError:
+            log.warning("DOMAIN ERROR ON TRUTH 4-VECT: "
+                        "Et: {0} eta: {1} m: {2}".format(
+                            self.vis_Et, self.vis_eta, self.vis_m))
+            vect.SetPtEtaPhiM(0, self.eta, self.phi, self.m)
         return vect
 
 

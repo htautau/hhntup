@@ -220,9 +220,10 @@ class hhskim(ATLASStudent):
         self.output.cd()
 
         # create the output tree
-        outtree = Tree(
-            name=self.metadata.treename,
-            model=get_model(datatype, dsname, prefix=None if local else 'hh_'))
+        model = get_model(datatype, dsname, prefix=None if local else 'hh_')
+        log.info("Output Model:\n\n{0}\n\n".format(model))
+        outtree = Tree(name=self.metadata.treename,
+                       model=model)
 
         if local:
             tree = outtree
@@ -232,6 +233,8 @@ class hhskim(ATLASStudent):
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='tau1', prefix='tau1_')
         tree.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='truetau1', prefix='truetau1_')
+        tree.define_object(name='truetau2', prefix='truetau2_')
         tree.define_object(name='jet1', prefix='jet1_')
         tree.define_object(name='jet2', prefix='jet2_')
         tree.define_object(name='jet3', prefix='jet3_')
@@ -908,6 +911,11 @@ class hhskim(ATLASStudent):
             # This must come after the RecoJetBlock is filled since
             # that sets the jet_beta for boosting the taus
             RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
+            if datatype != datasets.DATA:
+                if tau1.matched:
+                    TrueTauBlock.set(tree.truetau1, tau1.matched_object)
+                if tau2.matched:
+                    TrueTauBlock.set(tree.truetau2, tau2.matched_object)
 
             # fill the output tree
             outtree.Fill(reset=True)

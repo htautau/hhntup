@@ -4,67 +4,14 @@ as TreeModels.
 """
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
+from rootpy.vector import LorentzRotation, LorentzVector, Vector3, Vector2
 from rootpy import stl
-from rootpy.vector import (
-    LorentzRotation, LorentzVector, Vector3, Vector2)
-from rootpy import log
-ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
-    '.*transvers momentum.*')
 
-from ..utils import et2pt
 from .. import datasets
-from .. import utils
 from .. import eventshapes
-from ..models import MatchedObject
+from ..models import FourMomentum, MatchedObject, MMCModel, TrueTau
 
 import math
-import ROOT
-from ROOT import TLorentzVector
-
-
-class FourMomentum(TreeModel):
-    pt = FloatCol()
-    p = FloatCol()
-    et = FloatCol()
-    e = FloatCol()
-    eta = FloatCol(default=-1111)
-    phi = FloatCol(default=-1111)
-    m = FloatCol()
-
-    @classmethod
-    def set(cls, this, other):
-        if isinstance(other, TLorentzVector):
-            vect = other
-        else:
-            vect = other.fourvect
-        this.pt = vect.Pt()
-        this.p = vect.P()
-        this.et = vect.Et()
-        this.e = vect.E()
-        this.m = vect.M()
-        with ignore_warning:
-            this.phi = vect.Phi()
-            this.eta = vect.Eta()
-
-
-class TrueTau(TreeModel):
-    nProng = IntCol(default=-1111)
-    nPi0 = IntCol(default=-1111)
-    charge = IntCol()
-
-
-class MMCOutput(FourMomentum.prefix('resonance_')):
-    mass = FloatCol()
-    MET_et = FloatCol()
-    MET_etx = FloatCol()
-    MET_ety = FloatCol()
-    MET_phi = FloatCol()
-
-
-class MMCModel(MMCOutput.prefix('mmc0_'),
-               MMCOutput.prefix('mmc1_'),
-               MMCOutput.prefix('mmc2_')):
-    pass
 
 
 class MassModel(MMCModel):
@@ -344,7 +291,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
             outtau.matched = intau.matched
             outtau.matched_dR = intau.matched_dR
-            outtau.matched_collision = intau.matched_collision
+            #outtau.matched_collision = intau.matched_collision
             outtau.min_dr_jet = intau.min_dr_jet
 
             if not local:
@@ -463,36 +410,12 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
                    (TrueTau + MatchedObject).prefix('truetau2_')):
 
     @classmethod
-    def set(cls, tree, index, tau):
-        setattr(tree, 'truetau%i_nProng' % index, tau.nProng)
-        setattr(tree, 'truetau%i_nPi0' % index, tau.nPi0)
-        setattr(tree, 'truetau%i_charge' % index, tau.charge)
-
-        fourvect = getattr(tree, 'truetau%i_fourvect' % index)
-        fourvect.SetPtEtaPhiM(
-            tau.pt,
-            tau.eta,
-            tau.phi,
-            tau.m)
-
-        fourvect_boosted = getattr(tree, 'truetau%i_fourvect_boosted' % index)
-        fourvect_boosted.copy_from(fourvect)
-        fourvect_boosted.Boost(tree.parton_beta * -1)
-
-        fourvect_vis = getattr(tree, 'truetau%i_fourvect_vis' % index)
-        try:
-            fourvect_vis.SetPtEtaPhiM(
-                et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
-                tau.vis_eta,
-                tau.vis_phi,
-                tau.vis_m)
-        except ValueError:
-            print "DOMAIN ERROR ON TRUTH 4VECT"
-            print tau.vis_Et, tau.vis_eta, tau.vis_m
-        else:
-            fourvect_vis_boosted = getattr(tree, 'truetau%i_fourvect_vis_boosted' % index)
-            fourvect_vis_boosted.copy_from(fourvect_vis)
-            fourvect_vis_boosted.Boost(tree.parton_beta * -1)
+    def set(cls, tree_object, truetau):
+        tree_object.nProng = truetau.nProng
+        tree_object.nPi0 = truetau.nPi0
+        tree_object.charge = truetau.charge
+        TrueTau.set(tree_object, truetau.fourvect)
+        TrueTau.set_vis(tree_object, truetau.fourvect_vis)
 
 
 class EventModel(TreeModel):
@@ -561,10 +484,10 @@ class EventModel(TreeModel):
 
 def get_model(datatype, name, prefix=None):
     model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
-    #if datatype != datasets.DATA:
-    #    model += TrueTauBlock
     if datatype in (datasets.EMBED, datasets.MCEMBED):
         model += EmbeddingModel
+    if datatype != datasets.DATA:
+        model += TrueTauBlock
     #if datatype == datasets.MC and 'VBF' in name:
     #    # add branches for VBF Higgs associated partons
     #    model += PartonBlock
