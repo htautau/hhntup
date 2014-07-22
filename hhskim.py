@@ -918,10 +918,7 @@ class hhskim(ATLASStudent):
             # that sets the jet_beta for boosting the taus
             RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
             if datatype != datasets.DATA:
-                if tau1.matched:
-                    TrueTauBlock.set(tree.truetau1, tau1.matched_object)
-                if tau2.matched:
-                    TrueTauBlock.set(tree.truetau2, tau2.matched_object)
+                TrueTauBlock.set(tree, tau1, tau2)
 
             # fill the output tree
             outtree.Fill(reset=True)

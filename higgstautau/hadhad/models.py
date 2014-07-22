@@ -175,9 +175,13 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     # did both taus come from the same vertex?
     tau_same_vertex = BoolCol()
 
+    dR_tau1_tau2 = FloatCol()
+    dEta_tau1_tau2 = FloatCol()
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
     tau_pt_ratio = FloatCol()
+    # set in hhskim.py
+    dPhi_tau1_tau2 = FloatCol()
 
     @classmethod
     def set(cls, event, tree, datatype, tau1, tau2, local=False):
@@ -312,9 +316,13 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 class RecoJetBlock(RecoJet.prefix('jet1_') +
                    RecoJet.prefix('jet2_') +
                    RecoJet.prefix('jet3_')):
+
+    dEta_jets = FloatCol(default=-1)
+    dEta_jets_boosted = FloatCol(default=-1)
+    eta_product_jets = FloatCol(default=-1E10)
+    eta_product_jets_boosted = FloatCol(default=-1E10)
     #jet_transformation = LorentzRotation
     jet_beta = Vector3
-    #parton_beta = Vector3
     numJets = IntCol()
     nonisolatedjet = BoolCol()
     jet3_centrality = FloatCol(default=-1E10)
@@ -408,14 +416,42 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
                    (TrueTau + MatchedObject).prefix('truetau2_')):
+    dR_truetaus = FloatCol(default=-1)
+    dEta_truetaus = FloatCol(default=-1)
+    dPhi_truetaus = FloatCol(default=-1)
+    theta_truetaus = FloatCol(default=-1)
+    cos_theta_truetaus = FloatCol(default=-10)
+    truetau_pt_ratio = FloatCol(default=-1)
 
     @classmethod
-    def set(cls, tree_object, truetau):
-        tree_object.nProng = truetau.nProng
-        tree_object.nPi0 = truetau.nPi0
-        tree_object.charge = truetau.charge
-        TrueTau.set(tree_object, truetau.fourvect)
-        TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+    def set(cls, tree, tau1, tau2):
+        if tau1.matched:
+            truetau = tau1.matched_object
+            tree_object = tree.truetau1
+            tree_object.nProng = truetau.nProng
+            tree_object.nPi0 = truetau.nPi0
+            tree_object.charge = truetau.charge
+            TrueTau.set(tree_object, truetau.fourvect)
+            TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+        if tau2.matched:
+            truetau = tau2.matched_object
+            tree_object = tree.truetau2
+            tree_object.nProng = truetau.nProng
+            tree_object.nPi0 = truetau.nPi0
+            tree_object.charge = truetau.charge
+            TrueTau.set(tree_object, truetau.fourvect)
+            TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+        # angular variables
+        if tau1.matched and tau2.matched:
+            truetau1 = tau1.matched_object.fourvect_vis
+            truetau2 = tau2.matched_object.fourvect_vis
+            tree.theta_truetaus = abs(truetau1.Angle(truetau2))
+            tree.cos_theta_truetaus = math.cos(tree.theta_truetaus)
+            tree.dR_truetaus = truetau1.DeltaR(truetau2)
+            tree.dEta_truetaus = abs(truetau2.Eta() - truetau1.Eta())
+            tree.dPhi_truetaus = abs(truetau1.DeltaPhi(truetau2))
+            # leading pt over subleading pt
+            tree.truetau_pt_ratio = truetau1.Pt() / truetau2.Pt()
 
 
 class EventModel(TreeModel):
@@ -436,21 +472,6 @@ class EventModel(TreeModel):
     pileup_weight_low = FloatCol(default=1.)
 
     mc_weight = FloatCol(default=1.)
-
-    #dR_quarks = FloatCol()
-    #dR_truetaus = FloatCol()
-    #dR_taus = FloatCol()
-    #dR_jets = FloatCol()
-    #dR_quark_tau = FloatCol()
-    dR_tau1_tau2 = FloatCol()
-    dEta_tau1_tau2 = FloatCol()
-    dPhi_tau1_tau2 = FloatCol()
-
-    #dEta_quarks = FloatCol(default=-1)
-    dEta_jets = FloatCol(default=-1)
-    dEta_jets_boosted = FloatCol()
-    eta_product_jets = FloatCol(default=-1E10)
-    eta_product_jets_boosted = FloatCol(default=-1E10)
 
     #sphericity = FloatCol(default=-1)
     #aplanarity = FloatCol(default=-1)

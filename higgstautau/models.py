@@ -83,6 +83,10 @@ class Parton(FourMomentum):
 
 class PartonBlock((Parton + MatchedObject).prefix('parton1_') +
                   (Parton + MatchedObject).prefix('parton2_')):
+    dEta_partons = FloatCol(default=-1)
+    dR_partons = FloatCol()
+    dR_parton_tau = FloatCol()
+    parton_beta = Vector3
 
     @classmethod
     def set(cls, tree, parton1, parton2):
