@@ -4,67 +4,14 @@ as TreeModels.
 """
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
+from rootpy.vector import LorentzRotation, LorentzVector, Vector3, Vector2
 from rootpy import stl
-from rootpy.vector import (
-    LorentzRotation, LorentzVector, Vector3, Vector2)
-from rootpy import log
-ignore_warning = log['/ROOT.TVector3.PseudoRapidity'].ignore(
-    '.*transvers momentum.*')
 
-from ..utils import et2pt
 from .. import datasets
-from .. import utils
 from .. import eventshapes
-from ..models import MatchedObject
+from ..models import FourMomentum, MatchedObject, MMCModel, TrueTau
 
 import math
-import ROOT
-from ROOT import TLorentzVector
-
-
-class FourMomentum(TreeModel):
-    pt = FloatCol()
-    p = FloatCol()
-    et = FloatCol()
-    e = FloatCol()
-    eta = FloatCol(default=-1111)
-    phi = FloatCol(default=-1111)
-    m = FloatCol()
-
-    @classmethod
-    def set(cls, this, other):
-        if isinstance(other, TLorentzVector):
-            vect = other
-        else:
-            vect = other.fourvect
-        this.pt = vect.Pt()
-        this.p = vect.P()
-        this.et = vect.Et()
-        this.e = vect.E()
-        this.m = vect.M()
-        with ignore_warning:
-            this.phi = vect.Phi()
-            this.eta = vect.Eta()
-
-
-class TrueTau(TreeModel):
-    nProng = IntCol(default=-1111)
-    nPi0 = IntCol(default=-1111)
-    charge = IntCol()
-
-
-class MMCOutput(FourMomentum.prefix('resonance_')):
-    mass = FloatCol()
-    MET_et = FloatCol()
-    MET_etx = FloatCol()
-    MET_ety = FloatCol()
-    MET_phi = FloatCol()
-
-
-class MMCModel(MMCOutput.prefix('mmc0_'),
-               MMCOutput.prefix('mmc1_'),
-               MMCOutput.prefix('mmc2_')):
-    pass
 
 
 class MassModel(MMCModel):
@@ -228,9 +175,13 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
     # did both taus come from the same vertex?
     tau_same_vertex = BoolCol()
 
+    dR_tau1_tau2 = FloatCol()
+    dEta_tau1_tau2 = FloatCol()
     theta_tau1_tau2 = FloatCol()
     cos_theta_tau1_tau2 = FloatCol()
     tau_pt_ratio = FloatCol()
+    # set in hhskim.py
+    dPhi_tau1_tau2 = FloatCol()
 
     @classmethod
     def set(cls, event, tree, datatype, tau1, tau2, local=False):
@@ -344,7 +295,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
             outtau.matched = intau.matched
             outtau.matched_dR = intau.matched_dR
-            outtau.matched_collision = intau.matched_collision
+            #outtau.matched_collision = intau.matched_collision
             outtau.min_dr_jet = intau.min_dr_jet
 
             if not local:
@@ -365,9 +316,13 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 class RecoJetBlock(RecoJet.prefix('jet1_') +
                    RecoJet.prefix('jet2_') +
                    RecoJet.prefix('jet3_')):
+
+    dEta_jets = FloatCol(default=-1)
+    dEta_jets_boosted = FloatCol(default=-1)
+    eta_product_jets = FloatCol(default=-1E10)
+    eta_product_jets_boosted = FloatCol(default=-1E10)
     #jet_transformation = LorentzRotation
     jet_beta = Vector3
-    #parton_beta = Vector3
     numJets = IntCol()
     nonisolatedjet = BoolCol()
     jet3_centrality = FloatCol(default=-1E10)
@@ -461,38 +416,42 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
                    (TrueTau + MatchedObject).prefix('truetau2_')):
+    dR_truetaus = FloatCol(default=-1)
+    dEta_truetaus = FloatCol(default=-1)
+    dPhi_truetaus = FloatCol(default=-1)
+    theta_truetaus = FloatCol(default=-1)
+    cos_theta_truetaus = FloatCol(default=-10)
+    truetau_pt_ratio = FloatCol(default=-1)
 
     @classmethod
-    def set(cls, tree, index, tau):
-        setattr(tree, 'truetau%i_nProng' % index, tau.nProng)
-        setattr(tree, 'truetau%i_nPi0' % index, tau.nPi0)
-        setattr(tree, 'truetau%i_charge' % index, tau.charge)
-
-        fourvect = getattr(tree, 'truetau%i_fourvect' % index)
-        fourvect.SetPtEtaPhiM(
-            tau.pt,
-            tau.eta,
-            tau.phi,
-            tau.m)
-
-        fourvect_boosted = getattr(tree, 'truetau%i_fourvect_boosted' % index)
-        fourvect_boosted.copy_from(fourvect)
-        fourvect_boosted.Boost(tree.parton_beta * -1)
-
-        fourvect_vis = getattr(tree, 'truetau%i_fourvect_vis' % index)
-        try:
-            fourvect_vis.SetPtEtaPhiM(
-                et2pt(tau.vis_Et, tau.vis_eta, tau.vis_m),
-                tau.vis_eta,
-                tau.vis_phi,
-                tau.vis_m)
-        except ValueError:
-            print "DOMAIN ERROR ON TRUTH 4VECT"
-            print tau.vis_Et, tau.vis_eta, tau.vis_m
-        else:
-            fourvect_vis_boosted = getattr(tree, 'truetau%i_fourvect_vis_boosted' % index)
-            fourvect_vis_boosted.copy_from(fourvect_vis)
-            fourvect_vis_boosted.Boost(tree.parton_beta * -1)
+    def set(cls, tree, tau1, tau2):
+        if tau1.matched:
+            truetau = tau1.matched_object
+            tree_object = tree.truetau1
+            tree_object.nProng = truetau.nProng
+            tree_object.nPi0 = truetau.nPi0
+            tree_object.charge = truetau.charge
+            TrueTau.set(tree_object, truetau.fourvect)
+            TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+        if tau2.matched:
+            truetau = tau2.matched_object
+            tree_object = tree.truetau2
+            tree_object.nProng = truetau.nProng
+            tree_object.nPi0 = truetau.nPi0
+            tree_object.charge = truetau.charge
+            TrueTau.set(tree_object, truetau.fourvect)
+            TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+        # angular variables
+        if tau1.matched and tau2.matched:
+            truetau1 = tau1.matched_object.fourvect_vis
+            truetau2 = tau2.matched_object.fourvect_vis
+            tree.theta_truetaus = abs(truetau1.Angle(truetau2))
+            tree.cos_theta_truetaus = math.cos(tree.theta_truetaus)
+            tree.dR_truetaus = truetau1.DeltaR(truetau2)
+            tree.dEta_truetaus = abs(truetau2.Eta() - truetau1.Eta())
+            tree.dPhi_truetaus = abs(truetau1.DeltaPhi(truetau2))
+            # leading pt over subleading pt
+            tree.truetau_pt_ratio = truetau1.Pt() / truetau2.Pt()
 
 
 class EventModel(TreeModel):
@@ -513,21 +472,6 @@ class EventModel(TreeModel):
     pileup_weight_low = FloatCol(default=1.)
 
     mc_weight = FloatCol(default=1.)
-
-    #dR_quarks = FloatCol()
-    #dR_truetaus = FloatCol()
-    #dR_taus = FloatCol()
-    #dR_jets = FloatCol()
-    #dR_quark_tau = FloatCol()
-    dR_tau1_tau2 = FloatCol()
-    dEta_tau1_tau2 = FloatCol()
-    dPhi_tau1_tau2 = FloatCol()
-
-    #dEta_quarks = FloatCol(default=-1)
-    dEta_jets = FloatCol(default=-1)
-    dEta_jets_boosted = FloatCol()
-    eta_product_jets = FloatCol(default=-1E10)
-    eta_product_jets_boosted = FloatCol(default=-1E10)
 
     #sphericity = FloatCol(default=-1)
     #aplanarity = FloatCol(default=-1)
@@ -559,15 +503,21 @@ class EventModel(TreeModel):
     error = BoolCol()
 
 
-def get_model(datatype, name, prefix=None):
+class InclusiveHiggsModel(TreeModel):
+    higgs_decay_channel = IntCol(default=-1)
+
+
+def get_model(datatype, name, prefix=None, is_inclusive_signal=False):
     model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
-    #if datatype != datasets.DATA:
-    #    model += TrueTauBlock
     if datatype in (datasets.EMBED, datasets.MCEMBED):
         model += EmbeddingModel
+    if datatype != datasets.DATA:
+        model += TrueTauBlock
     #if datatype == datasets.MC and 'VBF' in name:
     #    # add branches for VBF Higgs associated partons
     #    model += PartonBlock
+    if is_inclusive_signal:
+        model += InclusiveHiggsModel
     if prefix is not None:
         return model.prefix(prefix)
     return model

@@ -220,9 +220,12 @@ class hhskim(ATLASStudent):
         self.output.cd()
 
         # create the output tree
-        outtree = Tree(
-            name=self.metadata.treename,
-            model=get_model(datatype, dsname, prefix=None if local else 'hh_'))
+        model = get_model(datatype, dsname,
+                          prefix=None if local else 'hh_',
+                          is_inclusive_signal=is_inclusive_signal)
+        log.info("Output Model:\n\n{0}\n\n".format(model))
+        outtree = Tree(name=self.metadata.treename,
+                       model=model)
 
         if local:
             tree = outtree
@@ -232,6 +235,8 @@ class hhskim(ATLASStudent):
         tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='tau1', prefix='tau1_')
         tree.define_object(name='tau2', prefix='tau2_')
+        tree.define_object(name='truetau1', prefix='truetau1_')
+        tree.define_object(name='truetau2', prefix='truetau2_')
         tree.define_object(name='jet1', prefix='jet1_')
         tree.define_object(name='jet2', prefix='jet2_')
         tree.define_object(name='jet3', prefix='jet3_')
@@ -542,6 +547,10 @@ class hhskim(ATLASStudent):
                     tree=tree,
                     passthrough=year == 2011 or local,
                     datatype=datatype,
+                    count_funcs=count_funcs),
+                ClassifyInclusiveHiggsSample(
+                    tree=tree,
+                    passthrough=not is_inclusive_signal,
                     count_funcs=count_funcs),
             ])
 
@@ -908,6 +917,8 @@ class hhskim(ATLASStudent):
             # This must come after the RecoJetBlock is filled since
             # that sets the jet_beta for boosting the taus
             RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
+            if datatype != datasets.DATA:
+                TrueTauBlock.set(tree, tau1, tau2)
 
             # fill the output tree
             outtree.Fill(reset=True)

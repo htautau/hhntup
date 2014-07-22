@@ -1,11 +1,28 @@
-from . import log; log = log[__name__]
-import ROOT, sys
-#ROOT.PyConfig.IgnoreCommandLineOptions = True
-ROOT.gROOT.SetBatch(True)
-
 """
 This module generates a database of all MC and data datasets
 """
+from rootpy.io import root_open, DoesNotExist
+
+#from multiprocessing import Pool, cpu_count
+
+import sys
+from operator import itemgetter
+import logging
+import re
+import glob
+import os
+import cPickle as pickle
+import atexit
+import fnmatch
+from collections import namedtuple
+
+import yaml
+
+from . import log; log = log[__name__]
+from .decorators import cached_property
+from .yaml_utils import Serializable
+from . import xsec
+
 USE_PYAMI = True
 try:
     from pyAMI.client import AMIClient
@@ -21,28 +38,6 @@ except ImportError:
     USE_PYAMI = False
     log.warning("pyAMI is not installed. "
                 "Cross section retrieval will be disabled.")
-
-from rootpy.io import root_open, DoesNotExist
-
-import multiprocessing as mp
-from multiprocessing import Pool, cpu_count
-
-import sys
-from operator import itemgetter
-import logging
-import re
-import glob
-import os
-import cPickle as pickle
-import atexit
-import fnmatch
-from collections import namedtuple
-
-import yaml
-
-from .decorators import cached_property
-from .yaml_utils import Serializable
-from . import xsec
 
 # data types
 DATA, MC, EMBED, MCEMBED = range(4)

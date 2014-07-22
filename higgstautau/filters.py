@@ -806,3 +806,40 @@ class BCHSampleRunNumber(EventFilter):
     def passes(self, event):
         event.RunNumber = 195848
         return True
+
+
+class ClassifyInclusiveHiggsSample(EventFilter):
+
+    UNKNOWN, TAUTAU, WW, ZZ, BB = range(5)
+
+    def __init__(self, tree, **kwargs):
+        super(ClassifyInclusiveHiggsSample, self).__init__(**kwargs)
+        self.tree = tree
+
+    def passes(self, event):
+        higgs = None
+        # find the Higgs
+        for mc in event.mc:
+            if mc.pdgId == 25 and mc.status == 62:
+                pt = mc.pt
+                higgs = mc
+                break
+        if higgs is None:
+            raise RuntimeError("Higgs not found!")
+        decay_type = self.UNKNOWN
+        # check pdg id of children
+        for mc in higgs.iter_children():
+            if mc.pdgId in (pdg.tau_minus, pdg.tau_plus):
+                decay_type = self.TAUTAU
+                break
+            elif mc.pdgId in (pdg.W_minus, pdg.W_plus):
+                decay_type = self.WW
+                break
+            elif mc.pdgId == pdg.Z0:
+                decay_type = self.ZZ
+                break
+            elif mc.pdgId in (pdg.b, pdg.anti_b):
+                decay_type = self.BB
+                break
+        self.tree.higgs_decay_channel = decay_type
+        return True
