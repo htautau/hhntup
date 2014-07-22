@@ -1,3 +1,5 @@
-group.phys-higgs.Pythia8.e1169_s1469_s1470_r3658.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_filter_MCEmbedding_hhdn_p1344_EXT0/
-group.phys-higgs.Pythia8.e1169_s1469_s1470_r3658.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_filter_MCEmbedding_hhup_p1344_EXT0/
-group.phys-higgs.Pythia8.e1169_s1469_s1470_r3658.DESD_SGLMU.pro14.embedding-01-01-10.Ztautau_filter_MCEmbedding2_hh_p1344_EXT0/
+group.phys-higgs.mc12_8TeV.147113.AlpgenPythia_ZmumuNp0.embeddingZtautau.01-02-10_HHIM.e1880_s1581_s1586_r3658_p1344_EXT0/
+group.phys-higgs.mc12_8TeV.147114.AlpgenPythia_ZmumuNp1.embeddingZtautau.01-02-10_HHIM.e1880_s1581_s1586_r3658_p1344_EXT0/
+group.phys-higgs.mc12_8TeV.147116.AlpgenPythia_ZmumuNp3.embeddingZtautau.01-02-10_HHIM.e1880_s1581_s1586_r3658_p1344_EXT0/
+group.phys-higgs.mc12_8TeV.147117.AlpgenPythia_ZmumuNp4.embeddingZtautau.01-02-10_HHIM.e1880_s1581_s1586_r3658_p1344_EXT0/
+group.phys-higgs.mc12_8TeV.147118.AlpgenPythia_ZmumuNp5.embeddingZtautau.01-02-10_HHIM.e1880_s1581_s1586_r3658_p1344_EXT0/
