@@ -419,6 +419,8 @@ class Systematics(EventFilter):
     TES_TRUE_MODELING_DOWN = -30009
     TES_FAKE_TOTAL_UP = -30010
     TES_FAKE_TOTAL_DOWN = -30011
+    TES_TRUE_TOTAL_UP = -30012
+    TES_TRUE_TOTAL_DOWN = -30013
 
     TES_TERMS = set([
         TES_TRUE_FINAL_UP,
@@ -433,6 +435,8 @@ class Systematics(EventFilter):
         TES_TRUE_MODELING_DOWN,
         TES_FAKE_TOTAL_UP,
         TES_FAKE_TOTAL_DOWN,
+        TES_TRUE_TOTAL_UP,
+        TES_TRUE_TOTAL_DOWN,
     ])
 
     TER_UP = METUtil.TERUp
