@@ -20,6 +20,13 @@ gg_bch:
     root: 'ggH#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PowPyth8_AU2CT10_ggH125_tautauhh_BCH.mc12b'
+gg_nompi:
+    name: gghtautau_nompi
+    latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
+    root: 'ggH#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b'
+
 vbf:
     name: vbfhtautau
     latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'
@@ -42,6 +49,12 @@ vbf_bch:
     root: 'VBF H#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PowPyth8_AU2CT10_VBFH125_tautauhh_BCH.mc12b'
+vbf_nompi:
+    name: vbfhtautau_nompi
+    latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'
+    root: 'VBF H#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
 wh:
     name: whtautau
     latex: '$WH\rightarrow\tau_{h}\tau_{h}$'

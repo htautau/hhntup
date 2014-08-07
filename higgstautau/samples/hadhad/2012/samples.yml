@@ -224,3 +224,7 @@ mc:
         - 'Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b'
         - 'Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b'
         - 'Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b'
+
+        # for MPI comparison
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
