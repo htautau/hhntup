@@ -1,1 +1,30 @@
-{}
+PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b: !Dataset
+  name: PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
+  dirs: [/cluster/data12/qbuat/skims/v33/user.qbuat.hhskim.mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v33.140806113830]
+  file_pattern: '*hadhad*.root*'
+  id: 189845
+  category: mc12b
+  version: 33
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e2985_s1773_s1776_r4485_r4540_p1344
+  grl: null
+  year: 2012
+  stream: null
+PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b: !Dataset
+  name: PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
+  dirs: [/cluster/data12/qbuat/skims/v33/user.qbuat.hhskim.mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v33.140806113832]
+  file_pattern: '*hadhad*.root*'
+  id: 189842
+  category: mc12b
+  version: 33
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e2985_s1773_s1776_r4485_r4540_p1344
+  grl: null
+  year: 2012
+  stream: null
