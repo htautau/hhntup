@@ -661,7 +661,15 @@ class Systematics(EventFilter):
                     systematic = TES(False, sys_util=self,
                         np='MODELING',
                         matched_state=True)
-
+                elif term == Systematics.TES_TRUE_TOTAL_UP:
+                    systematic = TES(True, sys_util=self,
+                                     np='TOTAL',
+                                     matched_state=True)
+                elif term == Systematics.TES_TRUE_TOTAL_DOWN:
+                    systematic = TES(False, sys_util=self,
+                                     np='TOTAL',
+                                     matched_state=True)
+                                    
                 # TES 2011 fake up and down
                 elif term == Systematics.TES_FAKE_FINAL_UP:
                     systematic = TES(True, sys_util=self,

@@ -295,7 +295,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
 
             outtau.matched = intau.matched
             outtau.matched_dR = intau.matched_dR
-            #outtau.matched_collision = intau.matched_collision
+            # outtau.matched_collision = intau.matched_collision
             outtau.min_dr_jet = intau.min_dr_jet
 
             if not local:
@@ -451,8 +451,10 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
             tree.dEta_truetaus = abs(truetau2.Eta() - truetau1.Eta())
             tree.dPhi_truetaus = abs(truetau1.DeltaPhi(truetau2))
             # leading pt over subleading pt
-            tree.truetau_pt_ratio = truetau1.Pt() / truetau2.Pt()
-
+            if truetau2.Pt()!=0:
+                tree.truetau_pt_ratio = truetau1.Pt() / truetau2.Pt()
+            else:
+                tree.truetau_pt_ratio = 0
 
 class EventModel(TreeModel):
     trigger = BoolCol(default=True)

@@ -81,16 +81,22 @@ if not args.systematics_only:
     datasets = samples.samples('hadhad', args.year, '*embed*')
     for sample in datasets:
         run_sample(sample)
-
+print args.systematics
 if not args.nominal_only:
     # TODO: use args.systematics to filter below
+    filter_systematics = None
     if args.systematics is not None:
         args.systematics = [
                 tuple(s.upper().split('+')) for s in
                 args.systematics.split(',')]
+        filter_systematics = args.systematics
     # systematics
     for datasets, systematics in samples.iter_samples('hadhad', args.year,
             '*embed*', systematics=True):
         for sample in datasets:
             for sys_variations in systematics:
-                run_sample(sample, sys_variations)
+                if filter_systematics is not None:
+                    if sys_variations in filter_systematics:
+                        run_sample(sample, sys_variations)
+                else:
+                    run_sample(sample, sys_variations)
