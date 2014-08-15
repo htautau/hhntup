@@ -255,6 +255,11 @@ for dataset in datasets:
         panda_outDS = panda_outDS.replace('e1169_s1469_s1470_r3658.', '')
         panda_outDS = panda_outDS.replace('filter_', '')
         panda_outDS = panda_outDS.replace('2JetsEW1JetQCD15GeVM40_min_n_tchannels', '')
+        panda_outDS = panda_outDS.replace('physics_JetTauEtmiss', 'JetTauEtm')
+        panda_outDS = panda_outDS.replace('periodA', 'pA')
+        panda_outDS = panda_outDS.replace('tautauInclusive', 'ttI')
+        panda_outDS = panda_outDS.replace('PowJim_AUET2CT10', 'PowJim')
+        panda_outDS = panda_outDS.replace('PowJim_ggH125_ttI', 'PoJi_ggH125_I')
         if len(panda_outDS) > 131:
             print
             print "DATASET NAME TOO LONG ({0:d} characters): {1}".format(len(panda_outDS), panda_outDS)

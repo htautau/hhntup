@@ -750,6 +750,31 @@ class JetCopy(EventFilter):
         return True
 
 
+class HiggsPT_Tresh(EventFilter):
+
+    def __init__(self, year, tresh=100*GeV, **kwargs):
+        super(HiggsPT_Tresh, self).__init__(**kwargs)
+        self.tresh = tresh
+        if year == 2011:
+            self.status = (2, 10902, 62)
+        elif year == 2012:
+            self.status = (62, 195)
+        else:
+            raise ValueError("No higgsPT defined for year {0}".format(year))
+
+    def passes(self, event):
+        higgs = None
+        status = self.status
+        #find the Higgs
+        for mc in event.mc:
+            if mc.pdgId == 25 and mc.status in status:
+                higgs = mc
+                break
+        if higgs is None:
+            raise RuntimeError("Higgs not found!")
+        return higgs.pt > self.tresh
+
+
 class HiggsPT(EventFilter):
 
     def __init__(self, year, tree, **kwargs):
@@ -758,10 +783,10 @@ class HiggsPT(EventFilter):
         if year == 2011:
             self.status = (2, 10902, 62)
         elif year == 2012:
-            self.status = (62,)
+            self.status = (62, 195)
         else:
             raise ValueError("No HiggsPT defined for year {0}".format(year))
-
+        
     def passes(self, event):
         pt = 0
         higgs = None
@@ -794,6 +819,24 @@ class HiggsPT(EventFilter):
         self.tree.num_true_jets_no_overlap = len(jets)
         return True
 
+class TruthJetLeadSublead(EventFilter):
+
+    def __init__(self, lead=50*GeV, sublead=30*GeV, **kwargs):
+        super(TruthJetLeadSublead, self).__init__(**kwargs)
+        # Leading and subleading truejet pT thresholds
+        self.lead = lead
+        self.sublead = sublead
+
+    def passes(self, event):
+        # sort in descending order by pT
+        event.truejets.sort(key=lambda jet: jet.pt, reverse=True)
+        if len(event.truejets) < 2:
+            return False
+        # only keep leading two true jets
+        event.truejets.slice(0, 2)
+        # Event passes if the highest pT true jet is above the leading
+        # pT threshold and the next subleading true jet pT is above the subleading pT theshold
+        return event.truejets[0].pt > self.lead and event.truejets[1].pt > self.sublead
 
 class BCHSampleRunNumber(EventFilter):
     """
