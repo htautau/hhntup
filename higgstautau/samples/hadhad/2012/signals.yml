@@ -27,6 +27,14 @@ gg_nompi:
     samples:
         - 'PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b'
 
+gg_herwigps:
+    name: gghtautau_herwigps
+    latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
+    root: 'ggH#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowHegJimmy_ggH125_Inclusive.mc12a'
+
+
 vbf:
     name: vbfhtautau
     latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'

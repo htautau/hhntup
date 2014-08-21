@@ -232,3 +232,5 @@ mc:
         # for MPI comparison
         - 'PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b'
         - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
+        # for Herwig PS comparison
+        - 'PowHegJimmy_ggH125_Inclusive.mc12a'

@@ -69,11 +69,12 @@
         data_treename: 'tau'
         data_sampletype: 'standard'
         data_period_containers: True
-        embed_path: '/cluster/data12/qbuat/skims/v33'
-        embed_prefix: 'user.qbuat.hhskim'
-        embed_pattern: '*hadhad.root*'
-        embed_treename: 'tau'
-        embed_sampletype: 'new'
+    herwigps:
+        mc_path: '/cluster/data12/qbuat/skims/herwigps'
+        mc_prefix: 'group.phys-higgs.hhskim'
+        mc_pattern: '*hadhad*.root*'
+        mc_treename: 'tau'
+        mc_sampletype: 'standard'
     lh:
         mc_path: '/cluster/data05/michel/lhCN-7/mc12'
         mc_prefix: 'group.phys-higgs'

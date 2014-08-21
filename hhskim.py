@@ -284,10 +284,10 @@ class hhskim(ATLASStudent):
                 # TruthJetLeadSublead(
                 #     passthrough=not is_signal or local,
                 #     count_funcs=count_funcs),
-                # HiggsPT_Tresh(
-                #     year=year,
-                #     passthrough=not is_signal or local,
-                #     count_funcs=count_funcs),
+                HiggsPT_Tresh(
+                    year=year,
+                    passthrough=not is_signal or local,
+                    count_funcs=count_funcs),
                 GRLFilter(
                     self.grl,
                     passthrough=(
