@@ -817,6 +817,10 @@ class HiggsPT(EventFilter):
                                       tau.Eta(), tau.Phi()) < 0.4])]
         # Count the number of remaining jets
         self.tree.num_true_jets_no_overlap = len(jets)
+        if len(jets) >=2:
+            jet1, jet2 = jets[:2]
+            self.tree.true_jet1_no_overlap_pt = jet1.pt
+            self.tree.true_jet2_no_overlap_pt = jet2.pt
         return True
 
 class TruthJetLeadSublead(EventFilter):

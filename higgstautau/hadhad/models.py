@@ -491,6 +491,8 @@ class EventModel(TreeModel):
     resonance_pt = FloatCol()
     true_resonance_pt = FloatCol()
     num_true_jets_no_overlap = IntCol()
+    true_jet1_no_overlap_pt = FloatCol(default=-1)
+    true_jet2_no_overlap_pt = FloatCol(default=-1)
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
