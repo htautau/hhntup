@@ -1,0 +1,9 @@
+# Herwig PS Higgs samples
+mc12_8TeV.181086.PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.merge.NTUP_TAU.e1990_s1581_s1586_r3658_r3549_p1344/
+# MPI Off
+mc12_8TeV.189845.PowHegPythia8_AU2CT10_VBFH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344/
+mc12_8TeV.189842.PowHegPythia8_AU2CT10_ggH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344/
+# Nominal sample @125 GeV
+mc12_8TeV.161577.PowHegPythia8_AU2CT10_ggH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1344/
+mc12_8TeV.161617.PowHegPythia8_AU2CT10_VBFH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1344/
+
