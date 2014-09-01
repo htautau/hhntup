@@ -281,13 +281,6 @@ class hhskim(ATLASStudent):
                         'tau_out_track_n_extended' in test_tree)
 
             event_filters = EventFilterList([
-                # TruthJetLeadSublead(
-                #     passthrough=not is_signal or local,
-                #     count_funcs=count_funcs),
-                HiggsPT_Tresh(
-                    year=year,
-                    passthrough=not is_signal or local,
-                    count_funcs=count_funcs),
                 GRLFilter(
                     self.grl,
                     passthrough=(

@@ -16,7 +16,7 @@ parser.add_argument('--info', action='store_true', default=False)
 parser.add_argument('--name', default='datasets')
 parser.add_argument('--config', default='higgstautau/datasets_config.yml')
 parser.add_argument('-v', '--verbose', action='store_true', default=False)
-parser.add_argument('analysis', choices=('lh', 'hh', 'hh_q', 'herwigps'))
+parser.add_argument('analysis', choices=('lh', 'hh', 'hh_q', 'ue_studies'))
 args = parser.parse_args()
 
 from higgstautau.datasets import Database
@@ -31,9 +31,9 @@ elif args.analysis == 'lh':
 elif args.analysis == 'hh_q':
     args.versioned = True
     args.name += '_hh_q'
-elif args.analysis == 'herwigps':
+elif args.analysis == 'ue_studies':
     args.versioned = True
-    args.name += '_herwigps'
+    args.name += '_ue_studies'
 
 db = Database(name=args.name,
               verbose=args.verbose)
