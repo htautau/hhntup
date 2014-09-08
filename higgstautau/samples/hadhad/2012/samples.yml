@@ -217,3 +217,10 @@ mc:
         # for BCH comparison
         - 'PowPyth8_AU2CT10_ggH125_tautauhh_BCH.mc12b'
         - 'PowPyth8_AU2CT10_VBFH125_tautauhh_BCH.mc12b'
+
+        # for overlap studies
+        - 'PowPyth8_AU2CT10_VBFH125p5_inclusive.mc12b'
+        - 'PowPyth8_AU2CT10_ggH125p5_inclusive.mc12b'
+        - 'Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b'
+        - 'Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b'
+        - 'Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b'

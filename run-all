@@ -7,12 +7,20 @@
 #./run-mc --systematics-only --year 12 --local $@
 
 #./run-data --year 11 --nsplit 40 --local $@
-./run-embed --nominal-only --year 11 --nsplit 10 --local $@
+#./run-embed --nominal-only --year 11 --nsplit 10 --local $@
 #./run-mc --nominal-only --year 11 --local $@
-./run-embed --systematics-only --year 11 --nsplit 10 --local $@
+#./run-embed --systematics-only --year 11 --nsplit 10 --local $@
 #./run-mc --systematics-only --year 11 --local $@
 
 # for theory uncertainty:
 #./run-mc --nominal-only --year 12 --local --redo-selection \
 #McAtNloJimmy_AUET2CT10_ggH125_tautau.mc12a \
 #PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.mc12a \
+
+# for overlap check
+./run-mc --nominal-only --year 12 --local \
+PowPyth8_AU2CT10_VBFH125p5_inclusive.mc12b \
+PowPyth8_AU2CT10_ggH125p5_inclusive.mc12b \
+Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b \
+Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b \
+Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b
