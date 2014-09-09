@@ -7030,6 +7030,369 @@ data11-JetTauEtmiss-191933: !Dataset
   grl: grl/2011/current.xml
   year: 2011
   stream: JetTauEtmiss
+data11-JetTauEtmiss-B: !Dataset
+  name: data11-JetTauEtmiss-B
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-B
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00178044.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023703,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00178047.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023925,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00178109.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024016]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-D: !Dataset
+  name: data11-JetTauEtmiss-D
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-D
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179725.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023919,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179739.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179771.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023440,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179804.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023823,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179938.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023519,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179939.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023916,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00179940.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023314,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180122.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023918,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180124.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023547,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180139.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023923,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180144.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023650,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180149.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023424,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180153.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023658,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180164.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023710,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180212.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023908,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180225.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024106,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180241.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024021,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180242.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024052,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180309.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023312,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180400.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023651,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180448.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023654,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180481.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023545]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-E: !Dataset
+  name: data11-JetTauEtmiss-E
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-E
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180614.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023800,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180636.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023640,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180664.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180710.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023906,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00180776.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023430]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-F: !Dataset
+  name: data11-JetTauEtmiss-F
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-F
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182013.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023313,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182161.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023851,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182284.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182346.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023545,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182372.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023916,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182424.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024033,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182449.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023434,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182450.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023547,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182454.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182455.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023654,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182456.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023807,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182486.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023815,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182516.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023436,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182518.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024039,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182519.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023906]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-G: !Dataset
+  name: data11-JetTauEtmiss-G
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-G
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182726.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023519,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182747.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182766.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023423,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182787.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023536,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182796.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023758,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182879.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024104,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182886.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023315,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00182997.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183003.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023927,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183021.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023908,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183038.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024034,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183045.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023539,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183054.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024030,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183078.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023712,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183079.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024021,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183081.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023649,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183127.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023908,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183129.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023926,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183130.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023755,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183216.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023318,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183272.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023813,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183286.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023318,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183347.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023719,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183391.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023909,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183407.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023618,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183412.physics_JetTauEtmiss.r2603_p659_p851.v27.140408024006,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183426.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023315,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183462.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023956]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-H: !Dataset
+  name: data11-JetTauEtmiss-H
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-H
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183544.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183580.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023718,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183581.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023929,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183602.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023428,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183780.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023809,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00183963.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184022.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023313,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184066.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023543,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184072.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184074.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023654,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184088.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023937,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184130.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023432,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00184169.physics_JetTauEtmiss.r2603_p659_p851.v27.140408023140]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-I: !Dataset
+  name: data11-JetTauEtmiss-I
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-I
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185353.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023735,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185518.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023551,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185649.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185731.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185761.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185823.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023429,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185856.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023425,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185976.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023312,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00185998.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023541,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186049.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023922,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186156.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023756,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186169.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023431,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186178.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023650,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186179.physics_JetTauEtmiss.r2713_p705_p851.v27.140408024033,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186180.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023525,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186182.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186216.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023940,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186217.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023315,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186275.physics_JetTauEtmiss.r2713_p705_p851.v27.140408024038,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186361.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023641,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186399.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023808,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186456.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023540,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186493.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023315]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-J: !Dataset
+  name: data11-JetTauEtmiss-J
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-J
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186516.physics_JetTauEtmiss.r2713_p705_p851.v27.140408024042,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186532.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023317,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186533.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186669.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023424,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186673.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023341,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186721.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186729.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023452,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186753.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023652,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186755.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023534]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-K: !Dataset
+  name: data11-JetTauEtmiss-K
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-K
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186873.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023312,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186877.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023657,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186878.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023810,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186923.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186933.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023539,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186934.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023502,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00186965.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023316,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187014.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023935,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187196.physics_JetTauEtmiss.r2713_p705_p851.v27.140408024032,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187219.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187453.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023651,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187457.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023435,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187552.physics_JetTauEtmiss.r2713_p705_p851.v27.140408024000,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187763.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023759,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187811.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023422,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187812.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023430,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00187815.physics_JetTauEtmiss.r2713_p705_p851.v27.140408023852]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-L: !Dataset
+  name: data11-JetTauEtmiss-L
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-L
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00188921.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023817,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00188951.physics_JetTauEtmiss.f403_m980_p851.v27.140408023923,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189027.physics_JetTauEtmiss.f403_m975_p851.v27.140408023737,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189028.physics_JetTauEtmiss.f403_m975_p851.v27.140408023526,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189049.physics_JetTauEtmiss.f403_m975_p851.v27.140408024054,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189079.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023812,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189090.physics_JetTauEtmiss.f403_m975_p851.v27.140408023800,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189184.physics_JetTauEtmiss.f403_m980_p851.v27.140408023436,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189207.physics_JetTauEtmiss.f404_m980_p851.v27.140408024033,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189242.physics_JetTauEtmiss.f404_m980_p851.v27.140408024039,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189280.physics_JetTauEtmiss.f404_m980_p851.v27.140408023317,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189288.physics_JetTauEtmiss.f404_m980_p851.v27.140408023957,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189372.physics_JetTauEtmiss.f404_m980_p851.v27.140408023706,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189421.physics_JetTauEtmiss.f404_m980_p851.v27.140408024036,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189425.physics_JetTauEtmiss.f404_m980_p851.v27.140408023640,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189481.physics_JetTauEtmiss.f404_m985_p851.v27.140408023530,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189483.physics_JetTauEtmiss.f405_m985_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189530.physics_JetTauEtmiss.f405_m985_p851.v27.140408023612,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189536.physics_JetTauEtmiss.f405_m985_p851.v27.140408023544,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189561.physics_JetTauEtmiss.f405_m985_p851.v27.140408023627,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189598.physics_JetTauEtmiss.f405_m985_p851.v27.140408024026,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189602.physics_JetTauEtmiss.f405_m985_p851.v27.140408023311,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189610.physics_JetTauEtmiss.f405_m985_p851.v27.140408023315,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189639.physics_JetTauEtmiss.f405_m985_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189660.physics_JetTauEtmiss.f405_m985_p851.v27.140408023929,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189693.physics_JetTauEtmiss.f405_m985_p851.v27.140408023807,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189719.physics_JetTauEtmiss.f405_m985_p851.v27.140408024033,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189751.physics_JetTauEtmiss.f405_m985_p851.v27.140408023314,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189813.physics_JetTauEtmiss.f405_m991_p851.v27.140408023434,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189822.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023651,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189836.physics_JetTauEtmiss.f406_m991_p851.v27.140408023703,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189845.physics_JetTauEtmiss.f406_m991_p851.v27.140408023541,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189875.physics_JetTauEtmiss.f406_m991_p851.v27.140408023825,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189963.physics_JetTauEtmiss.f406_m997_p851.v27.140408023612,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00189965.physics_JetTauEtmiss.f406_m991_p851.v27.140408023913,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190046.physics_JetTauEtmiss.f407_m997_p851.v27.140408024029,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190116.physics_JetTauEtmiss.f407_m997_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190119.physics_JetTauEtmiss.f407_m997_p851.v27.140408023803,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190120.physics_JetTauEtmiss.f407_m997_p851.v27.140408024028,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190236.physics_JetTauEtmiss.f408_m1007_p851.v27.140408023315,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190256.physics_JetTauEtmiss.f408_m1007_p851.v27.140408023549,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190297.physics_JetTauEtmiss.f408_m1007_p851.v27.140408023553,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190300.physics_JetTauEtmiss.f409_m1007_p851.v27.140408023606,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190343.physics_JetTauEtmiss.f409_m1007_p851.v27.140408023821]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
+data11-JetTauEtmiss-M: !Dataset
+  name: data11-JetTauEtmiss-M
+  datatype: 0
+  treename: tau
+  ds: data11-JetTauEtmiss-M
+  dirs: [/cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190608.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023952,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190611.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023803,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190618.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023755,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190643.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023432,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190644.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023317,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190661.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023316,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190689.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023547,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190872.physics_JetTauEtmiss.f411_m1007_p851.v27.140408023608,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190878.physics_JetTauEtmiss.f415_m1025_p851.v27.140408024047,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190933.physics_JetTauEtmiss.f412_m1007_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190934.physics_JetTauEtmiss.f412_m1007_p851.v27.140408023429,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00190975.physics_JetTauEtmiss.f411_m1007_p851.v27.140408024107,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191138.physics_JetTauEtmiss.f411_m1007_p851.v27.140408024020,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191139.physics_JetTauEtmiss.f415_m1025_p851.v27.140408024050,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191149.physics_JetTauEtmiss.f411_m1019_p851.v27.140408023314,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191150.physics_JetTauEtmiss.f411_m1019_p851.v27.140408023435,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191190.physics_JetTauEtmiss.f413_m1019_p851.v27.140408023738,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191217.physics_JetTauEtmiss.f413_m1019_p851.v27.140408023431,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191218.physics_JetTauEtmiss.f413_m1019_p851.v27.140408023528,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191235.physics_JetTauEtmiss.f413_m1019_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191239.physics_JetTauEtmiss.f413_m1019_p851.v27.140408024020,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191425.physics_JetTauEtmiss.f413_m1019_p851.v27.140408023314,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191426.physics_JetTauEtmiss.f413_m1025_p851.v27.140408023550,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191513.physics_JetTauEtmiss.f413_m1025_p851.v27.140408023140,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191517.physics_JetTauEtmiss.f413_m1025_p851.v27.140408023924,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191635.physics_JetTauEtmiss.f414_m1025_p851.v27.140408023926,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191676.physics_JetTauEtmiss.f414_m1025_p851.v27.140408023758,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191715.physics_JetTauEtmiss.f414_m1025_p851.v27.140408023629,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191920.physics_JetTauEtmiss.f414_m1025_p851.v27.140408023645,
+    /cluster/data11/endw/skims/v29/group.phys-higgs.hhskim.data11_7TeV.00191933.physics_JetTauEtmiss.f415_m1025_p851.v27.140408023435]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2011/current.xml
+  year: 2011
+  stream: JetTauEtmiss
 data12-JetTauEtmiss: !Dataset
   name: data12-JetTauEtmiss
   datatype: 0
@@ -8886,49 +9249,4 @@ st_tchan_taunu_AcerMC.mc11c: !Dataset
   tag: e825_s1310_s1300_r3043_r2993_p851
   grl: null
   year: 2011
-  stream: null
-PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b: !Dataset
-  name: PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b
-  datatype: 1
-  treename: tau
-  ds: mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
-  dirs: [/cluster/data12/qbuat/skims/v33/user.qbuat.hhskim.mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v33.140806113830]
-  file_pattern: '*hadhad*.root*'
-  id: 189845
-  category: mc12b
-  version: 33
-  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
-  tag: e2985_s1773_s1776_r4485_r4540_p1344
-  grl: null
-  year: 2012
-  stream: null
-PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b: !Dataset
-  name: PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b
-  datatype: 1
-  treename: tau
-  ds: mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
-  dirs: [/cluster/data12/qbuat/skims/v33/user.qbuat.hhskim.mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v33.140806113832]
-  file_pattern: '*hadhad*.root*'
-  id: 189842
-  category: mc12b
-  version: 33
-  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
-  tag: e2985_s1773_s1776_r4485_r4540_p1344
-  grl: null
-  year: 2012
-  stream: null
-PowHegJimmy_ggH125_Inclusive.mc12a: !Dataset
-  name: PowHegJimmy_ggH125_Inclusive.mc12a
-  datatype: 1
-  treename: tau
-  ds: mc12_8TeV.181086.PowHegJimmy_ggH125_Inclusive.merge.NTUP_TAU.e1990_s1581_s1586_r3658_r3549_p1344
-  dirs: [/cluster/data12/qbuat/skims/herwigps/group.phys-higgs.hhskim.mc12_8TeV.181086.PowHegJimmy_ggH125_Inclusive.e1990_s1581_s1586_r3658_r3549_p1344.v34.547846]
-  file_pattern: '*hadhad*.root*'
-  id: 181086
-  category: mc12a
-  version: 34
-  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
-  tag: e1990_s1581_s1586_r3658_r3549_p1344
-  grl: null
-  year: 2012
   stream: null

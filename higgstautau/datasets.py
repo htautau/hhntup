@@ -23,7 +23,7 @@ from .decorators import cached_property
 from .yaml_utils import Serializable
 from . import xsec
 
-USE_PYAMI = False
+USE_PYAMI = True
 try:
     from pyAMI.client import AMIClient
     from pyAMI.query import get_dataset_xsec_effic, \
@@ -223,7 +223,7 @@ MC_CATEGORIES = {
               'merge': (3109, 3063, 2993)},
     'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542, 3549),
               'merge': (3549,)},
-    'mc12b': {'reco': (5470, 4485),
+    'mc12b': {'reco':  (4485, 5470,),
               'merge': (4540,)}}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
