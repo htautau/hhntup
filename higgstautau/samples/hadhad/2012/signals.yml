@@ -62,6 +62,15 @@ vbf_nompi:
     root: 'VBF H#rightarrow#tau_{h}#tau_{h}'
     samples:
         - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
+
+vbf_herwigps:
+    name: vbfhtautau_herwigps
+    latex: '$VBF H\rightarrow\tau_{h}\tau_{h}$'
+    root: 'VBF H#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowJim_AUET2CT10_VBFH125_tautauInc.mc12b'
+
+
 wh:
     name: whtautau
     latex: '$WH\rightarrow\tau_{h}\tau_{h}$'

@@ -1,3 +1,18 @@
+PowJim_AUET2CT10_VBFH125_tautauInc.mc12b: !Dataset
+  name: PowJim_AUET2CT10_VBFH125_tautauInc.mc12b
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.189971.PowJim_AUET2CT10_VBFH125_tautauInc.merge.NTUP_TAU.e3057_s1773_s1776_r4485_r4540_p1344
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.189971.PowJim_AUET2CT10_VBFH125_tautauInc.e3057_s1773_s1776_r4485_r4540_p1344.v36.1563495]
+  file_pattern: '*hadhad*.root*'
+  id: 189971
+  category: mc12b
+  version: 36
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e3057_s1773_s1776_r4485_r4540_p1344
+  grl: null
+  year: 2012
+  stream: null
 PowJim_AUET2CT10_ggH125_tautauInc.mc12a: !Dataset
   name: PowJim_AUET2CT10_ggH125_tautauInc.mc12a
   datatype: 1

@@ -234,3 +234,4 @@ mc:
         - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
         # for Herwig PS comparison
         - 'PowJim_AUET2CT10_ggH125_tautauInc.mc12a'
+        - 'PowJim_AUET2CT10_VBFH125_tautauInc.mc12b'
