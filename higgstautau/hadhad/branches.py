@@ -94,7 +94,7 @@ REMOVE = [
     "trk_err_phi_wrtBS",
     "tau_jet_e_TileExt0",
 
-    "mcevt_pdf*",
+    #"mcevt_pdf*",
 ]
 
 # override globs above

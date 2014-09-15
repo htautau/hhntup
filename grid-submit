@@ -249,7 +249,7 @@ for dataset in datasets:
         panda_outDS = panda_outDS.replace('Alpgen', 'Alp')
         panda_outDS = panda_outDS.replace('Jimmy', 'Jim')
         panda_outDS = panda_outDS.replace('JIMMY', 'Jim')
-        panda_outDS = panda_outDS.replace('Pythia8', 'Pyt')
+        panda_outDS = panda_outDS.replace('Pythia8', 'Py')
         #panda_outDS = panda_outDS.replace('Pythia', 'Pyth')
         panda_outDS = panda_outDS.replace('Herwig', 'Her')
         panda_outDS = panda_outDS.replace('PowHeg', 'Pow')
