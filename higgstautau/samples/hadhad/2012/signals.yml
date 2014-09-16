@@ -34,6 +34,13 @@ gg_herwigps:
     samples:
         - 'PowJim_AUET2CT10_ggH125_tautauInc.mc12a'
 
+gg_mcatnlo:
+    name: gg_mcatnlo
+    latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
+    root: 'ggH#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'McAtNloJim_ggH125_tautauInc.mc12a'
+
 vbf:
     name: vbfhtautau
     latex: 'VBF $H\rightarrow\tau_{h}\tau_{h}$'

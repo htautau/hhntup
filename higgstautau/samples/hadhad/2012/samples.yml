@@ -235,3 +235,5 @@ mc:
         # for Herwig PS comparison
         - 'PowJim_AUET2CT10_ggH125_tautauInc.mc12a'
         - 'PowJim_AUET2CT10_VBFH125_tautauInc.mc12b'
+        # MC@NLO
+        - 'McAtNloJim_ggH125_tautauInc.mc12a'

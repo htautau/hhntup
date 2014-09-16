@@ -87,6 +87,14 @@
         mc_pattern: '*hadhad*.root*'
         mc_treename: 'tau'
         mc_sampletype: 'standard'
+    theory:
+        mc_path: '/cluster/data12/qbuat/skims/theory/v34'
+        mc_prefix: 'group.phys-higgs.hhskim'
+        mc_pattern: '*hadhad*.root*'
+        mc_treename: 'tau'
+        mc_sampletype: 'standard'
+
+
     lh:
         mc_path: '/cluster/data05/michel/lhCN-7/mc12'
         mc_prefix: 'group.phys-higgs'
