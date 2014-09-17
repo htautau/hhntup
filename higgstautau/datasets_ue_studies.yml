@@ -3,11 +3,11 @@ PowJim_AUET2CT10_VBFH125_tautauInc.mc12b: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.189971.PowJim_AUET2CT10_VBFH125_tautauInc.merge.NTUP_TAU.e3057_s1773_s1776_r4485_r4540_p1344
-  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.189971.PowJim_AUET2CT10_VBFH125_tautauInc.e3057_s1773_s1776_r4485_r4540_p1344.v36.1563495]
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.189971.PowJim_AUET2CT10_VBFH125_tautauInc.e3057_s1773_s1776_r4485_r4540_p1344.v40.2621788]
   file_pattern: '*hadhad*.root*'
   id: 189971
   category: mc12b
-  version: 36
+  version: 40
   tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
   tag: e3057_s1773_s1776_r4485_r4540_p1344
   grl: null
@@ -18,11 +18,11 @@ PowJim_AUET2CT10_ggH125_tautauInc.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.181086.PowJim_AUET2CT10_ggH125_tautauInc.merge.NTUP_TAU.e1990_s1581_s1586_r3658_r3549_p1344
-  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.181086.PowJim_AUET2CT10_ggH125_tautauInc.e1990_s1581_s1586_r3658_r3549_p1344.v36.1149200]
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.181086.PowJim_AUET2CT10_ggH125_tautauInc.e1990_s1581_s1586_r3658_r3549_p1344.v40.2621778]
   file_pattern: '*hadhad*.root*'
   id: 181086
   category: mc12a
-  version: 36
+  version: 40
   tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
   tag: e1990_s1581_s1586_r3658_r3549_p1344
   grl: null
@@ -33,15 +33,12 @@ PowPyth8_AU2CT10_VBFH125_tautauhh.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1344
-  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149203,
-    /cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149206,
-    /cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149691,
-    /cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149735,
-    /cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149738]
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v40.2621649,
+    /cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.161617.PowPyth8_AU2CT10_VBFH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v40.2621680]
   file_pattern: '*hadhad*.root*'
   id: 161617
   category: mc12a
-  version: 36
+  version: 40
   tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
   tag: e1217_s1469_s1470_r3542_r3549_p1344
   grl: null
@@ -52,11 +49,12 @@ PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
-  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v36.1149230]
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v40.2621691,
+    /cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v40.2626254]
   file_pattern: '*hadhad*.root*'
   id: 189845
   category: mc12b
-  version: 36
+  version: 40
   tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
   tag: e2985_s1773_s1776_r4485_r4540_p1344
   grl: null
@@ -67,13 +65,14 @@ PowPyth8_AU2CT10_ggH125_tautauhh.mc12a: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1344
-  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149234,
-    /cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149771,
-    /cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v36.1149774]
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v40.2621804,
+    /cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v40.2629865,
+    /cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v40.2629892,
+    /cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.161577.PowPyth8_AU2CT10_ggH125_tautauhh.e1217_s1469_s1470_r3542_r3549_p1344.v40.2629905]
   file_pattern: '*hadhad*.root*'
   id: 161577
   category: mc12a
-  version: 36
+  version: 40
   tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
   tag: e1217_s1469_s1470_r3542_r3549_p1344
   grl: null
@@ -84,11 +83,11 @@ PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b: !Dataset
   datatype: 1
   treename: tau
   ds: mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
-  dirs: [/cluster/data12/qbuat/skims/ue_studies/v36/group.phys-higgs.hhskim.mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v36.1149243]
+  dirs: [/cluster/data12/qbuat/skims/ue_studies/v40/group.phys-higgs.hhskim.mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v40.2621781]
   file_pattern: '*hadhad*.root*'
   id: 189842
   category: mc12b
-  version: 36
+  version: 40
   tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
   tag: e2985_s1773_s1776_r4485_r4540_p1344
   grl: null

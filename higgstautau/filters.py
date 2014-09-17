@@ -681,6 +681,11 @@ class MCWeight(EventFilter):
         # set the event weights
         if self.datatype == datasets.MC:
             self.tree.mc_weight = event.mc_event_weight
+            self.tree.mcevent_pdf_x1_0 = event.mcevt_pdf_x1[0]
+            self.tree.mcevent_pdf_x2_0 = event.mcevt_pdf_x2[0]
+            self.tree.mcevent_pdf_id1_0 = event.mcevt_pdf_id1[0]
+            self.tree.mcevent_pdf_id2_0 = event.mcevt_pdf_id2[0]
+            self.tree.mcevent_pdf_scale_0 = event.mcevt_pdf_scale[0]
         elif self.datatype == datasets.EMBED:
             # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
             # correct truth filter efficiency
@@ -796,6 +801,8 @@ class HiggsPT(EventFilter):
             jet1, jet2 = jets[:2]
             self.tree.true_jet1_no_overlap_pt = jet1.pt
             self.tree.true_jet2_no_overlap_pt = jet2.pt
+            self.tree.true_dEta_jet1_jet2_no_overlap = abs(jet1.eta-jet2.eta)
+            self.tree.true_mass_jet1_jet2_no_overlap = (jet1.fourvect + jet2.fourvect).M()
         return True
 
 

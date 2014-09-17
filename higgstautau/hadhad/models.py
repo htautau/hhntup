@@ -474,6 +474,11 @@ class EventModel(TreeModel):
     pileup_weight_low = FloatCol(default=1.)
 
     mc_weight = FloatCol(default=1.)
+    mcevent_pdf_x1_0    = FloatCol(default=1.)
+    mcevent_pdf_x2_0    = FloatCol(default=1.)
+    mcevent_pdf_id1_0   = FloatCol(default=1.)
+    mcevent_pdf_id2_0   = FloatCol(default=1.)
+    mcevent_pdf_scale_0 = FloatCol(default=1.)
 
     #sphericity = FloatCol(default=-1)
     #aplanarity = FloatCol(default=-1)
@@ -493,6 +498,8 @@ class EventModel(TreeModel):
     num_true_jets_no_overlap = IntCol()
     true_jet1_no_overlap_pt = FloatCol(default=-1)
     true_jet2_no_overlap_pt = FloatCol(default=-1)
+    true_dEta_jet1_jet2_no_overlap = FloatCol(default=-1)
+    true_mass_jet1_jet2_no_overlap = FloatCol(default=-1)
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()

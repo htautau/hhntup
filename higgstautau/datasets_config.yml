@@ -76,11 +76,25 @@
         mc_treename: 'tau'
         mc_sampletype: 'standard'
     ue_studies:
-        mc_path: '/cluster/data12/qbuat/skims/ue_studies/v36'
+        mc_path: '/cluster/data12/qbuat/skims/ue_studies/v40'
         mc_prefix: 'group.phys-higgs.hhskim'
         mc_pattern: '*hadhad*.root*'
         mc_treename: 'tau'
         mc_sampletype: 'standard'
+    ue_studies_truth:
+        mc_path: '/cluster/data12/qbuat/skims/ue_studies/v41'
+        mc_prefix: 'group.phys-higgs.hhskim_truth'
+        mc_pattern: '*hadhad*.root*'
+        mc_treename: 'tau'
+        mc_sampletype: 'standard'
+    theory:
+        mc_path: '/cluster/data12/qbuat/skims/theory/v34'
+        mc_prefix: 'group.phys-higgs.hhskim'
+        mc_pattern: '*hadhad*.root*'
+        mc_treename: 'tau'
+        mc_sampletype: 'standard'
+
+
     lh:
         mc_path: '/cluster/data05/michel/lhCN-7/mc12'
         mc_prefix: 'group.phys-higgs'
