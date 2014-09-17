@@ -419,6 +419,8 @@ class Systematics(EventFilter):
     TES_TRUE_MODELING_DOWN = -30009
     TES_FAKE_TOTAL_UP = -30010
     TES_FAKE_TOTAL_DOWN = -30011
+    TES_TRUE_TOTAL_UP = -30012
+    TES_TRUE_TOTAL_DOWN = -30013
 
     TES_TERMS = set([
         TES_TRUE_FINAL_UP,
@@ -433,6 +435,8 @@ class Systematics(EventFilter):
         TES_TRUE_MODELING_DOWN,
         TES_FAKE_TOTAL_UP,
         TES_FAKE_TOTAL_DOWN,
+        TES_TRUE_TOTAL_UP,
+        TES_TRUE_TOTAL_DOWN,
     ])
 
     TER_UP = METUtil.TERUp
@@ -657,7 +661,15 @@ class Systematics(EventFilter):
                     systematic = TES(False, sys_util=self,
                         np='MODELING',
                         matched_state=True)
-
+                elif term == Systematics.TES_TRUE_TOTAL_UP:
+                    systematic = TES(True, sys_util=self,
+                                     np='TOTAL',
+                                     matched_state=True)
+                elif term == Systematics.TES_TRUE_TOTAL_DOWN:
+                    systematic = TES(False, sys_util=self,
+                                     np='TOTAL',
+                                     matched_state=True)
+                                    
                 # TES 2011 fake up and down
                 elif term == Systematics.TES_FAKE_FINAL_UP:
                     systematic = TES(True, sys_util=self,

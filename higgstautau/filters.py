@@ -758,10 +758,10 @@ class HiggsPT(EventFilter):
         if year == 2011:
             self.status = (2, 10902, 62)
         elif year == 2012:
-            self.status = (62,)
+            self.status = (62, 195)
         else:
             raise ValueError("No HiggsPT defined for year {0}".format(year))
-
+        
     def passes(self, event):
         pt = 0
         higgs = None
@@ -792,6 +792,10 @@ class HiggsPT(EventFilter):
                                       tau.Eta(), tau.Phi()) < 0.4])]
         # Count the number of remaining jets
         self.tree.num_true_jets_no_overlap = len(jets)
+        if len(jets) >=2:
+            jet1, jet2 = jets[:2]
+            self.tree.true_jet1_no_overlap_pt = jet1.pt
+            self.tree.true_jet2_no_overlap_pt = jet2.pt
         return True
 
 

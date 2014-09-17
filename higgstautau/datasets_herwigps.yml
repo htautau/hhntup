@@ -1,0 +1,15 @@
+PowHegJimmy_ggH125_Inclusive.mc12a: !Dataset
+  name: PowHegJimmy_ggH125_Inclusive.mc12a
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.181086.PowHegJimmy_ggH125_Inclusive.merge.NTUP_TAU.e1990_s1581_s1586_r3658_r3549_p1344
+  dirs: [/cluster/data12/qbuat/skims/herwigps/group.phys-higgs.hhskim.mc12_8TeV.181086.PowHegJimmy_ggH125_Inclusive.e1990_s1581_s1586_r3658_r3549_p1344.v34.547846]
+  file_pattern: '*hadhad*.root*'
+  id: 181086
+  category: mc12a
+  version: 34
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e1990_s1581_s1586_r3658_r3549_p1344
+  grl: null
+  year: 2012
+  stream: null

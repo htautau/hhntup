@@ -1,0 +1,266 @@
+PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b: !Dataset
+  name: PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
+  dirs: [/cluster/data12/qbuat/skims/v33/user.qbuat.hhskim.mc12_8TeV.189845.PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v33.140806113830]
+  file_pattern: '*hadhad*.root*'
+  id: 189845
+  category: mc12b
+  version: 33
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e2985_s1773_s1776_r4485_r4540_p1344
+  grl: null
+  year: 2012
+  stream: null
+PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b: !Dataset
+  name: PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b
+  datatype: 1
+  treename: tau
+  ds: mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344
+  dirs: [/cluster/data12/qbuat/skims/v33/user.qbuat.hhskim.mc12_8TeV.189842.PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.e2985_s1773_s1776_r4485_r4540_p1344.v33.140806113832]
+  file_pattern: '*hadhad*.root*'
+  id: 189842
+  category: mc12b
+  version: 33
+  tag_pattern: ^e(?P<evnt>\d+)_s(?P<digi>\d+)_s(?P<digimerge>\d+)_r(?P<reco>\d+)_r(?P<recomerge>\d+)_p(?P<ntup>\d+)$
+  tag: e2985_s1773_s1776_r4485_r4540_p1344
+  grl: null
+  year: 2012
+  stream: null
+data12-JetTauEtm: !Dataset
+  name: data12-JetTauEtm
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.192579,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.193725,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.196473,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.221076,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188285,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.189239,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.273199,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.275356,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.283283,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.284191,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.296034,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.299569,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodC.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188233,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodC.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191728,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodC.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.260542,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188046,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.192311,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.219004,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.223977,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.231192,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.241314,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188043,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.202688,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.209726,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.285704,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.291546,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.296698,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodG.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188248,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodH.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188236,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188254,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.190910,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.207638,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.214295,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.283309,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188241,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191913,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191916,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.208895,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.304227,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodL.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188071,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodL.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191563]
+  file_pattern: '*hadhad.root*'
+  id: -1
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-A: !Dataset
+  name: data12-JetTauEtm-A
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-A
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.192579,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.193725,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.196473,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodA.JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1517_p1443_p1444.v35_hhskim.data12_p1443_hadhad.root.221076]
+  file_pattern: '*hadhad.root*'
+  id: periodA
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-B: !Dataset
+  name: data12-JetTauEtm-B
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-B
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188285,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.189239,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.273199,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.275356,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.283283,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.284191,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.296034,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodB.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.299569]
+  file_pattern: '*hadhad.root*'
+  id: periodB
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-C: !Dataset
+  name: data12-JetTauEtm-C
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-C
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodC.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188233,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodC.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191728,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodC.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.260542]
+  file_pattern: '*hadhad.root*'
+  id: periodC
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-D: !Dataset
+  name: data12-JetTauEtm-D
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-D
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188046,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.192311,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.219004,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.223977,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.231192,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodD.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.241314]
+  file_pattern: '*hadhad.root*'
+  id: periodD
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-E: !Dataset
+  name: data12-JetTauEtm-E
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-E
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188043,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.202688,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.209726,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.285704,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.291546,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodE.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.296698]
+  file_pattern: '*hadhad.root*'
+  id: periodE
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-G: !Dataset
+  name: data12-JetTauEtm-G
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-G
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodG.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188248]
+  file_pattern: '*hadhad.root*'
+  id: periodG
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-H: !Dataset
+  name: data12-JetTauEtm-H
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-H
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodH.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188236]
+  file_pattern: '*hadhad.root*'
+  id: periodH
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-I: !Dataset
+  name: data12-JetTauEtm-I
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-I
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188254,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.190910,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.207638,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.214295,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodI.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.283309]
+  file_pattern: '*hadhad.root*'
+  id: periodI
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-J: !Dataset
+  name: data12-JetTauEtm-J
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-J
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188241,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191913,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191916,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.208895,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodJ.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.304227]
+  file_pattern: '*hadhad.root*'
+  id: periodJ
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm
+data12-JetTauEtm-L: !Dataset
+  name: data12-JetTauEtm-L
+  datatype: 0
+  treename: tau
+  ds: data12-JetTauEtm-L
+  dirs: [/cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodL.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.188071,
+    /cluster/data12/qbuat/skims/no_tesshift/v35/group.phys-higgs.hhskim.data12_8TeV.periodL.phys_JetTauEtm.PhysCont.NTUP_TAU.grp14_v01_p1443.v35_hhskim.data12_p1443_hadhad.root.191563]
+  file_pattern: '*hadhad.root*'
+  id: periodL
+  category: null
+  version: null
+  tag_pattern: null
+  tag: null
+  grl: grl/2012/current.xml
+  year: 2012
+  stream: JetTauEtm

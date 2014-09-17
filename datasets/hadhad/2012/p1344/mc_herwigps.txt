@@ -1,0 +1,2 @@
+# Herwig PS Higgs samples
+mc12_8TeV.181086.PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.merge.NTUP_TAU.e1990_s1581_s1586_r3658_r3549_p1344/

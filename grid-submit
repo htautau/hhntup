@@ -236,6 +236,7 @@ for dataset in datasets:
         if usermatch:
             ds_name = ds_name[len(usermatch.group(0)):]
         panda_outDS = '%s.%s.%s' % (args.user, args.student, ds_name)
+        #panda_outDS = '%s.%s' % (args.user, ds_name)
         if args.suffix:
             panda_outDS += '.' + args.suffix
         if args.test:
@@ -248,6 +249,7 @@ for dataset in datasets:
         panda_outDS = panda_outDS.replace('Alpgen', 'Alp')
         panda_outDS = panda_outDS.replace('Jimmy', 'Jim')
         panda_outDS = panda_outDS.replace('JIMMY', 'Jim')
+        #panda_outDS = panda_outDS.replace('Pythia8', 'Pyt')
         panda_outDS = panda_outDS.replace('Pythia', 'Pyth')
         panda_outDS = panda_outDS.replace('Herwig', 'Her')
         panda_outDS = panda_outDS.replace('PowHeg', 'Pow')
@@ -255,6 +257,12 @@ for dataset in datasets:
         panda_outDS = panda_outDS.replace('e1169_s1469_s1470_r3658.', '')
         panda_outDS = panda_outDS.replace('filter_', '')
         panda_outDS = panda_outDS.replace('2JetsEW1JetQCD15GeVM40_min_n_tchannels', '')
+        #panda_outDS = panda_outDS.replace('physics_JetTauEtmiss', 'JetTauEtm')
+        #panda_outDS = panda_outDS.replace('Inclusive', 'Inc')
+        #panda_outDS = panda_outDS.replace('AUET2CT10_', '')
+        #panda_outDS = panda_outDS.replace('AU2CT10_', '')
+        #panda_outDS = panda_outDS.replace('mc12_8TeV.', '')
+        
         if len(panda_outDS) > 131:
             print
             print "DATASET NAME TOO LONG ({0:d} characters): {1}".format(len(panda_outDS), panda_outDS)
@@ -284,7 +292,8 @@ for dataset in datasets:
                         "--no-default-output requires --outputs to be specified")
                 panda_outputs = args.outputs
             else:
-                panda_outputs = '%s.%s.root' % (args.student, dataset)
+                panda_outputs = '%s.root' % (args.student)
+                #panda_outputs = '%s.%s.root' % (args.student, dataset)
                 if args.outputs is not None:
                     panda_outputs = ','.join([panda_outputs, args.outputs])
             command = [

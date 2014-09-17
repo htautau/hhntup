@@ -6,6 +6,8 @@ embedded:
         - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
         - TES_TRUE_MODELING_UP
         - TES_TRUE_MODELING_DOWN
+        - TES_TRUE_TOTAL_UP
+        - TES_TRUE_TOTAL_DOWN
 
         - TES_FAKE_TOTAL_UP
         - TES_FAKE_TOTAL_DOWN
@@ -24,6 +26,8 @@ mc:
         - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
         - TES_TRUE_MODELING_UP
         - TES_TRUE_MODELING_DOWN
+        #- TES_TRUE_TOTAL_UP
+        #- TES_TRUE_TOTAL_DOWN
 
         - TES_FAKE_TOTAL_UP
         - TES_FAKE_TOTAL_DOWN
@@ -224,3 +228,10 @@ mc:
         - 'Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b'
         - 'Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b'
         - 'Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b'
+
+        # for MPI comparison
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
+        # for Herwig PS comparison
+        - 'PowJim_AUET2CT10_ggH125_tautauInc.mc12a'
+        - 'PowJim_AUET2CT10_VBFH125_tautauInc.mc12b'
