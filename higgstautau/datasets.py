@@ -23,7 +23,7 @@ from .decorators import cached_property
 from .yaml_utils import Serializable
 from . import xsec
 
-USE_PYAMI = True
+USE_PYAMI = False
 try:
     from pyAMI.client import AMIClient
     from pyAMI.query import get_dataset_xsec_effic, \
