@@ -500,6 +500,7 @@ class EventModel(TreeModel):
     true_jet2_no_overlap_pt = FloatCol(default=-1)
     true_dEta_jet1_jet2_no_overlap = FloatCol(default=-1)
     true_mass_jet1_jet2_no_overlap = FloatCol(default=-1)
+    true_dphi_jj_higgs_no_overlap = FloatCol(default=-9999)
 
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()

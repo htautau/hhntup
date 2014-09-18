@@ -803,6 +803,7 @@ class HiggsPT(EventFilter):
             self.tree.true_jet2_no_overlap_pt = jet2.pt
             self.tree.true_dEta_jet1_jet2_no_overlap = abs(jet1.eta-jet2.eta)
             self.tree.true_mass_jet1_jet2_no_overlap = (jet1.fourvect + jet2.fourvect).M()
+            self.tree.true_dphi_jj_higgs_no_overlap = abs(utils.dphi(higgs.phi, (jet1.fourvect + jet2.fourvect).Phi()))
         return True
 
 
