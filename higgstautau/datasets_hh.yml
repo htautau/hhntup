@@ -50,7 +50,7 @@ AlpJimWenuNp0_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107680.AlpJimWenuNp0_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107680.AlpJimWenuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001144,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107680.AlpJimWenuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001304]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107680
   category: mc11c
   version: 29
@@ -66,7 +66,7 @@ AlpJimWenuNp1_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107681.AlpJimWenuNp1_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107681.AlpJimWenuNp1_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001546,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107681.AlpJimWenuNp1_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001638]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107681
   category: mc11c
   version: 29
@@ -81,7 +81,7 @@ AlpJimWenuNp2_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107682.AlpJimWenuNp2_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107682.AlpJimWenuNp2_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001404]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107682
   category: mc11c
   version: 29
@@ -96,7 +96,7 @@ AlpJimWenuNp3_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107683.AlpJimWenuNp3_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107683.AlpJimWenuNp3_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001144]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107683
   category: mc11c
   version: 29
@@ -111,7 +111,7 @@ AlpJimWenuNp4_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107684.AlpJimWenuNp4_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107684.AlpJimWenuNp4_pt20.e825_s1299_s1300_r3043_p851.v29.140429001255]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107684
   category: mc11c
   version: 29
@@ -126,7 +126,7 @@ AlpJimWenuNp5_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107685.AlpJimWenuNp5_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107685.AlpJimWenuNp5_pt20.e825_s1299_s1300_r3043_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107685
   category: mc11c
   version: 29
@@ -143,7 +143,7 @@ AlpJimWmunuNp0_pt20.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001532,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001626,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107690.AlpJimWmunuNp0_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429105852]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107690
   category: mc11c
   version: 29
@@ -159,7 +159,7 @@ AlpJimWmunuNp1_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107691.AlpJimWmunuNp1_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107691.AlpJimWmunuNp1_pt20.e825_s1299_s1300_r3043_p851.v29.140429001246,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107691.AlpJimWmunuNp1_pt20.e825_s1299_s1300_r3043_p851.v29.140429105627]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107691
   category: mc11c
   version: 29
@@ -175,7 +175,7 @@ AlpJimWmunuNp2_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107692.AlpJimWmunuNp2_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107692.AlpJimWmunuNp2_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001520,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107692.AlpJimWmunuNp2_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429105844]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107692
   category: mc11c
   version: 29
@@ -190,7 +190,7 @@ AlpJimWmunuNp3_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107693.AlpJimWmunuNp3_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107693.AlpJimWmunuNp3_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001515]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107693
   category: mc11c
   version: 29
@@ -205,7 +205,7 @@ AlpJimWmunuNp4_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107694.AlpJimWmunuNp4_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107694.AlpJimWmunuNp4_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001612]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107694
   category: mc11c
   version: 29
@@ -220,7 +220,7 @@ AlpJimWmunuNp5_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107695.AlpJimWmunuNp5_pt20.merge.NTUP_TAUMEDIUM.e825_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107695.AlpJimWmunuNp5_pt20.e825_s1299_s1300_r3043_r2993_p851.v29.140429001513]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107695
   category: mc11c
   version: 29
@@ -235,7 +235,7 @@ AlpJimWtaunuNp0_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107700.AlpJimWtaunuNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107700.AlpJimWtaunuNp0_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001514]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107700
   category: mc11c
   version: 29
@@ -250,7 +250,7 @@ AlpJimWtaunuNp1_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107701.AlpJimWtaunuNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107701.AlpJimWtaunuNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107701
   category: mc11c
   version: 29
@@ -265,7 +265,7 @@ AlpJimWtaunuNp2_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107702.AlpJimWtaunuNp2_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107702.AlpJimWtaunuNp2_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107702
   category: mc11c
   version: 29
@@ -282,7 +282,7 @@ AlpJimWtaunuNp3_pt20.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107703.AlpJimWtaunuNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001518,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107703.AlpJimWtaunuNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429105834,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107703.AlpJimWtaunuNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429150615]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107703
   category: mc11c
   version: 29
@@ -297,7 +297,7 @@ AlpJimWtaunuNp4_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107704.AlpJimWtaunuNp4_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107704.AlpJimWtaunuNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001407]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107704
   category: mc11c
   version: 29
@@ -312,7 +312,7 @@ AlpJimWtaunuNp5_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107705.AlpJimWtaunuNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107705.AlpJimWtaunuNp5_pt20.e835_s1299_s1300_r3043_p851.v29.140429001417]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107705
   category: mc11c
   version: 29
@@ -327,7 +327,7 @@ AlpJimZeeNp0_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116250.AlpJimZeeNp0_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116250.AlpJimZeeNp0_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001340]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116250
   category: mc11c
   version: 29
@@ -343,7 +343,7 @@ AlpJimZeeNp0_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107650.AlpJimZeeNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107650.AlpJimZeeNp0_pt20.e835_s1299_s1300_r3043_p851.v29.140429001257,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107650.AlpJimZeeNp0_pt20.e835_s1299_s1300_r3043_p851.v29.140429105647]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107650
   category: mc11c
   version: 29
@@ -358,7 +358,7 @@ AlpJimZeeNp1_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116251.AlpJimZeeNp1_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116251.AlpJimZeeNp1_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001241]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116251
   category: mc11c
   version: 29
@@ -374,7 +374,7 @@ AlpJimZeeNp1_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107651.AlpJimZeeNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107651.AlpJimZeeNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001256,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107651.AlpJimZeeNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429105647]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107651
   category: mc11c
   version: 29
@@ -389,7 +389,7 @@ AlpJimZeeNp2_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116252.AlpJimZeeNp2_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116252.AlpJimZeeNp2_Mll10to40_pt20.e944_s1310_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116252
   category: mc11c
   version: 29
@@ -406,7 +406,7 @@ AlpJimZeeNp2_pt20.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107652.AlpJimZeeNp2_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107652.AlpJimZeeNp2_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001141,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107652.AlpJimZeeNp2_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429105538]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107652
   category: mc11c
   version: 29
@@ -421,7 +421,7 @@ AlpJimZeeNp3_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116253.AlpJimZeeNp3_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116253.AlpJimZeeNp3_Mll10to40_pt20.e944_s1310_s1300_r3043_r2993_p851.v29.140429001136]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116253
   category: mc11c
   version: 29
@@ -437,7 +437,7 @@ AlpJimZeeNp3_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107653.AlpJimZeeNp3_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107653.AlpJimZeeNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001255,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107653.AlpJimZeeNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001412]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107653
   category: mc11c
   version: 29
@@ -452,7 +452,7 @@ AlpJimZeeNp4_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116254.AlpJimZeeNp4_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116254.AlpJimZeeNp4_Mll10to40_pt20.e944_s1310_s1300_r3043_r2993_p851.v29.140429001526]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116254
   category: mc11c
   version: 29
@@ -469,7 +469,7 @@ AlpJimZeeNp4_pt20.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107654.AlpJimZeeNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001540,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107654.AlpJimZeeNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001629,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107654.AlpJimZeeNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001719]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107654
   category: mc11c
   version: 29
@@ -484,7 +484,7 @@ AlpJimZeeNp5_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116255.AlpJimZeeNp5_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116255.AlpJimZeeNp5_Mll10to40_pt20.e944_s1310_s1300_r3043_p851.v29.140429001608]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116255
   category: mc11c
   version: 29
@@ -500,7 +500,7 @@ AlpJimZeeNp5_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107655.AlpJimZeeNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107655.AlpJimZeeNp5_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001446,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107655.AlpJimZeeNp5_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001541]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107655
   category: mc11c
   version: 29
@@ -515,7 +515,7 @@ AlpJimZmumuNp0_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116260.AlpJimZmumuNp0_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116260.AlpJimZmumuNp0_Mll10to40_pt20.e959_s1310_s1300_r3043_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116260
   category: mc11c
   version: 29
@@ -531,7 +531,7 @@ AlpJimZmumuNp0_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107660.AlpJimZmumuNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107660.AlpJimZmumuNp0_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107660.AlpJimZmumuNp0_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429105631]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107660
   category: mc11c
   version: 29
@@ -546,7 +546,7 @@ AlpJimZmumuNp1_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116261.AlpJimZmumuNp1_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116261.AlpJimZmumuNp1_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001609]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116261
   category: mc11c
   version: 29
@@ -561,7 +561,7 @@ AlpJimZmumuNp1_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107661.AlpJimZmumuNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107661.AlpJimZmumuNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001519]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107661
   category: mc11c
   version: 29
@@ -576,7 +576,7 @@ AlpJimZmumuNp2_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116262.AlpJimZmumuNp2_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116262.AlpJimZmumuNp2_Mll10to40_pt20.e944_s1310_s1300_r3043_r2993_p851.v29.140429001526]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116262
   category: mc11c
   version: 29
@@ -591,7 +591,7 @@ AlpJimZmumuNp2_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107662.AlpJimZmumuNp2_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107662.AlpJimZmumuNp2_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107662
   category: mc11c
   version: 29
@@ -606,7 +606,7 @@ AlpJimZmumuNp3_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116263.AlpJimZmumuNp3_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116263.AlpJimZmumuNp3_Mll10to40_pt20.e944_s1310_s1300_r3043_p851.v29.140429001408]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116263
   category: mc11c
   version: 29
@@ -621,7 +621,7 @@ AlpJimZmumuNp3_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107663.AlpJimZmumuNp3_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107663.AlpJimZmumuNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107663
   category: mc11c
   version: 29
@@ -636,7 +636,7 @@ AlpJimZmumuNp4_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116264.AlpJimZmumuNp4_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116264.AlpJimZmumuNp4_Mll10to40_pt20.e944_s1310_s1300_r3043_p851.v29.140429001456]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116264
   category: mc11c
   version: 29
@@ -653,7 +653,7 @@ AlpJimZmumuNp4_pt20.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107664.AlpJimZmumuNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001508,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107664.AlpJimZmumuNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001600,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107664.AlpJimZmumuNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001645]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107664
   category: mc11c
   version: 29
@@ -668,7 +668,7 @@ AlpJimZmumuNp5_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116265.AlpJimZmumuNp5_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e944_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116265.AlpJimZmumuNp5_Mll10to40_pt20.e944_s1310_s1300_r3043_r2993_p851.v29.140429001141]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116265
   category: mc11c
   version: 29
@@ -683,7 +683,7 @@ AlpJimZmumuNp5_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107665.AlpJimZmumuNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107665.AlpJimZmumuNp5_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107665
   category: mc11c
   version: 29
@@ -699,7 +699,7 @@ AlpJimZtautauNp0_Mll10to40_pt20.mc11c: !Dataset
   ds: mc11_7TeV.116270.AlpJimZtautauNp0_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116270.AlpJimZtautauNp0_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001252,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116270.AlpJimZtautauNp0_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429105640]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116270
   category: mc11c
   version: 29
@@ -715,7 +715,7 @@ AlpJimZtautauNp0_pt20.mc11c: !Dataset
   ds: mc11_7TeV.107670.AlpJimZtautauNp0_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107670.AlpJimZtautauNp0_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001429,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107670.AlpJimZtautauNp0_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429105758]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107670
   category: mc11c
   version: 29
@@ -730,7 +730,7 @@ AlpJimZtautauNp1_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116271.AlpJimZtautauNp1_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116271.AlpJimZtautauNp1_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001256]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116271
   category: mc11c
   version: 29
@@ -745,7 +745,7 @@ AlpJimZtautauNp1_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107671.AlpJimZtautauNp1_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107671.AlpJimZtautauNp1_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001608]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107671
   category: mc11c
   version: 29
@@ -760,7 +760,7 @@ AlpJimZtautauNp2_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116272.AlpJimZtautauNp2_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116272.AlpJimZtautauNp2_Mll10to40_pt20.e959_s1310_s1300_r3043_p851.v29.140429001405]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116272
   category: mc11c
   version: 29
@@ -775,7 +775,7 @@ AlpJimZtautauNp2_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107672.AlpJimZtautauNp2_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107672.AlpJimZtautauNp2_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107672
   category: mc11c
   version: 29
@@ -790,7 +790,7 @@ AlpJimZtautauNp3_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116273.AlpJimZtautauNp3_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116273.AlpJimZtautauNp3_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001141]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116273
   category: mc11c
   version: 29
@@ -805,7 +805,7 @@ AlpJimZtautauNp3_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107673.AlpJimZtautauNp3_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107673.AlpJimZtautauNp3_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001518]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107673
   category: mc11c
   version: 29
@@ -820,7 +820,7 @@ AlpJimZtautauNp4_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116274.AlpJimZtautauNp4_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116274.AlpJimZtautauNp4_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001255]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116274
   category: mc11c
   version: 29
@@ -835,7 +835,7 @@ AlpJimZtautauNp4_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107674.AlpJimZtautauNp4_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107674.AlpJimZtautauNp4_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429001244]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107674
   category: mc11c
   version: 29
@@ -850,7 +850,7 @@ AlpJimZtautauNp5_Mll10to40_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.116275.AlpJimZtautauNp5_Mll10to40_pt20.merge.NTUP_TAUMEDIUM.e959_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116275.AlpJimZtautauNp5_Mll10to40_pt20.e959_s1310_s1300_r3043_r2993_p851.v29.140429001140]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116275
   category: mc11c
   version: 29
@@ -865,7 +865,7 @@ AlpJimZtautauNp5_pt20.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.107675.AlpJimZtautauNp5_pt20.merge.NTUP_TAUMEDIUM.e835_s1299_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.107675.AlpJimZtautauNp5_pt20.e835_s1299_s1300_r3043_r2993_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 107675
   category: mc11c
   version: 29
@@ -2419,7 +2419,7 @@ PowPyth_VBFH100_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125200.PowPyth_VBFH100_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125200.PowPyth_VBFH100_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001257,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125200.PowPyth_VBFH100_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001411]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125200
   category: mc11c
   version: 29
@@ -2435,7 +2435,7 @@ PowPyth_VBFH105_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125201.PowPyth_VBFH105_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125201.PowPyth_VBFH105_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001257,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125201.PowPyth_VBFH105_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001411]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125201
   category: mc11c
   version: 29
@@ -2451,7 +2451,7 @@ PowPyth_VBFH110_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125202.PowPyth_VBFH110_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125202.PowPyth_VBFH110_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429000953,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125202.PowPyth_VBFH110_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001138]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125202
   category: mc11c
   version: 29
@@ -2467,7 +2467,7 @@ PowPyth_VBFH115_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125203.PowPyth_VBFH115_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125203.PowPyth_VBFH115_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001141,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125203.PowPyth_VBFH115_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001259]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125203
   category: mc11c
   version: 29
@@ -2484,7 +2484,7 @@ PowPyth_VBFH120_tautauhh.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125204.PowPyth_VBFH120_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001256,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125204.PowPyth_VBFH120_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001410,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125204.PowPyth_VBFH120_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429105753]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125204
   category: mc11c
   version: 29
@@ -2500,7 +2500,7 @@ PowPyth_VBFH125_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125205.PowPyth_VBFH125_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125205.PowPyth_VBFH125_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001426,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125205.PowPyth_VBFH125_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001532]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125205
   category: mc11c
   version: 29
@@ -2516,7 +2516,7 @@ PowPyth_VBFH130_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125206.PowPyth_VBFH130_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125206.PowPyth_VBFH130_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001512,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125206.PowPyth_VBFH130_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001610]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125206
   category: mc11c
   version: 29
@@ -2532,7 +2532,7 @@ PowPyth_VBFH135_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125207.PowPyth_VBFH135_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125207.PowPyth_VBFH135_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001608,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125207.PowPyth_VBFH135_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001652]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125207
   category: mc11c
   version: 29
@@ -2548,7 +2548,7 @@ PowPyth_VBFH140_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125208.PowPyth_VBFH140_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125208.PowPyth_VBFH140_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001246,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125208.PowPyth_VBFH140_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001343]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125208
   category: mc11c
   version: 29
@@ -2564,7 +2564,7 @@ PowPyth_VBFH145_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125209.PowPyth_VBFH145_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125209.PowPyth_VBFH145_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001609,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125209.PowPyth_VBFH145_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001654]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125209
   category: mc11c
   version: 29
@@ -2580,7 +2580,7 @@ PowPyth_VBFH150_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.125210.PowPyth_VBFH150_tautauhh.merge.NTUP_TAUMEDIUM.e893_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125210.PowPyth_VBFH150_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001141,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.125210.PowPyth_VBFH150_tautauhh.e893_s1310_s1300_r3043_r2993_p851.v29.140429001259]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 125210
   category: mc11c
   version: 29
@@ -2596,7 +2596,7 @@ PowPyth_ggH100_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116896.PowPyth_ggH100_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116896.PowPyth_ggH100_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620247,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116896.PowPyth_ggH100_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623321]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116896
   category: mc11c
   version: 1
@@ -2612,7 +2612,7 @@ PowPyth_ggH105_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116897.PowPyth_ggH105_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116897.PowPyth_ggH105_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620161,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116897.PowPyth_ggH105_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623150]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116897
   category: mc11c
   version: 1
@@ -2628,7 +2628,7 @@ PowPyth_ggH110_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116898.PowPyth_ggH110_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116898.PowPyth_ggH110_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620221,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116898.PowPyth_ggH110_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623338]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116898
   category: mc11c
   version: 1
@@ -2644,7 +2644,7 @@ PowPyth_ggH115_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116899.PowPyth_ggH115_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116899.PowPyth_ggH115_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620171,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116899.PowPyth_ggH115_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623213]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116899
   category: mc11c
   version: 1
@@ -2660,7 +2660,7 @@ PowPyth_ggH120_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116900.PowPyth_ggH120_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116900.PowPyth_ggH120_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620165,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116900.PowPyth_ggH120_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623221]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116900
   category: mc11c
   version: 1
@@ -2676,7 +2676,7 @@ PowPyth_ggH125_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116901.PowPyth_ggH125_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116901.PowPyth_ggH125_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620251,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116901.PowPyth_ggH125_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623234]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116901
   category: mc11c
   version: 1
@@ -2692,7 +2692,7 @@ PowPyth_ggH130_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116902.PowPyth_ggH130_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116902.PowPyth_ggH130_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620177,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116902.PowPyth_ggH130_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623350]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116902
   category: mc11c
   version: 1
@@ -2708,7 +2708,7 @@ PowPyth_ggH135_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116903.PowPyth_ggH135_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116903.PowPyth_ggH135_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620186,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116903.PowPyth_ggH135_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623317]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116903
   category: mc11c
   version: 1
@@ -2724,7 +2724,7 @@ PowPyth_ggH140_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116904.PowPyth_ggH140_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116904.PowPyth_ggH140_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620133,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116904.PowPyth_ggH140_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623346]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116904
   category: mc11c
   version: 1
@@ -2740,7 +2740,7 @@ PowPyth_ggH145_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116905.PowPyth_ggH145_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116905.PowPyth_ggH145_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620194,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116905.PowPyth_ggH145_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623342]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116905
   category: mc11c
   version: 1
@@ -2756,7 +2756,7 @@ PowPyth_ggH150_tautauhh.mc11c: !Dataset
   ds: mc11_7TeV.116906.PowPyth_ggH150_tautauhh.merge.NTUP_TAUMEDIUM.e873_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116906.PowPyth_ggH150_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3620152,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.116906.PowPyth_ggH150_tautauhh.e873_s1310_s1300_r3043_r2993_p851.v1.3623276]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 116906
   category: mc11c
   version: 1
@@ -2771,7 +2771,7 @@ Pyth8_AU2CTEQ6L1_WH100_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161652.Pyth8_AU2CTEQ6L1_WH100_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161652.Pyth8_AU2CTEQ6L1_WH100_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161652
   category: mc11c
   version: 29
@@ -2801,7 +2801,7 @@ Pyth8_AU2CTEQ6L1_WH105_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161653.Pyth8_AU2CTEQ6L1_WH105_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161653.Pyth8_AU2CTEQ6L1_WH105_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161653
   category: mc11c
   version: 29
@@ -2832,7 +2832,7 @@ Pyth8_AU2CTEQ6L1_WH110_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161654.Pyth8_AU2CTEQ6L1_WH110_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161654.Pyth8_AU2CTEQ6L1_WH110_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001522]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161654
   category: mc11c
   version: 29
@@ -2863,7 +2863,7 @@ Pyth8_AU2CTEQ6L1_WH115_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161655.Pyth8_AU2CTEQ6L1_WH115_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161655.Pyth8_AU2CTEQ6L1_WH115_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001332]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161655
   category: mc11c
   version: 29
@@ -2893,7 +2893,7 @@ Pyth8_AU2CTEQ6L1_WH120_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161656.Pyth8_AU2CTEQ6L1_WH120_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161656.Pyth8_AU2CTEQ6L1_WH120_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001134]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161656
   category: mc11c
   version: 29
@@ -2923,7 +2923,7 @@ Pyth8_AU2CTEQ6L1_WH125_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161657.Pyth8_AU2CTEQ6L1_WH125_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161657.Pyth8_AU2CTEQ6L1_WH125_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161657
   category: mc11c
   version: 29
@@ -2970,7 +2970,7 @@ Pyth8_AU2CTEQ6L1_WH130_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161658.Pyth8_AU2CTEQ6L1_WH130_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161658.Pyth8_AU2CTEQ6L1_WH130_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001423]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161658
   category: mc11c
   version: 29
@@ -3002,7 +3002,7 @@ Pyth8_AU2CTEQ6L1_WH135_tautauhh.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161659.Pyth8_AU2CTEQ6L1_WH135_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001409,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161659.Pyth8_AU2CTEQ6L1_WH135_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429105745,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161659.Pyth8_AU2CTEQ6L1_WH135_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140430150032]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161659
   category: mc11c
   version: 29
@@ -3035,7 +3035,7 @@ Pyth8_AU2CTEQ6L1_WH140_tautauhh.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161660.Pyth8_AU2CTEQ6L1_WH140_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001252,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161660.Pyth8_AU2CTEQ6L1_WH140_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429105643,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161660.Pyth8_AU2CTEQ6L1_WH140_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429150421]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161660
   category: mc11c
   version: 29
@@ -3066,7 +3066,7 @@ Pyth8_AU2CTEQ6L1_WH145_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161661.Pyth8_AU2CTEQ6L1_WH145_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161661.Pyth8_AU2CTEQ6L1_WH145_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001517]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161661
   category: mc11c
   version: 29
@@ -3096,7 +3096,7 @@ Pyth8_AU2CTEQ6L1_WH150_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161662.Pyth8_AU2CTEQ6L1_WH150_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161662.Pyth8_AU2CTEQ6L1_WH150_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001404]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161662
   category: mc11c
   version: 29
@@ -3126,7 +3126,7 @@ Pyth8_AU2CTEQ6L1_ZH100_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161692.Pyth8_AU2CTEQ6L1_ZH100_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161692.Pyth8_AU2CTEQ6L1_ZH100_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161692
   category: mc11c
   version: 29
@@ -3156,7 +3156,7 @@ Pyth8_AU2CTEQ6L1_ZH105_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161693.Pyth8_AU2CTEQ6L1_ZH105_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161693.Pyth8_AU2CTEQ6L1_ZH105_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001344]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161693
   category: mc11c
   version: 29
@@ -3186,7 +3186,7 @@ Pyth8_AU2CTEQ6L1_ZH110_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161694.Pyth8_AU2CTEQ6L1_ZH110_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161694.Pyth8_AU2CTEQ6L1_ZH110_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001136]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161694
   category: mc11c
   version: 29
@@ -3217,7 +3217,7 @@ Pyth8_AU2CTEQ6L1_ZH115_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161695.Pyth8_AU2CTEQ6L1_ZH115_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161695.Pyth8_AU2CTEQ6L1_ZH115_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001404]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161695
   category: mc11c
   version: 29
@@ -3249,7 +3249,7 @@ Pyth8_AU2CTEQ6L1_ZH120_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161696.Pyth8_AU2CTEQ6L1_ZH120_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161696.Pyth8_AU2CTEQ6L1_ZH120_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161696
   category: mc11c
   version: 29
@@ -3280,7 +3280,7 @@ Pyth8_AU2CTEQ6L1_ZH125_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161697.Pyth8_AU2CTEQ6L1_ZH125_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161697.Pyth8_AU2CTEQ6L1_ZH125_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001135]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161697
   category: mc11c
   version: 29
@@ -3325,7 +3325,7 @@ Pyth8_AU2CTEQ6L1_ZH130_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161698.Pyth8_AU2CTEQ6L1_ZH130_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161698.Pyth8_AU2CTEQ6L1_ZH130_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001140]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161698
   category: mc11c
   version: 29
@@ -3356,7 +3356,7 @@ Pyth8_AU2CTEQ6L1_ZH135_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161699.Pyth8_AU2CTEQ6L1_ZH135_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161699.Pyth8_AU2CTEQ6L1_ZH135_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001141]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161699
   category: mc11c
   version: 29
@@ -3386,7 +3386,7 @@ Pyth8_AU2CTEQ6L1_ZH140_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161700.Pyth8_AU2CTEQ6L1_ZH140_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161700.Pyth8_AU2CTEQ6L1_ZH140_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001253]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161700
   category: mc11c
   version: 29
@@ -3416,7 +3416,7 @@ Pyth8_AU2CTEQ6L1_ZH145_tautauhh.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.161701.Pyth8_AU2CTEQ6L1_ZH145_tautauhh.merge.NTUP_TAUMEDIUM.e2685_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161701.Pyth8_AU2CTEQ6L1_ZH145_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001135]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161701
   category: mc11c
   version: 29
@@ -3449,7 +3449,7 @@ Pyth8_AU2CTEQ6L1_ZH150_tautauhh.mc11c: !Dataset
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161702.Pyth8_AU2CTEQ6L1_ZH150_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429001519,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161702.Pyth8_AU2CTEQ6L1_ZH150_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429105838,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.161702.Pyth8_AU2CTEQ6L1_ZH150_tautauhh.e2685_s1570_s1571_r3108_r3109_p851.v29.140429150605]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 161702
   category: mc11c
   version: 29
@@ -3494,7 +3494,7 @@ Sherpa_CT10_Ztoee.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.129921.Sherpa_CT10_Ztoee.merge.NTUP_TAUMEDIUM.e2687_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.129921.Sherpa_CT10_Ztoee.e2687_s1570_s1571_r3108_r3109_p851.v29.140429150417]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 129921
   category: mc11c
   version: 29
@@ -3525,7 +3525,7 @@ Sherpa_CT10_Ztomm.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.129922.Sherpa_CT10_Ztomm.merge.NTUP_TAUMEDIUM.e2687_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.129922.Sherpa_CT10_Ztomm.e2687_s1570_s1571_r3108_r3109_p851.v29.140429150529]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 129922
   category: mc11c
   version: 29
@@ -3555,7 +3555,7 @@ Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.merge.NTUP_TAUMEDIUM.e2687_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.167723.Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.e2687_s1570_s1571_r3108_r3109_p851.v29.140429150340]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 167723
   category: mc11c
   version: 29
@@ -3586,7 +3586,7 @@ TTbar_FullHad_Pow_Pyth_P2011C.mc11c: !Dataset
   ds: mc11_7TeV.117049.TTbar_FullHad_Pow_Pyth_P2011C.merge.NTUP_TAUMEDIUM.e1440_s1372_s1370_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117049.TTbar_FullHad_Pow_Pyth_P2011C.e1440_s1372_s1370_r3108_r3109_p851.v29.140429001418,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117049.TTbar_FullHad_Pow_Pyth_P2011C.e1440_s1372_s1370_r3108_r3109_p851.v29.140429105801]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 117049
   category: mc11c
   version: 29
@@ -3617,7 +3617,7 @@ TTbar_Pow_Pyth_P2011C.mc11c: !Dataset
   ds: mc11_7TeV.117050.TTbar_Pow_Pyth_P2011C.merge.NTUP_TAUMEDIUM.e1377_s1372_s1370_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117050.TTbar_Pow_Pyth_P2011C.e1377_s1372_s1370_r3108_r3109_p851.v29.140429000953,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117050.TTbar_Pow_Pyth_P2011C.e1377_s1372_s1370_r3108_r3109_p851.v29.140429105517]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 117050
   category: mc11c
   version: 29
@@ -3633,7 +3633,7 @@ WW_Her.mc11c: !Dataset
   ds: mc11_7TeV.105985.WW_Her.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.105985.WW_Her.e825_s1310_s1300_r3043_r2993_p851.v29.140429000953,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.105985.WW_Her.e825_s1310_s1300_r3043_r2993_p851.v29.140429105536]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 105985
   category: mc11c
   version: 29
@@ -3649,7 +3649,7 @@ WZ_Her.mc11c: !Dataset
   ds: mc11_7TeV.105987.WZ_Her.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.105987.WZ_Her.e825_s1310_s1300_r3043_r2993_p851.v29.140429001142,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.105987.WZ_Her.e825_s1310_s1300_r3043_r2993_p851.v29.140429001302]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 105987
   category: mc11c
   version: 29
@@ -3665,7 +3665,7 @@ ZZ_Her.mc11c: !Dataset
   ds: mc11_7TeV.105986.ZZ_Her.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.105986.ZZ_Her.e825_s1310_s1300_r3043_r2993_p851.v29.140429001140,
     /cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.105986.ZZ_Her.e825_s1310_s1300_r3043_r2993_p851.v29.140429105536]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 105986
   category: mc11c
   version: 29
@@ -8546,7 +8546,7 @@ gg2wwJim_AUET2CT10_WpWmenuenu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169471.gg2wwJim_AUET2CT10_WpWmenuenu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169471.gg2wwJim_AUET2CT10_WpWmenuenu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001610]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169471
   category: mc11c
   version: 29
@@ -8576,7 +8576,7 @@ gg2wwJim_AUET2CT10_WpWmenumunu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169472.gg2wwJim_AUET2CT10_WpWmenumunu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169472.gg2wwJim_AUET2CT10_WpWmenumunu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001402]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169472
   category: mc11c
   version: 29
@@ -8606,7 +8606,7 @@ gg2wwJim_AUET2CT10_WpWmenutaunu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169473.gg2wwJim_AUET2CT10_WpWmenutaunu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169473.gg2wwJim_AUET2CT10_WpWmenutaunu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001140]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169473
   category: mc11c
   version: 29
@@ -8637,7 +8637,7 @@ gg2wwJim_AUET2CT10_WpWmmunuenu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169475.gg2wwJim_AUET2CT10_WpWmmunuenu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169475.gg2wwJim_AUET2CT10_WpWmmunuenu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429000953]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169475
   category: mc11c
   version: 29
@@ -8668,7 +8668,7 @@ gg2wwJim_AUET2CT10_WpWmmunumunu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169474.gg2wwJim_AUET2CT10_WpWmmunumunu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169474.gg2wwJim_AUET2CT10_WpWmmunumunu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001513]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169474
   category: mc11c
   version: 29
@@ -8698,7 +8698,7 @@ gg2wwJim_AUET2CT10_WpWmmunutaunu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169476.gg2wwJim_AUET2CT10_WpWmmunutaunu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169476.gg2wwJim_AUET2CT10_WpWmmunutaunu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001407]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169476
   category: mc11c
   version: 29
@@ -8728,7 +8728,7 @@ gg2wwJim_AUET2CT10_WpWmtaunuenu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169478.gg2wwJim_AUET2CT10_WpWmtaunuenu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169478.gg2wwJim_AUET2CT10_WpWmtaunuenu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001138]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169478
   category: mc11c
   version: 29
@@ -8758,7 +8758,7 @@ gg2wwJim_AUET2CT10_WpWmtaunumunu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169479.gg2wwJim_AUET2CT10_WpWmtaunumunu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169479.gg2wwJim_AUET2CT10_WpWmtaunumunu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001604]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169479
   category: mc11c
   version: 29
@@ -8788,7 +8788,7 @@ gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.169477.gg2wwJim_AUET2CT10_WpWmtaunutaunu.merge.NTUP_TAUMEDIUM.e1954_s1570_s1571_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.169477.gg2wwJim_AUET2CT10_WpWmtaunutaunu.e1954_s1570_s1571_r3108_r3109_p851.v29.140429001259]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 169477
   category: mc11c
   version: 29
@@ -8820,7 +8820,7 @@ st_Wtchan_incl_DR_Pow_Pyth_P2011C.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.110140.st_Wtchan_incl_DR_Pow_Pyth_P2011C.merge.NTUP_TAUMEDIUM.e1778_s1372_s1370_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.110140.st_Wtchan_incl_DR_Pow_Pyth_P2011C.e1778_s1372_s1370_r3108_r3109_p851.v29.140429001519]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 110140
   category: mc11c
   version: 29
@@ -8835,7 +8835,7 @@ st_schan_Pow_Pyth_P2011C.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.110119.st_schan_Pow_Pyth_P2011C.merge.NTUP_TAUMEDIUM.e1778_s1372_s1370_r3108_r3109_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.110119.st_schan_Pow_Pyth_P2011C.e1778_s1372_s1370_r3108_r3109_p851.v29.140429001507]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 110119
   category: mc11c
   version: 29
@@ -8850,7 +8850,7 @@ st_tchan_enu_AcerMC.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.117360.st_tchan_enu_AcerMC.merge.NTUP_TAUMEDIUM.e835_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117360.st_tchan_enu_AcerMC.e835_s1310_s1300_r3043_r2993_p851.v29.140429001143]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 117360
   category: mc11c
   version: 29
@@ -8865,7 +8865,7 @@ st_tchan_munu_AcerMC.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.117361.st_tchan_munu_AcerMC.merge.NTUP_TAUMEDIUM.e835_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117361.st_tchan_munu_AcerMC.e835_s1310_s1300_r3043_r2993_p851.v29.140429001602]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 117361
   category: mc11c
   version: 29
@@ -8880,7 +8880,7 @@ st_tchan_taunu_AcerMC.mc11c: !Dataset
   treename: tau
   ds: mc11_7TeV.117362.st_tchan_taunu_AcerMC.merge.NTUP_TAUMEDIUM.e825_s1310_s1300_r3043_r2993_p851
   dirs: [/cluster/data01/endw/skims/v29/group.phys-higgs.hhskim.mc11_7TeV.117362.st_tchan_taunu_AcerMC.e825_s1310_s1300_r3043_r2993_p851.v29.140429001414]
-  file_pattern: '*hadhad.root*'
+  file_pattern: '*hadhad*.root*'
   id: 117362
   category: mc11c
   version: 29

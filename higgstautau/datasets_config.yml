@@ -6,7 +6,7 @@
     hh:
         mc_path: '/cluster/data01/endw/skims/v29'
         mc_prefix: 'group.phys-higgs.hhskim'
-        mc_pattern: '*hadhad.root*'
+        mc_pattern: '*hadhad*.root*'
         mc_treename: 'tau'
         mc_sampletype: 'standard'
         data_path: '/cluster/data01/endw/skims/v29'
