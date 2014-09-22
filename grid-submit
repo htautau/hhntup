@@ -292,8 +292,8 @@ for dataset in datasets:
                         "--no-default-output requires --outputs to be specified")
                 panda_outputs = args.outputs
             else:
-                panda_outputs = '%s.root' % (args.student)
-                #panda_outputs = '%s.%s.root' % (args.student, dataset)
+                #panda_outputs = 's:%s.root' % (args.student)
+                panda_outputs = 's:%s.%s.root' % (args.student, dataset)
                 if args.outputs is not None:
                     panda_outputs = ','.join([panda_outputs, args.outputs])
             command = [
