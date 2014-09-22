@@ -6,9 +6,8 @@ embedded:
         - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
         - TES_TRUE_MODELING_UP
         - TES_TRUE_MODELING_DOWN
-        - TES_TRUE_TOTAL_UP
-        - TES_TRUE_TOTAL_DOWN
-
+        #- TES_TRUE_TOTAL_UP
+        #- TES_TRUE_TOTAL_DOWN
         - TES_FAKE_TOTAL_UP
         - TES_FAKE_TOTAL_DOWN
     samples:
