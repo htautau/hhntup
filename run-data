@@ -14,7 +14,7 @@ parser.add_argument('--queue', default='short')
 parser.add_argument('--nice', type=int, default=10)
 parser.add_argument('--dry', action='store_true', default=False)
 parser.add_argument('--output-path',
-                    default='/cluster/data11/endw/ntuples/running')
+                    default='/cluster/data01/endw/ntuples/running')
 parser.add_argument('--db', default='datasets_hh')
 parser.add_argument('splits', nargs='*', type=int)
 args, student_args = parser.parse_known_args()
