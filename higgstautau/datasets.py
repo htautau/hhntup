@@ -1149,7 +1149,7 @@ class Dataset(Serializable):
         try:
             return xsec.xsec_kfact_effic(self.year, self.id)
         except KeyError:
-            log.warning("cross section of dataset %s not available locally."
+            log.warning("cross section of dataset %s not available locally. "
                         "Looking it up in AMI instead. AMI cross sections can be very"
                         "wrong! You have been warned!"
                         % self.ds)

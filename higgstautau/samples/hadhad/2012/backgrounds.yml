@@ -81,8 +81,8 @@ ewk:
         - 'AlpPyth_Auto_P2011C_WtaunuNp4.mc12a'
         - 'AlpPyth_Auto_P2011C_WtaunuNp5incl.mc12a'
 
-        - 'Sherpa_CT10_Ztoee2JetsEW1JetQCD15GeVM40_min_n_tchannels.mc12a'
-        - 'Sherpa_CT10_Ztomm2JetsEW1JetQCD15GeVM40_min_n_tchannels.mc12a'
+        - 'Sherpa_CT10_Ztoee.mc12a'
+        - 'Sherpa_CT10_Ztomm.mc12a'
         - 'Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc12a'
 top:
     name: Top
