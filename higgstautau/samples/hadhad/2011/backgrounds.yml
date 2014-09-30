@@ -75,6 +75,10 @@ ewk:
         - 'AlpJimWenuNp3_pt20.mc11c'
         - 'AlpJimWenuNp4_pt20.mc11c'
         - 'AlpJimWenuNp5_pt20.mc11c'
+
+        - 'Sherpa_CT10_Ztoee.mc11c'
+        - 'Sherpa_CT10_Ztomm.mc11c'
+        - 'Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc11c'
 top:
     name: Top
     latex: Top
