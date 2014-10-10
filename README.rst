@@ -72,6 +72,29 @@ proxy with the phys-higgs production role)::
                   embed11_hadhad embed12_hadhad
 
 
+Running a local test of the skimming
+------------------------------------
+
+The samples are organized in several blocks defined in ``skims.cfg``.
+Each block is written following the template::
+
+   [block_name]
+    student = hhskim.py
+    dataset = dataset_block (defined in datasets.cfg) 
+    version = version_number
+    testinput = /path/to/the/input/files/for/test
+    dest = SFU-LCG2_LOCALGROUPDISK,
+
+For each block, modify the variable **testinput** according to your own setup.
+
+Run the test::
+
+    ./skim --yall block_name --local-test
+
+The output will be created in the main directory as::
+
+    hhskim_dataset_block.root
+
 Creating ntuples
 ----------------
 
