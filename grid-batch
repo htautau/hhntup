@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import xaod 
 
 from rootpy.extern.argparse import ArgumentParser
 

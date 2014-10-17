@@ -17,6 +17,8 @@ from rootpy.io import root_open
 from rootpy import stl
 
 # local imports
+from xaod.xaodtree import xAODTree
+
 from higgstautau import eventshapes
 from higgstautau import datasets
 from higgstautau import utils
@@ -128,7 +130,7 @@ class hhskim(ATLASStudent):
                     return event.hh_mc_weight
             else:
                 def mc_weight_count(event):
-                    return event.mc_event_weight
+                    return event.TruthEvent[0].weights()[0]
 
             count_funcs = {
                 'mc_weight': mc_weight_count,
@@ -168,28 +170,28 @@ class hhskim(ATLASStudent):
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         else:
-            # get pileup reweighting tool
-            pileup_tool = get_pileup_reweighting_tool(
-                year=year,
-                use_defaults=True)
-            pileup_tool_high = get_pileup_reweighting_tool(
-                year=year,
-                use_defaults=True,
-                systematic='high')
-            pileup_tool_low = get_pileup_reweighting_tool(
-                year=year,
-                use_defaults=True,
-                systematic='low')
+            # # get pileup reweighting tool
+            # pileup_tool = get_pileup_reweighting_tool(
+            #     year=year,
+            #     use_defaults=True)
+            # pileup_tool_high = get_pileup_reweighting_tool(
+            #     year=year,
+            #     use_defaults=True,
+            #     systematic='high')
+            # pileup_tool_low = get_pileup_reweighting_tool(
+            #     year=year,
+            #     use_defaults=True,
+            #     systematic='low')
 
-            if datatype not in (datasets.EMBED, datasets.MCEMBED):
-                # merge TrigConfTrees
-                metadirname = '%sMeta' % self.metadata.treename
-                trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
-                map(trigconfchain.Add, self.files)
-                metadir = self.output.mkdir(metadirname)
-                metadir.cd()
-                trigconfchain.Merge(self.output, -1, 'fast keep')
-                self.output.cd()
+            # if datatype not in (datasets.EMBED, datasets.MCEMBED):
+            #     # merge TrigConfTrees
+            #     metadirname = '%sMeta' % self.metadata.treename
+            #     trigconfchain = ROOT.TChain('%s/TrigConfTree' % metadirname)
+            #     map(trigconfchain.Add, self.files)
+            #     metadir = self.output.mkdir(metadirname)
+            #     metadir.cd()
+            #     trigconfchain.Merge(self.output, -1, 'fast keep')
+            #     self.output.cd()
 
             if datatype == datasets.DATA:
                 # merge GRL XML strings
@@ -221,7 +223,7 @@ class hhskim(ATLASStudent):
         else:
             tree = outtree.define_object(name='tree', prefix='hh_')
 
-        tree.define_object(name='tau', prefix='tau_')
+        #tree.define_object(name='tau', prefix='tau_')
         tree.define_object(name='tau1', prefix='tau1_')
         tree.define_object(name='tau2', prefix='tau2_')
         tree.define_object(name='truetau1', prefix='truetau1_')
@@ -239,22 +241,22 @@ class hhskim(ATLASStudent):
         for mmc_obj in mmc_objects:
             mmc_obj.define_object(name='resonance', prefix='resonance_')
 
-        trigger_emulation = TauTriggerEmulation(
-            year=year,
-            passthrough=local or datatype != datasets.MC or year > 2011,
-            count_funcs=count_funcs)
+        # trigger_emulation = TauTriggerEmulation(
+        #     year=year,
+        #     passthrough=local or datatype != datasets.MC or year > 2011,
+        #     count_funcs=count_funcs)
 
-        if not trigger_emulation.passthrough:
-            onfilechange.append(
-                (update_trigger_trees, (self, trigger_emulation,)))
+        # if not trigger_emulation.passthrough:
+        #     onfilechange.append(
+        #         (update_trigger_trees, (self, trigger_emulation,)))
 
-        trigger_config = None
+        # trigger_config = None
 
-        if datatype not in (datasets.EMBED, datasets.MCEMBED):
-            # trigger config tool to read trigger info in the ntuples
-            trigger_config = get_trigger_config()
-            # update the trigger config maps on every file change
-            onfilechange.append((update_trigger_config, (trigger_config,)))
+        # if datatype not in (datasets.EMBED, datasets.MCEMBED):
+        #     # trigger config tool to read trigger info in the ntuples
+        #     trigger_config = get_trigger_config()
+        #     # update the trigger config maps on every file change
+        #     onfilechange.append((update_trigger_config, (trigger_config,)))
 
         # define the list of event filters
         if local and syst_terms is None and not redo_selection:
@@ -269,6 +271,7 @@ class hhskim(ATLASStudent):
                     tau_ntrack_recounted_use_ntup = (
                         'tau_out_track_n_extended' in test_tree)
 
+
             event_filters = EventFilterList([
                 GRLFilter(
                     self.grl,
@@ -276,123 +279,123 @@ class hhskim(ATLASStudent):
                         local or (
                             datatype not in (datasets.DATA, datasets.EMBED))),
                     count_funcs=count_funcs),
-                CoreFlags(
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                EmbeddingPileupPatch(
-                    passthrough=(
-                        local or year > 2011 or datatype != datasets.EMBED),
-                    count_funcs=count_funcs),
-                averageIntPerXingPatch(
-                    passthrough=(
-                        local or year < 2012 or datatype != datasets.MC),
-                    count_funcs=count_funcs),
-                PileupTemplates(
-                    year=year,
-                    passthrough=(
-                        local or is_bch_sample or datatype not in (
-                            datasets.MC, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                RandomSeed(
-                    datatype=datatype,
-                    count_funcs=count_funcs),
-                BCHSampleRunNumber(
-                    passthrough=not is_bch_sample,
-                    count_funcs=count_funcs),
-                RandomRunNumber(
-                    tree=tree,
-                    datatype=datatype,
-                    pileup_tool=pileup_tool,
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                trigger_emulation,
-                Triggers(
-                    year=year,
-                    tree=tree,
-                    datatype=datatype,
-                    passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
-                    count_funcs=count_funcs),
-                PileupReweight(
-                    year=year,
-                    tool=pileup_tool,
-                    tool_high=pileup_tool_high,
-                    tool_low=pileup_tool_low,
-                    tree=tree,
-                    passthrough=(
-                        local or (
-                            datatype not in (datasets.MC, datasets.MCEMBED))),
-                    count_funcs=count_funcs),
+                # CoreFlags(
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # EmbeddingPileupPatch(
+                #     passthrough=(
+                #         local or year > 2011 or datatype != datasets.EMBED),
+                #     count_funcs=count_funcs),
+                # averageIntPerXingPatch(
+                #     passthrough=(
+                #         local or year < 2012 or datatype != datasets.MC),
+                #     count_funcs=count_funcs),
+                # PileupTemplates(
+                #     year=year,
+                #     passthrough=(
+                #         local or is_bch_sample or datatype not in (
+                #             datasets.MC, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # RandomSeed(
+                #     datatype=datatype,
+                #     count_funcs=count_funcs),
+                # BCHSampleRunNumber(
+                #     passthrough=not is_bch_sample,
+                #     count_funcs=count_funcs),
+                # RandomRunNumber(
+                #     tree=tree,
+                #     datatype=datatype,
+                #     pileup_tool=pileup_tool,
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # trigger_emulation,
+                # Triggers(
+                #     year=year,
+                #     tree=tree,
+                #     datatype=datatype,
+                #     passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
+                #     count_funcs=count_funcs),
+                # PileupReweight(
+                #     year=year,
+                #     tool=pileup_tool,
+                #     tool_high=pileup_tool_high,
+                #     tool_low=pileup_tool_low,
+                #     tree=tree,
+                #     passthrough=(
+                #         local or (
+                #             datatype not in (datasets.MC, datasets.MCEMBED))),
+                #     count_funcs=count_funcs),
                 PriVertex(
                     passthrough=local,
                     count_funcs=count_funcs),
-                LArError(
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                TileError(
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                TileTrips(
-                    passthrough=(
-                        local or datatype in (datasets.MC, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                JetCopy(
-                    tree=tree,
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                # IMPORTANT!
-                # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
-                # jet.fourvect since jet.fourvect IS CACHED!
-                JetCalibration(
-                    datatype=datatype,
-                    year=year,
-                    verbose=very_verbose,
-                    passthrough=local or nominal_values,
-                    count_funcs=count_funcs),
-                # in situ TES shift for 2012 data
-                TauEnergyShift(
-                    passthrough=(
-                        local or datatype != datasets.DATA
-                        or year < 2012 or nominal_values),
-                    count_funcs=count_funcs),
-                # truth matching must come before systematics due to
-                # TES_TRUE/FAKE
-                TruthMatching(
-                    passthrough=datatype == datasets.DATA,
-                    count_funcs=count_funcs),
-                NvtxJets(
-                    tree=tree,
-                    count_funcs=count_funcs),
-                # PUT THE SYSTEMATICS "FILTER" BEFORE
-                # ANY FILTERS THAT REFER TO OBJECTS
-                # BUT AFTER CALIBRATIONS
-                # Systematics must also come before anything that refers to
-                # thing.fourvect since fourvect is cached!
-                Systematics(
-                    terms=syst_terms,
-                    year=year,
-                    datatype=datatype,
-                    tree=tree,
-                    verbose=verbose,
-                    passthrough=not syst_terms,
-                    count_funcs=count_funcs),
-                JetIsPileup(
-                    passthrough=(
-                        local or year < 2012 or
-                        datatype not in (datasets.MC, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                LArHole(
-                    tree=tree,
-                    passthrough=year > 2011,
-                    count_funcs=count_funcs),
-                JetCleaning(
-                    datatype=datatype,
-                    year=year,
-                    count_funcs=count_funcs),
-                ElectronVeto(
-                    count_funcs=count_funcs),
-                MuonVeto(
-                    year=year,
-                    count_funcs=count_funcs),
+                # LArError(
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # TileError(
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # TileTrips(
+                #     passthrough=(
+                #         local or datatype in (datasets.MC, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # JetCopy(
+                #     tree=tree,
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # # IMPORTANT!
+                # # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
+                # # jet.fourvect since jet.fourvect IS CACHED!
+                # JetCalibration(
+                #     datatype=datatype,
+                #     year=year,
+                #     verbose=very_verbose,
+                #     passthrough=local or nominal_values,
+                #     count_funcs=count_funcs),
+                # # in situ TES shift for 2012 data
+                # TauEnergyShift(
+                #     passthrough=(
+                #         local or datatype != datasets.DATA
+                #         or year < 2012 or nominal_values),
+                #     count_funcs=count_funcs),
+                # # truth matching must come before systematics due to
+                # # TES_TRUE/FAKE
+                # TruthMatching(
+                #     passthrough=datatype == datasets.DATA,
+                #     count_funcs=count_funcs),
+                # NvtxJets(
+                #     tree=tree,
+                #     count_funcs=count_funcs),
+                # # PUT THE SYSTEMATICS "FILTER" BEFORE
+                # # ANY FILTERS THAT REFER TO OBJECTS
+                # # BUT AFTER CALIBRATIONS
+                # # Systematics must also come before anything that refers to
+                # # thing.fourvect since fourvect is cached!
+                # Systematics(
+                #     terms=syst_terms,
+                #     year=year,
+                #     datatype=datatype,
+                #     tree=tree,
+                #     verbose=verbose,
+                #     passthrough=not syst_terms,
+                #     count_funcs=count_funcs),
+                # JetIsPileup(
+                #     passthrough=(
+                #         local or year < 2012 or
+                #         datatype not in (datasets.MC, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # LArHole(
+                #     tree=tree,
+                #     passthrough=year > 2011,
+                #     count_funcs=count_funcs),
+                # JetCleaning(
+                #     datatype=datatype,
+                #     year=year,
+                #     count_funcs=count_funcs),
+                # ElectronVeto(
+                #     count_funcs=count_funcs),
+                # MuonVeto(
+                #     year=year,
+                #     count_funcs=count_funcs),
                 TauPT(2,
                     thresh=20 * GeV,
                     count_funcs=count_funcs),
@@ -400,215 +403,164 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauEta(2,
                     count_funcs=count_funcs),
-                TauElectronVeto(2,
-                    count_funcs=count_funcs),
-                TauMuonVeto(2,
-                    count_funcs=count_funcs),
-                TauAuthor(2,
-                    count_funcs=count_funcs),
-                TauCrack(2,
-                    count_funcs=count_funcs),
-                TauLArHole(2,
-                    tree=tree,
-                    passthrough=year > 2011,
-                    count_funcs=count_funcs),
-                # before selecting the leading and subleading taus
-                # be sure to only consider good candidates
-                TauIDMedium(2,
-                    count_funcs=count_funcs),
-                #TauTriggerMatchIndex(
-                #    config=trigger_config,
-                #    year=year,
-                #    datatype=datatype,
-                #    passthrough=datatype == datasets.EMBED,
-                #    count_funcs=count_funcs),
-                # Select two leading taus at this point
-                # 25 and 35 for data
-                # 20 and 30 for MC to leave room for TES uncertainty
-                TauLeadSublead(
-                    lead=(
-                        35 * GeV if datatype == datasets.DATA or local
-                        else 30 * GeV),
-                    sublead=(
-                        25 * GeV if datatype == datasets.DATA or local
-                        else 20 * GeV),
-                    count_funcs=count_funcs),
-                # taus are sorted (in decreasing order) by pT from here on
-                TauIDSelection(
-                    tree=tree,
-                    count_funcs=count_funcs),
-                TaudR(3.2,
-                    count_funcs=count_funcs),
-                #TauTriggerMatchThreshold(
-                #    datatype=datatype,
-                #    tree=tree,
-                #    count_funcs=count_funcs),
-                TauTriggerEfficiency(
-                    year=year,
-                    datatype=datatype,
-                    tree=tree,
-                    tes_systematic=self.args.syst_terms and (
-                        Systematics.TES_TERMS & self.args.syst_terms),
-                    passthrough=datatype == datasets.DATA,
-                    count_funcs=count_funcs),
-                PileupScale(
-                    tree=tree,
-                    year=year,
-                    datatype=datatype,
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                TauIDScaleFactors(
-                    year=year,
-                    passthrough=datatype == datasets.DATA,
-                    count_funcs=count_funcs),
-                TauFakeRateScaleFactors(
-                    year=year,
-                    datatype=datatype,
-                    tree=tree,
-                    tes_up=(self.args.syst_terms is not None and
-                        (Systematics.TES_FAKE_TOTAL_UP in self.args.syst_terms or
-                         Systematics.TES_FAKE_FINAL_UP in self.args.syst_terms)),
-                    tes_down=(self.args.syst_terms is not None and
-                        (Systematics.TES_FAKE_TOTAL_DOWN in self.args.syst_terms or
-                         Systematics.TES_FAKE_FINAL_DOWN in self.args.syst_terms)),
-                    passthrough=datatype in (datasets.DATA, datasets.EMBED),
-                    count_funcs=count_funcs),
-                HiggsPT(
-                    year=year,
-                    tree=tree,
-                    passthrough=not is_signal or local,
-                    count_funcs=count_funcs),
-                TauTrackRecounting(
-                    year=year,
-                    use_ntup_value=tau_ntrack_recounted_use_ntup,
-                    passthrough=local,
-                    count_funcs=count_funcs),
-                MCWeight(
-                    datatype=datatype,
-                    tree=tree,
-                    passthrough=local or datatype == datasets.DATA,
-                    count_funcs=count_funcs),
-                EmbeddingIsolation(
-                    tree=tree,
-                    passthrough=(
-                        local or year < 2012 or
-                        datatype not in (datasets.EMBED, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                EmbeddingCorrections(
-                    tree=tree,
-                    year=year,
-                    passthrough=(
-                        local or
-                        datatype not in (datasets.EMBED, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                EmbeddingTauSpinner(
-                    year=year,
-                    tree=tree,
-                    passthrough=(
-                        local or datatype not in (
-                            datasets.EMBED, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                # put MET recalculation after tau selection but before tau-jet
-                # overlap removal and jet selection because of the RefAntiTau
-                # MET correction
-                METRecalculation(
-                    terms=syst_terms,
-                    year=year,
-                    tree=tree,
-                    refantitau=not nominal_values,
-                    verbose=verbose,
-                    very_verbose=very_verbose,
-                    count_funcs=count_funcs),
-                TauJetOverlapRemoval(
-                    count_funcs=count_funcs),
-                JetPreselection(
-                    count_funcs=count_funcs),
-                NonIsolatedJet(
-                    tree=tree,
-                    count_funcs=count_funcs),
-                JetSelection(
-                    year=year,
-                    count_funcs=count_funcs),
-                RecoJetTrueTauMatching(
-                    passthrough=datatype == datasets.DATA or local,
-                    count_funcs=count_funcs),
-                BCHCleaning(
-                    tree=tree,
-                    passthrough=year == 2011 or local,
-                    datatype=datatype,
-                    count_funcs=count_funcs),
-                ClassifyInclusiveHiggsSample(
-                    tree=tree,
-                    passthrough=not is_inclusive_signal,
-                    count_funcs=count_funcs),
+                # TauElectronVeto(2,
+                #     count_funcs=count_funcs),
+                # TauMuonVeto(2,
+                #     count_funcs=count_funcs),
+                # TauAuthor(2,
+                #     count_funcs=count_funcs),
+                # TauCrack(2,
+                #     count_funcs=count_funcs),
+                # TauLArHole(2,
+                #     tree=tree,
+                #     passthrough=year > 2011,
+                #     count_funcs=count_funcs),
+                # # before selecting the leading and subleading taus
+                # # be sure to only consider good candidates
+                # TauIDMedium(2,
+                #     count_funcs=count_funcs),
+                # #TauTriggerMatchIndex(
+                # #    config=trigger_config,
+                # #    year=year,
+                # #    datatype=datatype,
+                # #    passthrough=datatype == datasets.EMBED,
+                # #    count_funcs=count_funcs),
+                # # Select two leading taus at this point
+                # # 25 and 35 for data
+                # # 20 and 30 for MC to leave room for TES uncertainty
+                # TauLeadSublead(
+                #     lead=(
+                #         35 * GeV if datatype == datasets.DATA or local
+                #         else 30 * GeV),
+                #     sublead=(
+                #         25 * GeV if datatype == datasets.DATA or local
+                #         else 20 * GeV),
+                #     count_funcs=count_funcs),
+                # # taus are sorted (in decreasing order) by pT from here on
+                # TauIDSelection(
+                #     tree=tree,
+                #     count_funcs=count_funcs),
+                # TaudR(3.2,
+                #     count_funcs=count_funcs),
+                # #TauTriggerMatchThreshold(
+                # #    datatype=datatype,
+                # #    tree=tree,
+                # #    count_funcs=count_funcs),
+                # TauTriggerEfficiency(
+                #     year=year,
+                #     datatype=datatype,
+                #     tree=tree,
+                #     tes_systematic=self.args.syst_terms and (
+                #         Systematics.TES_TERMS & self.args.syst_terms),
+                #     passthrough=datatype == datasets.DATA,
+                #     count_funcs=count_funcs),
+                # PileupScale(
+                #     tree=tree,
+                #     year=year,
+                #     datatype=datatype,
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # TauIDScaleFactors(
+                #     year=year,
+                #     passthrough=datatype == datasets.DATA,
+                #     count_funcs=count_funcs),
+                # TauFakeRateScaleFactors(
+                #     year=year,
+                #     datatype=datatype,
+                #     tree=tree,
+                #     tes_up=(self.args.syst_terms is not None and
+                #         (Systematics.TES_FAKE_TOTAL_UP in self.args.syst_terms or
+                #          Systematics.TES_FAKE_FINAL_UP in self.args.syst_terms)),
+                #     tes_down=(self.args.syst_terms is not None and
+                #         (Systematics.TES_FAKE_TOTAL_DOWN in self.args.syst_terms or
+                #          Systematics.TES_FAKE_FINAL_DOWN in self.args.syst_terms)),
+                #     passthrough=datatype in (datasets.DATA, datasets.EMBED),
+                #     count_funcs=count_funcs),
+                # HiggsPT(
+                #     year=year,
+                #     tree=tree,
+                #     passthrough=not is_signal or local,
+                #     count_funcs=count_funcs),
+                # TauTrackRecounting(
+                #     year=year,
+                #     use_ntup_value=tau_ntrack_recounted_use_ntup,
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
+                # MCWeight(
+                #     datatype=datatype,
+                #     tree=tree,
+                #     passthrough=local or datatype == datasets.DATA,
+                #     count_funcs=count_funcs),
+                # EmbeddingIsolation(
+                #     tree=tree,
+                #     passthrough=(
+                #         local or year < 2012 or
+                #         datatype not in (datasets.EMBED, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # EmbeddingCorrections(
+                #     tree=tree,
+                #     year=year,
+                #     passthrough=(
+                #         local or
+                #         datatype not in (datasets.EMBED, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # EmbeddingTauSpinner(
+                #     year=year,
+                #     tree=tree,
+                #     passthrough=(
+                #         local or datatype not in (
+                #             datasets.EMBED, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # # put MET recalculation after tau selection but before tau-jet
+                # # overlap removal and jet selection because of the RefAntiTau
+                # # MET correction
+                # METRecalculation(
+                #     terms=syst_terms,
+                #     year=year,
+                #     tree=tree,
+                #     refantitau=not nominal_values,
+                #     verbose=verbose,
+                #     very_verbose=very_verbose,
+                #     count_funcs=count_funcs),
+                # TauJetOverlapRemoval(
+                #     count_funcs=count_funcs),
+                # JetPreselection(
+                #     count_funcs=count_funcs),
+                # NonIsolatedJet(
+                #     tree=tree,
+                #     count_funcs=count_funcs),
+                # JetSelection(
+                #     year=year,
+                #     count_funcs=count_funcs),
+                # RecoJetTrueTauMatching(
+                #     passthrough=datatype == datasets.DATA or local,
+                #     count_funcs=count_funcs),
+                # BCHCleaning(
+                #     tree=tree,
+                #     passthrough=year == 2011 or local,
+                #     datatype=datatype,
+                #     count_funcs=count_funcs),
+                # ClassifyInclusiveHiggsSample(
+                #     tree=tree,
+                #     passthrough=not is_inclusive_signal,
+                #     count_funcs=count_funcs),
             ])
 
             # set the event filters
             self.filters['event'] = event_filters
 
-        # peek at first tree to determine which branches to exclude
-        with root_open(self.files[0]) as test_file:
-            test_tree = test_file.Get(self.metadata.treename)
-            ignore_branches = test_tree.glob(
-                hhbranches.REMOVE,
-                exclude=hhbranches.KEEP)
-            ignore_branches_output = test_tree.glob(
-                hhbranches.REMOVE_OUTPUT,
-                exclude=hhbranches.KEEP_OUTPUT)
-
-        # initialize the TreeChain of all input files
-        chain = TreeChain(
-            self.metadata.treename,
-            files=self.files,
-            ignore_branches=ignore_branches,
-            events=self.events,
-            onfilechange=onfilechange,
-            filters=event_filters,
-            cache=True,
-            cache_size=50000000,
-            learn_entries=100)
-
-        if local:
-            copied = [
-                'EventNumber',
-            ]
-
-            hh_buffer = TreeBuffer()
-            buffer = TreeBuffer()
-            for name, value in chain._buffer.items():
-                if name.startswith('hh_'):
-                    hh_buffer[name[3:]] = value
-                elif name in copied:
-                    buffer[name] = value
-            outtree.set_buffer(
-                hh_buffer,
-                create_branches=False,
-                visible=True)
-            outtree.set_buffer(
-                buffer,
-                create_branches=True,
-                visible=False)
-
-        else:
-            # additional decorations on existing objects
-            if year > 2011 and datatype in (datasets.MC, datasets.MCEMBED):
-                class Decorations(TreeModel):
-                    jet_ispileup = stl.vector('bool')
-
-                chain.set_buffer(Decorations(), create_branches=True)
-
-            # include the branches in the input chain in the output tree
-            # set branches to be removed in ignore_branches
-            outtree.set_buffer(
-                chain._buffer,
-                ignore_branches=ignore_branches + ignore_branches_output,
-                create_branches=True,
-                ignore_duplicates=True,
-                transfer_objects=True,
-                visible=False)
-
-        # define tree objects
-        define_objects(chain, year)
+        chain = ROOT.TChain(self.metadata.treename)
+        for f in self.files:
+            log.info(f)
+            chain.Add(f)
+        chain = xAODTree(chain, filters=event_filters, events=20)#self.events)
+        chain.define_collection('taus', 'TauRecContainer')    
+        chain.define_collection('vertices', 'PrimaryVertices')
+        hh_buffer = TreeBuffer()
+        outtree.set_buffer(
+            hh_buffer,
+            create_branches=True,
+            visible=False)
 
         # create the MMC
         mmc = mass.MMC(year=year)
@@ -626,256 +578,9 @@ class hhskim(ATLASStudent):
             if local and syst_terms is None and not redo_selection:
                 outtree.Fill()
                 continue
-
-            # sort taus and jets in decreasing order by pT
-            event.taus.sort(key=lambda tau: tau.pt, reverse=True)
-            event.jets.sort(key=lambda jet: jet.pt, reverse=True)
-
-            # tau1 is the leading tau
-            # tau2 is the subleading tau
-            tau1, tau2 = event.taus
-            jets = list(event.jets)
-            jet1, jet2, jet3 = None, None, None
-            beta = None
-
-            if len(jets) >= 2:
-                jet1, jet2 = jets[:2]
-
-                # determine boost of system
-                # determine jet CoM frame
-                beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-                tree.jet_beta.copy_from(beta)
-
-                jet1.fourvect_boosted.copy_from(jet1.fourvect)
-                jet2.fourvect_boosted.copy_from(jet2.fourvect)
-                jet1.fourvect_boosted.Boost(beta * -1)
-                jet2.fourvect_boosted.Boost(beta * -1)
-
-                tau1.fourvect_boosted.copy_from(tau1.fourvect)
-                tau2.fourvect_boosted.copy_from(tau2.fourvect)
-                tau1.fourvect_boosted.Boost(beta * -1)
-                tau2.fourvect_boosted.Boost(beta * -1)
-
-                tau1.min_dr_jet = min(
-                    tau1.fourvect.DeltaR(jet1.fourvect),
-                    tau1.fourvect.DeltaR(jet2.fourvect))
-                tau2.min_dr_jet = min(
-                    tau2.fourvect.DeltaR(jet1.fourvect),
-                    tau2.fourvect.DeltaR(jet2.fourvect))
-
-                #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
-                #    [tau1.fourvect,
-                #     tau2.fourvect,
-                #     jet1.fourvect,
-                #     jet2.fourvect])
-
-                # sphericity
-                #tree.sphericity = sphericity
-                # aplanarity
-                #tree.aplanarity = aplanarity
-
-                #sphericity_boosted, aplanarity_boosted = eventshapes.sphericity_aplanarity(
-                #    [tau1.fourvect_boosted,
-                #     tau2.fourvect_boosted,
-                #     jet1.fourvect_boosted,
-                #     jet2.fourvect_boosted])
-
-                # sphericity
-                #tree.sphericity_boosted = sphericity_boosted
-                # aplanarity
-                #tree.aplanarity_boosted = aplanarity_boosted
-
-                # tau centrality (degree to which they are between the two jets)
-                tau1.centrality = eventshapes.eta_centrality(
-                    tau1.fourvect.Eta(),
-                    jet1.fourvect.Eta(),
-                    jet2.fourvect.Eta())
-
-                tau2.centrality = eventshapes.eta_centrality(
-                    tau2.fourvect.Eta(),
-                    jet1.fourvect.Eta(),
-                    jet2.fourvect.Eta())
-
-                # boosted tau centrality
-                tau1.centrality_boosted = eventshapes.eta_centrality(
-                    tau1.fourvect_boosted.Eta(),
-                    jet1.fourvect_boosted.Eta(),
-                    jet2.fourvect_boosted.Eta())
-
-                tau2.centrality_boosted = eventshapes.eta_centrality(
-                    tau2.fourvect_boosted.Eta(),
-                    jet1.fourvect_boosted.Eta(),
-                    jet2.fourvect_boosted.Eta())
-
-                # 3rd leading jet
-                if len(jets) >= 3:
-                    jet3 = jets[2]
-                    jet3.fourvect_boosted.copy_from(jet3.fourvect)
-                    jet3.fourvect_boosted.Boost(beta * -1)
-
-            elif len(jets) == 1:
-                jet1 = jets[0]
-
-                tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
-                tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
-
-            RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
-
-            # mass of ditau + leading jet system
-            if jet1 is not None:
-                tree.mass_tau1_tau2_jet1 = (
-                    tau1.fourvect + tau2.fourvect + jet1.fourvect).M()
-
-            #####################################
-            # number of tracks from PV minus taus
-            #####################################
-            ntrack_pv = 0
-            ntrack_nontau_pv = 0
-            for vxp in event.vertices:
-                # primary vertex
-                if vxp.type == 1:
-                    ntrack_pv = vxp.nTracks
-                    ntrack_nontau_pv = ntrack_pv - tau1.numTrack - tau2.numTrack
-                    break
-            tree.ntrack_pv = ntrack_pv
-            tree.ntrack_nontau_pv = ntrack_nontau_pv
-
-            #########################
-            # MET variables
-            #########################
-            METx = event.MET.etx
-            METy = event.MET.ety
-            MET = event.MET.et
-            MET_vect = Vector2(METx, METy)
-            MET_4vect = LorentzVector()
-            MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
-            MET_4vect_boosted = LorentzVector()
-            MET_4vect_boosted.copy_from(MET_4vect)
-            if beta is not None:
-                MET_4vect_boosted.Boost(beta * -1)
-
-            tree.MET_et = MET
-            tree.MET_etx = METx
-            tree.MET_ety = METy
-            tree.MET_phi = event.MET.phi
-            dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
-            dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
-            dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
-            tree.dPhi_tau1_tau2 = dPhi_tau1_tau2
-            tree.dPhi_tau1_MET = dPhi_tau1_MET
-            tree.dPhi_tau2_MET = dPhi_tau2_MET
-            tree.dPhi_min_tau_MET = min(dPhi_tau1_MET, dPhi_tau2_MET)
-            tree.MET_bisecting = is_MET_bisecting(
-                dPhi_tau1_tau2,
-                dPhi_tau1_MET,
-                dPhi_tau2_MET)
-
-            sumET = event.MET.sumet
-            tree.MET_sumet = sumET
-            if sumET != 0:
-                tree.MET_sig = ((2. * MET / GeV) /
-                    (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
-            else:
-                tree.MET_sig = -1.
-
-            tree.MET_centrality = eventshapes.phi_centrality(
-                tau1.fourvect,
-                tau2.fourvect,
-                MET_vect)
-            tree.MET_centrality_boosted = eventshapes.phi_centrality(
-                tau1.fourvect_boosted,
-                tau2.fourvect_boosted,
-                MET_4vect_boosted)
-
-            tree.number_of_good_vertices = len(event.vertices)
-
-            ##########################
-            # Jet and sum pt variables
-            ##########################
-            tree.numJets = len(event.jets)
-
-            # sum pT with only the two leading jets
-            tree.sum_pt = sum(
-                [tau1.pt, tau2.pt] +
-                [jet.pt for jet in jets[:2]])
-
-            # sum pT with all selected jets
-            tree.sum_pt_full = sum(
-                [tau1.pt, tau2.pt] +
-                [jet.pt for jet in jets])
-
-            # vector sum pT with two leading jets and MET
-            tree.vector_sum_pt = sum(
-                [tau1.fourvect, tau2.fourvect] +
-                [jet.fourvect for jet in jets[:2]] +
-                [MET_4vect]).Pt()
-
-            # vector sum pT with all selected jets and MET
-            tree.vector_sum_pt_full = sum(
-                [tau1.fourvect, tau2.fourvect] +
-                [jet.fourvect for jet in jets] +
-                [MET_4vect]).Pt()
-
-            # resonance pT
-            tree.resonance_pt = sum(
-                [tau1.fourvect, tau2.fourvect, MET_4vect]).Pt()
-
-            #############################
-            # tau <-> vertex association
-            #############################
-            tree.tau_same_vertex = (
-                tau1.privtx_x == tau2.privtx_x and
-                tau1.privtx_y == tau2.privtx_y and
-                tau1.privtx_z == tau2.privtx_z)
-
-            tau1.vertex_prob = ROOT.TMath.Prob(
-                tau1.privtx_chiSquared,
-                int(tau1.privtx_numberDoF))
-
-            tau2.vertex_prob = ROOT.TMath.Prob(
-                tau2.privtx_chiSquared,
-                int(tau2.privtx_numberDoF))
-
-            ##########################
-            # MMC Mass
-            ##########################
-            mmc_result = mmc.mass(
-                tau1, tau2,
-                METx, METy, sumET,
-                njets=len(event.jets))
-
-            for mmc_method, mmc_object in enumerate(mmc_objects):
-                mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
-                if verbose:
-                    log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
-
-                mmc_object.mass = mmc_mass
-                mmc_object.MET_et = mmc_met.Mod()
-                mmc_object.MET_etx = mmc_met.X()
-                mmc_object.MET_ety = mmc_met.Y()
-                mmc_object.MET_phi = math.pi - mmc_met.Phi()
-                if mmc_mass > 0:
-                    FourMomentum.set(mmc_object.resonance, mmc_resonance)
-
-            ############################
-            # collinear and visible mass
-            ############################
-            vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
-                tau1, tau2, METx, METy)
-
-            tree.mass_vis_tau1_tau2 = vis_mass
-            tree.mass_collinear_tau1_tau2 = collin_mass
-            tau1.collinear_momentum_fraction = tau1_x
-            tau2.collinear_momentum_fraction = tau2_x
-
-            # Fill the tau block
-            # This must come after the RecoJetBlock is filled since
-            # that sets the jet_beta for boosting the taus
-            RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
-            if datatype != datasets.DATA:
-                TrueTauBlock.set(tree, tau1, tau2)
-
+            
             # fill the output tree
+            EventModel.set(tree, event.EventInfo)
             outtree.Fill(reset=True)
 
         externaltools.report()
@@ -884,6 +589,266 @@ class hhskim(ATLASStudent):
         self.output.cd()
         outtree.FlushBaskets()
         outtree.Write()
+
+
+
+            # # sort taus and jets in decreasing order by pT
+            # event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+            # event.jets.sort(key=lambda jet: jet.pt, reverse=True)
+
+            # # tau1 is the leading tau
+            # # tau2 is the subleading tau
+            # tau1, tau2 = event.taus
+            # jets = list(event.jets)
+            # jet1, jet2, jet3 = None, None, None
+            # beta = None
+
+            # if len(jets) >= 2:
+            #     jet1, jet2 = jets[:2]
+
+            #     # determine boost of system
+            #     # determine jet CoM frame
+            #     beta = (jet1.fourvect + jet2.fourvect).BoostVector()
+            #     tree.jet_beta.copy_from(beta)
+
+            #     jet1.fourvect_boosted.copy_from(jet1.fourvect)
+            #     jet2.fourvect_boosted.copy_from(jet2.fourvect)
+            #     jet1.fourvect_boosted.Boost(beta * -1)
+            #     jet2.fourvect_boosted.Boost(beta * -1)
+
+            #     tau1.fourvect_boosted.copy_from(tau1.fourvect)
+            #     tau2.fourvect_boosted.copy_from(tau2.fourvect)
+            #     tau1.fourvect_boosted.Boost(beta * -1)
+            #     tau2.fourvect_boosted.Boost(beta * -1)
+
+            #     tau1.min_dr_jet = min(
+            #         tau1.fourvect.DeltaR(jet1.fourvect),
+            #         tau1.fourvect.DeltaR(jet2.fourvect))
+            #     tau2.min_dr_jet = min(
+            #         tau2.fourvect.DeltaR(jet1.fourvect),
+            #         tau2.fourvect.DeltaR(jet2.fourvect))
+
+            #     #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
+            #     #    [tau1.fourvect,
+            #     #     tau2.fourvect,
+            #     #     jet1.fourvect,
+            #     #     jet2.fourvect])
+
+            #     # sphericity
+            #     #tree.sphericity = sphericity
+            #     # aplanarity
+            #     #tree.aplanarity = aplanarity
+
+            #     #sphericity_boosted, aplanarity_boosted = eventshapes.sphericity_aplanarity(
+            #     #    [tau1.fourvect_boosted,
+            #     #     tau2.fourvect_boosted,
+            #     #     jet1.fourvect_boosted,
+            #     #     jet2.fourvect_boosted])
+
+            #     # sphericity
+            #     #tree.sphericity_boosted = sphericity_boosted
+            #     # aplanarity
+            #     #tree.aplanarity_boosted = aplanarity_boosted
+
+            #     # tau centrality (degree to which they are between the two jets)
+            #     tau1.centrality = eventshapes.eta_centrality(
+            #         tau1.fourvect.Eta(),
+            #         jet1.fourvect.Eta(),
+            #         jet2.fourvect.Eta())
+
+            #     tau2.centrality = eventshapes.eta_centrality(
+            #         tau2.fourvect.Eta(),
+            #         jet1.fourvect.Eta(),
+            #         jet2.fourvect.Eta())
+
+            #     # boosted tau centrality
+            #     tau1.centrality_boosted = eventshapes.eta_centrality(
+            #         tau1.fourvect_boosted.Eta(),
+            #         jet1.fourvect_boosted.Eta(),
+            #         jet2.fourvect_boosted.Eta())
+
+            #     tau2.centrality_boosted = eventshapes.eta_centrality(
+            #         tau2.fourvect_boosted.Eta(),
+            #         jet1.fourvect_boosted.Eta(),
+            #         jet2.fourvect_boosted.Eta())
+
+            #     # 3rd leading jet
+            #     if len(jets) >= 3:
+            #         jet3 = jets[2]
+            #         jet3.fourvect_boosted.copy_from(jet3.fourvect)
+            #         jet3.fourvect_boosted.Boost(beta * -1)
+
+            # elif len(jets) == 1:
+            #     jet1 = jets[0]
+
+            #     tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
+            #     tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
+
+            # RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
+
+            # # mass of ditau + leading jet system
+            # if jet1 is not None:
+            #     tree.mass_tau1_tau2_jet1 = (
+            #         tau1.fourvect + tau2.fourvect + jet1.fourvect).M()
+
+            # #####################################
+            # # number of tracks from PV minus taus
+            # #####################################
+            # ntrack_pv = 0
+            # ntrack_nontau_pv = 0
+            # for vxp in event.vertices:
+            #     # primary vertex
+            #     if vxp.type == 1:
+            #         ntrack_pv = vxp.nTracks
+            #         ntrack_nontau_pv = ntrack_pv - tau1.numTrack - tau2.numTrack
+            #         break
+            # tree.ntrack_pv = ntrack_pv
+            # tree.ntrack_nontau_pv = ntrack_nontau_pv
+
+            # #########################
+            # # MET variables
+            # #########################
+            # METx = event.MET.etx
+            # METy = event.MET.ety
+            # MET = event.MET.et
+            # MET_vect = Vector2(METx, METy)
+            # MET_4vect = LorentzVector()
+            # MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
+            # MET_4vect_boosted = LorentzVector()
+            # MET_4vect_boosted.copy_from(MET_4vect)
+            # if beta is not None:
+            #     MET_4vect_boosted.Boost(beta * -1)
+
+            # tree.MET_et = MET
+            # tree.MET_etx = METx
+            # tree.MET_ety = METy
+            # tree.MET_phi = event.MET.phi
+            # dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+            # dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
+            # dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
+            # tree.dPhi_tau1_tau2 = dPhi_tau1_tau2
+            # tree.dPhi_tau1_MET = dPhi_tau1_MET
+            # tree.dPhi_tau2_MET = dPhi_tau2_MET
+            # tree.dPhi_min_tau_MET = min(dPhi_tau1_MET, dPhi_tau2_MET)
+            # tree.MET_bisecting = is_MET_bisecting(
+            #     dPhi_tau1_tau2,
+            #     dPhi_tau1_MET,
+            #     dPhi_tau2_MET)
+
+            # sumET = event.MET.sumet
+            # tree.MET_sumet = sumET
+            # if sumET != 0:
+            #     tree.MET_sig = ((2. * MET / GeV) /
+            #         (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
+            # else:
+            #     tree.MET_sig = -1.
+
+            # tree.MET_centrality = eventshapes.phi_centrality(
+            #     tau1.fourvect,
+            #     tau2.fourvect,
+            #     MET_vect)
+            # tree.MET_centrality_boosted = eventshapes.phi_centrality(
+            #     tau1.fourvect_boosted,
+            #     tau2.fourvect_boosted,
+            #     MET_4vect_boosted)
+
+            # tree.number_of_good_vertices = len(event.vertices)
+
+            # ##########################
+            # # Jet and sum pt variables
+            # ##########################
+            # tree.numJets = len(event.jets)
+
+            # # sum pT with only the two leading jets
+            # tree.sum_pt = sum(
+            #     [tau1.pt, tau2.pt] +
+            #     [jet.pt for jet in jets[:2]])
+
+            # # sum pT with all selected jets
+            # tree.sum_pt_full = sum(
+            #     [tau1.pt, tau2.pt] +
+            #     [jet.pt for jet in jets])
+
+            # # vector sum pT with two leading jets and MET
+            # tree.vector_sum_pt = sum(
+            #     [tau1.fourvect, tau2.fourvect] +
+            #     [jet.fourvect for jet in jets[:2]] +
+            #     [MET_4vect]).Pt()
+
+            # # vector sum pT with all selected jets and MET
+            # tree.vector_sum_pt_full = sum(
+            #     [tau1.fourvect, tau2.fourvect] +
+            #     [jet.fourvect for jet in jets] +
+            #     [MET_4vect]).Pt()
+
+            # # resonance pT
+            # tree.resonance_pt = sum(
+            #     [tau1.fourvect, tau2.fourvect, MET_4vect]).Pt()
+
+            # #############################
+            # # tau <-> vertex association
+            # #############################
+            # tree.tau_same_vertex = (
+            #     tau1.privtx_x == tau2.privtx_x and
+            #     tau1.privtx_y == tau2.privtx_y and
+            #     tau1.privtx_z == tau2.privtx_z)
+
+            # tau1.vertex_prob = ROOT.TMath.Prob(
+            #     tau1.privtx_chiSquared,
+            #     int(tau1.privtx_numberDoF))
+
+            # tau2.vertex_prob = ROOT.TMath.Prob(
+            #     tau2.privtx_chiSquared,
+            #     int(tau2.privtx_numberDoF))
+
+            # ##########################
+            # # MMC Mass
+            # ##########################
+            # mmc_result = mmc.mass(
+            #     tau1, tau2,
+            #     METx, METy, sumET,
+            #     njets=len(event.jets))
+
+            # for mmc_method, mmc_object in enumerate(mmc_objects):
+            #     mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
+            #     if verbose:
+            #         log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
+
+            #     mmc_object.mass = mmc_mass
+            #     mmc_object.MET_et = mmc_met.Mod()
+            #     mmc_object.MET_etx = mmc_met.X()
+            #     mmc_object.MET_ety = mmc_met.Y()
+            #     mmc_object.MET_phi = math.pi - mmc_met.Phi()
+            #     if mmc_mass > 0:
+            #         FourMomentum.set(mmc_object.resonance, mmc_resonance)
+
+            # ############################
+            # # collinear and visible mass
+            # ############################
+            # vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
+            #     tau1, tau2, METx, METy)
+
+            # tree.mass_vis_tau1_tau2 = vis_mass
+            # tree.mass_collinear_tau1_tau2 = collin_mass
+            # tau1.collinear_momentum_fraction = tau1_x
+            # tau2.collinear_momentum_fraction = tau2_x
+
+            # # Fill the tau block
+            # # This must come after the RecoJetBlock is filled since
+            # # that sets the jet_beta for boosting the taus
+            # RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
+            # if datatype != datasets.DATA:
+            #     TrueTauBlock.set(tree, tau1, tau2)
+
+            # # fill the output tree
+            # outtree.Fill(reset=True)
+
+        # externaltools.report()
+
+        # # flush any baskets remaining in memory to disk
+        # self.output.cd()
+        # outtree.FlushBaskets()
+        # outtree.Write()
 
         if local:
             if datatype == datasets.DATA:

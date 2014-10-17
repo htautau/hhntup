@@ -34,15 +34,15 @@ class GRLFilter(EventFilter):
     def passes(self, event):
         if not self.grl:
             return False
-        return (event.RunNumber, event.lbn) in self.grl
+        return (event.EventInfo.runNumber(), event.EventInfo.lumiBlock()) in self.grl
 
 
 def primary_vertex_selection(vxp):
-    return vxp.type == 1 and vxp.nTracks >= 4
+    return vxp.vertexType() == 1 and vxp.nTrackParticles() >= 4
 
 
 def pileup_vertex_selection(vxp):
-    return vxp.type == 3 and vxp.nTracks >= 2
+    return vxp.vertexType() == 3 and vxp.nTrackParticles() >= 2
 
 
 def vertex_selection(vxp):
@@ -165,23 +165,16 @@ class TileTrips(EventFilter):
     """
     def __init__(self, passthrough=False, **kwargs):
         if not passthrough:
-            from externaltools import TileTripReader
+            #from externaltools import TileTripReader
             from ROOT import Root
             self.tool = Root.TTileTripReader()
         super(TileTrips, self).__init__(passthrough=passthrough, **kwargs)
 
     def passes(self, event):
-        # only apply between G - J
-        #if event.RunNumber < 211522:
-        #    return True
-        #if event.RunNumber > 215091:
-        #    return True
-        # returns false if the event is one with a saturation in a tile cell
-        # (bad MET).
         return self.tool.checkEvent(
-            event.RunNumber,
-            event.lbn,
-            event.EventNumber)
+            event.EventInfo.runNumber(),
+            event.EventInfo.lumiBlock(),
+            event.EventInfo.eventNumber())
 
 
 class JetCleaning(EventFilter):
@@ -361,7 +354,7 @@ class TauHasTrack(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.numTrack > 0)
+        event.taus.select(lambda tau: tau.nTracks() > 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -384,7 +377,7 @@ class TauPT(EventFilter):
         super(TauPT, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.pt > self.thresh)
+        event.taus.select(lambda tau: tau.pt() > self.thresh)
         return len(event.taus) >= self.min_taus
 
 
@@ -397,8 +390,8 @@ class TauEta(EventFilter):
     def passes(self, event):
         # both calo and leading track eta within 2.47
         event.taus.select(lambda tau:
-            abs(tau.eta) < 2.47 and
-            abs(tau.track_eta[tau.leadtrack_idx]) < 2.47)
+            abs(tau.eta()) < 2.47 and
+            abs(tau.track(0).eta()) < 2.47)
         return len(event.taus) >= self.min_taus
 
 

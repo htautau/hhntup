@@ -513,7 +513,11 @@ class EventModel(TreeModel):
     jet_phi_original = stl.vector('float')
 
     error = BoolCol()
-
+    
+    @classmethod
+    def set(cls, tree, ei):
+        tree.RunNumber = ei.runNumber()
+        tree.lbn = ei.lumiBlock()
 
 class InclusiveHiggsModel(TreeModel):
     higgs_decay_channel = IntCol(default=-1)
