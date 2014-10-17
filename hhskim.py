@@ -15,14 +15,8 @@ from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
 from rootpy.extern.argparse import ArgumentParser
 from rootpy.io import root_open
 from rootpy import stl
-# Show stack traces for ROOT warning messages
-#from rootpy import log
-#import logging
-#log["/ROOT"].show_stack(min_level=logging.WARNING)
 
 # local imports
-from higgstautau import hepmc
-from higgstautau import tautools
 from higgstautau import eventshapes
 from higgstautau import datasets
 from higgstautau import utils
@@ -36,20 +30,15 @@ from higgstautau.hadhad.models import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
 from higgstautau.mass import is_MET_bisecting
-from higgstautau.overlap import TauJetOverlapRemoval
-from higgstautau.embedding import (
-    EmbeddingPileupPatch, EmbeddingIsolation, EmbeddingCorrections)
+from higgstautau.embedding import *
 from higgstautau.systematics import Systematics
 from higgstautau.met import METRecalculation
 from higgstautau.jetcalibration import JetCalibration
 from higgstautau.tauspinner import EmbeddingTauSpinner
-from higgstautau.patches import ElectronIDpatch, TauIDpatch
 from higgstautau.trigger import update_trigger_config, get_trigger_config
 from higgstautau.trigger.efficiency import TauTriggerEfficiency
 from higgstautau.trigger.emulation import (
     TauTriggerEmulation, update_trigger_trees)
-#from higgstautau.trigger.matching import (
-#    TauTriggerMatchIndex, TauTriggerMatchThreshold)
 from higgstautau.pileup import (
     PileupTemplates, PileupReweight, get_pileup_reweighting_tool,
     averageIntPerXingPatch, PileupScale)
@@ -730,29 +719,12 @@ class hhskim(ATLASStudent):
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
 
-                #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
-                #    [tau1.fourvect,
-                #     tau2.fourvect,
-                #     jet1.fourvect])
-
-                # sphericity
-                #tree.sphericity = sphericity
-                # aplanarity
-                #tree.aplanarity = aplanarity
-
             RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
 
             # mass of ditau + leading jet system
             if jet1 is not None:
                 tree.mass_tau1_tau2_jet1 = (
                     tau1.fourvect + tau2.fourvect + jet1.fourvect).M()
-
-            # full sphericity and aplanarity
-            #sphericity_full, aplanarity_full = eventshapes.sphericity_aplanarity(
-            #    [tau1.fourvect, tau2.fourvect] + [jet.fourvect for jet in jets])
-
-            #tree.sphericity_full = sphericity_full
-            #tree.aplanarity_full = aplanarity_full
 
             #####################################
             # number of tracks from PV minus taus
@@ -895,23 +867,6 @@ class hhskim(ATLASStudent):
             tree.mass_collinear_tau1_tau2 = collin_mass
             tau1.collinear_momentum_fraction = tau1_x
             tau2.collinear_momentum_fraction = tau2_x
-
-            ###########################
-            # Match jets to VBF partons
-            ###########################
-            #if datatype == datasets.MC and 'VBF' in dsname and year == 2011:
-            #    # get partons (already sorted by eta in hepmc) FIXME!!!
-            #    parton1, parton2 = hepmc.get_VBF_partons(event)
-            #    tree.mass_true_quark1_quark2 = (parton1.fourvect + parton2.fourvect).M()
-            #    # order here needs to be revised since jets are no longer
-            #    # sorted by eta but instead by pT
-            #    PartonBlock.set(tree, parton1, parton2)
-            #    if len(jets) >= 2:
-            #        jet1, jet2 = jets[:2]
-            #        for i, jet in zip((1, 2), (jet1, jet2)):
-            #            for parton in (parton1, parton2):
-            #                if utils.dR(jet.eta, jet.phi, parton.eta, parton.phi) < .8:
-            #                    setattr(tree, 'jet%i_matched' % i, True)
 
             # Fill the tau block
             # This must come after the RecoJetBlock is filled since
