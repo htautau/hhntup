@@ -1,8 +1,0 @@
-# https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/MC12APAPER2014#Signal_sample
-# https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HSG7OverlapSamples
-# https://twiki.cern.ch/twiki/bin/view/AtlasProtected/OverlapRules
-mc12_8TeV.189140.PowhegPythia8_AU2CT10_ggH125p5_inclusive.merge.NTUP_TAU.e2537_s1773_s1776_r4485_r4540_p1344/
-mc12_8TeV.189141.PowhegPythia8_AU2CT10_VBFH125p5_inclusive.merge.NTUP_TAU.e2537_s1773_s1776_r4485_r4540_p1344/
-mc12_8TeV.189142.Pythia8_AU2CTEQ6L1_WH125p5_inclusive.merge.NTUP_TAU.e2537_s1773_s1776_r4485_r4540_p1344/
-mc12_8TeV.189143.Pythia8_AU2CTEQ6L1_ZH125p5_inclusive.merge.NTUP_TAU.e2537_s1773_s1776_r4485_r4540_p1344/
-mc12_8TeV.189144.Pythia8_AU2CTEQ6L1_ttH125p5_inclusive.merge.NTUP_TAU.e2537_s1773_s1776_r4485_r4540_p1344/
