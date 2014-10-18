@@ -409,8 +409,8 @@ class hhskim(ATLASStudent):
                 #     count_funcs=count_funcs),
                 # TauAuthor(2,
                 #     count_funcs=count_funcs),
-                # TauCrack(2,
-                #     count_funcs=count_funcs),
+                TauCrack(2,
+                    count_funcs=count_funcs),
                 # TauLArHole(2,
                 #     tree=tree,
                 #     passthrough=year > 2011,
@@ -425,23 +425,23 @@ class hhskim(ATLASStudent):
                 # #    datatype=datatype,
                 # #    passthrough=datatype == datasets.EMBED,
                 # #    count_funcs=count_funcs),
-                # # Select two leading taus at this point
-                # # 25 and 35 for data
-                # # 20 and 30 for MC to leave room for TES uncertainty
-                # TauLeadSublead(
-                #     lead=(
-                #         35 * GeV if datatype == datasets.DATA or local
-                #         else 30 * GeV),
-                #     sublead=(
-                #         25 * GeV if datatype == datasets.DATA or local
-                #         else 20 * GeV),
-                #     count_funcs=count_funcs),
-                # # taus are sorted (in decreasing order) by pT from here on
+                # Select two leading taus at this point
+                # 25 and 35 for data
+                # 20 and 30 for MC to leave room for TES uncertainty
+                TauLeadSublead(
+                    lead=(
+                        35 * GeV if datatype == datasets.DATA or local
+                        else 30 * GeV),
+                    sublead=(
+                        25 * GeV if datatype == datasets.DATA or local
+                        else 20 * GeV),
+                    count_funcs=count_funcs),
+                # taus are sorted (in decreasing order) by pT from here on
                 # TauIDSelection(
                 #     tree=tree,
                 #     count_funcs=count_funcs),
-                # TaudR(3.2,
-                #     count_funcs=count_funcs),
+                TaudR(3.2,
+                    count_funcs=count_funcs),
                 # #TauTriggerMatchThreshold(
                 # #    datatype=datatype,
                 # #    tree=tree,

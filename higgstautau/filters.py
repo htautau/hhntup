@@ -414,7 +414,7 @@ class Tau1Track3Track(EventFilter):
         super(Tau1Track3Track, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.numTrack in (1, 3))
+        event.taus.select(lambda tau: tau.nTracks() in (1, 3))
         return len(event.taus) >= self.min_taus
 
 
@@ -426,11 +426,11 @@ class Tau1P3P(EventFilter):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         # 1P + 3P
-        if (tau1.numTrack == 1 and tau2.numTrack == 3) or \
-           (tau1.numTrack == 3 and tau2.numTrack == 1):
+        if (tau1.nTracks() == 1 and tau2.nTracks() == 3) or \
+           (tau1.nTracks() == 3 and tau2.nTracks() == 1):
             return True
         # 3P + 3P
-        if tau1.numTrack == 3 and tau2.numTrack == 3:
+        if tau1.nTracks() == 3 and tau2.nTracks() == 3:
             return True
         return False
 
@@ -442,7 +442,7 @@ class TauCharge(EventFilter):
         super(TauCharge, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: abs(tau.charge) == 1)
+        event.taus.select(lambda tau: abs(tau.charge()) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -477,7 +477,7 @@ class TauCrack(EventFilter):
     def passes(self, event):
         event.taus.select(
             lambda tau: not (
-                1.37 <= abs(tau.track_eta[tau.leadtrack_idx]) <= 1.52))
+                1.37 <= abs(tau.track(0).eta()) <= 1.52))
         return len(event.taus) >= self.min_taus
 
 

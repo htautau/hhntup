@@ -53,12 +53,12 @@ class TauLeadSublead(EventFilter):
 
     def passes(self, event):
         # sort in descending order by pT
-        event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+        event.taus.sort(key=lambda tau: tau.pt(), reverse=True)
         # only keep leading two taus
         event.taus.slice(0, 2)
         # Event passes if the highest pT tau is above the leading
         # pT threshold and the next subleading tau pT is above the subleading pT theshold
-        return event.taus[0].pt > self.lead and event.taus[1].pt > self.sublead
+        return event.taus[0].pt() > self.lead and event.taus[1].pt() > self.sublead
 
 
 class Triggers(EventFilter):
@@ -182,7 +182,7 @@ class TaudR(EventFilter):
     def passes(self, event):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
-        return utils.dR(tau1.eta, tau1.phi, tau2.eta, tau2.phi) < self.dr
+        return utils.dR(tau1.eta(), tau1.phi(), tau2.eta(), tau2.phi()) < self.dr
 
 
 class TauTrackRecounting(EventFilter):
