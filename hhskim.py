@@ -1,4 +1,6 @@
 # Author: Noel Dawe
+# Modified by: Quentin Buat (xAOD migration)
+
 import ROOT
 
 import os
@@ -14,7 +16,8 @@ from rootpy.tree.filtering import EventFilter, EventFilterList
 from rootpy.tree import Tree, TreeChain, TreeModel, TreeBuffer
 from rootpy.extern.argparse import ArgumentParser
 from rootpy.io import root_open
-from rootpy import stl
+from rootpy import stl, asrootpy
+from rootpy.vector import LorentzVector
 
 # local imports
 from xaod.xaodtree import xAODTree
@@ -522,16 +525,16 @@ class hhskim(ATLASStudent):
                 #     verbose=verbose,
                 #     very_verbose=very_verbose,
                 #     count_funcs=count_funcs),
-                # TauJetOverlapRemoval(
-                #     count_funcs=count_funcs),
-                # JetPreselection(
-                #     count_funcs=count_funcs),
-                # NonIsolatedJet(
-                #     tree=tree,
-                #     count_funcs=count_funcs),
-                # JetSelection(
-                #     year=year,
-                #     count_funcs=count_funcs),
+                TauJetOverlapRemoval(
+                    count_funcs=count_funcs),
+                JetPreselection(
+                    count_funcs=count_funcs),
+                NonIsolatedJet(
+                    tree=tree,
+                    count_funcs=count_funcs),
+                JetSelection(
+                    year=year,
+                    count_funcs=count_funcs),
                 # RecoJetTrueTauMatching(
                 #     passthrough=datatype == datasets.DATA or local,
                 #     count_funcs=count_funcs),
@@ -556,6 +559,8 @@ class hhskim(ATLASStudent):
         chain = xAODTree(chain, filters=event_filters, events=20)#self.events)
         chain.define_collection('taus', 'TauRecContainer')    
         chain.define_collection('vertices', 'PrimaryVertices')
+        chain.define_collection('jets', 'AntiKt4LCTopoJets')
+        chain.define_collection('MET', 'MET_RefFinal')
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
             hh_buffer,
@@ -579,8 +584,193 @@ class hhskim(ATLASStudent):
                 outtree.Fill()
                 continue
             
-            # fill the output tree
+            # Set the output tree event level info
             EventModel.set(tree, event.EventInfo)
+
+            # sort taus and jets in decreasing order by pT
+            event.taus.sort(key=lambda tau: tau.pt(), reverse=True)
+            event.jets.sort(key=lambda jet: jet.pt(), reverse=True)
+
+            # tau1 is the leading tau
+            # tau2 is the subleading tau
+            tau1, tau2 = event.taus
+            tau1.fourvect = asrootpy(tau1.p4())
+            tau2.fourvect = asrootpy(tau2.p4())
+            tau1.fourvect_boosted = LorentzVector()
+            tau2.fourvect_boosted = LorentzVector()
+
+            jets = list(event.jets)
+            jet1, jet2, jet3 = None, None, None
+            beta = None
+            if len(jets) >= 2:
+                jet1, jet2 = jets[:2]
+
+                # determine boost of system
+                # determine jet CoM frame
+                jet1.fourvect = asrootpy(jet1.p4())
+                jet2.fourvect = asrootpy(jet2.p4())
+                beta = asrootpy(jet1.fourvect + jet2.fourvect).BoostVector()
+                tree.jet_beta.copy_from(beta)
+
+                jet1.fourvect_boosted = LorentzVector()
+                jet2.fourvect_boosted = LorentzVector()
+                jet1.fourvect_boosted.copy_from(jet1.fourvect)
+                jet2.fourvect_boosted.copy_from(jet2.fourvect)
+                jet1.fourvect_boosted.Boost(beta * -1)
+                jet2.fourvect_boosted.Boost(beta * -1)
+
+                tau1.fourvect_boosted.copy_from(tau1.fourvect)
+                tau2.fourvect_boosted.copy_from(tau2.fourvect)
+                tau1.fourvect_boosted.Boost(beta * -1)
+                tau2.fourvect_boosted.Boost(beta * -1)
+
+                tau1.min_dr_jet = min(
+                    tau1.fourvect.DeltaR(jet1.fourvect),
+                    tau1.fourvect.DeltaR(jet2.fourvect))
+                tau2.min_dr_jet = min(
+                    tau2.fourvect.DeltaR(jet1.fourvect),
+                    tau2.fourvect.DeltaR(jet2.fourvect))
+
+                # tau centrality (degree to which they are between the two jets)
+                tau1.centrality = eventshapes.eta_centrality(
+                    tau1.fourvect.Eta(),
+                    jet1.fourvect.Eta(),
+                    jet2.fourvect.Eta())
+
+                tau2.centrality = eventshapes.eta_centrality(
+                    tau2.fourvect.Eta(),
+                    jet1.fourvect.Eta(),
+                    jet2.fourvect.Eta())
+
+                # boosted tau centrality
+                tau1.centrality_boosted = eventshapes.eta_centrality(
+                    tau1.fourvect_boosted.Eta(),
+                    jet1.fourvect_boosted.Eta(),
+                    jet2.fourvect_boosted.Eta())
+
+                tau2.centrality_boosted = eventshapes.eta_centrality(
+                    tau2.fourvect_boosted.Eta(),
+                    jet1.fourvect_boosted.Eta(),
+                    jet2.fourvect_boosted.Eta())
+
+                # 3rd leading jet
+                if len(jets) >= 3:
+                    jet3 = jets[2]
+                    jet3.fourvect = asrootpy(jet3.p4())
+                    jet3.fourvect_boosted = LorentzVector()
+                    jet3.fourvect_boosted.copy_from(jet3.fourvect)
+                    jet3.fourvect_boosted.Boost(beta * -1)
+
+            elif len(jets) == 1:
+                jet1 = jets[0]
+                jet1.fourvect = asrootpy(jet1.p4())
+
+                tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
+                tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
+
+            RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
+
+            # mass of ditau + leading jet system
+            if jet1 is not None:
+                tree.mass_tau1_tau2_jet1 = (
+                    tau1.fourvect + tau2.fourvect + jet1.fourvect).M()
+
+            #####################################
+            # number of tracks from PV minus taus
+            #####################################
+            ntrack_pv = 0
+            ntrack_nontau_pv = 0
+            for vxp in event.vertices:
+                # primary vertex
+                if vxp.vertexType() == 1:
+                    ntrack_pv = vxp.nTrackParticles()
+                    ntrack_nontau_pv = ntrack_pv - tau1.nTracks() - tau2.nTracks()
+                    break
+            tree.ntrack_pv = ntrack_pv
+            tree.ntrack_nontau_pv = ntrack_nontau_pv
+
+            #########################
+            # MET variables
+            #########################
+            MET = event.MET[0]
+            METx = MET.mpx()
+            METy = MET.mpy()
+            METet = MET.met()
+            MET_vect = Vector2(METx, METy)
+            MET_4vect = LorentzVector()
+            MET_4vect.SetPxPyPzE(METx, METy, 0., METet)
+            MET_4vect_boosted = LorentzVector()
+            MET_4vect_boosted.copy_from(MET_4vect)
+            if beta is not None:
+                MET_4vect_boosted.Boost(beta * -1)
+
+            tree.MET_et = METet
+            tree.MET_etx = METx
+            tree.MET_ety = METy
+            tree.MET_phi = MET.phi()
+            dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
+            dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
+            dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
+            tree.dPhi_tau1_tau2 = dPhi_tau1_tau2
+            tree.dPhi_tau1_MET = dPhi_tau1_MET
+            tree.dPhi_tau2_MET = dPhi_tau2_MET
+            tree.dPhi_min_tau_MET = min(dPhi_tau1_MET, dPhi_tau2_MET)
+            tree.MET_bisecting = is_MET_bisecting(
+                dPhi_tau1_tau2,
+                dPhi_tau1_MET,
+                dPhi_tau2_MET)
+
+            sumET = MET.sumet()
+            tree.MET_sumet = sumET
+            if sumET != 0:
+                tree.MET_sig = ((2. * METet / GeV) /
+                    (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
+            else:
+                tree.MET_sig = -1.
+
+            tree.MET_centrality = eventshapes.phi_centrality(
+                tau1.fourvect,
+                tau2.fourvect,
+                MET_vect)
+            tree.MET_centrality_boosted = eventshapes.phi_centrality(
+                tau1.fourvect_boosted,
+                tau2.fourvect_boosted,
+                MET_4vect_boosted)
+
+            tree.number_of_good_vertices = len(event.vertices)
+
+            ##########################
+            # Jet and sum pt variables
+            ##########################
+            tree.numJets = len(event.jets)
+
+            # sum pT with only the two leading jets
+            tree.sum_pt = sum(
+                [tau1.pt(), tau2.pt()] +
+                [jet.pt() for jet in jets[:2]])
+
+            # sum pT with all selected jets
+            tree.sum_pt_full = sum(
+                [tau1.pt(), tau2.pt()] +
+                [jet.pt() for jet in jets])
+
+            # vector sum pT with two leading jets and MET
+            tree.vector_sum_pt = sum(
+                [tau1.fourvect, tau2.fourvect] +
+                [jet.fourvect for jet in jets[:2]] +
+                [MET_4vect]).Pt()
+
+            # vector sum pT with all selected jets and MET
+            tree.vector_sum_pt_full = sum(
+                [tau1.fourvect, tau2.fourvect] +
+                [jet.fourvect for jet in jets] +
+                [MET_4vect]).Pt()
+
+            # resonance pT
+            tree.resonance_pt = sum(
+                [tau1.fourvect, tau2.fourvect, MET_4vect]).Pt()
+
+            # fill the output tree
             outtree.Fill(reset=True)
 
         externaltools.report()
@@ -592,198 +782,10 @@ class hhskim(ATLASStudent):
 
 
 
-            # # sort taus and jets in decreasing order by pT
-            # event.taus.sort(key=lambda tau: tau.pt, reverse=True)
-            # event.jets.sort(key=lambda jet: jet.pt, reverse=True)
 
-            # # tau1 is the leading tau
-            # # tau2 is the subleading tau
-            # tau1, tau2 = event.taus
-            # jets = list(event.jets)
-            # jet1, jet2, jet3 = None, None, None
-            # beta = None
 
-            # if len(jets) >= 2:
-            #     jet1, jet2 = jets[:2]
 
-            #     # determine boost of system
-            #     # determine jet CoM frame
-            #     beta = (jet1.fourvect + jet2.fourvect).BoostVector()
-            #     tree.jet_beta.copy_from(beta)
 
-            #     jet1.fourvect_boosted.copy_from(jet1.fourvect)
-            #     jet2.fourvect_boosted.copy_from(jet2.fourvect)
-            #     jet1.fourvect_boosted.Boost(beta * -1)
-            #     jet2.fourvect_boosted.Boost(beta * -1)
-
-            #     tau1.fourvect_boosted.copy_from(tau1.fourvect)
-            #     tau2.fourvect_boosted.copy_from(tau2.fourvect)
-            #     tau1.fourvect_boosted.Boost(beta * -1)
-            #     tau2.fourvect_boosted.Boost(beta * -1)
-
-            #     tau1.min_dr_jet = min(
-            #         tau1.fourvect.DeltaR(jet1.fourvect),
-            #         tau1.fourvect.DeltaR(jet2.fourvect))
-            #     tau2.min_dr_jet = min(
-            #         tau2.fourvect.DeltaR(jet1.fourvect),
-            #         tau2.fourvect.DeltaR(jet2.fourvect))
-
-            #     #sphericity, aplanarity = eventshapes.sphericity_aplanarity(
-            #     #    [tau1.fourvect,
-            #     #     tau2.fourvect,
-            #     #     jet1.fourvect,
-            #     #     jet2.fourvect])
-
-            #     # sphericity
-            #     #tree.sphericity = sphericity
-            #     # aplanarity
-            #     #tree.aplanarity = aplanarity
-
-            #     #sphericity_boosted, aplanarity_boosted = eventshapes.sphericity_aplanarity(
-            #     #    [tau1.fourvect_boosted,
-            #     #     tau2.fourvect_boosted,
-            #     #     jet1.fourvect_boosted,
-            #     #     jet2.fourvect_boosted])
-
-            #     # sphericity
-            #     #tree.sphericity_boosted = sphericity_boosted
-            #     # aplanarity
-            #     #tree.aplanarity_boosted = aplanarity_boosted
-
-            #     # tau centrality (degree to which they are between the two jets)
-            #     tau1.centrality = eventshapes.eta_centrality(
-            #         tau1.fourvect.Eta(),
-            #         jet1.fourvect.Eta(),
-            #         jet2.fourvect.Eta())
-
-            #     tau2.centrality = eventshapes.eta_centrality(
-            #         tau2.fourvect.Eta(),
-            #         jet1.fourvect.Eta(),
-            #         jet2.fourvect.Eta())
-
-            #     # boosted tau centrality
-            #     tau1.centrality_boosted = eventshapes.eta_centrality(
-            #         tau1.fourvect_boosted.Eta(),
-            #         jet1.fourvect_boosted.Eta(),
-            #         jet2.fourvect_boosted.Eta())
-
-            #     tau2.centrality_boosted = eventshapes.eta_centrality(
-            #         tau2.fourvect_boosted.Eta(),
-            #         jet1.fourvect_boosted.Eta(),
-            #         jet2.fourvect_boosted.Eta())
-
-            #     # 3rd leading jet
-            #     if len(jets) >= 3:
-            #         jet3 = jets[2]
-            #         jet3.fourvect_boosted.copy_from(jet3.fourvect)
-            #         jet3.fourvect_boosted.Boost(beta * -1)
-
-            # elif len(jets) == 1:
-            #     jet1 = jets[0]
-
-            #     tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
-            #     tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
-
-            # RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
-
-            # # mass of ditau + leading jet system
-            # if jet1 is not None:
-            #     tree.mass_tau1_tau2_jet1 = (
-            #         tau1.fourvect + tau2.fourvect + jet1.fourvect).M()
-
-            # #####################################
-            # # number of tracks from PV minus taus
-            # #####################################
-            # ntrack_pv = 0
-            # ntrack_nontau_pv = 0
-            # for vxp in event.vertices:
-            #     # primary vertex
-            #     if vxp.type == 1:
-            #         ntrack_pv = vxp.nTracks
-            #         ntrack_nontau_pv = ntrack_pv - tau1.numTrack - tau2.numTrack
-            #         break
-            # tree.ntrack_pv = ntrack_pv
-            # tree.ntrack_nontau_pv = ntrack_nontau_pv
-
-            # #########################
-            # # MET variables
-            # #########################
-            # METx = event.MET.etx
-            # METy = event.MET.ety
-            # MET = event.MET.et
-            # MET_vect = Vector2(METx, METy)
-            # MET_4vect = LorentzVector()
-            # MET_4vect.SetPxPyPzE(METx, METy, 0., MET)
-            # MET_4vect_boosted = LorentzVector()
-            # MET_4vect_boosted.copy_from(MET_4vect)
-            # if beta is not None:
-            #     MET_4vect_boosted.Boost(beta * -1)
-
-            # tree.MET_et = MET
-            # tree.MET_etx = METx
-            # tree.MET_ety = METy
-            # tree.MET_phi = event.MET.phi
-            # dPhi_tau1_tau2 = abs(tau1.fourvect.DeltaPhi(tau2.fourvect))
-            # dPhi_tau1_MET = abs(tau1.fourvect.DeltaPhi(MET_4vect))
-            # dPhi_tau2_MET = abs(tau2.fourvect.DeltaPhi(MET_4vect))
-            # tree.dPhi_tau1_tau2 = dPhi_tau1_tau2
-            # tree.dPhi_tau1_MET = dPhi_tau1_MET
-            # tree.dPhi_tau2_MET = dPhi_tau2_MET
-            # tree.dPhi_min_tau_MET = min(dPhi_tau1_MET, dPhi_tau2_MET)
-            # tree.MET_bisecting = is_MET_bisecting(
-            #     dPhi_tau1_tau2,
-            #     dPhi_tau1_MET,
-            #     dPhi_tau2_MET)
-
-            # sumET = event.MET.sumet
-            # tree.MET_sumet = sumET
-            # if sumET != 0:
-            #     tree.MET_sig = ((2. * MET / GeV) /
-            #         (utils.sign(sumET) * sqrt(abs(sumET / GeV))))
-            # else:
-            #     tree.MET_sig = -1.
-
-            # tree.MET_centrality = eventshapes.phi_centrality(
-            #     tau1.fourvect,
-            #     tau2.fourvect,
-            #     MET_vect)
-            # tree.MET_centrality_boosted = eventshapes.phi_centrality(
-            #     tau1.fourvect_boosted,
-            #     tau2.fourvect_boosted,
-            #     MET_4vect_boosted)
-
-            # tree.number_of_good_vertices = len(event.vertices)
-
-            # ##########################
-            # # Jet and sum pt variables
-            # ##########################
-            # tree.numJets = len(event.jets)
-
-            # # sum pT with only the two leading jets
-            # tree.sum_pt = sum(
-            #     [tau1.pt, tau2.pt] +
-            #     [jet.pt for jet in jets[:2]])
-
-            # # sum pT with all selected jets
-            # tree.sum_pt_full = sum(
-            #     [tau1.pt, tau2.pt] +
-            #     [jet.pt for jet in jets])
-
-            # # vector sum pT with two leading jets and MET
-            # tree.vector_sum_pt = sum(
-            #     [tau1.fourvect, tau2.fourvect] +
-            #     [jet.fourvect for jet in jets[:2]] +
-            #     [MET_4vect]).Pt()
-
-            # # vector sum pT with all selected jets and MET
-            # tree.vector_sum_pt_full = sum(
-            #     [tau1.fourvect, tau2.fourvect] +
-            #     [jet.fourvect for jet in jets] +
-            #     [MET_4vect]).Pt()
-
-            # # resonance pT
-            # tree.resonance_pt = sum(
-            #     [tau1.fourvect, tau2.fourvect, MET_4vect]).Pt()
 
             # #############################
             # # tau <-> vertex association

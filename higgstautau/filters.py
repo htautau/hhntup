@@ -577,7 +577,7 @@ class TauJetOverlapRemoval(EventFilter):
         # remove overlap with taus
         event.jets.select(lambda jet:
                 not any([tau for tau in event.taus if
-                (utils.dR(jet.eta, jet.phi, tau.eta, tau.phi) < self.dr)]))
+                (utils.dR(jet.eta(), jet.phi(), tau.eta(), tau.phi()) < self.dr)]))
         return True
 
 class NumJets25(EventFilter):
@@ -606,7 +606,7 @@ class NonIsolatedJet(EventFilter):
         self.tree.nonisolatedjet = False
         for tau in event.taus:
             for jet in event.jets:
-                if 0.4 < utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 1.0:
+                if 0.4 < utils.dR(tau.eta(), tau.phi(), jet.eta(), jet.phi()) < 1.0:
                     self.tree.nonisolatedjet = True
         return True
 
@@ -636,20 +636,21 @@ def jet_selection_2012(jet):
     """ Finalizes the jet selection
     https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
     """
-    if not (jet.pt > 30 * GeV):
+    if not (jet.pt() > 30 * GeV):
         return False
 
-    if not (abs(jet.eta) < 4.5):
+    if not (abs(jet.eta()) < 4.5):
         return False
 
     # suppress forward jets
-    if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
+    if (abs(jet.eta()) > 2.4) and not (jet.pt() > 35 * GeV):
         return False
 
-    # JVF cut on central jets below 50 GeV
-    if (jet.pt < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
-        if not (abs(jet.jvtxf) > 0.5):
-            return False
+    # NEED TO APPLY THIS ON XAOD
+    # # JVF cut on central jets below 50 GeV
+    # if (jet.pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
+    #     if not (abs(jet.jvtxf) > 0.5):
+    #         return False
 
     return True
 
@@ -674,7 +675,7 @@ class JetSelection(EventFilter):
 class JetPreselection(EventFilter):
 
     def passes(self, event):
-        event.jets.select(lambda jet: jet.pt > 20 * GeV)
+        event.jets.select(lambda jet: jet.pt() > 20 * GeV)
         return True
 
 
