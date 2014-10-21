@@ -417,7 +417,6 @@ class hhskim(ATLASStudent):
                 #     datatype=datatype,
                 #     year=year,
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
                 # Need to check the electron ID and OQ
                 ElectronVeto(
                         el_sel='Medium',
@@ -433,12 +432,10 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauEta(2,
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # TauElectronVeto(2,
-                #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # TauMuonVeto(2,
-                #     count_funcs=count_funcs),
+                TauElectronVeto(2,
+                    count_funcs=count_funcs),
+                TauMuonVeto(2,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # TauAuthor(2,
                 #     count_funcs=count_funcs),
@@ -452,8 +449,8 @@ class hhskim(ATLASStudent):
                 # # before selecting the leading and subleading taus
                 # # be sure to only consider good candidates
                 # NEED TO BE CONVERTED TO XAOD
-                # TauIDMedium(2,
-                #     count_funcs=count_funcs),
+                TauIDMedium(2,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # but not used by default
                 # #TauTriggerMatchIndex(
