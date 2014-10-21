@@ -337,10 +337,10 @@ class hhskim(ATLASStudent):
                 # TileError(
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
-                # TileTrips(
-                #     passthrough=(
-                #         local or datatype in (datasets.MC, datasets.MCEMBED)),
-                #     count_funcs=count_funcs),
+                TileTrips(
+                    passthrough=(
+                        local or datatype in (datasets.MC, datasets.MCEMBED)),
+                    count_funcs=count_funcs),
                 # JetCopy(
                 #     tree=tree,
                 #     passthrough=local,
