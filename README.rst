@@ -1,5 +1,10 @@
 .. -*- mode: rst -*-
 
+News
+----
+The master branch is now dedicated to analysis of the new atlas data format (xAOD).
+For production of skims from the d3pd, please refer to the d3pd branch.
+
 Dependencies
 ------------
 
@@ -46,6 +51,22 @@ hhntup to satisfy the symlinks in hhana. See the README in externaltools and
 TauSpinnerTool for further instructions. Use at least Python version 2.6 (2.7
 is preferred).
 
+xAOD Migration
+--------------
+* Analysis release used::
+  
+  Base, 2.0.12
+
+* Dataset used::
+
+  mc14_8TeV.147808.PowhegPythia8_AU2CT10_Ztautau.merge.AOD.e2372_s1933_s1911_r5591_r5625
+
+* You need to put a xaod file named ``xaod_struct.root`` in ``cache`` in order to read the data structure before ``rootpy`` is 
+enabled.  
+
+* To run the test::
+  
+  skim --local-test mc12_hadhad_xaod
 
 Build and setup
 ---------------
