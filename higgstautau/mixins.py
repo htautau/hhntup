@@ -3,6 +3,7 @@ from decorators import cached_property
 
 from rootpy.vector import LorentzVector, Vector3
 from rootpy.extern.hep import pdg
+from rootpy import asrootpy
 
 from . import log; log = log[__name__]
 from .utils import dR, et2pt
@@ -29,7 +30,8 @@ SF_DEFAULT = 1.
 
 class MatchedObject(object):
 
-    def __init__(self):
+    def __init__(self, obj):
+        self.obj = obj
         self.matched = False
         self.matched_dR = 9999.
         #self.matched_collision = False
@@ -39,10 +41,10 @@ class MatchedObject(object):
         return self.dr(other) < thresh
 
     def dr(self, other):
-        return dR(self.eta, self.phi, other.eta, other.phi)
+        return dR(self.obj.eta(), self.obj.phi(), other.obj.eta(), other.obj.phi())
 
     def dr_vect(self, other):
-        return dR(self.eta, self.phi, other.Eta(), other.Phi())
+        return dR(self.obj.eta(), self.obj.phi(), other.Eta(), other.Phi())
 
     def angle_vect(self, other):
         return self.fourvect.Angle(other)
@@ -53,14 +55,13 @@ class MatchedObject(object):
 
 class FourMomentum(MatchedObject):
 
-    def __init__(self):
+    def __init__(self, *args):
         self.fourvect_boosted = LorentzVector()
-        super(FourMomentum, self).__init__()
+        super(FourMomentum, self).__init__(*args)
 
     @cached_property
     def fourvect(self):
-        vect = LorentzVector()
-        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        vect = asrootpy(self.obj.p4())
         return vect
 
     def __repr__(self):
@@ -69,15 +70,16 @@ class FourMomentum(MatchedObject):
     def __str__(self):
         return "%s (m: %.3f MeV, pt: %.1f MeV, eta: %.2f, phi: %.2f)" % \
             (self.__class__.__name__,
-             self.m,
-             self.pt,
-             self.eta,
-             self.phi)
+             self.obj.m(),
+             self.obj.pt(),
+             self.obj.eta(),
+             self.obj.phi())
 
 
 class FourMomentumMeV(object):
 
     def __init__(self):
+        self.obj
         self.fourvect_boosted = LorentzVector()
 
     @cached_property
@@ -113,8 +115,8 @@ class JetFourMomentum(FourMomentum):
 
 class TauFourMomentum(FourMomentum):
 
-    def __init__(self):
-        super(TauFourMomentum, self).__init__()
+    def __init__(self, *args):
+        super(TauFourMomentum, self).__init__(*args)
 
         self.id = IDNONE
 
@@ -195,41 +197,29 @@ class TauFourMomentum(FourMomentum):
     def pt_nominal(self):
         if self._pt_nominal != -1111.:
             return self._pt_nominal
-        return self.pt
+        return self.obj.pt()
 
     @cached_property
     def fourvect(self):
-        vect = LorentzVector()
-        vect.SetPtEtaPhiM(self.pt, self.eta, self.phi, self.m)
+        vect = asrootpy(self.obj.p4())
         return vect
-
-    @cached_property
-    def leadtrack_idx(self):
-        """
-        Return index of leading track
-        """
-        ldtrkindex = -1
-        ldtrkpt = 0.
-        for i in xrange(self.track_n):
-            pt = self.track_pt[i]
-            if pt > ldtrkpt:
-                ldtrkindex = i
-                ldtrkpt = pt
-        return ldtrkindex
 
     @cached_property
     def privtx(self):
         return Vector3(
-            self.privtx_x,
-            self.privtx_y,
-            self.privtx_z)
+            self.obj.vertex().x(),
+            self.obj.vertex().y(),
+            self.obj.vertex().z())
 
     @cached_property
     def secvtx(self):
-        return Vector3(
-            self.secvtx_x,
-            self.secvtx_y,
-            self.secvtx_z)
+        if self.obj.nTracks() < 2:
+            return self.privtx
+        else:
+            return Vector3(
+                self.obj.secondaryVertex().x(),
+                self.obj.secondaryVertex().y(),
+                self.obj.secondaryVertex().z())
 
     @cached_property
     def decay_vect(self):

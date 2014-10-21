@@ -394,8 +394,10 @@ class hhskim(ATLASStudent):
                 #     datatype=datatype,
                 #     year=year,
                 #     count_funcs=count_funcs),
-                # ElectronVeto(
-                #     count_funcs=count_funcs),
+                # # Need to check the electron ID
+                ElectronVeto(
+                        el_sel='Medium',
+                        count_funcs=count_funcs),
                 # MuonVeto(
                 #     year=year,
                 #     count_funcs=count_funcs),
@@ -557,10 +559,7 @@ class hhskim(ATLASStudent):
             log.info(f)
             chain.Add(f)
         chain = xAODTree(chain, filters=event_filters, events=20)#self.events)
-        chain.define_collection('taus', 'TauRecContainer')    
-        chain.define_collection('vertices', 'PrimaryVertices')
-        chain.define_collection('jets', 'AntiKt4LCTopoJets')
-        chain.define_collection('MET', 'MET_RefFinal')
+        define_objects(chain)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
             hh_buffer,
@@ -588,16 +587,12 @@ class hhskim(ATLASStudent):
             EventModel.set(tree, event.EventInfo)
 
             # sort taus and jets in decreasing order by pT
-            event.taus.sort(key=lambda tau: tau.pt(), reverse=True)
+            event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)
             event.jets.sort(key=lambda jet: jet.pt(), reverse=True)
 
             # tau1 is the leading tau
             # tau2 is the subleading tau
             tau1, tau2 = event.taus
-            tau1.fourvect = asrootpy(tau1.p4())
-            tau2.fourvect = asrootpy(tau2.p4())
-            tau1.fourvect_boosted = LorentzVector()
-            tau2.fourvect_boosted = LorentzVector()
 
             jets = list(event.jets)
             jet1, jet2, jet3 = None, None, None
@@ -684,7 +679,7 @@ class hhskim(ATLASStudent):
                 # primary vertex
                 if vxp.vertexType() == 1:
                     ntrack_pv = vxp.nTrackParticles()
-                    ntrack_nontau_pv = ntrack_pv - tau1.nTracks() - tau2.nTracks()
+                    ntrack_nontau_pv = ntrack_pv - tau1.obj.nTracks() - tau2.obj.nTracks()
                     break
             tree.ntrack_pv = ntrack_pv
             tree.ntrack_nontau_pv = ntrack_nontau_pv
@@ -746,12 +741,12 @@ class hhskim(ATLASStudent):
 
             # sum pT with only the two leading jets
             tree.sum_pt = sum(
-                [tau1.pt(), tau2.pt()] +
+                [tau1.obj.pt(), tau2.obj.pt()] +
                 [jet.pt() for jet in jets[:2]])
 
             # sum pT with all selected jets
             tree.sum_pt_full = sum(
-                [tau1.pt(), tau2.pt()] +
+                [tau1.obj.pt(), tau2.obj.pt()] +
                 [jet.pt() for jet in jets])
 
             # vector sum pT with two leading jets and MET

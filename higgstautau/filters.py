@@ -354,7 +354,7 @@ class TauHasTrack(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.nTracks() > 0)
+        event.taus.select(lambda tau: tau.obj.nTracks() > 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -377,7 +377,7 @@ class TauPT(EventFilter):
         super(TauPT, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.pt() > self.thresh)
+        event.taus.select(lambda tau: tau.obj.pt() > self.thresh)
         return len(event.taus) >= self.min_taus
 
 
@@ -390,8 +390,8 @@ class TauEta(EventFilter):
     def passes(self, event):
         # both calo and leading track eta within 2.47
         event.taus.select(lambda tau:
-            abs(tau.eta()) < 2.47 and
-            abs(tau.track(0).eta()) < 2.47)
+            abs(tau.obj.eta()) < 2.47 and
+            abs(tau.obj.track(0).eta()) < 2.47)
         return len(event.taus) >= self.min_taus
 
 
@@ -477,7 +477,7 @@ class TauCrack(EventFilter):
     def passes(self, event):
         event.taus.select(
             lambda tau: not (
-                1.37 <= abs(tau.track(0).eta()) <= 1.52))
+                1.37 <= abs(tau.obj.track(0).eta()) <= 1.52))
         return len(event.taus) >= self.min_taus
 
 
@@ -577,7 +577,7 @@ class TauJetOverlapRemoval(EventFilter):
         # remove overlap with taus
         event.jets.select(lambda jet:
                 not any([tau for tau in event.taus if
-                (utils.dR(jet.eta(), jet.phi(), tau.eta(), tau.phi()) < self.dr)]))
+                (utils.dR(jet.eta(), jet.phi(), tau.obj.eta(), tau.obj.phi()) < self.dr)]))
         return True
 
 class NumJets25(EventFilter):
@@ -606,7 +606,7 @@ class NonIsolatedJet(EventFilter):
         self.tree.nonisolatedjet = False
         for tau in event.taus:
             for jet in event.jets:
-                if 0.4 < utils.dR(tau.eta(), tau.phi(), jet.eta(), jet.phi()) < 1.0:
+                if 0.4 < utils.dR(tau.obj.eta(), tau.obj.phi(), jet.eta(), jet.phi()) < 1.0:
                     self.tree.nonisolatedjet = True
         return True
 
