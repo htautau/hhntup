@@ -173,6 +173,9 @@ class hhskim(ATLASStudent):
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         else:
+
+
+            # NEED TO BE CONVERTED TO XAOD
             # # get pileup reweighting tool
             # pileup_tool = get_pileup_reweighting_tool(
             #     year=year,
@@ -186,6 +189,7 @@ class hhskim(ATLASStudent):
             #     use_defaults=True,
             #     systematic='low')
 
+            # NEED TO BE CONVERTED TO XAOD
             # if datatype not in (datasets.EMBED, datasets.MCEMBED):
             #     # merge TrigConfTrees
             #     metadirname = '%sMeta' % self.metadata.treename
@@ -244,6 +248,7 @@ class hhskim(ATLASStudent):
         for mmc_obj in mmc_objects:
             mmc_obj.define_object(name='resonance', prefix='resonance_')
 
+        # NEED TO BE CONVERTED TO XAOD
         # trigger_emulation = TauTriggerEmulation(
         #     year=year,
         #     passthrough=local or datatype != datasets.MC or year > 2011,
@@ -282,42 +287,52 @@ class hhskim(ATLASStudent):
                         local or (
                             datatype not in (datasets.DATA, datasets.EMBED))),
                     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # CoreFlags(
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingPileupPatch(
                 #     passthrough=(
                 #         local or year > 2011 or datatype != datasets.EMBED),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # averageIntPerXingPatch(
                 #     passthrough=(
                 #         local or year < 2012 or datatype != datasets.MC),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # PileupTemplates(
                 #     year=year,
                 #     passthrough=(
                 #         local or is_bch_sample or datatype not in (
                 #             datasets.MC, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # RandomSeed(
                 #     datatype=datatype,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # BCHSampleRunNumber(
                 #     passthrough=not is_bch_sample,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # RandomRunNumber(
                 #     tree=tree,
                 #     datatype=datatype,
                 #     pileup_tool=pileup_tool,
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # trigger_emulation,
+                # NEED TO BE CONVERTED TO XAOD
                 # Triggers(
                 #     year=year,
                 #     tree=tree,
                 #     datatype=datatype,
                 #     passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # PileupReweight(
                 #     year=year,
                 #     tool=pileup_tool,
@@ -331,9 +346,11 @@ class hhskim(ATLASStudent):
                 PriVertex(
                     passthrough=local,
                     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # LArError(
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TileError(
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
@@ -341,6 +358,7 @@ class hhskim(ATLASStudent):
                     passthrough=(
                         local or datatype in (datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
+                # WILL BE REMOVED
                 # JetCopy(
                 #     tree=tree,
                 #     passthrough=local,
@@ -348,12 +366,14 @@ class hhskim(ATLASStudent):
                 # # IMPORTANT!
                 # # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
                 # # jet.fourvect since jet.fourvect IS CACHED!
+                # NEED TO BE CONVERTED TO XAOD
                 # JetCalibration(
                 #     datatype=datatype,
                 #     year=year,
                 #     verbose=very_verbose,
                 #     passthrough=local or nominal_values,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # # in situ TES shift for 2012 data
                 # TauEnergyShift(
                 #     passthrough=(
@@ -361,10 +381,12 @@ class hhskim(ATLASStudent):
                 #         or year < 2012 or nominal_values),
                 #     count_funcs=count_funcs),
                 # # truth matching must come before systematics due to
+                # NEED TO BE CONVERTED TO XAOD
                 # # TES_TRUE/FAKE
                 # TruthMatching(
                 #     passthrough=datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # NvtxJets(
                 #     tree=tree,
                 #     count_funcs=count_funcs),
@@ -373,6 +395,7 @@ class hhskim(ATLASStudent):
                 # # BUT AFTER CALIBRATIONS
                 # # Systematics must also come before anything that refers to
                 # # thing.fourvect since fourvect is cached!
+                # NEED TO BE CONVERTED TO XAOD
                 # Systematics(
                 #     terms=syst_terms,
                 #     year=year,
@@ -381,23 +404,28 @@ class hhskim(ATLASStudent):
                 #     verbose=verbose,
                 #     passthrough=not syst_terms,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # JetIsPileup(
                 #     passthrough=(
                 #         local or year < 2012 or
                 #         datatype not in (datasets.MC, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # LArHole(
                 #     tree=tree,
                 #     passthrough=year > 2011,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # JetCleaning(
                 #     datatype=datatype,
                 #     year=year,
                 #     count_funcs=count_funcs),
-                # # Need to check the electron ID
+                # NEED TO BE CONVERTED TO XAOD
+                # Need to check the electron ID and OQ
                 ElectronVeto(
                         el_sel='Medium',
                         count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # MuonVeto(
                 #     year=year,
                 #     count_funcs=count_funcs),
@@ -408,22 +436,29 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauEta(2,
                     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauElectronVeto(2,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauMuonVeto(2,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauAuthor(2,
                 #     count_funcs=count_funcs),
                 TauCrack(2,
                     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauLArHole(2,
                 #     tree=tree,
                 #     passthrough=year > 2011,
                 #     count_funcs=count_funcs),
                 # # before selecting the leading and subleading taus
                 # # be sure to only consider good candidates
+                # NEED TO BE CONVERTED TO XAOD
                 # TauIDMedium(2,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
+                # but not used by default
                 # #TauTriggerMatchIndex(
                 # #    config=trigger_config,
                 # #    year=year,
@@ -442,15 +477,19 @@ class hhskim(ATLASStudent):
                         else 20 * GeV),
                     count_funcs=count_funcs),
                 # taus are sorted (in decreasing order) by pT from here on
+                # NEED TO BE CONVERTED TO XAOD
                 # TauIDSelection(
                 #     tree=tree,
                 #     count_funcs=count_funcs),
                 TaudR(3.2,
                     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
+                # but not used by default
                 # #TauTriggerMatchThreshold(
                 # #    datatype=datatype,
                 # #    tree=tree,
                 # #    count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauTriggerEfficiency(
                 #     year=year,
                 #     datatype=datatype,
@@ -459,16 +498,19 @@ class hhskim(ATLASStudent):
                 #         Systematics.TES_TERMS & self.args.syst_terms),
                 #     passthrough=datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # PileupScale(
                 #     tree=tree,
                 #     year=year,
                 #     datatype=datatype,
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauIDScaleFactors(
                 #     year=year,
                 #     passthrough=datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauFakeRateScaleFactors(
                 #     year=year,
                 #     datatype=datatype,
@@ -481,27 +523,32 @@ class hhskim(ATLASStudent):
                 #          Systematics.TES_FAKE_FINAL_DOWN in self.args.syst_terms)),
                 #     passthrough=datatype in (datasets.DATA, datasets.EMBED),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # HiggsPT(
                 #     year=year,
                 #     tree=tree,
                 #     passthrough=not is_signal or local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # TauTrackRecounting(
                 #     year=year,
                 #     use_ntup_value=tau_ntrack_recounted_use_ntup,
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # MCWeight(
                 #     datatype=datatype,
                 #     tree=tree,
                 #     passthrough=local or datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingIsolation(
                 #     tree=tree,
                 #     passthrough=(
                 #         local or year < 2012 or
                 #         datatype not in (datasets.EMBED, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingCorrections(
                 #     tree=tree,
                 #     year=year,
@@ -509,6 +556,7 @@ class hhskim(ATLASStudent):
                 #         local or
                 #         datatype not in (datasets.EMBED, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingTauSpinner(
                 #     year=year,
                 #     tree=tree,
@@ -519,6 +567,7 @@ class hhskim(ATLASStudent):
                 # # put MET recalculation after tau selection but before tau-jet
                 # # overlap removal and jet selection because of the RefAntiTau
                 # # MET correction
+                # NEED TO BE CONVERTED TO XAOD
                 # METRecalculation(
                 #     terms=syst_terms,
                 #     year=year,
@@ -537,14 +586,17 @@ class hhskim(ATLASStudent):
                 JetSelection(
                     year=year,
                     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # RecoJetTrueTauMatching(
                 #     passthrough=datatype == datasets.DATA or local,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # BCHCleaning(
                 #     tree=tree,
                 #     passthrough=year == 2011 or local,
                 #     datatype=datatype,
                 #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
                 # ClassifyInclusiveHiggsSample(
                 #     tree=tree,
                 #     passthrough=not is_inclusive_signal,
@@ -765,6 +817,61 @@ class hhskim(ATLASStudent):
             tree.resonance_pt = sum(
                 [tau1.fourvect, tau2.fourvect, MET_4vect]).Pt()
 
+            # #############################
+            # # tau <-> vertex association
+            # #############################
+            tree.tau_same_vertex = (
+                tau1.obj.vertex() == tau2.obj.vertex())
+
+            tau1.vertex_prob = ROOT.TMath.Prob(
+                tau1.obj.vertex().chiSquared(),
+                int(tau1.obj.vertex().numberDoF()))
+
+            tau2.vertex_prob = ROOT.TMath.Prob(
+                tau2.obj.vertex().chiSquared(),
+                int(tau2.obj.vertex().numberDoF()))
+
+            ##########################
+            # MMC Mass
+            ##########################
+            mmc_result = mmc.mass(
+                tau1, tau2,
+                METx, METy, sumET,
+                njets=len(event.jets))
+
+            for mmc_method, mmc_object in enumerate(mmc_objects):
+                mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
+                if verbose:
+                    log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
+
+                mmc_object.mass = mmc_mass
+                mmc_object.MET_et = mmc_met.Mod()
+                mmc_object.MET_etx = mmc_met.X()
+                mmc_object.MET_ety = mmc_met.Y()
+                mmc_object.MET_phi = math.pi - mmc_met.Phi()
+                if mmc_mass > 0:
+                    FourMomentum.set(mmc_object.resonance, mmc_resonance)
+
+            # ############################
+            # # collinear and visible mass
+            # ############################
+            vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
+                tau1, tau2, METx, METy)
+
+            tree.mass_vis_tau1_tau2 = vis_mass
+            tree.mass_collinear_tau1_tau2 = collin_mass
+            tau1.collinear_momentum_fraction = tau1_x
+            tau2.collinear_momentum_fraction = tau2_x
+
+            # # Fill the tau block
+            # # This must come after the RecoJetBlock is filled since
+            # # that sets the jet_beta for boosting the taus
+            RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
+
+            # NEED TO BE CONVERTED TO XAOD
+            # if datatype != datasets.DATA:
+            #     TrueTauBlock.set(tree, tau1, tau2)
+
             # fill the output tree
             outtree.Fill(reset=True)
 
@@ -782,60 +889,7 @@ class hhskim(ATLASStudent):
 
 
 
-            # #############################
-            # # tau <-> vertex association
-            # #############################
-            # tree.tau_same_vertex = (
-            #     tau1.privtx_x == tau2.privtx_x and
-            #     tau1.privtx_y == tau2.privtx_y and
-            #     tau1.privtx_z == tau2.privtx_z)
 
-            # tau1.vertex_prob = ROOT.TMath.Prob(
-            #     tau1.privtx_chiSquared,
-            #     int(tau1.privtx_numberDoF))
-
-            # tau2.vertex_prob = ROOT.TMath.Prob(
-            #     tau2.privtx_chiSquared,
-            #     int(tau2.privtx_numberDoF))
-
-            # ##########################
-            # # MMC Mass
-            # ##########################
-            # mmc_result = mmc.mass(
-            #     tau1, tau2,
-            #     METx, METy, sumET,
-            #     njets=len(event.jets))
-
-            # for mmc_method, mmc_object in enumerate(mmc_objects):
-            #     mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
-            #     if verbose:
-            #         log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
-
-            #     mmc_object.mass = mmc_mass
-            #     mmc_object.MET_et = mmc_met.Mod()
-            #     mmc_object.MET_etx = mmc_met.X()
-            #     mmc_object.MET_ety = mmc_met.Y()
-            #     mmc_object.MET_phi = math.pi - mmc_met.Phi()
-            #     if mmc_mass > 0:
-            #         FourMomentum.set(mmc_object.resonance, mmc_resonance)
-
-            # ############################
-            # # collinear and visible mass
-            # ############################
-            # vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
-            #     tau1, tau2, METx, METy)
-
-            # tree.mass_vis_tau1_tau2 = vis_mass
-            # tree.mass_collinear_tau1_tau2 = collin_mass
-            # tau1.collinear_momentum_fraction = tau1_x
-            # tau2.collinear_momentum_fraction = tau2_x
-
-            # # Fill the tau block
-            # # This must come after the RecoJetBlock is filled since
-            # # that sets the jet_beta for boosting the taus
-            # RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
-            # if datatype != datasets.DATA:
-            #     TrueTauBlock.set(tree, tau1, tau2)
 
             # # fill the output tree
             # outtree.Fill(reset=True)
