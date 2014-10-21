@@ -4,7 +4,7 @@ from rootpy.tree.filtering import *
 from rootpy.extern.hep import pdg
 from rootpy import stl
 VectorTLorentzVector = stl.vector("TLorentzVector")
-
+Vector = stl.vector('float')
 from itertools import ifilter
 from math import *
 
@@ -65,7 +65,6 @@ class CoreFlags(EventFilter):
 
 
 class NvtxJets(EventFilter):
-    # NOT CONVERTED TO XAOD YET
     def __init__(self, tree, **kwargs):
         super(NvtxJets, self).__init__(**kwargs)
         self.tree = tree
@@ -83,13 +82,13 @@ class NvtxJets(EventFilter):
         # check should be applied to the first vertex in the collection.
         # Otherwise, you should ensure that the vx_type branch is available.
         for vertex in event.vertices:
-            if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
+            if vertex.vertexType() == 1 and vertex.nTrackParticles() > 2 and abs(vertex.z()) < 200:
                 goodPV = True
         if goodPV:
             for vertex in event.vertices:
-                if vertex.nTracks > 2:
+                if vertex.nTrackParticles() > 2:
                     nvtxsoftmet += 1
-                if vertex.nTracks > 1:
+                if vertex.nTrackParticles() > 1:
                     nvtxjets += 1
         self.tree.nvtxsoftmet = nvtxsoftmet
         self.tree.nvtxjets = nvtxjets
@@ -123,19 +122,31 @@ class BCHCleaning(EventFilter):
         if self.datatype in (datasets.DATA, datasets.MC, datasets.MCEMBED):
             if self.datatype == datasets.DATA:
                 jet_tool = self.bchtool_data
-                runnumber = event.RunNumber
-                lbn = event.lbn
+                runnumber = event.EventInfo.runNumber()
+                lbn = event.EventInfo.lumiBlock()
             else:
                 jet_tool = self.bchtool_mc
                 runnumber = self.tree.RunNumber
                 lbn = self.tree.lbn
                 #jet_tool.SetSeed(314159 + event.EventNumber * 2)
             for jet in event.jets:
-                jet.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
-                jet.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
+                jet.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
             for tau in event.taus:
-                tau.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
-                tau.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                tau.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
 
         elif self.datatype == datasets.EMBED:
             # Do truth-matching to find out if MC taus
@@ -148,15 +159,27 @@ class BCHCleaning(EventFilter):
                     jet_tool = self.bchtool_mc
                 else:
                     jet_tool = self.bchtool_data
-                jet.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
-                jet.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
+                jet.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
             for tau in event.taus:
                 if tau.matched:
                     jet_tool = self.bchtool_mc
                 else:
                     jet_tool = self.bchtool_data
-                tau.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
-                tau.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                tau.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
 
         return True
 
@@ -203,21 +226,24 @@ class JetCleaning(EventFilter):
     def passes(self, event):
         # using LC jets
         for jet in event.jets:
-            if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max:
+            if jet.pt() <= self.pt_thresh or abs(jet.eta()) >= self.eta_max:
                 continue
-            LArQmean = jet.AverageLArQF / 65535.0
-            chf = jet.sumPtTrk / jet.pt
+            LArQmean = jet.auxdataConst('float')('AverageLArQF') / 65535.0
+            chf = 0
+            sumptrk_vec  = jet.auxdataConst('std::vector<float, std::allocator<float> >')('SumPtTrkPt500')
+            if not sumptrk_vec.empty():
+                chf = sumptrk_vec[0] / jet.pt()
             if jetcleaning.is_bad(
                     level=self.level,
-                    quality=jet.LArQuality,
-                    NegE=jet.NegativeE,
-                    emf=jet.emfrac,
-                    hecf=jet.hecf,
-                    time=jet.Timing,
-                    fmax=jet.fracSamplingMax,
-                    eta=jet.emscale_eta,
+                    quality=jet.auxdataConst('float')('LArQuality'),
+                    NegE=jet.auxdataConst('float')('NegativeE'),
+                    emf=jet.auxdataConst('float')('EMFrac'),
+                    hecf=jet.auxdataConst('float')('HECFrac'),
+                    time=jet.auxdataConst('float')('Timing'),
+                    fmax=jet.auxdataConst('float')('FracSamplingMax'),
+                    eta=jet.eta(),
                     chf=chf,
-                    HecQ=jet.HECQuality,
+                    HecQ=jet.auxdataConst('float')('HECQuality'),
                     LArQmean=LArQmean):
                 return False
 
@@ -228,9 +254,11 @@ class JetCleaning(EventFilter):
                 # recommendation is to use EM jets
                 for jet in event.jets_EM:
                     _etaphi28 = (
-                        -0.2 < jet.eta < -0.1 and
-                        2.65 < jet.phi < 2.75)
-                    if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
+                        -0.2 < jet.eta() < -0.1 and
+                        2.65 < jet.phi() < 2.75)
+                    FracSamplingMax = jet.auxdataConst('float')('FracSamplingMax')
+                    SamplingMax = et.auxdataConst('int')('SamplingMax')
+                    if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
                         return False
             # Not required in reprocessed data:
             # Bad FCAL response in periods C1-C8
@@ -408,17 +436,25 @@ class TauEta(EventFilter):
             abs(tau.obj.track(0).eta()) < 2.47)
         return len(event.taus) >= self.min_taus
 
+def jvf_selection(tau):
+    if abs(tau.obj.track(0).eta()) > 2.1:
+        return True
+    else:
+        jvf = 0
+        jvf_vec = tau.obj.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+        if not jvf_vec.empty():
+            jvf = jvf_vec[0]
+        return jvf > .5
 
 class TauJVF(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
+        self.filter_func = jvf_selection
         super(TauJVF, self).__init__(**kwargs)
-
+        
     def passes(self, event):
-        event.taus.select(lambda tau: True if
-            abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
+        event.taus.select(self.filter_func)
         return len(event.taus) >= self.min_taus
 
 

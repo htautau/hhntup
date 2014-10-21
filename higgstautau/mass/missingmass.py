@@ -7,7 +7,8 @@ from .. import datasets
 
 import os
 from math import sqrt
-from externaltools import MissingMassCalculator
+# from externaltools import MissingMassCalculator
+import ROOT
 
 ignore_fit_warning = rlog['/ROOT.Fit'].ignore('Fit data is empty')
 

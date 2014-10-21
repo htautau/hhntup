@@ -384,9 +384,9 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # NvtxJets(
-                #     tree=tree,
-                #     count_funcs=count_funcs),
+                NvtxJets(
+                    tree=tree,
+                    count_funcs=count_funcs),
                 # # PUT THE SYSTEMATICS "FILTER" BEFORE
                 # # ANY FILTERS THAT REFER TO OBJECTS
                 # # BUT AFTER CALIBRATIONS
@@ -413,10 +413,10 @@ class hhskim(ATLASStudent):
                 #     passthrough=year > 2011,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # JetCleaning(
-                #     datatype=datatype,
-                #     year=year,
-                #     count_funcs=count_funcs),
+                JetCleaning(
+                    datatype=datatype,
+                    year=year,
+                    count_funcs=count_funcs),
                 # Need to check the electron ID and OQ
                 ElectronVeto(
                         el_sel='Medium',

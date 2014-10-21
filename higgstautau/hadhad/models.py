@@ -200,22 +200,23 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             FourMomentum.set(outtau, intau)
 
             # NEED TO BE CONVERTED TO XAOD
-            # outtau.BDTJetScore = intau.BDTJetScore
-            # outtau.BDTEleScore = intau.BDTEleScore
+            outtau.BDTJetScore = intau.obj.auxdataConst('float')('BDTJetScore')
+            outtau.BDTEleScore = intau.obj.auxdataConst('float')('BDTEleScore')
 
             # NEED TO BE CONVERTED TO XAOD
             # outtau.JetBDTSigLoose = intau.JetBDTSigLoose
             # outtau.JetBDTSigMedium = intau.JetBDTSigMedium
             # outtau.JetBDTSigTight = intau.JetBDTSigTight
 
+            outtau.nPi0 = intau.obj.auxdataConst('int')('nPi0')
             # NEED TO BE CONVERTED TO XAOD
-            # outtau.nPi0 = intau.nPi0
             # outtau.seedCalo_numTrack = intau.seedCalo_numTrack
             outtau.numTrack = intau.obj.nTracks()
             outtau.charge = intau.obj.charge()
-            #outtau.jvtxf = intau.jet_jvtxf
-            # NEED TO BE CONVERTED TO XAOD
-            # outtau.seedCalo_centFrac = intau.seedCalo_centFrac
+            
+            jvf_vec = intau.obj.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+            outtau.jvtxf = 0 if jvf_vec.empty() else jvf_vec[0]
+            outtau.seedCalo_centFrac = intau.obj.auxdataConst('float')('centFrac')
 
             outtau.centrality = intau.centrality
             outtau.centrality_boosted = intau.centrality_boosted
