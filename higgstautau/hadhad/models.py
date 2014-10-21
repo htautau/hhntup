@@ -188,30 +188,34 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
-        tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
+        tree.dEta_tau1_tau2 = abs(tau2.obj.eta() - tau1.obj.eta())
         # leading pt over subleading pt
-        tree.tau_pt_ratio = tau1.pt / tau2.pt
+        tree.tau_pt_ratio = tau1.obj.pt() / tau2.obj.pt()
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
 
-            outtau.index = intau.index
+            outtau.index = intau.obj.index()
             outtau.id = intau.id
 
             FourMomentum.set(outtau, intau)
 
-            outtau.BDTJetScore = intau.BDTJetScore
-            outtau.BDTEleScore = intau.BDTEleScore
+            # NEED TO BE CONVERTED TO XAOD
+            # outtau.BDTJetScore = intau.BDTJetScore
+            # outtau.BDTEleScore = intau.BDTEleScore
 
-            outtau.JetBDTSigLoose = intau.JetBDTSigLoose
-            outtau.JetBDTSigMedium = intau.JetBDTSigMedium
-            outtau.JetBDTSigTight = intau.JetBDTSigTight
+            # NEED TO BE CONVERTED TO XAOD
+            # outtau.JetBDTSigLoose = intau.JetBDTSigLoose
+            # outtau.JetBDTSigMedium = intau.JetBDTSigMedium
+            # outtau.JetBDTSigTight = intau.JetBDTSigTight
 
-            outtau.nPi0 = intau.nPi0
-            outtau.seedCalo_numTrack = intau.seedCalo_numTrack
-            outtau.numTrack = intau.numTrack
-            outtau.charge = intau.charge
+            # NEED TO BE CONVERTED TO XAOD
+            # outtau.nPi0 = intau.nPi0
+            # outtau.seedCalo_numTrack = intau.seedCalo_numTrack
+            outtau.numTrack = intau.obj.nTracks()
+            outtau.charge = intau.obj.charge()
             #outtau.jvtxf = intau.jet_jvtxf
-            outtau.seedCalo_centFrac = intau.seedCalo_centFrac
+            # NEED TO BE CONVERTED TO XAOD
+            # outtau.seedCalo_centFrac = intau.seedCalo_centFrac
 
             outtau.centrality = intau.centrality
             outtau.centrality_boosted = intau.centrality_boosted
@@ -333,9 +337,11 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet1 is not None:
             FourMomentum.set(tree.jet1, jet1)
+            # NEED TO BE CONVERTED TO XAOD
             # tree.jet1_jvtxf = jet1.jvtxf
-            # tree.jet1_index = jet1.index
+            tree.jet1_index = jet1.index()
 
+            # NEED TO BE CONVERTED TO XAOD
             # if not local:
             #     # only computed in skim!
             #     tree.jet1_BCHMedium = jet1.BCHMedium
@@ -354,9 +360,11 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet2 is not None:
             FourMomentum.set(tree.jet2, jet2)
+            # NEED TO BE CONVERTED TO XAOD
             # tree.jet2_jvtxf = jet2.jvtxf
-            # tree.jet2_index = jet2.index
+            tree.jet2_index = jet2.index()
 
+            # NEED TO BE CONVERTED TO XAOD
             # if not local:
             #     # only computed in skim!
             #     tree.jet2_BCHMedium = jet2.BCHMedium
@@ -385,9 +393,11 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet3 is not None:
             FourMomentum.set(tree.jet3, jet3)
+            # NEED TO BE CONVERTED TO XAOD
             # tree.jet3_jvtxf = jet3.jvtxf
-            # tree.jet3_index = jet3.index
+            tree.jet3_index = jet3.index()
 
+            # NEED TO BE CONVERTED TO XAOD
             # if not local:
             #     # only computed in skim!
             #     tree.jet3_BCHMedium = jet3.BCHMedium

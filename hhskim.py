@@ -765,6 +765,61 @@ class hhskim(ATLASStudent):
             tree.resonance_pt = sum(
                 [tau1.fourvect, tau2.fourvect, MET_4vect]).Pt()
 
+            # #############################
+            # # tau <-> vertex association
+            # #############################
+            tree.tau_same_vertex = (
+                tau1.obj.vertex() == tau2.obj.vertex())
+
+            tau1.vertex_prob = ROOT.TMath.Prob(
+                tau1.obj.vertex().chiSquared(),
+                int(tau1.obj.vertex().numberDoF()))
+
+            tau2.vertex_prob = ROOT.TMath.Prob(
+                tau2.obj.vertex().chiSquared(),
+                int(tau2.obj.vertex().numberDoF()))
+
+            ##########################
+            # MMC Mass
+            ##########################
+            mmc_result = mmc.mass(
+                tau1, tau2,
+                METx, METy, sumET,
+                njets=len(event.jets))
+
+            for mmc_method, mmc_object in enumerate(mmc_objects):
+                mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
+                if verbose:
+                    log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
+
+                mmc_object.mass = mmc_mass
+                mmc_object.MET_et = mmc_met.Mod()
+                mmc_object.MET_etx = mmc_met.X()
+                mmc_object.MET_ety = mmc_met.Y()
+                mmc_object.MET_phi = math.pi - mmc_met.Phi()
+                if mmc_mass > 0:
+                    FourMomentum.set(mmc_object.resonance, mmc_resonance)
+
+            # ############################
+            # # collinear and visible mass
+            # ############################
+            vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
+                tau1, tau2, METx, METy)
+
+            tree.mass_vis_tau1_tau2 = vis_mass
+            tree.mass_collinear_tau1_tau2 = collin_mass
+            tau1.collinear_momentum_fraction = tau1_x
+            tau2.collinear_momentum_fraction = tau2_x
+
+            # # Fill the tau block
+            # # This must come after the RecoJetBlock is filled since
+            # # that sets the jet_beta for boosting the taus
+            RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
+
+            # NEED TO BE CONVERTED TO XAOD
+            # if datatype != datasets.DATA:
+            #     TrueTauBlock.set(tree, tau1, tau2)
+
             # fill the output tree
             outtree.Fill(reset=True)
 
@@ -782,60 +837,7 @@ class hhskim(ATLASStudent):
 
 
 
-            # #############################
-            # # tau <-> vertex association
-            # #############################
-            # tree.tau_same_vertex = (
-            #     tau1.privtx_x == tau2.privtx_x and
-            #     tau1.privtx_y == tau2.privtx_y and
-            #     tau1.privtx_z == tau2.privtx_z)
 
-            # tau1.vertex_prob = ROOT.TMath.Prob(
-            #     tau1.privtx_chiSquared,
-            #     int(tau1.privtx_numberDoF))
-
-            # tau2.vertex_prob = ROOT.TMath.Prob(
-            #     tau2.privtx_chiSquared,
-            #     int(tau2.privtx_numberDoF))
-
-            # ##########################
-            # # MMC Mass
-            # ##########################
-            # mmc_result = mmc.mass(
-            #     tau1, tau2,
-            #     METx, METy, sumET,
-            #     njets=len(event.jets))
-
-            # for mmc_method, mmc_object in enumerate(mmc_objects):
-            #     mmc_mass, mmc_resonance, mmc_met = mmc_result[mmc_method]
-            #     if verbose:
-            #         log.info("MMC (method %d): %f" % (mmc_method, mmc_mass))
-
-            #     mmc_object.mass = mmc_mass
-            #     mmc_object.MET_et = mmc_met.Mod()
-            #     mmc_object.MET_etx = mmc_met.X()
-            #     mmc_object.MET_ety = mmc_met.Y()
-            #     mmc_object.MET_phi = math.pi - mmc_met.Phi()
-            #     if mmc_mass > 0:
-            #         FourMomentum.set(mmc_object.resonance, mmc_resonance)
-
-            # ############################
-            # # collinear and visible mass
-            # ############################
-            # vis_mass, collin_mass, tau1_x, tau2_x = mass.collinearmass(
-            #     tau1, tau2, METx, METy)
-
-            # tree.mass_vis_tau1_tau2 = vis_mass
-            # tree.mass_collinear_tau1_tau2 = collin_mass
-            # tau1.collinear_momentum_fraction = tau1_x
-            # tau2.collinear_momentum_fraction = tau2_x
-
-            # # Fill the tau block
-            # # This must come after the RecoJetBlock is filled since
-            # # that sets the jet_beta for boosting the taus
-            # RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
-            # if datatype != datasets.DATA:
-            #     TrueTauBlock.set(tree, tau1, tau2)
 
             # # fill the output tree
             # outtree.Fill(reset=True)
