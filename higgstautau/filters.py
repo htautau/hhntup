@@ -554,6 +554,11 @@ class TauLArHole(EventFilter):
                  and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
         return len(event.taus) >= self.min_taus
 
+class TrueTauSelection(EventFilter):
+    
+    def passes(self, event):
+        event.truetaus.select(lambda p: p.isTau() and p.status() in (2,))
+        return True
 
 class TruthMatching(EventFilter):
     # NOT CONVERTED TO XAOD YET
@@ -565,13 +570,14 @@ class TruthMatching(EventFilter):
             tau.matched = False
             tau.matched_dr = 1111.
             tau.matched_object = None
-            for truetau in event.truetaus:
-                dr = utils.dR(tau.eta, tau.phi, truetau.vis_eta, truetau.vis_phi)
+            for p in event.truetaus:
+                tau_decay = TauDecay(p).fourvect_visible
+                dr = utils.dR(tau.obj.eta(), tau.obj.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     tau.matched = True
                     tau.matched_dr = dr
-                    tau.matched_object = truetau
+                    tau.matched_object = p
                     break
         return True
 
@@ -708,11 +714,12 @@ def jet_selection_2012(jet):
     if (abs(jet.eta()) > 2.4) and not (jet.pt() > 35 * GeV):
         return False
 
-    # NEED TO APPLY THIS ON XAOD
-    # # JVF cut on central jets below 50 GeV
-    # if (jet.pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
-    #     if not (abs(jet.jvtxf) > 0.5):
-    #         return False
+    # JVF cut on central jets below 50 GeV
+    if (jet.pt() < 50 * GeV) and (abs(jet.eta()) < 2.4):
+        jvf_vec = jet.auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+        jvf = 0 if jvf_vec.empty() else jvf_vec[0]
+        if not (abs(jvf) > 0.5):
+            return False
 
     return True
 

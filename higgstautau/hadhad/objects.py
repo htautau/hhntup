@@ -10,6 +10,9 @@ def define_objects(tree):
     tree.define_collection('jets', 'AntiKt4LCTopoJets')
     tree.define_collection('jets_EM', 'AntiKt4EMTopoJets')
     tree.define_collection('MET', 'MET_RefFinal')
+    tree.define_collection('mc', 'TruthParticle')
+    # collection filtered in hhskim
+    tree.define_collection('truetaus', 'TruthParticle')
 
 # def define_objects(tree, year):
 

@@ -380,9 +380,11 @@ class hhskim(ATLASStudent):
                 # # truth matching must come before systematics due to
                 # NEED TO BE CONVERTED TO XAOD
                 # # TES_TRUE/FAKE
-                # TruthMatching(
-                #     passthrough=datatype == datasets.DATA,
-                #     count_funcs=count_funcs),
+                TrueTauSelection(
+                        count_funcs=count_funcs),
+                TruthMatching(
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 NvtxJets(
                     tree=tree,
@@ -864,7 +866,6 @@ class hhskim(ATLASStudent):
             # NEED TO BE CONVERTED TO XAOD
             # if datatype != datasets.DATA:
             #     TrueTauBlock.set(tree, tau1, tau2)
-
             # fill the output tree
             outtree.Fill(reset=True)
 

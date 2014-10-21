@@ -281,9 +281,9 @@ class TauIDScaleFactors(EventFilter):
             if not tau.matched:
                 continue
             wp = self.get_id_2012(tau)
-            sf = self.tool.GetIDSF(wp, tau.eta, tau.numTrack)
-            sf_stat = self.tool.GetIDStatUnc(wp, tau.eta, tau.numTrack)
-            sf_sys = self.tool.GetIDSysUnc(wp, tau.eta, tau.numTrack)
+            sf = self.tool.GetIDSF(wp, tau.obj.eta(), tau.obj.nTracks())
+            sf_stat = self.tool.GetIDStatUnc(wp, tau.obj.eta(), tau.obj.nTracks())
+            sf_sys = self.tool.GetIDSysUnc(wp, tau.obj.eta(), tau.obj.nTracks())
             tau.id_sf =  sf
             tau.id_sf_high = sf
             tau.id_sf_low = sf
