@@ -60,7 +60,8 @@ class PriVertex(EventFilter):
 class CoreFlags(EventFilter):
 
     def passes(self, event):
-        return (event.coreFlags & 0x40000) == 0
+        Core = event.EventInfo.Core
+        return event.EventInfo.errorState(Core) == 0
 
 
 class NvtxJets(EventFilter):
@@ -246,13 +247,15 @@ class JetCleaning(EventFilter):
 class LArError(EventFilter):
 
     def passes(self, event):
-        return event.larError != 2
+        LAr = event.EventInfo.LAr
+        return event.EventInfo.errorState(LAr) == 0
 
 
 class TileError(EventFilter):
 
     def passes(self, event):
-        return event.tileError != 2
+        Tile = event.EventInfo.Tile
+        return event.EventInfo.errorState(Tile) == 0
 
 
 def in_lar_hole(eta, phi):

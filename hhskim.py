@@ -287,10 +287,9 @@ class hhskim(ATLASStudent):
                         local or (
                             datatype not in (datasets.DATA, datasets.EMBED))),
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # CoreFlags(
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
+                CoreFlags(
+                    passthrough=local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingPileupPatch(
                 #     passthrough=(
@@ -346,14 +345,12 @@ class hhskim(ATLASStudent):
                 PriVertex(
                     passthrough=local,
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # LArError(
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # TileError(
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
+                LArError(
+                    passthrough=local,
+                    count_funcs=count_funcs),
+                TileError(
+                    passthrough=local,
+                    count_funcs=count_funcs),
                 TileTrips(
                     passthrough=(
                         local or datatype in (datasets.MC, datasets.MCEMBED)),
