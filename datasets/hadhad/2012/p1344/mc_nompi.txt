@@ -1,4 +1,0 @@
-# Samples without MPI. Used to assess the syst uncert. related to 
-# the modelling of the underlying event 
-mc12_8TeV.189845.PowHegPythia8_AU2CT10_VBFH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344/
-mc12_8TeV.189842.PowHegPythia8_AU2CT10_ggH125_tautauhh_noMPI.merge.NTUP_TAU.e2985_s1773_s1776_r4485_r4540_p1344/

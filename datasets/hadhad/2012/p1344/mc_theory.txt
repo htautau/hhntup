@@ -1,4 +1,0 @@
-# https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HSG4Uncertainties
-mc12_8TeV.169854.McAtNloJimmy_AUET2CT10_ggH125_tautau.merge.NTUP_TAU.e1974_s1581_s1586_r3658_r3549_p1344/
-mc12_8TeV.161617.PowHegPythia8_AU2CT10_VBFH125_tautauhh.merge.NTUP_TAU.e1217_s1469_s1470_r3542_r3549_p1344/
-#mc12_8TeV.181086.PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.merge.NTUP_TAU.e1990_s1581_s1586_r3658_r3549_p1344/

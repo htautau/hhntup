@@ -34,15 +34,15 @@ class GRLFilter(EventFilter):
     def passes(self, event):
         if not self.grl:
             return False
-        return (event.RunNumber, event.lbn) in self.grl
+        return (event.EventInfo.runNumber(), event.EventInfo.lumiBlock()) in self.grl
 
 
 def primary_vertex_selection(vxp):
-    return vxp.type == 1 and vxp.nTracks >= 4
+    return vxp.vertexType() == 1 and vxp.nTrackParticles() >= 4
 
 
 def pileup_vertex_selection(vxp):
-    return vxp.type == 3 and vxp.nTracks >= 2
+    return vxp.vertexType() == 3 and vxp.nTrackParticles() >= 2
 
 
 def vertex_selection(vxp):
@@ -165,23 +165,16 @@ class TileTrips(EventFilter):
     """
     def __init__(self, passthrough=False, **kwargs):
         if not passthrough:
-            from externaltools import TileTripReader
+            #from externaltools import TileTripReader
             from ROOT import Root
             self.tool = Root.TTileTripReader()
         super(TileTrips, self).__init__(passthrough=passthrough, **kwargs)
 
     def passes(self, event):
-        # only apply between G - J
-        #if event.RunNumber < 211522:
-        #    return True
-        #if event.RunNumber > 215091:
-        #    return True
-        # returns false if the event is one with a saturation in a tile cell
-        # (bad MET).
         return self.tool.checkEvent(
-            event.RunNumber,
-            event.lbn,
-            event.EventNumber)
+            event.EventInfo.runNumber(),
+            event.EventInfo.lumiBlock(),
+            event.EventInfo.eventNumber())
 
 
 class JetCleaning(EventFilter):
@@ -361,7 +354,7 @@ class TauHasTrack(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.numTrack > 0)
+        event.taus.select(lambda tau: tau.obj.nTracks() > 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -384,7 +377,7 @@ class TauPT(EventFilter):
         super(TauPT, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.pt > self.thresh)
+        event.taus.select(lambda tau: tau.obj.pt() > self.thresh)
         return len(event.taus) >= self.min_taus
 
 
@@ -397,8 +390,8 @@ class TauEta(EventFilter):
     def passes(self, event):
         # both calo and leading track eta within 2.47
         event.taus.select(lambda tau:
-            abs(tau.eta) < 2.47 and
-            abs(tau.track_eta[tau.leadtrack_idx]) < 2.47)
+            abs(tau.obj.eta()) < 2.47 and
+            abs(tau.obj.track(0).eta()) < 2.47)
         return len(event.taus) >= self.min_taus
 
 
@@ -421,7 +414,7 @@ class Tau1Track3Track(EventFilter):
         super(Tau1Track3Track, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.numTrack in (1, 3))
+        event.taus.select(lambda tau: tau.nTracks() in (1, 3))
         return len(event.taus) >= self.min_taus
 
 
@@ -433,11 +426,11 @@ class Tau1P3P(EventFilter):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         # 1P + 3P
-        if (tau1.numTrack == 1 and tau2.numTrack == 3) or \
-           (tau1.numTrack == 3 and tau2.numTrack == 1):
+        if (tau1.nTracks() == 1 and tau2.nTracks() == 3) or \
+           (tau1.nTracks() == 3 and tau2.nTracks() == 1):
             return True
         # 3P + 3P
-        if tau1.numTrack == 3 and tau2.numTrack == 3:
+        if tau1.nTracks() == 3 and tau2.nTracks() == 3:
             return True
         return False
 
@@ -449,7 +442,7 @@ class TauCharge(EventFilter):
         super(TauCharge, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: abs(tau.charge) == 1)
+        event.taus.select(lambda tau: abs(tau.charge()) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -484,7 +477,7 @@ class TauCrack(EventFilter):
     def passes(self, event):
         event.taus.select(
             lambda tau: not (
-                1.37 <= abs(tau.track_eta[tau.leadtrack_idx]) <= 1.52))
+                1.37 <= abs(tau.obj.track(0).eta()) <= 1.52))
         return len(event.taus) >= self.min_taus
 
 
@@ -572,6 +565,21 @@ class TauEnergyShift(EventFilter):
         return True
 
 
+class TauJetOverlapRemoval(EventFilter):
+    """
+    Precendence: taus > jets
+    """
+    def __init__(self, dr=.2, **kwargs):
+        super(TauJetOverlapRemoval, self).__init__(**kwargs)
+        self.dr = dr
+
+    def passes(self, event):
+        # remove overlap with taus
+        event.jets.select(lambda jet:
+                not any([tau for tau in event.taus if
+                (utils.dR(jet.eta(), jet.phi(), tau.obj.eta(), tau.obj.phi()) < self.dr)]))
+        return True
+
 class NumJets25(EventFilter):
 
     def __init__(self, tree, **kwargs):
@@ -598,7 +606,7 @@ class NonIsolatedJet(EventFilter):
         self.tree.nonisolatedjet = False
         for tau in event.taus:
             for jet in event.jets:
-                if 0.4 < utils.dR(tau.eta, tau.phi, jet.eta, jet.phi) < 1.0:
+                if 0.4 < utils.dR(tau.obj.eta(), tau.obj.phi(), jet.eta(), jet.phi()) < 1.0:
                     self.tree.nonisolatedjet = True
         return True
 
@@ -628,20 +636,21 @@ def jet_selection_2012(jet):
     """ Finalizes the jet selection
     https://cds.cern.ch/record/1472547/files/ATL-COM-PHYS-2012-1202.pdf
     """
-    if not (jet.pt > 30 * GeV):
+    if not (jet.pt() > 30 * GeV):
         return False
 
-    if not (abs(jet.eta) < 4.5):
+    if not (abs(jet.eta()) < 4.5):
         return False
 
     # suppress forward jets
-    if (abs(jet.eta) > 2.4) and not (jet.pt > 35 * GeV):
+    if (abs(jet.eta()) > 2.4) and not (jet.pt() > 35 * GeV):
         return False
 
-    # JVF cut on central jets below 50 GeV
-    if (jet.pt < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
-        if not (abs(jet.jvtxf) > 0.5):
-            return False
+    # NEED TO APPLY THIS ON XAOD
+    # # JVF cut on central jets below 50 GeV
+    # if (jet.pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
+    #     if not (abs(jet.jvtxf) > 0.5):
+    #         return False
 
     return True
 
@@ -666,7 +675,7 @@ class JetSelection(EventFilter):
 class JetPreselection(EventFilter):
 
     def passes(self, event):
-        event.jets.select(lambda jet: jet.pt > 20 * GeV)
+        event.jets.select(lambda jet: jet.pt() > 20 * GeV)
         return True
 
 

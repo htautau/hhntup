@@ -3,6 +3,11 @@ from . import log; log = log[__name__]
 
 import ROOT
 
+__all__ = [
+    'EmbeddingPileupPatch',
+    'EmbeddingIsolation',
+    'EmbeddingCorrections'
+]
 
 class EmbeddingPileupPatch(EventFilter):
 

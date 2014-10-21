@@ -1,0 +1,2 @@
+# PowhegPythia Ztautau
+mc14_8TeV.147808.PowhegPythia8_AU2CT10_Ztautau.merge.AOD.e2372_s1933_s1911_r5591_r5625

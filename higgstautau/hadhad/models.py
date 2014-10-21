@@ -333,13 +333,13 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet1 is not None:
             FourMomentum.set(tree.jet1, jet1)
-            tree.jet1_jvtxf = jet1.jvtxf
-            tree.jet1_index = jet1.index
+            # tree.jet1_jvtxf = jet1.jvtxf
+            # tree.jet1_index = jet1.index
 
-            if not local:
-                # only computed in skim!
-                tree.jet1_BCHMedium = jet1.BCHMedium
-                tree.jet1_BCHTight = jet1.BCHTight
+            # if not local:
+            #     # only computed in skim!
+            #     tree.jet1_BCHMedium = jet1.BCHMedium
+            #     tree.jet1_BCHTight = jet1.BCHTight
 
         elif local:
             # zero the fourvect
@@ -354,13 +354,13 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet2 is not None:
             FourMomentum.set(tree.jet2, jet2)
-            tree.jet2_jvtxf = jet2.jvtxf
-            tree.jet2_index = jet2.index
+            # tree.jet2_jvtxf = jet2.jvtxf
+            # tree.jet2_index = jet2.index
 
-            if not local:
-                # only computed in skim!
-                tree.jet2_BCHMedium = jet2.BCHMedium
-                tree.jet2_BCHTight = jet2.BCHTight
+            # if not local:
+            #     # only computed in skim!
+            #     tree.jet2_BCHMedium = jet2.BCHMedium
+            #     tree.jet2_BCHTight = jet2.BCHTight
 
             tree.mass_jet1_jet2 = (jet1.fourvect + jet2.fourvect).M()
 
@@ -385,13 +385,13 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet3 is not None:
             FourMomentum.set(tree.jet3, jet3)
-            tree.jet3_jvtxf = jet3.jvtxf
-            tree.jet3_index = jet3.index
+            # tree.jet3_jvtxf = jet3.jvtxf
+            # tree.jet3_index = jet3.index
 
-            if not local:
-                # only computed in skim!
-                tree.jet3_BCHMedium = jet3.BCHMedium
-                tree.jet3_BCHTight = jet3.BCHTight
+            # if not local:
+            #     # only computed in skim!
+            #     tree.jet3_BCHMedium = jet3.BCHMedium
+            #     tree.jet3_BCHTight = jet3.BCHTight
 
             # eta centrality of 3rd leading jet
             tree.jet3_centrality = eventshapes.eta_centrality(
@@ -513,7 +513,11 @@ class EventModel(TreeModel):
     jet_phi_original = stl.vector('float')
 
     error = BoolCol()
-
+    
+    @classmethod
+    def set(cls, tree, ei):
+        tree.RunNumber = ei.runNumber()
+        tree.lbn = ei.lumiBlock()
 
 class InclusiveHiggsModel(TreeModel):
     higgs_decay_channel = IntCol(default=-1)

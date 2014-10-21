@@ -53,12 +53,12 @@ class TauLeadSublead(EventFilter):
 
     def passes(self, event):
         # sort in descending order by pT
-        event.taus.sort(key=lambda tau: tau.pt, reverse=True)
+        event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)
         # only keep leading two taus
         event.taus.slice(0, 2)
         # Event passes if the highest pT tau is above the leading
         # pT threshold and the next subleading tau pT is above the subleading pT theshold
-        return event.taus[0].pt > self.lead and event.taus[1].pt > self.sublead
+        return event.taus[0].obj.pt() > self.lead and event.taus[1].obj.pt() > self.sublead
 
 
 class Triggers(EventFilter):
@@ -132,21 +132,27 @@ class Triggers(EventFilter):
 
 class ElectronVeto(EventFilter):
 
+    def __init__(self, el_sel='Medium', **kwargs):
+        self.el_sel = el_sel
+        super(ElectronVeto, self).__init__(**kwargs)
+
     def passes(self, event):
         for el in event.electrons:
-            pt = el.cl_E / cosh(el.tracketa)
+            tracketa = el.trackParticle().eta()
+            pt = el.caloCluster().e() / cosh(tracketa)
             if pt <= 15 * GeV:
                 continue
-            if not ((abs(el.tracketa) < 1.37) or (1.52 < abs(el.tracketa) < 2.47)):
+            if not ((abs(tracketa) < 1.37) or (1.52 < abs(tracketa) < 2.47)):
                 continue
-            if el.author not in (1, 3):
+            if el.author() not in (1, 3):
                 continue
-            if not abs(el.charge) == 1:
+            if not abs(el.charge()) == 1:
                 continue
-            if el.mediumPP != 1:
+            if el.passSelection(self.el_sel) != 1:
                 continue
-            if (el.OQ & 1446) != 0:
-                continue
+            # NEED TO IMPLEMENT THIS IN XAOD
+            # if el.isGoodOQ(ROOT.xAOD.EgammaParameters.BADCLUSELECTRON):
+            #     continue
             return False
         return True
 
@@ -182,7 +188,9 @@ class TaudR(EventFilter):
     def passes(self, event):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
-        return utils.dR(tau1.eta, tau1.phi, tau2.eta, tau2.phi) < self.dr
+        return tau1.dr(tau2) < self.dr
+        # return utils.dR(
+        #     tau1.obj.eta(), tau1.obj.phi(), tau2.obj.eta(), tau2.obj.phi()) < self.dr
 
 
 class TauTrackRecounting(EventFilter):

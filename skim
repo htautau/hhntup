@@ -3,7 +3,6 @@
 """
 The master skim launcher and tester
 """
-
 from rootpy.extern.argparse import ArgumentParser
 
 parser = ArgumentParser()

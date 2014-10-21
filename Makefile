@@ -23,6 +23,7 @@ hh-ntup-merge: hh-ntup-clean
 
 clean-pyc:                                                                      
 	find higgstautau -name "*.pyc" -exec rm {} \;
+	find xaod -name "*.pyc" -exec rm {} \;
 	rm -f *.pyc
 
 clean: clean-pyc
