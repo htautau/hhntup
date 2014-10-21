@@ -14,6 +14,7 @@ from . import log; log = log[__name__]
 
 
 class TauIDSelection(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, tree, **kwargs):
         super(TauIDSelection, self).__init__(**kwargs)
@@ -62,6 +63,8 @@ class TauLeadSublead(EventFilter):
 
 
 class Triggers(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+
     """
     See lowest unprescaled triggers here:
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
@@ -160,6 +163,7 @@ class ElectronVeto(EventFilter):
 from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, **kwargs):
         self.year = year
@@ -194,6 +198,7 @@ class TaudR(EventFilter):
 
 
 class TauTrackRecounting(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, use_ntup_value=False, **kwargs):
         super(TauTrackRecounting, self).__init__(**kwargs)
@@ -214,6 +219,7 @@ class TauTrackRecounting(EventFilter):
 
 
 class TauIDScaleFactors(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, passthrough=False, **kwargs):
         if not passthrough:
@@ -285,6 +291,7 @@ class TauIDScaleFactors(EventFilter):
 
 
 class TauFakeRateScaleFactors(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, datatype, tree,
                  tes_up=False, tes_down=False,

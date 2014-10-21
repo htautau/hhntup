@@ -65,7 +65,7 @@ class CoreFlags(EventFilter):
 
 
 class NvtxJets(EventFilter):
-
+    # NOT CONVERTED TO XAOD YET
     def __init__(self, tree, **kwargs):
         super(NvtxJets, self).__init__(**kwargs)
         self.tree = tree
@@ -97,6 +97,7 @@ class NvtxJets(EventFilter):
 
 
 class BCHCleaning(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     https://twiki.cern.ch/twiki/bin/view/AtlasProtected/BCHCleaningTool
     """
@@ -179,6 +180,7 @@ class TileTrips(EventFilter):
 
 
 class JetCleaning(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     BAD_TILE = [
         202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
@@ -263,6 +265,8 @@ def in_lar_hole(eta, phi):
 
 
 class LArHole(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+
     """
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2011#LAr_Hole
     """
@@ -286,8 +290,8 @@ class JetCrackVeto(EventFilter):
 
     def passes(self, event):
         for jet in event.jets:
-            if jet.pt <= 20 * GeV: continue
-            if 1.3 < abs(jet.eta) < 1.7: return False
+            if jet.pt() <= 20 * GeV: continue
+            if 1.3 < abs(jet.eta()) < 1.7: return False
         return True
 
 
@@ -324,6 +328,7 @@ def muon_has_good_track(muon, year):
 
 
 class TauElectronVeto(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         super(TauElectronVeto, self).__init__(**kwargs)
@@ -340,6 +345,7 @@ class TauElectronVeto(EventFilter):
 
 
 class TauMuonVeto(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         super(TauMuonVeto, self).__init__(**kwargs)
@@ -362,6 +368,7 @@ class TauHasTrack(EventFilter):
 
 
 class TauAuthor(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         super(TauAuthor, self).__init__(**kwargs)
@@ -399,6 +406,7 @@ class TauEta(EventFilter):
 
 
 class TauJVF(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
@@ -417,7 +425,7 @@ class Tau1Track3Track(EventFilter):
         super(Tau1Track3Track, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.nTracks() in (1, 3))
+        event.taus.select(lambda tau: tau.obj.nTracks() in (1, 3))
         return len(event.taus) >= self.min_taus
 
 
@@ -429,11 +437,11 @@ class Tau1P3P(EventFilter):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         # 1P + 3P
-        if (tau1.nTracks() == 1 and tau2.nTracks() == 3) or \
-           (tau1.nTracks() == 3 and tau2.nTracks() == 1):
+        if (tau1.obj.nTracks() == 1 and tau2.obj.nTracks() == 3) or \
+           (tau1.obj.nTracks() == 3 and tau2.obj.nTracks() == 1):
             return True
         # 3P + 3P
-        if tau1.nTracks() == 3 and tau2.nTracks() == 3:
+        if tau1.obj.nTracks() == 3 and tau2.obj.nTracks() == 3:
             return True
         return False
 
@@ -445,11 +453,12 @@ class TauCharge(EventFilter):
         super(TauCharge, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: abs(tau.charge()) == 1)
+        event.taus.select(lambda tau: abs(tau.obj.charge()) == 1)
         return len(event.taus) >= self.min_taus
 
 
 class TauIDLoose(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
@@ -461,6 +470,7 @@ class TauIDLoose(EventFilter):
 
 
 class TauIDMedium(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
@@ -485,6 +495,7 @@ class TauCrack(EventFilter):
 
 
 class TauLArHole(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, tree, **kwargs):
         self.min_taus = min_taus
@@ -501,6 +512,7 @@ class TauLArHole(EventFilter):
 
 
 class TruthMatching(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def passes(self, event):
         for tau in event.taus:
@@ -521,6 +533,7 @@ class TruthMatching(EventFilter):
 
 
 class RecoJetTrueTauMatching(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def passes(self, event):
         for jet in event.jets:
@@ -539,6 +552,7 @@ class RecoJetTrueTauMatching(EventFilter):
 
 
 class TauSelected(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
@@ -550,6 +564,7 @@ class TauSelected(EventFilter):
 
 
 class TauEnergyShift(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     in situ TES shift for 8TeV 2012 data
     """
@@ -591,7 +606,7 @@ class NumJets25(EventFilter):
 
     def passes(self, event):
         self.tree.numJets25 = len([j for j in event.jets if
-            j.pt > 25 * GeV and abs(j.eta) < 4.5])
+            j.pt() > 25 * GeV and abs(j.eta()) < 4.5])
         return True
 
 
@@ -617,14 +632,14 @@ class NonIsolatedJet(EventFilter):
 def jet_selection_2011(jet):
     """ Finalizes the jet selection """
 
-    if not (jet.pt > 25 * GeV):
+    if not (jet.pt() > 25 * GeV):
         return False
 
-    if not (abs(jet.eta) < 4.5):
+    if not (abs(jet.eta()) < 4.5):
         return False
 
     # suppress forward jets
-    if (abs(jet.eta) > 2.4) and not (jet.pt > 30 * GeV):
+    if (abs(jet.eta()) > 2.4) and not (jet.pt() > 30 * GeV):
         return False
 
     # JVF cut on central jets
@@ -683,6 +698,7 @@ class JetPreselection(EventFilter):
 
 
 class MCWeight(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, datatype, tree, **kwargs):
         self.datatype = datatype
@@ -708,6 +724,7 @@ class MCWeight(EventFilter):
 
 
 class ggFReweighting(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, dsname, tree, **kwargs):
         self.dsname = dsname
@@ -720,6 +737,7 @@ class ggFReweighting(EventFilter):
 
 
 class JetIsPileup(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     must be applied before any jet selection
     """
@@ -746,6 +764,8 @@ class JetIsPileup(EventFilter):
 
 
 class JetCopy(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+    # NOT NEEDED ANYMORE
 
     def __init__(self, tree, **kwargs):
         super(JetCopy, self).__init__(**kwargs)
@@ -768,6 +788,7 @@ class JetCopy(EventFilter):
 
 
 class HiggsPT(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, tree, **kwargs):
         super(HiggsPT, self).__init__(**kwargs)
@@ -820,6 +841,8 @@ class HiggsPT(EventFilter):
 
 
 class BCHSampleRunNumber(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+
     """
     d3pd.RunNumber=195848 tells the tool that the sample was made with mc12b
     pileup conditions. Our BCH samples were made with identical pileup
@@ -833,6 +856,7 @@ class BCHSampleRunNumber(EventFilter):
 
 
 class ClassifyInclusiveHiggsSample(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     UNKNOWN, TAUTAU, WW, ZZ, BB = range(5)
 
