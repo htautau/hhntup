@@ -3,7 +3,7 @@
 News
 ----
 The master branch is now dedicated to analysis of the new atlas data format (xAOD).
-For production of skims from the d3pd, please refer to the d3pd branch.
+For production of skims out of the old format (D3PD), please refer to the d3pd branch.
 
 Dependencies
 ------------
@@ -55,18 +55,17 @@ xAOD Migration
 --------------
 * Analysis release used::
   
-  Base, 2.0.12
+   Base, 2.0.12
 
 * Dataset used::
 
-  mc14_8TeV.147808.PowhegPythia8_AU2CT10_Ztautau.merge.AOD.e2372_s1933_s1911_r5591_r5625
+   mc14_8TeV.147808.PowhegPythia8_AU2CT10_Ztautau.merge.AOD.e2372_s1933_s1911_r5591_r5625
 
-* You need to put a xaod file named ``xaod_struct.root`` in ``cache`` in order to read the data structure before ``rootpy`` is 
-enabled.  
+* You need to put a xaod file named ``xaod_struct.root`` in ``cache`` in order to read the data structure before ``rootpy`` is enabled.  
 
 * To run the test::
   
-  skim --local-test mc12_hadhad_xaod
+   skim --local-test mc12_hadhad_xaod
 
 Build and setup
 ---------------
