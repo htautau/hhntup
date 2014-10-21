@@ -14,27 +14,31 @@ from . import log; log = log[__name__]
 
 
 class TauIDSelection(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, tree, **kwargs):
         super(TauIDSelection, self).__init__(**kwargs)
         self.tree = tree
 
     def passes(self, event):
+        # Enum definition
+        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
+        JetBDTSigMedium = 20
+        JetBDTSigTight = 21
+
         tau1, tau2 = event.taus
         # signal region is: both medium with at least one being tight
-        if ((tau1.JetBDTSigMedium and tau2.JetBDTSigMedium) and
-            (tau1.JetBDTSigTight or tau2.JetBDTSigTight)):
+        if ((tau1.obj.isTau(JetBDTSigMedium) and tau2.obj.isTau(JetBDTSigMedium)) and
+            (tau1.obj.isTau(JetBDTSigTight) or tau2.obj.isTau(JetBDTSigTight))):
             # if both are tight then assign medium to one at random
             # so we can apply the SFs in an inclusive manner
-            if tau1.JetBDTSigTight and tau2.JetBDTSigTight:
-                if event.EventNumber % 2 == 1: # ODD
+            if tau1.obj.isTau(JetBDTSigTight) and tau2.obj.isTau(JetBDTSigTight):
+                if event.EventInfo.eventNumber() % 2 == 1: # ODD
                     tau1.id = IDTIGHT
                     tau2.id = IDMEDIUM
                 else: # EVEN
                     tau1.id = IDMEDIUM
                     tau2.id = IDTIGHT
-            elif tau1.JetBDTSigTight:
+            elif tau1.obj.isTau(JetBDTSigTight):
                 tau1.id = IDTIGHT
                 tau2.id = IDMEDIUM
             else:

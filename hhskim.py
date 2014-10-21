@@ -471,10 +471,9 @@ class hhskim(ATLASStudent):
                         else 20 * GeV),
                     count_funcs=count_funcs),
                 # taus are sorted (in decreasing order) by pT from here on
-                # NEED TO BE CONVERTED TO XAOD
-                # TauIDSelection(
-                #     tree=tree,
-                #     count_funcs=count_funcs),
+                TauIDSelection(
+                    tree=tree,
+                    count_funcs=count_funcs),
                 TaudR(3.2,
                     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
@@ -500,10 +499,10 @@ class hhskim(ATLASStudent):
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # TauIDScaleFactors(
-                #     year=year,
-                #     passthrough=datatype == datasets.DATA,
-                #     count_funcs=count_funcs),
+                TauIDScaleFactors(
+                    year=year,
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # TauFakeRateScaleFactors(
                 #     year=year,
