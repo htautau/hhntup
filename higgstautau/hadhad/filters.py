@@ -1,3 +1,4 @@
+import ROOT
 from rootpy.tree.filtering import EventFilter
 
 from math import *
@@ -157,9 +158,10 @@ class ElectronVeto(EventFilter):
                 continue
             if el.passSelection(self.el_sel) != 1:
                 continue
-            # NEED TO IMPLEMENT THIS IN XAOD
-            # if el.isGoodOQ(ROOT.xAOD.EgammaParameters.BADCLUSELECTRON):
-            #     continue
+            oq = int(el.auxdataConst('unsigned int')('OQ'))
+            mask = int(ROOT.xAOD.EgammaParameters.BADCLUSELECTRON)
+            if (oq & mask) != 0:
+                continue
             return False
         return True
 

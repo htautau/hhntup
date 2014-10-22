@@ -404,11 +404,11 @@ class hhskim(ATLASStudent):
                 #     passthrough=not syst_terms,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # JetIsPileup(
-                #     passthrough=(
-                #         local or year < 2012 or
-                #         datatype not in (datasets.MC, datasets.MCEMBED)),
-                #     count_funcs=count_funcs),
+                JetIsPileup(
+                    passthrough=(
+                        local or year < 2012 or
+                        datatype not in (datasets.MC, datasets.MCEMBED)),
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # LArHole(
                 #     tree=tree,
@@ -531,11 +531,11 @@ class hhskim(ATLASStudent):
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # MCWeight(
-                #     datatype=datatype,
-                #     tree=tree,
-                #     passthrough=local or datatype == datasets.DATA,
-                #     count_funcs=count_funcs),
+                MCWeight(
+                    datatype=datatype,
+                    tree=tree,
+                    passthrough=local or datatype == datasets.DATA,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingIsolation(
                 #     tree=tree,

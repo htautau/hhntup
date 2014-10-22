@@ -96,7 +96,6 @@ class NvtxJets(EventFilter):
 
 
 class BCHCleaning(EventFilter):
-    # NOT CONVERTED TO XAOD YET
     """
     https://twiki.cern.ch/twiki/bin/view/AtlasProtected/BCHCleaningTool
     """
@@ -203,7 +202,6 @@ class TileTrips(EventFilter):
 
 
 class JetCleaning(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     BAD_TILE = [
         202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
@@ -561,7 +559,6 @@ class TrueTauSelection(EventFilter):
         return True
 
 class TruthMatching(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     def passes(self, event):
         for tau in event.taus:
@@ -749,7 +746,7 @@ class JetPreselection(EventFilter):
 
 
 class MCWeight(EventFilter):
-    # NOT CONVERTED TO XAOD YET
+    # NOT FULLY CONVERTED TO XAOD YET
 
     def __init__(self, datatype, tree, **kwargs):
         self.datatype = datatype
@@ -759,18 +756,21 @@ class MCWeight(EventFilter):
     def passes(self, event):
         # set the event weights
         if self.datatype == datasets.MC:
-            self.tree.mc_weight = event.mc_event_weight
-            self.tree.mcevent_pdf_x1_0 = event.mcevt_pdf_x1[0]
-            self.tree.mcevent_pdf_x2_0 = event.mcevt_pdf_x2[0]
-            self.tree.mcevent_pdf_id1_0 = event.mcevt_pdf_id1[0]
-            self.tree.mcevent_pdf_id2_0 = event.mcevt_pdf_id2[0]
-            self.tree.mcevent_pdf_scale_0 = event.mcevt_pdf_scale[0]
+            truth_event = event.TruthEvent[0]
+            self.tree.mc_weight = truth_event.weights()[0]
+            val_i = ROOT.Long(0)
+            truth_event.pdfInfoParameter(val_i, truth_event.id1)
+            self.tree.mcevent_pdf_id1_0 = val_i
+            truth_event.pdfInfoParameter(val_i, truth_event.id2)
+            self.tree.mcevent_pdf_id2_0 = val_i
+
+            self.tree.mcevent_pdf_x1_0 = 0. #event.mcevt_pdf_x1[0]
+            self.tree.mcevent_pdf_x2_0 = 0. #event.mcevt_pdf_x2[0]
+            self.tree.mcevent_pdf_scale_0 = 0. #event.mcevt_pdf_scale[0]
+
         elif self.datatype == datasets.EMBED:
-            # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
-            # correct truth filter efficiency
-            self.tree.mc_weight = event.mcevt_weight[0][0]
-            # In 2011 mc_event_weight == mcevt_weight[0][0]
-            # for embedding. But not so in 2012...
+            truth_event = event.TruthEvent[0]
+            self.tree.mc_weight = truth_event.weights()[0]
         return True
 
 
@@ -803,14 +803,12 @@ class JetIsPileup(EventFilter):
         # collect truth jets
         truejets = VectorTLorentzVector()
         for truejet in event.truejets:
-            if truejet.pt > 10e3:
-                truejets.push_back(truejet.fourvect)
-        # reset
-        event.jet_ispileup.clear()
+            if truejet.pt() > 10e3:
+                truejets.push_back(truejet.p4())
         # test each jet
         for jet in event.jets:
-            ispileup = self.tool.isPileUpJet(jet.fourvect, truejets)
-            event.jet_ispileup.push_back(ispileup)
+            ispileup = self.tool.isPileUpJet(jet.p4(), truejets)
+            jet.ispileup = ispileup
         return True
 
 
