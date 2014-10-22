@@ -338,8 +338,9 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet1 is not None:
             FourMomentum.set(tree.jet1, jet1)
-            # NEED TO BE CONVERTED TO XAOD
-            # tree.jet1_jvtxf = jet1.jvtxf
+            jvf_vec = jet1.auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+            jvf = 0 if jvf_vec.empty() else jvf_vec[0]
+            tree.jet1_jvtxf = jvf
             tree.jet1_index = jet1.index()
 
             # NEED TO BE CONVERTED TO XAOD
@@ -361,8 +362,9 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet2 is not None:
             FourMomentum.set(tree.jet2, jet2)
-            # NEED TO BE CONVERTED TO XAOD
-            # tree.jet2_jvtxf = jet2.jvtxf
+            jvf_vec = jet2.auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+            jvf = 0 if jvf_vec.empty() else jvf_vec[0]
+            tree.jet2_jvtxf = jvf
             tree.jet2_index = jet2.index()
 
             # NEED TO BE CONVERTED TO XAOD
@@ -394,8 +396,10 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
 
         if jet3 is not None:
             FourMomentum.set(tree.jet3, jet3)
-            # NEED TO BE CONVERTED TO XAOD
-            # tree.jet3_jvtxf = jet3.jvtxf
+
+            jvf_vec = jet3.auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+            jvf = 0 if jvf_vec.empty() else jvf_vec[0]
+            tree.jet3_jvtxf = jvf
             tree.jet3_index = jet3.index()
 
             # NEED TO BE CONVERTED TO XAOD
