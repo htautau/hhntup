@@ -873,25 +873,6 @@ class hhskim(ATLASStudent):
         outtree.FlushBaskets()
         outtree.Write()
 
-
-
-
-
-
-
-
-
-
-            # # fill the output tree
-            # outtree.Fill(reset=True)
-
-        # externaltools.report()
-
-        # # flush any baskets remaining in memory to disk
-        # self.output.cd()
-        # outtree.FlushBaskets()
-        # outtree.Write()
-
         if local:
             if datatype == datasets.DATA:
                 xml_string = ROOT.TObjString(merged_grl.str())
