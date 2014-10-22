@@ -7,6 +7,7 @@ VectorTLorentzVector = stl.vector("TLorentzVector")
 Vector = stl.vector('float')
 from itertools import ifilter
 from math import *
+from array import array as carray
 
 from . import datasets
 from .corrections import reweight_ggf
@@ -399,7 +400,7 @@ class TauHasTrack(EventFilter):
 
 class TauAuthor(EventFilter):
     # NOT CONVERTED TO XAOD YET
-
+    # OBSOLETE
     def __init__(self, min_taus, **kwargs):
         super(TauAuthor, self).__init__(**kwargs)
         self.min_taus = min_taus
@@ -757,20 +758,22 @@ class MCWeight(EventFilter):
         # set the event weights
         if self.datatype == datasets.MC:
             truth_event = event.TruthEvent[0]
-            self.tree.mc_weight = truth_event.weights()[0]
+            self.tree.mc_weight = event.EventInfo.mcEventWeight()
             val_i = ROOT.Long(0)
-            truth_event.pdfInfoParameter(val_i, truth_event.id1)
-            self.tree.mcevent_pdf_id1_0 = val_i
-            truth_event.pdfInfoParameter(val_i, truth_event.id2)
-            self.tree.mcevent_pdf_id2_0 = val_i
-
-            self.tree.mcevent_pdf_x1_0 = 0. #event.mcevt_pdf_x1[0]
-            self.tree.mcevent_pdf_x2_0 = 0. #event.mcevt_pdf_x2[0]
-            self.tree.mcevent_pdf_scale_0 = 0. #event.mcevt_pdf_scale[0]
+            if truth_event.pdfInfoParameter(val_i, truth_event.id1):
+                self.tree.mcevent_pdf_id1_0 = val_i
+            if truth_event.pdfInfoParameter(val_i, truth_event.id2):
+                self.tree.mcevent_pdf_id2_0 = val_i
+            val_f = carray('f', [0.])
+            if truth_event.pdfInfoParameter(val_f, truth_event.x1):
+                self.tree.mcevent_pdf_x1_0 = val_f[0]
+            if truth_event.pdfInfoParameter(val_f, truth_event.x2):
+                self.tree.mcevent_pdf_x2_0 = val_f[0] 
+            if truth_event.pdfInfoParameter(val_f, truth_event.scalePDF):
+                self.tree.mcevent_pdf_scale_0 = val_f[0]
 
         elif self.datatype == datasets.EMBED:
-            truth_event = event.TruthEvent[0]
-            self.tree.mc_weight = truth_event.weights()[0]
+            self.tree.mc_weight = event.EventInfo.mcEventWeight()
         return True
 
 
