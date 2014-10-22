@@ -45,7 +45,7 @@ class xAODTree(object):
             if time.time() - t2 > 2:
                 entry_rate = int(entries / (time.time() - self._init_time))
                 log.info(
-                    "{0:d} entries per second."
+                    "{0:d} entries per second. "
                     "{1:.0f}% done current tree".format(
                         entry_rate, 
                         100 * entries / total_entries))

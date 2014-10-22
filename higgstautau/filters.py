@@ -4,7 +4,7 @@ from rootpy.tree.filtering import *
 from rootpy.extern.hep import pdg
 from rootpy import stl
 VectorTLorentzVector = stl.vector("TLorentzVector")
-
+Vector = stl.vector('float')
 from itertools import ifilter
 from math import *
 
@@ -60,11 +60,11 @@ class PriVertex(EventFilter):
 class CoreFlags(EventFilter):
 
     def passes(self, event):
-        return (event.coreFlags & 0x40000) == 0
+        Core = event.EventInfo.Core
+        return event.EventInfo.errorState(Core) == 0
 
 
 class NvtxJets(EventFilter):
-
     def __init__(self, tree, **kwargs):
         super(NvtxJets, self).__init__(**kwargs)
         self.tree = tree
@@ -82,13 +82,13 @@ class NvtxJets(EventFilter):
         # check should be applied to the first vertex in the collection.
         # Otherwise, you should ensure that the vx_type branch is available.
         for vertex in event.vertices:
-            if vertex.type == 1 and vertex.nTracks > 2 and abs(vertex.z) < 200:
+            if vertex.vertexType() == 1 and vertex.nTrackParticles() > 2 and abs(vertex.z()) < 200:
                 goodPV = True
         if goodPV:
             for vertex in event.vertices:
-                if vertex.nTracks > 2:
+                if vertex.nTrackParticles() > 2:
                     nvtxsoftmet += 1
-                if vertex.nTracks > 1:
+                if vertex.nTrackParticles() > 1:
                     nvtxjets += 1
         self.tree.nvtxsoftmet = nvtxsoftmet
         self.tree.nvtxjets = nvtxjets
@@ -121,19 +121,31 @@ class BCHCleaning(EventFilter):
         if self.datatype in (datasets.DATA, datasets.MC, datasets.MCEMBED):
             if self.datatype == datasets.DATA:
                 jet_tool = self.bchtool_data
-                runnumber = event.RunNumber
-                lbn = event.lbn
+                runnumber = event.EventInfo.runNumber()
+                lbn = event.EventInfo.lumiBlock()
             else:
                 jet_tool = self.bchtool_mc
                 runnumber = self.tree.RunNumber
                 lbn = self.tree.lbn
                 #jet_tool.SetSeed(314159 + event.EventNumber * 2)
             for jet in event.jets:
-                jet.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
-                jet.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
+                jet.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
             for tau in event.taus:
-                tau.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
-                tau.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                tau.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
 
         elif self.datatype == datasets.EMBED:
             # Do truth-matching to find out if MC taus
@@ -146,15 +158,27 @@ class BCHCleaning(EventFilter):
                     jet_tool = self.bchtool_mc
                 else:
                     jet_tool = self.bchtool_data
-                jet.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
-                jet.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, jet.eta, jet.phi, jet.BCH_CORR_CELL, jet.emfrac, jet.pt)
+                jet.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
+                jet.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, jet.eta(), jet.phi(), 
+                    jet.auxdataConst('float')('BchCorrCell'), 
+                    jet.auxdataConst('float')('EMFrac'), jet.pt())
             for tau in event.taus:
                 if tau.matched:
                     jet_tool = self.bchtool_mc
                 else:
                     jet_tool = self.bchtool_data
-                tau.BCHMedium = jet_tool.IsBadMediumBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
-                tau.BCHTight = jet_tool.IsBadTightBCH(runnumber, lbn, tau.jet_eta, tau.jet_phi, tau.jet_BCH_CORR_CELL, tau.jet_emfrac, tau.jet_pt)
+                tau.BCHMedium = jet_tool.IsBadMediumBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                tau.BCHTight = jet_tool.IsBadTightBCH(
+                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
+                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
 
         return True
 
@@ -200,21 +224,24 @@ class JetCleaning(EventFilter):
     def passes(self, event):
         # using LC jets
         for jet in event.jets:
-            if jet.pt <= self.pt_thresh or abs(jet.eta) >= self.eta_max:
+            if jet.pt() <= self.pt_thresh or abs(jet.eta()) >= self.eta_max:
                 continue
-            LArQmean = jet.AverageLArQF / 65535.0
-            chf = jet.sumPtTrk / jet.pt
+            LArQmean = jet.auxdataConst('float')('AverageLArQF') / 65535.0
+            chf = 0
+            sumptrk_vec  = jet.auxdataConst('std::vector<float, std::allocator<float> >')('SumPtTrkPt500')
+            if not sumptrk_vec.empty():
+                chf = sumptrk_vec[0] / jet.pt()
             if jetcleaning.is_bad(
                     level=self.level,
-                    quality=jet.LArQuality,
-                    NegE=jet.NegativeE,
-                    emf=jet.emfrac,
-                    hecf=jet.hecf,
-                    time=jet.Timing,
-                    fmax=jet.fracSamplingMax,
-                    eta=jet.emscale_eta,
+                    quality=jet.auxdataConst('float')('LArQuality'),
+                    NegE=jet.auxdataConst('float')('NegativeE'),
+                    emf=jet.auxdataConst('float')('EMFrac'),
+                    hecf=jet.auxdataConst('float')('HECFrac'),
+                    time=jet.auxdataConst('float')('Timing'),
+                    fmax=jet.auxdataConst('float')('FracSamplingMax'),
+                    eta=jet.eta(),
                     chf=chf,
-                    HecQ=jet.HECQuality,
+                    HecQ=jet.auxdataConst('float')('HECQuality'),
                     LArQmean=LArQmean):
                 return False
 
@@ -225,9 +252,11 @@ class JetCleaning(EventFilter):
                 # recommendation is to use EM jets
                 for jet in event.jets_EM:
                     _etaphi28 = (
-                        -0.2 < jet.eta < -0.1 and
-                        2.65 < jet.phi < 2.75)
-                    if jet.fracSamplingMax > 0.6 and jet.SamplingMax == 13 and _etaphi28:
+                        -0.2 < jet.eta() < -0.1 and
+                        2.65 < jet.phi() < 2.75)
+                    FracSamplingMax = jet.auxdataConst('float')('FracSamplingMax')
+                    SamplingMax = et.auxdataConst('int')('SamplingMax')
+                    if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
                         return False
             # Not required in reprocessed data:
             # Bad FCAL response in periods C1-C8
@@ -246,13 +275,15 @@ class JetCleaning(EventFilter):
 class LArError(EventFilter):
 
     def passes(self, event):
-        return event.larError != 2
+        LAr = event.EventInfo.LAr
+        return event.EventInfo.errorState(LAr) == 0
 
 
 class TileError(EventFilter):
 
     def passes(self, event):
-        return event.tileError != 2
+        Tile = event.EventInfo.Tile
+        return event.EventInfo.errorState(Tile) == 0
 
 
 def in_lar_hole(eta, phi):
@@ -260,6 +291,8 @@ def in_lar_hole(eta, phi):
 
 
 class LArHole(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+
     """
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2011#LAr_Hole
     """
@@ -283,8 +316,8 @@ class JetCrackVeto(EventFilter):
 
     def passes(self, event):
         for jet in event.jets:
-            if jet.pt <= 20 * GeV: continue
-            if 1.3 < abs(jet.eta) < 1.7: return False
+            if jet.pt() <= 20 * GeV: continue
+            if 1.3 < abs(jet.eta()) < 1.7: return False
         return True
 
 
@@ -330,9 +363,12 @@ class TauElectronVeto(EventFilter):
         #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
         # Eta selection already applied by TauEta filter
+        # Enum definition
+        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
+        EleBDTLoose = 22
         event.taus.select(lambda tau:
-            tau.numTrack > 1 or
-            tau.EleBDTLoose == 0)
+            tau.obj.nTracks() > 1 or
+            tau.obj.isTau(EleBDTLoose) == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -343,7 +379,10 @@ class TauMuonVeto(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.muonVeto == 0)
+        # Enum definition
+        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
+        MuonVeto = 4
+        event.taus.select(lambda tau: tau.obj.isTau(MuonVeto) == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -359,6 +398,7 @@ class TauHasTrack(EventFilter):
 
 
 class TauAuthor(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         super(TauAuthor, self).__init__(**kwargs)
@@ -394,16 +434,25 @@ class TauEta(EventFilter):
             abs(tau.obj.track(0).eta()) < 2.47)
         return len(event.taus) >= self.min_taus
 
+def jvf_selection(tau):
+    if abs(tau.obj.track(0).eta()) > 2.1:
+        return True
+    else:
+        jvf = 0
+        jvf_vec = tau.obj.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+        if not jvf_vec.empty():
+            jvf = jvf_vec[0]
+        return jvf > .5
 
 class TauJVF(EventFilter):
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
+        self.filter_func = jvf_selection
         super(TauJVF, self).__init__(**kwargs)
-
+        
     def passes(self, event):
-        event.taus.select(lambda tau: True if
-            abs(tau.track_eta[tau.leadtrack_idx]) > 2.1 else tau.jet_jvtxf > .5)
+        event.taus.select(self.filter_func)
         return len(event.taus) >= self.min_taus
 
 
@@ -414,7 +463,7 @@ class Tau1Track3Track(EventFilter):
         super(Tau1Track3Track, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.nTracks() in (1, 3))
+        event.taus.select(lambda tau: tau.obj.nTracks() in (1, 3))
         return len(event.taus) >= self.min_taus
 
 
@@ -426,11 +475,11 @@ class Tau1P3P(EventFilter):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         # 1P + 3P
-        if (tau1.nTracks() == 1 and tau2.nTracks() == 3) or \
-           (tau1.nTracks() == 3 and tau2.nTracks() == 1):
+        if (tau1.obj.nTracks() == 1 and tau2.obj.nTracks() == 3) or \
+           (tau1.obj.nTracks() == 3 and tau2.obj.nTracks() == 1):
             return True
         # 3P + 3P
-        if tau1.nTracks() == 3 and tau2.nTracks() == 3:
+        if tau1.obj.nTracks() == 3 and tau2.obj.nTracks() == 3:
             return True
         return False
 
@@ -442,7 +491,7 @@ class TauCharge(EventFilter):
         super(TauCharge, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: abs(tau.charge()) == 1)
+        event.taus.select(lambda tau: abs(tau.obj.charge()) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -453,7 +502,10 @@ class TauIDLoose(EventFilter):
         super(TauIDLoose, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.JetBDTSigLoose == 1)
+        # Enum definition
+        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
+        JetBDTSigLoose = 19
+        event.taus.select(lambda tau: tau.obj.isTau(JetBDTSigLoose) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -464,7 +516,10 @@ class TauIDMedium(EventFilter):
         super(TauIDMedium, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.JetBDTSigMedium == 1)
+        # Enum definition
+        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
+        JetBDTSigMedium = 20
+        event.taus.select(lambda tau: tau.obj.isTau(JetBDTSigMedium) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -482,6 +537,7 @@ class TauCrack(EventFilter):
 
 
 class TauLArHole(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, tree, **kwargs):
         self.min_taus = min_taus
@@ -496,6 +552,11 @@ class TauLArHole(EventFilter):
                  and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
         return len(event.taus) >= self.min_taus
 
+class TrueTauSelection(EventFilter):
+    
+    def passes(self, event):
+        event.truetaus.select(lambda p: p.isTau() and p.status() in (2,))
+        return True
 
 class TruthMatching(EventFilter):
 
@@ -506,18 +567,20 @@ class TruthMatching(EventFilter):
             tau.matched = False
             tau.matched_dr = 1111.
             tau.matched_object = None
-            for truetau in event.truetaus:
-                dr = utils.dR(tau.eta, tau.phi, truetau.vis_eta, truetau.vis_phi)
+            for p in event.truetaus:
+                tau_decay = TauDecay(p).fourvect_visible
+                dr = utils.dR(tau.obj.eta(), tau.obj.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     tau.matched = True
                     tau.matched_dr = dr
-                    tau.matched_object = truetau
+                    tau.matched_object = p
                     break
         return True
 
 
 class RecoJetTrueTauMatching(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def passes(self, event):
         for jet in event.jets:
@@ -536,6 +599,7 @@ class RecoJetTrueTauMatching(EventFilter):
 
 
 class TauSelected(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, min_taus, **kwargs):
         self.min_taus = min_taus
@@ -547,6 +611,7 @@ class TauSelected(EventFilter):
 
 
 class TauEnergyShift(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     in situ TES shift for 8TeV 2012 data
     """
@@ -588,7 +653,7 @@ class NumJets25(EventFilter):
 
     def passes(self, event):
         self.tree.numJets25 = len([j for j in event.jets if
-            j.pt > 25 * GeV and abs(j.eta) < 4.5])
+            j.pt() > 25 * GeV and abs(j.eta()) < 4.5])
         return True
 
 
@@ -614,14 +679,14 @@ class NonIsolatedJet(EventFilter):
 def jet_selection_2011(jet):
     """ Finalizes the jet selection """
 
-    if not (jet.pt > 25 * GeV):
+    if not (jet.pt() > 25 * GeV):
         return False
 
-    if not (abs(jet.eta) < 4.5):
+    if not (abs(jet.eta()) < 4.5):
         return False
 
     # suppress forward jets
-    if (abs(jet.eta) > 2.4) and not (jet.pt > 30 * GeV):
+    if (abs(jet.eta()) > 2.4) and not (jet.pt() > 30 * GeV):
         return False
 
     # JVF cut on central jets
@@ -646,11 +711,12 @@ def jet_selection_2012(jet):
     if (abs(jet.eta()) > 2.4) and not (jet.pt() > 35 * GeV):
         return False
 
-    # NEED TO APPLY THIS ON XAOD
-    # # JVF cut on central jets below 50 GeV
-    # if (jet.pt() < 50 * GeV) and (abs(jet.constscale_eta) < 2.4):
-    #     if not (abs(jet.jvtxf) > 0.5):
-    #         return False
+    # JVF cut on central jets below 50 GeV
+    if (jet.pt() < 50 * GeV) and (abs(jet.eta()) < 2.4):
+        jvf_vec = jet.auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+        jvf = 0 if jvf_vec.empty() else jvf_vec[0]
+        if not (abs(jvf) > 0.5):
+            return False
 
     return True
 
@@ -680,6 +746,7 @@ class JetPreselection(EventFilter):
 
 
 class MCWeight(EventFilter):
+    # NOT FULLY CONVERTED TO XAOD YET
 
     def __init__(self, datatype, tree, **kwargs):
         self.datatype = datatype
@@ -689,22 +756,26 @@ class MCWeight(EventFilter):
     def passes(self, event):
         # set the event weights
         if self.datatype == datasets.MC:
-            self.tree.mc_weight = event.mc_event_weight
-            self.tree.mcevent_pdf_x1_0 = event.mcevt_pdf_x1[0]
-            self.tree.mcevent_pdf_x2_0 = event.mcevt_pdf_x2[0]
-            self.tree.mcevent_pdf_id1_0 = event.mcevt_pdf_id1[0]
-            self.tree.mcevent_pdf_id2_0 = event.mcevt_pdf_id2[0]
-            self.tree.mcevent_pdf_scale_0 = event.mcevt_pdf_scale[0]
+            truth_event = event.TruthEvent[0]
+            self.tree.mc_weight = truth_event.weights()[0]
+            val_i = ROOT.Long(0)
+            truth_event.pdfInfoParameter(val_i, truth_event.id1)
+            self.tree.mcevent_pdf_id1_0 = val_i
+            truth_event.pdfInfoParameter(val_i, truth_event.id2)
+            self.tree.mcevent_pdf_id2_0 = val_i
+
+            self.tree.mcevent_pdf_x1_0 = 0. #event.mcevt_pdf_x1[0]
+            self.tree.mcevent_pdf_x2_0 = 0. #event.mcevt_pdf_x2[0]
+            self.tree.mcevent_pdf_scale_0 = 0. #event.mcevt_pdf_scale[0]
+
         elif self.datatype == datasets.EMBED:
-            # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EmbeddingTools
-            # correct truth filter efficiency
-            self.tree.mc_weight = event.mcevt_weight[0][0]
-            # In 2011 mc_event_weight == mcevt_weight[0][0]
-            # for embedding. But not so in 2012...
+            truth_event = event.TruthEvent[0]
+            self.tree.mc_weight = truth_event.weights()[0]
         return True
 
 
 class ggFReweighting(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, dsname, tree, **kwargs):
         self.dsname = dsname
@@ -717,6 +788,7 @@ class ggFReweighting(EventFilter):
 
 
 class JetIsPileup(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     must be applied before any jet selection
     """
@@ -731,18 +803,18 @@ class JetIsPileup(EventFilter):
         # collect truth jets
         truejets = VectorTLorentzVector()
         for truejet in event.truejets:
-            if truejet.pt > 10e3:
-                truejets.push_back(truejet.fourvect)
-        # reset
-        event.jet_ispileup.clear()
+            if truejet.pt() > 10e3:
+                truejets.push_back(truejet.p4())
         # test each jet
         for jet in event.jets:
-            ispileup = self.tool.isPileUpJet(jet.fourvect, truejets)
-            event.jet_ispileup.push_back(ispileup)
+            ispileup = self.tool.isPileUpJet(jet.p4(), truejets)
+            jet.ispileup = ispileup
         return True
 
 
 class JetCopy(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+    # NOT NEEDED ANYMORE
 
     def __init__(self, tree, **kwargs):
         super(JetCopy, self).__init__(**kwargs)
@@ -765,6 +837,7 @@ class JetCopy(EventFilter):
 
 
 class HiggsPT(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, tree, **kwargs):
         super(HiggsPT, self).__init__(**kwargs)
@@ -817,6 +890,8 @@ class HiggsPT(EventFilter):
 
 
 class BCHSampleRunNumber(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+
     """
     d3pd.RunNumber=195848 tells the tool that the sample was made with mc12b
     pileup conditions. Our BCH samples were made with identical pileup
@@ -830,6 +905,7 @@ class BCHSampleRunNumber(EventFilter):
 
 
 class ClassifyInclusiveHiggsSample(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     UNKNOWN, TAUTAU, WW, ZZ, BB = range(5)
 

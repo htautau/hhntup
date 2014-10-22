@@ -1,3 +1,4 @@
+import ROOT
 from rootpy.tree.filtering import EventFilter
 
 from math import *
@@ -20,20 +21,25 @@ class TauIDSelection(EventFilter):
         self.tree = tree
 
     def passes(self, event):
+        # Enum definition
+        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
+        JetBDTSigMedium = 20
+        JetBDTSigTight = 21
+
         tau1, tau2 = event.taus
         # signal region is: both medium with at least one being tight
-        if ((tau1.JetBDTSigMedium and tau2.JetBDTSigMedium) and
-            (tau1.JetBDTSigTight or tau2.JetBDTSigTight)):
+        if ((tau1.obj.isTau(JetBDTSigMedium) and tau2.obj.isTau(JetBDTSigMedium)) and
+            (tau1.obj.isTau(JetBDTSigTight) or tau2.obj.isTau(JetBDTSigTight))):
             # if both are tight then assign medium to one at random
             # so we can apply the SFs in an inclusive manner
-            if tau1.JetBDTSigTight and tau2.JetBDTSigTight:
-                if event.EventNumber % 2 == 1: # ODD
+            if tau1.obj.isTau(JetBDTSigTight) and tau2.obj.isTau(JetBDTSigTight):
+                if event.EventInfo.eventNumber() % 2 == 1: # ODD
                     tau1.id = IDTIGHT
                     tau2.id = IDMEDIUM
                 else: # EVEN
                     tau1.id = IDMEDIUM
                     tau2.id = IDTIGHT
-            elif tau1.JetBDTSigTight:
+            elif tau1.obj.isTau(JetBDTSigTight):
                 tau1.id = IDTIGHT
                 tau2.id = IDMEDIUM
             else:
@@ -62,6 +68,8 @@ class TauLeadSublead(EventFilter):
 
 
 class Triggers(EventFilter):
+    # NOT CONVERTED TO XAOD YET
+
     """
     See lowest unprescaled triggers here:
     https://twiki.cern.ch/twiki/bin/viewauth/Atlas/LowestUnprescaled#Taus_electron_muon_MET
@@ -150,9 +158,10 @@ class ElectronVeto(EventFilter):
                 continue
             if el.passSelection(self.el_sel) != 1:
                 continue
-            # NEED TO IMPLEMENT THIS IN XAOD
-            # if el.isGoodOQ(ROOT.xAOD.EgammaParameters.BADCLUSELECTRON):
-            #     continue
+            oq = int(el.auxdataConst('unsigned int')('OQ'))
+            mask = int(ROOT.xAOD.EgammaParameters.BADCLUSELECTRON)
+            if (oq & mask) != 0:
+                continue
             return False
         return True
 
@@ -160,6 +169,7 @@ class ElectronVeto(EventFilter):
 from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, **kwargs):
         self.year = year
@@ -194,6 +204,7 @@ class TaudR(EventFilter):
 
 
 class TauTrackRecounting(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, use_ntup_value=False, **kwargs):
         super(TauTrackRecounting, self).__init__(**kwargs)
@@ -214,6 +225,7 @@ class TauTrackRecounting(EventFilter):
 
 
 class TauIDScaleFactors(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, passthrough=False, **kwargs):
         if not passthrough:
@@ -271,9 +283,9 @@ class TauIDScaleFactors(EventFilter):
             if not tau.matched:
                 continue
             wp = self.get_id_2012(tau)
-            sf = self.tool.GetIDSF(wp, tau.eta, tau.numTrack)
-            sf_stat = self.tool.GetIDStatUnc(wp, tau.eta, tau.numTrack)
-            sf_sys = self.tool.GetIDSysUnc(wp, tau.eta, tau.numTrack)
+            sf = self.tool.GetIDSF(wp, tau.obj.eta(), tau.obj.nTracks())
+            sf_stat = self.tool.GetIDStatUnc(wp, tau.obj.eta(), tau.obj.nTracks())
+            sf_sys = self.tool.GetIDSysUnc(wp, tau.obj.eta(), tau.obj.nTracks())
             tau.id_sf =  sf
             tau.id_sf_high = sf
             tau.id_sf_low = sf
@@ -285,6 +297,7 @@ class TauIDScaleFactors(EventFilter):
 
 
 class TauFakeRateScaleFactors(EventFilter):
+    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, datatype, tree,
                  tes_up=False, tes_down=False,
