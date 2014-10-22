@@ -177,9 +177,9 @@ class MuonVeto(EventFilter):
 
     def passes(self, event):
        for muon in event.muons:
-           if muon.pt <= 10 * GeV:
+           if muon.pt() <= 10 * GeV:
                continue
-           if abs(muon.eta) >= 2.5:
+           if abs(muon.eta()) >= 2.5:
                continue
            if muon.loose != 1:
                continue

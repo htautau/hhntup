@@ -438,9 +438,6 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauMuonVeto(2,
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # TauAuthor(2,
-                #     count_funcs=count_funcs),
                 TauCrack(2,
                     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
