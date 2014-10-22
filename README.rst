@@ -55,13 +55,11 @@ xAOD Migration
 --------------
 * Analysis release used::
   
-   Base, 2.0.12
+   Base, 2.0.14
 
 * Dataset used::
 
    mc14_8TeV.147808.PowhegPythia8_AU2CT10_Ztautau.merge.AOD.e2372_s1933_s1911_r5591_r5625
-
-* You need to put a xaod file named ``xaod_struct.root`` in ``cache`` in order to read the data structure before ``rootpy`` is enabled.  
 
 * To run the test::
   
