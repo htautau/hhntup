@@ -757,7 +757,7 @@ class MCWeight(EventFilter):
         # set the event weights
         if self.datatype == datasets.MC:
             truth_event = event.TruthEvent[0]
-            self.tree.mc_weight = truth_event.weights()[0]
+            self.tree.mc_weight = event.EventInfo.mcEventWeight()
             val_i = ROOT.Long(0)
             truth_event.pdfInfoParameter(val_i, truth_event.id1)
             self.tree.mcevent_pdf_id1_0 = val_i
