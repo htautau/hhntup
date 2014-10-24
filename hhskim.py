@@ -602,7 +602,7 @@ class hhskim(ATLASStudent):
         for f in self.files:
             log.info(f)
             chain.Add(f)
-        chain = xAODTree(chain, filters=event_filters, events=20)#self.events)
+        chain = xAODTree(chain, filters=event_filters, events=self.events)
         define_objects(chain)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
@@ -872,25 +872,6 @@ class hhskim(ATLASStudent):
         self.output.cd()
         outtree.FlushBaskets()
         outtree.Write()
-
-
-
-
-
-
-
-
-
-
-            # # fill the output tree
-            # outtree.Fill(reset=True)
-
-        # externaltools.report()
-
-        # # flush any baskets remaining in memory to disk
-        # self.output.cd()
-        # outtree.FlushBaskets()
-        # outtree.Write()
 
         if local:
             if datatype == datasets.DATA:
