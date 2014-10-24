@@ -602,7 +602,7 @@ class hhskim(ATLASStudent):
         for f in self.files:
             log.info(f)
             chain.Add(f)
-        chain = xAODTree(chain, filters=event_filters, events=20)#self.events)
+        chain = xAODTree(chain, filters=event_filters, events=self.events)
         define_objects(chain)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
