@@ -9,7 +9,10 @@ from .xaodobject import xAODTreeCollection
 class xAODTree(object):
     
     def __init__(self, chain, filters=None, events=-1):
-        self._tree = ROOT.xAOD.MakeTransientTree(chain)
+        self._chain = chain
+        log.info(chain)
+        self._tree = ROOT.xAOD.MakeTransientTree(self._chain)
+        log.info(self._tree)
         self._collections = {}
         self._events = events
         self._init_time = time.time()

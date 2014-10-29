@@ -598,11 +598,11 @@ class hhskim(ATLASStudent):
             # set the event filters
             self.filters['event'] = event_filters
 
-        chain = ROOT.TChain(self.metadata.treename)
+        ch = ROOT.TChain(self.metadata.treename)
         for f in self.files:
             log.info(f)
-            chain.Add(f)
-        chain = xAODTree(chain, filters=event_filters, events=self.events)
+            ch.Add(f)
+        chain = xAODTree(ch, filters=event_filters, events=self.events)
         define_objects(chain)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
