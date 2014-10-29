@@ -23,6 +23,7 @@ SETUPTOOLS_VERS=2.2
 
 ROOT_VERSION_CVMFS=5.34.14-x86_64-slc5-gcc4.3
 PYTHON_VERSION_CVMFS=2.6.5-x86_64-slc5-gcc43
+ANALYSIS_REALEASE=2.0.14,Base
 
 USE_CVMFS=true
 
@@ -139,6 +140,9 @@ function setup_CVMFS() {
     source $ATLAS_LOCAL_ROOT_BASE/user/atlasLocalSetup.sh
 }
 
+function setup_ANALYSIS_RELEASE(){
+    source $ATLAS_LOCAL_RCSETUP_PATH/rcSetup.sh ${ANALYSIS_REALEASE}
+}
 function setup_ROOT_CVMFS() {
     source ${ATLAS_LOCAL_ROOT_BASE}/packageSetups/atlasLocalROOTSetup.sh \
         --skipConfirm --rootVersion=${ROOT_VERSION_CVMFS}
@@ -268,8 +272,9 @@ build)
     if $USE_CVMFS
     then
         setup_CVMFS
-        setup_python_CVMFS
-        setup_ROOT_CVMFS
+	setup_ANALYSIS_RELEASE
+        # setup_python_CVMFS
+        # setup_ROOT_CVMFS
     fi
     
     determine_python
@@ -327,8 +332,9 @@ worker)
     if $USE_CVMFS
     then
         setup_CVMFS
-        setup_python_CVMFS
-        setup_ROOT_CVMFS
+	setup_ANALYSIS_RELEASE
+        # setup_python_CVMFS
+        # setup_ROOT_CVMFS
     fi
 
     if [[ -e python ]]
