@@ -177,9 +177,9 @@ class hhskim(ATLASStudent):
 
             # NEED TO BE CONVERTED TO XAOD
             # # get pileup reweighting tool
-            # pileup_tool = get_pileup_reweighting_tool(
-            #     year=year,
-            #     use_defaults=True)
+            pileup_tool = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True)
             # pileup_tool_high = get_pileup_reweighting_tool(
             #     year=year,
             #     use_defaults=True,
@@ -295,33 +295,27 @@ class hhskim(ATLASStudent):
                 #     passthrough=(
                 #         local or year > 2011 or datatype != datasets.EMBED),
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # averageIntPerXingPatch(
-                #     passthrough=(
-                #         local or year < 2012 or datatype != datasets.MC),
-                #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
+                # NEED TO BE CONFIGURED FOR XAOD
                 # PileupTemplates(
                 #     year=year,
                 #     passthrough=(
                 #         local or is_bch_sample or datatype not in (
                 #             datasets.MC, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # RandomSeed(
-                #     datatype=datatype,
-                #     count_funcs=count_funcs),
+                RandomSeed(
+                    datatype=datatype,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # BCHSampleRunNumber(
                 #     passthrough=not is_bch_sample,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # RandomRunNumber(
-                #     tree=tree,
-                #     datatype=datatype,
-                #     pileup_tool=pileup_tool,
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
+                RandomRunNumber(
+                    tree=tree,
+                    datatype=datatype,
+                    pileup_tool=pileup_tool,
+                    passthrough=local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # trigger_emulation,
                 # NEED TO BE CONVERTED TO XAOD
@@ -622,7 +616,7 @@ class hhskim(ATLASStudent):
                 continue
             
             # Set the output tree event level info
-            EventModel.set(tree, event.EventInfo)
+            # EventModel.set(tree, event.EventInfo)
 
             # sort taus and jets in decreasing order by pT
             event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)

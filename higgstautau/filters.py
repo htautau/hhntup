@@ -793,14 +793,13 @@ class ggFReweighting(EventFilter):
 
 
 class JetIsPileup(EventFilter):
-    # NOT CONVERTED TO XAOD YET
     """
     must be applied before any jet selection
     """
     def __init__(self, **kwargs):
         super(JetIsPileup, self).__init__(**kwargs)
         if not self.passthrough:
-            from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
+            # from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
             from ROOT import JVFUncertaintyTool
             self.tool = JVFUncertaintyTool("AntiKt4LCTopo")
 

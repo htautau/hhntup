@@ -80,11 +80,17 @@ class PileupTemplates(EventFilter):
             **kwargs)
 
     def passes(self, event):
+        #pileup_chan107655_run195847
         self.pileup_tool.Fill(
-            event.RunNumber,
-            event.mc_channel_number,
-            event.mc_event_weight,
-            event.averageIntPerXing)
+            195847,
+            107655,
+            event.EventInfo.mcEventWeight(),
+            event.EventInfo.averageInteractionsPerCrossing())
+        # self.pileup_tool.Fill(
+        #     event.EventInfo.runNumber(),
+        #     event.EventInfo.mcChannelNumber(),
+        #     event.EventInfo.mcEventWeight(),
+        #     event.EventInfo.averageInteractionsPerCrossing())
         return True
 
     def finalize(self):
@@ -155,6 +161,7 @@ class PileupScale(EventFilter):
 
 
 class averageIntPerXingPatch(EventFilter):
+    # NOT CONVERTED AND NOT NEEDED IN THE XAOD
     """
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ExtendedPileupReweighting:
 
@@ -169,5 +176,5 @@ class averageIntPerXingPatch(EventFilter):
     """
     def passes(self, event):
         if event.lbn == 1 and int(event.averageIntPerXing + 0.5) == 1:
-            event.averageIntPerXing = 0.
+            event.averageIntPerXing = 0
         return True

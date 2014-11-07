@@ -24,9 +24,9 @@ class RandomSeed(EventFilter):
 
     def passes(self, event):
         if self.datatype in (datasets.DATA, datasets.EMBED):
-            seed = int(event.RunNumber + event.EventNumber)
+            seed = int(event.EventInfo.runNumber() + event.EventInfo.eventNumber())
         else:
-            seed = int(event.mc_channel_number + event.EventNumber)
+            seed = int(event.EventInfo.mcChannelNumber() + event.EventInfo.eventNumber())
         # METUtility uses gRandom
         ROOT.gRandom.SetSeed(seed)
         idx = 1
@@ -51,13 +51,15 @@ class RandomRunNumber(EventFilter):
             self.passes = self.passes_data
 
     def passes_data(self, event):
-        self.tree.RunNumber = event.RunNumber
-        self.tree.lbn = event.lbn
+        self.tree.RunNumber = event.EventInfo.runNumber()
+        self.tree.lbn = event.EventInfo.lumiBlock()
         return True
 
     def passes_mc(self, event):
         # get random run number using the pileup tool
-        random_run = self.pileup_tool.GetRandomRunNumber(event.RunNumber)
+        # NEED TO UPDATE THE PILEUP TOOL FILE
+        random_run = self.pileup_tool.GetRandomRunNumber(195847)
+        # random_run = self.pileup_tool.GetRandomRunNumber(event.EventInfo.runNumber())
         self.tree.RunNumber = random_run
         self.tree.lbn = self.pileup_tool.GetRandomLumiBlockNumber(random_run)
         return True
