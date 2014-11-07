@@ -169,7 +169,7 @@ class ElectronVeto(EventFilter):
 from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
-    # NOT CONVERTED TO XAOD YET
+    # XAOD CONVERSION IS ONGOING
 
     def __init__(self, year, **kwargs):
         self.year = year
