@@ -531,9 +531,9 @@ class EventModel(TreeModel):
     error = BoolCol()
     
     @classmethod
-    def set(cls, tree, ei):
-        tree.RunNumber = ei.runNumber()
-        tree.lbn = ei.lumiBlock()
+    def set(cls, tree, event):
+        tree.RunNumber = event.EventInfo.runNumber()
+        tree.lbn = event.EventInfo.lumiBlock()
 
 class InclusiveHiggsModel(TreeModel):
     higgs_decay_channel = IntCol(default=-1)

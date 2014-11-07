@@ -615,9 +615,6 @@ class hhskim(ATLASStudent):
                 outtree.Fill()
                 continue
             
-            # Set the output tree event level info
-            # EventModel.set(tree, event.EventInfo)
-
             # sort taus and jets in decreasing order by pT
             event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)
             event.jets.sort(key=lambda jet: jet.pt(), reverse=True)
