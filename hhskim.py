@@ -195,20 +195,20 @@ class hhskim(ATLASStudent):
             #     trigconfchain.Merge(self.output, -1, 'fast keep')
             #     self.output.cd()
 
-            if datatype == datasets.DATA:
-                # merge GRL XML strings
-                merged_grl = goodruns.GRL()
-                for fname in self.files:
-                    with root_open(fname) as f:
-                        for key in f.Lumi.keys():
-                            merged_grl |= goodruns.GRL(
-                                str(key.ReadObj().GetString()),
-                                from_string=True)
-                lumi_dir = self.output.mkdir('Lumi')
-                lumi_dir.cd()
-                xml_string= ROOT.TObjString(merged_grl.str())
-                xml_string.Write(self.metadata.treename)
-                self.output.cd()
+            # if datatype == datasets.DATA:
+            #     # merge GRL XML strings
+            #     merged_grl = goodruns.GRL()
+            #     for fname in self.files:
+            #         with root_open(fname) as f:
+            #             for key in f.Lumi.keys():
+            #                 merged_grl |= goodruns.GRL(
+            #                     str(key.ReadObj().GetString()),
+            #                     from_string=True)
+            #     lumi_dir = self.output.mkdir('Lumi')
+            #     lumi_dir.cd()
+            #     xml_string= ROOT.TObjString(merged_grl.str())
+            #     xml_string.Write(self.metadata.treename)
+            #     self.output.cd()
 
         self.output.cd()
 
@@ -586,7 +586,7 @@ class hhskim(ATLASStudent):
             log.info(f)
             root_chain.Add(f)
         chain = xAODTree(root_chain, filters=event_filters, events=self.events)
-        define_objects(chain)
+        define_objects(chain, datatype=datatype)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
             hh_buffer,
