@@ -563,19 +563,19 @@ class TruthMatching(EventFilter):
 
     def passes(self, event):
         for tau in event.taus:
-            # CANNOT do the following due to buggy D3PD:
-            # tau.matched = tau.trueTauAssoc_index > -1
             tau.matched = False
             tau.matched_dr = 1111.
             tau.matched_object = None
             for p in event.truetaus:
-                tau_decay = TauDecay(p).fourvect_visible
+                # fix waiting for a xAOD true tau collection
+                truetau = TauDecay(p)
+                tau_decay = truetau.fourvect_visible
                 dr = utils.dR(tau.obj.eta(), tau.obj.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     tau.matched = True
                     tau.matched_dr = dr
-                    tau.matched_object = p
+                    tau.matched_object = truetau
                     break
         return True
 

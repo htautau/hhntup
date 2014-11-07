@@ -598,11 +598,11 @@ class hhskim(ATLASStudent):
             # set the event filters
             self.filters['event'] = event_filters
 
-        ch = ROOT.TChain(self.metadata.treename)
+        root_chain = ROOT.TChain(self.metadata.treename)
         for f in self.files:
             log.info(f)
-            ch.Add(f)
-        chain = xAODTree(ch, filters=event_filters, events=self.events)
+            root_chain.Add(f)
+        chain = xAODTree(root_chain, filters=event_filters, events=self.events)
         define_objects(chain)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
@@ -823,9 +823,9 @@ class hhskim(ATLASStudent):
                 tau2.obj.vertex().chiSquared(),
                 int(tau2.obj.vertex().numberDoF()))
 
-            ##########################
-            # MMC Mass
-            ##########################
+            # ##########################
+            # # MMC Mass
+            # ##########################
             mmc_result = mmc.mass(
                 tau1, tau2,
                 METx, METy, sumET,
@@ -861,8 +861,8 @@ class hhskim(ATLASStudent):
             RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
 
             # NEED TO BE CONVERTED TO XAOD
-            # if datatype != datasets.DATA:
-            #     TrueTauBlock.set(tree, tau1, tau2)
+            if datatype != datasets.DATA:
+                TrueTauBlock.set(tree, tau1, tau2)
             # fill the output tree
             outtree.Fill(reset=True)
 
