@@ -225,7 +225,6 @@ class TauTrackRecounting(EventFilter):
 
 
 class TauIDScaleFactors(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     def __init__(self, year, passthrough=False, **kwargs):
         if not passthrough:
