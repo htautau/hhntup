@@ -1,5 +1,5 @@
-from atlastools.batch import ATLASStudent
 from rootpy.io import root_open
+from higgstautau.batch import ATLASStudent
 from higgstautau import log; log = log[__name__]
 from goodruns import GRL
 

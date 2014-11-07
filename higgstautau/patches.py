@@ -1,3 +1,7 @@
+# --
+# November 6th, 2014: Not converted to XAOD yet
+# --
+
 from rootpy.tree.filtering import *
 from rootpy.io import root_open as ropen
 from math import *

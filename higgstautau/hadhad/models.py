@@ -443,23 +443,23 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
         if tau1.matched:
             truetau = tau1.matched_object
             tree_object = tree.truetau1
-            tree_object.nProng = truetau.nProng
-            tree_object.nPi0 = truetau.nPi0
+            tree_object.nProng = truetau.nprong
+            tree_object.nPi0 = truetau.nneutrals
             tree_object.charge = truetau.charge
             TrueTau.set(tree_object, truetau.fourvect)
-            TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+            TrueTau.set_vis(tree_object, truetau.fourvect_visible)
         if tau2.matched:
             truetau = tau2.matched_object
             tree_object = tree.truetau2
-            tree_object.nProng = truetau.nProng
-            tree_object.nPi0 = truetau.nPi0
+            tree_object.nProng = truetau.nprong
+            tree_object.nPi0 = truetau.nneutrals
             tree_object.charge = truetau.charge
             TrueTau.set(tree_object, truetau.fourvect)
-            TrueTau.set_vis(tree_object, truetau.fourvect_vis)
+            TrueTau.set_vis(tree_object, truetau.fourvect_visible)
         # angular variables
         if tau1.matched and tau2.matched:
-            truetau1 = tau1.matched_object.fourvect_vis
-            truetau2 = tau2.matched_object.fourvect_vis
+            truetau1 = tau1.matched_object.fourvect_visible
+            truetau2 = tau2.matched_object.fourvect_visible
             tree.theta_truetaus = abs(truetau1.Angle(truetau2))
             tree.cos_theta_truetaus = math.cos(tree.theta_truetaus)
             tree.dR_truetaus = truetau1.DeltaR(truetau2)
@@ -520,19 +520,20 @@ class EventModel(TreeModel):
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
 
+    # NOT USE FOR NOW IN THE XAOD
     # used by the JetCopy filter:
-    jet_E_original = stl.vector('float')
-    jet_m_original = stl.vector('float')
-    jet_pt_original = stl.vector('float')
-    jet_eta_original = stl.vector('float')
-    jet_phi_original = stl.vector('float')
+    # jet_E_original = stl.vector('float')
+    # jet_m_original = stl.vector('float')
+    # jet_pt_original = stl.vector('float')
+    # jet_eta_original = stl.vector('float')
+    # jet_phi_original = stl.vector('float')
 
     error = BoolCol()
     
     @classmethod
-    def set(cls, tree, ei):
-        tree.RunNumber = ei.runNumber()
-        tree.lbn = ei.lumiBlock()
+    def set(cls, tree, event):
+        tree.RunNumber = event.EventInfo.runNumber()
+        tree.lbn = event.EventInfo.lumiBlock()
 
 class InclusiveHiggsModel(TreeModel):
     higgs_decay_channel = IntCol(default=-1)

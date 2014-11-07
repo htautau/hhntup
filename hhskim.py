@@ -177,9 +177,9 @@ class hhskim(ATLASStudent):
 
             # NEED TO BE CONVERTED TO XAOD
             # # get pileup reweighting tool
-            # pileup_tool = get_pileup_reweighting_tool(
-            #     year=year,
-            #     use_defaults=True)
+            pileup_tool = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True)
             # pileup_tool_high = get_pileup_reweighting_tool(
             #     year=year,
             #     use_defaults=True,
@@ -295,33 +295,27 @@ class hhskim(ATLASStudent):
                 #     passthrough=(
                 #         local or year > 2011 or datatype != datasets.EMBED),
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # averageIntPerXingPatch(
-                #     passthrough=(
-                #         local or year < 2012 or datatype != datasets.MC),
-                #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
+                # NEED TO BE CONFIGURED FOR XAOD
                 # PileupTemplates(
                 #     year=year,
                 #     passthrough=(
                 #         local or is_bch_sample or datatype not in (
                 #             datasets.MC, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # RandomSeed(
-                #     datatype=datatype,
-                #     count_funcs=count_funcs),
+                RandomSeed(
+                    datatype=datatype,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # BCHSampleRunNumber(
                 #     passthrough=not is_bch_sample,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # RandomRunNumber(
-                #     tree=tree,
-                #     datatype=datatype,
-                #     pileup_tool=pileup_tool,
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
+                RandomRunNumber(
+                    tree=tree,
+                    datatype=datatype,
+                    pileup_tool=pileup_tool,
+                    passthrough=local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # trigger_emulation,
                 # NEED TO BE CONVERTED TO XAOD
@@ -355,11 +349,6 @@ class hhskim(ATLASStudent):
                     passthrough=(
                         local or datatype in (datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
-                # WILL BE REMOVED
-                # JetCopy(
-                #     tree=tree,
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
                 # # IMPORTANT!
                 # # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
                 # # jet.fourvect since jet.fourvect IS CACHED!
@@ -578,10 +567,9 @@ class hhskim(ATLASStudent):
                 JetSelection(
                     year=year,
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # RecoJetTrueTauMatching(
-                #     passthrough=datatype == datasets.DATA or local,
-                #     count_funcs=count_funcs),
+                RecoJetTrueTauMatching(
+                    passthrough=datatype == datasets.DATA or local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # BCHCleaning(
                 #     tree=tree,
@@ -598,11 +586,11 @@ class hhskim(ATLASStudent):
             # set the event filters
             self.filters['event'] = event_filters
 
-        ch = ROOT.TChain(self.metadata.treename)
+        root_chain = ROOT.TChain(self.metadata.treename)
         for f in self.files:
             log.info(f)
-            ch.Add(f)
-        chain = xAODTree(ch, filters=event_filters, events=self.events)
+            root_chain.Add(f)
+        chain = xAODTree(root_chain, filters=event_filters, events=self.events)
         define_objects(chain)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
@@ -627,9 +615,6 @@ class hhskim(ATLASStudent):
                 outtree.Fill()
                 continue
             
-            # Set the output tree event level info
-            EventModel.set(tree, event.EventInfo)
-
             # sort taus and jets in decreasing order by pT
             event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)
             event.jets.sort(key=lambda jet: jet.pt(), reverse=True)
@@ -823,9 +808,9 @@ class hhskim(ATLASStudent):
                 tau2.obj.vertex().chiSquared(),
                 int(tau2.obj.vertex().numberDoF()))
 
-            ##########################
-            # MMC Mass
-            ##########################
+            # ##########################
+            # # MMC Mass
+            # ##########################
             mmc_result = mmc.mass(
                 tau1, tau2,
                 METx, METy, sumET,
@@ -861,8 +846,8 @@ class hhskim(ATLASStudent):
             RecoTauBlock.set(event, tree, datatype, tau1, tau2, local=local)
 
             # NEED TO BE CONVERTED TO XAOD
-            # if datatype != datasets.DATA:
-            #     TrueTauBlock.set(tree, tau1, tau2)
+            if datatype != datasets.DATA:
+                TrueTauBlock.set(tree, tau1, tau2)
             # fill the output tree
             outtree.Fill(reset=True)
 

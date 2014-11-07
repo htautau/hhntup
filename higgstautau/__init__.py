@@ -3,9 +3,7 @@ import logging
 import os
 import ROOT
 
-if not os.getenv('MVA_NO_BATCH', False):
-    ROOT.gROOT.SetBatch(True)
-
+ROOT.gROOT.SetBatch(True)
 rootpy.log.basic_config_colorized()
 
 log = logging.getLogger('higgstautau')

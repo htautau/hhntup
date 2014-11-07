@@ -1,3 +1,7 @@
+# --
+# November 6th, 2014: Not converted to XAOD yet
+# --
+
 """
 Adapted from the Example.C in MissingETUtility/macros
 """

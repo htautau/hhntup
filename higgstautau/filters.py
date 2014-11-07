@@ -563,33 +563,35 @@ class TruthMatching(EventFilter):
 
     def passes(self, event):
         for tau in event.taus:
-            # CANNOT do the following due to buggy D3PD:
-            # tau.matched = tau.trueTauAssoc_index > -1
             tau.matched = False
             tau.matched_dr = 1111.
             tau.matched_object = None
             for p in event.truetaus:
-                tau_decay = TauDecay(p).fourvect_visible
+                # fix waiting for a xAOD true tau collection
+                truetau = TauDecay(p)
+                tau_decay = truetau.fourvect_visible
                 dr = utils.dR(tau.obj.eta(), tau.obj.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     tau.matched = True
                     tau.matched_dr = dr
-                    tau.matched_object = p
+                    tau.matched_object = truetau
                     break
         return True
 
 
 class RecoJetTrueTauMatching(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     def passes(self, event):
         for jet in event.jets:
             jet.matched = False
             jet.matched_dr = 1111.
             jet.matched_object = None
-            for truetau in event.truetaus:
-                dr = utils.dR(jet.eta, jet.phi, truetau.vis_eta, truetau.vis_phi)
+            for p in event.truetaus:
+                # fix waiting for a xAOD true tau collection
+                truetau = TauDecay(p)
+                tau_decay = truetau.fourvect_visible
+                dr = utils.dR(jet.eta(), jet.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     jet.matched = True
@@ -791,14 +793,13 @@ class ggFReweighting(EventFilter):
 
 
 class JetIsPileup(EventFilter):
-    # NOT CONVERTED TO XAOD YET
     """
     must be applied before any jet selection
     """
     def __init__(self, **kwargs):
         super(JetIsPileup, self).__init__(**kwargs)
         if not self.passthrough:
-            from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
+            # from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
             from ROOT import JVFUncertaintyTool
             self.tool = JVFUncertaintyTool("AntiKt4LCTopo")
 

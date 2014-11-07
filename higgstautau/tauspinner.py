@@ -1,3 +1,7 @@
+# --
+# November 6th, 2014: Not converted to XAOD yet
+# --
+
 """
 See instructions here:
 https://svnweb.cern.ch/trac/atlasphys/browser/Physics/Higgs/HSG4/software/common/TauSpinner/trunk/README.rst

@@ -1,3 +1,6 @@
+# --
+# November 6th, 2014: Not converted to XAOD yet
+# --
 """
 See instructions here:
     https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/JetCalibrationToolsForPhysicsAnalyses
