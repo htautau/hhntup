@@ -276,7 +276,7 @@ class hhskim(ATLASStudent):
 
             log.info(self.grl)
             event_filters = EventFilterList([
-                GRLFilterOfficial(
+                GRLFilter(
                     self.grl,
                     passthrough=(
                         local or (

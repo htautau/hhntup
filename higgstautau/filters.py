@@ -24,6 +24,7 @@ BCH_TOOLS = []
 
 
 class GRLFilter(EventFilter):
+
     def __init__(self, grl, **kwargs):
         super(GRLFilter, self).__init__(**kwargs)
         if isinstance(grl, GRL):
@@ -36,7 +37,7 @@ class GRLFilter(EventFilter):
         return (int(event.EventInfo.runNumber()), int(event.EventInfo.lumiBlock())) in self.grl
 
 class GRLFilterOfficial(EventFilter):
-
+    # ALTERNATIVE USING OFFICIAL TOOL
     def __init__(self, xml, **kwargs):
         super(GRLFilterOfficial, self).__init__(**kwargs)
         from ROOT import Root
