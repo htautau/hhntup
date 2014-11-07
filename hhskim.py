@@ -195,9 +195,9 @@ class hhskim(ATLASStudent):
             #     trigconfchain.Merge(self.output, -1, 'fast keep')
             #     self.output.cd()
 
-            # if datatype == datasets.DATA:
-            #     # merge GRL XML strings
-            #     merged_grl = goodruns.GRL()
+            if datatype == datasets.DATA:
+                # merge GRL XML strings
+                merged_grl = goodruns.GRL()
             #     for fname in self.files:
             #         with root_open(fname) as f:
             #             for key in f.Lumi.keys():
@@ -274,9 +274,9 @@ class hhskim(ATLASStudent):
                     tau_ntrack_recounted_use_ntup = (
                         'tau_out_track_n_extended' in test_tree)
 
-
+            log.info(self.grl)
             event_filters = EventFilterList([
-                GRLFilter(
+                GRLFilterOfficial(
                     self.grl,
                     passthrough=(
                         local or (
@@ -321,16 +321,16 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # PileupReweight(
-                #     year=year,
-                #     tool=pileup_tool,
-                #     tool_high=pileup_tool_high,
-                #     tool_low=pileup_tool_low,
-                #     tree=tree,
-                #     passthrough=(
-                #         local or (
-                #             datatype not in (datasets.MC, datasets.MCEMBED))),
-                #     count_funcs=count_funcs),
+                PileupReweight(
+                    year=year,
+                    tool=pileup_tool,
+                    tool_high=pileup_tool_high,
+                    tool_low=pileup_tool_low,
+                    tree=tree,
+                    passthrough=(
+                        local or (
+                            datatype not in (datasets.MC, datasets.MCEMBED))),
+                    count_funcs=count_funcs),
                 PriVertex(
                     passthrough=local,
                     count_funcs=count_funcs),
@@ -362,9 +362,10 @@ class hhskim(ATLASStudent):
                 #         or year < 2012 or nominal_values),
                 #     count_funcs=count_funcs),
                 # # truth matching must come before systematics due to
-                # NEED TO BE CONVERTED TO XAOD
                 # # TES_TRUE/FAKE
+                # NEED TO BE CONVERTED TO XAOD
                 TrueTauSelection(
+                        passthrough=datatype == datasets.DATA,
                         count_funcs=count_funcs),
                 TruthMatching(
                     passthrough=datatype == datasets.DATA,
@@ -475,12 +476,12 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # PileupScale(
-                #     tree=tree,
-                #     year=year,
-                #     datatype=datatype,
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
+                PileupScale(
+                    tree=tree,
+                    year=year,
+                    datatype=datatype,
+                    passthrough=local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 TauIDScaleFactors(
                     year=year,

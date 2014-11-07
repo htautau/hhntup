@@ -24,18 +24,30 @@ BCH_TOOLS = []
 
 
 class GRLFilter(EventFilter):
-
     def __init__(self, grl, **kwargs):
         super(GRLFilter, self).__init__(**kwargs)
         if isinstance(grl, GRL):
             self.grl = grl
         else:
             self.grl = GRL(grl)
-
     def passes(self, event):
         if not self.grl:
             return False
-        return (event.EventInfo.runNumber(), event.EventInfo.lumiBlock()) in self.grl
+        return (int(event.EventInfo.runNumber()), int(event.EventInfo.lumiBlock())) in self.grl
+
+class GRLFilterOfficial(EventFilter):
+
+    def __init__(self, xml, **kwargs):
+        super(GRLFilterOfficial, self).__init__(**kwargs)
+        from ROOT import Root
+        reader = Root.TGoodRunsListReader(xml)
+        reader.Interpret()
+        self.grl = reader.GetMergedGRLCollection()
+        self.grl.Summary()
+    def passes(self, event):
+        return self.grl.HasRunLumiBlock(
+            int(event.EventInfo.runNumber()), 
+            int(event.EventInfo.lumiBlock()))
 
 
 def primary_vertex_selection(vxp):
@@ -66,6 +78,7 @@ class CoreFlags(EventFilter):
 
 
 class NvtxJets(EventFilter):
+
     def __init__(self, tree, **kwargs):
         super(NvtxJets, self).__init__(**kwargs)
         self.tree = tree
@@ -249,7 +262,7 @@ class JetCleaning(EventFilter):
         if (self.datatype in (datasets.DATA, datasets.EMBED)) and self.year == 2012:
             # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
             # Hot Tile calorimeter in period B1 and B2
-            if event.RunNumber in JetCleaning.BAD_TILE:
+            if event.EventInfo.runNumber() in JetCleaning.BAD_TILE:
                 # recommendation is to use EM jets
                 for jet in event.jets_EM:
                     _etaphi28 = (

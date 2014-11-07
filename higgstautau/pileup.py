@@ -9,6 +9,7 @@ from ROOT import Root
 
 from . import datasets
 from . import log; log = log[__name__]
+import os
 
 # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/InDetTrackingPerformanceGuidelines
 PU_RESCALE = {
@@ -32,7 +33,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
             pileup_tool.AddConfigFile(
                 'lumi/2011/'
                 'TPileupReweighting.mc11.prw.root')
-        lumicalc_file = 'lumi/2011/ilumicalc_histograms_None_178044-191933.root'
+        lumicalc_file = 'lumi/2011/ilumicDDalc_histograms_None_178044-191933.root'
     elif year == 2012:
         if use_defaults:
             pileup_tool.AddConfigFile(
@@ -86,15 +87,11 @@ class PileupTemplates(EventFilter):
     def passes(self, event):
         #pileup_chan107655_run195847
         self.pileup_tool.Fill(
+            #     event.EventInfo.runNumber(),
             195847,
-            107655,
+            event.EventInfo.mcChannelNumber(),
             event.EventInfo.mcEventWeight(),
             event.EventInfo.averageInteractionsPerCrossing())
-        # self.pileup_tool.Fill(
-        #     event.EventInfo.runNumber(),
-        #     event.EventInfo.mcChannelNumber(),
-        #     event.EventInfo.mcEventWeight(),
-        #     event.EventInfo.averageInteractionsPerCrossing())
         return True
 
     def finalize(self):
@@ -104,6 +101,7 @@ class PileupTemplates(EventFilter):
 
 
 class PileupReweight(EventFilter):
+    # XAOD MIGRATION: hard coding of the runnumber for now
     """
     Currently only implements hadhad reweighting
     """
@@ -121,21 +119,20 @@ class PileupReweight(EventFilter):
     def passes(self, event):
         # set the pileup weights
         self.tree.pileup_weight = self.tool.GetCombinedWeight(
-            event.RunNumber,
-            event.mc_channel_number,
-            event.averageIntPerXing)
+            195847,
+            # event.EventInfo.runNumber(),
+            event.EventInfo.mcChannelNumber(),
+            event.EventInfo.averageInteractionsPerCrossing())
         self.tree.pileup_weight_high = self.tool_high.GetCombinedWeight(
-            event.RunNumber,
-            event.mc_channel_number,
-            event.averageIntPerXing)
+            195847,
+            # event.EventInfo.runNumber(),
+            event.EventInfo.mcChannelNumber(),
+            event.EventInfo.averageInteractionsPerCrossing())
         self.tree.pileup_weight_low = self.tool_low.GetCombinedWeight(
-            event.RunNumber,
-            event.mc_channel_number,
-            event.averageIntPerXing)
-        #log.info("Run: {0}".format(event.RunNumber))
-        #log.info("Channel: {0}".format(event.mc_channel_number))
-        #log.info("mu: {0}".format(event.averageIntPerXing))
-        #log.info("Weight: {0}".format(self.tree.pileup_weight))
+            195847,
+            # event.EventInfo.runNumber(),
+            event.EventInfo.mcChannelNumber(),
+            event.EventInfo.averageInteractionsPerCrossing())
         return True
 
 
@@ -154,13 +151,13 @@ class PileupScale(EventFilter):
                 datatype)
 
     def passes_data(self, event):
-        self.tree.averageIntPerXing = event.averageIntPerXing
-        self.tree.actualIntPerXing = event.actualIntPerXing
+        self.tree.averageIntPerXing = event.EventInfo.averageInteractionsPerCrossing()
+        self.tree.actualIntPerXing = event.EventInfo.actualInteractionsPerCrossing()
         return True
 
     def passes_mc(self, event):
-        self.tree.averageIntPerXing = event.averageIntPerXing * self.scale
-        self.tree.actualIntPerXing = event.actualIntPerXing * self.scale
+        self.tree.averageIntPerXing = event.EventInfo.averageInteractionsPerCrossing() * self.scale
+        self.tree.actualIntPerXing = event.EventInfo.actualInteractionsPerCrossing() * self.scale
         return True
 
 
