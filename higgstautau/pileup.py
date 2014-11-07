@@ -1,3 +1,7 @@
+# --
+# November 6th, 2014: Not converted to XAOD yet
+# --
+
 from rootpy.tree.filtering import EventFilter
 
 from externaltools import PileupReweighting
