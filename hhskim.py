@@ -355,11 +355,6 @@ class hhskim(ATLASStudent):
                     passthrough=(
                         local or datatype in (datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
-                # WILL BE REMOVED
-                # JetCopy(
-                #     tree=tree,
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
                 # # IMPORTANT!
                 # # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
                 # # jet.fourvect since jet.fourvect IS CACHED!

@@ -520,12 +520,13 @@ class EventModel(TreeModel):
     ntrack_pv = IntCol()
     ntrack_nontau_pv = IntCol()
 
+    # NOT USE FOR NOW IN THE XAOD
     # used by the JetCopy filter:
-    jet_E_original = stl.vector('float')
-    jet_m_original = stl.vector('float')
-    jet_pt_original = stl.vector('float')
-    jet_eta_original = stl.vector('float')
-    jet_phi_original = stl.vector('float')
+    # jet_E_original = stl.vector('float')
+    # jet_m_original = stl.vector('float')
+    # jet_pt_original = stl.vector('float')
+    # jet_eta_original = stl.vector('float')
+    # jet_phi_original = stl.vector('float')
 
     error = BoolCol()
     
