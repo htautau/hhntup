@@ -19,17 +19,13 @@ from rootpy.io import root_open
 from rootpy import stl, asrootpy
 from rootpy.vector import LorentzVector
 
-# local imports
+# local xaod imports
 from xaod.xaodtree import xAODTree
-
-from higgstautau import eventshapes
-from higgstautau import datasets
-from higgstautau import utils
+# local higgstautau imports
+from higgstautau import eventshapes, utils, datasets
 from higgstautau.batch import ATLASStudent
 from higgstautau.units import GeV
-from higgstautau.mixins import *
 from higgstautau.filters import *
-from higgstautau.hadhad import branches as hhbranches
 from higgstautau.hadhad.objects import define_objects
 from higgstautau.hadhad.models import *
 from higgstautau.hadhad.filters import *
@@ -175,19 +171,18 @@ class hhskim(ATLASStudent):
         else:
 
 
-            # NEED TO BE CONVERTED TO XAOD
             # # get pileup reweighting tool
             pileup_tool = get_pileup_reweighting_tool(
                 year=year,
                 use_defaults=True)
-            # pileup_tool_high = get_pileup_reweighting_tool(
-            #     year=year,
-            #     use_defaults=True,
-            #     systematic='high')
-            # pileup_tool_low = get_pileup_reweighting_tool(
-            #     year=year,
-            #     use_defaults=True,
-            #     systematic='low')
+            pileup_tool_high = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True,
+                systematic='high')
+            pileup_tool_low = get_pileup_reweighting_tool(
+                year=year,
+                use_defaults=True,
+                systematic='low')
 
             # NEED TO BE CONVERTED TO XAOD
             # if datatype not in (datasets.EMBED, datasets.MCEMBED):
