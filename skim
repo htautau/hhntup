@@ -20,12 +20,12 @@ import os
 
 
 TEST_CMD = """\
-source setup.sh && ./grid-batch --dataset %(dataset)s --metadata datasets.cfg 
+source setup.sh && ./grid-batch --dataset %(dataset)s --metadata datasets/datasets.cfg 
 --student %(student)s %(student_args)s %(testinput)s
 """
 
 SUBMIT_CMD = """\
-./grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
+./grid-submit -u group.phys-higgs -m datasets/datasets.cfg -s %(student)s -v %(version)s
 %(opts)s
 %(student_args)s
 %(dataset)s
