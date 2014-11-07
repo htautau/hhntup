@@ -573,10 +573,9 @@ class hhskim(ATLASStudent):
                 JetSelection(
                     year=year,
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # RecoJetTrueTauMatching(
-                #     passthrough=datatype == datasets.DATA or local,
-                #     count_funcs=count_funcs),
+                RecoJetTrueTauMatching(
+                    passthrough=datatype == datasets.DATA or local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # BCHCleaning(
                 #     tree=tree,

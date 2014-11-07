@@ -581,15 +581,17 @@ class TruthMatching(EventFilter):
 
 
 class RecoJetTrueTauMatching(EventFilter):
-    # NOT CONVERTED TO XAOD YET
 
     def passes(self, event):
         for jet in event.jets:
             jet.matched = False
             jet.matched_dr = 1111.
             jet.matched_object = None
-            for truetau in event.truetaus:
-                dr = utils.dR(jet.eta, jet.phi, truetau.vis_eta, truetau.vis_phi)
+            for p in event.truetaus:
+                # fix waiting for a xAOD true tau collection
+                truetau = TauDecay(p)
+                tau_decay = truetau.fourvect_visible
+                dr = utils.dR(jet.eta(), jet.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     jet.matched = True
