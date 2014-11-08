@@ -270,7 +270,7 @@ class JetCleaning(EventFilter):
                         -0.2 < jet.eta() < -0.1 and
                         2.65 < jet.phi() < 2.75)
                     FracSamplingMax = jet.auxdataConst('float')('FracSamplingMax')
-                    SamplingMax = et.auxdataConst('int')('SamplingMax')
+                    SamplingMax = jet.auxdataConst('int')('SamplingMax')
                     if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
                         return False
             # Not required in reprocessed data:
