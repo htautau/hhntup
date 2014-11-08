@@ -620,6 +620,9 @@ class hhskim(ATLASStudent):
             tau1, tau2 = event.taus
 
             jets = list(event.jets)
+            for jet in jets:
+                jet.fourvect = asrootpy(jet.p4())
+
             jet1, jet2, jet3 = None, None, None
             beta = None
             if len(jets) >= 2:
@@ -627,8 +630,8 @@ class hhskim(ATLASStudent):
 
                 # determine boost of system
                 # determine jet CoM frame
-                jet1.fourvect = asrootpy(jet1.p4())
-                jet2.fourvect = asrootpy(jet2.p4())
+                # jet1.fourvect = asrootpy(jet1.p4())
+                # jet2.fourvect = asrootpy(jet2.p4())
                 beta = asrootpy(jet1.fourvect + jet2.fourvect).BoostVector()
                 tree.jet_beta.copy_from(beta)
 
@@ -676,14 +679,14 @@ class hhskim(ATLASStudent):
                 # 3rd leading jet
                 if len(jets) >= 3:
                     jet3 = jets[2]
-                    jet3.fourvect = asrootpy(jet3.p4())
+                    # jet3.fourvect = asrootpy(jet3.p4())
                     jet3.fourvect_boosted = LorentzVector()
                     jet3.fourvect_boosted.copy_from(jet3.fourvect)
                     jet3.fourvect_boosted.Boost(beta * -1)
 
             elif len(jets) == 1:
                 jet1 = jets[0]
-                jet1.fourvect = asrootpy(jet1.p4())
+                # jet1.fourvect = asrootpy(jet1.p4())
 
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
