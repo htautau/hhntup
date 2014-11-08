@@ -55,7 +55,7 @@ xAOD Migration
 --------------
 * Analysis release used::
   
-   Base, 2.0.14
+   Base, 2.0.17
 
 * Dataset used::
 
