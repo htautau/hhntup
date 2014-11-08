@@ -198,17 +198,17 @@ class hhskim(ATLASStudent):
             if datatype == datasets.DATA:
                 # merge GRL XML strings
                 merged_grl = goodruns.GRL()
-                for fname in self.files:
-                    with root_open(fname) as f:
-                        for key in f.Lumi.keys():
-                            merged_grl |= goodruns.GRL(
-                                str(key.ReadObj().GetString()),
-                                from_string=True)
-                lumi_dir = self.output.mkdir('Lumi')
-                lumi_dir.cd()
-                xml_string= ROOT.TObjString(merged_grl.str())
-                xml_string.Write(self.metadata.treename)
-                self.output.cd()
+            #     for fname in self.files:
+            #         with root_open(fname) as f:
+            #             for key in f.Lumi.keys():
+            #                 merged_grl |= goodruns.GRL(
+            #                     str(key.ReadObj().GetString()),
+            #                     from_string=True)
+            #     lumi_dir = self.output.mkdir('Lumi')
+            #     lumi_dir.cd()
+            #     xml_string= ROOT.TObjString(merged_grl.str())
+            #     xml_string.Write(self.metadata.treename)
+            #     self.output.cd()
 
         self.output.cd()
 
@@ -274,7 +274,7 @@ class hhskim(ATLASStudent):
                     tau_ntrack_recounted_use_ntup = (
                         'tau_out_track_n_extended' in test_tree)
 
-
+            log.info(self.grl)
             event_filters = EventFilterList([
                 GRLFilter(
                     self.grl,
@@ -321,16 +321,16 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # PileupReweight(
-                #     year=year,
-                #     tool=pileup_tool,
-                #     tool_high=pileup_tool_high,
-                #     tool_low=pileup_tool_low,
-                #     tree=tree,
-                #     passthrough=(
-                #         local or (
-                #             datatype not in (datasets.MC, datasets.MCEMBED))),
-                #     count_funcs=count_funcs),
+                PileupReweight(
+                    year=year,
+                    tool=pileup_tool,
+                    tool_high=pileup_tool_high,
+                    tool_low=pileup_tool_low,
+                    tree=tree,
+                    passthrough=(
+                        local or (
+                            datatype not in (datasets.MC, datasets.MCEMBED))),
+                    count_funcs=count_funcs),
                 PriVertex(
                     passthrough=local,
                     count_funcs=count_funcs),
@@ -362,9 +362,10 @@ class hhskim(ATLASStudent):
                 #         or year < 2012 or nominal_values),
                 #     count_funcs=count_funcs),
                 # # truth matching must come before systematics due to
-                # NEED TO BE CONVERTED TO XAOD
                 # # TES_TRUE/FAKE
+                # NEED TO BE CONVERTED TO XAOD
                 TrueTauSelection(
+                        passthrough=datatype == datasets.DATA,
                         count_funcs=count_funcs),
                 TruthMatching(
                     passthrough=datatype == datasets.DATA,
@@ -475,12 +476,12 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype == datasets.DATA,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # PileupScale(
-                #     tree=tree,
-                #     year=year,
-                #     datatype=datatype,
-                #     passthrough=local,
-                #     count_funcs=count_funcs),
+                PileupScale(
+                    tree=tree,
+                    year=year,
+                    datatype=datatype,
+                    passthrough=local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 TauIDScaleFactors(
                     year=year,
@@ -586,7 +587,7 @@ class hhskim(ATLASStudent):
             log.info(f)
             root_chain.Add(f)
         chain = xAODTree(root_chain, filters=event_filters, events=self.events)
-        define_objects(chain)
+        define_objects(chain, datatype=datatype)
         hh_buffer = TreeBuffer()
         outtree.set_buffer(
             hh_buffer,
@@ -619,6 +620,9 @@ class hhskim(ATLASStudent):
             tau1, tau2 = event.taus
 
             jets = list(event.jets)
+            for jet in jets:
+                jet.fourvect = asrootpy(jet.p4())
+
             jet1, jet2, jet3 = None, None, None
             beta = None
             if len(jets) >= 2:
@@ -626,8 +630,8 @@ class hhskim(ATLASStudent):
 
                 # determine boost of system
                 # determine jet CoM frame
-                jet1.fourvect = asrootpy(jet1.p4())
-                jet2.fourvect = asrootpy(jet2.p4())
+                # jet1.fourvect = asrootpy(jet1.p4())
+                # jet2.fourvect = asrootpy(jet2.p4())
                 beta = asrootpy(jet1.fourvect + jet2.fourvect).BoostVector()
                 tree.jet_beta.copy_from(beta)
 
@@ -675,14 +679,14 @@ class hhskim(ATLASStudent):
                 # 3rd leading jet
                 if len(jets) >= 3:
                     jet3 = jets[2]
-                    jet3.fourvect = asrootpy(jet3.p4())
+                    # jet3.fourvect = asrootpy(jet3.p4())
                     jet3.fourvect_boosted = LorentzVector()
                     jet3.fourvect_boosted.copy_from(jet3.fourvect)
                     jet3.fourvect_boosted.Boost(beta * -1)
 
             elif len(jets) == 1:
                 jet1 = jets[0]
-                jet1.fourvect = asrootpy(jet1.p4())
+                # jet1.fourvect = asrootpy(jet1.p4())
 
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
