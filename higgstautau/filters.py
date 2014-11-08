@@ -331,8 +331,10 @@ class JetCrackVeto(EventFilter):
 
     def passes(self, event):
         for jet in event.jets:
-            if jet.pt() <= 20 * GeV: continue
-            if 1.3 < abs(jet.eta()) < 1.7: return False
+            if jet.pt() <= 20 * GeV: 
+                continue
+            if 1.3 < abs(jet.eta()) < 1.7: 
+                return False
         return True
 
 
@@ -378,12 +380,9 @@ class TauElectronVeto(EventFilter):
         #https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TauRecommendationsWinterConf2013#Electron_veto
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
         # Eta selection already applied by TauEta filter
-        # Enum definition
-        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
-        EleBDTLoose = 22
         event.taus.select(lambda tau:
             tau.obj.nTracks() > 1 or
-            tau.obj.isTau(EleBDTLoose) == 0)
+            tau.obj.isTau(ROOT.xAOD.TauJetParameters.EleBDTLoose) == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -394,10 +393,7 @@ class TauMuonVeto(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        # Enum definition
-        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
-        MuonVeto = 4
-        event.taus.select(lambda tau: tau.obj.isTau(MuonVeto) == 0)
+        event.taus.select(lambda tau: tau.obj.isTau(ROOT.xAOD.TauJetParameters.MuonVeto) == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -517,10 +513,7 @@ class TauIDLoose(EventFilter):
         super(TauIDLoose, self).__init__(**kwargs)
 
     def passes(self, event):
-        # Enum definition
-        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
-        JetBDTSigLoose = 19
-        event.taus.select(lambda tau: tau.obj.isTau(JetBDTSigLoose) == 1)
+        event.taus.select(lambda tau: tau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigLoose) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -531,10 +524,7 @@ class TauIDMedium(EventFilter):
         super(TauIDMedium, self).__init__(**kwargs)
 
     def passes(self, event):
-        # Enum definition
-        # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
-        JetBDTSigMedium = 20
-        event.taus.select(lambda tau: tau.obj.isTau(JetBDTSigMedium) == 1)
+        event.taus.select(lambda tau: tau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigMedium) == 1)
         return len(event.taus) >= self.min_taus
 
 
