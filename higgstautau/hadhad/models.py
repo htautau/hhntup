@@ -2,6 +2,7 @@
 This module defines the output branches in the final ntuple
 as TreeModels.
 """
+import ROOT
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
 from rootpy.vector import LorentzRotation, LorentzVector, Vector3, Vector2
@@ -204,9 +205,9 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
             outtau.BDTEleScore = intau.obj.auxdataConst('float')('BDTEleScore')
 
             # NEED TO BE CONVERTED TO XAOD
-            # outtau.JetBDTSigLoose = intau.JetBDTSigLoose
-            # outtau.JetBDTSigMedium = intau.JetBDTSigMedium
-            # outtau.JetBDTSigTight = intau.JetBDTSigTight
+            outtau.JetBDTSigLoose = intau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigLoose)
+            outtau.JetBDTSigMedium = intau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigMedium)
+            outtau.JetBDTSigTight = intau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigTight)
 
             outtau.nPi0 = intau.obj.auxdataConst('int')('nPi0')
             # NEED TO BE CONVERTED TO XAOD

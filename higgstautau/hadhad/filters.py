@@ -23,8 +23,8 @@ class TauIDSelection(EventFilter):
     def passes(self, event):
         # Enum definition
         # https://svnweb.cern.ch/trac/atlasoff/browser/Event/xAOD/xAODTau/trunk/xAODTau/TauDefs.h#L96
-        JetBDTSigMedium = 20
-        JetBDTSigTight = 21
+        JetBDTSigMedium = ROOT.xAOD.TauJetParameters.JetBDTSigMedium
+        JetBDTSigTight = ROOT.xAOD.TauJetParameters.JetBDTSigTight
 
         tau1, tau2 = event.taus
         # signal region is: both medium with at least one being tight
