@@ -216,6 +216,54 @@ class TileTrips(EventFilter):
             event.EventInfo.eventNumber())
 
 
+class JetCleaningxAOD(EventFilter):
+
+    BAD_TILE = [
+        202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
+    ]
+
+    def __init__(self,
+                 datatype,
+                 year,
+                 # level=jetcleaning.LOOSER,
+                 pt_thresh=20*GeV,
+                 eta_max=4.5,
+                 **kwargs):
+        super(JetCleaningxAOD, self).__init__(**kwargs)
+        self.year = year
+        self.datatype = datatype
+        # self.level = level
+        self.pt_thresh = pt_thresh
+        self.eta_max = eta_max
+        from ROOT import JetCleaningTool
+        self.tool = JetCleaningTool(JetCleaningTool.LooseBad)
+
+    def passes(self, event):
+        # using LC jets
+        for jet in event.jets:
+            if jet.pt() <= self.pt_thresh or abs(jet.eta()) >= self.eta_max:
+                continue
+            isbadloose = self.tool.accept(jet)
+            if isbadloose == True:
+                log.info('bad jet !')
+                return False
+
+        if (self.datatype in (datasets.DATA, datasets.EMBED)) and self.year == 2012:
+            # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
+            # Hot Tile calorimeter in period B1 and B2
+            if event.EventInfo.runNumber() in JetCleaning.BAD_TILE:
+                # recommendation is to use EM jets
+                for jet in event.jets_EM:
+                    _etaphi28 = (
+                        -0.2 < jet.eta() < -0.1 and
+                        2.65 < jet.phi() < 2.75)
+                    FracSamplingMax = jet.auxdataConst('float')('FracSamplingMax')
+                    SamplingMax = jet.auxdataConst('int')('FracSamplingMaxIndex')
+                    if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
+                        return False
+
+        return True
+
 class JetCleaning(EventFilter):
 
     BAD_TILE = [
@@ -270,7 +318,7 @@ class JetCleaning(EventFilter):
                         -0.2 < jet.eta() < -0.1 and
                         2.65 < jet.phi() < 2.75)
                     FracSamplingMax = jet.auxdataConst('float')('FracSamplingMax')
-                    SamplingMax = jet.auxdataConst('int')('SamplingMax')
+                    SamplingMax = jet.auxdataConst('int')('FracSamplingMaxIndex')
                     if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
                         return False
             # Not required in reprocessed data:

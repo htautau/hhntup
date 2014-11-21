@@ -400,7 +400,7 @@ class hhskim(ATLASStudent):
                 #     passthrough=year > 2011,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                JetCleaning(
+                JetCleaningxAOD(
                     datatype=datatype,
                     year=year,
                     count_funcs=count_funcs),
