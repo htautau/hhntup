@@ -400,7 +400,7 @@ class hhskim(ATLASStudent):
                 #     passthrough=year > 2011,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                JetCleaningxAOD(
+                JetCleaning(
                     datatype=datatype,
                     year=year,
                     count_funcs=count_funcs),
@@ -409,9 +409,8 @@ class hhskim(ATLASStudent):
                         el_sel='Medium',
                         count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # MuonVeto(
-                #     year=year,
-                #     count_funcs=count_funcs),
+                MuonVeto(
+                    count_funcs=count_funcs),
                 TauPT(2,
                     thresh=20 * GeV,
                     count_funcs=count_funcs),
@@ -513,11 +512,11 @@ class hhskim(ATLASStudent):
                 #     passthrough=local,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                MCWeight(
-                    datatype=datatype,
-                    tree=tree,
-                    passthrough=local or datatype == datasets.DATA,
-                    count_funcs=count_funcs),
+                # MCWeight(
+                #     datatype=datatype,
+                #     tree=tree,
+                #     passthrough=local or datatype == datasets.DATA,
+                #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # EmbeddingIsolation(
                 #     tree=tree,

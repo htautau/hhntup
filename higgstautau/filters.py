@@ -90,12 +90,6 @@ class NvtxJets(EventFilter):
         goodPV = False
         nvtxsoftmet = 0
         nvtxjets = 0
-        # Most D3PDs contain the vx_type branch, but some don't.
-        # Those which don't are most likely skimmed, and require at least 1
-        # primary vertex for all events.
-        # If your D3PD is skimmed in this way, then the goodPV (nTracks and z)
-        # check should be applied to the first vertex in the collection.
-        # Otherwise, you should ensure that the vx_type branch is available.
         for vertex in event.vertices:
             if vertex.vertexType() == 1 and vertex.nTrackParticles() > 2 and abs(vertex.z()) < 200:
                 goodPV = True
@@ -216,7 +210,7 @@ class TileTrips(EventFilter):
             event.EventInfo.eventNumber())
 
 
-class JetCleaningxAOD(EventFilter):
+class JetCleaning(EventFilter):
 
     BAD_TILE = [
         202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
@@ -225,14 +219,12 @@ class JetCleaningxAOD(EventFilter):
     def __init__(self,
                  datatype,
                  year,
-                 # level=jetcleaning.LOOSER,
                  pt_thresh=20*GeV,
                  eta_max=4.5,
                  **kwargs):
-        super(JetCleaningxAOD, self).__init__(**kwargs)
+        super(JetCleaning, self).__init__(**kwargs)
         self.year = year
         self.datatype = datatype
-        # self.level = level
         self.pt_thresh = pt_thresh
         self.eta_max = eta_max
         from ROOT import JetCleaningTool
@@ -243,8 +235,7 @@ class JetCleaningxAOD(EventFilter):
         for jet in event.jets:
             if jet.pt() <= self.pt_thresh or abs(jet.eta()) >= self.eta_max:
                 continue
-            isbadloose = self.tool.accept(jet)
-            if isbadloose == True:
+            if self.tool.accept(jet):
                 log.info('bad jet !')
                 return False
 
@@ -262,76 +253,6 @@ class JetCleaningxAOD(EventFilter):
                     if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
                         return False
 
-        return True
-
-class JetCleaning(EventFilter):
-
-    BAD_TILE = [
-        202660, 202668, 202712, 202740, 202965, 202987, 202991, 203027, 203169
-    ]
-
-    def __init__(self,
-                 datatype,
-                 year,
-                 level=jetcleaning.LOOSER,
-                 pt_thresh=20*GeV,
-                 eta_max=4.5,
-                 **kwargs):
-        super(JetCleaning, self).__init__(**kwargs)
-        self.year = year
-        self.datatype = datatype
-        self.level = level
-        self.pt_thresh = pt_thresh
-        self.eta_max = eta_max
-
-    def passes(self, event):
-        # using LC jets
-        for jet in event.jets:
-            if jet.pt() <= self.pt_thresh or abs(jet.eta()) >= self.eta_max:
-                continue
-            LArQmean = jet.auxdataConst('float')('AverageLArQF') / 65535.0
-            chf = 0
-            sumptrk_vec  = jet.auxdataConst('std::vector<float, std::allocator<float> >')('SumPtTrkPt500')
-            if not sumptrk_vec.empty():
-                chf = sumptrk_vec[0] / jet.pt()
-            if jetcleaning.is_bad(
-                    level=self.level,
-                    quality=jet.auxdataConst('float')('LArQuality'),
-                    NegE=jet.auxdataConst('float')('NegativeE'),
-                    emf=jet.auxdataConst('float')('EMFrac'),
-                    hecf=jet.auxdataConst('float')('HECFrac'),
-                    time=jet.auxdataConst('float')('Timing'),
-                    fmax=jet.auxdataConst('float')('FracSamplingMax'),
-                    eta=jet.eta(),
-                    chf=chf,
-                    HecQ=jet.auxdataConst('float')('HECQuality'),
-                    LArQmean=LArQmean):
-                return False
-
-        if (self.datatype in (datasets.DATA, datasets.EMBED)) and self.year == 2012:
-            # https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2012
-            # Hot Tile calorimeter in period B1 and B2
-            if event.EventInfo.runNumber() in JetCleaning.BAD_TILE:
-                # recommendation is to use EM jets
-                for jet in event.jets_EM:
-                    _etaphi28 = (
-                        -0.2 < jet.eta() < -0.1 and
-                        2.65 < jet.phi() < 2.75)
-                    FracSamplingMax = jet.auxdataConst('float')('FracSamplingMax')
-                    SamplingMax = jet.auxdataConst('int')('FracSamplingMaxIndex')
-                    if FracSamplingMax > 0.6 and SamplingMax == 13 and _etaphi28:
-                        return False
-            # Not required in reprocessed data:
-            # Bad FCAL response in periods C1-C8
-            # not applied in the skim for now.
-            # Need to also apply on MC and choose a random run number with the
-            # PileupReweighting tool
-            #if 206248 <= event.RunNumber <= 207332:
-            #    for jet in event.jets_EM:
-            #        if (jet.pt > 20 * GeV and
-            #            abs(jet.eta) > 3.2 and
-            #            1.6 < jet.phi < 3.1):
-            #            return False
         return True
 
 
@@ -814,14 +735,14 @@ class MCWeight(EventFilter):
             truth_event = event.TruthEvent[0]
             self.tree.mc_weight = event.EventInfo.mcEventWeight()
             val_i = ROOT.Long(0)
-            if truth_event.pdfInfoParameter(val_i, truth_event.id1):
+            if truth_event.pdfInfoParameter(val_i, truth_event.PDFID1):
                 self.tree.mcevent_pdf_id1_0 = val_i
-            if truth_event.pdfInfoParameter(val_i, truth_event.id2):
+            if truth_event.pdfInfoParameter(val_i, truth_event.PDFID2):
                 self.tree.mcevent_pdf_id2_0 = val_i
             val_f = carray('f', [0.])
-            if truth_event.pdfInfoParameter(val_f, truth_event.x1):
+            if truth_event.pdfInfoParameter(val_f, truth_event.X1):
                 self.tree.mcevent_pdf_x1_0 = val_f[0]
-            if truth_event.pdfInfoParameter(val_f, truth_event.x2):
+            if truth_event.pdfInfoParameter(val_f, truth_event.X2):
                 self.tree.mcevent_pdf_x2_0 = val_f[0] 
             if truth_event.pdfInfoParameter(val_f, truth_event.scalePDF):
                 self.tree.mcevent_pdf_scale_0 = val_f[0]

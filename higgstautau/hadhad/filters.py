@@ -169,24 +169,21 @@ class ElectronVeto(EventFilter):
 from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
-    # XAOD CONVERSION IS ONGOING
 
-    def __init__(self, year, **kwargs):
-        self.year = year
+    def __init__(self, **kwargs):
         super(MuonVeto, self).__init__(**kwargs)
-
+        self.muon_tool = ROOT.CP.MuonSelectionTool('MuonSelectionTool')
+        # use loose quality and |eta|>2.5
+        self.muon_tool.setProperty('int')('MuQuality', 2)
+        self.muon_tool.initialize()
     def passes(self, event):
-       for muon in event.muons:
-           if muon.pt() <= 10 * GeV:
-               continue
-           if abs(muon.eta()) >= 2.5:
-               continue
-           if muon.loose != 1:
-               continue
-           if not muon_has_good_track(muon, self.year):
-               continue
-           return False
-       return True
+        for muon in event.muons:
+            if muon.pt() <= 10 * GeV:
+                continue
+            if not self.muon_tool.accept(muon):
+                continue
+            return False
+        return True
 
 
 class TaudR(EventFilter):
