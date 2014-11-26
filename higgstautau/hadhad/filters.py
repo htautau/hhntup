@@ -230,7 +230,7 @@ class TauIDScaleFactors(EventFilter):
                 self.passes = self.passes_2011
             elif year == 2012:
                 log.info("will apply 2012 ID SFs")
-                from externaltools import TauCorrUncert as TCU
+                # from externaltools import TauCorrUncert as TCU
                 from ROOT import TauCorrUncert
                 self.tool = TauCorrUncert.TauSF(TCU.RESOURCE_PATH)
                 self.tool_ns = TauCorrUncert
@@ -307,7 +307,7 @@ class TauFakeRateScaleFactors(EventFilter):
             self.datatype = datatype
             self.tree = tree
             if self.year == 11:
-                from externaltools.bundle_2011 import TauFakeRates
+                # from externaltools.bundle_2011 import TauFakeRates
                 from ROOT import TauFakeRates as TFR
                 fakerate_table = TauFakeRates.get_resource(
                         'FakeRateScaleFactor.txt')
@@ -315,7 +315,7 @@ class TauFakeRateScaleFactors(EventFilter):
                 self.passes = self.passes_2011
                 log.info("will apply 2011 fake rate scale factors")
             elif self.year == 12:
-                from externaltools.bundle_2012 import TauFakeRates
+                # from externaltools.bundle_2012 import TauFakeRates
                 from ROOT import TauFakeRates as TFR
                 self.fakerate_tool = TFR.FakeRateScaler()
                 self.fakerate_tool.initialise(TauFakeRates.RESOURCE_PATH)

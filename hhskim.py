@@ -8,7 +8,7 @@ import math
 import subprocess
 
 import goodruns
-import externaltools
+# import externaltools
 
 # rootpy imports
 from rootpy.plotting import Hist
@@ -31,15 +31,15 @@ from higgstautau.hadhad.models import *
 from higgstautau.hadhad.filters import *
 from higgstautau import mass
 from higgstautau.mass import is_MET_bisecting
-from higgstautau.embedding import *
-from higgstautau.systematics import Systematics
-from higgstautau.met import METRecalculation
-from higgstautau.jetcalibration import JetCalibration
-from higgstautau.tauspinner import EmbeddingTauSpinner
-from higgstautau.trigger import update_trigger_config, get_trigger_config
-from higgstautau.trigger.efficiency import TauTriggerEfficiency
-from higgstautau.trigger.emulation import (
-    TauTriggerEmulation, update_trigger_trees)
+# from higgstautau.embedding import *
+# from higgstautau.systematics import Systematics
+# from higgstautau.met import METRecalculation
+# from higgstautau.jetcalibration import JetCalibration
+# from higgstautau.tauspinner import EmbeddingTauSpinner
+# from higgstautau.trigger import update_trigger_config, get_trigger_config
+# from higgstautau.trigger.efficiency import TauTriggerEfficiency
+# from higgstautau.trigger.emulation import (
+#     TauTriggerEmulation, update_trigger_trees)
 from higgstautau.pileup import (
     PileupTemplates, PileupReweight, get_pileup_reweighting_tool,
     averageIntPerXingPatch, PileupScale)
@@ -482,10 +482,10 @@ class hhskim(ATLASStudent):
                     passthrough=local,
                     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                TauIDScaleFactors(
-                    year=year,
-                    passthrough=datatype == datasets.DATA,
-                    count_funcs=count_funcs),
+                # TauIDScaleFactors(
+                #     year=year,
+                #     passthrough=datatype == datasets.DATA,
+                #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # TauFakeRateScaleFactors(
                 #     year=year,
@@ -597,7 +597,7 @@ class hhskim(ATLASStudent):
         mmc = mass.MMC(year=year)
 
         # report which packages have been loaded
-        externaltools.report()
+        # externaltools.report()
 
         self.output.cd()
 
@@ -849,7 +849,7 @@ class hhskim(ATLASStudent):
             # fill the output tree
             outtree.Fill(reset=True)
 
-        externaltools.report()
+        # externaltools.report()
 
         # flush any baskets remaining in memory to disk
         self.output.cd()

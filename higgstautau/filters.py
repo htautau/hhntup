@@ -110,8 +110,8 @@ class BCHCleaning(EventFilter):
     """
     def __init__(self, tree, passthrough, datatype, **kwargs):
         if not passthrough:
-            from externaltools import TileTripReader
-            from externaltools import BCHCleaningTool
+            # from externaltools import TileTripReader
+            # from externaltools import BCHCleaningTool
             from ROOT import Root
             from ROOT import BCHTool
             self.tree = tree
@@ -592,7 +592,7 @@ class TauEnergyShift(EventFilter):
     in situ TES shift for 8TeV 2012 data
     """
     def __init__(self, *args, **kwargs):
-        from externaltools import TauCorrUncert as TCU
+        # from externaltools import TauCorrUncert as TCU
         from ROOT import TauCorrUncert
         self.tool = TauCorrUncert.TESUncertainty(
             TCU.get_resource('TES/mc12_p1344_medium.root'))
@@ -772,7 +772,7 @@ class JetIsPileup(EventFilter):
     def __init__(self, **kwargs):
         super(JetIsPileup, self).__init__(**kwargs)
         if not self.passthrough:
-            # from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
+            from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
             from ROOT import JVFUncertaintyTool
             self.tool = JVFUncertaintyTool("AntiKt4LCTopo")
 
