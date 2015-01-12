@@ -10,6 +10,7 @@ def define_objects(tree, datatype=None):
     tree.define_collection('jets', 'AntiKt4LCTopoJets')
     tree.define_collection('jets_EM', 'AntiKt4EMTopoJets')
     tree.define_collection('MET', 'MET_RefFinal')
+    tree.define_collection('muons', 'Muons')
 
     if datatype != datasets.DATA:
         tree.define_collection('mc', 'TruthParticle')
