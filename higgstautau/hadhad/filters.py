@@ -226,14 +226,21 @@ class TauIDScaleFactors(EventFilter):
     def __init__(self, year, passthrough=False, **kwargs):
         if not passthrough:
             if year == 2011:
-                log.info("will apply 2011 ID SFs")
-                self.passes = self.passes_2011
+                raise RuntimeWarning('TauIDScaleFactor 2011 is deprecated !')
             elif year == 2012:
                 log.info("will apply 2012 ID SFs")
-                # from externaltools import TauCorrUncert as TCU
-                from ROOT import TauCorrUncert
-                self.tool = TauCorrUncert.TauSF(TCU.RESOURCE_PATH)
-                self.tool_ns = TauCorrUncert
+                from ROOT.TauAnalysisTools import TauEfficiencyCorrectionsTool
+                # Medium id tool
+                self.tool_medium = TauEfficiencyCorrectionsTool('tool_SF_med')
+                self.tool_medium.setProperty('int')('IDLevel', 3)
+                self.tool_medium.printConfig()
+                self.tool_medium.initialize()
+
+                # Tight id tool
+                self.tool_tight = TauEfficiencyCorrectionsTool('tool_SF_tight')
+                self.tool_tight.printConfig()
+                self.tool_tight.initialize()
+
                 self.passes = self.passes_2012
             else:
                 raise ValueError("No efficiency SFs for year %d" % year)
@@ -241,47 +248,31 @@ class TauIDScaleFactors(EventFilter):
             passthrough=passthrough, **kwargs)
 
     def get_id_2011(self, tau):
-        if tau.id == IDLOOSE:
-            return 'loose'
-        elif tau.id == IDMEDIUM:
-            return 'medium'
-        elif tau.id == IDTIGHT:
-            return 'tight'
-        raise ValueError("tau is not loose, medium, or tight")
+        raise ValueError("deprecated !")
 
-    def get_id_2012(self, tau):
+    def get_id_tool(self, tau):
         if tau.id == IDLOOSE:
-            return self.tool_ns.BDTLOOSE
+            raise RuntimeError('Need to instantiate the ID loose tool !')
         elif tau.id == IDMEDIUM:
-            return self.tool_ns.BDTMEDIUM
+            return self.tool_medium
         elif tau.id == IDTIGHT:
-            return self.tool_ns.BDTTIGHT
+            return self.tool_tight
         raise ValueError("tau is not loose, medium, or tight")
 
     def passes_2011(self, event):
-        for tau in event.taus:
-            if not tau.matched:
-                continue
-            wp = self.get_id_2011(tau)
-            # efficiency scale factor
-            effic_sf, err = tauid.effic_sf_uncert_exc(wp, tau, 2011)
-            tau.id_sf =  effic_sf
-            tau.id_sf_high = effic_sf + err
-            tau.id_sf_low = effic_sf - err
-            tau.id_sf_stat_high = effic_sf
-            tau.id_sf_stat_low = effic_sf
-            tau.id_sf_sys_high = effic_sf
-            tau.id_sf_sys_low = effic_sf
+        raise RuntimeError('deprecated !')
         return True
 
     def passes_2012(self, event):
         for tau in event.taus:
             if not tau.matched:
                 continue
-            wp = self.get_id_2012(tau)
-            sf = self.tool.GetIDSF(wp, tau.obj.eta(), tau.obj.nTracks())
-            sf_stat = self.tool.GetIDStatUnc(wp, tau.obj.eta(), tau.obj.nTracks())
-            sf_sys = self.tool.GetIDSysUnc(wp, tau.obj.eta(), tau.obj.nTracks())
+            tool = self.get_id_tool(tau)
+            tool.applyEfficiencyScaleFactor(tau.obj)
+            sf = tau.obj.auxdataConst('double')('TauScaleFactorJetID')
+            # not implemented yet
+            sf_stat = 9999.
+            sf_sys = 9999.
             tau.id_sf =  sf
             tau.id_sf_high = sf
             tau.id_sf_low = sf

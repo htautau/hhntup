@@ -482,10 +482,10 @@ class hhskim(ATLASStudent):
                     passthrough=local,
                     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # TauIDScaleFactors(
-                #     year=year,
-                #     passthrough=datatype == datasets.DATA,
-                #     count_funcs=count_funcs),
+                TauIDScaleFactors(
+                    year=year,
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # TauFakeRateScaleFactors(
                 #     year=year,
