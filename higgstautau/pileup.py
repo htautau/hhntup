@@ -4,7 +4,7 @@
 
 from rootpy.tree.filtering import EventFilter
 
-from externaltools import PileupReweighting
+# from externaltools import PileupReweighting
 from ROOT import Root
 
 from . import datasets
@@ -26,9 +26,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
     pileup_tool = Root.TPileupReweighting()
     if year == 2011:
         if use_defaults:
-            pileup_tool.AddConfigFile(
-                PileupReweighting.get_resource(
-                    'mc11b_defaults.prw.root'))
+            raise RuntimeError('no default for now')
         else:
             pileup_tool.AddConfigFile(
                 'lumi/2011/'
@@ -36,9 +34,7 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
         lumicalc_file = 'lumi/2011/ilumicDDalc_histograms_None_178044-191933.root'
     elif year == 2012:
         if use_defaults:
-            pileup_tool.AddConfigFile(
-                PileupReweighting.get_resource(
-                    'mc12ab_defaults.prw.root'))
+            raise RuntimeError('no default for now')
         else:
             pileup_tool.AddConfigFile(
                 'lumi/2012/'
@@ -85,11 +81,12 @@ class PileupTemplates(EventFilter):
             **kwargs)
 
     def passes(self, event):
-        #pileup_chan107655_run195847
+        # XAOD MIGRATION: hard coding of the runnumber and channel for now
         self.pileup_tool.Fill(
-            #     event.EventInfo.runNumber(),
             195847,
-            event.EventInfo.mcChannelNumber(),
+            161656,
+            #     event.EventInfo.runNumber(),
+            # event.EventInfo.mcChannelNumber(),
             event.EventInfo.mcEventWeight(),
             event.EventInfo.averageInteractionsPerCrossing())
         return True
@@ -101,7 +98,7 @@ class PileupTemplates(EventFilter):
 
 
 class PileupReweight(EventFilter):
-    # XAOD MIGRATION: hard coding of the runnumber for now
+    # XAOD MIGRATION: hard coding of the runnumber and channel for now
     """
     Currently only implements hadhad reweighting
     """
@@ -120,18 +117,21 @@ class PileupReweight(EventFilter):
         # set the pileup weights
         self.tree.pileup_weight = self.tool.GetCombinedWeight(
             195847,
+            161656,
             # event.EventInfo.runNumber(),
-            event.EventInfo.mcChannelNumber(),
+            # event.EventInfo.mcChannelNumber(),
             event.EventInfo.averageInteractionsPerCrossing())
         self.tree.pileup_weight_high = self.tool_high.GetCombinedWeight(
             195847,
+            161656,
             # event.EventInfo.runNumber(),
-            event.EventInfo.mcChannelNumber(),
+            # event.EventInfo.mcChannelNumber(),
             event.EventInfo.averageInteractionsPerCrossing())
         self.tree.pileup_weight_low = self.tool_low.GetCombinedWeight(
             195847,
+            161656,
             # event.EventInfo.runNumber(),
-            event.EventInfo.mcChannelNumber(),
+            # event.EventInfo.mcChannelNumber(),
             event.EventInfo.averageInteractionsPerCrossing())
         return True
 

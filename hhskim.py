@@ -46,7 +46,6 @@ from higgstautau.pileup import (
 from higgstautau.rand import RandomRunNumber, RandomSeed
 from higgstautau import log; log = log[__name__]
 
-
 class hhskim(ATLASStudent):
 
     def __init__(self, options, **kwargs):
@@ -174,14 +173,14 @@ class hhskim(ATLASStudent):
             # # get pileup reweighting tool
             pileup_tool = get_pileup_reweighting_tool(
                 year=year,
-                use_defaults=True)
+                use_defaults=False)
             pileup_tool_high = get_pileup_reweighting_tool(
                 year=year,
-                use_defaults=True,
+                use_defaults=False,
                 systematic='high')
             pileup_tool_low = get_pileup_reweighting_tool(
                 year=year,
-                use_defaults=True,
+                use_defaults=False,
                 systematic='low')
 
             # NEED TO BE CONVERTED TO XAOD
@@ -291,12 +290,12 @@ class hhskim(ATLASStudent):
                 #         local or year > 2011 or datatype != datasets.EMBED),
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONFIGURED FOR XAOD
-                # PileupTemplates(
-                #     year=year,
-                #     passthrough=(
-                #         local or is_bch_sample or datatype not in (
-                #             datasets.MC, datasets.MCEMBED)),
-                #     count_funcs=count_funcs),
+                PileupTemplates(
+                    year=year,
+                    passthrough=(
+                        local or is_bch_sample or datatype not in (
+                            datasets.MC, datasets.MCEMBED)),
+                    count_funcs=count_funcs),
                 RandomSeed(
                     datatype=datatype,
                     count_funcs=count_funcs),
@@ -389,11 +388,11 @@ class hhskim(ATLASStudent):
                 #     passthrough=not syst_terms,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                JetIsPileup(
-                    passthrough=(
-                        local or year < 2012 or
-                        datatype not in (datasets.MC, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
+                # JetIsPileup(
+                #     passthrough=(
+                #         local or year < 2012 or
+                #         datatype not in (datasets.MC, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # LArHole(
                 #     tree=tree,
@@ -482,10 +481,10 @@ class hhskim(ATLASStudent):
                     passthrough=local,
                     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # TauIDScaleFactors(
-                #     year=year,
-                #     passthrough=datatype == datasets.DATA,
-                #     count_funcs=count_funcs),
+                TauIDScaleFactors(
+                    year=year,
+                    passthrough=datatype == datasets.DATA,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # TauFakeRateScaleFactors(
                 #     year=year,

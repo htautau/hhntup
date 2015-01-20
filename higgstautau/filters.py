@@ -10,7 +10,7 @@ from math import *
 from array import array as carray
 
 from . import datasets
-from .corrections import reweight_ggf
+# from .corrections import reweight_ggf
 from .units import GeV
 from .tautools import TauDecay
 from . import jetcleaning
@@ -761,18 +761,19 @@ class ggFReweighting(EventFilter):
         super(ggFReweighting, self).__init__(**kwargs)
 
     def passes(self, event):
-        self.tree.ggf_weight = reweight_ggf(event, self.dsname)
+        # self.tree.ggf_weight = reweight_ggf(event, self.dsname)
         return True
 
 
 class JetIsPileup(EventFilter):
+    # NOT converted to XAOD yet
     """
     must be applied before any jet selection
     """
     def __init__(self, **kwargs):
         super(JetIsPileup, self).__init__(**kwargs)
         if not self.passthrough:
-            from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
+            # from externaltools import JVFUncertaintyTool as JVFUncertaintyTool2012
             from ROOT import JVFUncertaintyTool
             self.tool = JVFUncertaintyTool("AntiKt4LCTopo")
 
