@@ -500,11 +500,11 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype in (datasets.DATA, datasets.EMBED),
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # HiggsPT(
-                #     year=year,
-                #     tree=tree,
-                #     passthrough=not is_signal or local,
-                #     count_funcs=count_funcs),
+                HiggsPT(
+                    year=year,
+                    tree=tree,
+                    passthrough=not is_signal or local,
+                    count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # TauTrackRecounting(
                 #     year=year,

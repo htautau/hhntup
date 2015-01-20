@@ -26,7 +26,9 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
     pileup_tool = Root.TPileupReweighting()
     if year == 2011:
         if use_defaults:
-            raise RuntimeError('no default for now')
+            pileup_tool.AddConfig(os.path.join(
+                os.getenv('ROOTCOREDIR'),
+                'data/PileupReweighting/mc11b_defaults.prw.root'))
         else:
             pileup_tool.AddConfigFile(
                 'lumi/2011/'
@@ -34,7 +36,9 @@ def get_pileup_reweighting_tool(year, use_defaults=True, systematic=None):
         lumicalc_file = 'lumi/2011/ilumicDDalc_histograms_None_178044-191933.root'
     elif year == 2012:
         if use_defaults:
-            raise RuntimeError('no default for now')
+            pileup_tool.AddConfig(os.path.join(
+                os.getenv('ROOTCOREDIR'),
+                'data/PileupReweighting/mc12ab_defaults.prw.root'))
         else:
             pileup_tool.AddConfigFile(
                 'lumi/2012/'

@@ -833,8 +833,8 @@ class HiggsPT(EventFilter):
         status = self.status
         # find the Higgs
         for mc in event.mc:
-            if mc.pdgId == 25 and mc.status in status:
-                pt = mc.pt
+            if mc.pdgId() == 25 and mc.status() in status:
+                pt = mc.pt()
                 higgs = mc
                 break
         if higgs is None:
@@ -842,28 +842,32 @@ class HiggsPT(EventFilter):
         self.tree.true_resonance_pt = pt
         # Only consider taus here since there are very soft photons radiated
         # off the taus but included as children of the Higgs
+        vertex = higgs.decayVtx()
+        children = [
+            vertex.outgoingParticle(i) for i in
+            xrange(vertex.nOutgoingParticles())]
         true_taus = [TauDecay(mc).fourvect_visible
-                     for mc in higgs.iter_children()
-                     if mc.pdgId in (pdg.tau_plus, pdg.tau_minus)
-                     and mc.status in (2, 11, 195)]
+                     for mc in children
+                     if mc.pdgId() in (pdg.tau_plus, pdg.tau_minus)
+                     and mc.status() in (2, 11, 195)]
         # The number of anti kt R = 0.4 truth jets with pT>25 GeV, not
         # originating from the decay products of the Higgs boson.
         # Start from the AntiKt4Truth collection. Reject any jet with pT<25
         # GeV. Reject any jet withing dR < 0.4 of any electron, tau, photon or
         # parton (directly) produced in the Higgs decay.
-        jets = [jet for jet in event.truejets if jet.pt >= 25 * GeV
+        jets = [jet for jet in event.truejets if jet.pt() >= 25 * GeV
                 and not any([tau for tau in true_taus if
-                             utils.dR(jet.eta, jet.phi,
+                             utils.dR(jet.eta(), jet.phi(),
                                       tau.Eta(), tau.Phi()) < 0.4])]
         # Count the number of remaining jets
         self.tree.num_true_jets_no_overlap = len(jets)
         if len(jets) >=2:
             jet1, jet2 = jets[:2]
-            self.tree.true_jet1_no_overlap_pt = jet1.pt
-            self.tree.true_jet2_no_overlap_pt = jet2.pt
-            self.tree.true_dEta_jet1_jet2_no_overlap = abs(jet1.eta-jet2.eta)
-            self.tree.true_mass_jet1_jet2_no_overlap = (jet1.fourvect + jet2.fourvect).M()
-            self.tree.true_dphi_jj_higgs_no_overlap = abs(utils.dphi(higgs.phi, (jet1.fourvect + jet2.fourvect).Phi()))
+            self.tree.true_jet1_no_overlap_pt = jet1.pt()
+            self.tree.true_jet2_no_overlap_pt = jet2.pt()
+            self.tree.true_dEta_jet1_jet2_no_overlap = abs(jet1.eta() - jet2.eta())
+            self.tree.true_mass_jet1_jet2_no_overlap = (jet1.p4() + jet2.p4()).M()
+            self.tree.true_dphi_jj_higgs_no_overlap = abs(utils.dphi(higgs.phi(), (jet1.p4() + jet2.p4()).Phi()))
         return True
 
 
