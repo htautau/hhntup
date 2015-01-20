@@ -46,6 +46,7 @@ from higgstautau.pileup import (
 from higgstautau.rand import RandomRunNumber, RandomSeed
 from higgstautau import log; log = log[__name__]
 
+
 class hhskim(ATLASStudent):
 
     def __init__(self, options, **kwargs):
