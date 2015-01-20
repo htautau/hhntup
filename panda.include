@@ -18,10 +18,10 @@ grl/2011/*
 grl/2012/*
 lumi/2012/*
 lumi/2011/*
-externaltools/*/share/*.root
-externaltools/*/share/*/*.root
-externaltools/*/*/share/*.root
-externaltools/*/*/share/*/*.root
+# externaltools/*/share/*.root
+# externaltools/*/share/*/*.root
+# externaltools/*/*/share/*.root
+# externaltools/*/*/share/*/*.root
 higgstautau/tauid/*.root
 higgstautau/tauid/*/*.root
 cache/*.root
