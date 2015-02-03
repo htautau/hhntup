@@ -16,9 +16,8 @@ from . import log; log = log[__name__]
 
 class TauIDSelection(EventFilter):
 
-    def __init__(self, tree, **kwargs):
+    def __init__(self, **kwargs):
         super(TauIDSelection, self).__init__(**kwargs)
-        self.tree = tree
 
     def passes(self, event):
         # Enum definition
@@ -270,16 +269,22 @@ class TauIDScaleFactors(EventFilter):
             tool = self.get_id_tool(tau)
             tool.applyEfficiencyScaleFactor(tau.obj)
             sf = tau.obj.auxdataConst('double')('TauScaleFactorJetID')
-            # not implemented yet
-            sf_stat = 9999.
-            sf_sys = 9999.
+            systs = tool.recommendedSystematics()
+            sf_syst = {}
+            for sys in systs:
+                # Why do we have to use a systematic set ??
+                s_set = ROOT.CP.SystematicSet()
+                s_set.insert(sys)
+                tool.applySystematicVariation(s_set)
+                tool.applyEfficiencyScaleFactor(tau.obj)
+                sf_syst[sys.name()] = tau.obj.auxdataConst('double')('TauScaleFactorJetID')
             tau.id_sf =  sf
-            tau.id_sf_high = sf
-            tau.id_sf_low = sf
-            tau.id_sf_stat_high = sf + sf_stat
-            tau.id_sf_stat_low = sf - sf_stat
-            tau.id_sf_sys_high = sf + sf_sys
-            tau.id_sf_sys_low = sf - sf_sys
+            # tau.id_sf_high = sf
+            # tau.id_sf_low = sf
+            tau.id_sf_stat_high = sf_syst['TAUS_EFF_JETID_STAT__1up']
+            tau.id_sf_stat_low = sf_syst['TAUS_EFF_JETID_STAT__1down']
+            tau.id_sf_sys_high = sf_syst['TAUS_EFF_JETID_SYST__1up']
+            tau.id_sf_sys_low = sf_syst['TAUS_EFF_JETID_SYST__1down']
         return True
 
 

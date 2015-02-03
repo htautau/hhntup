@@ -455,7 +455,6 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 # taus are sorted (in decreasing order) by pT from here on
                 TauIDSelection(
-                    tree=tree,
                     count_funcs=count_funcs),
                 TaudR(3.2,
                     count_funcs=count_funcs),
