@@ -580,20 +580,55 @@ class hhskim(ATLASStudent):
             # set the event filters
             self.filters['event'] = event_filters
 
-        root_chain = ROOT.TChain(self.metadata.treename)
-        for f in self.files:
-            log.info(f)
-            root_chain.Add(f)
-        chain = xAODTree(root_chain, filters=event_filters, events=self.events)
-        define_objects(chain, datatype=datatype)
         hh_buffer = TreeBuffer()
-        outtree.set_buffer(
-            hh_buffer,
-            create_branches=True,
-            visible=False)
+        if local:
+            chain = TreeChain(
+                self.metadata.treename,
+                files=self.files,
+                # ignore_branches=ignore_branches,
+                events=self.events,
+                onfilechange=onfilechange,
+                filters=event_filters,
+                cache=True,
+                cache_size=50000000,
+                learn_entries=100)
+            buffer = TreeBuffer()
+            for name, value in chain._buffer.items():
+                if name.startswith('hh_'):
+                    hh_buffer[name[3:]] = value
+                elif name in copied:
+                    buffer[name] = value
+            outtree.set_buffer(
+                hh_buffer,
+                create_branches=False,
+                visible=True)
+            outtree.set_buffer(
+                buffer,
+                create_branches=True,
+                visible=False)
 
-        # create the MMC
-        mmc = mass.MMC(year=year)
+
+        else:
+
+            root_chain = ROOT.TChain(self.metadata.treename)
+            for f in self.files:
+                log.info(f)
+                root_chain.Add(f)
+            
+            # if len(self.files) != 1:
+            #     raise RuntimeError('lenght of files has to be 1 for now (no xAOD chaining available)')
+            # self.files = self.files[0]
+            # root_chain = ROOT.TFile(self.files)
+
+            chain = xAODTree(root_chain, filters=event_filters, events=self.events)
+            define_objects(chain, datatype=datatype)
+            outtree.set_buffer(
+                hh_buffer,
+                create_branches=True,
+                visible=False)
+
+            # create the MMC
+            mmc = mass.MMC(year=year)
 
         # report which packages have been loaded
         # externaltools.report()
@@ -610,12 +645,23 @@ class hhskim(ATLASStudent):
                 continue
             
             # sort taus and jets in decreasing order by pT
-            event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)
+            event.taus.sort(key=lambda tau: tau.pt(), reverse=True)
             event.jets.sort(key=lambda jet: jet.pt(), reverse=True)
 
             # tau1 is the leading tau
             # tau2 is the subleading tau
             tau1, tau2 = event.taus
+            tau1.fourvect = asrootpy(tau1.p4())
+            tau2.fourvect = asrootpy(tau2.p4())
+
+            beta_taus = (tau1.fourvect + tau2.fourvect).BoostVector()
+            tau1.fourvect_boosted = LorentzVector()
+            tau1.fourvect_boosted.copy_from(tau1.fourvect)
+            tau1.fourvect_boosted.Boost(beta_taus * -1)
+            
+            tau2.fourvect_boosted = LorentzVector()
+            tau2.fourvect_boosted.copy_from(tau2.fourvect)
+            tau2.fourvect_boosted.Boost(beta_taus * -1)
 
             jets = list(event.jets)
             for jet in jets:
@@ -628,22 +674,16 @@ class hhskim(ATLASStudent):
 
                 # determine boost of system
                 # determine jet CoM frame
-                # jet1.fourvect = asrootpy(jet1.p4())
-                # jet2.fourvect = asrootpy(jet2.p4())
-                beta = asrootpy(jet1.fourvect + jet2.fourvect).BoostVector()
+                beta = (jet1.fourvect + jet2.fourvect).BoostVector()
                 tree.jet_beta.copy_from(beta)
 
                 jet1.fourvect_boosted = LorentzVector()
-                jet2.fourvect_boosted = LorentzVector()
                 jet1.fourvect_boosted.copy_from(jet1.fourvect)
-                jet2.fourvect_boosted.copy_from(jet2.fourvect)
                 jet1.fourvect_boosted.Boost(beta * -1)
-                jet2.fourvect_boosted.Boost(beta * -1)
 
-                tau1.fourvect_boosted.copy_from(tau1.fourvect)
-                tau2.fourvect_boosted.copy_from(tau2.fourvect)
-                tau1.fourvect_boosted.Boost(beta * -1)
-                tau2.fourvect_boosted.Boost(beta * -1)
+                jet2.fourvect_boosted = LorentzVector()
+                jet2.fourvect_boosted.copy_from(jet2.fourvect)
+                jet2.fourvect_boosted.Boost(beta * -1)
 
                 tau1.min_dr_jet = min(
                     tau1.fourvect.DeltaR(jet1.fourvect),
@@ -677,14 +717,12 @@ class hhskim(ATLASStudent):
                 # 3rd leading jet
                 if len(jets) >= 3:
                     jet3 = jets[2]
-                    # jet3.fourvect = asrootpy(jet3.p4())
                     jet3.fourvect_boosted = LorentzVector()
                     jet3.fourvect_boosted.copy_from(jet3.fourvect)
                     jet3.fourvect_boosted.Boost(beta * -1)
 
             elif len(jets) == 1:
                 jet1 = jets[0]
-                # jet1.fourvect = asrootpy(jet1.p4())
 
                 tau1.min_dr_jet = tau1.fourvect.DeltaR(jet1.fourvect)
                 tau2.min_dr_jet = tau2.fourvect.DeltaR(jet1.fourvect)
@@ -705,7 +743,7 @@ class hhskim(ATLASStudent):
                 # primary vertex
                 if vxp.vertexType() == 1:
                     ntrack_pv = vxp.nTrackParticles()
-                    ntrack_nontau_pv = ntrack_pv - tau1.obj.nTracks() - tau2.obj.nTracks()
+                    ntrack_nontau_pv = ntrack_pv - tau1.nTracks() - tau2.nTracks()
                     break
             tree.ntrack_pv = ntrack_pv
             tree.ntrack_nontau_pv = ntrack_nontau_pv
@@ -767,12 +805,12 @@ class hhskim(ATLASStudent):
 
             # sum pT with only the two leading jets
             tree.sum_pt = sum(
-                [tau1.obj.pt(), tau2.obj.pt()] +
+                [tau1.pt(), tau2.pt()] +
                 [jet.pt() for jet in jets[:2]])
 
             # sum pT with all selected jets
             tree.sum_pt_full = sum(
-                [tau1.obj.pt(), tau2.obj.pt()] +
+                [tau1.pt(), tau2.pt()] +
                 [jet.pt() for jet in jets])
 
             # vector sum pT with two leading jets and MET
@@ -795,15 +833,15 @@ class hhskim(ATLASStudent):
             # # tau <-> vertex association
             # #############################
             tree.tau_same_vertex = (
-                tau1.obj.vertex() == tau2.obj.vertex())
+                tau1.vertex() == tau2.vertex())
 
             tau1.vertex_prob = ROOT.TMath.Prob(
-                tau1.obj.vertex().chiSquared(),
-                int(tau1.obj.vertex().numberDoF()))
+                tau1.vertex().chiSquared(),
+                int(tau1.vertex().numberDoF()))
 
             tau2.vertex_prob = ROOT.TMath.Prob(
-                tau2.obj.vertex().chiSquared(),
-                int(tau2.obj.vertex().numberDoF()))
+                tau2.vertex().chiSquared(),
+                int(tau2.vertex().numberDoF()))
 
             # ##########################
             # # MMC Mass

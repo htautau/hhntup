@@ -27,15 +27,15 @@ def mass(tau1, tau2, METpx, METpy):
     recTau2 = LorentzVector()
 
     # tau 4-vector; synchronize for MMC calculation
-    if tau1.obj.nTracks() < 3:
-        recTau1.SetPtEtaPhiM(tau1.obj.pt(), tau1.obj.eta(), tau1.obj.phi(), 800.) # MeV
+    if tau1.nTracks() < 3:
+        recTau1.SetPtEtaPhiM(tau1.pt(), tau1.eta(), tau1.phi(), 800.) # MeV
     else:
-        recTau1.SetPtEtaPhiM(tau1.obj.pt(), tau1.obj.eta(), tau1.obj.phi(), 1200.) # MeV
+        recTau1.SetPtEtaPhiM(tau1.pt(), tau1.eta(), tau1.phi(), 1200.) # MeV
 
-    if tau2.obj.nTracks() < 3:
-        recTau2.SetPtEtaPhiM(tau2.obj.pt(), tau2.obj.eta(), tau2.obj.phi(), 800.) # MeV
+    if tau2.nTracks() < 3:
+        recTau2.SetPtEtaPhiM(tau2.pt(), tau2.eta(), tau2.phi(), 800.) # MeV
     else:
-        recTau2.SetPtEtaPhiM(tau2.obj.pt(), tau2.obj.eta(), tau2.obj.phi(), 1200.) # MeV
+        recTau2.SetPtEtaPhiM(tau2.pt(), tau2.eta(), tau2.phi(), 1200.) # MeV
 
     K = ROOT.TMatrixD(2, 2)
     K[0][0] = recTau1.Px(); K[0][1] = recTau2.Px()

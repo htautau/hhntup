@@ -13,13 +13,18 @@ __MIXINS__ = {}
 
 class xAODTreeCollection(object):
 
-    def __init__(self, tree, name, collection_name, cache=True, mix=None):
+    def __init__(
+        self, tree, name, 
+        collection_name, 
+        cache=True, 
+        mix=None, decorate_func=None):
 
         self.tree = tree
         self.name = name
         self.collection = getattr(self.tree, collection_name)
         self.selection = None
         self.mix = mix
+        self.decorate_func = decorate_func
 
         self.__cache_objects = cache
         self.__cache = {}
@@ -126,6 +131,8 @@ class xAODTreeCollection(object):
             obj = self.mix(self.collection[index])
         else:
             obj = self.collection[index]
+            if self.decorate_func is not None:
+                self.decorate_func(obj)
         if self.__cache_objects:
             self.__cache[index] = obj
         return obj
@@ -144,6 +151,10 @@ class xAODTreeCollection(object):
             obj = self.mix(self.collection[index])
         else:
             obj = self.collection[index]
+            if self.decorate_func is not None:
+                self.decorate_func(obj)
+
+
         if self.__cache_objects:
             self.__cache[index] = obj
         return obj

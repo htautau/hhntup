@@ -10,7 +10,6 @@ class xAODTree(object):
     
     def __init__(self, chain, filters=None, events=-1):
         self._chain = chain
-        log.info(chain)
         self._tree = ROOT.xAOD.MakeTransientTree(self._chain)
         log.info(self._tree)
         self._collections = {}
@@ -21,8 +20,8 @@ class xAODTree(object):
         else:
             self._filters = filters
 
-    def define_collection(self, name, collection_name, mix=None):
-        self._collections[name] =  (collection_name, mix)
+    def define_collection(self, name, collection_name, mix=None, decorate_func=None):
+        self._collections[name] =  (collection_name, mix, decorate_func)
         # return coll
 
     def reset_collections(self):
@@ -37,8 +36,10 @@ class xAODTree(object):
         for i in xrange(self._tree.GetEntries()):
             entries += 1
             self._tree.GetEntry(i)
-            for name, (coll_name, mix) in self._collections.items():
-                coll = xAODTreeCollection(self._tree, name, coll_name, mix=mix)
+            for name, (coll_name, mix, decorate_func) in self._collections.items():
+                coll = xAODTreeCollection(
+                    self._tree, name, coll_name, 
+                    mix=mix, decorate_func=decorate_func)
                 object.__setattr__(self._tree, name, coll)
             if self._filters(self._tree):
                 yield self._tree

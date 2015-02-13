@@ -11,9 +11,13 @@ CACHE_DIR = os.path.join(BASE_DIR, 'cache')
 import ROOT
 ROOT.gROOT.Macro('$ROOTCOREDIR/scripts/load_packages.C')
 # Initialize the xAOD infrastructure: 
-ROOT.xAOD.Init().ignore()
+RC = ROOT.xAOD.Init()
+if not RC.isSuccess():
+    raise RuntimeError('Error in the xAOD initialization')
+
 ROOT.xAOD.AuxContainerBase()
+
 # Set up the input files:
 ftemp = ROOT.TFile(os.path.join(CACHE_DIR, 'xaod_struct.root'))
-ROOT.xAOD.MakeTransientTree(ftemp)
+ttemp = ROOT.xAOD.MakeTransientTree(ftemp)
 ftemp.Close()

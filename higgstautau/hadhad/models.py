@@ -189,35 +189,35 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.theta_tau1_tau2 = abs(tau1.fourvect.Angle(tau2.fourvect))
         tree.cos_theta_tau1_tau2 = math.cos(tree.theta_tau1_tau2)
         tree.dR_tau1_tau2 = tau1.fourvect.DeltaR(tau2.fourvect)
-        tree.dEta_tau1_tau2 = abs(tau2.obj.eta() - tau1.obj.eta())
+        tree.dEta_tau1_tau2 = abs(tau2.eta() - tau1.eta())
         # leading pt over subleading pt
-        tree.tau_pt_ratio = tau1.obj.pt() / tau2.obj.pt()
+        tree.tau_pt_ratio = tau1.pt() / tau2.pt()
 
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
 
-            outtau.index = intau.obj.index()
+            outtau.index = intau.index()
             outtau.id = intau.id
 
             FourMomentum.set(outtau, intau)
 
             # NEED TO BE CONVERTED TO XAOD
-            outtau.BDTJetScore = intau.obj.auxdataConst('float')('BDTJetScore')
-            outtau.BDTEleScore = intau.obj.auxdataConst('float')('BDTEleScore')
+            outtau.BDTJetScore = intau.auxdataConst('float')('BDTJetScore')
+            outtau.BDTEleScore = intau.auxdataConst('float')('BDTEleScore')
 
             # NEED TO BE CONVERTED TO XAOD
-            outtau.JetBDTSigLoose = intau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigLoose)
-            outtau.JetBDTSigMedium = intau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigMedium)
-            outtau.JetBDTSigTight = intau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigTight)
+            outtau.JetBDTSigLoose = intau.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigLoose)
+            outtau.JetBDTSigMedium = intau.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigMedium)
+            outtau.JetBDTSigTight = intau.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigTight)
 
-            outtau.nPi0 = intau.obj.auxdataConst('int')('nPi0')
+            outtau.nPi0 = intau.auxdataConst('int')('nPi0')
             # NEED TO BE CONVERTED TO XAOD
             # outtau.seedCalo_numTrack = intau.seedCalo_numTrack
-            outtau.numTrack = intau.obj.nTracks()
-            outtau.charge = intau.obj.charge()
+            outtau.numTrack = intau.nTracks()
+            outtau.charge = intau.charge()
             
-            jvf_vec = intau.obj.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+            jvf_vec = intau.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
             outtau.jvtxf = 0 if jvf_vec.empty() else jvf_vec[0]
-            outtau.seedCalo_centFrac = intau.obj.auxdataConst('float')('centFrac')
+            outtau.seedCalo_centFrac = intau.auxdataConst('float')('centFrac')
 
             outtau.centrality = intau.centrality
             outtau.centrality_boosted = intau.centrality_boosted
@@ -265,7 +265,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                     outtau.trigger_eff_stat_scale_PeriodA_low = intau.trigger_eff_stat_scale_low
                 elif 202660 <= tree.RunNumber <= 209025:
                     # period B-D
-                    if abs(intau.obj.eta()) <= 1.5:
+                    if abs(intau.eta()) <= 1.5:
                         outtau.trigger_sf_stat_scale_PeriodBD_Barrel_high = intau.trigger_sf_stat_scale_high
                         outtau.trigger_sf_stat_scale_PeriodBD_Barrel_low = intau.trigger_sf_stat_scale_low
                         outtau.trigger_eff_stat_scale_PeriodBD_Barrel_high = intau.trigger_eff_stat_scale_high
@@ -277,7 +277,7 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
                         outtau.trigger_eff_stat_scale_PeriodBD_EndCap_low = intau.trigger_eff_stat_scale_low
                 elif 209074 <= tree.RunNumber <= 216432:
                     # period E-M
-                    if abs(intau.obj.eta()) <= 1.5:
+                    if abs(intau.eta()) <= 1.5:
                         outtau.trigger_sf_stat_scale_PeriodEM_Barrel_high = intau.trigger_sf_stat_scale_high
                         outtau.trigger_sf_stat_scale_PeriodEM_Barrel_low = intau.trigger_sf_stat_scale_low
                         outtau.trigger_eff_stat_scale_PeriodEM_Barrel_high = intau.trigger_eff_stat_scale_high
