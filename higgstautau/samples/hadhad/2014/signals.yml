@@ -1,0 +1,16 @@
+gg:
+    name: gghtautau
+    latex: '$ggH\rightarrow\tau_{h}\tau_{h}$'
+    root: 'ggH#rightarrow#tau_{h}#tau_{h}'
+    samples:
+        - 'PowPyth8_AU2CT10_ggH100_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH105_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH110_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH115_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH120_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH130_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH135_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH140_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH145_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH150_tautauhh.mc14'

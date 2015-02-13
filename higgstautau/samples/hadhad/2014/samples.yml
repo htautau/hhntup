@@ -1,0 +1,239 @@
+embedded:
+    systematics:
+        - TES_TRUE_INSITUINTERPOL_UP
+        - TES_TRUE_INSITUINTERPOL_DOWN
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_UP
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
+        - TES_TRUE_MODELING_UP
+        - TES_TRUE_MODELING_DOWN
+        #- TES_TRUE_TOTAL_UP
+        #- TES_TRUE_TOTAL_DOWN
+        - TES_FAKE_TOTAL_UP
+        - TES_FAKE_TOTAL_DOWN
+    samples:
+        - 'embed12-HH-IM'
+    systematics_samples:
+        'embed12-HH-IM':
+            'embed12-HH-UP': MFS_UP
+            'embed12-HH-DN': MFS_DOWN
+            # ISOL systematics included in nominal sample
+mc:
+    systematics:
+        - TES_TRUE_INSITUINTERPOL_UP
+        - TES_TRUE_INSITUINTERPOL_DOWN
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_UP
+        - TES_TRUE_SINGLEPARTICLEINTERPOL_DOWN
+        - TES_TRUE_MODELING_UP
+        - TES_TRUE_MODELING_DOWN
+        #- TES_TRUE_TOTAL_UP
+        #- TES_TRUE_TOTAL_DOWN
+
+        - TES_FAKE_TOTAL_UP
+        - TES_FAKE_TOTAL_DOWN
+
+        #- JES_Statistical_UP
+        #- JES_Statistical_DOWN
+        - JES_Modelling_UP
+        - JES_Modelling_DOWN
+        - JES_Detector_UP
+        - JES_Detector_DOWN
+        #- JES_Mixed_UP
+        #- JES_Mixed_DOWN
+        - JES_EtaModelling_UP
+        - JES_EtaModelling_DOWN
+        - JES_EtaMethod_UP
+        - JES_EtaMethod_DOWN
+        - JES_PURho_UP
+        - JES_PURho_DOWN
+        #- JES_PUPt_UP
+        #- JES_PUPt_DOWN
+        #- JES_PUNPV_UP
+        #- JES_PUNPV_DOWN
+        #- JES_PUMu_UP
+        #- JES_PUMu_DOWN
+        - JES_FlavComp_UP
+        - JES_FlavComp_DOWN
+        - JES_FlavResp_UP
+        - JES_FlavResp_DOWN
+        #- JES_BJet_UP
+        #- JES_BJet_DOWN
+        #- JES_NonClosure_UP
+        #- JES_NonClosure_DOWN
+        
+        - JER_UP
+
+        - JVF_UP
+        - JVF_DOWN
+
+        - MET_RESOSOFTTERMS_UP
+        - MET_RESOSOFTTERMS_DOWN
+        - MET_SCALESOFTTERMS_UP
+        - MET_SCALESOFTTERMS_DOWN
+    samples:
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZtautauNp5Incl_Mll10to60.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZtautauNp0.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZtautauNp1.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZtautauNp2.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZtautauNp3.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZtautauNp4.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZtautauNp5incl.mc12a'
+        
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZeeNp5Incl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp0Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp1Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp2Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp3Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp4Excl_Mll10to60.mc12a'
+        - 'AlpJim_Auto_AUET2CTEQ6L1_ZmumuNp5Incl_Mll10to60.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZeeNp0.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZeeNp1.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZeeNp2.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZeeNp3.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZeeNp4.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZeeNp5incl.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZmumuNp0.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZmumuNp1.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZmumuNp2.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZmumuNp3.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZmumuNp4.mc12a'
+        - 'AlpPyth_Auto_P2011C_ZmumuNp5incl.mc12a'
+        - 'AlpPyth_Auto_P2011C_WenuNp0.mc12a'
+        - 'AlpPyth_Auto_P2011C_WenuNp1.mc12a'
+        - 'AlpPyth_Auto_P2011C_WenuNp2.mc12a'
+        - 'AlpPyth_Auto_P2011C_WenuNp3.mc12a'
+        - 'AlpPyth_Auto_P2011C_WenuNp4.mc12a'
+        - 'AlpPyth_Auto_P2011C_WenuNp5incl.mc12a'
+        - 'AlpPyth_Auto_P2011C_WmunuNp0.mc12a'
+        - 'AlpPyth_Auto_P2011C_WmunuNp1.mc12a'
+        - 'AlpPyth_Auto_P2011C_WmunuNp2.mc12a'
+        - 'AlpPyth_Auto_P2011C_WmunuNp3.mc12a'
+        - 'AlpPyth_Auto_P2011C_WmunuNp4.mc12a'
+        - 'AlpPyth_Auto_P2011C_WmunuNp5incl.mc12a'
+        - 'AlpPyth_Auto_P2011C_WtaunuNp0.mc12a'
+        - 'AlpPyth_Auto_P2011C_WtaunuNp1.mc12a'
+        - 'AlpPyth_Auto_P2011C_WtaunuNp2.mc12a'
+        - 'AlpPyth_Auto_P2011C_WtaunuNp3.mc12a'
+        - 'AlpPyth_Auto_P2011C_WtaunuNp4.mc12a'
+        - 'AlpPyth_Auto_P2011C_WtaunuNp5incl.mc12a'
+        
+        - 'Her_AUET2CTEQ6L1_WZ.mc12a'
+        - 'Her_AUET2CTEQ6L1_ZZ.mc12a'
+   
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWlnulnuNp3.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp0.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp1.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp2.mc12a'
+        - 'AlpJim_AUET2CTEQ6L1_WWqqlnuNp3.mc12a'
+
+        - 'gg2wwJim_AUET2CT10_WpWmenuenu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmenumunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmenutaunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmmunuenu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmmunumunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmmunutaunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunuenu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunumunu.mc12a'
+        - 'gg2wwJim_AUET2CT10_WpWmtaunutaunu.mc12a'
+
+        #- 'AlpPyth_AUET2CTEQ6L1_WqqbarNp0.mc12a'
+        #- 'AlpPyth_AUET2CTEQ6L1_WqqbarNp1.mc12a'
+        #- 'AlpPyth_AUET2CTEQ6L1_WqqbarNp2.mc12a'
+
+        - 'Sherpa_CT10_Ztoee.mc12a'
+        - 'Sherpa_CT10_Ztomm.mc12a'
+        - 'Sherpa_CT10_Ztott2JetsEW_Mll40_NoYtau.mc12a'
+        
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_e.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_mu.mc12a'
+        - 'AcerMCPyth_AUET2BCTEQ6L1_singletop_tchan_tau.mc12a'
+        - 'PowPyth_P2011C_st_schan_lep.mc12a'
+        - 'PowPyth_P2011C_st_Wtchan_incl_DR.mc12a'
+        - 'PowPyth_P2011C_ttbar.mc12a'
+        - 'TTbar_MT1725_allhad_Pow_Pyth_P2011C.mc12a'
+
+        - 'PowPyth8_AU2CT10_ggH100_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH105_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH110_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH115_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH120_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh.mc14'
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH130_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH135_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH140_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH145_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_ggH150_tautauhh.mc12a'
+        #- 'McAtNloJim_AUET2CT10_ggH125_tautau.mc12a'
+        #- 'PowhegJim_AUET2CT10_ggH125_tautauInclusive.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH100_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH105_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH110_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH115_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH120_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH130_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH135_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH140_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH145_tautauhh.mc12a'
+        - 'PowPyth8_AU2CT10_VBFH150_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH100_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH105_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH110_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH115_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH120_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH125_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH130_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH135_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH140_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH145_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_WH150_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH100_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH105_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH110_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH115_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH120_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH125_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH130_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH135_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH140_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH145_tautauhh.mc12a'
+        - 'Pyth8_AU2CTEQ6L1_ZH150_tautauhh.mc12a'
+
+        # for MC embedding closure
+        #- 'PowPyth8_AU2CT10_Ztautau.mc12a'
+        #- 'mcembed12-hh'
+        #- 'mcembed12-hhup'
+        #- 'mcembed12-hhdn'
+        
+        # for BCH comparison
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_BCH.mc12b'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_BCH.mc12b'
+
+        # for overlap studies
+        - 'PowPyth8_AU2CT10_VBFH125p5_inclusive.mc12b'
+        - 'PowPyth8_AU2CT10_ggH125p5_inclusive.mc12b'
+        - 'Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b'
+        - 'Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b'
+        - 'Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b'
+
+        # for MPI comparison
+        - 'PowPyth8_AU2CT10_ggH125_tautauhh_noMPI.mc12b'
+        - 'PowPyth8_AU2CT10_VBFH125_tautauhh_noMPI.mc12b'
+        # for Herwig PS comparison
+        - 'PowJim_AUET2CT10_ggH125_tautauInc.mc12a'
+        - 'PowJim_AUET2CT10_VBFH125_tautauInc.mc12b'
+        # MC@NLO
+        - 'McAtNloJim_ggH125_tautauInc.mc12a'
