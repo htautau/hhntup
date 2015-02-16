@@ -1,11 +1,10 @@
 # --
-# November 6th, 2014: Not converted to XAOD yet
+# February 16th, 2015: xAOD filter using AsgTool implemented
 # --
-
 from rootpy.tree.filtering import EventFilter
+from rootpy import stl
 
-# from externaltools import PileupReweighting
-from ROOT import Root
+import ROOT
 
 from . import datasets
 from . import log; log = log[__name__]
@@ -165,21 +164,66 @@ class PileupScale(EventFilter):
         return True
 
 
-class averageIntPerXingPatch(EventFilter):
-    # NOT CONVERTED AND NOT NEEDED IN THE XAOD
+class PileupReweight(EventFilter):
+    # XAOD MIGRATION: hard coding of the runnumber and channel for now
+    # Will move to the XAOD tool once available in python
     """
-    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/ExtendedPileupReweighting:
-
-    NOTE (23/01/2013): A bug has been found in the d3pd making code, causing
-    all MC12 samples to have a few of the averageIntPerXing values incorrectly set
-    (some should be 0 but are set to 1). The bug does not affect data. To resolve
-    this, when reading this branch, for both prw file generating and for when
-    retrieving pileup weights, you should amend the value with the following line
-    of code:
-
-    averageIntPerXing = (isSimulation && lbn==1 && int(averageIntPerXing+0.5)==1) ? 0. : averageIntPerXing;
+    Currently only implements hadhad reweighting
     """
+    def __init__(self, year, tool, tool_high, tool_low,
+                 tree, passthrough=False, **kwargs):
+        if not passthrough:
+            self.tree = tree
+            self.tool = tool
+            self.tool_high = tool_high
+            self.tool_low = tool_low
+        super(PileupReweight, self).__init__(
+            passthrough=passthrough,
+            **kwargs)
+
     def passes(self, event):
-        if event.lbn == 1 and int(event.averageIntPerXing + 0.5) == 1:
-            event.averageIntPerXing = 0
+        # set the pileup weights
+        self.tree.pileup_weight = self.tool.GetCombinedWeight(
+            195847,
+            161656,
+            # event.EventInfo.runNumber(),
+            # event.EventInfo.mcChannelNumber(),
+            event.EventInfo.averageInteractionsPerCrossing())
+        self.tree.pileup_weight_high = self.tool_high.GetCombinedWeight(
+            195847,
+            161656,
+            # event.EventInfo.runNumber(),
+            # event.EventInfo.mcChannelNumber(),
+            event.EventInfo.averageInteractionsPerCrossing())
+        self.tree.pileup_weight_low = self.tool_low.GetCombinedWeight(
+            195847,
+            161656,
+            # event.EventInfo.runNumber(),
+            # event.EventInfo.mcChannelNumber(),
+            event.EventInfo.averageInteractionsPerCrossing())
         return True
+
+
+class PileupReweight_xAOD(EventFilter):
+
+    def __init__(self, tree, **kwargs):
+        super(PileupReweight_xAOD, self).__init__(**kwargs)
+
+        self.tree = tree
+        self.pileup_tool = ROOT.CP.PileupReweightingTool('pileup_tool')
+
+        mc_vec = stl.vector('string')()
+        data_vec = stl.vector('string')()
+        mc_vec.push_back('PileupReweighting/mc14v1_defaults.prw.root')
+        data_vec.push_back('lumi/2012/ilumicalc_histograms_None_200842-215643.root')
+
+        self.pileup_tool.setProperty('ConfigFiles', mc_vec)
+        self.pileup_tool.setProperty('LumiCalcFiles', data_vec)
+        self.pileup_tool.setProperty('int')('DefaultChannel', 161656)
+        self.pileup_tool.initialize()
+
+    def passes(self, event):
+        self.pileup_tool.apply(event.EventInfo)
+        self.tree.pileup_weight = event.EventInfo.auxdataConst('double')( "PileupWeight" )
+        return True
+

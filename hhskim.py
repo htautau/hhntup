@@ -40,9 +40,7 @@ from higgstautau.mass import is_MET_bisecting
 # from higgstautau.trigger.efficiency import TauTriggerEfficiency
 # from higgstautau.trigger.emulation import (
 #     TauTriggerEmulation, update_trigger_trees)
-from higgstautau.pileup import (
-    PileupTemplates, PileupReweight, get_pileup_reweighting_tool,
-    averageIntPerXingPatch, PileupScale)
+from higgstautau.pileup import PileupScale, PileupReweight_xAOD
 from higgstautau.rand import RandomRunNumber, RandomSeed
 from higgstautau import log; log = log[__name__]
 
@@ -135,12 +133,6 @@ class hhskim(ATLASStudent):
                 'mc_weight': mc_weight_count,
             }
 
-        # three instances of the pileup reweighting tool are created to write
-        # out the nominal, high and low pileup weights
-        pileup_tool = None
-        pileup_tool_high = None
-        pileup_tool_low = None
-
         if local:
             # local means running on the skims, the output of this script
             # running on the grid
@@ -169,20 +161,6 @@ class hhskim(ATLASStudent):
             onfilechange.append((update_cutflow, (self, merged_cutflow,)))
 
         else:
-
-
-            # # get pileup reweighting tool
-            pileup_tool = get_pileup_reweighting_tool(
-                year=year,
-                use_defaults=False)
-            pileup_tool_high = get_pileup_reweighting_tool(
-                year=year,
-                use_defaults=False,
-                systematic='high')
-            pileup_tool_low = get_pileup_reweighting_tool(
-                year=year,
-                use_defaults=False,
-                systematic='low')
 
             # NEED TO BE CONVERTED TO XAOD
             # if datatype not in (datasets.EMBED, datasets.MCEMBED):
@@ -290,27 +268,28 @@ class hhskim(ATLASStudent):
                 #     passthrough=(
                 #         local or year > 2011 or datatype != datasets.EMBED),
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONFIGURED FOR XAOD
-                PileupTemplates(
-                    year=year,
-                    passthrough=(
-                        local or is_bch_sample or datatype not in (
-                            datasets.MC, datasets.MCEMBED)),
-                    count_funcs=count_funcs),
-                RandomSeed(
-                    datatype=datatype,
-                    count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD (not a priority)
+                # PileupTemplates(
+                #     year=year,
+                #     passthrough=(
+                #         local or is_bch_sample or datatype not in (
+                #             datasets.MC, datasets.MCEMBED)),
+                #     count_funcs=count_funcs),
+                # NEED TO BE CONVERTED TO XAOD
+                # RandomSeed(
+                #     datatype=datatype,
+                #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # BCHSampleRunNumber(
                 #     passthrough=not is_bch_sample,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                RandomRunNumber(
-                    tree=tree,
-                    datatype=datatype,
-                    pileup_tool=pileup_tool,
-                    passthrough=local,
-                    count_funcs=count_funcs),
+                # RandomRunNumber(
+                #     tree=tree,
+                #     datatype=datatype,
+                #     pileup_tool=pileup_tool,
+                #     passthrough=local,
+                #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # trigger_emulation,
                 # NEED TO BE CONVERTED TO XAOD
@@ -321,16 +300,11 @@ class hhskim(ATLASStudent):
                 #     passthrough=datatype in (datasets.EMBED, datasets.MCEMBED),
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                PileupReweight(
-                    year=year,
-                    tool=pileup_tool,
-                    tool_high=pileup_tool_high,
-                    tool_low=pileup_tool_low,
-                    tree=tree,
-                    passthrough=(
-                        local or (
+                PileupReweight_xAOD(
+                        tree=tree,
+                        passthrough=(local or (
                             datatype not in (datasets.MC, datasets.MCEMBED))),
-                    count_funcs=count_funcs),
+                        count_funcs=count_funcs),
                 PriVertex(
                     passthrough=local,
                     count_funcs=count_funcs),
@@ -408,7 +382,6 @@ class hhskim(ATLASStudent):
                 ElectronVeto(
                         el_sel='Medium',
                         count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
                 MuonVeto(
                     count_funcs=count_funcs),
                 TauPT(2,
@@ -431,7 +404,6 @@ class hhskim(ATLASStudent):
                 #     count_funcs=count_funcs),
                 # # before selecting the leading and subleading taus
                 # # be sure to only consider good candidates
-                # NEED TO BE CONVERTED TO XAOD
                 TauIDMedium(2,
                     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD

@@ -165,6 +165,7 @@ class ElectronVeto(EventFilter):
         return True
 
 
+
 from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
@@ -177,11 +178,12 @@ class MuonVeto(EventFilter):
         self.muon_tool.initialize()
     def passes(self, event):
         for muon in event.muons:
+            # DO NOT CONSIDER MUONS WITH LESS THAN 10 GeV
             if muon.pt() <= 10 * GeV:
                 continue
-            if not self.muon_tool.accept(muon):
-                continue
-            return False
+            if self.muon_tool.accept(muon):
+                return False
+
         return True
 
 
@@ -270,20 +272,21 @@ class TauIDScaleFactors(EventFilter):
             sf = tau.auxdataConst('double')('TauScaleFactorJetID')
             systs = tool.recommendedSystematics()
             sf_syst = {}
-            # for sys in systs:
-            #     # Why do we have to use a systematic set ??
-            #     s_set = ROOT.CP.SystematicSet()
-            #     s_set.insert(sys)
-            #     sc = tool.applySystematicVariation(s_set)
-            #     sc = tool.applyEfficiencyScaleFactor(tau)
-            #     sf_syst[sys.name()] = tau.auxdataConst('double')('TauScaleFactorJetID')
-            # tau.id_sf =  sf
-            # # tau.id_sf_high = sf
-            # # tau.id_sf_low = sf
-            # tau.id_sf_stat_high = sf_syst['TAUS_EFF_JETID_STAT__1up']
-            # tau.id_sf_stat_low = sf_syst['TAUS_EFF_JETID_STAT__1down']
-            # tau.id_sf_sys_high = sf_syst['TAUS_EFF_JETID_SYST__1up']
-            # tau.id_sf_sys_low = sf_syst['TAUS_EFF_JETID_SYST__1down']
+            for sys in systs:
+                # Why do we have to use a systematic set ??
+                s_set = ROOT.CP.SystematicSet()
+                s_set.insert(sys)
+                sc = tool.applySystematicVariation(s_set)
+                sc = tool.applyEfficiencyScaleFactor(tau)
+                # print sc
+                sf_syst[sys.name()] = tau.auxdataConst('double')('TauScaleFactorJetID')
+            tau.id_sf =  sf
+            # tau.id_sf_high = sf
+            # tau.id_sf_low = sf
+            tau.id_sf_stat_high = sf_syst['TAUS_EFF_JETID_STAT__1up']
+            tau.id_sf_stat_low = sf_syst['TAUS_EFF_JETID_STAT__1down']
+            tau.id_sf_sys_high = sf_syst['TAUS_EFF_JETID_SYST__1up']
+            tau.id_sf_sys_low = sf_syst['TAUS_EFF_JETID_SYST__1down']
         return True
 
 
