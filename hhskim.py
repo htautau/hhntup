@@ -34,7 +34,7 @@ from higgstautau.mass import is_MET_bisecting
 # from higgstautau.embedding import *
 # from higgstautau.systematics import Systematics
 # from higgstautau.met import METRecalculation
-from higgstautau.jetcalibration import JetCalibration
+from higgstautau.jetcalibration import JetCalibration, JetResolution
 # from higgstautau.tauspinner import EmbeddingTauSpinner
 # from higgstautau.trigger import update_trigger_config, get_trigger_config
 # from higgstautau.trigger.efficiency import TauTriggerEfficiency
@@ -321,6 +321,10 @@ class hhskim(ATLASStudent):
                 JetCalibration(
                         datatype=datatype,
                         passthrough=local,
+                        count_funcs=count_funcs),
+                JetResolution(
+                        passthrough=(local or (
+                                datatype not in (datasets.MC, datasets.MCEMBED))),
                         count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # # in situ TES shift for 2012 data
