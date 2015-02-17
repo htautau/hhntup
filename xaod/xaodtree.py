@@ -13,7 +13,6 @@ class xAODTree(object):
         self._tree = ROOT.xAOD.MakeTransientTree(self._chain)
         # Create the TStore that hold the shallow copies
         self._store = ROOT.xAOD.TStore()
-        # Initialize the shallow copy helper
         log.info(self._tree)
         self._collections = {}
         self._events = events
