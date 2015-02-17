@@ -95,6 +95,7 @@ def run(student,
         qsub_name_suffix = '_' + qsub_name_suffix
 
     database = Database(db)
+    print database
 
     output_path = os.path.normpath(output_path)
     if separate_student_output and os.path.basename(output_path) != student:

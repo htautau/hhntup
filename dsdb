@@ -16,7 +16,7 @@ parser.add_argument('--info', action='store_true', default=False)
 parser.add_argument('--name', default='datasets')
 parser.add_argument('--config', default='higgstautau/datasets_config.yml')
 parser.add_argument('-v', '--verbose', action='store_true', default=False)
-parser.add_argument('analysis', choices=('lh', 'hh', 'hh_q', 'ue_studies', 'ue_studies_truth', 'theory'))
+parser.add_argument('analysis', choices=('lh', 'hh', 'hh_q', 'ue_studies', 'ue_studies_truth', 'theory', 'xaod'))
 args = parser.parse_args()
 
 from higgstautau.datasets import Database
@@ -40,10 +40,13 @@ elif args.analysis == 'ue_studies_truth':
 elif args.analysis == 'theory':
     args.versioned = True
     args.name += '_theory'
+elif args.analysis == 'xaod':
+    args.versioned = True
+    args.name += '_xaod'
 
 db = Database(name=args.name,
               verbose=args.verbose)
-
+print db
 if args.validate or args.validate_pattern is not None:
     # check for missing events etc...
     validate_type = args.validate_type
@@ -71,6 +74,7 @@ else:
             params = {}
             params['data_grl'] = year_config['common'].get('grl', None)
             params.update(year_config[args.analysis])
+            print params
             db.scan(year,
                     deep=args.deep,
                     versioned=args.versioned,

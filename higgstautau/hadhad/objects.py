@@ -1,10 +1,11 @@
 from ..mixins import *
 from . import log; log = log[__name__]
 from .. import datasets
+from .decorations import *
 
 def define_objects(tree, datatype=None):
 
-    tree.define_collection('taus', 'TauRecContainer', mix=TauFourMomentum)    
+    tree.define_collection('taus', 'TauRecContainer', decorate_func=decorate_tau)
     tree.define_collection('electrons', 'ElectronCollection')    
     tree.define_collection('vertices', 'PrimaryVertices')
     tree.define_collection('jets', 'AntiKt4LCTopoJets')

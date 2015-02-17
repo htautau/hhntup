@@ -27,12 +27,12 @@ embedded_ztautau:
 #    root: '#font[52]{Z}#rightarrow#tau#tau'
 #    samples:
 #        - 'mcembed12-hh'
-pythia_ztautau:
-   name: Ztautau
-   latex: '$Z\rightarrow\tau\tau$'
-   root: '#font[52]{Z}#rightarrow#tau#tau'
-   samples:
-       - 'PowPyth8_AU2CT10_Ztautau.mc14'
+#pythia_ztautau:
+#    name: Ztautau
+#    latex: '$Z\rightarrow\tau\tau$'
+#    root: '#font[52]{Z}#rightarrow#tau#tau'
+#    samples:
+#        - 'PowPyth8_AU2CT10_Ztautau.mc12a'
 ewk:
     name: EW
     latex: EW

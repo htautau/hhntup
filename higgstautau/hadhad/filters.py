@@ -9,16 +9,15 @@ from .. import utils
 from ..units import GeV
 from .. import datasets
 from . import track_counting
-from .. import tauid
+# from .. import tauid
 from ..tauid import IDLOOSE, IDMEDIUM, IDTIGHT
 from . import log; log = log[__name__]
 
 
 class TauIDSelection(EventFilter):
 
-    def __init__(self, tree, **kwargs):
+    def __init__(self, **kwargs):
         super(TauIDSelection, self).__init__(**kwargs)
-        self.tree = tree
 
     def passes(self, event):
         # Enum definition
@@ -28,18 +27,18 @@ class TauIDSelection(EventFilter):
 
         tau1, tau2 = event.taus
         # signal region is: both medium with at least one being tight
-        if ((tau1.obj.isTau(JetBDTSigMedium) and tau2.obj.isTau(JetBDTSigMedium)) and
-            (tau1.obj.isTau(JetBDTSigTight) or tau2.obj.isTau(JetBDTSigTight))):
+        if ((tau1.isTau(JetBDTSigMedium) and tau2.isTau(JetBDTSigMedium)) and
+            (tau1.isTau(JetBDTSigTight) or tau2.isTau(JetBDTSigTight))):
             # if both are tight then assign medium to one at random
             # so we can apply the SFs in an inclusive manner
-            if tau1.obj.isTau(JetBDTSigTight) and tau2.obj.isTau(JetBDTSigTight):
+            if tau1.isTau(JetBDTSigTight) and tau2.isTau(JetBDTSigTight):
                 if event.EventInfo.eventNumber() % 2 == 1: # ODD
                     tau1.id = IDTIGHT
                     tau2.id = IDMEDIUM
                 else: # EVEN
                     tau1.id = IDMEDIUM
                     tau2.id = IDTIGHT
-            elif tau1.obj.isTau(JetBDTSigTight):
+            elif tau1.isTau(JetBDTSigTight):
                 tau1.id = IDTIGHT
                 tau2.id = IDMEDIUM
             else:
@@ -59,12 +58,12 @@ class TauLeadSublead(EventFilter):
 
     def passes(self, event):
         # sort in descending order by pT
-        event.taus.sort(key=lambda tau: tau.obj.pt(), reverse=True)
+        event.taus.sort(key=lambda tau: tau.pt(), reverse=True)
         # only keep leading two taus
         event.taus.slice(0, 2)
         # Event passes if the highest pT tau is above the leading
         # pT threshold and the next subleading tau pT is above the subleading pT theshold
-        return event.taus[0].obj.pt() > self.lead and event.taus[1].obj.pt() > self.sublead
+        return event.taus[0].pt() > self.lead and event.taus[1].pt() > self.sublead
 
 
 class Triggers(EventFilter):
@@ -166,6 +165,7 @@ class ElectronVeto(EventFilter):
         return True
 
 
+
 from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
@@ -178,11 +178,12 @@ class MuonVeto(EventFilter):
         self.muon_tool.initialize()
     def passes(self, event):
         for muon in event.muons:
+            # DO NOT CONSIDER MUONS WITH LESS THAN 10 GeV
             if muon.pt() <= 10 * GeV:
                 continue
-            if not self.muon_tool.accept(muon):
-                continue
-            return False
+            if self.muon_tool.accept(muon):
+                return False
+
         return True
 
 
@@ -195,9 +196,8 @@ class TaudR(EventFilter):
     def passes(self, event):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
-        return tau1.dr(tau2) < self.dr
-        # return utils.dR(
-        #     tau1.obj.eta(), tau1.obj.phi(), tau2.obj.eta(), tau2.obj.phi()) < self.dr
+        return utils.dR(
+            tau1.eta(), tau1.phi(), tau2.eta(), tau2.phi()) < self.dr
 
 
 class TauTrackRecounting(EventFilter):
@@ -268,18 +268,25 @@ class TauIDScaleFactors(EventFilter):
             if not tau.matched:
                 continue
             tool = self.get_id_tool(tau)
-            tool.applyEfficiencyScaleFactor(tau.obj)
-            sf = tau.obj.auxdataConst('double')('TauScaleFactorJetID')
-            # not implemented yet
-            sf_stat = 9999.
-            sf_sys = 9999.
+            tool.applyEfficiencyScaleFactor(tau)
+            sf = tau.auxdataConst('double')('TauScaleFactorJetID')
+            systs = tool.recommendedSystematics()
+            sf_syst = {}
+            for sys in systs:
+                # Why do we have to use a systematic set ??
+                s_set = ROOT.CP.SystematicSet()
+                s_set.insert(sys)
+                sc = tool.applySystematicVariation(s_set)
+                sc = tool.applyEfficiencyScaleFactor(tau)
+                # print sc
+                sf_syst[sys.name()] = tau.auxdataConst('double')('TauScaleFactorJetID')
             tau.id_sf =  sf
-            tau.id_sf_high = sf
-            tau.id_sf_low = sf
-            tau.id_sf_stat_high = sf + sf_stat
-            tau.id_sf_stat_low = sf - sf_stat
-            tau.id_sf_sys_high = sf + sf_sys
-            tau.id_sf_sys_low = sf - sf_sys
+            # tau.id_sf_high = sf
+            # tau.id_sf_low = sf
+            tau.id_sf_stat_high = sf_syst['TAUS_EFF_JETID_STAT__1up']
+            tau.id_sf_stat_low = sf_syst['TAUS_EFF_JETID_STAT__1down']
+            tau.id_sf_sys_high = sf_syst['TAUS_EFF_JETID_SYST__1up']
+            tau.id_sf_sys_low = sf_syst['TAUS_EFF_JETID_SYST__1down']
         return True
 
 

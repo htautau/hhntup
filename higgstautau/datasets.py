@@ -99,10 +99,11 @@ DS_PATTERN = re.compile(
     '\.(?P<id>(\d+|period[A-Z]))'
     '\.(?P<name>\w+)'
     '(\.PhysCont)?'
-    '(\.(?P<ntup>merge\.NTUP_TAU(MEDIUM)?))?'
+    '(\.(?P<ntup>(merge\.NTUP_TAU(MEDIUM)?|merge\.AOD)))?'
     '\.(?P<tag>\w+)'
     '(\.small)?'
-    '(\.v(?P<version>\d+))?'
+    '(\.v(?P<version>\d+?))?'
+    '(_s)?'
     '\.(?P<suffix>\S+)$')
 
 MC_TAG_PATTERN1 = re.compile(
@@ -120,6 +121,15 @@ MC_TAG_PATTERN2 = re.compile(
     '[sa](?P<digimerge>\d+)_'
     'r(?P<reco>\d+)_'
     'p(?P<ntup>\d+)$')
+
+# XAOD samples (not derived)
+MC_TAG_PATTERN3 = re.compile(
+    '^e(?P<evnt>\d+)_'
+    's(?P<digi>\d+)_'
+    's(?P<digimerge>\d+)_'
+    'r(?P<reco>\d+)_'
+    'r(?P<recomerge>\d+)$')
+    
 
 # Embedded sample pattern
 EMBED_PATTERN11 = re.compile(
@@ -224,7 +234,9 @@ MC_CATEGORIES = {
     'mc12a': {'reco':  (3753, 3752, 3658, 3605, 3553, 3542, 3549),
               'merge': (3549,)},
     'mc12b': {'reco':  (4485, 5470,),
-              'merge': (4540,)}}
+              'merge': (4540,)},
+    'mc14': {'reco': (5591,),
+             'merge': (5625,)}}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -392,18 +404,20 @@ class Database(dict):
                     mc_dirs = glob.glob(os.path.join(mc_path, mc_prefix) + '*')
                 else:
                     mc_dirs = glob.glob(os.path.join(mc_path, '*'))
-
             for dir in mc_dirs:
                 dirname, basename = os.path.split(dir)
                 if mc_sampletype == 'standard':
+                    print basename
                     match  = re.match(DS_PATTERN, basename)
                     if match:
+                        print match.group('prefix')
                         if int(match.group('year')) != (year % 1E3):
                             continue
                         if match.group('type') != 'mc':
                             continue
                         ds_name = Database.match_to_ds(match)
                         name = match.group('name')
+                        print name
                         tag = match.group('tag')
                         try:
                             version = int(match.group('version'))
@@ -414,16 +428,22 @@ class Database(dict):
                             raise
                         tag_match = re.match(MC_TAG_PATTERN1, tag)
                         tag_match2 = re.match(MC_TAG_PATTERN2, tag)
+                        tag_match3 = re.match(MC_TAG_PATTERN3, tag)
                         MC_TAG_PATTERN = MC_TAG_PATTERN1
 
                         if (tag_match2 and not tag_match) :
                             tag_match = tag_match2
                             MC_TAG_PATTERN = MC_TAG_PATTERN2
 
+                        if (tag_match3 and not tag_match and not tag_match2):
+                            tag_match = tag_match3
+                            MC_TAG_PATTERN = MC_TAG_PATTERN3
+
                         if not tag_match:
                             log.warning("not tag-matched: %s" % basename)
                             continue
                         cat = None
+                        print MC_CATEGORIES
                         for cat_name, cat_params in MC_CATEGORIES.items():
                             if int(tag_match.group('reco')) in cat_params['reco']:
                                 cat = cat_name

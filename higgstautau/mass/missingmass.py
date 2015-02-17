@@ -49,7 +49,7 @@ class MMC(object):
         """
         vis_tau1 = ROOT.TLorentzVector()
         # 1 prong
-        if tau1.obj.nTracks() <= 1:
+        if tau1.nTracks() <= 1:
             tau1_decay_type = 10
             mvis = 0.8
         # 3 prongs
@@ -68,7 +68,7 @@ class MMC(object):
         # hadronic tau
         if tau2_lep_type is None:
             # 1 prong
-            if tau2.obj.nTracks() <= 1:
+            if tau2.nTracks() <= 1:
                 tau2_decay_type = 10
                 mvis = 0.8
             # 3 prongs

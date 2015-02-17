@@ -120,8 +120,10 @@ class BCHCleaning(EventFilter):
             self.tiletool.setTripFile(TileTripReader.get_resource("CompleteTripList_2011-2012.root"))
             self.bchtool_data = BCHTool.BCHCleaningToolRoot()
             self.bchtool_mc = BCHTool.BCHCleaningToolRoot()
-            self.bchtool_data.InitializeTool(True, self.tiletool, BCHCleaningTool.get_resource("FractionsRejectedJetsMC.root"))
-            self.bchtool_mc.InitializeTool(False, self.tiletool, BCHCleaningTool.get_resource("FractionsRejectedJetsMC.root"))
+            self.bchtool_data.InitializeTool(
+                True, self.tiletool, BCHCleaningTool.get_resource("FractionsRejectedJetsMC.root"))
+            self.bchtool_mc.InitializeTool(
+                False, self.tiletool, BCHCleaningTool.get_resource("FractionsRejectedJetsMC.root"))
             BCH_TOOLS.append(self.bchtool_data)
             BCH_TOOLS.append(self.bchtool_mc)
         super(BCHCleaning, self).__init__(passthrough=passthrough, **kwargs)
@@ -148,13 +150,13 @@ class BCHCleaning(EventFilter):
                     jet.auxdataConst('float')('EMFrac'), jet.pt())
             for tau in event.taus:
                 tau.BCHMedium = jet_tool.IsBadMediumBCH(
-                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
-                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
-                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                    runnumber, lbn, tau.jet().eta(), tau.jet().phi(), 
+                    tau.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.jet().auxdataConst('float')('EMFrac'), tau.jet().pt())
                 tau.BCHTight = jet_tool.IsBadTightBCH(
-                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
-                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
-                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                    runnumber, lbn, tau.jet().eta(), tau.jet().phi(), 
+                    tau.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.jet().auxdataConst('float')('EMFrac'), tau.jet().pt())
 
         elif self.datatype == datasets.EMBED:
             # Do truth-matching to find out if MC taus
@@ -181,13 +183,13 @@ class BCHCleaning(EventFilter):
                 else:
                     jet_tool = self.bchtool_data
                 tau.BCHMedium = jet_tool.IsBadMediumBCH(
-                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
-                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
-                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                    runnumber, lbn, tau.jet().eta(), tau.jet().phi(), 
+                    tau.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.jet().auxdataConst('float')('EMFrac'), tau.jet().pt())
                 tau.BCHTight = jet_tool.IsBadTightBCH(
-                    runnumber, lbn, tau.obj.jet().eta(), tau.obj.jet().phi(), 
-                    tau.obj.jet().auxdataConst('float')('BchCorrCell'),
-                    tau.obj.jet().auxdataConst('float')('EMFrac'), tau.obj.jet().pt())
+                    runnumber, lbn, tau.jet().eta(), tau.jet().phi(), 
+                    tau.jet().auxdataConst('float')('BchCorrCell'),
+                    tau.jet().auxdataConst('float')('EMFrac'), tau.jet().pt())
 
         return True
 
@@ -236,7 +238,6 @@ class JetCleaning(EventFilter):
             if jet.pt() <= self.pt_thresh or abs(jet.eta()) >= self.eta_max:
                 continue
             if self.tool.accept(jet):
-                log.info('bad jet !')
                 return False
 
         if (self.datatype in (datasets.DATA, datasets.EMBED)) and self.year == 2012:
@@ -350,8 +351,8 @@ class TauElectronVeto(EventFilter):
         # only apply eveto on 1p taus with cluster and track eta less than 2.47
         # Eta selection already applied by TauEta filter
         event.taus.select(lambda tau:
-            tau.obj.nTracks() > 1 or
-            tau.obj.isTau(ROOT.xAOD.TauJetParameters.EleBDTLoose) == 0)
+            tau.nTracks() > 1 or
+            tau.isTau(ROOT.xAOD.TauJetParameters.EleBDTLoose) == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -362,7 +363,7 @@ class TauMuonVeto(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.obj.isTau(ROOT.xAOD.TauJetParameters.MuonVeto) == 0)
+        event.taus.select(lambda tau: tau.isTau(ROOT.xAOD.TauJetParameters.MuonVeto) == 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -373,7 +374,7 @@ class TauHasTrack(EventFilter):
         self.min_taus = min_taus
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.obj.nTracks() > 0)
+        event.taus.select(lambda tau: tau.nTracks() > 0)
         return len(event.taus) >= self.min_taus
 
 
@@ -397,7 +398,7 @@ class TauPT(EventFilter):
         super(TauPT, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.obj.pt() > self.thresh)
+        event.taus.select(lambda tau: tau.pt() > self.thresh)
         return len(event.taus) >= self.min_taus
 
 
@@ -410,16 +411,16 @@ class TauEta(EventFilter):
     def passes(self, event):
         # both calo and leading track eta within 2.47
         event.taus.select(lambda tau:
-            abs(tau.obj.eta()) < 2.47 and
-            abs(tau.obj.track(0).eta()) < 2.47)
+            abs(tau.eta()) < 2.47 and
+            abs(tau.track(0).eta()) < 2.47)
         return len(event.taus) >= self.min_taus
 
 def jvf_selection(tau):
-    if abs(tau.obj.track(0).eta()) > 2.1:
+    if abs(tau.track(0).eta()) > 2.1:
         return True
     else:
         jvf = 0
-        jvf_vec = tau.obj.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
+        jvf_vec = tau.jet().auxdataConst('std::vector<float, std::allocator<float> >')('JVF')
         if not jvf_vec.empty():
             jvf = jvf_vec[0]
         return jvf > .5
@@ -443,7 +444,7 @@ class Tau1Track3Track(EventFilter):
         super(Tau1Track3Track, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.obj.nTracks() in (1, 3))
+        event.taus.select(lambda tau: tau.nTracks() in (1, 3))
         return len(event.taus) >= self.min_taus
 
 
@@ -455,11 +456,11 @@ class Tau1P3P(EventFilter):
         assert len(event.taus) == 2
         tau1, tau2 = event.taus
         # 1P + 3P
-        if (tau1.obj.nTracks() == 1 and tau2.obj.nTracks() == 3) or \
-           (tau1.obj.nTracks() == 3 and tau2.obj.nTracks() == 1):
+        if (tau1.nTracks() == 1 and tau2.nTracks() == 3) or \
+           (tau1.nTracks() == 3 and tau2.nTracks() == 1):
             return True
         # 3P + 3P
-        if tau1.obj.nTracks() == 3 and tau2.obj.nTracks() == 3:
+        if tau1.nTracks() == 3 and tau2.nTracks() == 3:
             return True
         return False
 
@@ -471,7 +472,7 @@ class TauCharge(EventFilter):
         super(TauCharge, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: abs(tau.obj.charge()) == 1)
+        event.taus.select(lambda tau: abs(tau.charge()) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -482,7 +483,7 @@ class TauIDLoose(EventFilter):
         super(TauIDLoose, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigLoose) == 1)
+        event.taus.select(lambda tau: tau.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigLoose) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -493,7 +494,7 @@ class TauIDMedium(EventFilter):
         super(TauIDMedium, self).__init__(**kwargs)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.obj.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigMedium) == 1)
+        event.taus.select(lambda tau: tau.isTau(ROOT.xAOD.TauJetParameters.JetBDTSigMedium) == 1)
         return len(event.taus) >= self.min_taus
 
 
@@ -506,7 +507,7 @@ class TauCrack(EventFilter):
     def passes(self, event):
         event.taus.select(
             lambda tau: not (
-                1.37 <= abs(tau.obj.track(0).eta()) <= 1.52))
+                1.37 <= abs(tau.track(0).eta()) <= 1.52))
         return len(event.taus) >= self.min_taus
 
 
@@ -543,7 +544,7 @@ class TruthMatching(EventFilter):
                 # fix waiting for a xAOD true tau collection
                 truetau = TauDecay(p)
                 tau_decay = truetau.fourvect_visible
-                dr = utils.dR(tau.obj.eta(), tau.obj.phi(), tau_decay.Eta(), tau_decay.Phi())
+                dr = utils.dR(tau.eta(), tau.phi(), tau_decay.Eta(), tau_decay.Phi())
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     tau.matched = True
@@ -618,7 +619,7 @@ class TauJetOverlapRemoval(EventFilter):
         # remove overlap with taus
         event.jets.select(lambda jet:
                 not any([tau for tau in event.taus if
-                (utils.dR(jet.eta(), jet.phi(), tau.obj.eta(), tau.obj.phi()) < self.dr)]))
+                (utils.dR(jet.eta(), jet.phi(), tau.eta(), tau.phi()) < self.dr)]))
         return True
 
 class NumJets25(EventFilter):
@@ -647,7 +648,7 @@ class NonIsolatedJet(EventFilter):
         self.tree.nonisolatedjet = False
         for tau in event.taus:
             for jet in event.jets:
-                if 0.4 < utils.dR(tau.obj.eta(), tau.obj.phi(), jet.eta(), jet.phi()) < 1.0:
+                if 0.4 < utils.dR(tau.eta(), tau.phi(), jet.eta(), jet.phi()) < 1.0:
                     self.tree.nonisolatedjet = True
         return True
 
@@ -833,8 +834,8 @@ class HiggsPT(EventFilter):
         status = self.status
         # find the Higgs
         for mc in event.mc:
-            if mc.pdgId == 25 and mc.status in status:
-                pt = mc.pt
+            if mc.pdgId() == 25 and mc.status() in status:
+                pt = mc.pt()
                 higgs = mc
                 break
         if higgs is None:
@@ -842,28 +843,32 @@ class HiggsPT(EventFilter):
         self.tree.true_resonance_pt = pt
         # Only consider taus here since there are very soft photons radiated
         # off the taus but included as children of the Higgs
+        vertex = higgs.decayVtx()
+        children = [
+            vertex.outgoingParticle(i) for i in
+            xrange(vertex.nOutgoingParticles())]
         true_taus = [TauDecay(mc).fourvect_visible
-                     for mc in higgs.iter_children()
-                     if mc.pdgId in (pdg.tau_plus, pdg.tau_minus)
-                     and mc.status in (2, 11, 195)]
+                     for mc in children
+                     if mc.pdgId() in (pdg.tau_plus, pdg.tau_minus)
+                     and mc.status() in (2, 11, 195)]
         # The number of anti kt R = 0.4 truth jets with pT>25 GeV, not
         # originating from the decay products of the Higgs boson.
         # Start from the AntiKt4Truth collection. Reject any jet with pT<25
         # GeV. Reject any jet withing dR < 0.4 of any electron, tau, photon or
         # parton (directly) produced in the Higgs decay.
-        jets = [jet for jet in event.truejets if jet.pt >= 25 * GeV
+        jets = [jet for jet in event.truejets if jet.pt() >= 25 * GeV
                 and not any([tau for tau in true_taus if
-                             utils.dR(jet.eta, jet.phi,
+                             utils.dR(jet.eta(), jet.phi(),
                                       tau.Eta(), tau.Phi()) < 0.4])]
         # Count the number of remaining jets
         self.tree.num_true_jets_no_overlap = len(jets)
         if len(jets) >=2:
             jet1, jet2 = jets[:2]
-            self.tree.true_jet1_no_overlap_pt = jet1.pt
-            self.tree.true_jet2_no_overlap_pt = jet2.pt
-            self.tree.true_dEta_jet1_jet2_no_overlap = abs(jet1.eta-jet2.eta)
-            self.tree.true_mass_jet1_jet2_no_overlap = (jet1.fourvect + jet2.fourvect).M()
-            self.tree.true_dphi_jj_higgs_no_overlap = abs(utils.dphi(higgs.phi, (jet1.fourvect + jet2.fourvect).Phi()))
+            self.tree.true_jet1_no_overlap_pt = jet1.pt()
+            self.tree.true_jet2_no_overlap_pt = jet2.pt()
+            self.tree.true_dEta_jet1_jet2_no_overlap = abs(jet1.eta() - jet2.eta())
+            self.tree.true_mass_jet1_jet2_no_overlap = (jet1.p4() + jet2.p4()).M()
+            self.tree.true_dphi_jj_higgs_no_overlap = abs(utils.dphi(higgs.phi(), (jet1.p4() + jet2.p4()).Phi()))
         return True
 
 

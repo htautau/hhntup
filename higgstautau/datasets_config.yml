@@ -76,3 +76,13 @@
         mc_pattern: '*hadhad*.root*'
         mc_treename: 'tau'
         mc_sampletype: 'standard'
+2014:
+    # common config
+    common:
+        grl: 'grl/2012/current.xml'
+    xaod:
+        mc_path: '/cluster/data01/qbuat/xaod_skims/v7/'
+        mc_prefix: 'group.phys-higgs.hhskim'
+        mc_pattern: '*hadhad*.root*'
+        mc_treename: 'CollectionTree'
+        mc_sampletype: 'standard'
