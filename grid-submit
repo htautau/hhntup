@@ -303,8 +303,7 @@ for dataset in datasets:
                 '--inDS %s' % panda_inDS,
                 '--outDS %s' % panda_outDS,
                 '--outputs %s' % panda_outputs,
-                '--inTarBall %s' % tar_name,
-                '--nFilesPerJob=1' # FIX UP FOR THE MOMENT
+                '--inTarBall %s' % tar_name
             ]
             if args.merge:
                 command += [
