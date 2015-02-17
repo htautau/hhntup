@@ -9,6 +9,7 @@ from itertools import ifilter
 from math import *
 from array import array as carray
 
+from xaod import tools_store
 from . import datasets
 # from .corrections import reweight_ggf
 from .units import GeV
@@ -542,13 +543,9 @@ class TruthMatching(EventFilter):
         super(TruthMatching, self).__init__(
             passthrough=passthrough, **kwargs)
         if not passthrough:
-            # This is very ad hoc for now
-            # the tools should be put in a store
-            from ROOT.TauAnalysisTools import TauTruthMatchingTool
-            self.tau_truth_tool = TauTruthMatchingTool('tau_truth_tool_2')
-            # Should add an argument for the sample type
-            self.tau_truth_tool.initialize()
-            log.info(self.tau_truth_tool)
+            # This implies that this filter is ALWAYS applied after
+            # the TrueTauSelection
+            self.tau_truth_tool = tools_store.get('tau_truth_tool')
 
     def passes(self, event):
         for tau in event.taus:
