@@ -11,6 +11,9 @@ class xAODTree(object):
     def __init__(self, chain, filters=None, events=-1):
         self._chain = chain
         self._tree = ROOT.xAOD.MakeTransientTree(self._chain)
+        # Create the TStore that hold the shallow copies
+        self._store = ROOT.xAOD.TStore()
+        # Initialize the shallow copy helper
         log.info(self._tree)
         self._collections = {}
         self._events = events
@@ -55,6 +58,7 @@ class xAODTree(object):
                         100 * entries / total_entries))
                 t2 = time.time()
             self._filters.finalize()
+            self._store.clear()
 
     def __len__(self):
         return self._tree.GetEntries()

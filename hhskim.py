@@ -34,7 +34,7 @@ from higgstautau.mass import is_MET_bisecting
 # from higgstautau.embedding import *
 # from higgstautau.systematics import Systematics
 # from higgstautau.met import METRecalculation
-# from higgstautau.jetcalibration import JetCalibration
+from higgstautau.jetcalibration import JetCalibration
 # from higgstautau.tauspinner import EmbeddingTauSpinner
 # from higgstautau.trigger import update_trigger_config, get_trigger_config
 # from higgstautau.trigger.efficiency import TauTriggerEfficiency
@@ -318,16 +318,10 @@ class hhskim(ATLASStudent):
                     passthrough=(
                         local or datatype in (datasets.MC, datasets.MCEMBED)),
                     count_funcs=count_funcs),
-                # # IMPORTANT!
-                # # JetCalibration MUST COME BEFORE ANYTHING THAT REFERS TO
-                # # jet.fourvect since jet.fourvect IS CACHED!
-                # NEED TO BE CONVERTED TO XAOD
-                # JetCalibration(
-                #     datatype=datatype,
-                #     year=year,
-                #     verbose=very_verbose,
-                #     passthrough=local or nominal_values,
-                #     count_funcs=count_funcs),
+                JetCalibration(
+                        datatype=datatype,
+                        passthrough=local,
+                        count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
                 # # in situ TES shift for 2012 data
                 # TauEnergyShift(

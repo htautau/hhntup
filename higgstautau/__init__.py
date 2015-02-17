@@ -12,3 +12,6 @@ if not os.environ.get("DEBUG", False):
 
 if hasattr(logging, 'captureWarnings'):
     logging.captureWarnings(True)
+
+# Shallow copy helper
+store_helper = ROOT.xAOD.StorePyHelper()
