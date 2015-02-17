@@ -2,11 +2,12 @@
 This module defines the output branches in the final ntuple
 as TreeModels.
 """
+import re
 import ROOT
 
 from rootpy.tree import TreeModel, FloatCol, IntCol, DoubleCol, BoolCol
 from rootpy.vector import LorentzRotation, LorentzVector, Vector3, Vector2
-from rootpy import stl
+from rootpy import stl, asrootpy
 
 from .. import datasets
 from .. import eventshapes
@@ -430,8 +431,10 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
             tree['jet3_eta'].reset()
 
 
+DECAY_PATTERN = re.compile('(?P<prong>\d)p((?P<co>\d)co)?(?P<pi0>\d)n((?P<no>\d)no)?$')
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
                    (TrueTau + MatchedObject).prefix('truetau2_')):
+
     dR_truetaus = FloatCol(default=-1)
     dEta_truetaus = FloatCol(default=-1)
     dPhi_truetaus = FloatCol(default=-1)
@@ -439,28 +442,59 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
     cos_theta_truetaus = FloatCol(default=-10)
     truetau_pt_ratio = FloatCol(default=-1)
 
+
     @classmethod
     def set(cls, tree, tau1, tau2):
         if tau1.matched:
             truetau = tau1.matched_object
+            decay_mode_1 = truetau.auxdataConst('std::string')('DecayMode')
+            match_1 = re.match(DECAY_PATTERN, decay_mode_1)
+            if not match_1:
+                print decay_mode_1
+                raise RuntimeError('Something is wrong with the regular expression')
+
             tree_object = tree.truetau1
-            tree_object.nProng = truetau.nprong
-            tree_object.nPi0 = truetau.nneutrals
-            tree_object.charge = truetau.charge
-            TrueTau.set(tree_object, truetau.fourvect)
-            TrueTau.set_vis(tree_object, truetau.fourvect_visible)
+            tree_object.nProng = int(match_1.group('prong')) if match_1.group('co') is None else \
+                int(match_1.group('prong')) + int(match_1.group('co'))
+            tree_object.nPi0 = int(match_1.group('pi0')) if match_1.group('no') is None else \
+                 int(match_1.group('pi0')) + int(match_1.group('no'))
+            tree_object.charge = truetau.charge()
+            TrueTau.set(tree_object, truetau.p4())
+            fourvect_vis_1 = ROOT.TLorentzVector()
+            fourvect_vis_1.SetPtEtaPhiM(
+                truetau.auxdataConst('double')('pt_vis'),
+                truetau.auxdataConst('double')('eta_vis'),
+                truetau.auxdataConst('double')('phi_vis'),
+                truetau.auxdataConst('double')('m_vis'))
+            TrueTau.set_vis(tree_object, fourvect_vis_1)
+
         if tau2.matched:
             truetau = tau2.matched_object
+            decay_mode_2 = truetau.auxdataConst('std::string')('DecayMode')
+            match_2 = re.match(DECAY_PATTERN, decay_mode_2)
+            if not match_2:
+                print decay_mode_2
+                raise RuntimeError('Something is wrong with the regular expression')
+
             tree_object = tree.truetau2
-            tree_object.nProng = truetau.nprong
-            tree_object.nPi0 = truetau.nneutrals
-            tree_object.charge = truetau.charge
-            TrueTau.set(tree_object, truetau.fourvect)
-            TrueTau.set_vis(tree_object, truetau.fourvect_visible)
+            tree_object.nProng = int(match_2.group('prong')) if match_2.group('co') is None else \
+                int(match_2.group('prong')) + int(match_2.group('co'))
+            tree_object.nPi0 = int(match_2.group('pi0')) if match_2.group('no') is None else \
+                 int(match_2.group('pi0')) + int(match_2.group('no'))
+            tree_object.charge = truetau.charge()
+            TrueTau.set(tree_object, truetau.p4())
+            fourvect_vis_2 = ROOT.TLorentzVector()
+            fourvect_vis_2.SetPtEtaPhiM(
+                truetau.auxdataConst('double')('pt_vis'),
+                truetau.auxdataConst('double')('eta_vis'),
+                truetau.auxdataConst('double')('phi_vis'),
+                truetau.auxdataConst('double')('m_vis'))
+            TrueTau.set_vis(tree_object, fourvect_vis_2)
+
         # angular variables
         if tau1.matched and tau2.matched:
-            truetau1 = tau1.matched_object.fourvect_visible
-            truetau2 = tau2.matched_object.fourvect_visible
+            truetau1 = asrootpy(fourvect_vis_1)
+            truetau2 = asrootpy(fourvect_vis_2)
             tree.theta_truetaus = abs(truetau1.Angle(truetau2))
             tree.cos_theta_truetaus = math.cos(tree.theta_truetaus)
             tree.dR_truetaus = truetau1.DeltaR(truetau2)
@@ -471,6 +505,7 @@ class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
                 tree.truetau_pt_ratio = truetau1.Pt() / truetau2.Pt()
             else:
                 tree.truetau_pt_ratio = 0
+
 
 class EventModel(TreeModel):
     trigger = BoolCol(default=True)

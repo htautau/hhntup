@@ -510,51 +510,66 @@ class TauCrack(EventFilter):
                 1.37 <= abs(tau.track(0).eta()) <= 1.52))
         return len(event.taus) >= self.min_taus
 
-
-class TauLArHole(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-
-    def __init__(self, min_taus, tree, **kwargs):
-        self.min_taus = min_taus
-        self.tree = tree
-        super(TauLArHole, self).__init__(**kwargs)
-
-    def passes(self, event):
-        if not 180614 <= self.tree.RunNumber <= 184169:
-            return True
-        event.taus.select(lambda tau:
-            not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
-                 and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
-        return len(event.taus) >= self.min_taus
-
 class TrueTauSelection(EventFilter):
-    
+    """
+    True tau selection from the truth particle container
+    using the official tool (does it work for all the generators ?)
+    """
+    def __init__(self, passthrough=False, **kwargs):
+        super(TrueTauSelection, self).__init__(
+            passthrough=passthrough, **kwargs)
+        if not passthrough:
+            from ROOT.TauAnalysisTools import TauTruthMatchingTool
+            self.tau_truth_tool = TauTruthMatchingTool('tau_truth_tool')
+            # Should add an argument for the sample type
+            self.tau_truth_tool.initialize()
+            truth_matching_tool = self.tau_truth_tool
+
     def passes(self, event):
-        event.truetaus.select(lambda p: p.isTau() and p.status() in (2,))
+        self.tau_truth_tool.setTruthParticleContainer(event.truetaus.collection)
+        self.tau_truth_tool.createTruthTauContainer()
+        truth_taus = self.tau_truth_tool.getTruthTauContainer()
+        truth_taus_aux = self.tau_truth_tool.getTruthTauAuxContainer()
+        truth_taus.setNonConstStore(truth_taus_aux)
+        event.truetaus.collection = truth_taus
+        # OLD METHOD using the edm itself
+        # event.truetaus.select(lambda p: p.isTau() and p.status() in (2,))
         return True
 
 class TruthMatching(EventFilter):
 
+    def __init__(self, passthrough=False, **kwargs):
+        super(TruthMatching, self).__init__(
+            passthrough=passthrough, **kwargs)
+        if not passthrough:
+            # This is very ad hoc for now
+            # the tools should be put in a store
+            from ROOT.TauAnalysisTools import TauTruthMatchingTool
+            self.tau_truth_tool = TauTruthMatchingTool('tau_truth_tool_2')
+            # Should add an argument for the sample type
+            self.tau_truth_tool.initialize()
+            log.info(self.tau_truth_tool)
+
     def passes(self, event):
         for tau in event.taus:
-            tau.matched = False
             tau.matched_dr = 1111.
             tau.matched_object = None
-            for p in event.truetaus:
-                # fix waiting for a xAOD true tau collection
-                truetau = TauDecay(p)
-                tau_decay = truetau.fourvect_visible
-                dr = utils.dR(tau.eta(), tau.phi(), tau_decay.Eta(), tau_decay.Phi())
-                if dr < 0.2:
-                    # TODO: handle possible collision!
-                    tau.matched = True
-                    tau.matched_dr = dr
-                    tau.matched_object = truetau
-                    break
+            self.tau_truth_tool.setTruthParticleContainer(event.mc.collection)
+            true_tau = self.tau_truth_tool.applyTruthMatch(tau)            
+            tau.matched = tau.auxdataConst('bool')('IsTruthMatched')
+            if tau.matched:
+                tau.matched_object = true_tau
+                tau.matched_dr = utils.dR(
+                    tau.eta(), tau.phi(),
+                    true_tau.auxdataConst('double')('eta_vis'),
+                    true_tau.auxdataConst('double')('phi_vis'))
         return True
 
 
 class RecoJetTrueTauMatching(EventFilter):
+    """
+    To use after the TrueTauSelection filter
+    """
 
     def passes(self, event):
         for jet in event.jets:
@@ -562,10 +577,10 @@ class RecoJetTrueTauMatching(EventFilter):
             jet.matched_dr = 1111.
             jet.matched_object = None
             for p in event.truetaus:
-                # fix waiting for a xAOD true tau collection
-                truetau = TauDecay(p)
-                tau_decay = truetau.fourvect_visible
-                dr = utils.dR(jet.eta(), jet.phi(), tau_decay.Eta(), tau_decay.Phi())
+                dr = utils.dR(
+                    jet.eta(), jet.phi(), 
+                    p.auxdataConst('double')('eta_vis'),
+                    p.auxdataConst('double')('phi_vis'))
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     jet.matched = True
@@ -573,18 +588,6 @@ class RecoJetTrueTauMatching(EventFilter):
                     jet.matched_object = truetau
                     break
         return True
-
-
-class TauSelected(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-
-    def __init__(self, min_taus, **kwargs):
-        self.min_taus = min_taus
-        super(TauSelected, self).__init__(**kwargs)
-
-    def passes(self, event):
-        event.taus.select(lambda tau: tau.selected)
-        return len(event.taus) >= self.min_taus
 
 
 class TauEnergyShift(EventFilter):
