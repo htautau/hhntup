@@ -366,17 +366,10 @@ class hhskim(ATLASStudent):
                 #         local or year < 2012 or
                 #         datatype not in (datasets.MC, datasets.MCEMBED)),
                 #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # LArHole(
-                #     tree=tree,
-                #     passthrough=year > 2011,
-                #     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
                 JetCleaning(
                     datatype=datatype,
                     year=year,
                     count_funcs=count_funcs),
-                # Need to check the electron ID and OQ
                 ElectronVeto(
                         el_sel='Medium',
                         count_funcs=count_funcs),
@@ -541,10 +534,10 @@ class hhskim(ATLASStudent):
                 #     datatype=datatype,
                 #     count_funcs=count_funcs),
                 # NEED TO BE CONVERTED TO XAOD
-                # ClassifyInclusiveHiggsSample(
-                #     tree=tree,
-                #     passthrough=not is_inclusive_signal,
-                #     count_funcs=count_funcs),
+                ClassifyInclusiveHiggsSample(
+                    tree=tree,
+                    passthrough=not is_inclusive_signal,
+                    count_funcs=count_funcs),
             ])
 
             # set the event filters

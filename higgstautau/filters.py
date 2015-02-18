@@ -271,32 +271,6 @@ class TileError(EventFilter):
         return event.EventInfo.errorState(Tile) == 0
 
 
-def in_lar_hole(eta, phi):
-    return (-0.2 < eta < 1.6) and (-0.988 < phi < -0.392)
-
-
-class LArHole(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-
-    """
-    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2011#LAr_Hole
-    """
-    def __init__(self, tree, **kwargs):
-        super(LArHole, self).__init__(**kwargs)
-        self.tree = tree
-
-    def passes(self, event):
-        # only apply from period E to H
-        if not 180614 <= self.tree.RunNumber <= 184169:
-            return True
-        for jet in event.jets:
-            if not jet.pt * (1. - jet.BCH_CORR_CELL) / (1. - jet.BCH_CORR_JET) > 20 * GeV:
-                continue
-            if in_lar_hole(jet.eta, jet.phi):
-                return False
-        return True
-
-
 class JetCrackVeto(EventFilter):
 
     def passes(self, event):
@@ -306,38 +280,6 @@ class JetCrackVeto(EventFilter):
             if 1.3 < abs(jet.eta()) < 1.7: 
                 return False
         return True
-
-
-def muon_has_good_track(muon, year):
-    """
-    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesRel17MC11a
-    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesData2012
-    """
-    if year == 2011:
-        pix_min = 2
-        sct_min = 6
-        abs_eta_min = -0.1
-    elif year == 2012:
-        pix_min = 1
-        sct_min = 5
-        abs_eta_min = 0.1
-    else:
-        raise ValueError("No muon veto defined for year %d" % year)
-
-    blayer = (muon.expectBLayerHit == 0) or (muon.nBLHits > 0)
-    pix = muon.nPixHits + muon.nPixelDeadSensors >= pix_min
-    sct = muon.nSCTHits + muon.nSCTDeadSensors >= sct_min
-    holes = muon.nPixHoles + muon.nSCTHoles < 3
-    n_trt_hits_outliers = muon.nTRTHits + muon.nTRTOutliers
-
-    if abs_eta_min < abs(muon.eta) < 1.9:
-        trt = ((n_trt_hits_outliers > 5) and
-              (muon.nTRTOutliers < 0.9 * n_trt_hits_outliers))
-    else:
-        trt = (n_trt_hits_outliers <= 5 or
-               muon.nTRTOutliers < 0.9 * n_trt_hits_outliers)
-
-    return blayer and pix and sct and holes and trt
 
 
 class TauElectronVeto(EventFilter):
@@ -375,18 +317,6 @@ class TauHasTrack(EventFilter):
 
     def passes(self, event):
         event.taus.select(lambda tau: tau.nTracks() > 0)
-        return len(event.taus) >= self.min_taus
-
-
-class TauAuthor(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-    # OBSOLETE
-    def __init__(self, min_taus, **kwargs):
-        super(TauAuthor, self).__init__(**kwargs)
-        self.min_taus = min_taus
-
-    def passes(self, event):
-        event.taus.select(lambda tau: tau.author != 2)
         return len(event.taus) >= self.min_taus
 
 
@@ -899,26 +829,26 @@ class ClassifyInclusiveHiggsSample(EventFilter):
         higgs = None
         # find the Higgs
         for mc in event.mc:
-            if mc.pdgId == 25 and mc.status == 62:
-                pt = mc.pt
+            if mc.pdgId() == 25 and mc.status() == 62:
+                pt = mc.pt()
                 higgs = mc
                 break
         if higgs is None:
             raise RuntimeError("Higgs not found!")
         decay_type = self.UNKNOWN
         # check pdg id of children
-        for mc in higgs.iter_children():
-            if mc.pdgId in (pdg.tau_minus, pdg.tau_plus):
-                decay_type = self.TAUTAU
-                break
-            elif mc.pdgId in (pdg.W_minus, pdg.W_plus):
-                decay_type = self.WW
-                break
-            elif mc.pdgId == pdg.Z0:
-                decay_type = self.ZZ
-                break
-            elif mc.pdgId in (pdg.b, pdg.anti_b):
-                decay_type = self.BB
-                break
-        self.tree.higgs_decay_channel = decay_type
+        # for mc in higgs.iter_children():
+        #     if mc.pdgId in (pdg.tau_minus, pdg.tau_plus):
+        #         decay_type = self.TAUTAU
+        #         break
+        #     elif mc.pdgId in (pdg.W_minus, pdg.W_plus):
+        #         decay_type = self.WW
+        #         break
+        #     elif mc.pdgId == pdg.Z0:
+        #         decay_type = self.ZZ
+        #         break
+        #     elif mc.pdgId in (pdg.b, pdg.anti_b):
+        #         decay_type = self.BB
+        #         break
+        # self.tree.higgs_decay_channel = decay_type
         return True

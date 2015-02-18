@@ -137,6 +137,7 @@ class Triggers(EventFilter):
 
 
 class ElectronVeto(EventFilter):
+    # Need to check the electron ID and OQ
 
     def __init__(self, el_sel='Medium', **kwargs):
         self.el_sel = el_sel
@@ -163,9 +164,6 @@ class ElectronVeto(EventFilter):
             return False
         return True
 
-
-
-from ..filters import muon_has_good_track
 
 class MuonVeto(EventFilter):
 
