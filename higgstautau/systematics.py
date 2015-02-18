@@ -11,7 +11,6 @@ import math
 from math import sin, sqrt, pow
 
 # local imports
-from . import tauid
 from . import log; log = log[__name__]
 from . import utils
 from . import datasets

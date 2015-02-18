@@ -8,7 +8,7 @@ from rootpy import asrootpy
 from . import log; log = log[__name__]
 from .utils import dR, et2pt
 from .units import GeV
-from .tauid import IDNONE
+from .hadhad.filters import IDNONE
 
 """
 This module contains "mixin" classes for adding

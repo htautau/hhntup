@@ -14,7 +14,6 @@ from . import datasets
 # from .corrections import reweight_ggf
 from .units import GeV
 from .tautools import TauDecay
-from . import jetcleaning
 from . import utils
 from . import log; log = log[__name__]
 

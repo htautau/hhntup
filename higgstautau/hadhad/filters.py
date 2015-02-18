@@ -9,10 +9,9 @@ from .. import utils
 from ..units import GeV
 from .. import datasets
 from . import track_counting
-# from .. import tauid
-from ..tauid import IDLOOSE, IDMEDIUM, IDTIGHT
 from . import log; log = log[__name__]
 
+IDNONE, IDLOOSE, IDMEDIUM, IDTIGHT = range(4)
 
 class TauIDSelection(EventFilter):
 
