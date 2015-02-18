@@ -21,3 +21,5 @@ ROOT.xAOD.AuxContainerBase()
 ftemp = ROOT.TFile(os.path.join(CACHE_DIR, 'xaod_struct.root'))
 ttemp = ROOT.xAOD.MakeTransientTree(ftemp)
 ftemp.Close()
+
+TOOLS = ROOT.asg.ToolStore()

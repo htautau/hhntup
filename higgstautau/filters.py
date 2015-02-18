@@ -9,12 +9,13 @@ from itertools import ifilter
 from math import *
 from array import array as carray
 
+from xaod import TOOLS
 from . import datasets
 # from .corrections import reweight_ggf
 from .units import GeV
 from .tautools import TauDecay
-from . import jetcleaning
 from . import utils
+from . import store_helper
 from . import log; log = log[__name__]
 
 from goodruns import GRL
@@ -105,6 +106,7 @@ class NvtxJets(EventFilter):
 
 
 class BCHCleaning(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     https://twiki.cern.ch/twiki/bin/view/AtlasProtected/BCHCleaningTool
     """
@@ -271,32 +273,6 @@ class TileError(EventFilter):
         return event.EventInfo.errorState(Tile) == 0
 
 
-def in_lar_hole(eta, phi):
-    return (-0.2 < eta < 1.6) and (-0.988 < phi < -0.392)
-
-
-class LArHole(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-
-    """
-    https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2011#LAr_Hole
-    """
-    def __init__(self, tree, **kwargs):
-        super(LArHole, self).__init__(**kwargs)
-        self.tree = tree
-
-    def passes(self, event):
-        # only apply from period E to H
-        if not 180614 <= self.tree.RunNumber <= 184169:
-            return True
-        for jet in event.jets:
-            if not jet.pt * (1. - jet.BCH_CORR_CELL) / (1. - jet.BCH_CORR_JET) > 20 * GeV:
-                continue
-            if in_lar_hole(jet.eta, jet.phi):
-                return False
-        return True
-
-
 class JetCrackVeto(EventFilter):
 
     def passes(self, event):
@@ -306,38 +282,6 @@ class JetCrackVeto(EventFilter):
             if 1.3 < abs(jet.eta()) < 1.7: 
                 return False
         return True
-
-
-def muon_has_good_track(muon, year):
-    """
-    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesRel17MC11a
-    https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesData2012
-    """
-    if year == 2011:
-        pix_min = 2
-        sct_min = 6
-        abs_eta_min = -0.1
-    elif year == 2012:
-        pix_min = 1
-        sct_min = 5
-        abs_eta_min = 0.1
-    else:
-        raise ValueError("No muon veto defined for year %d" % year)
-
-    blayer = (muon.expectBLayerHit == 0) or (muon.nBLHits > 0)
-    pix = muon.nPixHits + muon.nPixelDeadSensors >= pix_min
-    sct = muon.nSCTHits + muon.nSCTDeadSensors >= sct_min
-    holes = muon.nPixHoles + muon.nSCTHoles < 3
-    n_trt_hits_outliers = muon.nTRTHits + muon.nTRTOutliers
-
-    if abs_eta_min < abs(muon.eta) < 1.9:
-        trt = ((n_trt_hits_outliers > 5) and
-              (muon.nTRTOutliers < 0.9 * n_trt_hits_outliers))
-    else:
-        trt = (n_trt_hits_outliers <= 5 or
-               muon.nTRTOutliers < 0.9 * n_trt_hits_outliers)
-
-    return blayer and pix and sct and holes and trt
 
 
 class TauElectronVeto(EventFilter):
@@ -375,18 +319,6 @@ class TauHasTrack(EventFilter):
 
     def passes(self, event):
         event.taus.select(lambda tau: tau.nTracks() > 0)
-        return len(event.taus) >= self.min_taus
-
-
-class TauAuthor(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-    # OBSOLETE
-    def __init__(self, min_taus, **kwargs):
-        super(TauAuthor, self).__init__(**kwargs)
-        self.min_taus = min_taus
-
-    def passes(self, event):
-        event.taus.select(lambda tau: tau.author != 2)
         return len(event.taus) >= self.min_taus
 
 
@@ -510,51 +442,62 @@ class TauCrack(EventFilter):
                 1.37 <= abs(tau.track(0).eta()) <= 1.52))
         return len(event.taus) >= self.min_taus
 
-
-class TauLArHole(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-
-    def __init__(self, min_taus, tree, **kwargs):
-        self.min_taus = min_taus
-        self.tree = tree
-        super(TauLArHole, self).__init__(**kwargs)
-
-    def passes(self, event):
-        if not 180614 <= self.tree.RunNumber <= 184169:
-            return True
-        event.taus.select(lambda tau:
-            not (-0.1 < tau.track_eta[tau.leadtrack_idx] < 1.55
-                 and -0.9 < tau.track_phi[tau.leadtrack_idx] < -0.5))
-        return len(event.taus) >= self.min_taus
-
 class TrueTauSelection(EventFilter):
-    
+    """
+    True tau selection from the truth particle container
+    using the official tool (does it work for all the generators ?)
+    """
+    def __init__(self, passthrough=False, **kwargs):
+        super(TrueTauSelection, self).__init__(
+            passthrough=passthrough, **kwargs)
+        if not passthrough:
+            from ROOT.TauAnalysisTools import TauTruthMatchingTool
+            self.tau_truth_tool = TauTruthMatchingTool('tau_truth_tool')
+            # Should add an argument for the sample type
+            self.tau_truth_tool.initialize()
+            truth_matching_tool = self.tau_truth_tool
+
     def passes(self, event):
-        event.truetaus.select(lambda p: p.isTau() and p.status() in (2,))
+        self.tau_truth_tool.setTruthParticleContainer(event.truetaus.collection)
+        self.tau_truth_tool.createTruthTauContainer()
+        truth_taus = self.tau_truth_tool.getTruthTauContainer()
+        truth_taus_aux = self.tau_truth_tool.getTruthTauAuxContainer()
+        truth_taus.setNonConstStore(truth_taus_aux)
+        event.truetaus.collection = truth_taus
+        # OLD METHOD using the edm itself
+        # event.truetaus.select(lambda p: p.isTau() and p.status() in (2,))
         return True
 
 class TruthMatching(EventFilter):
 
+    def __init__(self, passthrough=False, **kwargs):
+        super(TruthMatching, self).__init__(
+            passthrough=passthrough, **kwargs)
+        if not passthrough:
+            # This implies that this filter is ALWAYS applied after
+            # the TrueTauSelection
+            self.tau_truth_tool = TOOLS.get('tau_truth_tool')
+
     def passes(self, event):
         for tau in event.taus:
-            tau.matched = False
             tau.matched_dr = 1111.
             tau.matched_object = None
-            for p in event.truetaus:
-                # fix waiting for a xAOD true tau collection
-                truetau = TauDecay(p)
-                tau_decay = truetau.fourvect_visible
-                dr = utils.dR(tau.eta(), tau.phi(), tau_decay.Eta(), tau_decay.Phi())
-                if dr < 0.2:
-                    # TODO: handle possible collision!
-                    tau.matched = True
-                    tau.matched_dr = dr
-                    tau.matched_object = truetau
-                    break
+            self.tau_truth_tool.setTruthParticleContainer(event.mc.collection)
+            true_tau = self.tau_truth_tool.applyTruthMatch(tau)            
+            tau.matched = tau.auxdataConst('bool')('IsTruthMatched')
+            if tau.matched:
+                tau.matched_object = true_tau
+                tau.matched_dr = utils.dR(
+                    tau.eta(), tau.phi(),
+                    true_tau.auxdataConst('double')('eta_vis'),
+                    true_tau.auxdataConst('double')('phi_vis'))
         return True
 
 
 class RecoJetTrueTauMatching(EventFilter):
+    """
+    To use after the TrueTauSelection filter
+    """
 
     def passes(self, event):
         for jet in event.jets:
@@ -562,10 +505,10 @@ class RecoJetTrueTauMatching(EventFilter):
             jet.matched_dr = 1111.
             jet.matched_object = None
             for p in event.truetaus:
-                # fix waiting for a xAOD true tau collection
-                truetau = TauDecay(p)
-                tau_decay = truetau.fourvect_visible
-                dr = utils.dR(jet.eta(), jet.phi(), tau_decay.Eta(), tau_decay.Phi())
+                dr = utils.dR(
+                    jet.eta(), jet.phi(), 
+                    p.auxdataConst('double')('eta_vis'),
+                    p.auxdataConst('double')('phi_vis'))
                 if dr < 0.2:
                     # TODO: handle possible collision!
                     jet.matched = True
@@ -575,35 +518,25 @@ class RecoJetTrueTauMatching(EventFilter):
         return True
 
 
-class TauSelected(EventFilter):
-    # NOT CONVERTED TO XAOD YET
+class TauCalibration(EventFilter):
+    """
+    Apply Energy shift in data and 
+    systematic variation in MC (Not yet)
+    """
+    def __init__(self, datatype, **kwargs):
+        super(TauCalibration, self).__init__(**kwargs)
+        self.datatype = datatype
 
-    def __init__(self, min_taus, **kwargs):
-        self.min_taus = min_taus
-        super(TauSelected, self).__init__(**kwargs)
+        from ROOT.TauAnalysisTools import TauSmearingTool
+        self.tool = TauSmearingTool('tau_smearing_tool')
+        self.tool.setProperty('bool')(
+            'IsData', self.datatype == datasets.DATA)
 
     def passes(self, event):
-        event.taus.select(lambda tau: tau.selected)
-        return len(event.taus) >= self.min_taus
-
-
-class TauEnergyShift(EventFilter):
-    # NOT CONVERTED TO XAOD YET
-    """
-    in situ TES shift for 8TeV 2012 data
-    """
-    def __init__(self, *args, **kwargs):
-        # from externaltools import TauCorrUncert as TCU
-        from ROOT import TauCorrUncert
-        self.tool = TauCorrUncert.TESUncertainty(
-            TCU.get_resource('TES/mc12_p1344_medium.root'))
-        super(TauEnergyShift, self).__init__(*args, **kwargs)
-
-    def passes(self, event):
-        shift_func = self.tool.GetTESShift
-        for tau in event.taus:
-            shift = shift_func(tau.pt, tau.numTrack)
-            tau.pt *= 1. + shift
+        taus_copy = store_helper.shallowCopyTauJetContainer(event.taus.collection)
+        for tau in taus_copy:
+            self.tool.applyCorrection(tau)
+        event.taus.collection = taus_copy
         return True
 
 
@@ -900,26 +833,26 @@ class ClassifyInclusiveHiggsSample(EventFilter):
         higgs = None
         # find the Higgs
         for mc in event.mc:
-            if mc.pdgId == 25 and mc.status == 62:
-                pt = mc.pt
+            if mc.pdgId() == 25 and mc.status() == 62:
+                pt = mc.pt()
                 higgs = mc
                 break
         if higgs is None:
             raise RuntimeError("Higgs not found!")
         decay_type = self.UNKNOWN
         # check pdg id of children
-        for mc in higgs.iter_children():
-            if mc.pdgId in (pdg.tau_minus, pdg.tau_plus):
-                decay_type = self.TAUTAU
-                break
-            elif mc.pdgId in (pdg.W_minus, pdg.W_plus):
-                decay_type = self.WW
-                break
-            elif mc.pdgId == pdg.Z0:
-                decay_type = self.ZZ
-                break
-            elif mc.pdgId in (pdg.b, pdg.anti_b):
-                decay_type = self.BB
-                break
-        self.tree.higgs_decay_channel = decay_type
+        # for mc in higgs.iter_children():
+        #     if mc.pdgId in (pdg.tau_minus, pdg.tau_plus):
+        #         decay_type = self.TAUTAU
+        #         break
+        #     elif mc.pdgId in (pdg.W_minus, pdg.W_plus):
+        #         decay_type = self.WW
+        #         break
+        #     elif mc.pdgId == pdg.Z0:
+        #         decay_type = self.ZZ
+        #         break
+        #     elif mc.pdgId in (pdg.b, pdg.anti_b):
+        #         decay_type = self.BB
+        #         break
+        # self.tree.higgs_decay_channel = decay_type
         return True
