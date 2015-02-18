@@ -326,13 +326,10 @@ class hhskim(ATLASStudent):
                         passthrough=(local or (
                                 datatype not in (datasets.MC, datasets.MCEMBED))),
                         count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # # in situ TES shift for 2012 data
-                # TauEnergyShift(
-                #     passthrough=(
-                #         local or datatype != datasets.DATA
-                #         or year < 2012 or nominal_values),
-                #     count_funcs=count_funcs),
+                TauCalibration(
+                        datatype,
+                        passthrough=local,
+                        count_funcs=count_funcs),
                 # # truth matching must come before systematics due to
                 # # TES_TRUE/FAKE
                 # NEED TO BE CONVERTED TO XAOD
@@ -388,11 +385,6 @@ class hhskim(ATLASStudent):
                     count_funcs=count_funcs),
                 TauCrack(2,
                     count_funcs=count_funcs),
-                # NEED TO BE CONVERTED TO XAOD
-                # TauLArHole(2,
-                #     tree=tree,
-                #     passthrough=year > 2011,
-                #     count_funcs=count_funcs),
                 # # before selecting the leading and subleading taus
                 # # be sure to only consider good candidates
                 TauIDMedium(2,

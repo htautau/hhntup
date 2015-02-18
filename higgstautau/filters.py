@@ -15,6 +15,7 @@ from . import datasets
 from .units import GeV
 from .tautools import TauDecay
 from . import utils
+from . import store_helper
 from . import log; log = log[__name__]
 
 from goodruns import GRL
@@ -105,6 +106,7 @@ class NvtxJets(EventFilter):
 
 
 class BCHCleaning(EventFilter):
+    # NOT CONVERTED TO XAOD YET
     """
     https://twiki.cern.ch/twiki/bin/view/AtlasProtected/BCHCleaningTool
     """
@@ -516,23 +518,25 @@ class RecoJetTrueTauMatching(EventFilter):
         return True
 
 
-class TauEnergyShift(EventFilter):
-    # NOT CONVERTED TO XAOD YET
+class TauCalibration(EventFilter):
     """
-    in situ TES shift for 8TeV 2012 data
+    Apply Energy shift in data and 
+    systematic variation in MC (Not yet)
     """
-    def __init__(self, *args, **kwargs):
-        # from externaltools import TauCorrUncert as TCU
-        from ROOT import TauCorrUncert
-        self.tool = TauCorrUncert.TESUncertainty(
-            TCU.get_resource('TES/mc12_p1344_medium.root'))
-        super(TauEnergyShift, self).__init__(*args, **kwargs)
+    def __init__(self, datatype, **kwargs):
+        super(TauCalibration, self).__init__(**kwargs)
+        self.datatype = datatype
+
+        from ROOT.TauAnalysisTools import TauSmearingTool
+        self.tool = TauSmearingTool('tau_smearing_tool')
+        self.tool.setProperty('bool')(
+            'IsData', self.datatype == datasets.DATA)
 
     def passes(self, event):
-        shift_func = self.tool.GetTESShift
-        for tau in event.taus:
-            shift = shift_func(tau.pt, tau.numTrack)
-            tau.pt *= 1. + shift
+        taus_copy = store_helper.shallowCopyTauJetContainer(event.taus.collection)
+        for tau in taus_copy:
+            self.tool.applyCorrection(tau)
+        event.taus.collection = taus_copy
         return True
 
 
