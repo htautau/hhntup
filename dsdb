@@ -16,7 +16,7 @@ parser.add_argument('--info', action='store_true', default=False)
 parser.add_argument('--name', default='datasets')
 parser.add_argument('--config', default='higgstautau/datasets_config.yml')
 parser.add_argument('-v', '--verbose', action='store_true', default=False)
-parser.add_argument('analysis', choices=('lh', 'hh', 'hh_q', 'ue_studies', 'ue_studies_truth', 'theory'))
+parser.add_argument('analysis', choices=('lh', 'hh', 'hh_q', 'ue_studies', 'ue_studies_truth', 'theory','vbf'))
 args = parser.parse_args()
 
 from higgstautau.datasets import Database
@@ -40,6 +40,9 @@ elif args.analysis == 'ue_studies_truth':
 elif args.analysis == 'theory':
     args.versioned = True
     args.name += '_theory'
+elif args.analysis == 'vbf':
+    args.versioned = True
+    args.name += '_signal'
 
 db = Database(name=args.name,
               verbose=args.verbose)
@@ -64,13 +67,18 @@ else:
     if args.reset:
         db.clear()
     with open(args.config) as config:
+        print config
         config_dict = yaml.load(config)
+        print config_dict
         for year, year_config in config_dict.items():
             if args.analysis not in year_config:
                 continue
+            print "Found proper name"
             params = {}
             params['data_grl'] = year_config['common'].get('grl', None)
             params.update(year_config[args.analysis])
+            print params
+            
             db.scan(year,
                     deep=args.deep,
                     versioned=args.versioned,

@@ -52,6 +52,12 @@
         data_treename: 'tau'
         data_sampletype: 'standard'
         data_period_containers: True
+    vbf:
+        mc_path: '/afs/cern.ch/user/v/vcroft/portal/hhskims/hhskim/'
+        mc_prefix: 'user.vcroft.hhskim'
+        mc_pattern: '*hadhad*.root'
+        mc_treename: 'tau'
+        mc_sampletype: 'standard'
     herwigps:
         mc_path: '/cluster/data12/qbuat/skims/herwigps'
         mc_prefix: 'group.phys-higgs.hhskim'

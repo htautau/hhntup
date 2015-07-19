@@ -138,6 +138,7 @@ KEEP = [
     "el_TRTHighTOutliersRatio",
     "el_weta2",
     "el_wstot",
+    "el_ptcone40",
 
     "mu_staco_n",
     "mu_staco_E",
@@ -159,7 +160,9 @@ KEEP = [
     "mu_staco_nSCTHoles",
     "mu_staco_nTRTHits",
     "mu_staco_nTRTOutliers",
-
+    "mu_staco_trackz0pv",
+    "mu_staco_ptcone40",
+    "mu_staco_charge",
     "tau_jet_jvtxf",
 ]
 
@@ -184,4 +187,9 @@ REMOVE_OUTPUT = [
 ]
 
 # override REMOVE_OUTPUT above
-KEEP_OUTPUT = []
+KEEP_OUTPUT = [
+    'jet_antikt4truth_pt',
+    'jet_antikt4truth_eta',
+    'jet_antikt4truth_phi',
+    'jet_antikt4truth_m',
+]

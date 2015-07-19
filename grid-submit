@@ -44,6 +44,8 @@ parser.add_argument('--yall', action='store_true', default=False,
                     help='answer yes to all questions')
 parser.add_argument('-f', '--filter', default=None,
                     help='only submit jobs on datasets matching this glob')
+parser.add_argument('--allowTaskDuplication', action='store_true',
+                    help='If you screwed up the local test')
 parser.add_argument('datasets', nargs="+")
 args, user_args = parser.parse_known_args()
 

@@ -135,11 +135,11 @@ class PBSMonitor(object):
         print_table(rows)
 
 
-MONITOR = PBSMonitor()
+#MONITOR = PBSMonitor()
 
 
 def qsub(cmd,
-         queue='medium',
+         queue='test',
          ppn=1,
          mem=None,
          vmem=None,
@@ -148,12 +148,12 @@ def qsub(cmd,
          stdout_path=None,
          name=None,
          dry_run=False):
-    MONITOR.update()
+ #   MONITOR.update()
     kwargs = {}
     if name is not None:
-        if MONITOR.has_jobname(name):
-            print "job {0} already exists".format(name)
-            return
+ #       if MONITOR.has_jobname(name):
+ #           print "job {0} already exists".format(name)
+ #           return
         kwargs['-N'] = name
     if stderr_path is not None:
         kwargs['-e'] = stderr_path
@@ -169,13 +169,36 @@ def qsub(cmd,
         resources += ',pmem={0}'.format(pmem)
     cmd = "echo '{0}' | qsub -q {1} {2} -l {3}".format(
         cmd, queue, args, resources)
-    print cmd
+    print 'this qsub command: ',cmd
     if not dry_run:
         if stderr_path and not os.path.exists(stderr_path):
             mkdir_p(stderr_path)
         if stdout_path and not os.path.exists(stdout_path):
             mkdir_p(stdout_path)
         call(cmd, shell=True)
+
+def bsub(cmd,
+         queue='1nd',
+         stderr_path=None,
+         stdout_path=None,
+         name=None,
+         dry_run=False):
+    kwargs = {}
+    if stderr_path is not None:
+        kwargs['-e'] = stderr_path
+    if stdout_path is not None:
+        kwargs['-o'] = stdout_path
+    args = ' '.join(['%s "%s"' % arg for arg in kwargs.items()])
+    cmd = "echo '{0}' | bsub -q {1} -W 720 {2}".format(
+        cmd, queue, args)
+    print 'this bsub command: ',cmd
+    if not dry_run:
+        if stderr_path and not os.path.exists(stderr_path):
+            mkdir_p(stderr_path)
+        if stdout_path and not os.path.exists(stdout_path):
+            mkdir_p(stdout_path)
+        call(cmd, shell=True)
+
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-from ..mixins import *
+from mixins import *
 from . import log; log = log[__name__]
 
 

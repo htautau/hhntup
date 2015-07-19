@@ -68,6 +68,8 @@ class TrueTau(FourMomentum + FourMomentum.prefix('vis_')):
         with ignore_warning:
             this.vis_phi = vect.Phi()
             this.vis_eta = vect.Eta()
+class TrueJet(FourMomentum):
+    nJet = IntCol(default=-1111)
 
 
 class MatchedObject(TreeModel):
@@ -81,39 +83,4 @@ class Parton(FourMomentum):
     pdgId = IntCol()
 
 
-class PartonBlock((Parton + MatchedObject).prefix('parton1_') +
-                  (Parton + MatchedObject).prefix('parton2_')):
-    dEta_partons = FloatCol(default=-1)
-    dR_partons = FloatCol()
-    dR_parton_tau = FloatCol()
-    parton_beta = Vector3
 
-    @classmethod
-    def set(cls, tree, parton1, parton2):
-        # TODO: UPDATE
-
-        # sort by eta
-        parton1, parton2 = sorted(
-            [parton1, parton2],
-            key=lambda parton: parton.fourvect.Eta())
-
-        parton1_fourvect = parton1.fourvect
-        parton2_fourvect = parton2.fourvect
-
-        tree.mass_true_quark1_quark2 = (
-            parton1_fourvect + parton2_fourvect).M()
-
-        tree.parton1_fourvect.copy_from(parton1_fourvect)
-        tree.parton2_fourvect.copy_from(parton2_fourvect)
-
-        beta = (parton1_fourvect + parton2_fourvect).BoostVector()
-        tree.parton_beta.copy_from(beta)
-
-        parton1_fourvect.Boost(beta * -1)
-        parton2_fourvect.Boost(beta * -1)
-
-        tree.parton1_fourvect_boosted.copy_from(parton1_fourvect)
-        tree.parton2_fourvect_boosted.copy_from(parton2_fourvect)
-
-        tree.parton1_pdgId = parton1.pdgId
-        tree.parton2_pdgId = parton2.pdgId

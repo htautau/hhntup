@@ -394,6 +394,7 @@ class Database(dict):
                     mc_dirs = glob.glob(os.path.join(mc_path, '*'))
 
             for dir in mc_dirs:
+                print dir
                 dirname, basename = os.path.split(dir)
                 if mc_sampletype == 'standard':
                     match  = re.match(DS_PATTERN, basename)
@@ -405,9 +406,12 @@ class Database(dict):
                         ds_name = Database.match_to_ds(match)
                         name = match.group('name')
                         tag = match.group('tag')
+                        print ds_name, name, tag
                         try:
                             version = int(match.group('version'))
                         except IndexError:
+                            version = 0
+                        except TypeError:
                             version = 0
                         except:
                             log.warning(basename)

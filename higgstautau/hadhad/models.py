@@ -9,7 +9,7 @@ from rootpy import stl
 
 from .. import datasets
 from .. import eventshapes
-from ..models import FourMomentum, MatchedObject, MMCModel, TrueTau
+from ..models import FourMomentum, MatchedObject, MMCModel, TrueTau, TrueJet, Parton
 
 import math
 
@@ -191,7 +191,6 @@ class RecoTauBlock((RecoTau + MatchedObject).prefix('tau1_') +
         tree.dEta_tau1_tau2 = abs(tau2.eta - tau1.eta)
         # leading pt over subleading pt
         tree.tau_pt_ratio = tau1.pt / tau2.pt
-
         for outtau, intau in [(tree.tau1, tau1), (tree.tau2, tau2)]:
 
             outtau.index = intau.index
@@ -413,6 +412,160 @@ class RecoJetBlock(RecoJet.prefix('jet1_') +
             tree['jet3_phi'].reset()
             tree['jet3_eta'].reset()
 
+class PartonBlock(Parton.prefix('parton1_') +
+                  Parton.prefix('parton2_') +
+                  Parton.prefix('parton3_')+
+                  Parton.prefix('partin1_') +
+                  Parton.prefix('partin2_') +
+                  Parton.prefix('higgs_')):
+
+    @classmethod
+    def set(cls, tree, parton1, 
+            parton2=None, 
+            parton3=None, 
+            partin1=None, 
+            partin2=None,
+            higgs=None,
+            local=False):
+
+        if parton1 is not None:
+            FourMomentum.set(tree.parton1, parton1)
+            tree.parton1_pdgId = parton1.pdgId
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if parton selection changed
+            tree['parton1_pt'].reset()
+            tree['parton1_p'].reset()
+            tree['parton1_et'].reset()
+            tree['parton1_e'].reset()
+            tree['parton1_m'].reset()
+            tree['parton1_phi'].reset()
+            tree['parton1_eta'].reset()
+
+        if parton2 is not None:
+            FourMomentum.set(tree.parton2, parton2)
+            tree.parton2_pdgId = parton2.pdgId        
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if parton selection changed
+            tree['parton2_pt'].reset()
+            tree['parton2_p'].reset()
+            tree['parton2_et'].reset()
+            tree['parton2_e'].reset()
+            tree['parton2_m'].reset()
+            tree['parton2_phi'].reset()
+            tree['parton2_eta'].reset()
+
+        if parton3 is not None:
+            FourMomentum.set(tree.parton3, parton3)
+            tree.parton3_pdgId = parton3.pdgId
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if parton selection changed
+            tree['parton3_pt'].reset()
+            tree['parton3_p'].reset()
+            tree['parton3_et'].reset()
+            tree['parton3_e'].reset()
+            tree['parton3_m'].reset()
+            tree['parton3_phi'].reset()
+            tree['parton3_eta'].reset()
+
+        if partin1 is not None:
+            FourMomentum.set(tree.partin1, partin1)
+            tree.partin1_pdgId = partin1.pdgId
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if partin selection changed
+            tree['partin1_pt'].reset()
+            tree['partin1_p'].reset()
+            tree['partin1_et'].reset()
+            tree['partin1_e'].reset()
+            tree['partin1_m'].reset()
+            tree['partin1_phi'].reset()
+            tree['partin1_eta'].reset()
+
+        if partin2 is not None:
+            FourMomentum.set(tree.partin2, partin2)
+            tree.partin2_pdgId = partin2.pdgId        
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if partin selection changed
+            tree['partin2_pt'].reset()
+            tree['partin2_p'].reset()
+            tree['partin2_et'].reset()
+            tree['partin2_e'].reset()
+            tree['partin2_m'].reset()
+            tree['partin2_phi'].reset()
+            tree['partin2_eta'].reset()
+
+        if higgs is not None:
+            FourMomentum.set(tree.higgs, higgs)
+            tree.higgs_pdgId = higgs.pdgId
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if parton selection changed
+            tree['higgs_pt'].reset()
+            tree['higgs_p'].reset()
+            tree['higgs_et'].reset()
+            tree['higgs_e'].reset()
+            tree['higgs_m'].reset()
+            tree['higgs_phi'].reset()
+            tree['higgs_eta'].reset()
+
+
+
+
+
+
+class TrueJetBlock(TrueJet.prefix('truejet1_') +
+                   TrueJet.prefix('truejet2_') +
+                   TrueJet.prefix('truejet3_')):
+    @classmethod
+    def set(cls, tree, jet1, jet2=None, jet3=None, local=False):
+
+        if jet1 is not None:
+            FourMomentum.set(tree.jet1, jet1)
+
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if jet selection changed
+            tree['jet1_pt'].reset()
+            tree['jet1_p'].reset()
+            tree['jet1_et'].reset()
+            tree['jet1_e'].reset()
+            tree['jet1_m'].reset()
+            tree['jet1_phi'].reset()
+            tree['jet1_eta'].reset()
+
+        if jet2 is not None:
+            FourMomentum.set(tree.jet2, jet2)
+
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if jet selection changed
+            tree['jet2_pt'].reset()
+            tree['jet2_p'].reset()
+            tree['jet2_et'].reset()
+            tree['jet2_e'].reset()
+            tree['jet2_m'].reset()
+            tree['jet2_phi'].reset()
+            tree['jet2_eta'].reset()
+
+        if jet3 is not None:
+            FourMomentum.set(tree.jet3, jet3)
+
+        elif local:
+            # zero the fourvect
+            # avoid ghost values from skim if jet selection changed
+            tree['jet3_pt'].reset()
+            tree['jet3_p'].reset()
+            tree['jet3_et'].reset()
+            tree['jet3_e'].reset()
+            tree['jet3_m'].reset()
+            tree['jet3_phi'].reset()
+            tree['jet3_eta'].reset()
+
+
 
 class TrueTauBlock((TrueTau + MatchedObject).prefix('truetau1_') +
                    (TrueTau + MatchedObject).prefix('truetau2_')):
@@ -520,14 +673,14 @@ class InclusiveHiggsModel(TreeModel):
 
 
 def get_model(datatype, name, prefix=None, is_inclusive_signal=False):
-    model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock
+    model = EventModel + MassModel + METModel + RecoTauBlock + RecoJetBlock + TrueJetBlock + PartonBlock
     if datatype in (datasets.EMBED, datasets.MCEMBED):
         model += EmbeddingModel
     if datatype != datasets.DATA:
         model += TrueTauBlock
-    #if datatype == datasets.MC and 'VBF' in name:
-    #    # add branches for VBF Higgs associated partons
-    #    model += PartonBlock
+#    if datatype == datasets.MC and 'VBF' in name:
+     # add branches for VBF Higgs associated partons
+
     if is_inclusive_signal:
         model += InclusiveHiggsModel
     if prefix is not None:

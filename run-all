@@ -18,9 +18,21 @@
 #PowhegJimmy_AUET2CT10_ggH125_tautauInclusive.mc12a \
 
 # for overlap check
-./run-mc --nominal-only --year 12 --local \
-PowPyth8_AU2CT10_VBFH125p5_inclusive.mc12b \
-PowPyth8_AU2CT10_ggH125p5_inclusive.mc12b \
-Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b \
-Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b \
-Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b
+#./run-mc --nominal-only --year 12 --local \
+#PowPyth8_AU2CT10_VBFH125p5_inclusive.mc12b \
+#PowPyth8_AU2CT10_ggH125p5_inclusive.mc12b \
+#Pyth8_AU2CTEQ6L1_WH125p5_inclusive.mc12b \
+#Pyth8_AU2CTEQ6L1_ZH125p5_inclusive.mc12b \
+#Pyth8_AU2CTEQ6L1_ttH125p5_inclusive.mc12b
+
+#./run-mc --nominal-only --year 12 --db 'datasets_signal' --queue 1nh --dry --local \
+#./run-mc --nominal-only --year 12 --db 'datasets_signal' --local --cluster \
+#PowPyth8_AU2CT10_VBFH125_tautauhh.mc12a \
+#PowPyth8_AU2CT10_ggH125_tautauhh.mc12a \
+#Pyth8_AU2CTEQ6L1_WH125_tautauhh.mc12a \
+#Pyth8_AU2CTEQ6L1_ZH125_tautauhh.mc12a 
+
+# JES_EtaModelling_UP
+
+./run-mc --systematics-only --year 12 --use-batch --queue '1nd' --db 'datasets_signal' --local --cluster \
+PowPyth8_AU2CT10_VBFH125_tautauhh.mc12a

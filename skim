@@ -26,11 +26,10 @@ source setup.sh && ./grid-batch --dataset %(dataset)s --metadata datasets.cfg
 """
 
 SUBMIT_CMD = """\
-./grid-submit -u group.phys-higgs -m datasets.cfg -s %(student)s -v %(version)s
+./grid-submit -u user.$USER -m datasets.cfg --allowTaskDuplication -s %(student)s -v %(version)s
 %(opts)s
 %(student_args)s
 %(dataset)s
---official --voms=atlas:/atlas/phys-higgs/Role=production %(options)s
 %(dest)s
 """
 

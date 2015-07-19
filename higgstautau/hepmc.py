@@ -13,5 +13,29 @@ def get_VBF_partons(event):
     8, 9 are the associated quark/gluons after Higgs production
 
     Does not work for 2012 samples...
+
+    mc_status: 
+    mc_status==21 is incoming partons
+    mc_status==23 are outgoing partons 
+    mc_status==22 are higgles
+
+    This only works though for PowhegPythia we think...
     """
-    return [p for p in event.mc if p.barcode in (8, 9)]
+
+    partons = [p for p in event.mc if p.status==23]
+    return partons
+
+def get_VBF_partins(event):
+    """
+    Find and return the two incoming VBF partons in a VBF event
+    """
+    partins = [p for p in event.mc if p.status==21]
+    return partins
+
+def get_MC_higgles(event):
+    """
+    Find and return the higgs boson
+
+    uses the optimum possible discriminator.
+    """
+    return [h for h in event.mc if h.status==22]

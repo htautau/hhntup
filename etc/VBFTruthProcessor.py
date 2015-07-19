@@ -74,6 +74,7 @@ class VBFTruthProcessor(ATLASStudent):
         # jet_eta etc is AntiKt4LCTopo in tau-perf D3PDs
         tree.define_collection(name="jets", prefix="jet_", size="jet_n", mix=FourMomentum)
         tree.define_collection(name="truetaus", prefix="trueTau_", size="trueTau_n", mix=MCTauFourMomentum)
+        tree.define_collection(name="truejets", prefix="jet_antikt4truth_", size="jet_antikt4truth_n", mix=FourMomentum)
         tree.define_collection(name="mc", prefix="mc_", size="mc_n", mix=MCParticle)
         tree.define_collection(name="muons", prefix="mu_staco_", size="mu_staco_n")
         tree.define_collection(name="electrons", prefix="el_", size="el_n")

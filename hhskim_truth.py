@@ -523,7 +523,9 @@ class hhskim_truth(ATLASStudent):
                 #tree.aplanarity = aplanarity
 
                     RecoJetBlock.set(tree, jet1, jet2, jet3, local=local)
-
+                    if datatype != datasets.DATA:
+                        TrueJetBlock.set(tree, jet1, jet2, jet3)
+                    
                 # mass of ditau + leading jet system
                 if jet1 is not None:
                     tree.mass_tau1_tau2_jet1 = (
